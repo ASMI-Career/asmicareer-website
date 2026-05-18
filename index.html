@@ -5,114 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="ASMI Career — Maharashtra's most trusted NEET medical admissions counsellors. 11+ years, 25,000+ admissions. Expert guidance for MBBS, BDS, BAMS, BHMS."/>
     <title>ASMI Career — NEET Medical Admissions Counselling</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="assets/shared.css" rel="stylesheet"/>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#705d00",
-                        "surface": "#f8f9fa",
-                        "on-surface": "#191c1d",
-                        "on-surface-variant": "#4d4732",
-                        "on-primary-container": "#705e00",
-                        "surface-container-lowest": "#ffffff",
-                        "secondary": "#7b41b3",
-                        "on-secondary": "#ffffff",
-                        "primary-container": "#ffd700",
-                        "outline-variant": "#d0c6ab",
+                        brand: '#7b41b3',
+                        'brand-dark': '#5a2d8a',
+                        gold: '#ffd700',
+                        'gold-dark': '#5a4400',
+                        dark: '#09090f',
+                    },
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'Inter', sans-serif; background: #f6f5f9; color: #0f0e17; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
 
         /* Hero */
-        .hero-section {
-            background: linear-gradient(135deg, #7b41b3 0%, #5a2d8a 60%, #3d1c6e 100%);
-            position: relative;
+        .hero-section { background: #09090f; position: relative; overflow: hidden; }
+        .hero-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(123,65,179,0.32) 0%, transparent 55%),
+                radial-gradient(ellipse 40% 40% at 85% 85%, rgba(255,215,0,0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            pointer-events: none;
+        }
+        .hero-card {
+            background: #111118;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 24px;
+            padding: 0;
             overflow: hidden;
         }
-        .hero-pattern {
-            position: absolute;
-            inset: 0;
-            background-image:
-                radial-gradient(circle at 20% 50%, rgba(255,215,0,0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
-            pointer-events: none;
+        .hero-card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .hero-dots {
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-            background-size: 28px 28px;
-            pointer-events: none;
+        .hero-admission-row {
+            padding: 0.9rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            transition: background 0.2s;
         }
-
-        /* Stats bar */
-        .stats-bar {
-            background: #ffd700;
+        .hero-admission-row:last-child { border-bottom: none; }
+        .hero-admission-row:hover { background: rgba(255,255,255,0.03); }
+        .hero-card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,215,0,0.04);
         }
 
-        /* Service card hover */
-        .service-card { transition: transform 0.2s, box-shadow 0.2s; }
-        .service-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(123,65,179,0.15); }
+        /* Trust strip */
+        .trust-strip { background: #fff; border-bottom: 1px solid rgba(0,0,0,0.06); }
 
-        /* Step connector */
-        .step-connector {
-            width: 2px;
-            background: linear-gradient(to bottom, #ffd700, rgba(255,215,0,0.1));
-            height: 40px;
-            margin: 0 auto;
+        /* Courses */
+        .course-card { border-radius: 20px; padding: 2rem; transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1); }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+
+        /* Features */
+        .feature-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1.1rem; border-radius: 14px; transition: background 0.15s ease-out; }
+        .feature-row:hover { background: rgba(123,65,179,0.04); }
+        .feature-ico {
+            width: 42px; height: 42px; border-radius: 11px;
+            background: rgba(123,65,179,0.1);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
-        /* Tool card */
+        /* Steps */
+        .step-num {
+            width: 52px; height: 52px; border-radius: 50%;
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* Tool cards */
         .tool-card {
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-decoration: none;
-        }
-        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(123,65,179,0.18); }
-
-        /* Testimonial card */
-        .testimonial-card {
             background: #fff;
-            border-radius: 16px;
-            padding: 1.75rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            border: 1px solid #ede9f7;
+            border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 20px; padding: 1.75rem;
+            text-decoration: none; display: block;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.18s ease-out;
         }
-        .testimonial-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #7b41b3;
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(123,65,179,0.12);
+            border-color: rgba(123,65,179,0.18);
+        }
+        .tool-ico {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1rem;
         }
 
-        /* Scroll reveal */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
+        /* Testimonials */
+        .testi-card {
+            background: #fff; border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 20px; padding: 2rem; position: relative;
         }
-        .fade-up { animation: fadeUp 0.6s ease both; }
+        .testi-quote {
+            position: absolute; top: 1.25rem; right: 1.75rem;
+            font-size: 5.5rem; line-height: 1; font-family: Georgia, serif;
+            color: rgba(123,65,179,0.06); user-select: none; pointer-events: none;
+        }
+        .testi-av {
+            width: 44px; height: 44px; border-radius: 50%;
+            font-weight: 700; font-size: 0.875rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        /* Branch cards */
+        .branch-card {
+            background: #fff; border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 16px; padding: 1.5rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .branch-card:hover {
+            border-color: rgba(123,65,179,0.22);
+            box-shadow: 0 4px 20px rgba(123,65,179,0.08);
+        }
+
+        /* CTA section */
+        .cta-section { background: #09090f; position: relative; overflow: hidden; }
+        .cta-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 90% 70% at 50% 110%, rgba(123,65,179,0.28) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Gold button shimmer — transform-only, no layout property */
+        @keyframes shimmer {
+            from { transform: translateX(-100%) skewX(-20deg); }
+            to   { transform: translateX(300%) skewX(-20deg); }
+        }
+        .btn-gold-shine { position: relative; overflow: hidden; }
+        .btn-gold-shine::after {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: translateX(-100%) skewX(-20deg);
+        }
+        .btn-gold-shine:hover::after { animation: shimmer 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Status dot pulse — slow, non-distracting */
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+
+        /* Hero CTA ghost button */
+        .hero-ghost-btn {
+            color: rgba(255,255,255,0.55);
+            border-color: rgba(255,255,255,0.12);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .hero-ghost-btn:hover {
+            color: rgba(255,255,255,0.9);
+            border-color: rgba(255,255,255,0.22);
+        }
     </style>
 </head>
-<body class="bg-surface text-on-surface">
+<body class="font-body">
 
-<!-- ── NAVBAR ──────────────────────────────────────────────── -->
-<nav class="asmi-nav">
+<!-- ── NAVBAR ──────────────────────────────────────────────────── -->
+<nav class="asmi-nav" id="mainNav">
     <div class="asmi-nav-inner">
         <a href="index.html" class="asmi-nav-logo">
             <img src="asmi-logo.png" alt="ASMI Career"/>
@@ -126,7 +207,7 @@
                     <li><a href="tools/college-search.html"><span>🏥</span> College Search</a></li>
                     <li><a href="tools/cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
                     <li><a href="tools/documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
-                    <li><a href="tools/events.html"><span>🎓</span> Events & Seminars</a></li>
+                    <li><a href="tools/events.html"><span>🎓</span> Events &amp; Seminars</a></li>
                 </ul>
             </li>
             <li><a href="#about">About</a></li>
@@ -138,328 +219,624 @@
         </button>
     </div>
     <div class="asmi-mobile-menu" id="mobileMenu">
-        <a href="index.html">🏠 Home</a>
+        <a href="index.html">Home</a>
         <div class="mobile-section-label">Tools</div>
         <a href="tools/rank-predictor.html">📊 Rank Predictor</a>
         <a href="tools/college-search.html">🏥 College Search</a>
         <a href="tools/cutoff-explorer.html">📈 Cutoff Explorer</a>
         <a href="tools/documents-checklist.html">📋 Documents Checklist</a>
-        <a href="tools/events.html">🎓 Events & Seminars</a>
+        <a href="tools/events.html">🎓 Events &amp; Seminars</a>
         <div class="mobile-section-label">Company</div>
         <a href="#about">About ASMI</a>
-        <a href="#contact">Contact & Branches</a>
+        <a href="#contact">Contact &amp; Branches</a>
         <a href="inquiry.html" class="mobile-cta">Book Free Counselling →</a>
     </div>
 </nav>
 
-<!-- ── HERO ────────────────────────────────────────────────── -->
-<section class="hero-section py-16 md:py-24 px-4">
-    <div class="hero-pattern"></div>
-    <div class="hero-dots"></div>
-    <div class="max-w-5xl mx-auto text-center relative z-10">
-        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-6">
-            <span class="w-2 h-2 rounded-full bg-yellow-300 animate-pulse"></span>
-            <span class="text-white/90 text-sm font-medium">Maharashtra's Most Trusted NEET Counsellors</span>
-        </div>
-        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
-            Your NEET Score Deserves<br class="hidden md:block"/>
-            <span style="color:#ffd700;">the Right College</span>
-        </h1>
-        <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
-            Expert, honest guidance through every round of NEET counselling —
-            from choice filling to confirmed admission. No confusion, no missed deadlines.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="inquiry.html" class="btn-gold text-base px-7 py-4 rounded-xl shadow-lg">
-                Book Free Counselling
-                <span class="material-symbols-outlined text-xl">arrow_forward</span>
-            </a>
-            <a href="#tools" class="btn-outline text-base px-7 py-4 rounded-xl" style="color:#fff;border-color:rgba(255,255,255,0.40);">
-                Explore Free Tools
-                <span class="material-symbols-outlined text-xl">construction</span>
-            </a>
+<!-- ── HERO ────────────────────────────────────────────────────── -->
+<section class="hero-section">
+    <div class="hero-grid"></div>
+    <div class="max-w-7xl mx-auto px-6 py-20 md:py-28 lg:py-32 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+
+            <!-- Left -->
+            <div class="lg:col-span-7 reveal">
+                <div class="inline-flex items-center gap-2 mb-7 rounded-full px-4 py-1.5" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.10);">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gold pulse-slow inline-block"></span>
+                    <span class="text-white text-opacity-60 text-xs font-semibold tracking-widest uppercase">Maharashtra's #1 NEET Counsellors</span>
+                </div>
+
+                <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-none tracking-tight mb-6" style="letter-spacing:-0.03em; line-height:1.04;">
+                    Your NEET Score<br/>Deserves the<br/><span style="color:#ffd700;">Right College.</span>
+                </h1>
+
+                <p class="text-lg md:text-xl leading-relaxed mb-9 max-w-xl" style="color:rgba(255,255,255,0.5);">
+                    Expert, honest guidance through every round of counselling — from choice filling to confirmed admission. No confusion, no missed deadlines.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3 mb-10">
+                    <a href="inquiry.html" class="btn-gold btn-gold-shine text-base px-7 py-3.5 rounded-xl inline-flex items-center gap-2">
+                        Book Free Counselling
+                        <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
+                    </a>
+                    <a href="#tools" class="hero-ghost-btn inline-flex items-center gap-2 font-medium px-5 py-3.5 rounded-xl text-base border">
+                        Explore Free Tools
+                        <span class="material-symbols-outlined" style="font-size:18px;">construction</span>
+                    </a>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-8">
+                    <div>
+                        <div class="font-display text-2xl font-bold text-white" style="letter-spacing:-0.02em;">25,000+</div>
+                        <div class="text-xs font-medium mt-0.5" style="color:rgba(255,255,255,0.35);">Admissions secured</div>
+                    </div>
+                    <div style="width:1px; height:32px; background:rgba(255,255,255,0.1);"></div>
+                    <div>
+                        <div class="font-display text-2xl font-bold text-white" style="letter-spacing:-0.02em;">11+</div>
+                        <div class="text-xs font-medium mt-0.5" style="color:rgba(255,255,255,0.35);">Years experience</div>
+                    </div>
+                    <div style="width:1px; height:32px; background:rgba(255,255,255,0.1);"></div>
+                    <div>
+                        <div class="font-display text-2xl font-bold text-white" style="letter-spacing:-0.02em;">6</div>
+                        <div class="text-xs font-medium mt-0.5" style="color:rgba(255,255,255,0.35);">Branches statewide</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Admissions feed -->
+            <div class="lg:col-span-5 reveal reveal-delay-2">
+                <div class="hero-card">
+                    <div class="hero-card-header">
+                        <div>
+                            <div class="text-xs font-semibold uppercase tracking-widest" style="color:rgba(255,255,255,0.3);">2024–25 Season</div>
+                            <div class="text-sm font-semibold mt-0.5" style="color:rgba(255,255,255,0.75);">Recent admissions</div>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-xs font-semibold rounded-full px-2.5 py-1" style="background:rgba(255,215,0,0.1); color:#ffd700; border:1px solid rgba(255,215,0,0.15);">
+                            <span class="w-1.5 h-1.5 rounded-full inline-block pulse-slow" style="background:#ffd700;"></span>
+                            Live
+                        </div>
+                    </div>
+
+                    <div class="hero-admission-row">
+                        <div>
+                            <div class="text-sm font-semibold" style="color:rgba(255,255,255,0.8);">Shrihaan G.</div>
+                            <div class="text-xs mt-0.5" style="color:rgba(255,255,255,0.35);">AIIMS Delhi · MBBS</div>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md flex-shrink-0" style="background:rgba(255,215,0,0.12); color:#ffd700;">AIQ</span>
+                    </div>
+                    <div class="hero-admission-row">
+                        <div>
+                            <div class="text-sm font-semibold" style="color:rgba(255,255,255,0.8);">Hazel P.</div>
+                            <div class="text-xs mt-0.5" style="color:rgba(255,255,255,0.35);">KEM Mumbai · MBBS</div>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md flex-shrink-0" style="background:rgba(123,65,179,0.25); color:rgba(180,140,220,0.9);">State</span>
+                    </div>
+                    <div class="hero-admission-row">
+                        <div>
+                            <div class="text-sm font-semibold" style="color:rgba(255,255,255,0.8);">Dhruv M.</div>
+                            <div class="text-xs mt-0.5" style="color:rgba(255,255,255,0.35);">KMC Manipal · MBBS</div>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md flex-shrink-0" style="background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.45);">Mgmt</span>
+                    </div>
+                    <div class="hero-admission-row">
+                        <div>
+                            <div class="text-sm font-semibold" style="color:rgba(255,255,255,0.8);">Isha T.</div>
+                            <div class="text-xs mt-0.5" style="color:rgba(255,255,255,0.35);">KJ Somaiya · MBBS</div>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md flex-shrink-0" style="background:rgba(123,65,179,0.25); color:rgba(180,140,220,0.9);">State</span>
+                    </div>
+                    <div class="hero-admission-row">
+                        <div>
+                            <div class="text-sm font-semibold" style="color:rgba(255,255,255,0.8);">Riya K.</div>
+                            <div class="text-xs mt-0.5" style="color:rgba(255,255,255,0.35);">Nair Hospital Mumbai · BDS</div>
+                        </div>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-md flex-shrink-0" style="background:rgba(123,65,179,0.25); color:rgba(180,140,220,0.9);">State</span>
+                    </div>
+
+                    <div class="hero-card-footer flex items-center justify-between">
+                        <span class="text-xs" style="color:rgba(255,255,255,0.35);">+ 25,000 more across 11 years</span>
+                        <span class="text-xs font-bold" style="color:#ffd700;">Maharashtra #1 ★</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </section>
 
-<!-- ── STATS BAR ───────────────────────────────────────────── -->
-<div class="stats-bar">
-    <div class="max-w-5xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-yellow-400/40">
-        <div class="text-center px-4">
-            <div class="text-2xl md:text-3xl font-black text-on-primary-container">25,000+</div>
-            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Admissions Secured</div>
-        </div>
-        <div class="text-center px-4">
-            <div class="text-2xl md:text-3xl font-black text-on-primary-container">11+</div>
-            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Years of Experience</div>
-        </div>
-        <div class="text-center px-4">
-            <div class="text-2xl md:text-3xl font-black text-on-primary-container">6</div>
-            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Branches in Maharashtra</div>
-        </div>
-        <div class="text-center px-4">
-            <div class="text-2xl md:text-3xl font-black text-on-primary-container">All India</div>
-            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Coverage — Every State</div>
+<!-- ── TRUST STRIP ──────────────────────────────────────────────── -->
+<div class="trust-strip">
+    <div class="max-w-5xl mx-auto px-6 py-7">
+        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+            <div class="text-center px-4 reveal">
+                <div class="font-display text-3xl md:text-4xl font-extrabold text-brand" style="letter-spacing:-0.03em;">25,000+</div>
+                <div class="text-xs text-gray-400 font-semibold mt-1 uppercase tracking-wider">Admissions</div>
+            </div>
+            <div class="text-center px-4 reveal reveal-delay-1">
+                <div class="font-display text-3xl md:text-4xl font-extrabold text-brand" style="letter-spacing:-0.03em;">11+</div>
+                <div class="text-xs text-gray-400 font-semibold mt-1 uppercase tracking-wider">Years</div>
+            </div>
+            <div class="text-center px-4 reveal reveal-delay-2">
+                <div class="font-display text-3xl md:text-4xl font-extrabold text-brand" style="letter-spacing:-0.03em;">6</div>
+                <div class="text-xs text-gray-400 font-semibold mt-1 uppercase tracking-wider">Branches</div>
+            </div>
+            <div class="text-center px-4 reveal reveal-delay-3">
+                <div class="font-display text-3xl md:text-4xl font-extrabold text-brand" style="letter-spacing:-0.03em;">#1</div>
+                <div class="text-xs text-gray-400 font-semibold mt-1 uppercase tracking-wider">Maharashtra</div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- ── WHY ASMI ────────────────────────────────────────────── -->
-<section id="about" class="py-16 px-4 bg-white">
-    <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Why Families Trust Us</p>
-            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">Everything you need,<br/>in one counselling team</h2>
-            <p class="text-on-surface-variant max-w-xl mx-auto">NEET counselling has dozens of moving parts. We handle every one of them so you don't have to figure it out alone.</p>
+<!-- ── COURSES ──────────────────────────────────────────────────── -->
+<section id="services" class="py-20 md:py-28 px-6 bg-white">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-14 reveal">
+            <span class="section-label">What We Cover</span>
+            <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mb-4" style="letter-spacing:-0.03em; line-height:1.06;">
+                Every medical admission,<br/>handled end to end.
+            </h2>
+            <p class="text-gray-400 text-lg max-w-lg leading-relaxed">
+                From NEET score to college confirmation — across four disciplines, all quotas, every state.
+            </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Card 1 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">verified_user</span>
-                <h3 class="font-bold text-on-surface mb-1">Complete Admission Guidance</h3>
-                <p class="text-sm text-on-surface-variant">From AIQ to state quota — every process covered, round by round.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- MBBS — dark card -->
+            <div class="course-card reveal" style="background:#09090f; color:#fff;">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-2xl" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);">🩺</div>
+                <div class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#ffd700;">MBBS</div>
+                <h3 class="font-display text-2xl font-bold mb-3" style="letter-spacing:-0.02em; line-height:1.15;">Bachelor of Medicine</h3>
+                <p class="text-sm leading-relaxed mb-5" style="color:rgba(255,255,255,0.45);">AIQ, State Quota, Management &amp; NRI quota across govt and private medical colleges.</p>
+                <div class="flex flex-wrap gap-1.5 mb-6">
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.45); border:1px solid rgba(255,255,255,0.07);">AIIMS Delhi</span>
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.45); border:1px solid rgba(255,255,255,0.07);">KEM Mumbai</span>
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.45); border:1px solid rgba(255,255,255,0.07);">Manipal</span>
+                </div>
+                <a href="inquiry.html" class="inline-flex items-center gap-1.5 text-sm font-semibold transition-all" style="color:#ffd700;"
+                   onmouseover="this.style.gap='0.75rem'" onmouseout="this.style.gap='0.375rem'">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
             </div>
-            <!-- Card 2 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">groups</span>
-                <h3 class="font-bold text-on-surface mb-1">One-on-One Counselling</h3>
-                <p class="text-sm text-on-surface-variant">A dedicated counsellor who knows your profile, score, and goals personally.</p>
+
+            <!-- BDS -->
+            <div class="course-card reveal reveal-delay-1" style="background:#f6f5f9; border:1px solid rgba(0,0,0,0.06);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-2xl" style="background:rgba(123,65,179,0.09);">🦷</div>
+                <div class="text-xs font-bold uppercase tracking-widest mb-2 text-brand">BDS</div>
+                <h3 class="font-display text-2xl font-bold mb-3 text-dark" style="letter-spacing:-0.02em; line-height:1.15;">Bachelor of Dental Surgery</h3>
+                <p class="text-sm leading-relaxed mb-5 text-gray-400">Complete guidance for dental college admissions under AIQ and state counselling processes.</p>
+                <div class="flex flex-wrap gap-1.5 mb-6">
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium bg-white text-gray-400" style="border:1px solid rgba(0,0,0,0.08);">MAIDS Delhi</span>
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium bg-white text-gray-400" style="border:1px solid rgba(0,0,0,0.08);">Nair Mumbai</span>
+                </div>
+                <a href="inquiry.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-all">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
             </div>
-            <!-- Card 3 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">format_list_bulleted</span>
-                <h3 class="font-bold text-on-surface mb-1">Tailored Preference Lists</h3>
-                <p class="text-sm text-on-surface-variant">Strategically built college lists that maximise your upgradation chances.</p>
+
+            <!-- BAMS -->
+            <div class="course-card reveal reveal-delay-2" style="background:#f6f5f9; border:1px solid rgba(0,0,0,0.06);">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-2xl" style="background:rgba(123,65,179,0.09);">🌿</div>
+                <div class="text-xs font-bold uppercase tracking-widest mb-2 text-brand">BAMS</div>
+                <h3 class="font-display text-2xl font-bold mb-3 text-dark" style="letter-spacing:-0.02em; line-height:1.15;">Ayurvedic Medicine &amp; Surgery</h3>
+                <p class="text-sm leading-relaxed mb-5 text-gray-400">Expert guidance for AYUSH counselling — state and central, government and private.</p>
+                <div class="flex flex-wrap gap-1.5 mb-6">
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium bg-white text-gray-400" style="border:1px solid rgba(0,0,0,0.08);">BHU Varanasi</span>
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium bg-white text-gray-400" style="border:1px solid rgba(0,0,0,0.08);">GAC Pune</span>
+                </div>
+                <a href="inquiry.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-all">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
             </div>
-            <!-- Card 4 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">analytics</span>
-                <h3 class="font-bold text-on-surface mb-1">Accurate Round Cutoffs</h3>
-                <p class="text-sm text-on-surface-variant">Real data — not guesswork. Know exactly where your score stands.</p>
-            </div>
-            <!-- Card 5 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">notifications_active</span>
-                <h3 class="font-bold text-on-surface mb-1">Real-time Alerts</h3>
-                <p class="text-sm text-on-surface-variant">WhatsApp updates on every deadline, schedule change, and allotment result.</p>
-            </div>
-            <!-- Card 6 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">fact_check</span>
-                <h3 class="font-bold text-on-surface mb-1">Document Verification</h3>
-                <p class="text-sm text-on-surface-variant">We check every certificate before submission. No surprises at reporting.</p>
-            </div>
-            <!-- Card 7 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">edit_document</span>
-                <h3 class="font-bold text-on-surface mb-1">Form Filling Assistance</h3>
-                <p class="text-sm text-on-surface-variant">We sit with you and fill every form, so no field is missed or wrong.</p>
-            </div>
-            <!-- Card 8 -->
-            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
-                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">support_agent</span>
-                <h3 class="font-bold text-on-surface mb-1">Dedicated Helpline</h3>
-                <p class="text-sm text-on-surface-variant">Direct access to your counsellor during the entire admission season.</p>
+
+            <!-- BHMS — gold card -->
+            <div class="course-card reveal reveal-delay-3" style="background:#ffd700;">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-2xl" style="background:rgba(0,0,0,0.07);">💊</div>
+                <div class="text-xs font-bold uppercase tracking-widest mb-2" style="color:rgba(90,68,0,0.6);">BHMS</div>
+                <h3 class="font-display text-2xl font-bold mb-3 text-dark" style="letter-spacing:-0.02em; line-height:1.15;">Homeopathic Medicine &amp; Surgery</h3>
+                <p class="text-sm leading-relaxed mb-5" style="color:rgba(90,68,0,0.65);">Full support for homeopathy admissions across Maharashtra and other AYUSH states.</p>
+                <div class="flex flex-wrap gap-1.5 mb-6">
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background:rgba(0,0,0,0.07); color:rgba(90,68,0,0.7);">NHMC Mumbai</span>
+                    <span class="text-xs px-2.5 py-1 rounded-lg font-medium" style="background:rgba(0,0,0,0.07); color:rgba(90,68,0,0.7);">PHC Pune</span>
+                </div>
+                <a href="inquiry.html" class="inline-flex items-center gap-1.5 text-sm font-semibold transition-all text-gold-dark">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ── HOW IT WORKS ────────────────────────────────────────── -->
-<section class="py-16 px-4 bg-surface">
-    <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Simple Process</p>
-            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">From NEET score to<br/>confirmed admission</h2>
-            <p class="text-on-surface-variant max-w-md mx-auto">Three clear steps. We guide you through every detail at each stage.</p>
-        </div>
-        <div class="max-w-xl mx-auto">
-            <!-- Step 1 -->
-            <div class="flex items-start gap-4">
-                <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#ffd700;color:#705d00;">1</div>
-                    <div class="step-connector mt-1"></div>
-                </div>
-                <div class="pb-8">
-                    <h3 class="text-xl font-bold text-on-surface mb-1">Share Your Details</h3>
-                    <p class="text-on-surface-variant">Fill the inquiry form with your NEET score, category, and preferred courses. It takes 2 minutes and is completely free.</p>
-                    <a href="inquiry.html" class="inline-flex items-center gap-1 text-secondary font-semibold text-sm mt-2 hover:underline">
-                        Go to inquiry form <span class="material-symbols-outlined text-base">arrow_forward</span>
-                    </a>
-                </div>
-            </div>
-            <!-- Step 2 -->
-            <div class="flex items-start gap-4">
-                <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#7b41b3;color:#fff;">2</div>
-                    <div class="step-connector mt-1"></div>
-                </div>
-                <div class="pb-8">
-                    <h3 class="text-xl font-bold text-on-surface mb-1">Meet Your Counsellor</h3>
-                    <p class="text-on-surface-variant">Your dedicated counsellor analyses your score, category, and budget. You get a clear, honest picture of every college you can get — with no false promises.</p>
+<!-- ── WHY ASMI ─────────────────────────────────────────────────── -->
+<section id="about" class="py-20 md:py-28 px-6" style="background:#f6f5f9;">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+            <!-- Left -->
+            <div class="reveal">
+                <span class="section-label">Why ASMI</span>
+                <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mb-5" style="letter-spacing:-0.03em; line-height:1.06;">
+                    Everything NEET.<br/>One team.
+                </h2>
+                <p class="text-gray-400 text-lg leading-relaxed mb-8">
+                    NEET counselling has dozens of moving parts — AIQ rounds, state quotas, management seats, upgradations, documents, reporting. We handle every one.
+                </p>
+                <a href="inquiry.html" class="btn-gold btn-gold-shine inline-flex">
+                    Book free session
+                    <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
+                </a>
+                <div class="mt-10 grid grid-cols-2 gap-4">
+                    <div class="rounded-2xl p-4" style="background:#fff; border:1px solid rgba(0,0,0,0.06);">
+                        <div class="font-display text-3xl font-extrabold text-brand mb-1" style="letter-spacing:-0.03em;">All India</div>
+                        <div class="text-xs text-gray-400 font-medium">Coverage — every state</div>
+                    </div>
+                    <div class="rounded-2xl p-4" style="background:#fff; border:1px solid rgba(0,0,0,0.06);">
+                        <div class="font-display text-3xl font-extrabold text-brand mb-1" style="letter-spacing:-0.03em;">4 Courses</div>
+                        <div class="text-xs text-gray-400 font-medium">MBBS · BDS · BAMS · BHMS</div>
+                    </div>
                 </div>
             </div>
-            <!-- Step 3 -->
-            <div class="flex items-start gap-4">
-                <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#ffd700;color:#705d00;">3</div>
+
+            <!-- Right: Feature list -->
+            <div class="reveal reveal-delay-1 -mx-3">
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">verified_user</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">Complete Admission Guidance</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">Every quota, every round — AIQ to state, government to private.</div>
+                    </div>
                 </div>
-                <div class="pb-0">
-                    <h3 class="text-xl font-bold text-on-surface mb-1">Get Your Seat Confirmed</h3>
-                    <p class="text-on-surface-variant">We guide you through every counselling round — choice filling, allotments, upgrades, documents, and final reporting. Until you walk into your college.</p>
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">groups</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">One-on-One Counselling</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">A dedicated counsellor who knows your profile and goals personally.</div>
+                    </div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">analytics</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">Accurate Round Cutoffs</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">Real historical data — not guesswork. Know exactly where you stand.</div>
+                    </div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">notifications_active</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">Real-time WhatsApp Alerts</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">Updates on every deadline, schedule change, and allotment result.</div>
+                    </div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">fact_check</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">Document Verification</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">Every certificate checked before submission. No surprises at reporting.</div>
+                    </div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-ico"><span class="material-symbols-outlined text-brand" style="font-size:22px; font-variation-settings:'FILL' 1;">support_agent</span></div>
+                    <div>
+                        <div class="font-semibold text-dark text-sm mb-0.5">Dedicated Helpline</div>
+                        <div class="text-sm text-gray-400 leading-relaxed">Direct access to your counsellor throughout the entire admission season.</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ── TOOLS PREVIEW ───────────────────────────────────────── -->
-<section id="tools" class="py-16 px-4 bg-white">
+<!-- ── HOW IT WORKS ─────────────────────────────────────────────── -->
+<section class="py-20 md:py-28 px-6 bg-white">
     <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Free Student Tools</p>
-            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">Research smarter,<br/>decide with confidence</h2>
-            <p class="text-on-surface-variant max-w-xl mx-auto">Use our free tools to understand your options before your counselling session.</p>
+        <div class="text-center mb-16 reveal">
+            <span class="section-label" style="display:inline-block;">How It Works</span>
+            <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mt-2 mb-4" style="letter-spacing:-0.03em; line-height:1.06;">
+                From NEET score<br/>to confirmed seat.
+            </h2>
+            <p class="text-gray-400 text-lg max-w-sm mx-auto">Three steps. We guide you through every detail.</p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            <a href="tools/rank-predictor.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
-                <div class="text-4xl mb-3">📊</div>
-                <h3 class="font-bold text-lg text-on-surface mb-1">Rank Predictor</h3>
-                <p class="text-sm text-on-surface-variant">Estimate your All India Rank from your NEET score and see where you stand nationally.</p>
-                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
-                    Try tool <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+            <div class="reveal text-center">
+                <div class="flex justify-center mb-5">
+                    <div class="step-num" style="background:#ffd700; color:#5a4400;">1</div>
+                </div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Share Your Details</h3>
+                <p class="text-gray-400 text-sm leading-relaxed mb-3">Fill the free inquiry form with your NEET score, category, and preferred courses. Takes 2 minutes.</p>
+                <a href="inquiry.html" class="inline-flex items-center gap-1 text-brand text-sm font-semibold hover:underline">
+                    Go to form <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="reveal reveal-delay-1 text-center">
+                <div class="flex justify-center mb-5">
+                    <div class="step-num" style="background:#7b41b3; color:#fff;">2</div>
+                </div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Meet Your Counsellor</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Your dedicated counsellor analyses your score, category, and budget — giving you a clear, honest picture of every college you can get.</p>
+            </div>
+
+            <div class="reveal reveal-delay-2 text-center">
+                <div class="flex justify-center mb-5">
+                    <div class="step-num" style="background:#ffd700; color:#5a4400;">3</div>
+                </div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Get Your Seat Confirmed</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">We guide you through every counselling round — choice filling, allotments, upgrades, documents, and reporting. Until you walk into your college.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TOOLS SHOWCASE ───────────────────────────────────────────── -->
+<section id="tools" class="py-20 md:py-28 px-6" style="background:#f6f5f9;">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 reveal">
+            <div>
+                <span class="section-label">Free Student Tools</span>
+                <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mt-2" style="letter-spacing:-0.03em; line-height:1.06;">
+                    Research smarter.<br/>Decide with confidence.
+                </h2>
+            </div>
+            <p class="text-gray-400 text-sm leading-relaxed md:text-right max-w-xs">Use our free tools before your counselling session to understand your options better.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="tools/rank-predictor.html" class="tool-card reveal group">
+                <div class="tool-ico" style="background:rgba(123,65,179,0.08);">📊</div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Rank Predictor</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Estimate your All India Rank from your NEET score. Know where you stand before results are out.</p>
+                <div class="flex items-center gap-1.5 text-brand text-sm font-semibold" style="transition: gap 0.2s;">
+                    Try tool <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
-            <a href="tools/college-search.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
-                <div class="text-4xl mb-3">🏥</div>
-                <h3 class="font-bold text-lg text-on-surface mb-1">College Search</h3>
-                <p class="text-sm text-on-surface-variant">Search and compare medical colleges across India by state, course, fees, and seats.</p>
-                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
-                    Search colleges <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+            <a href="tools/college-search.html" class="tool-card reveal reveal-delay-1 group">
+                <div class="tool-ico" style="background:#eff6ff;">🏥</div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">College Search</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Compare medical colleges across India by state, course, fees, and available seats.</p>
+                <div class="flex items-center gap-1.5 text-brand text-sm font-semibold">
+                    Search colleges <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
-            <a href="tools/cutoff-explorer.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
-                <div class="text-4xl mb-3">📈</div>
-                <h3 class="font-bold text-lg text-on-surface mb-1">Cutoff Explorer</h3>
-                <p class="text-sm text-on-surface-variant">Browse 2025–26 cutoffs by state, course, and category. Know if your score qualifies.</p>
-                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
-                    Explore cutoffs <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+            <a href="tools/cutoff-explorer.html" class="tool-card reveal reveal-delay-2 group">
+                <div class="tool-ico" style="background:#f0fdf4;">📈</div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Cutoff Explorer</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Browse 2025–26 cutoffs by state, course, and category. Know if your score qualifies.</p>
+                <div class="flex items-center gap-1.5 text-brand text-sm font-semibold">
+                    Explore cutoffs <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
-            <a href="tools/documents-checklist.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
-                <div class="text-4xl mb-3">📋</div>
-                <h3 class="font-bold text-lg text-on-surface mb-1">Documents Checklist</h3>
-                <p class="text-sm text-on-surface-variant">Know exactly which documents you need for each counselling process — before it's urgent.</p>
-                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
-                    View checklist <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+            <a href="tools/documents-checklist.html" class="tool-card reveal reveal-delay-1 group">
+                <div class="tool-ico" style="background:#fff7ed;">📋</div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Documents Checklist</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Know exactly which documents you need for each counselling process — before it's urgent.</p>
+                <div class="flex items-center gap-1.5 text-brand text-sm font-semibold">
+                    View checklist <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
-            <a href="tools/events.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
-                <div class="text-4xl mb-3">🎓</div>
-                <h3 class="font-bold text-lg text-on-surface mb-1">Events & Seminars</h3>
-                <p class="text-sm text-on-surface-variant">Join our free NEET counselling seminars across Maharashtra. In-person and online.</p>
-                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
-                    See events <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+            <a href="tools/events.html" class="tool-card reveal reveal-delay-2 group">
+                <div class="tool-ico" style="background:#faf5ff;">🎓</div>
+                <h3 class="font-display text-xl font-bold text-dark mb-2" style="letter-spacing:-0.02em;">Events &amp; Seminars</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-4">Join free NEET counselling seminars across Maharashtra — in-person and online.</p>
+                <div class="flex items-center gap-1.5 text-brand text-sm font-semibold">
+                    See events <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
-            <!-- Book CTA card -->
-            <a href="inquiry.html" class="tool-card block rounded-2xl p-6" style="background:linear-gradient(135deg,#7b41b3,#5a2d8a);">
-                <div class="text-4xl mb-3">🤝</div>
-                <h3 class="font-bold text-lg text-white mb-1">Talk to a Counsellor</h3>
-                <p class="text-sm text-white/75">Still confused? Book a free one-on-one session. We'll explain everything in your language.</p>
-                <div class="mt-3 font-bold text-sm flex items-center gap-1" style="color:#ffd700;">
-                    Book free session <span class="material-symbols-outlined text-base">arrow_forward</span>
+
+            <!-- CTA card -->
+            <a href="inquiry.html" class="tool-card reveal reveal-delay-3 group" style="background:#09090f; border-color:rgba(255,255,255,0.06);">
+                <div class="tool-ico" style="background:rgba(255,255,255,0.05); font-size:1.5rem;">🤝</div>
+                <h3 class="font-display text-xl font-bold text-white mb-2" style="letter-spacing:-0.02em;">Talk to a Counsellor</h3>
+                <p class="text-sm leading-relaxed mb-4" style="color:rgba(255,255,255,0.45);">Still confused? Book a free one-on-one session. We'll explain everything in your language.</p>
+                <div class="flex items-center gap-1.5 text-sm font-semibold" style="color:#ffd700;">
+                    Book free session <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
                 </div>
             </a>
         </div>
     </div>
 </section>
 
-<!-- ── TESTIMONIALS ────────────────────────────────────────── -->
-<section class="py-16 px-4" style="background:linear-gradient(135deg,#ffd700 0%,#ffe866 100%);">
-    <div class="max-w-5xl mx-auto">
-        <div class="text-center mb-12">
-            <p class="text-on-primary-container text-sm font-bold uppercase tracking-widest mb-2">Student Stories</p>
-            <h2 class="text-3xl md:text-4xl font-black text-secondary mb-3">Voices of Success</h2>
-            <p class="text-on-surface-variant max-w-md mx-auto">Real students. Real colleges. Real results.</p>
+<!-- ── TESTIMONIALS ─────────────────────────────────────────────── -->
+<section class="py-20 md:py-28 px-6 bg-white">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-14 reveal">
+            <span class="section-label" style="display:inline-block;">Student Stories</span>
+            <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mt-2 mb-2" style="letter-spacing:-0.03em; line-height:1.06;">
+                Voices of success.
+            </h2>
+            <p class="text-gray-300 text-sm">Real students. Real colleges. Real results.</p>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <!-- Testimonial 1 -->
-            <div class="testimonial-card">
-                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle. His timely direction kept me stress-free throughout the process and helped me make confident decisions that eventually led me to KEM Mumbai."</p>
+            <div class="testi-card reveal">
+                <div class="testi-quote">"</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 pr-10">ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle. His timely direction kept me stress-free and helped me make confident decisions that eventually led me to KEM Mumbai.</p>
                 <div class="flex items-center gap-3">
-                    <div class="testimonial-avatar">HP</div>
+                    <div class="testi-av" style="background:#7b41b3; color:#fff;">HP</div>
                     <div>
-                        <div class="font-bold text-on-surface text-sm">Hazel Punmiya</div>
-                        <div class="text-secondary text-xs font-semibold">KEM, Mumbai</div>
+                        <div class="font-bold text-dark text-sm">Hazel Punmiya</div>
+                        <div class="text-xs font-semibold text-brand mt-0.5">KEM, Mumbai</div>
                     </div>
                 </div>
             </div>
-            <!-- Testimonial 2 -->
-            <div class="testimonial-card">
-                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused. His guidance made the entire journey feel manageable and helped me reach AIIMS Delhi with complete confidence."</p>
+
+            <div class="testi-card reveal reveal-delay-1">
+                <div class="testi-quote">"</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 pr-10">The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused. His guidance made the journey manageable and helped me reach AIIMS Delhi with complete confidence.</p>
                 <div class="flex items-center gap-3">
-                    <div class="testimonial-avatar">SG</div>
+                    <div class="testi-av" style="background:#2d6a4f; color:#fff;">SG</div>
                     <div>
-                        <div class="font-bold text-on-surface text-sm">Shrihaan Ghare</div>
-                        <div class="text-secondary text-xs font-semibold">AIIMS Delhi</div>
+                        <div class="font-bold text-dark text-sm">Shrihaan Ghare</div>
+                        <div class="text-xs font-semibold text-brand mt-0.5">AIIMS Delhi</div>
                     </div>
                 </div>
             </div>
-            <!-- Testimonial 3 -->
-            <div class="testimonial-card">
-                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"Comparing top colleges was challenging, but ASMI Career helped me understand the bigger picture. Anish Sir's insights on reputation, exposure, and opportunities showed why KMC Manipal stands out nationally. That clarity made my final decision smooth, helping me choose what was right."</p>
+
+            <div class="testi-card reveal reveal-delay-1">
+                <div class="testi-quote">"</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 pr-10">Comparing top colleges was challenging, but ASMI Career helped me understand the bigger picture. Anish Sir's insights on reputation, exposure, and opportunities showed why KMC Manipal stands out nationally. That clarity made my final decision smooth and confident.</p>
                 <div class="flex items-center gap-3">
-                    <div class="testimonial-avatar">DM</div>
+                    <div class="testi-av" style="background:#9b2226; color:#fff;">DM</div>
                     <div>
-                        <div class="font-bold text-on-surface text-sm">Dhruv Mundra</div>
-                        <div class="text-secondary text-xs font-semibold">KMC Manipal</div>
+                        <div class="font-bold text-dark text-sm">Dhruv Mundra</div>
+                        <div class="text-xs font-semibold text-brand mt-0.5">KMC Manipal</div>
                     </div>
                 </div>
             </div>
-            <!-- Testimonial 4 -->
-            <div class="testimonial-card">
-                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"With a strong score and several options, what I needed most was clarity. Anish Sir helped me evaluate every college carefully and explained why KJ Somaiya offered better long-term stability than the newer GMCs. That direction shaped my decision and gave me confidence in choosing KJ Somaiya."</p>
+
+            <div class="testi-card reveal reveal-delay-2">
+                <div class="testi-quote">"</div>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6 pr-10">With a strong score and several options, what I needed most was clarity. Anish Sir helped me evaluate every college carefully and explained why KJ Somaiya offered better long-term stability than the newer GMCs. That direction shaped my decision and gave me confidence.</p>
                 <div class="flex items-center gap-3">
-                    <div class="testimonial-avatar">IT</div>
+                    <div class="testi-av" style="background:#b5838d; color:#fff;">IT</div>
                     <div>
-                        <div class="font-bold text-on-surface text-sm">Isha Tilak</div>
-                        <div class="text-secondary text-xs font-semibold">KJ Somaiya, Mumbai</div>
+                        <div class="font-bold text-dark text-sm">Isha Tilak</div>
+                        <div class="text-xs font-semibold text-brand mt-0.5">KJ Somaiya, Mumbai</div>
                     </div>
                 </div>
             </div>
         </div>
-        <p class="text-center text-on-primary-container/60 text-xs mt-6">...and 25,000+ more families across Maharashtra</p>
+
+        <p class="text-center text-gray-200 text-xs mt-8 reveal">…and 25,000+ more families guided across Maharashtra and India</p>
     </div>
 </section>
 
-<!-- ── FINAL CTA ───────────────────────────────────────────── -->
-<section class="py-16 px-4" style="background:#7b41b3;">
-    <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-3xl md:text-4xl font-black text-white mb-3">Ready to secure your<br/>medical seat?</h2>
-        <p class="text-white/75 mb-8 text-lg">Book your free counselling session today. No pressure, no cost — just honest advice from people who know NEET inside out.</p>
-        <a href="inquiry.html" class="btn-gold text-lg px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-xl">
+<!-- ── BRANCHES ─────────────────────────────────────────────────── -->
+<section id="contact" class="py-20 md:py-28 px-6" style="background:#f6f5f9;">
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-12 reveal">
+            <span class="section-label">Our Branches</span>
+            <h2 class="font-display text-4xl md:text-5xl font-extrabold text-dark mt-2 mb-4" style="letter-spacing:-0.03em; line-height:1.06;">
+                Find us near you.
+            </h2>
+            <p class="text-gray-400 text-lg max-w-md">6 branches across Maharashtra. Walk in, call, or visit — we're here for you.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="branch-card reveal" style="border-top:3px solid #ffd700;">
+                <div class="mb-3">
+                    <span class="text-xs font-bold rounded-full px-2.5 py-1" style="background:rgba(255,215,0,0.15); color:#5a4400;">Head Office</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Mumbai – Andheri</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East</p>
+                <a href="tel:7410019077" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019077
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background:rgba(123,65,179,0.08);">
+                    <span class="material-symbols-outlined text-brand" style="font-size:16px;">location_on</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Thane</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">Shah Avenue, Gokhale Road, Naupada, Thane West</p>
+                <a href="tel:7410019075" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019075
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background:rgba(123,65,179,0.08);">
+                    <span class="material-symbols-outlined text-brand" style="font-size:16px;">location_on</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Pune</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">Business Guild Complex, Law College Road, Pune</p>
+                <a href="tel:7410013458" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410013458
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-1">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background:rgba(123,65,179,0.08);">
+                    <span class="material-symbols-outlined text-brand" style="font-size:16px;">location_on</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Kolhapur</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=kolhapur" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background:rgba(123,65,179,0.08);">
+                    <span class="material-symbols-outlined text-brand" style="font-size:16px;">location_on</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Sangli</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=sangli" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-3">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background:rgba(123,65,179,0.08);">
+                    <span class="material-symbols-outlined text-brand" style="font-size:16px;">location_on</span>
+                </div>
+                <h3 class="font-display text-lg font-bold text-dark mb-1" style="letter-spacing:-0.01em;">Ch. Sambhajinagar</h3>
+                <p class="text-sm text-gray-400 leading-relaxed mb-3">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=sambhajinagar" class="inline-flex items-center gap-2 text-brand text-sm font-semibold hover:underline">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+        </div>
+
+        <!-- Central helpline bar -->
+        <div class="mt-6 p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 reveal" style="background:#fff; border:1px solid rgba(0,0,0,0.06);">
+            <div>
+                <div class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Central Helpline</div>
+                <div class="font-display text-2xl font-extrabold text-dark" style="letter-spacing:-0.02em;">7410019074</div>
+                <div class="text-sm text-gray-300 mt-0.5">Available Mon–Sat, 9am–7pm</div>
+            </div>
+            <a href="tel:7410019074" class="btn-gold btn-gold-shine flex-shrink-0 inline-flex items-center gap-2">
+                <span class="material-symbols-outlined" style="font-size:20px;">phone</span>
+                Call Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FINAL CTA ────────────────────────────────────────────────── -->
+<section class="cta-section py-24 px-6">
+    <div class="max-w-3xl mx-auto text-center relative z-10 reveal">
+        <div class="inline-flex items-center gap-2 mb-7" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:100px; padding:0.375rem 1rem;">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold pulse-slow inline-block"></span>
+            <span class="text-xs font-semibold tracking-widest uppercase" style="color:rgba(255,255,255,0.5);">Free, no obligation</span>
+        </div>
+        <h2 class="font-display text-5xl sm:text-6xl font-extrabold text-white mb-6" style="letter-spacing:-0.03em; line-height:1.04;">
+            Ready to secure<br/>your medical seat?
+        </h2>
+        <p class="text-lg leading-relaxed mb-10 max-w-md mx-auto" style="color:rgba(255,255,255,0.45);">
+            Book your free counselling session today. Honest advice from people who know NEET inside out.
+        </p>
+        <a href="inquiry.html" class="btn-gold btn-gold-shine text-lg px-8 py-4 rounded-xl inline-flex items-center gap-2" style="box-shadow:0 8px 32px rgba(255,215,0,0.25);">
             Book Free Counselling
-            <span class="material-symbols-outlined">arrow_forward</span>
+            <span class="material-symbols-outlined" style="font-size:22px;">arrow_forward</span>
         </a>
-        <div class="mt-6 flex flex-wrap justify-center gap-4 text-white/60 text-sm">
-            <span>✓ Free, no obligation</span>
-            <span>✓ In-person or phone</span>
-            <span>✓ Any NEET score welcome</span>
+        <div class="mt-9 flex flex-wrap justify-center gap-2 text-xs font-medium" style="color:rgba(255,255,255,0.25);">
+            <span>Free, no obligation</span>
+            <span>·</span>
+            <span>In-person or phone</span>
+            <span>·</span>
+            <span>Any NEET score welcome</span>
+            <span>·</span>
+            <span>All 6 Maharashtra branches</span>
         </div>
     </div>
 </section>
 
-<!-- ── FOOTER ──────────────────────────────────────────────── -->
-<footer class="asmi-footer" id="contact">
+<!-- ── FOOTER ───────────────────────────────────────────────────── -->
+<footer class="asmi-footer">
     <div class="asmi-footer-inner">
         <div class="asmi-footer-grid">
             <div class="asmi-footer-brand">
                 <img src="asmi-logo.png" alt="ASMI Career"/>
-                <p>ASMI Career is Maharashtra's leading NEET medical admissions counselling company. 11+ years of experience, 25,000+ admissions, and a team that genuinely cares about your future.</p>
-                <div class="mt-4 text-sm" style="color:rgba(255,255,255,0.45);">
-                    <div>📞 Central Helpline: <a href="tel:7410019074" style="color:rgba(255,255,255,0.65);">7410019074</a></div>
-                    <div class="mt-1">🌐 asmicareer.in</div>
+                <p>Maharashtra's leading NEET medical admissions counselling company. 11+ years, 25,000+ admissions, and a team that genuinely cares about your future.</p>
+                <div class="mt-5 space-y-1" style="font-size:0.825rem; color:rgba(255,255,255,0.3);">
+                    <div>Central: <a href="tel:7410019074" style="color:rgba(255,255,255,0.5);">7410019074</a></div>
+                    <div>asmicareer.in</div>
                 </div>
             </div>
             <div>
@@ -488,18 +865,18 @@
                 <h4>Contact</h4>
                 <div class="asmi-footer-contact-item">
                     <strong>Andheri (Head Office)</strong>
-                    42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East
-                    <br/><a href="tel:7410019077" style="color:rgba(255,255,255,0.65);">7410019077</a>
+                    42, 4th Floor, Silver Astra, J.B. Nagar, Andheri East
+                    <br/><a href="tel:7410019077">7410019077</a>
                 </div>
                 <div class="asmi-footer-contact-item">
                     <strong>Thane</strong>
                     Shah Avenue, Gokhale Road, Naupada
-                    <br/><a href="tel:7410019075" style="color:rgba(255,255,255,0.65);">7410019075</a>
+                    <br/><a href="tel:7410019075">7410019075</a>
                 </div>
                 <div class="asmi-footer-contact-item">
                     <strong>Pune</strong>
                     Business Guild Complex, Law College Road
-                    <br/><a href="tel:7410013458" style="color:rgba(255,255,255,0.65);">7410013458</a>
+                    <br/><a href="tel:7410013458">7410013458</a>
                 </div>
             </div>
         </div>
@@ -511,24 +888,40 @@
 </footer>
 
 <script>
-    // Mobile hamburger toggle
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    hamburger.addEventListener('click', () => {
-        mobileMenu.classList.toggle('open');
+    // Navbar shadow on scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, { passive: true });
+
+    // Mobile menu toggle
+    document.getElementById('hamburger').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
     });
 
-    // Smooth scroll for anchor links
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {
-            const target = document.querySelector(a.getAttribute('href'));
-            if (target) {
+            const el = document.querySelector(a.getAttribute('href'));
+            if (el) {
                 e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                mobileMenu.classList.remove('open');
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.getElementById('mobileMenu').classList.remove('open');
             }
         });
     });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
