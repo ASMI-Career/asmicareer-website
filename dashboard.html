@@ -1103,14 +1103,16 @@ function renderSum5(opts) {
 async function fetchStudent(token) {
   try {
     const res = await fetch(APPS_URL + '?token=' + encodeURIComponent(token));
-    const d = await res.json();
+    const resp = await res.json();
+    // Apps Script returns { success: true, data: { name, score, ... } }
+    const d = resp.data || resp; // handle both nested and flat response
     if(d && d.name) {
       S.name = d.name;
       S.score = parseInt(d.score)||S.score;
       S.category = (d.category||'OPEN').toUpperCase().trim();
       S.courses = d.courses ? d.courses.split(',').map(x=>x.trim().toUpperCase()) : ['MBBS'];
       S.city = d.city||'';
-      S.branch = d.source||S.branch;
+      S.branch = d.branch||S.branch; // Apps Script returns 'branch', not 'source'
       S.token = token;
       S.isDemo = false;
       // Budget
