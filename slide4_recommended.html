@@ -241,7 +241,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
 const DB_URL  = 'ASMI_DB_Final.json';
 const FEE_URL = 'fee_map.json';
 
@@ -450,22 +450,30 @@ async function init(){
   const token  = params.get('token')||'';
 
   try{
-    const [dbRes, feeRes, studentRes] = await Promise.all([
+    // Load DB and fee data — these are required
+    const [dbRes, feeRes] = await Promise.all([
       fetch(DB_URL).then(r=>r.json()),
       fetch(FEE_URL).then(r=>r.json()),
-      token ? fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json())
-            : Promise.resolve({demo:true})
     ]);
-
     DB  = dbRes;
     FEE = feeRes;
-    STUDENT = studentRes.success ? studentRes.data : {score:520,category:'OBC',courses:'MBBS',name:'Student',token};
 
-    // Seed session if not set
+    // Try to fetch student data — fall back to session storage if it fails
+    if(token){
+      try{
+        const studentRes = await fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json());
+        if(studentRes.data) STUDENT = studentRes.data;
+        else if(!studentRes.error) STUDENT = studentRes;
+      }catch(e){
+        console.warn('Student fetch failed, using session data');
+      }
+    }
+
+    // Seed session from student data if session is empty
     const s=getSess();
-    if(!s.score)    { try{const ss=getSess();ss.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
-    if(!s.category) { try{const ss=getSess();ss.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
-    if(!s.course)   { try{const ss=getSess();ss.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    if(!s.score && STUDENT.score)       { try{const ss=getSess();ss.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    if(!s.category && STUDENT.category) { try{const ss=getSess();ss.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    if(!s.course && STUDENT.courses)    { try{const ss=getSess();ss.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
 
     // Next button
     document.getElementById('nextBtn').href =
