@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Career — Dashboard</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100vw;height:100vh;overflow:hidden;background:#1a0040;}
+  iframe{width:100vw;height:100vh;border:none;display:block;}
+</style>
+</head>
+<body>
+<iframe id="slideFrame" src="" allowfullscreen></iframe>
+<script>
+  const token = new URLSearchParams(location.search).get('token') || '';
+  // Starts at Slide 1 (Welcome). Slide 1's button will carry the token forward.
+  document.getElementById('slideFrame').src =
+    'slide1_welcome.html?token=' + encodeURIComponent(token);
+</script>
+</body>
+</html>
