@@ -213,6 +213,16 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   from{opacity:0;transform:translateY(20px);}
   to{opacity:1;transform:translateY(0);}
 }
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
 </style>
 </head>
 <body>
@@ -315,10 +325,15 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   </div>
 </div>
 
-<div class="slide-counter">SLIDE 1 OF 6</div>
+<nav class="slide-nav">
+  <span class="snav-btn dim">←</span>
+  <span class="snav-label">SLIDE 1 OF 6</span>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
   const token = new URLSearchParams(location.search).get('token') || '';
+  document.getElementById('navNext').href = 'slide2_profile.html?token=' + encodeURIComponent(token);
   document.getElementById('startBtn').href =
     'slide2_profile.html?token=' + encodeURIComponent(token);
 </script>

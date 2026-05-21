@@ -97,7 +97,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   width:100%;height:100%;
   display:flex;flex-direction:column;
   justify-content:center;align-items:stretch;
-  padding:28px 24px;cursor:pointer;
+  padding:28px 24px 64px;cursor:pointer;
   transition:background .25s;
 }
 .pane-default:hover{background:rgba(255,255,255,.12);}
@@ -236,6 +236,16 @@ table.ctable th:not(:first-child){text-align:center;}
 .slide-counter{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
 </style>
 </head>
 <body>
@@ -383,7 +393,11 @@ table.ctable th:not(:first-child){text-align:center;}
 
 </div><!-- /panes -->
 
-<div class="slide-counter">SLIDE 3 OF 6</div>
+<nav class="slide-nav" id="slideNav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <span class="snav-label">SLIDE 3 OF 6</span>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────
@@ -676,7 +690,7 @@ function expandOSState(stKey){
 
 // ── PANE EXPAND / COLLAPSE ───────────────────────────────────────
 function handlePaneClick(paneId){
-  if(currentPane) return; // already expanded — ignore click on slim strips
+  if(currentPane === paneId) return;
   expandPane(paneId);
 }
 
@@ -685,6 +699,7 @@ function expandPane(paneId){
   const container = document.getElementById('panesContainer');
   container.classList.add('has-expanded');
   document.getElementById('editBar').classList.add('visible');
+  document.getElementById('slideNav').style.display = 'none';
 
   ['mh','mcc','open'].forEach(id=>{
     const el = document.getElementById('pane-'+id);
@@ -717,6 +732,7 @@ function collapseAll(){
   const container = document.getElementById('panesContainer');
   container.classList.remove('has-expanded');
   document.getElementById('editBar').classList.remove('visible');
+  document.getElementById('slideNav').style.display = '';
   ['mh','mcc','open'].forEach(id=>{
     const el = document.getElementById('pane-'+id);
     el.classList.remove('pane-active','pane-collapsed');
@@ -779,6 +795,10 @@ async function init(){
     } else {
       STUDENT = {score:520, category:'General', courses:'MBBS', name:'Student', token:token};
     }
+
+    // Wire nav buttons
+    document.getElementById('navPrev').href = 'slide2_profile.html?token='+encodeURIComponent(token);
+    document.getElementById('navNext').href = 'slide4_recommended.html?token='+encodeURIComponent(token);
 
     // 3. Store token in session
     setSess('token', STUDENT.token||token);

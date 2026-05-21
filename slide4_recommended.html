@@ -86,7 +86,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .tb-backup{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
 
 /* ════ RIGHT PANEL ════ */
-.right{display:flex;flex-direction:column;padding:28px 32px 24px 28px;overflow:hidden;}
+.right{display:flex;flex-direction:column;padding:28px 32px 64px 28px;overflow:hidden;}
 
 .right-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;animation:fadeUp .5s .06s ease both;}
 .rh-title{font-family:'Montserrat';font-weight:900;font-size:1.05rem;color:var(--navy);}
@@ -159,6 +159,27 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
+
+@media print{
+  .slide-nav,.loading-overlay,.bg-deco,.bg-grid{display:none!important;}
+  html,body{width:auto;height:auto;overflow:visible;background:#fff;}
+  .page{display:block;height:auto;grid-template-columns:1fr;}
+  .left{padding:20px;border:none;}
+  .right{padding:20px;overflow:visible;}
+  .tiers-wrap{overflow:visible;height:auto;}
+  .rec-card{opacity:1!important;transform:none!important;page-break-inside:avoid;}
+  .bottom-nav{display:none;}
+}
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
 </style>
 </head>
 <body>
@@ -237,7 +258,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   </div>
 </div>
 
-<div class="slide-counter">SLIDE 4 OF 6</div>
+<nav class="slide-nav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <div class="snav-center">
+    <button class="snav-pdf" onclick="window.print()">⬇ PDF</button>
+    <span class="snav-label">SLIDE 4 OF 6</span>
+  </div>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────
@@ -474,6 +502,10 @@ async function init(){
     if(!s.score && STUDENT.score)       { try{const ss=getSess();ss.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
     if(!s.category && STUDENT.category) { try{const ss=getSess();ss.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
     if(!s.course && STUDENT.courses)    { try{const ss=getSess();ss.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+
+    // Wire nav buttons
+    document.getElementById('navPrev').href = 'slide3_options.html?token='+encodeURIComponent(token);
+    document.getElementById('navNext').href = 'slide5_problems.html?token='+encodeURIComponent(STUDENT.token||token);
 
     // Next button
     document.getElementById('nextBtn').href =

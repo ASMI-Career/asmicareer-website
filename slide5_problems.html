@@ -24,7 +24,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   background-size:52px 52px;}
 
 /* ── PAGE ── */
-.page{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;padding:20px 40px 16px;}
+.page{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;padding:20px 40px 64px;}
 
 /* ── TOP BAR ── */
 .top-bar{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;margin-bottom:14px;}
@@ -166,6 +166,16 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 @keyframes ctaPop{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
 @keyframes pulse{0%,100%{box-shadow:0 6px 24px rgba(255,215,0,.35);}50%{box-shadow:0 8px 32px rgba(255,215,0,.65);}}
 @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-4px);}40%,80%{transform:translateX(4px);}}
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
 </style>
 </head>
 <body>
@@ -339,9 +349,21 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 </div><!-- /page -->
 
-<div class="slide-counter">SLIDE 4 OF 6</div>
+<nav class="slide-nav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <span class="snav-label">SLIDE 5 OF 6</span>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
+// ── Nav wiring ──────────────────────────────────────────────────
+(function(){
+  const sess = (() => { try { return JSON.parse(sessionStorage.getItem('asmi') || '{}'); } catch(e) { return {}; } })();
+  const token = sess.token || new URLSearchParams(location.search).get('token') || '';
+  document.getElementById('navPrev').href = 'slide4_recommended.html?token=' + encodeURIComponent(token);
+  document.getElementById('navNext').href = 'slide6_register.html?token=' + encodeURIComponent(token);
+})();
+
 // ── Animate rows in on load ─────────────────────────────────────
 function animateRows(){
   const rows = document.querySelectorAll('.row');
