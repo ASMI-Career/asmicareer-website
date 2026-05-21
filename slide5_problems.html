@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI — Why You Need Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFD700;--navy:#1a0040;--purple:#6a0dad;--mid:#2D0A5E;--soft:#4a0080;
+  --red:#b91c1c;--red-bg:rgba(185,28,28,.08);--red-border:rgba(185,28,28,.22);
+  --green:#15803d;--green-bg:rgba(21,128,61,.10);--green-border:rgba(21,128,61,.25);
+  --card:rgba(255,255,255,.58);--cb:rgba(106,13,173,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
+
+/* BG */
+.bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 92% 8%,rgba(106,13,173,.14) 0%,transparent 40%),
+             radial-gradient(circle at 8% 90%,rgba(45,10,94,.09) 0%,transparent 35%);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(26,0,64,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,0,64,.05) 1px,transparent 1px);
+  background-size:52px 52px;}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;padding:20px 40px 16px;}
+
+/* ── TOP BAR ── */
+.top-bar{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;margin-bottom:14px;}
+.logo-wrap img{height:46px;width:auto;object-fit:contain;filter:drop-shadow(0 3px 10px rgba(26,0,64,.16));}
+.step-label{font-family:'Montserrat';font-size:.65rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);}
+
+/* ── HEADLINE STRIP ── */
+.headline-strip{
+  flex-shrink:0;
+  background:linear-gradient(135deg,var(--navy),var(--mid));
+  border-radius:16px;padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  animation:fadeDown .5s ease both;
+}
+.hs-left{}
+.hs-eyebrow{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,215,0,.6);margin-bottom:5px;}
+.hs-headline{font-family:'Montserrat';font-weight:900;font-size:1.55rem;color:#fff;line-height:1.15;}
+.hs-headline em{color:#FFD700;font-style:normal;}
+.hs-stats{display:flex;gap:24px;}
+.hs-stat{text-align:center;}
+.hs-stat-num{font-family:'Montserrat';font-weight:900;font-size:1.6rem;color:#FFD700;line-height:1;}
+.hs-stat-lbl{font-size:.62rem;color:rgba(255,255,255,.5);font-weight:600;margin-top:2px;letter-spacing:.5px;}
+.hs-divider{width:1px;height:36px;background:rgba(255,255,255,.12);align-self:center;}
+
+/* ── COLUMN HEADERS ── */
+.col-headers{
+  display:grid;grid-template-columns:1fr 40px 1fr;gap:0;
+  flex-shrink:0;margin-bottom:8px;
+  animation:fadeDown .5s .1s ease both;
+}
+.ch-left{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(185,28,28,.12);border:1px solid var(--red-border);border-radius:10px 0 0 10px;}
+.ch-right{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(21,128,61,.12);border:1px solid var(--green-border);border-radius:0 10px 10px 0;justify-content:flex-end;}
+.ch-mid{display:flex;align-items:center;justify-content:center;background:rgba(26,0,64,.06);border-top:1px solid rgba(26,0,64,.08);border-bottom:1px solid rgba(26,0,64,.08);}
+.ch-label{font-family:'Montserrat';font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.ch-label.red{color:var(--red);}
+.ch-label.green{color:var(--green);}
+.ch-icon{font-size:1.1rem;}
+
+/* ── ROWS CONTAINER ── */
+.rows{display:flex;flex-direction:column;gap:7px;flex:1;min-height:0;}
+
+/* ── SINGLE ROW (problem + solution) ── */
+.row{
+  display:grid;grid-template-columns:1fr 40px 1fr;gap:0;
+  animation:none;opacity:0;
+}
+/* Problem side */
+.prob-card{
+  background:var(--red-bg);border:1px solid var(--red-border);
+  border-radius:12px 0 0 12px;padding:10px 14px;
+  display:flex;align-items:flex-start;gap:10px;
+  transform:translateX(-30px);
+}
+/* VS divider */
+.vs{
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.4);border-top:1px solid rgba(26,0,64,.06);border-bottom:1px solid rgba(26,0,64,.06);
+}
+.vs-inner{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:#FFD700;
+  font-family:'Montserrat';font-size:.52rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  letter-spacing:.5px;
+}
+/* Solution side */
+.sol-card{
+  background:var(--green-bg);border:1px solid var(--green-border);
+  border-radius:0 12px 12px 0;padding:10px 14px;
+  display:flex;align-items:flex-start;gap:10px;
+  transform:translateX(30px);
+}
+
+.card-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px;}
+.card-content{}
+.card-title{font-family:'Montserrat';font-weight:800;font-size:.8rem;margin-bottom:3px;}
+.prob-card .card-title{color:var(--red);}
+.sol-card  .card-title{color:var(--green);}
+.card-body{font-size:.72rem;color:var(--mid);line-height:1.45;}
+.cost-pill{
+  display:inline-block;margin-top:5px;
+  font-family:'Montserrat';font-size:.6rem;font-weight:800;
+  padding:2px 10px;border-radius:20px;letter-spacing:.3px;
+}
+.cost-pill.red{background:rgba(185,28,28,.15);color:var(--red);border:1px solid var(--red-border);}
+.cost-pill.green{background:rgba(21,128,61,.15);color:var(--green);border:1px solid var(--green-border);}
+
+/* ── ROW ANIMATIONS ── */
+/* Each row fades + slides in after stagger */
+.row.animate{animation:rowIn .5s ease forwards;}
+.prob-card{transition:transform .45s ease, opacity .45s ease;}
+.sol-card{transition:transform .45s ease, opacity .45s ease;}
+
+@keyframes rowIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* Rows animate in sequence */
+.row:nth-child(1){animation-delay:.15s;}
+.row:nth-child(2){animation-delay:.35s;}
+.row:nth-child(3){animation-delay:.55s;}
+.row:nth-child(4){animation-delay:.75s;}
+.row:nth-child(5){animation-delay:.95s;}
+
+/* Cards slide when row is visible */
+.row.visible .prob-card{transform:translateX(0);}
+.row.visible .sol-card{transform:translateX(0);}
+
+/* ── CTA STRIP ── */
+.cta-strip{
+  flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--navy));
+  border-radius:16px;padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;
+  opacity:0;
+  animation:ctaPop .6s 1.3s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.cs-text{}
+.cs-title{font-family:'Montserrat';font-weight:900;font-size:1.05rem;color:#fff;margin-bottom:3px;}
+.cs-sub{font-size:.75rem;color:rgba(255,255,255,.55);}
+.cs-btn{
+  background:#FFD700;color:var(--navy);font-family:'Montserrat';font-weight:900;
+  font-size:.85rem;padding:11px 28px;border-radius:50px;border:none;cursor:pointer;
+  letter-spacing:.5px;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(255,215,0,.35);
+  animation:pulse 2s 2s ease-in-out infinite;
+  transition:.2s;
+}
+.cs-btn:hover{transform:scale(1.05);}
+
+/* ── SLIDE COUNTER ── */
+.slide-counter{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes ctaPop{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
+@keyframes pulse{0%,100%{box-shadow:0 6px 24px rgba(255,215,0,.35);}50%{box-shadow:0 8px 32px rgba(255,215,0,.65);}}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-4px);}40%,80%{transform:translateX(4px);}}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<div class="page">
+
+  <!-- ── TOP BAR ── -->
+  <div class="top-bar">
+    <div class="logo-wrap"><img src="asmi-logo.png" alt="ASMI Career"></div>
+    <div class="step-label">Step 4 of 6 — Why This Matters</div>
+  </div>
+
+  <!-- ── HEADLINE ── -->
+  <div class="headline-strip">
+    <div class="hs-left">
+      <div class="hs-eyebrow">The Hard Truth</div>
+      <div class="hs-headline">Most students lose seats they <em>already qualified for.</em><br>Not because of score. Because of avoidable mistakes.</div>
+    </div>
+    <div class="hs-stats">
+      <div class="hs-stat">
+        <div class="hs-stat-num">60%</div>
+        <div class="hs-stat-lbl">Wrong college order</div>
+      </div>
+      <div class="hs-divider"></div>
+      <div class="hs-stat">
+        <div class="hs-stat-num">₹50K+</div>
+        <div class="hs-stat-lbl">Avg deposit lost</div>
+      </div>
+      <div class="hs-divider"></div>
+      <div class="hs-stat">
+        <div class="hs-stat-num">1 Year</div>
+        <div class="hs-stat-lbl">Gone if you miss</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── COLUMN HEADERS ── -->
+  <div class="col-headers">
+    <div class="ch-left">
+      <span class="ch-icon">⚠️</span>
+      <span class="ch-label red">Without ASMI — What Goes Wrong</span>
+    </div>
+    <div class="ch-mid"></div>
+    <div class="ch-right">
+      <span class="ch-label green">With ASMI — How We Fix It</span>
+      <span class="ch-icon">✅</span>
+    </div>
+  </div>
+
+  <!-- ── PROBLEM / SOLUTION ROWS ── -->
+  <div class="rows" id="rows">
+
+    <!-- Row 1 -->
+    <div class="row" data-index="0">
+      <div class="prob-card">
+        <span class="card-icon">🎯</span>
+        <div class="card-content">
+          <div class="card-title">Wrong preference list order</div>
+          <div class="card-body">Students rank colleges randomly. One wrong position and a better seat is permanently gone — given to the next person in queue.</div>
+          <span class="cost-pill red">⏱ 1-year gap guaranteed</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">📋</span>
+        <div class="card-content">
+          <div class="card-title">Expert preference list — built for you</div>
+          <div class="card-body">ASMI builds your college priority list using 2025-26 actual cutoffs, projected adjustments, and your category — college by college.</div>
+          <span class="cost-pill green">✓ Maximum seats locked in</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row" data-index="1">
+      <div class="prob-card">
+        <span class="card-icon">📅</span>
+        <div class="card-content">
+          <div class="card-title">Missing round deadlines</div>
+          <div class="card-body">MCC runs R1, R2, Stray, Special Stray. Missing even one round means you lose your deposit and forfeit your seat permanently.</div>
+          <span class="cost-pill red">💸 ₹50,000 deposit forfeited</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">🔔</span>
+        <div class="card-content">
+          <div class="card-title">Real-time alerts — every single round</div>
+          <div class="card-body">WhatsApp alerts for every counselling round, reporting date, and last-chance window. You will never miss a deadline on our watch.</div>
+          <span class="cost-pill green">✓ Zero missed deadlines</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row" data-index="2">
+      <div class="prob-card">
+        <span class="card-icon">🏷️</span>
+        <div class="card-content">
+          <div class="card-title">Category confusion — seats left on the table</div>
+          <div class="card-body">OBC/SC/ST students are eligible under both their quota AND open quota. Most students only apply one way — and miss 30% of their options.</div>
+          <span class="cost-pill red">🚨 Govt seats missed silently</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">🔍</span>
+        <div class="card-content">
+          <div class="card-title">Full category analysis — every pool covered</div>
+          <div class="card-body">We check your eligibility across MH quota, AIQ, open states, and deemed — under both your category and open quota simultaneously.</div>
+          <span class="cost-pill green">✓ Every eligible seat identified</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4 -->
+    <div class="row" data-index="3">
+      <div class="prob-card">
+        <span class="card-icon">📄</span>
+        <div class="card-content">
+          <div class="card-title">Document mismatch at reporting</div>
+          <div class="card-body">One wrong document — wrong format, missing attestation, expired certificate — and your admission is cancelled on Day 1 at the college.</div>
+          <span class="cost-pill red">❌ Admission cancelled on Day 1</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">✅</span>
+        <div class="card-content">
+          <div class="card-title">Document verification before every date</div>
+          <div class="card-body">ASMI runs a complete document checklist before every reporting date. We catch errors before the college does — every single time.</div>
+          <span class="cost-pill green">✓ Walk in confident, fully prepared</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 5 -->
+    <div class="row" data-index="4">
+      <div class="prob-card">
+        <span class="card-icon">💺</span>
+        <div class="card-content">
+          <div class="card-title">Not knowing the Stray & Special Stray rounds</div>
+          <div class="card-body">Thousands of government seats are filled in Stray and Special Stray rounds. Students who don't know these rounds exist simply don't participate.</div>
+          <span class="cost-pill red">🏛 Govt seat taken by someone else</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">🏆</span>
+        <div class="card-content">
+          <div class="card-title">Round-by-round handholding — till the end</div>
+          <div class="card-body">R1 → R2 → Stray → Special Stray. ASMI stays with you through every round until you have a confirmed seat. We don't stop until you're in.</div>
+          <span class="cost-pill green">✓ Last round = best chance utilised</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /rows -->
+
+  <!-- ── CTA STRIP ── -->
+  <div class="cta-strip">
+    <div class="cs-text">
+      <div class="cs-title">Your score got you here. Don't let strategy lose it for you.</div>
+      <div class="cs-sub">Register with ASMI today — and make sure every seat you qualify for is yours.</div>
+    </div>
+    <button class="cs-btn" onclick="goNext()">Register with ASMI →</button>
+  </div>
+
+</div><!-- /page -->
+
+<div class="slide-counter">SLIDE 4 OF 6</div>
+
+<script>
+// ── Animate rows in on load ─────────────────────────────────────
+function animateRows(){
+  const rows = document.querySelectorAll('.row');
+  rows.forEach((row, i) => {
+    setTimeout(() => {
+      row.classList.add('animate');
+      // Small delay then slide cards in
+      setTimeout(() => row.classList.add('visible'), 60);
+    }, 150 + i * 200);
+  });
+}
+
+// ── Hover: shake problem card for extra impact ──────────────────
+document.querySelectorAll('.prob-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    card.style.animation = 'shake .4s ease';
+    card.addEventListener('animationend', () => { card.style.animation = ''; }, {once:true});
+  });
+});
+
+// ── Next slide navigation ───────────────────────────────────────
+function goNext(){
+  try {
+    const sess = JSON.parse(sessionStorage.getItem('asmi') || '{}');
+    const token = sess.token || new URLSearchParams(location.search).get('token') || '';
+    window.location.href = 'slide6_register.html?token=' + encodeURIComponent(token);
+  } catch(e) {
+    window.location.href = 'slide6_register.html';
+  }
+}
+
+// Start animations after fonts load
+document.fonts.ready.then(animateRows);
+</script>
+
+</body>
+</html>

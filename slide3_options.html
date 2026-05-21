@@ -258,7 +258,7 @@ table.ctable th:not(:first-child){text-align:center;}
 
 <!-- ── EDIT BAR (fixed top) ── -->
 <div class="edit-bar" id="editBar">
-  <img src="ASMI Logo.png" alt="ASMI" class="eb-logo">
+  <img src="asmi-logo.png" alt="ASMI" class="eb-logo">
   <div class="eb-divider-v"></div>
   <button class="eb-back" onclick="collapseAll()">← Back</button>
   <div class="eb-divider-v"></div>
@@ -709,7 +709,7 @@ function expandPane(paneId){
 
   // Next button URL
   const token = (getSess().token || new URLSearchParams(location.search).get('token') || '');
-  document.getElementById('nextBtn').href = 'slide4_summary.html?token='+encodeURIComponent(token);
+  document.getElementById('nextBtn').href = 'slide4_recommended.html?token='+encodeURIComponent(token);
 }
 
 function collapseAll(){
