@@ -249,19 +249,25 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="rb-text">4.9 Google Rating</div>
         <div class="rb-g">ASMI Youth Career Advisor LLP</div>
       </div>
-    </div>
-<button class="cta-btn" id="startBtn" style="...">
-  Start your ASMI journey →
-</button>
-<script>
-  const token = new URLSearchParams(location.search).get('token') || '';
-  document.getElementById('startBtn').onclick = function() {
-    window.location.href = 'slide2_profile.html?token=' + encodeURIComponent(token);
-  };
-</script>
+    </div> <!-- closes .rating-badge -->
+
+    <a id="startBtn" href="#" style="
+      display:inline-flex;align-items:center;gap:10px;
+      margin-top:24px;
+      background:linear-gradient(135deg,#1a0040,#6a0dad);
+      color:#FFD700;
+      font-family:'Montserrat',sans-serif;font-weight:800;font-size:.9rem;
+      padding:14px 38px;border:none;border-radius:50px;cursor:pointer;
+      letter-spacing:.5px;
+      box-shadow:0 8px 28px rgba(26,0,64,.30);
+      text-decoration:none;
+      transition:transform .2s,box-shadow .2s;
+    " onmouseover="this.style.transform='scale(1.04)'"
+       onmouseout="this.style.transform='scale(1)'">
+      Start your ASMI journey →
+    </a>
 
   </div>
-
   <!-- ══ RIGHT ══ -->
   <div class="right">
 
@@ -310,6 +316,12 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 </div>
 
 <div class="slide-counter">SLIDE 1 OF 6</div>
+
+<script>
+  const token = new URLSearchParams(location.search).get('token') || '';
+  document.getElementById('startBtn').href =
+    'slide2_profile.html?token=' + encodeURIComponent(token);
+</script>
 
 </body>
 </html>
