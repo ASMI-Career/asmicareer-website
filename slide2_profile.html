@@ -302,14 +302,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <span class="pc-key">Category</span>
         <div><span class="cat-badge" id="categoryVal">—</span></div>
       </div>
-      <div class="pc-row">
-        <span class="pc-key">Coaching</span>
-        <span class="pc-val" id="coachingVal">—</span>
-      </div>
-      <div class="pc-row">
-        <span class="pc-key">Max Budget</span>
-        <span class="pc-val" id="maxBudgetVal">—</span>
-      </div>
+
       <div class="pc-row top-align">
         <span class="pc-key top">Selected Courses</span>
         <div class="pills-wrap" id="coursePills"></div>
@@ -362,17 +355,8 @@ function populate(data) {
   document.getElementById('welcomeName').textContent = data.name ? 'Welcome, ' + data.name : 'Welcome';
   document.getElementById('scoreVal').textContent    = data.score    || '—';
   document.getElementById('categoryVal').textContent = data.category || '—';
-  document.getElementById('coachingVal').textContent = data.coaching || '—';
-
-  // Max budget — highest bucket selected
+  // Budget pills (for pills section below)
   const budgetList = (data.budget || '').split(',').map(b => b.trim()).filter(Boolean);
-  let maxLabel = '—';
-  for (const key of Object.keys(BUDGET_MAX)) {
-    if (budgetList.some(b => b.includes(key.split(' ')[0]))) {
-      maxLabel = BUDGET_MAX[key]; break;
-    }
-  }
-  document.getElementById('maxBudgetVal').textContent = maxLabel;
 
   // Course pills
   const cpWrap = document.getElementById('coursePills');
