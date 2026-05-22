@@ -175,6 +175,66 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding-bottom: 60px;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .page {
+    height: auto !important;
+    padding-bottom: 60px;
+  }
+  .left {
+    padding: 24px 20px 16px;
+    order: 1;
+  }
+  .right {
+    padding: 16px 20px 20px;
+    order: 2;
+  }
+  .logo-wrap img { height: 44px; }
+  .rec-heading { font-size: 1.2rem; }
+  .counsellor-note { flex: none; }
+  .legend { display: none; }
+  .table-outer {
+    overflow-x: auto;
+    flex: none;
+    max-height: 55vh;
+  }
+  table.stable { min-width: 580px; }
+  table.stable thead th { font-size: .54rem; padding: 7px 8px; }
+  table.stable td { font-size: .66rem; padding: 6px 8px; }
+  .cutoff-proj { font-size: .65rem; padding: 2px 7px; }
+  .right-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .rh-actions { width: 100%; justify-content: space-between; }
+  .bottom-nav { flex-direction: column; gap: 10px; align-items: stretch; }
+  .bn-btn { text-align: center; }
+  .bn-note { display: none; }
+}
 </style>
 </head>
 <body>

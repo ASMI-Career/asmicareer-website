@@ -227,6 +227,65 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .snav-center{display:flex;align-items:center;gap:12px;}
 .snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
 .snav-pdf:hover{background:rgba(255,215,0,0.22);}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .page {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+  .col-packages {
+    padding: 24px 20px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(26,0,64,.10);
+    order: 1;
+  }
+  .col-services {
+    padding: 16px 20px;
+    order: 2;
+    border-right: none;
+    border-bottom: 1px solid rgba(26,0,64,.10);
+  }
+  .col-payment {
+    padding: 16px 20px 24px;
+    order: 3;
+  }
+  .urgency-banner { flex-direction: column; gap: 8px; text-align: center; }
+  .ub-left { flex-direction: column; align-items: center; }
+  .pkg-card { padding: 16px; }
+  .price-now-val { font-size: 1.6rem; }
+  .qr-row { grid-template-columns: 1fr 1fr; }
+  .qr-img { width: 90px; height: 90px; }
+  .pay-rows { gap: 4px; }
+  .service-list { max-height: none; overflow: visible; }
+  .tnc-list li { font-size: .65rem; }
+  .gst-note { margin-bottom: 60px; }
+}
 </style>
 </head>
 <body>

@@ -178,6 +178,77 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .snav-center{display:flex;align-items:center;gap:12px;}
 .snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
 .snav-pdf:hover{background:rgba(255,215,0,0.22);}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .page {
+    height: auto !important;
+    min-height: 100vh;
+    padding: 12px 16px 8px;
+    gap: 6px;
+    overflow-y: auto;
+  }
+  .headline-strip {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .hs-headline { font-size: .9rem; }
+  .hs-stats { justify-content: space-around; width: 100%; }
+  .hs-stat-num { font-size: 1rem; }
+  .hs-divider { display: none; }
+  .col-headers { display: none; }
+  .rows { gap: 8px; overflow: visible; flex: none; }
+  .row {
+    grid-template-columns: 1fr !important;
+    gap: 4px;
+  }
+  .vs { display: none; }
+  .prob-card {
+    border-radius: 10px !important;
+    transform: none !important;
+    margin-bottom: 0;
+  }
+  .sol-card {
+    border-radius: 10px !important;
+    transform: none !important;
+    border-left: 3px solid var(--green-border);
+  }
+  .card-title { font-size: .76rem; }
+  .card-body { font-size: .68rem; }
+  .cta-strip {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    margin-top: 8px;
+  }
+  .cs-btn { width: 100%; }
+}
 </style>
 </head>
 <body>
