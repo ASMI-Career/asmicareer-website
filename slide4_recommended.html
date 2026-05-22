@@ -5,18 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ASMI — Your Recommended Path</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   --bg:#FFD700;--navy:#1a0040;--purple:#6a0dad;--mid:#2D0A5E;--soft:#4a0080;
   --card:rgba(255,255,255,.58);--cb:rgba(106,13,173,.18);
   --safe:#15803d;--safe-bg:rgba(21,128,61,.10);--safe-border:rgba(21,128,61,.25);
   --likely:#0369a1;--likely-bg:rgba(56,189,248,.11);--likely-border:rgba(56,189,248,.24);
-  --border-col:rgba(106,13,173,.10);--borderline:#b45309;--borderline-bg:rgba(251,146,60,.10);--borderline-border:rgba(251,146,60,.24);
+  --borderline:#b45309;--borderline-bg:rgba(251,146,60,.10);--borderline-border:rgba(251,146,60,.24);
   --reach:#b91c1c;--reach-bg:rgba(185,28,28,.08);--reach-border:rgba(185,28,28,.2);
+  --border-col:rgba(106,13,173,.10);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
-
 .bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(circle at 92% 8%,rgba(106,13,173,.14) 0%,transparent 40%),
              radial-gradient(circle at 8% 90%,rgba(45,10,94,.09) 0%,transparent 35%);}
@@ -25,505 +27,568 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   background-size:52px 52px;}
 
 /* ── LAYOUT ── */
-.page{position:relative;z-index:1;width:100%;height:100%;display:grid;grid-template-columns:300px 1fr;}
+.page{position:relative;z-index:1;width:100%;height:calc(100vh - 44px);display:grid;grid-template-columns:280px 1fr;}
 
-/* ════ LEFT PANEL ════ */
-.left{
-  display:flex;flex-direction:column;
-  padding:28px 24px 28px 32px;
-  border-right:1px solid rgba(26,0,64,.10);
-  background:rgba(255,255,255,.12);
-}
+/* ── LEFT PANEL ── */
+.left{display:flex;flex-direction:column;padding:24px 20px 24px 28px;
+  border-right:1px solid rgba(26,0,64,.10);background:rgba(255,255,255,.12);}
 
-.logo-wrap{margin-bottom:24px;animation:fadeUp .5s ease both;}
-.logo-wrap img{height:48px;width:auto;object-fit:contain;filter:drop-shadow(0 3px 10px rgba(26,0,64,.14));}
+.logo-wrap{margin-bottom:18px;animation:fadeUp .5s ease both;}
+.logo-wrap img{height:44px;width:auto;object-fit:contain;mix-blend-mode:multiply;
+  filter:drop-shadow(0 2px 8px rgba(26,0,64,.14));}
 
-.step-label{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;animation:fadeUp .5s .05s ease both;}
+.step-label{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:3.5px;
+  text-transform:uppercase;color:var(--purple);margin-bottom:8px;animation:fadeUp .5s .05s ease both;}
 
-.rec-heading{font-family:'Montserrat';font-weight:900;font-size:1.55rem;line-height:1.1;color:var(--navy);margin-bottom:6px;animation:fadeUp .5s .1s ease both;}
+.rec-heading{font-family:'Montserrat';font-weight:900;font-size:1.4rem;line-height:1.1;
+  color:var(--navy);margin-bottom:5px;animation:fadeUp .5s .1s ease both;}
 .rec-heading em{color:var(--purple);font-style:normal;}
 
-.rec-sub{font-size:.78rem;color:var(--mid);line-height:1.6;margin-bottom:20px;animation:fadeUp .5s .14s ease both;}
+.rec-sub{font-size:.74rem;color:var(--mid);line-height:1.6;margin-bottom:14px;animation:fadeUp .5s .14s ease both;}
 
-/* Profile summary card */
-.profile-card{
-  background:linear-gradient(145deg,var(--navy),var(--mid));
-  border-radius:14px;padding:16px 18px;margin-bottom:16px;
-  animation:fadeUp .5s .18s ease both;
-}
-.pc-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,215,0,.6);margin-bottom:10px;}
-.pc-rows{}
-.pc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+/* Profile card */
+.profile-card{background:linear-gradient(145deg,var(--navy),var(--mid));
+  border-radius:12px;padding:13px 15px;margin-bottom:12px;animation:fadeUp .5s .18s ease both;}
+.pc-label{font-family:'Montserrat';font-size:.55rem;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:rgba(255,215,0,.6);margin-bottom:8px;}
+.pc-row{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;border-bottom:1px solid rgba(255,255,255,.07);}
 .pc-row:last-child{border-bottom:none;}
-.pc-key{font-size:.72rem;color:rgba(255,255,255,.5);}
-.pc-val{font-family:'Montserrat';font-weight:800;font-size:.82rem;color:#fff;}
-.pc-val.score{color:#FFD700;font-size:1.1rem;}
+.pc-key{font-size:.68rem;color:rgba(255,255,255,.5);}
+.pc-val{font-family:'Montserrat';font-weight:800;font-size:.78rem;color:#fff;}
+.pc-val.score{color:#FFD700;font-size:1.05rem;}
 
 /* Counsellor note */
-.counsellor-note{
-  background:var(--card);border:1px solid var(--cb);border-radius:12px;
-  padding:13px 15px;flex:1;margin-bottom:16px;
-  animation:fadeUp .5s .22s ease both;
-}
-.cn-icon{font-size:1.2rem;margin-bottom:7px;}
-.cn-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
-.cn-text{font-size:.76rem;color:var(--mid);line-height:1.6;font-style:italic;}
+.counsellor-note{background:var(--card);border:1px solid var(--cb);border-radius:12px;
+  padding:12px 14px;flex:1;margin-bottom:12px;animation:fadeUp .5s .22s ease both;}
+.cn-icon{font-size:1.1rem;margin-bottom:5px;}
+.cn-label{font-family:'Montserrat';font-size:.55rem;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--purple);margin-bottom:5px;}
+.cn-text{font-size:.72rem;color:var(--mid);line-height:1.6;font-style:italic;}
 
 /* Legend */
-.legend{display:flex;flex-direction:column;gap:5px;animation:fadeUp .5s .26s ease both;}
-.legend-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:4px;}
-.legend-item{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mid);}
-.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.legend{display:flex;flex-direction:column;gap:4px;animation:fadeUp .5s .26s ease both;}
+.legend-label{font-family:'Montserrat';font-size:.55rem;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--soft);margin-bottom:3px;}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:.67rem;color:var(--mid);}
+.ld{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
 
-/* Tier badges on left */
-.tier-badge{
-  display:inline-block;font-family:'Montserrat';font-size:.6rem;font-weight:800;
-  padding:2px 9px;border-radius:6px;letter-spacing:.5px;
+/* ── RIGHT PANEL ── */
+.right{display:flex;flex-direction:column;padding:20px 24px 16px 20px;overflow:hidden;}
+
+.right-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;animation:fadeUp .5s .06s ease both;}
+.rh-left{}
+.rh-title{font-family:'Montserrat';font-weight:900;font-size:.95rem;color:var(--navy);}
+.rh-sub{font-size:.68rem;color:var(--soft);margin-top:2px;}
+.rh-actions{display:flex;align-items:center;gap:8px;}
+.rh-badge{background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+  font-family:'Montserrat';font-size:.62rem;font-weight:800;padding:5px 13px;
+  border-radius:20px;letter-spacing:.5px;white-space:nowrap;}
+.pdf-btn{background:rgba(255,255,255,.55);border:1px solid var(--cb);color:var(--navy);
+  font-family:'Montserrat';font-size:.62rem;font-weight:800;padding:5px 13px;
+  border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:.2s;white-space:nowrap;}
+.pdf-btn:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
+.pdf-btn.loading{opacity:.6;cursor:not-allowed;}
+
+/* ── SUMMARY TABLE ── */
+.table-outer{flex:1;min-height:0;overflow-y:auto;border-radius:14px;
+  border:1px solid var(--cb);background:rgba(255,255,255,.5);}
+.table-outer::-webkit-scrollbar{width:4px;}
+.table-outer::-webkit-scrollbar-thumb{background:rgba(106,13,173,.3);border-radius:10px;}
+
+table.stable{width:100%;border-collapse:collapse;}
+table.stable thead th{
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  color:#FFD700;font-family:'Montserrat';font-size:.6rem;font-weight:800;
+  letter-spacing:.8px;text-transform:uppercase;padding:10px 12px;
+  text-align:left;position:sticky;top:0;z-index:2;}
+table.stable thead th:not(:first-child):not(:nth-child(2)){text-align:center;}
+table.stable tbody tr:nth-child(odd){background:rgba(255,255,255,.58);}
+table.stable tbody tr:nth-child(even){background:rgba(255,255,255,.36);}
+table.stable tbody tr:hover{background:rgba(106,13,173,.06)!important;}
+table.stable td{padding:9px 12px;font-size:.74rem;color:var(--navy);
+  border-bottom:1px solid var(--border-col);}
+table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
+.pool-name{font-family:'Montserrat';font-weight:800;font-size:.78rem;}
+.course-tag{font-family:'Montserrat';font-size:.64rem;font-weight:700;color:var(--soft);}
+.options-val{font-family:'Montserrat';font-weight:900;font-size:.85rem;color:var(--purple);}
+.cutoff-raw{font-family:'Montserrat';font-weight:700;font-size:.8rem;color:var(--mid);}
+.cutoff-proj{
+  display:inline-block;font-family:'Montserrat';font-weight:900;font-size:.75rem;
+  padding:2px 10px;border-radius:20px;
+  background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+  letter-spacing:.3px;
 }
-.tb-bestbet{background:linear-gradient(135deg,#FFD700,#f59e0b);color:var(--navy);}
-.tb-strong{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
-.tb-consider{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
-.tb-backup{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
+.fee-val{font-family:'Montserrat';font-weight:700;font-size:.8rem;color:var(--mid);}
+.budget-val{font-family:'Montserrat';font-weight:900;font-size:.82rem;color:var(--navy);}
 
-/* ════ RIGHT PANEL ════ */
-.right{display:flex;flex-direction:column;padding:28px 32px 64px 28px;overflow:hidden;}
+/* Status badges */
+.status{display:inline-block;font-family:'Montserrat';font-size:.6rem;font-weight:800;
+  padding:3px 9px;border-radius:8px;letter-spacing:.3px;}
+.status-safe{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
+.status-likely{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
+.status-borderline{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
+.status-reach{background:var(--reach-bg);color:var(--reach);border:1px solid var(--reach-border);}
 
-.right-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;animation:fadeUp .5s .06s ease both;}
-.rh-title{font-family:'Montserrat';font-weight:900;font-size:1.05rem;color:var(--navy);}
-.rh-sub{font-size:.72rem;color:var(--soft);margin-top:2px;}
-.rh-badge{background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;font-family:'Montserrat';font-size:.65rem;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:.5px;white-space:nowrap;}
+/* Section row (group header) */
+.section-row td{background:rgba(106,13,173,.07)!important;
+  font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--purple);padding:6px 12px!important;}
 
-/* Tier sections */
-.tiers-wrap{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
-.tiers-wrap::-webkit-scrollbar{width:4px;}
-.tiers-wrap::-webkit-scrollbar-thumb{background:rgba(106,13,173,.25);border-radius:10px;}
-
-.tier-section{flex-shrink:0;}
-.tier-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.tier-icon{font-size:1rem;}
-.tier-title{font-family:'Montserrat';font-weight:800;font-size:.75rem;color:var(--navy);}
-.tier-count{font-size:.67rem;color:var(--soft);margin-left:auto;}
-
-/* College recommendation card */
-.rec-cards{display:flex;flex-direction:column;gap:6px;}
-.rec-card{
-  background:rgba(255,255,255,.62);border:1px solid var(--cb);
-  border-radius:11px;padding:10px 14px;
-  display:grid;grid-template-columns:1fr auto;gap:8px;
-  align-items:center;
-  opacity:0;transform:translateX(20px);
-  transition:background .2s,border-color .2s;
-}
-.rec-card:hover{background:rgba(255,255,255,.88);border-color:rgba(106,13,173,.3);}
-.rec-card.visible{opacity:1;transform:translateX(0);}
-
-.rc-left{}
-.rc-top{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
-.rc-name{font-family:'Montserrat';font-weight:800;font-size:.8rem;color:var(--navy);line-height:1.2;}
-.rc-pool{display:inline-block;font-family:'Montserrat';font-size:.57rem;font-weight:800;padding:2px 7px;border-radius:5px;background:rgba(106,13,173,.10);color:var(--purple);border:1px solid rgba(106,13,173,.18);white-space:nowrap;}
-.rc-note{font-size:.68rem;color:var(--soft);line-height:1.4;}
-
-.rc-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
-.rc-fee{font-family:'Montserrat';font-size:.72rem;font-weight:700;color:var(--mid);white-space:nowrap;}
-.prob{display:inline-block;font-family:'Montserrat';font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:7px;}
-.prob-safe{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
-.prob-likely{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
-.prob-borderline{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
-
-/* Best bet highlight */
-.tier-section.bestbet .rec-card{background:rgba(255,215,0,.22);border-color:rgba(245,158,11,.35);}
-.tier-section.bestbet .rec-card:hover{background:rgba(255,215,0,.38);}
-
-/* Empty state */
-.no-recs{padding:24px;text-align:center;font-size:.82rem;color:var(--soft);}
+/* No data */
+.no-data{padding:32px;text-align:center;font-size:.8rem;color:var(--soft);}
 
 /* Bottom nav */
-.bottom-nav{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;margin-top:12px;animation:fadeUp .5s .3s ease both;}
-.bn-note{font-size:.72rem;color:var(--soft);font-style:italic;}
-.bn-btn{
-  background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-  font-family:'Montserrat';font-weight:800;font-size:.82rem;
-  padding:10px 24px;border-radius:50px;border:none;cursor:pointer;
-  letter-spacing:.5px;box-shadow:0 6px 20px rgba(26,0,64,.25);transition:.2s;
-  text-decoration:none;
-}
+.bottom-nav{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;animation:fadeUp .5s .3s ease both;}
+.bn-note{font-size:.68rem;color:var(--soft);font-style:italic;}
+.bn-btn{background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+  font-family:'Montserrat';font-weight:800;font-size:.8rem;padding:10px 22px;
+  border-radius:50px;border:none;cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 6px 20px rgba(26,0,64,.22);transition:.2s;text-decoration:none;}
 .bn-btn:hover{transform:scale(1.04);}
 
-/* Loading */
-.loading-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:var(--bg);}
+/* Loading overlay */
+.loading-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;gap:14px;background:var(--bg);}
 .loading-overlay.hidden{display:none;}
-.spinner{width:38px;height:38px;border:4px solid rgba(106,13,173,.15);border-top:4px solid var(--purple);border-radius:50%;animation:spin .9s linear infinite;}
-.ov-text{font-family:'Montserrat';font-size:.78rem;font-weight:700;color:var(--soft);letter-spacing:1px;}
+.spinner{width:36px;height:36px;border:4px solid rgba(106,13,173,.15);
+  border-top:4px solid var(--purple);border-radius:50%;animation:spin .9s linear infinite;}
+.ov-text{font-family:'Montserrat';font-size:.76rem;font-weight:700;color:var(--soft);letter-spacing:1px;}
 
-.slide-counter{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
+/* SLIDE NAV */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:44px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+  background:rgba(26,0,64,.92);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,255,255,.07);}
+.snav-btn{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);font-size:.95rem;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+.snav-label{font-family:'Montserrat';font-size:.56rem;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.28);}
+
+/* PDF PRINT TEMPLATE (hidden on screen) */
+#pdfTemplate{display:none;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-@media print{
-  .slide-nav,.loading-overlay,.bg-deco,.bg-grid{display:none!important;}
-  html,body{width:auto;height:auto;overflow:visible;background:#fff;}
-  .page{display:block;height:auto;grid-template-columns:1fr;}
-  .left{padding:20px;border:none;}
-  .right{padding:20px;overflow:visible;}
-  .tiers-wrap{overflow:visible;height:auto;}
-  .rec-card{opacity:1!important;transform:none!important;page-break-inside:avoid;}
-  .bottom-nav{display:none;}
-}
-
-/* ── SLIDE NAV ── */
-.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
-.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
-.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
-.snav-btn.dim{opacity:.22;pointer-events:none;}
-.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
-.snav-center{display:flex;align-items:center;gap:12px;}
-.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
-.snav-pdf:hover{background:rgba(255,215,0,0.22);}
 </style>
 </head>
 <body>
-
 <div class="bg-deco"></div>
 <div class="bg-grid"></div>
 
-<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div class="ov-text">Building your recommendation...</div>
+  <div class="ov-text">Building your summary...</div>
 </div>
 
 <div class="page hidden" id="mainPage">
-
-  <!-- ════ LEFT ════ -->
+  <!-- ── LEFT ── -->
   <div class="left">
+    <div class="logo-wrap"><img src="asmi-logo.png" alt="ASMI Career"></div>
+    <div class="step-label">Step 4 of 6 — Your Summary</div>
+    <div class="rec-heading">Your Options.<br><em>At a Glance.</em></div>
+    <p class="rec-sub">Pool-wise summary of what's available for your score across all admission processes.</p>
 
-    <div class="logo-wrap"><img src="asmi-logo.png" alt="ASMI"></div>
-
-    <div class="step-label">Step 4 of 6 — Your Path</div>
-
-    <div class="rec-heading">Your Best<br><em>Options.</em><br>Curated.</div>
-
-    <p class="rec-sub">Based on your score, category, and budget — here is ASMI's shortlist of what you should be targeting this counselling season.</p>
-
-    <!-- Profile summary -->
     <div class="profile-card">
       <div class="pc-label">Your Profile</div>
-      <div class="pc-rows">
-        <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
-        <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
-        <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
-        <div class="pc-row"><span class="pc-key">Data basis</span><span class="pc-val" style="font-size:.7rem;color:rgba(255,255,255,.6)">2025–26 + 15 adj.</span></div>
-      </div>
+      <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
+      <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
+      <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
+      <div class="pc-row"><span class="pc-key">Projection</span><span class="pc-val" style="font-size:.68rem;color:rgba(255,255,255,.55)">2025–26 + 15 adj.</span></div>
     </div>
 
-    <!-- Counsellor note -->
     <div class="counsellor-note">
       <div class="cn-icon">👨‍⚕️</div>
       <div class="cn-label">ASMI Counsellor's View</div>
       <div class="cn-text" id="counsellorNote">Loading analysis...</div>
     </div>
 
-    <!-- Legend -->
     <div class="legend">
-      <div class="legend-label">What the tags mean</div>
-      <div class="legend-item"><span class="ld" style="background:#f59e0b"></span>Best Bet — Target first</div>
-      <div class="legend-item"><span class="ld" style="background:var(--safe)"></span>Strong Option — High confidence</div>
-      <div class="legend-item"><span class="ld" style="background:var(--likely)"></span>Consider — Good backup</div>
-      <div class="legend-item"><span class="ld" style="background:var(--borderline)"></span>Borderline — Worth a try</div>
+      <div class="legend-label">Status guide</div>
+      <div class="legend-item"><span class="ld" style="background:var(--safe)"></span>Safe — score clears easily</div>
+      <div class="legend-item"><span class="ld" style="background:var(--likely)"></span>Likely — within projected cutoff</div>
+      <div class="legend-item"><span class="ld" style="background:var(--borderline)"></span>Borderline — within 10 marks</div>
+      <div class="legend-item"><span class="ld" style="background:var(--reach)"></span>Reach — below projected cutoff</div>
     </div>
-
   </div>
 
-  <!-- ════ RIGHT ════ -->
+  <!-- ── RIGHT ── -->
   <div class="right">
-
     <div class="right-header">
-      <div>
-        <div class="rh-title">Recommended Colleges — ASMI Shortlist</div>
-        <div class="rh-sub" id="rhSub">Across all pools · prioritised by your best chance</div>
+      <div class="rh-left">
+        <div class="rh-title">Admission Options — Pool Summary</div>
+        <div class="rh-sub" id="rhSub">All pools · 2025–26 cutoffs with +15 projection</div>
       </div>
-      <div class="rh-badge" id="totalBadge">— options</div>
+      <div class="rh-actions">
+        <button class="pdf-btn" id="pdfBtn" onclick="downloadPDF()">⬇ Download PDF</button>
+        <div class="rh-badge" id="totalBadge">— pools</div>
+      </div>
     </div>
 
-    <div class="tiers-wrap" id="tiersWrap">
-      <!-- Rendered by JS -->
+    <div class="table-outer" id="tableOuter">
+      <table class="stable" id="summaryTable">
+        <thead>
+          <tr>
+            <th>Pool</th>
+            <th>Course</th>
+            <th>Options</th>
+            <th>Last Cutoff</th>
+            <th>Projected</th>
+            <th>Fee / yr</th>
+            <th>Total Budget</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody"></tbody>
+      </table>
     </div>
 
     <div class="bottom-nav">
-      <div class="bn-note">These recommendations are based on 2025–26 cutoffs with +15 projection.</div>
+      <div class="bn-note">Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 15 marks.</div>
       <a class="bn-btn" id="nextBtn" href="slide5_problems.html">See Why ASMI →</a>
     </div>
-
   </div>
 </div>
 
+<!-- Hidden PDF template -->
+<div id="pdfTemplate"></div>
+
 <nav class="slide-nav">
   <a class="snav-btn" id="navPrev" href="#">←</a>
-  <div class="snav-center">
-    <button class="snav-pdf" onclick="window.print()">⬇ PDF</button>
-    <span class="snav-label">SLIDE 4 OF 6</span>
-  </div>
+  <span class="snav-label">SLIDE 4 OF 6</span>
   <a class="snav-btn" id="navNext" href="#">→</a>
 </nav>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
-const DB_URL  = 'ASMI_DB_Final.json';
-const FEE_URL = 'fee_map.json';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
+const DB_URL='ASMI_DB_Final.json';
+const FEE_URL='fee_map.json';
 
 let DB={}, FEE={}, STUDENT={};
 
 // ── SESSION ──────────────────────────────────────────────────────
-function getSess(){ try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};} }
-
-function activeScore(){    return parseInt(getSess().score    || STUDENT.score    || 0); }
-function activeCategory(){ return getSess().category || STUDENT.category || 'General'; }
-function activeCourse(){   return getSess().course   || (STUDENT.courses||'MBBS').split(',')[0].trim(); }
+function getSess(){try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};}}
+function activeScore(){return parseInt(getSess().score||STUDENT.score||0);}
+function activeCategory(){return getSess().category||STUDENT.category||'General';}
+function activeCourse(){return getSess().course||(STUDENT.courses||'MBBS').split(',')[0].trim();}
 
 // ── CATEGORY KEYS ────────────────────────────────────────────────
 function catKeys(cat){
-  const map={General:['OPEN'],OBC:['OBC','OPEN'],SC:['SC','OPEN'],ST:['ST','OPEN'],
-    EWS:['EWS','OPEN'],SEBC:['SEBC','OPEN'],VJ:['VJ','OPEN'],NT1:['NT1','OPEN'],NT2:['NT2','OPEN'],NT3:['NT3','OPEN']};
-  return map[cat]||['OPEN'];
+  const m={General:['OPEN'],OBC:['OBC','OPEN'],SC:['SC','OPEN'],ST:['ST','OPEN'],
+    EWS:['EWS','OPEN'],SEBC:['SEBC','OPEN'],VJ:['VJ','OPEN'],NT1:['NT1','OPEN'],
+    NT2:['NT2','OPEN'],NT3:['NT3','OPEN']};
+  return m[cat]||['OPEN'];
 }
 
-// ── PROBABILITY ──────────────────────────────────────────────────
-function prob(score,cutoff){
-  const gap = score-(cutoff+15);
-  if(gap>=15)   return {key:'safe',       label:'Safe',       cls:'prob-safe'};
-  if(gap>=0)    return {key:'likely',     label:'Likely',     cls:'prob-likely'};
-  if(gap>=-10)  return {key:'borderline', label:'Borderline', cls:'prob-borderline'};
-  return              {key:'reach',       label:'Reach',      cls:'prob-reach'};
+// ── PROBABILITY vs PROJECTED ─────────────────────────────────────
+function getStatus(score, lastCutoff){
+  const proj=lastCutoff+15, gap=score-proj;
+  if(gap>=15)  return{key:'safe',      label:'Safe',       cls:'status-safe'};
+  if(gap>=0)   return{key:'likely',    label:'Likely',     cls:'status-likely'};
+  if(gap>=-10) return{key:'borderline',label:'Borderline', cls:'status-borderline'};
+  return             {key:'reach',     label:'Reach',      cls:'status-reach'};
 }
-const PROB_ORDER={safe:0,likely:1,borderline:2,reach:3};
 
 // ── GET COLLEGES ─────────────────────────────────────────────────
 function getColleges(stateKey,courseKey,keys,listType){
   if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
-  const seen=new Map();
-  const score=activeScore();
+  const seen=new Map(), score=activeScore();
   keys.forEach(catKey=>{
-    const catData=DB[stateKey][courseKey][catKey];
-    if(!catData||!catData[listType]) return;
-    catData[listType].forEach(col=>{
-      const p=prob(score,col.c);
-      const entry={...col,quota:catKey,prob:p};
-      if(!seen.has(col.n)){seen.set(col.n,entry);}
-      else if(col.c<seen.get(col.n).c){seen.set(col.n,entry);}
+    const d=DB[stateKey][courseKey][catKey];
+    if(!d||!d[listType]) return;
+    d[listType].forEach(col=>{
+      if(!seen.has(col.n)) seen.set(col.n,col);
+      else if(col.c<seen.get(col.n).c) seen.set(col.n,col);
     });
   });
-  return Array.from(seen.values()).filter(c=>c.prob.key!=='reach');
+  return Array.from(seen.values());
 }
 
-// ── FEE ──────────────────────────────────────────────────────────
-function feeStr(name){const f=FEE[name];return f?`₹${f}L/yr`:'—';}
+// ── MEDIAN FEE ───────────────────────────────────────────────────
+function medianFee(colleges){
+  const fees=colleges.map(c=>FEE[c.n]).filter(Boolean).sort((a,b)=>a-b);
+  if(!fees.length) return null;
+  const mid=Math.floor(fees.length/2);
+  return fees.length%2?fees[mid]:((fees[mid-1]+fees[mid])/2);
+}
+
+// ── TOTAL BUDGET MULTIPLIER ──────────────────────────────────────
+function budgetMultiplier(course){
+  if(course==='BDS')  return 4;
+  if(course==='BPTH') return 3;
+  return 4.5; // MBBS default
+}
 
 // ── COUNSELLOR NOTE ──────────────────────────────────────────────
-function buildNote(score,cat,totalRecs){
-  if(score>=580) return `With a score of ${score}, you are in an elite bracket. Government seats at top MH and AIQ colleges are very much within reach. Your priority should be locking a govt seat first — then using private/deemed as backup only.`;
-  if(score>=540) return `At ${score}, you have solid options across MH Govt, AIQ, and select open states. The key is building the right preference list — a few positions can make the difference between a govt and a private seat.`;
-  if(score>=500) return `Score of ${score} opens up private MH colleges, Karnataka, and deemed options. Category-wise, you have more reach than you think. Focus on budget-fit colleges and don't overlook the Stray rounds.`;
-  if(score>=450) return `At ${score}, deemed universities and select open state private colleges are your best path. Don't write off govt seats in reserved categories — the cutoffs may still work in your favour.`;
-  return `Every option counts at this score. Focus on deemed universities with no strict cutoff floors, and reserved category quotas. ASMI will identify every seat you qualify for.`;
+function buildNote(score){
+  if(score>=580) return `At ${score}, you are in the top bracket. Government seats at MH and AIQ colleges are very much in play. Prioritise govt seats first — private and deemed are backup only.`;
+  if(score>=540) return `Score of ${score} gives you solid options across MH Govt, AIQ, and select open states. The preference list order will make the difference between a govt and a private seat.`;
+  if(score>=500) return `At ${score}, private MH colleges, Karnataka, and deemed universities are your strongest options. Don't underestimate reserved category quotas — they may open govt seats too.`;
+  if(score>=450) return `Deemed universities and select open state private colleges are your best path at ${score}. Every round matters — especially Stray and Special Stray rounds.`;
+  return `At this score, focus on deemed universities and category quotas. ASMI will identify every reachable seat across all pools.`;
 }
 
-// ── POOL LABEL ───────────────────────────────────────────────────
-const POOL_LABELS={
-  'mh_govt':'MH Govt','mh_pvt':'MH Private',
-  'aiq':'AIQ Govt','aiims':'AIIMS','jipmer':'JIPMER','central':'Central Univ.',
-  'deemed':'Deemed','deemed_nri':'Deemed NRI',
-  'open_pvt':'Open State','mgmt_quota':'Open State MQ'
-};
+// ── BUILD POOL ROWS ──────────────────────────────────────────────
+function buildPoolRows(){
+  const score=activeScore(), cat=activeCategory(), course=activeCourse();
+  const keys=catKeys(cat);
+  const mult=budgetMultiplier(course);
+  const rows=[];
 
-// ── POOL NOTE ────────────────────────────────────────────────────
-const POOL_NOTES={
-  mh_govt:'Govt seat · lowest fee · domicile advantage',
-  mh_pvt:'MH private · 85% state quota seats',
-  aiq:'15% All India quota · open to all states',
-  aiims:'Premier institution · most competitive',
-  jipmer:'Central govt · only 2 institutes',
-  central:'BHU / AMU · central university quota',
-  deemed:'No domicile required · check budget',
-  open_pvt:'Out-of-state quota · check eligibility',
-  mgmt_quota:'Management quota · flexible admission',
-};
+  function addPool(label, group, colleges){
+    if(!colleges.length) return;
+    // Only colleges not reaching "Reach" are counted as "in reach"
+    const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key!=='reach';});
+    const total=colleges.length;
+    if(inReach.length===0 && total===0) return;
+    // Lowest cutoff among all (to show last cutoff)
+    const allSorted=[...colleges].sort((a,b)=>a.c-b.c);
+    const lastCutoff=allSorted[0]?.c ?? null;
+    if(lastCutoff===null) return;
+    const projCutoff=lastCutoff+15;
+    const status=getStatus(score, lastCutoff);
+    const fee=medianFee(colleges);
+    const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
+    const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
+    rows.push({label, group, course, inReach:inReach.length, total,
+      lastCutoff, projCutoff, status, feeStr, budgetStr});
+  }
 
-// ── BUILD RECOMMENDATIONS ────────────────────────────────────────
-function buildRecs(){
-  const score  = activeScore();
-  const cat    = activeCategory();
-  const course = activeCourse();
-  const keys   = catKeys(cat);
-
-  const pools = [
-    {key:'mh_govt',  fn:()=>getColleges('MH',    course, keys,   'mh_govt'),  limit:4, tier:'bestbet'},
-    {key:'aiq',      fn:()=>getColleges('AIQ',   course, keys,   'aiq'),      limit:3, tier:'strong'},
-    {key:'aiims',    fn:()=>getColleges('AIIMS', 'MBBS', keys,   'aiims'),    limit:2, tier:'bestbet'},
-    {key:'mh_pvt',   fn:()=>getColleges('MH',    course, keys,   'mh_pvt'),   limit:3, tier:'consider'},
-    {key:'central',  fn:()=>getColleges('CENTRAL',course,keys,   'central'),  limit:2, tier:'strong'},
-    {key:'jipmer',   fn:()=>getColleges('JIPMER','MBBS', keys,   'jipmer'),   limit:2, tier:'bestbet'},
-    {key:'deemed',   fn:()=>getColleges('DEEMED', course,['OPEN'],'deemed')
-                            .sort((a,b)=>Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15))),
-                                                                               limit:4, tier:'consider'},
+  // MH
+  addPool('MH Govt',    'Maharashtra', getColleges('MH',course,keys,'mh_govt'));
+  addPool('MH Private', 'Maharashtra', getColleges('MH',course,keys,'mh_pvt'));
+  // MCC
+  addPool('AIQ Govt',   'MCC AIQ', getColleges('AIQ',course,keys,'aiq'));
+  addPool('AIIMS',      'MCC AIQ', getColleges('AIIMS','MBBS',keys,'aiims'));
+  addPool('JIPMER',     'MCC AIQ', getColleges('JIPMER','MBBS',keys,'jipmer'));
+  addPool('Central Univ.','MCC AIQ', getColleges('CENTRAL',course,keys,'central'));
+  addPool('Deemed',     'MCC AIQ', getColleges('DEEMED',course,['OPEN'],'deemed'));
+  // Open States
+  const OS_POOLS=[
+    {k:'KA',l:'Karnataka',  t:'open_pvt'},
+    {k:'KL',l:'Kerala',     t:'open_pvt'},
+    {k:'TS',l:'Telangana',  t:'open_pvt'},
+    {k:'UP',l:'Uttar Pradesh',t:'open_pvt'},
+    {k:'AP',l:'Andhra Pradesh',t:'open_pvt'},
+    {k:'TN',l:'Tamil Nadu', t:'open_pvt'},
+    {k:'HR',l:'Haryana',    t:'open_pvt'},
+    {k:'WB',l:'West Bengal',t:'open_pvt'},
+    {k:'BR',l:'Bihar',      t:'open_pvt'},
   ];
-
-  // Open states — pick 1 best college per top 3 states
-  const OPEN_STATES=['KA','KL','TS','HR','UK','AP','WB'];
-  OPEN_STATES.forEach(st=>{
-    const cols=getColleges(st,course,['OPEN'],'open_pvt')
-      .sort((a,b)=>PROB_ORDER[a.prob.key]-PROB_ORDER[b.prob.key]);
-    if(cols.length) pools.push({key:'open_pvt',poolState:st,fn:()=>cols,limit:1,tier:'consider'});
+  OS_POOLS.forEach(p=>{
+    const cols=[...getColleges(p.k,course,['OPEN'],p.t),
+                ...getColleges(p.k,course,['OPEN'],'mgmt_quota')];
+    const uniq=Array.from(new Map(cols.map(c=>[c.n,c])).values());
+    addPool(p.l,'Open States',uniq);
   });
 
-  // Collect and classify
-  const bestbet=[], strong=[], consider=[], borderline=[];
+  return rows;
+}
 
-  pools.forEach(pool=>{
-    const cols = pool.fn().slice(0, pool.limit);
-    cols.forEach(col=>{
-      const entry = {...col, poolKey:pool.key};
-      const pk = col.prob.key;
-      if(pool.tier==='bestbet' && (pk==='safe'||pk==='likely')) bestbet.push(entry);
-      else if(pool.tier==='strong'  && (pk==='safe'||pk==='likely')) strong.push(entry);
-      else if(pool.tier==='consider'&& (pk==='safe'||pk==='likely')) consider.push(entry);
-      else if(pk==='borderline') borderline.push(entry);
-    });
+// ── RENDER TABLE ─────────────────────────────────────────────────
+function renderTable(rows){
+  const body=document.getElementById('summaryBody');
+  if(!rows.length){
+    body.innerHTML=`<tr><td colspan="8"><div class="no-data">No options found. Try adjusting score or category in Slide 3.</div></td></tr>`;
+    return;
+  }
+
+  let html='', lastGroup='';
+  rows.forEach(r=>{
+    if(r.group!==lastGroup){
+      lastGroup=r.group;
+      html+=`<tr class="section-row"><td colspan="8">${r.group}</td></tr>`;
+    }
+    html+=`<tr>
+      <td><span class="pool-name">${r.label}</span></td>
+      <td><span class="course-tag">${r.course}</span></td>
+      <td><span class="options-val">${r.inReach}/${r.total}</span></td>
+      <td><span class="cutoff-raw">${r.lastCutoff}</span></td>
+      <td><span class="cutoff-proj">${r.projCutoff}</span></td>
+      <td><span class="fee-val">${r.feeStr}</span></td>
+      <td><span class="budget-val">${r.budgetStr}</span></td>
+      <td><span class="status ${r.status.cls}">${r.status.label}</span></td>
+    </tr>`;
   });
-
-  // Deduplicate across tiers
-  const seen=new Set();
-  function dedup(arr){ return arr.filter(c=>{if(seen.has(c.n)){return false;}seen.add(c.n);return true;}); }
-
-  return {
-    bestbet:  dedup(bestbet).slice(0,4),
-    strong:   dedup(strong).slice(0,4),
-    consider: dedup(consider).slice(0,5),
-    borderline:dedup(borderline).slice(0,3),
-  };
+  body.innerHTML=html;
 }
 
-// ── RENDER TIER ──────────────────────────────────────────────────
-function renderTier(title,icon,tagClass,cols,tierClass){
-  if(!cols.length) return '';
-  const cards = cols.map((c,i)=>`
-    <div class="rec-card" style="transition-delay:${i*80}ms">
-      <div class="rc-left">
-        <div class="rc-top">
-          <span class="rc-name">${c.n}</span>
-          <span class="rc-pool">${POOL_LABELS[c.poolKey]||c.poolKey}</span>
-          <span class="tier-badge ${tagClass}">${title}</span>
-        </div>
-        <div class="rc-note">${POOL_NOTES[c.poolKey]||''} · Quota: ${c.quota}</div>
+// ── PDF DOWNLOAD ─────────────────────────────────────────────────
+async function downloadPDF(){
+  const btn=document.getElementById('pdfBtn');
+  btn.textContent='⏳ Generating...';btn.classList.add('loading');
+
+  const score=activeScore(), cat=activeCategory(), course=activeCourse();
+  const name=STUDENT.name||'Student';
+  const token=STUDENT.token||getSess().token||'—';
+  const date=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const rows=buildPoolRows();
+
+  // Build printable HTML
+  const tableRows=rows.map(r=>{
+    let html='';
+    html+=`<tr style="background:${rows.indexOf(r)%2===0?'#fff':'#f9f9ff'}">
+      <td style="font-weight:700">${r.label}</td>
+      <td style="text-align:center">${r.course}</td>
+      <td style="text-align:center;font-weight:900;color:#6a0dad">${r.inReach}/${r.total}</td>
+      <td style="text-align:center;font-weight:700">${r.lastCutoff}</td>
+      <td style="text-align:center;font-weight:900;color:#1a0040">${r.projCutoff}</td>
+      <td style="text-align:center">${r.feeStr}</td>
+      <td style="text-align:center;font-weight:900">${r.budgetStr}</td>
+      <td style="text-align:center"><span style="padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;
+        background:${r.status.key==='safe'?'rgba(21,128,61,.12)':r.status.key==='likely'?'rgba(56,189,248,.15)':r.status.key==='borderline'?'rgba(251,146,60,.15)':'rgba(185,28,28,.10)'};
+        color:${r.status.key==='safe'?'#15803d':r.status.key==='likely'?'#0369a1':r.status.key==='borderline'?'#b45309':'#b91c1c'}">${r.status.label}</span></td>
+    </tr>`;
+    return html;
+  }).join('');
+
+  const printEl=document.getElementById('pdfTemplate');
+  printEl.innerHTML=`
+  <div style="font-family:Arial,sans-serif;width:750px;padding:30px;background:#fff;">
+    <!-- HEADER -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+      <div>
+        <div style="font-size:20px;font-weight:900;color:#1a0040;letter-spacing:-0.5px">ASMI Career</div>
+        <div style="font-size:11px;color:#6a0dad;font-weight:700;letter-spacing:1px;text-transform:uppercase">Admission Analysis Report</div>
       </div>
-      <div class="rc-right">
-        <span class="rc-fee">${feeStr(c.n)}</span>
-        <span class="prob ${c.prob.cls}">${c.prob.label}</span>
+      <div style="text-align:right;font-size:10px;color:#888">
+        <div>Generated: ${date}</div>
+        <div>asmicareer.in · 7410019077</div>
       </div>
-    </div>`).join('');
-  return `
-    <div class="tier-section ${tierClass}">
-      <div class="tier-header">
-        <span class="tier-icon">${icon}</span>
-        <span class="tier-title">${title}</span>
-        <span class="tier-count">${cols.length} option${cols.length>1?'s':''}</span>
-      </div>
-      <div class="rec-cards">${cards}</div>
-    </div>`;
+    </div>
+    <div style="height:2px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:16px;"></div>
+
+    <!-- STUDENT PROFILE -->
+    <div style="background:#FFF9CC;border:1px solid #1a0040;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;gap:30px;">
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</span><br><strong style="font-size:13px;color:#1a0040">${name}</strong></div>
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Token</span><br><strong style="color:#1a0040">${token}</strong></div>
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">NEET Score</span><br><strong style="font-size:16px;color:#6a0dad">${score}</strong></div>
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Category</span><br><strong style="color:#1a0040">${cat}</strong></div>
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Course</span><br><strong style="color:#1a0040">${course}</strong></div>
+      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Data Basis</span><br><strong style="color:#1a0040;font-size:11px">2025–26 + 15 adj.</strong></div>
+    </div>
+
+    <!-- TABLE -->
+    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+      <thead>
+        <tr style="background:#1a0040;">
+          <th style="color:#FFD700;padding:8px 10px;text-align:left;font-weight:800;font-size:10px;letter-spacing:.5px">Pool</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Course</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Options</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Last Cutoff</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Projected</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Fee/yr</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Total Budget</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Status</th>
+        </tr>
+      </thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+
+    <!-- FOOTER -->
+    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:9px;color:#999;text-align:center;">
+      Generated by ASMI Career · asmicareer.in · 7410019077 · Confidential — For student use only
+    </div>
+  </div>`;
+
+  printEl.style.display='block';
+
+  try{
+    const canvas=await html2canvas(printEl,{scale:2,backgroundColor:'#fff',useCORS:true});
+    const imgData=canvas.toDataURL('image/png');
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW=pdf.internal.pageSize.getWidth();
+    const pageH=pdf.internal.pageSize.getHeight();
+    const imgW=pageW;
+    const imgH=(canvas.height*imgW)/canvas.width;
+    let yPos=0;
+    if(imgH<=pageH){
+      pdf.addImage(imgData,'PNG',0,0,imgW,imgH);
+    } else {
+      // Multi-page
+      let remaining=imgH;
+      while(remaining>0){
+        pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
+        remaining-=pageH;yPos+=pageH;
+        if(remaining>0) pdf.addPage();
+      }
+    }
+    const safeName=name.replace(/[^a-zA-Z0-9]/g,'_');
+    pdf.save(`ASMI_Analysis_${safeName}_${token}.pdf`);
+  } catch(err){
+    console.error('PDF error:',err);
+    alert('PDF generation failed. Try again.');
+  } finally {
+    printEl.style.display='none';
+    btn.textContent='⬇ Download PDF';
+    btn.classList.remove('loading');
+  }
 }
 
-// ── ANIMATE CARDS IN ─────────────────────────────────────────────
-function animateCards(){
-  const cards = document.querySelectorAll('.rec-card');
-  cards.forEach((card,i)=>{
-    setTimeout(()=>card.classList.add('visible'), 80+i*60);
-  });
-}
-
-// ── RENDER ALL ───────────────────────────────────────────────────
-function render(){
-  const recs  = buildRecs();
-  const score = activeScore();
-  const cat   = activeCategory();
-  const course= activeCourse();
-
-  // Left panel
-  document.getElementById('lScore').textContent  = score||'—';
-  document.getElementById('lCat').textContent    = cat;
-  document.getElementById('lCourse').textContent = course;
-  const total = recs.bestbet.length+recs.strong.length+recs.consider.length+recs.borderline.length;
-  document.getElementById('counsellorNote').textContent = buildNote(score,cat,total);
-
-  // Right header
-  document.getElementById('totalBadge').textContent = total+' options';
-  document.getElementById('rhSub').textContent =
-    `Score: ${score} · Category: ${cat} · Course: ${course} · 2025–26 cutoffs + 15 adj.`;
-
-  // Tiers
-  const html =
-    renderTier('Best Bet',   '🏆','tb-bestbet', recs.bestbet,  'bestbet') +
-    renderTier('Strong Option','✅','tb-strong', recs.strong,   'strong') +
-    renderTier('Consider',   '🎯','tb-consider',recs.consider, 'consider') +
-    renderTier('Borderline', '⚡','tb-backup',  recs.borderline,'backup');
-
-  document.getElementById('tiersWrap').innerHTML = html || '<div class="no-recs">No recommendations found. Try adjusting score or category in Slide 3.</div>';
-
-  setTimeout(animateCards, 150);
-}
+// ── KEYBOARD NAV ─────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
+  if(e.key==='ArrowRight') window.location.href='slide5_problems.html?token='+encodeURIComponent(token);
+  if(e.key==='ArrowLeft')  window.location.href='slide3_options.html?token='+encodeURIComponent(token);
+});
 
 // ── INIT ─────────────────────────────────────────────────────────
 async function init(){
-  const params = new URLSearchParams(location.search);
-  const token  = params.get('token')||'';
+  const params=new URLSearchParams(location.search);
+  const token=params.get('token')||'';
+
+  document.getElementById('navPrev').href='slide3_options.html?token='+encodeURIComponent(token);
+  document.getElementById('navNext').href='slide5_problems.html?token='+encodeURIComponent(token);
+  document.getElementById('nextBtn').href='slide5_problems.html?token='+encodeURIComponent(token);
 
   try{
-    // Load DB and fee data — these are required
-    const [dbRes, feeRes] = await Promise.all([
+    const[dbRes,feeRes,studentRes]=await Promise.all([
       fetch(DB_URL).then(r=>r.json()),
       fetch(FEE_URL).then(r=>r.json()),
+      token?fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json()):Promise.resolve({demo:true})
     ]);
-    DB  = dbRes;
-    FEE = feeRes;
+    DB=dbRes; FEE=feeRes;
+    STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
 
-    // Try to fetch student data — fall back to session storage if it fails
-    if(token){
-      try{
-        const studentRes = await fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json());
-        if(studentRes.data) STUDENT = studentRes.data;
-        else if(!studentRes.error) STUDENT = studentRes;
-      }catch(e){
-        console.warn('Student fetch failed, using session data');
-      }
-    }
+    // Seed session
+    const sess=getSess();
+    if(!sess.score)    {const s=getSess();s.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(s));}
+    if(!sess.category) {const s=getSess();s.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(s));}
+    if(!sess.course)   {const s=getSess();s.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(s));}
+    const s2=getSess();s2.token=STUDENT.token||token;sessionStorage.setItem('asmi',JSON.stringify(s2));
 
-    // Seed session from student data if session is empty
-    const s=getSess();
-    if(!s.score && STUDENT.score)       { try{const ss=getSess();ss.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
-    if(!s.category && STUDENT.category) { try{const ss=getSess();ss.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
-    if(!s.course && STUDENT.courses)    { try{const ss=getSess();ss.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    // Populate left panel
+    document.getElementById('lScore').textContent=activeScore()||'—';
+    document.getElementById('lCat').textContent=activeCategory();
+    document.getElementById('lCourse').textContent=activeCourse();
+    document.getElementById('counsellorNote').textContent=buildNote(activeScore());
 
-    // Wire nav buttons
-    document.getElementById('navPrev').href = 'slide3_options.html?token='+encodeURIComponent(token);
-    document.getElementById('navNext').href = 'slide5_problems.html?token='+encodeURIComponent(STUDENT.token||token);
-
-    // Next button
-    document.getElementById('nextBtn').href =
-      'slide5_problems.html?token='+encodeURIComponent(STUDENT.token||token);
+    // Build and render table
+    const rows=buildPoolRows();
+    document.getElementById('totalBadge').textContent=rows.length+' pools';
+    document.getElementById('rhSub').textContent=
+      `Score: ${activeScore()} · Category: ${activeCategory()} · Course: ${activeCourse()}`;
+    renderTable(rows);
 
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('mainPage').classList.remove('hidden');
-    render();
 
-  }catch(err){
-    document.getElementById('loadingOverlay').innerHTML =
-      `<div style="text-align:center;padding:40px"><div style="font-size:2rem">⚠️</div><div style="font-family:Montserrat;font-weight:800;color:#b91c1c;margin:10px 0">Could not load data</div><div style="font-size:.8rem;color:#4a0080">${err.message}</div></div>`;
+  } catch(err){
+    document.getElementById('loadingOverlay').innerHTML=
+      `<div style="text-align:center;padding:40px"><div style="font-size:2rem">⚠️</div>
+       <div style="font-family:Montserrat;font-weight:800;color:#b91c1c;margin:10px 0">Could not load data</div>
+       <div style="font-size:.8rem;color:#4a0080">${err.message}</div></div>`;
     console.error(err);
   }
 }
 
 init();
 </script>
-
 </body>
 </html>
