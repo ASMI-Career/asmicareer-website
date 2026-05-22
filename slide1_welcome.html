@@ -53,10 +53,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   margin-bottom:30px;
   animation:fadeUp .55s ease both;
 }
-.logo-wrap img{
-  height:120px;width:auto;object-fit:contain;
-  /* subtle drop shadow so logo pops on yellow */
-  filter:drop-shadow(0 4px 14px rgba(26,0,64,.18));
+.logo-wrap img {
+  height: 120px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(26,0,64,.18))
+          drop-shadow(0 0 0 #FFD700); /* fills transparency with yellow */
 }
 
 /* Eyebrow */
@@ -146,10 +146,12 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;
   animation:fadeUp .55s .2s ease both;
 }
-.sc{
-  background:var(--card);border:1px solid var(--card-border);
-  border-radius:14px;padding:18px 14px;text-align:center;
-  transition:.22s;
+.sc {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 18px 14px;
+  text-align: center; /* ADD THIS */
 }
 .sc:hover{background:var(--card-hover);border-color:var(--purple);transform:translateY(-2px);}
 .sc-num{
@@ -239,11 +241,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <img src="asmi-logo.png" alt="ASMI Career">
     </div>
 
-    <div class="eyebrow">Maharashtra's #1 NEET Counselling</div>
+    <div class="eyebrow">Maharashtra's #No.1 NEET Counselling</div>
 
     <div class="headline">
-      Your Dream.<br>
-      Our <em>Mission.</em>
+      Every <em>NEET Score</em>em><br>
+      Deserves The<em>Best College</em>
     </div>
 
     <p class="tagline">
@@ -285,7 +287,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="hb-num">25K+</div>
       <div class="hb-right">
         <div class="hb-label">Admissions Done<br>Across India</div>
-        <div class="hb-sub">MBBS · BDS · BAMS · BPTH · Deemed · AIQ</div>
+        <div class="hb-sub">MBBS · BDS · BAMS · BHMS · BPTH · BVSC </div>
       </div>
     </div>
 
@@ -307,10 +309,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
     <div class="mission-card">
       <div class="mc-label">What We Deliver</div>
       <div class="mc-points">
-        <div class="mc-pt"><span class="mc-dot"></span>Accurate cutoff data — MH State, AIQ, Open States, Deemed</div>
-        <div class="mc-pt"><span class="mc-dot"></span>Category-wise preference list built for your score</div>
-        <div class="mc-pt"><span class="mc-dot"></span>Live round-by-round alerts so you never miss a deadline</div>
-        <div class="mc-pt"><span class="mc-dot"></span>Document verification before every reporting date</div>
+        <div class="mc-pt"><span class="mc-dot"></span>Data-driven college prediction across AIQ, State & Deemed</div>
+        <div class="mc-pt"><span class="mc-dot"></span>Personalized preference list designed for your rank & budget</div>
+        <div class="mc-pt"><span class="mc-dot"></span>Instant updates on counselling changes and deadlines</div>
+        <div class="mc-pt"><span class="mc-dot"></span>Error-free documentation and reporting support</div>
+        <div class="mc-pt"><span class="mc-dot"></span>Step-by-step support till final admission confirmation</div>
       </div>
     </div>
 
