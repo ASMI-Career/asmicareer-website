@@ -284,11 +284,15 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-name">Complete Medical Admission Counselling<br>NRI or Management Quota</div>
       <div class="pkg-prices">
         <div class="price-now">
-          <span class="price-now-lbl">Flat Fee</span>
+          <span class="price-now-lbl">Till 31st May</span>
           <span class="price-now-val">₹60,000</span>
         </div>
+        <div class="price-later">
+          <span class="price-later-lbl">After 31st May</span>
+          <span class="price-later-val" style="text-decoration:line-through;">₹70,000</span>
+        </div>
       </div>
-      <span class="saving-pill">No deadline — same price anytime</span>
+      <span class="saving-pill">Save ₹10,000 if registered before 31st May</span>
       <div class="pkg-note">For students pursuing NRI quota or management quota seats in private / deemed colleges.</div>
     </div>
 
@@ -415,8 +419,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Registration Form</div>
         <div class="qr-img">
           <!-- Replace src with actual registration QR image -->
-          <img src="qr_registration.png" alt="Registration QR"
-               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Registration QR</div>'">
+          <img src="qr_registration.png" alt="Registration QR" style="width:100%;height:100%;object-fit:contain;">
         </div>
         <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to fill form</div>
       </div>
@@ -424,8 +427,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Payment</div>
         <div class="qr-img">
           <!-- Replace src with actual payment QR image -->
-          <img src="qr_payment.png" alt="Payment QR"
-               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Payment QR</div>'">
+          <img src="qr_payment.png" alt="Payment QR" style="width:100%;height:100%;object-fit:contain;">
         </div>
         <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to pay</div>
       </div>
@@ -460,12 +462,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
     <div class="tnc">
       <div class="tnc-title">Terms &amp; Conditions</div>
       <ul class="tnc-list">
-        <li>Registration amount is <strong>non-refundable</strong> and <strong>non-transferable</strong> under any circumstances.</li>
-        <li>MH State &amp; MCC form filling included. All other states at ₹5,000/state extra.</li>
-        <li>No additional charges for counselling, advisory, or helpline services.</li>
-        <li>All charges are <strong>inclusive of GST</strong>.</li>
-        <li>Early bird rate of ₹30,000 valid only till 31st May. ₹35,000 applies after.</li>
-        <li>NRI / Management package is a flat ₹60,000 with no date-based variation.</li>
+        <li>Registration amount is non-refundable and non-transferable under any circumstances</li>
+        <li>All charges are inclusive of GST</li>
+        <li>Early bird rates valid till 31st May only — standard rates apply from 1st June</li>
+        <li>Additional state or process form filling charged at ₹5,000 per state (not included in package)</li>
+        <li>ASMI reserves the right to assign counsellors based on branch availability</li>
       </ul>
     </div>
 
@@ -499,9 +500,27 @@ function updateDaysLeft(){
     el.textContent = diff;
   } else {
     el.textContent = '0';
+    // Urgency banner
     document.querySelector('.urgency-banner').style.background = 'linear-gradient(135deg,#64748b,#475569)';
     document.querySelector('.ub-text').textContent = 'Early Bird Price Expired';
     document.querySelector('.ub-sub').textContent = 'Standard rate of ₹35,000 now applies';
+    // NRI card — promote ₹70,000 to current price, grey out early bird messaging
+    const nriCard = document.querySelector('.pkg-card.nri');
+    if(nriCard){
+      const nowLbl  = nriCard.querySelector('.price-now-lbl');
+      const nowVal  = nriCard.querySelector('.price-now-val');
+      const laterEl = nriCard.querySelector('.price-later');
+      const pill    = nriCard.querySelector('.saving-pill');
+      if(nowLbl)  nowLbl.textContent = 'Current Price';
+      if(nowVal)  nowVal.textContent = '₹70,000';
+      if(laterEl) laterEl.style.display = 'none';
+      if(pill){
+        pill.textContent = 'Early bird period has ended';
+        pill.style.background = 'rgba(100,116,139,.15)';
+        pill.style.color = '#64748b';
+        pill.style.borderColor = 'rgba(100,116,139,.3)';
+      }
+    }
   }
 }
 
