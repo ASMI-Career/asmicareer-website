@@ -598,7 +598,7 @@ function expandOSState(stKey){
 }
 
 // PANE CONTROL
-function handlePaneClick(id){if(currentPane) return;expandPane(id);}
+function handlePaneClick(id){if(id===currentPane) return;expandPane(id);}
 function expandPane(id){
   currentPane=id;
   document.getElementById('panesContainer').classList.add('has-expanded');
