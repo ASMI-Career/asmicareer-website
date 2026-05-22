@@ -223,6 +223,16 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <img src="ASMI Logo.png" alt="ASMI Career">
     </div>
 
+<div class="welcome-name" id="welcomeName" style="
+  font-family:'Montserrat',sans-serif;
+  font-weight:900;
+  font-size:1.6rem;
+  color:#1a0040;
+  margin-bottom:8px;
+  opacity:0;
+  animation:fadeUp .5s ease forwards;
+">Welcome</div>
+    
     <div class="step-label">Step 2 of 6 — Your Profile</div>
 
     <div class="main-heading">Your Medical<br>Admission Analysis<br>is ready.</div>
@@ -343,7 +353,8 @@ function populate(data) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('profileCard').classList.add('visible');
 
-  document.getElementById('tokenVal').textContent    = data.token    || '—';
+  document.getElementById('tokenVal').textContent = data.token || '—';
+  document.getElementById('welcomeName').textContent = data.name ? 'Welcome, ' + data.name : 'Welcome'; // ADD THIS
   document.getElementById('scoreVal').textContent    = data.score    || '—';
   document.getElementById('categoryVal').textContent = data.category || '—';
   document.getElementById('coachingVal').textContent = data.coaching || '—';
