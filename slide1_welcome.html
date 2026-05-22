@@ -151,7 +151,12 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   border: 1px solid var(--card-border);
   border-radius: 14px;
   padding: 18px 14px;
-  text-align: center; /* ADD THIS */
+  text-align: center;
+  display: flex;              /* ADD */
+  flex-direction: column;     /* ADD */
+  align-items: center;        /* ADD */
+  justify-content: center;    /* ADD */
+  transition: .22s;
 }
 .sc:hover{background:var(--card-hover);border-color:var(--purple);transform:translateY(-2px);}
 .sc-num{
@@ -245,7 +250,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
     <div class="headline">
       Every <em>NEET Score</em><br>
-      Deserves The<em>Best College</em>
+      Deserves The<br><em>Best College</em>
     </div>
 
     <p class="tagline">
