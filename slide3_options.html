@@ -493,23 +493,25 @@ function renderMHBlurred(cols){
   const userCat=activeCategory(),showDual=(userCat!=='General');
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
-  // Sort by cutoff ascending (easiest first)
-  const byEasiest=[...cols].sort((a,b)=>a.c-b.c);
-  const total=byEasiest.length;
+  const score=activeScore();
+  const byClosest=(arr)=>[...arr].sort((a,b)=>
+    Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)));
+
+  const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
+  const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
+  const reachPool = byClosest(cols.filter(c=>c.prob.key==='reach'));
+
   const preview=[];
-  if(total<=5){
-    // Fewer than 5 — show all
-    preview.push(...byEasiest);
-  } else {
-    // Always pick: 2 easiest, 2 from middle, 1 hardest
-    preview.push(byEasiest[0]);
-    preview.push(byEasiest[1]);
-    const mid=Math.floor(total/2);
-    preview.push(byEasiest[mid]);
-    preview.push(byEasiest[mid+1]);
-    preview.push(byEasiest[total-1]);
-  }
-  const rest=byEasiest.filter(c=>!preview.includes(c));
+  // 3 safe/likely closest to score
+  preview.push(...safePool.slice(0,3));
+  // fill to 3 from borderline if not enough safe
+  if(preview.length<3) preview.push(...borderPool.slice(0, 3-preview.length));
+  // 2 borderline closest to score (not already in preview)
+  const borderRemaining=borderPool.filter(c=>!preview.includes(c));
+  preview.push(...borderRemaining.slice(0,2));
+  // fill to 5 from reach if still not enough
+  if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
+  const rest=cols.filter(c=>!preview.includes(c));
   const catLabel=userCat+' Cutoff';
   const dh=showDual?`<th style="color:rgba(255,215,0,.75)">${catLabel}</th>`:'';
   function row(c){
@@ -527,20 +529,21 @@ function renderMHBlurred(cols){
 function renderOSTable(stKey,cols){
   if(!cols.length) return '<div class="no-data">No colleges found.</div>';
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
-  const byEasiest=[...cols].sort((a,b)=>a.c-b.c);
-  const total=byEasiest.length;
+  const score=activeScore();
+  const byClosest=(arr)=>[...arr].sort((a,b)=>
+    Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)));
+
+  const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
+  const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
+  const reachPool = byClosest(cols.filter(c=>c.prob.key==='reach'));
+
   const preview=[];
-  if(total<=5){
-    preview.push(...byEasiest);
-  } else {
-    preview.push(byEasiest[0]);
-    preview.push(byEasiest[1]);
-    const mid=Math.floor(total/2);
-    preview.push(byEasiest[mid]);
-    preview.push(byEasiest[mid+1]);
-    preview.push(byEasiest[total-1]);
-  }
-  const rest=byEasiest.filter(c=>!preview.includes(c));
+  preview.push(...safePool.slice(0,3));
+  if(preview.length<3) preview.push(...borderPool.slice(0, 3-preview.length));
+  const borderRemaining=borderPool.filter(c=>!preview.includes(c));
+  preview.push(...borderRemaining.slice(0,2));
+  if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
+  const rest=cols.filter(c=>!preview.includes(c));
   function row(c){return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;}
   const thead=`<thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
