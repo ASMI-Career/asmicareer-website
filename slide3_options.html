@@ -556,8 +556,7 @@ function renderMHOverview(){
   const pi=mhPvt.cols.filter(c=>c.prob.key!=='reach').length,pt=mhPvt.total;
   document.getElementById('mh-overview-stats').innerHTML=`
     <div class="pd-stat"><span class="pd-stat-label">Govt Colleges</span><span class="pd-stat-val">${gi}/${gt}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Private Colleges</span><span class="pd-stat-val">${pi}/${pt}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Category</span><span class="pd-stat-val" style="font-size:.85rem">${activeCategory()}</span></div>`;
+    <div class="pd-stat"><span class="pd-stat-label">Private Colleges</span><span class="pd-stat-val">${pi}/${pt}</span></div>`;
   document.getElementById('mh-slim-count').textContent=`${gi+pi}/${gt+pt}`;
 }
 function renderMHExpanded(){
@@ -663,8 +662,7 @@ function renderOpenOverview(){
   const ti=osResults.reduce((s,r)=>s+r.inReach,0),tt=osResults.reduce((s,r)=>s+r.total,0);
   document.getElementById('open-overview-stats').innerHTML=`
     <div class="pd-stat"><span class="pd-stat-label">States with options</span><span class="pd-stat-val">${osResults.length}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Colleges in reach</span><span class="pd-stat-val">${ti}/${tt}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Quota</span><span class="pd-stat-val" style="font-size:.8rem">Open / Mgmt</span></div>`;
+    <div class="pd-stat"><span class="pd-stat-label">Colleges in reach</span><span class="pd-stat-val">${ti}/${tt}</span></div>`;
   document.getElementById('open-slim-count').textContent=`${osResults.length}`;
 }
 function renderOpenExpanded(){
