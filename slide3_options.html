@@ -418,6 +418,13 @@ function setSess(k,v){const s=getSess();s[k]=v;sessionStorage.setItem('asmi',JSO
 function activeScore(){return parseInt(getSess().score||STUDENT.score||0);}
 function activeCategory(){return getSess().category||STUDENT.category||'General';}
 function activeCourse(){return getSess().course||(STUDENT.courses||'MBBS').split(',')[0].trim();}
+function primaryCourse(){
+  const courses=(getSess().course||(STUDENT.courses||'MBBS')).split(',').map(c=>c.trim());
+  // Prefer MBBS, then BDS, then first available
+  if(courses.includes('MBBS')) return 'MBBS';
+  if(courses.includes('BDS'))  return 'BDS';
+  return courses[0]||'MBBS';
+}
 
 function catKeys(cat){
   const m={General:['OPEN'],OBC:['OBC','OPEN'],SC:['SC','OPEN'],ST:['ST','OPEN'],
@@ -605,7 +612,7 @@ function setMHTabContent(){
 
 // MCC
 function computeMCC(){
-  const keys=catKeys(activeCategory()),course=activeCourse();
+  const keys=catKeys(activeCategory()),course=primaryCourse();
   const aiq=getColleges('AIQ',course,keys,'aiq');
   const aiims=getColleges('AIIMS','MBBS',keys,'aiims');
   const jipmer=getColleges('JIPMER','MBBS',keys,'jipmer');
@@ -665,7 +672,7 @@ function toggleAIIMS(){
 // OPEN STATE
 let osResults=[];
 function computeOS(){
-  const course=activeCourse();osResults=[];
+  const course=primaryCourse();osResults=[];
   OPEN_STATES.forEach(stKey=>{
     const all=getOSColleges(stKey,course);
     const total=getOSTotal(stKey,course);
