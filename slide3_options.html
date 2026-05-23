@@ -923,10 +923,14 @@ function toggleCoursePill(el, course){
 function applyEdits(){
   const score=parseInt(document.getElementById('editScore').value);
   const cat=document.getElementById('editCategory').value;
-  if(score>0) setSess('score',score);if(cat) setSess('category',cat);
+  if(score>0) setSess('score',score);
+  if(cat)     setSess('category',cat);
+  // Re-render expanded pane
   if(currentPane==='mh')   renderMHExpanded();
   if(currentPane==='mcc')  renderMCCExpanded();
   if(currentPane==='open') renderOpenExpanded();
+  // Also update all overview stats so collapsed panes stay in sync
+  renderAllOverviews();
 }
 function renderAllOverviews(){renderMHOverview();renderMCCOverview();renderOpenOverview();}
 
