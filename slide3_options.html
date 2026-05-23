@@ -654,27 +654,47 @@ function renderMCCExpanded(){
     <div class="mcc-count-card"><div class="mcc-card-title">AIQ Govt</div><div class="mcc-card-num">${num(aiqR.length,aiq.length)}</div><div class="mcc-card-sub">colleges in reach</div></div>
     <div class="mcc-count-card clickable" id="aiims-card" onclick="toggleAIIMS()"><div class="mcc-card-title">AIIMS</div><div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div><div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div></div>
     <div class="mcc-count-card"><div class="mcc-card-title">JIPMER</div><div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">of ${jipmer.length} reachable</div></div>
-    <div class="mcc-count-card"><div class="mcc-card-title">Central Univ.</div><div class="mcc-card-num">${num(centralR.length,central.length)}</div><div class="mcc-card-sub">BHU · AMU</div></div>`;
+    ${(()=>{
+      const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+      const hasBDS=selectedCourses.includes('BDS');
+      const jmiCols=hasBDS?getColleges('CENTRAL','BDS',keys,'central').filter(c=>c.n.includes('Jamia')):[];
+      const jmiR=jmiCols.filter(c=>c.prob&&c.prob.key!=='reach');
+      const totalCentral=central.length+(hasBDS?jmiCols.length:0);
+      const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
+      return `<div class="mcc-count-card">
+        <div class="mcc-card-title">Central Univ.</div>
+        <div class="mcc-card-num">${num(reachCentral,totalCentral)}</div>
+        <div class="mcc-card-sub">BHU · AMU${hasBDS?' · JMI':''}</div>
+      </div>`;
+    })()}`;
   document.getElementById('aiims-list').innerHTML=aiims.length?renderTable(aiims):'';
   document.getElementById('aiims-list').classList.remove('open');
-  const isMBBS=primaryCourse()==='MBBS';
-  if(isMBBS){
-    const bands=getDeemedBands(deemed);
-    document.getElementById('deemed-bands').innerHTML=bands.map(b=>`
+  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  const hasMBBS=selectedCourses.includes('MBBS');
+  const hasBDS=selectedCourses.includes('BDS');
+  let deemedHtml='';
+
+  // MBBS Deemed — 3 fee bands
+  if(hasMBBS){
+    const mbbsDemed=getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+    const bands=getDeemedBands(mbbsDemed);
+    if(hasBDS) deemedHtml+=`<div class="deemed-label" style="margin-top:0;margin-bottom:6px">MBBS Deemed</div>`;
+    deemedHtml+=bands.map(b=>`
       <div class="deemed-band">
         <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
         <div><div class="db-count">${b.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${b.total}</span></div><div class="db-sub">in reach / total</div></div>
       </div>`).join('');
-  } else {
-    // BDS Deemed — split into MH+KA vs Rest
-    const mhKa=deemed.filter(c=>['Maharashtra','Karnataka'].includes(c.s||''));
-    const rest=deemed.filter(c=>!['Maharashtra','Karnataka'].includes(c.s||''));
-    function bandStats(cols){
-      const inReach=cols.filter(c=>c.prob&&c.prob.key!=='reach').length;
-      return{inReach,total:cols.length};
-    }
-    const s1=bandStats(mhKa), s2=bandStats(rest);
-    document.getElementById('deemed-bands').innerHTML=`
+  }
+
+  // BDS Deemed — MH+KA vs Rest
+  if(hasBDS){
+    const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
+    const mhKa=bdsDemed.filter(c=>['Maharashtra','Karnataka'].includes(c.s||''));
+    const rest=bdsDemed.filter(c=>!['Maharashtra','Karnataka'].includes(c.s||''));
+    function bandStats(cols){return{inReach:cols.filter(c=>c.prob&&c.prob.key!=='reach').length,total:cols.length};}
+    const s1=bandStats(mhKa),s2=bandStats(rest);
+    if(hasMBBS) deemedHtml+=`<div class="deemed-label" style="margin-top:10px;margin-bottom:6px">BDS Deemed</div>`;
+    deemedHtml+=`
       <div class="deemed-band">
         <div><div class="db-fee">🏛️ MH & Karnataka Deemed</div><div class="db-label">Manipal · DY Patil · JSS · KLE and others</div></div>
         <div><div class="db-count">${s1.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${s1.total}</span></div><div class="db-sub">in reach / total</div></div>
@@ -684,6 +704,7 @@ function renderMCCExpanded(){
         <div><div class="db-count">${s2.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${s2.total}</span></div><div class="db-sub">in reach / total</div></div>
       </div>`;
   }
+  document.getElementById('deemed-bands').innerHTML=deemedHtml;
 }
 function toggleAIIMS(){
   aiimsOpen=!aiimsOpen;
