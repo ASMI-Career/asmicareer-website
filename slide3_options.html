@@ -514,9 +514,7 @@ function renderMHBlurred(cols){
 }
 
 function renderOSTable(stKey,cols){
-  const isBlur=BLUR_STATES.includes(stKey);
   if(!cols.length) return '<div class="no-data">No colleges found.</div>';
-  if(!isBlur) return renderTable(cols);
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const preview=[];
   const safeOnes=sorted.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').slice(0,2);
