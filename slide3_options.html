@@ -297,7 +297,7 @@ table.ctable th:not(:first-child){text-align:center;}
   </div>
   <div class="eb-group">
     <span class="eb-label">Course</span>
-    <select id="editCourse"><option>MBBS</option><option>BDS</option></select>
+    <div id="editCoursePills" style="display:flex;gap:4px;flex-wrap:wrap"></div>
   </div>
   <button class="eb-apply" onclick="applyEdits()">Update ↺</button>
   <div class="eb-spacer"></div>
@@ -720,7 +720,18 @@ function expandPane(id){
   });
   document.getElementById('editScore').value=activeScore();
   document.getElementById('editCategory').value=activeCategory();
-  document.getElementById('editCourse').value=activeCourse();
+  // Build course pills
+  const allCourses=['MBBS','BDS','BPTH','BAMS','BHMS'];
+  const currentCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  const pillsWrap=document.getElementById('editCoursePills');
+  pillsWrap.innerHTML=allCourses.map(c=>`
+    <span onclick="toggleCoursePill(this,'${c}')" data-course="${c}" style="
+      font-family:Montserrat,sans-serif;font-size:.62rem;font-weight:800;
+      padding:3px 10px;border-radius:6px;cursor:pointer;letter-spacing:.3px;
+      background:${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.15)'};
+      color:${currentCourses.includes(c)?'#1a0040':'rgba(255,255,255,.7)'};
+      border:1px solid ${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.25)'};
+      transition:.15s;">${c}</span>`).join('');
   if(id==='mh')   renderMHExpanded();
   if(id==='mcc')  renderMCCExpanded();
   if(id==='open') renderOpenExpanded();
@@ -737,11 +748,27 @@ function collapseAll(){
     document.getElementById('panesContainer').scrollIntoView({behavior:'smooth'});
   }
 }
+function toggleCoursePill(el, course){
+  const sess=getSess();
+  let courses=(sess.course||activeCourse()).split(',').map(c=>c.trim()).filter(Boolean);
+  if(courses.includes(course)){
+    if(courses.length===1) return; // must keep at least 1
+    courses=courses.filter(c=>c!==course);
+    el.style.background='rgba(255,255,255,.15)';
+    el.style.color='rgba(255,255,255,.7)';
+    el.style.borderColor='rgba(255,255,255,.25)';
+  } else {
+    courses.push(course);
+    el.style.background='#FFD700';
+    el.style.color='#1a0040';
+    el.style.borderColor='#FFD700';
+  }
+  setSess('course', courses.join(','));
+}
 function applyEdits(){
   const score=parseInt(document.getElementById('editScore').value);
   const cat=document.getElementById('editCategory').value;
-  const course=document.getElementById('editCourse').value;
-  if(score>0) setSess('score',score);if(cat) setSess('category',cat);if(course) setSess('course',course);
+  if(score>0) setSess('score',score);if(cat) setSess('category',cat);
   if(currentPane==='mh')   renderMHExpanded();
   if(currentPane==='mcc')  renderMCCExpanded();
   if(currentPane==='open') renderOpenExpanded();

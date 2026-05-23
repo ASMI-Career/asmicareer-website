@@ -395,56 +395,98 @@ function buildNote(score){
 
 // ── BUILD POOL ROWS ──────────────────────────────────────────────
 function buildPoolRows(){
-  const score=activeScore(), cat=activeCategory(), course=activeCourse();
+  const score=activeScore(), cat=activeCategory();
+  const sess=getSess();
+  const selectedCourses=(sess.course||activeCourse()).split(',').map(c=>c.trim()).filter(Boolean);
   const keys=catKeys(cat);
-  const mult=budgetMultiplier(course);
   const rows=[];
 
-  function addPool(label, group, colleges){
+  function addPool(label,group,course,colleges){
     if(!colleges.length) return;
-    // Only colleges not reaching "Reach" are counted as "in reach"
     const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key!=='reach';});
-    const total=colleges.length;
-    if(inReach.length===0 && total===0) return;
-    // Lowest cutoff among all (to show last cutoff)
+    if(!inReach.length && !colleges.length) return;
     const allSorted=[...colleges].sort((a,b)=>a.c-b.c);
-    const lastCutoff=allSorted[0]?.c ?? null;
+    const lastCutoff=allSorted[0]?.c??null;
     if(lastCutoff===null) return;
     const projCutoff=lastCutoff+15;
-    const status=getStatus(score, lastCutoff);
+    const status=getStatus(score,lastCutoff);
     const fee=medianFee(colleges);
+    const mult=budgetMultiplier(course);
     const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
     const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
-    rows.push({label, group, course, inReach:inReach.length, total,
-      lastCutoff, projCutoff, status, feeStr, budgetStr});
+    rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
+      lastCutoff,projCutoff,status,feeStr,budgetStr});
   }
 
-  // MH
-  addPool('MH Govt',    'Maharashtra', getColleges('MH',course,keys,'mh_govt'));
-  addPool('MH Private', 'Maharashtra', getColleges('MH',course,keys,'mh_pvt'));
-  // MCC
-  addPool('AIQ Govt',   'MCC AIQ', getColleges('AIQ',course,keys,'aiq'));
-  addPool('AIIMS',      'MCC AIQ', getColleges('AIIMS','MBBS',keys,'aiims'));
-  addPool('JIPMER',     'MCC AIQ', getColleges('JIPMER','MBBS',keys,'jipmer'));
-  addPool('Central Univ.','MCC AIQ', getColleges('CENTRAL',course,keys,'central'));
-  addPool('Deemed',     'MCC AIQ', getColleges('DEEMED',course,['OPEN'],'deemed'));
-  // Open States
-  const OS_POOLS=[
-    {k:'KA',l:'Karnataka',  t:'open_pvt'},
-    {k:'KL',l:'Kerala',     t:'open_pvt'},
-    {k:'TS',l:'Telangana',  t:'open_pvt'},
-    {k:'UP',l:'Uttar Pradesh',t:'open_pvt'},
-    {k:'AP',l:'Andhra Pradesh',t:'open_pvt'},
-    {k:'TN',l:'Tamil Nadu', t:'open_pvt'},
-    {k:'HR',l:'Haryana',    t:'open_pvt'},
-    {k:'WB',l:'West Bengal',t:'open_pvt'},
-    {k:'BR',l:'Bihar',      t:'open_pvt'},
-  ];
-  OS_POOLS.forEach(p=>{
-    const cols=[...getColleges(p.k,course,['OPEN'],p.t),
-                ...getColleges(p.k,course,['OPEN'],'mgmt_quota')];
-    const uniq=Array.from(new Map(cols.map(c=>[c.n,c])).values());
-    addPool(p.l,'Open States',uniq);
+  function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
+    if(!colleges.length) return;
+    const b1=colleges.filter(c=>(FEE[c.n]||0)<=threshold && FEE[c.n]);
+    const b2=colleges.filter(c=>(FEE[c.n]||0)>threshold);
+    if(b1.length) addPool(band1Label,group,course,b1);
+    if(b2.length) addPool(band2Label,group,course,b2);
+    if(!b1.length && !b2.length) addPool(label,group,course,colleges);
+  }
+
+  function addDeemedBands(group,course){
+    const deemed=getColleges('DEEMED',course,['OPEN'],'deemed');
+    const bands=[
+      {label:'Deemed ₹10–20L/yr', min:10, max:20},
+      {label:'Deemed ₹21–25L/yr', min:21, max:25},
+      {label:'Deemed ₹26–35L/yr', min:26, max:35},
+    ];
+    bands.forEach(band=>{
+      const cols=deemed.filter(c=>{const f=FEE[c.n]; return f&&f>=band.min&&f<=band.max;});
+      if(cols.length) addPool(band.label,group,course,cols);
+    });
+  }
+
+  selectedCourses.forEach(course=>{
+    const isMBBS=course==='MBBS';
+    const isBDS=course==='BDS';
+    const isBPTH=course==='BPTH';
+
+    // MH — all courses
+    addPool('MH Govt',   course, course, getColleges('MH',course,keys,'mh_govt'));
+    addPool('MH Private',course, course, getColleges('MH',course,keys,'mh_pvt'));
+
+    if(isMBBS){
+      // AIQ
+      addPool('AIQ Govt',    'MCC AIQ',course,getColleges('AIQ',course,keys,'aiq'));
+      addPool('AIIMS',       'MCC AIQ',course,getColleges('AIIMS','MBBS',keys,'aiims'));
+      addPool('JIPMER',      'MCC AIQ',course,getColleges('JIPMER','MBBS',keys,'jipmer'));
+      addPool('Central Univ.','MCC AIQ',course,getColleges('CENTRAL',course,keys,'central'));
+      // Deemed bands
+      addDeemedBands('MCC AIQ',course);
+      // Open States with fee bands
+      addPoolBanded('Karnataka','Open States',course,
+        getColleges('KA',course,['OPEN'],'open_pvt'),15,'Karnataka ≤₹15L/yr','Karnataka >₹15L/yr');
+      addPoolBanded('Uttar Pradesh','Open States',course,
+        getColleges('UP',course,['OPEN'],'open_pvt'),14.52,'Uttar Pradesh ≤₹14.52L/yr','Uttar Pradesh >₹14.52L/yr');
+      addPool('Kerala',      'Open States',course,getColleges('KL',course,['OPEN'],'open_pvt'));
+      addPoolBanded('Telangana','Open States',course,
+        getColleges('TS',course,['OPEN'],'open_pvt'),13,'Telangana ≤₹13L/yr','Telangana >₹13L/yr');
+      addPool('Andhra Pradesh','Open States',course,getColleges('AP',course,['OPEN'],'open_pvt'));
+      addPoolBanded('Tamil Nadu','Open States',course,
+        getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr');
+      addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'));
+      addPool('West Bengal', 'Open States',course,getColleges('WB',course,['OPEN'],'open_pvt'));
+      addPoolBanded('Bihar','Open States',course,
+        getColleges('BR',course,['OPEN'],'open_pvt'),14,'Bihar ≤₹14L/yr','Bihar >₹14L/yr');
+      addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'));
+      addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'));
+      addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'));
+      addPool('Jharkhand',   'Open States',course,getColleges('JH',course,['OPEN'],'open_pvt'));
+      addPool('Tripura',     'Open States',course,getColleges('TR',course,['OPEN'],'open_pvt'));
+    }
+
+    if(isBDS){
+      addPool('AIQ Govt','MCC AIQ',course,getColleges('AIQ',course,keys,'aiq'));
+      addDeemedBands('MCC AIQ',course);
+    }
+
+    if(isBPTH){
+      // MH only — already added above
+    }
   });
 
   return rows;
@@ -481,7 +523,8 @@ function renderTable(rows){
 // ── PDF DOWNLOAD ─────────────────────────────────────────────────
 async function downloadPDF(){
   const btn=document.getElementById('pdfBtn');
-  btn.textContent='⏳ Generating...';btn.classList.add('loading');
+  btn.textContent='⏳ Generating...';
+  btn.classList.add('loading');
 
   const score=activeScore(), cat=activeCategory(), course=activeCourse();
   const name=STUDENT.name||'Student';
@@ -489,77 +532,72 @@ async function downloadPDF(){
   const date=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
   const rows=buildPoolRows();
 
-  // Build printable HTML
-  const tableRows=rows.map(r=>{
-    let html='';
-    html+=`<tr style="background:${rows.indexOf(r)%2===0?'#fff':'#f9f9ff'}">
-      <td style="font-weight:700">${r.label}</td>
-      <td style="text-align:center">${r.course}</td>
-      <td style="text-align:center;font-weight:900;color:#6a0dad">${r.inReach}/${r.total}</td>
-      <td style="text-align:center;font-weight:700">${r.lastCutoff}</td>
-      <td style="text-align:center;font-weight:900;color:#1a0040">${r.projCutoff}</td>
-      <td style="text-align:center">${r.feeStr}</td>
-      <td style="text-align:center;font-weight:900">${r.budgetStr}</td>
-      <td style="text-align:center"><span style="padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;
-        background:${r.status.key==='safe'?'rgba(21,128,61,.12)':r.status.key==='likely'?'rgba(56,189,248,.15)':r.status.key==='borderline'?'rgba(251,146,60,.15)':'rgba(185,28,28,.10)'};
-        color:${r.status.key==='safe'?'#15803d':r.status.key==='likely'?'#0369a1':r.status.key==='borderline'?'#b45309':'#b91c1c'}">${r.status.label}</span></td>
+  // Build table rows HTML
+  let lastGroup='';
+  const tableRowsHtml=rows.map((r,i)=>{
+    let groupHeader='';
+    if(r.group!==lastGroup){
+      lastGroup=r.group;
+      groupHeader=`<tr style="background:#1a0040"><td colspan="8" style="color:#FFD700;font-weight:800;font-size:11px;padding:6px 10px;letter-spacing:1px;text-transform:uppercase">${r.group}</td></tr>`;
+    }
+    const statusColor=r.status.key==='safe'?'#15803d':r.status.key==='likely'?'#0369a1':r.status.key==='borderline'?'#b45309':'#b91c1c';
+    const statusBg=r.status.key==='safe'?'rgba(21,128,61,.12)':r.status.key==='likely'?'rgba(56,189,248,.12)':r.status.key==='borderline'?'rgba(251,146,60,.12)':'rgba(185,28,28,.08)';
+    return groupHeader+`<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+      <td style="padding:7px 10px;font-size:11px;font-weight:700">${r.label}</td>
+      <td style="padding:7px 10px;font-size:11px;text-align:center">${r.course}</td>
+      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:900;color:#6a0dad">${r.inReach}/${r.total}</td>
+      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:700">${r.lastCutoff}</td>
+      <td style="padding:7px 10px;text-align:center"><span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:900">${r.projCutoff}</span></td>
+      <td style="padding:7px 10px;font-size:11px;text-align:center">${r.feeStr}</td>
+      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:900">${r.budgetStr}</td>
+      <td style="padding:7px 10px;text-align:center"><span style="background:${statusBg};color:${statusColor};padding:2px 9px;border-radius:6px;font-size:10px;font-weight:800">${r.status.label}</span></td>
     </tr>`;
-    return html;
   }).join('');
 
-  const printEl=document.getElementById('pdfTemplate');
-  printEl.innerHTML=`
-  <div style="font-family:Arial,sans-serif;width:750px;padding:30px;background:#fff;">
-    <!-- HEADER -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+  // Build full A4 PDF div
+  const pdfDiv=document.getElementById('pdfTemplate');
+  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;padding:30px;';
+  pdfDiv.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
       <div>
-        <div style="font-size:20px;font-weight:900;color:#1a0040;letter-spacing:-0.5px">ASMI Career</div>
-        <div style="font-size:11px;color:#6a0dad;font-weight:700;letter-spacing:1px;text-transform:uppercase">Admission Analysis Report</div>
+        <div style="font-size:22px;font-weight:900;color:#1a0040;letter-spacing:-0.5px">ASMI Career</div>
+        <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Medical Admission Analysis Report</div>
       </div>
-      <div style="text-align:right;font-size:10px;color:#888">
+      <div style="text-align:right;font-size:10px;color:#888;line-height:1.6">
         <div>Generated: ${date}</div>
         <div>asmicareer.in · 7410019077</div>
       </div>
     </div>
-    <div style="height:2px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:16px;"></div>
-
-    <!-- STUDENT PROFILE -->
-    <div style="background:#FFF9CC;border:1px solid #1a0040;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;gap:30px;">
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</span><br><strong style="font-size:13px;color:#1a0040">${name}</strong></div>
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Token</span><br><strong style="color:#1a0040">${token}</strong></div>
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">NEET Score</span><br><strong style="font-size:16px;color:#6a0dad">${score}</strong></div>
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Category</span><br><strong style="color:#1a0040">${cat}</strong></div>
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Course</span><br><strong style="color:#1a0040">${course}</strong></div>
-      <div><span style="font-size:10px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Data Basis</span><br><strong style="color:#1a0040;font-size:11px">2025–26 + 15 adj.</strong></div>
+    <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:16px"></div>
+    <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;gap:28px;flex-wrap:wrap">
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div><div style="font-weight:800;font-size:13px;color:#1a0040;margin-top:2px">${name}</div></div>
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${token}</div></div>
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px">${score}</div></div>
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${cat}</div></div>
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Course(s)</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${(getSess().course||course)}</div></div>
+      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Data Basis</div><div style="font-weight:700;font-size:11px;color:#1a0040;margin-top:2px">2025–26 + 15 adj.</div></div>
     </div>
-
-    <!-- TABLE -->
-    <table style="width:100%;border-collapse:collapse;font-size:11px;">
+    <table style="width:100%;border-collapse:collapse;font-size:11px">
       <thead>
-        <tr style="background:#1a0040;">
-          <th style="color:#FFD700;padding:8px 10px;text-align:left;font-weight:800;font-size:10px;letter-spacing:.5px">Pool</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Course</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Options</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Last Cutoff</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Projected</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Fee/yr</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Total Budget</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-weight:800;font-size:10px">Status</th>
+        <tr style="background:#1a0040">
+          <th style="color:#FFD700;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.5px">Pool</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Course</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Options</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Last Cutoff</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Projected</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Fee/yr</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Total Budget</th>
+          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Status</th>
         </tr>
       </thead>
-      <tbody>${tableRows}</tbody>
+      <tbody>${tableRowsHtml}</tbody>
     </table>
-
-    <!-- FOOTER -->
-    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:9px;color:#999;text-align:center;">
+    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:9px;color:#aaa;text-align:center">
       Generated by ASMI Career · asmicareer.in · 7410019077 · Confidential — For student use only
-    </div>
-  </div>`;
-
-  printEl.style.display='block';
+    </div>`;
 
   try{
-    const canvas=await html2canvas(printEl,{scale:2,backgroundColor:'#fff',useCORS:true});
+    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,logging:false});
     const imgData=canvas.toDataURL('image/png');
     const{jsPDF}=window.jspdf;
     const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
@@ -571,21 +609,20 @@ async function downloadPDF(){
     if(imgH<=pageH){
       pdf.addImage(imgData,'PNG',0,0,imgW,imgH);
     } else {
-      // Multi-page
       let remaining=imgH;
       while(remaining>0){
         pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
-        remaining-=pageH;yPos+=pageH;
+        remaining-=pageH; yPos+=pageH;
         if(remaining>0) pdf.addPage();
       }
     }
-    const safeName=name.replace(/[^a-zA-Z0-9]/g,'_');
+    const safeName=(name).replace(/[^a-zA-Z0-9]/g,'_');
     pdf.save(`ASMI_Analysis_${safeName}_${token}.pdf`);
-  } catch(err){
+  }catch(err){
     console.error('PDF error:',err);
     alert('PDF generation failed. Try again.');
-  } finally {
-    printEl.style.display='none';
+  }finally{
+    pdfDiv.style.display='none';
     btn.textContent='⬇ Download PDF';
     btn.classList.remove('loading');
   }
