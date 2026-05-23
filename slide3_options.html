@@ -635,14 +635,41 @@ function getDeemedBands(deemed){
   return bands;
 }
 function renderMCCOverview(){
-  const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
-  const di=deemed.filter(c=>c.prob&&c.prob.key!=='reach').length;
-  const dt=deemed.length;
-  const ti=aiqR.length+aiimsR.length+jipmerR.length+centralR.length+di;
-  const tt=aiq.length+aiims.length+jipmer.length+central.length+dt;
+  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  const hasMBBS=selectedCourses.includes('MBBS');
+  const hasBDS=selectedCourses.includes('BDS');
+  const keys=catKeys(activeCategory());
+
+  // AIQ — merge MBBS + BDS deduplicated
+  const aiqMBBS=hasMBBS?getColleges('AIQ','MBBS',keys,'aiq'):[];
+  const aiqBDS=hasBDS?getColleges('AIQ','BDS',keys,'aiq'):[];
+  const seenAIQ=new Set(aiqMBBS.map(c=>c.n));
+  const aiqAll=[...aiqMBBS,...aiqBDS.filter(c=>!seenAIQ.has(c.n))];
+  const aiqAllR=aiqAll.filter(c=>c.prob&&c.prob.key!=='reach');
+
+  // AIIMS — MBBS only
+  const{aiimsR,aiims,jipmerR,jipmer,centralR,central}=computeMCC();
+
+  // Deemed — MBBS bands + BDS groups
+  let di=0,dt=0;
+  if(hasMBBS){
+    const mbbsDemed=getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+    const bands=getDeemedBands(mbbsDemed);
+    di+=bands.reduce((s,b)=>s+b.inReach,0);
+    dt+=bands.reduce((s,b)=>s+b.total,0);
+  }
+  if(hasBDS){
+    const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
+    di+=bdsDemed.filter(c=>c.prob&&c.prob.key!=='reach').length;
+    dt+=bdsDemed.length;
+  }
+
+  const ti=aiqAllR.length+(hasMBBS?aiimsR.length:0)+(hasMBBS?jipmerR.length:0)+centralR.length+di;
+  const tt=aiqAll.length+(hasMBBS?aiims.length:0)+(hasMBBS?jipmer.length:0)+central.length+dt;
+
   document.getElementById('mcc-overview-stats').innerHTML=`
-    <div class="pd-stat"><span class="pd-stat-label">AIQ Govt</span><span class="pd-stat-val">${aiqR.length}/${aiq.length}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">AIIMS</span><span class="pd-stat-val">${aiimsR.length}/${aiims.length}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">AIQ Govt</span><span class="pd-stat-val">${aiqAllR.length}/${aiqAll.length}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">AIIMS</span><span class="pd-stat-val">${hasMBBS?aiimsR.length+'/'+aiims.length:'N/A'}</span></div>
     <div class="pd-stat"><span class="pd-stat-label">Deemed</span><span class="pd-stat-val">${di}/${dt}</span></div>`;
   document.getElementById('mcc-slim-count').textContent=`${ti}/${tt}`;
 }
