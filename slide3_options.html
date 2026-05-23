@@ -656,9 +656,39 @@ function renderMCCExpanded(){
   const hasBDS=selectedCourses.includes('BDS');
   const isMBBS=hasMBBS; // keep for count grid compatibility
   document.getElementById('mcc-count-grid').innerHTML=`
-    <div class="mcc-count-card"><div class="mcc-card-title">AIQ Govt</div><div class="mcc-card-num">${num(aiqR.length,aiq.length)}</div><div class="mcc-card-sub">colleges in reach</div></div>
-    <div class="mcc-count-card clickable" id="aiims-card" onclick="toggleAIIMS()"><div class="mcc-card-title">AIIMS</div><div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div><div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div></div>
-    <div class="mcc-count-card"><div class="mcc-card-title">JIPMER</div><div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">of ${jipmer.length} reachable</div></div>
+    ${(()=>{
+      let aiqTotal=aiq, aiqReach=aiqR;
+      if(hasBDS){
+        const aiqBDS=getColleges('AIQ','BDS',keys,'aiq');
+        const aiqBDSR=aiqBDS.filter(c=>c.prob&&c.prob.key!=='reach');
+        const seen=new Set(aiq.map(c=>c.n));
+        const extraCols=aiqBDS.filter(c=>!seen.has(c.n));
+        const extraReach=aiqBDSR.filter(c=>!seen.has(c.n));
+        aiqTotal=[...aiq,...extraCols];
+        aiqReach=[...aiqR,...extraReach];
+      }
+      return `<div class="mcc-count-card">
+        <div class="mcc-card-title">AIQ Govt</div>
+        <div class="mcc-card-num">${num(aiqReach.length,aiqTotal.length)}</div>
+        <div class="mcc-card-sub">${hasMBBS&&hasBDS?'MBBS + BDS combined':'colleges in reach'}</div>
+      </div>`;
+    })()}
+    <div class="mcc-count-card ${hasMBBS?'clickable':''}" id="aiims-card" ${hasMBBS?'onclick="toggleAIIMS()"':''}>
+      <div class="mcc-card-title">AIIMS</div>
+      ${hasMBBS
+        ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
+           <div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
+        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
+           <div class="mcc-card-sub">BDS not applicable</div>`}
+    </div>
+    <div class="mcc-count-card">
+      <div class="mcc-card-title">JIPMER</div>
+      ${hasMBBS
+        ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div>
+           <div class="mcc-card-sub">of ${jipmer.length} reachable</div>`
+        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
+           <div class="mcc-card-sub">BDS not applicable</div>`}
+    </div>
     ${(()=>{
       const jmiCols=hasBDS?getColleges('CENTRAL','BDS',keys,'central').filter(c=>c.n.includes('Jamia')):[];
       const jmiR=jmiCols.filter(c=>c.prob&&c.prob.key!=='reach');
