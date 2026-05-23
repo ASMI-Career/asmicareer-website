@@ -576,14 +576,41 @@ function getOSTotal(stKey,course){
 // MH
 let mhGovt={cols:[],total:0},mhPvt={cols:[],total:0};
 function computeMH(){mhGovt=getMHDual('mh_govt');mhPvt=getMHDual('mh_pvt');}
+function getMHDualForCourse(course, listType){
+  const score=activeScore(), userCat=activeCategory();
+  if(!DB.MH||!DB.MH[course]) return{cols:[],total:0};
+  const openList=DB.MH[course]?.OPEN?.[listType]||[];
+  const catList=(userCat!=='General')?(DB.MH[course]?.[userCat]?.[listType]||[]):[];
+  const openMap=new Map(openList.map(c=>[c.n,c.c]));
+  const catMap=new Map(catList.map(c=>[c.n,c.c]));
+  const allNames=new Set([...openMap.keys(),...catMap.keys()]);
+  const total=allNames.size, cols=[];
+  allNames.forEach(name=>{
+    const openC=openMap.has(name)?openMap.get(name):null;
+    const catC=catMap.has(name)?catMap.get(name):null;
+    const bestC=Math.min(openC??Infinity,catC??Infinity);
+    if(bestC===Infinity) return;
+    cols.push({n:name,openCutoff:openC,catCutoff:catC,c:bestC,prob:prob(score,bestC)});
+  });
+  return{cols,total};
+}
 function renderMHOverview(){
+  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  let giTotal=0,gtTotal=0,piTotal=0,ptTotal=0;
+  selectedCourses.forEach(course=>{
+    const govt=getMHDualForCourse(course,'mh_govt');
+    const pvt =getMHDualForCourse(course,'mh_pvt');
+    giTotal+=govt.cols.filter(c=>c.prob.key!=='reach').length;
+    gtTotal+=govt.total;
+    piTotal+=pvt.cols.filter(c=>c.prob.key!=='reach').length;
+    ptTotal+=pvt.total;
+  });
+  // Also run computeMH() so expanded view stays in sync
   computeMH();
-  const gi=mhGovt.cols.filter(c=>c.prob.key!=='reach').length,gt=mhGovt.total;
-  const pi=mhPvt.cols.filter(c=>c.prob.key!=='reach').length,pt=mhPvt.total;
   document.getElementById('mh-overview-stats').innerHTML=`
-    <div class="pd-stat"><span class="pd-stat-label">Govt Colleges</span><span class="pd-stat-val">${gi}/${gt}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Private Colleges</span><span class="pd-stat-val">${pi}/${pt}</span></div>`;
-  document.getElementById('mh-slim-count').textContent=`${gi+pi}/${gt+pt}`;
+    <div class="pd-stat"><span class="pd-stat-label">Govt Colleges</span><span class="pd-stat-val">${giTotal}/${gtTotal}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Private Colleges</span><span class="pd-stat-val">${piTotal}/${ptTotal}</span></div>`;
+  document.getElementById('mh-slim-count').textContent=`${giTotal+piTotal}/${gtTotal+ptTotal}`;
 }
 function renderMHExpanded(){
   computeMH();
@@ -772,12 +799,33 @@ function toggleAIIMS(){
 // OPEN STATE
 let osResults=[];
 function computeOS(){
-  const course=primaryCourse();osResults=[];
+  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  // Open States only show MBBS data — use primaryCourse() for display
+  const course=primaryCourse();
+  osResults=[];
   OPEN_STATES.forEach(stKey=>{
-    const all=getOSColleges(stKey,course);
-    const total=getOSTotal(stKey,course);
-    const inReach=all.filter(c=>c.prob.key!=='reach');
-    if(inReach.length>0) osResults.push({stKey,label:STATE_LABELS[stKey]||stKey,colleges:all.sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c),inReach:inReach.length,total});
+    let totalCount=0, inReachCount=0;
+    let allCols=[];
+    selectedCourses.forEach(sc=>{
+      // Only MBBS has open state data
+      if(sc!=='MBBS') return;
+      const cols=getOSColleges(stKey,sc);
+      const total=getOSTotal(stKey,sc);
+      totalCount+=total;
+      inReachCount+=cols.filter(c=>c.prob.key!=='reach').length;
+      allCols=[...allCols,...cols];
+    });
+    // If no MBBS selected fall back to primaryCourse
+    if(!selectedCourses.includes('MBBS')){
+      const cols=getOSColleges(stKey,course);
+      totalCount=getOSTotal(stKey,course);
+      inReachCount=cols.filter(c=>c.prob.key!=='reach').length;
+      allCols=cols;
+    }
+    if(inReachCount>0){
+      const sorted=allCols.sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+      osResults.push({stKey,label:STATE_LABELS[stKey]||stKey,colleges:sorted,inReach:inReachCount,total:totalCount});
+    }
   });
 }
 function renderOpenOverview(){
