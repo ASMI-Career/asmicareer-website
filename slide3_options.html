@@ -493,13 +493,23 @@ function renderMHBlurred(cols){
   const userCat=activeCategory(),showDual=(userCat!=='General');
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  // Sort by cutoff ascending (easiest first)
+  const byEasiest=[...cols].sort((a,b)=>a.c-b.c);
+  const total=byEasiest.length;
   const preview=[];
-  const safeOnes=sorted.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').slice(0,2);
-  const borderOnes=sorted.filter(c=>c.prob.key==='borderline').slice(0,2);
-  const reachOne=sorted.find(c=>c.prob.key==='reach');
-  preview.push(...safeOnes,...borderOnes);
-  if(reachOne) preview.push(reachOne);
-  const rest=sorted.filter(c=>!preview.includes(c));
+  if(total<=5){
+    // Fewer than 5 — show all
+    preview.push(...byEasiest);
+  } else {
+    // Always pick: 2 easiest, 2 from middle, 1 hardest
+    preview.push(byEasiest[0]);
+    preview.push(byEasiest[1]);
+    const mid=Math.floor(total/2);
+    preview.push(byEasiest[mid]);
+    preview.push(byEasiest[mid+1]);
+    preview.push(byEasiest[total-1]);
+  }
+  const rest=byEasiest.filter(c=>!preview.includes(c));
   const catLabel=userCat+' Cutoff';
   const dh=showDual?`<th style="color:rgba(255,215,0,.75)">${catLabel}</th>`:'';
   function row(c){
@@ -517,13 +527,20 @@ function renderMHBlurred(cols){
 function renderOSTable(stKey,cols){
   if(!cols.length) return '<div class="no-data">No colleges found.</div>';
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  const byEasiest=[...cols].sort((a,b)=>a.c-b.c);
+  const total=byEasiest.length;
   const preview=[];
-  const safeOnes=sorted.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').slice(0,2);
-  const borderOnes=sorted.filter(c=>c.prob.key==='borderline').slice(0,2);
-  const reachOne=sorted.find(c=>c.prob.key==='reach');
-  preview.push(...safeOnes,...borderOnes);
-  if(reachOne) preview.push(reachOne);
-  const rest=sorted.filter(c=>!preview.includes(c));
+  if(total<=5){
+    preview.push(...byEasiest);
+  } else {
+    preview.push(byEasiest[0]);
+    preview.push(byEasiest[1]);
+    const mid=Math.floor(total/2);
+    preview.push(byEasiest[mid]);
+    preview.push(byEasiest[mid+1]);
+    preview.push(byEasiest[total-1]);
+  }
+  const rest=byEasiest.filter(c=>!preview.includes(c));
   function row(c){return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;}
   const thead=`<thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
