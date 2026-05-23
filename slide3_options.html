@@ -650,13 +650,16 @@ function renderMCCExpanded(){
   const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
   aiimsOpen=false;
   const num=(r,t)=>`${r}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${t}</span>`;
+  const keys=catKeys(activeCategory());
+  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  const hasMBBS=selectedCourses.includes('MBBS');
+  const hasBDS=selectedCourses.includes('BDS');
+  const isMBBS=hasMBBS; // keep for count grid compatibility
   document.getElementById('mcc-count-grid').innerHTML=`
     <div class="mcc-count-card"><div class="mcc-card-title">AIQ Govt</div><div class="mcc-card-num">${num(aiqR.length,aiq.length)}</div><div class="mcc-card-sub">colleges in reach</div></div>
     <div class="mcc-count-card clickable" id="aiims-card" onclick="toggleAIIMS()"><div class="mcc-card-title">AIIMS</div><div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div><div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div></div>
     <div class="mcc-count-card"><div class="mcc-card-title">JIPMER</div><div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">of ${jipmer.length} reachable</div></div>
     ${(()=>{
-      const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
-      const hasBDS=selectedCourses.includes('BDS');
       const jmiCols=hasBDS?getColleges('CENTRAL','BDS',keys,'central').filter(c=>c.n.includes('Jamia')):[];
       const jmiR=jmiCols.filter(c=>c.prob&&c.prob.key!=='reach');
       const totalCentral=central.length+(hasBDS?jmiCols.length:0);
@@ -669,9 +672,6 @@ function renderMCCExpanded(){
     })()}`;
   document.getElementById('aiims-list').innerHTML=aiims.length?renderTable(aiims):'';
   document.getElementById('aiims-list').classList.remove('open');
-  const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
-  const hasMBBS=selectedCourses.includes('MBBS');
-  const hasBDS=selectedCourses.includes('BDS');
   let deemedHtml='';
 
   // MBBS Deemed — 3 fee bands
