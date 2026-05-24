@@ -795,8 +795,10 @@ async function downloadShortlistPDF(){
 // ── KEYBOARD NAV ─────────────────────────────────────────────────
 document.addEventListener('keydown',e=>{
   const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
-  if(e.key==='ArrowRight') window.location.href='slide5_problems.html?token='+encodeURIComponent(token);
-  if(e.key==='ArrowLeft')  window.location.href='slide3_options.html?token='+encodeURIComponent(token);
+  const isCounsel=getSess().mode==='counsel';
+  const modeParam=isCounsel?'&mode=counsel':'';
+  if(e.key==='ArrowLeft') window.location.href='slide3_options.html?token='+encodeURIComponent(token)+modeParam;
+  if(e.key==='ArrowRight'&&!isCounsel) window.location.href='slide5_problems.html?token='+encodeURIComponent(token);
 });
 
 // ── INIT ─────────────────────────────────────────────────────────
@@ -804,8 +806,16 @@ async function init(){
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
 
-  document.getElementById('navPrev').href='slide3_options.html?token='+encodeURIComponent(token);
-  document.getElementById('navNext').href='slide5_problems.html?token='+encodeURIComponent(token);
+  const isCounsel=getSess().mode==='counsel';
+  const modeParam=isCounsel?'&mode=counsel':'';
+  document.getElementById('navPrev').href='slide3_options.html?token='+encodeURIComponent(token)+modeParam;
+  document.getElementById('navNext').href= isCounsel
+    ? 'slide3_options.html?token='+encodeURIComponent(token)+'&mode=counsel'
+    : 'slide5_problems.html?token='+encodeURIComponent(token);
+  if(isCounsel){
+    document.getElementById('navNext').style.opacity='0.2';
+    document.getElementById('navNext').style.pointerEvents='none';
+  }
   document.getElementById('nextBtn').href='slide5_problems.html?token='+encodeURIComponent(token);
 
   try{
