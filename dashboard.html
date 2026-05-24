@@ -83,12 +83,24 @@
 <iframe id="slideFrame" src="" allowfullscreen></iframe>
 
 <script>
-  const token = new URLSearchParams(location.search).get('token') || '';
-  const frame = document.getElementById('slideFrame');
-  const overlay = document.getElementById('loadingOverlay');
+  const token  = new URLSearchParams(location.search).get('token') || '';
+  const mode   = new URLSearchParams(location.search).get('mode') || '';
+  const frame  = document.getElementById('slideFrame');
+  const overlay= document.getElementById('loadingOverlay');
 
-  // Load slide 1 with token
-  frame.src = 'slide1_welcome.html?token=' + encodeURIComponent(token);
+  // Store mode in sessionStorage so all slides can read it
+  try {
+    const s = JSON.parse(sessionStorage.getItem('asmi') || '{}');
+    s.mode = mode;
+    sessionStorage.setItem('asmi', JSON.stringify(s));
+  } catch(e){}
+
+  // Counsel mode starts at Slide 2, sales mode starts at Slide 1
+  const startSlide = mode === 'counsel'
+    ? 'slide2_profile.html?token=' + encodeURIComponent(token) + '&mode=counsel'
+    : 'slide1_welcome.html?token='  + encodeURIComponent(token);
+
+  frame.src = startSlide;
 
   // When iframe is ready — fade out loader, fade in iframe
   frame.addEventListener('load', function() {
