@@ -7,17 +7,13 @@
     <title>ASMI Career — Medical & Engineering Admissions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
     <style>
+        /* ── BASE ── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; font-family: 'Space Grotesk', sans-serif; }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* ── SPLIT CONTAINER ── */
+        /* ── SPLIT ── */
         .split {
             display: flex;
             height: 100vh;
@@ -26,274 +22,323 @@
             overflow: hidden;
         }
 
-        /* ── BOTH PANELS ── */
+        /* ── PANELS ── */
         .medical, .engineering {
+            width: 50%;
             height: 100%;
             position: relative;
             cursor: pointer;
+            overflow: hidden;
             flex-shrink: 0;
-        }
-
-        .medical {
-            flex-basis: 50%;
-            clip-path: polygon(0 0, 92% 0, 100% 100%, 0 100%);
-            background: #1a0040;
-            z-index: 1;
-            transition: flex-basis 0.6s cubic-bezier(0.77, 0, 0.18, 1);
-        }
-
-        .engineering {
-            flex-basis: 58%;
-            margin-left: -8%;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 8% 100%);
-            background: #003d3d;
-            z-index: 2;
-            transition: flex-basis 0.6s cubic-bezier(0.77, 0, 0.18, 1);
+            transition: width 0.55s cubic-bezier(0.77, 0, 0.18, 1);
         }
 
         /* ── HOVER EXPAND ── */
-        .split:has(.medical:hover) .medical   { flex-basis: 62%; }
-        .split:has(.medical:hover) .engineering { flex-basis: 46%; }
-        .split:has(.engineering:hover) .engineering { flex-basis: 62%; }
-        .split:has(.engineering:hover) .medical   { flex-basis: 46%; }
+        .split:has(.medical:hover)    .medical     { width: 60%; }
+        .split:has(.medical:hover)    .engineering { width: 40%; }
+        .split:has(.engineering:hover) .engineering { width: 60%; }
+        .split:has(.engineering:hover) .medical     { width: 40%; }
 
-        /* ── MEDICAL BG LAYERS ── */
+        /* ═══════════════════════════════════════
+           MEDICAL SIDE  (#FFD700)
+        ═══════════════════════════════════════ */
+        .medical { background: #FFD700; }
+
         .medical-grid {
             position: absolute; inset: 0; pointer-events: none;
             background-image:
-                linear-gradient(rgba(255,215,0,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,215,0,0.04) 1px, transparent 1px);
-            background-size: 48px 48px;
+                linear-gradient(rgba(26,0,64,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26,0,64,0.06) 1px, transparent 1px);
+            background-size: 52px 52px;
         }
         .medical-glow {
-            position: absolute; bottom: -20%; right: -10%;
-            width: 70%; height: 70%; pointer-events: none;
-            background: radial-gradient(circle, rgba(106,13,173,0.35) 0%, transparent 70%);
+            position: absolute; bottom: -20%; left: -10%;
+            width: 80%; height: 80%; pointer-events: none;
+            background: radial-gradient(circle, rgba(26,0,64,0.08) 0%, transparent 70%);
         }
 
-        /* ── ENGINEERING BG LAYERS ── */
-        .engineering-grid {
-            position: absolute; inset: 0; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(0,200,180,0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,200,180,0.05) 1px, transparent 1px);
-            background-size: 48px 48px;
+        /* Floating particles */
+        .particle {
+            position: absolute; border-radius: 50%;
+            background: rgba(26,0,64,0.15);
+            pointer-events: none;
+            animation: floatUp var(--dur, 4s) var(--delay, 0s) ease-in infinite;
+            z-index: 1;
         }
-        .engineering-glow {
-            position: absolute; top: -20%; left: -10%;
-            width: 70%; height: 70%; pointer-events: none;
-            background: radial-gradient(circle, rgba(0,168,150,0.3) 0%, transparent 70%);
+        @keyframes floatUp {
+            0%   { transform: translateY(0) scale(1); opacity: 0.8; }
+            80%  { opacity: 0.3; }
+            100% { transform: translateY(-85vh) scale(0.4); opacity: 0; }
         }
 
-        /* ── PANEL CONTENT ── */
+        /* Medical content */
         .medical-content {
             position: relative; z-index: 2;
             height: 100%;
             display: flex; flex-direction: column; justify-content: center;
-            padding: 64px 12% 64px 8%;
+            padding: 64px;
         }
+
+        .med-logo { margin-bottom: 28px; }
+        .med-logo img { height: 52px; width: auto; mix-blend-mode: multiply; display: block; }
+
+        /* Eyebrow pill */
+        .eyebrow-pill {
+            display: inline-flex; align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 3px; text-transform: uppercase;
+            border-radius: 20px; padding: 5px 14px;
+            margin-bottom: 20px; align-self: flex-start;
+        }
+        .medical   .eyebrow-pill { background: #1a0040; color: #FFD700; }
+        .engineering .eyebrow-pill {
+            background: rgba(0,200,180,0.15); color: #00C8B4;
+            border: 1px solid rgba(0,200,180,0.3);
+        }
+
+        /* Headline */
+        .panel-h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900; font-size: clamp(30px, 3vw, 48px);
+            line-height: 1.05; letter-spacing: -0.025em;
+            margin-bottom: 18px;
+        }
+        .medical   .panel-h1        { color: #1a0040; }
+        .medical   .panel-h1 .accent { color: #6a0dad; }
+        .engineering .panel-h1        { color: #ffffff; }
+        .engineering .panel-h1 .accent { color: #00C8B4; }
+
+        /* Sub */
+        .panel-sub {
+            font-size: 15px; line-height: 1.65;
+            margin-bottom: 22px; max-width: 380px;
+        }
+        .medical   .panel-sub { color: rgba(26,0,64,0.6); }
+        .engineering .panel-sub { color: rgba(255,255,255,0.5); }
+
+        /* Tags */
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+        .tag { font-size: 10px; font-weight: 600; letter-spacing: 1px; padding: 5px 10px; border-radius: 8px; }
+        .medical   .tag { background: rgba(26,0,64,0.08); color: #1a0040; border: 1px solid rgba(26,0,64,0.15); }
+        .engineering .tag { background: rgba(0,200,180,0.1); color: rgba(0,200,180,0.8); border: 1px solid rgba(0,200,180,0.2); }
+
+        /* Stats */
+        .stats-row { display: flex; align-items: flex-start; gap: 24px; margin-bottom: 32px; flex-wrap: wrap; }
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-num {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900; font-size: 22px; line-height: 1;
+        }
+        .stat-lbl { font-size: 11px; font-weight: 500; margin-top: 3px; }
+        .medical   .stat-num { color: #1a0040; }
+        .medical   .stat-lbl { color: rgba(26,0,64,0.5); }
+        .engineering .stat-num { color: #ffffff; }
+        .engineering .stat-lbl { color: rgba(255,255,255,0.4); }
+
+        /* CTA */
+        .cta-btn {
+            display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px;
+            padding: 14px 32px; border-radius: 50px;
+            text-decoration: none; border: none; cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .medical   .cta-btn { background: #1a0040; color: #FFD700; box-shadow: 0 6px 24px rgba(26,0,64,0.25); }
+        .engineering .cta-btn { background: #00A896; color: #ffffff; box-shadow: 0 6px 24px rgba(0,168,150,0.3); }
+        .medical:hover   .cta-btn { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(26,0,64,0.38); }
+        .engineering:hover .cta-btn { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,168,150,0.48); }
+
+        /* Heartbeat SVG */
+        .heartbeat-wrap {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+            z-index: 2; pointer-events: none;
+        }
+        .heartbeat-wrap svg { width: 100%; height: 100%; }
+        .heartbeat-path {
+            fill: none; stroke: #6a0dad; stroke-width: 2;
+            stroke-dasharray: 350 850;
+            animation: heartbeatFlow 2s linear infinite;
+        }
+        @keyframes heartbeatFlow {
+            from { stroke-dashoffset: 1200; }
+            to   { stroke-dashoffset: 0; }
+        }
+
+        /* Medical college cards */
+        .med-cards {
+            position: absolute; bottom: 90px; right: 28px;
+            z-index: 5; display: flex; flex-direction: column; gap: 8px;
+        }
+        .med-card {
+            background: rgba(255,255,255,0.7);
+            border: 1px solid rgba(26,0,64,0.12);
+            border-radius: 12px; backdrop-filter: blur(8px);
+            padding: 10px 14px; font-size: 11px; color: #1a0040;
+            min-width: 200px;
+            opacity: 0; transform: translateY(20px);
+            animation: slideUp 0.5s ease forwards;
+        }
+        .med-card:nth-child(1) { animation-delay: 0.4s; }
+        .med-card:nth-child(2) { animation-delay: 0.65s; }
+        .med-card:nth-child(3) { animation-delay: 0.9s; }
+        .card-college { font-weight: 700; margin-bottom: 4px; }
+        .card-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .card-score { color: rgba(26,0,64,0.55); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════
+           ENGINEERING SIDE  (#0a1628)
+        ═══════════════════════════════════════ */
+        .engineering { background: #0a1628; }
+
+        .engineering-grid {
+            position: absolute; inset: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(0,200,180,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,200,180,0.04) 1px, transparent 1px);
+            background-size: 52px 52px;
+        }
+        .engineering-glow {
+            position: absolute; top: -20%; right: -10%;
+            width: 70%; height: 70%; pointer-events: none;
+            background: radial-gradient(circle, rgba(0,168,150,0.2) 0%, transparent 70%);
+        }
+
+        /* Circuit board lines */
+        .circuit-svg {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 1; overflow: visible;
+        }
+        .cpath {
+            fill: none; stroke: rgba(0,200,180,0.2); stroke-width: 1;
+            stroke-dasharray: var(--l, 600);
+            stroke-dashoffset: var(--l, 600);
+            animation: drawCircuit 3s ease forwards;
+            animation-delay: var(--d, 0s);
+            animation-fill-mode: forwards;
+        }
+        @keyframes drawCircuit { to { stroke-dashoffset: 0; } }
+
+        /* Engineering content */
         .engineering-content {
             position: relative; z-index: 2;
             height: 100%;
             display: flex; flex-direction: column; justify-content: center;
-            padding: 64px 8% 64px 18%;
+            padding: 64px 64px 64px 80px;
         }
 
-        /* ── EYEBROW ── */
-        .eyebrow {
-            font-size: 10px; font-weight: 700;
-            letter-spacing: 3px; text-transform: uppercase;
-            margin-bottom: 20px;
+        /* Rank counter */
+        .rank-counter {
+            display: inline-flex; align-items: baseline; gap: 6px;
+            margin-bottom: 16px;
         }
-        .medical .eyebrow { color: rgba(255,215,0,0.6); }
-        .engineering .eyebrow { color: rgba(0,200,180,0.7); }
+        .rank-label {
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+            font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+            color: rgba(0,200,180,0.6);
+        }
+        .rank-num {
+            font-family: 'Montserrat', sans-serif; font-weight: 900;
+            font-size: 30px; color: #00C8B4; line-height: 1;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .rank-num.changing { opacity: 0; transform: scale(0.82); }
 
-        /* ── HEADLINES ── */
-        .panel-h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900; font-size: clamp(36px, 3.5vw, 52px);
-            line-height: 1.06; letter-spacing: -0.03em;
-            margin-bottom: 20px;
+        /* Engineering college cards */
+        .eng-cards {
+            position: absolute; bottom: 32px; left: 80px;
+            z-index: 5; display: flex; flex-direction: column; gap: 8px;
         }
-        .medical .panel-h1 { color: #FFD700; }
-        .medical .panel-h1 .accent { color: #6a0dad; }
-        .engineering .panel-h1 { color: #fff; }
-        .engineering .panel-h1 .accent { color: #00C8B4; }
-
-        /* ── SUBTEXT ── */
-        .panel-sub {
-            font-size: 15px; line-height: 1.65;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 24px; max-width: 360px;
-        }
-
-        /* ── TAGS ── */
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-        .tag {
-            font-size: 11px; font-weight: 600;
-            padding: 5px 12px; border-radius: 20px;
-        }
-        .medical .tag {
-            background: rgba(255,215,0,0.12);
-            color: rgba(255,215,0,0.8);
-            border: 1px solid rgba(255,215,0,0.2);
-        }
-        .engineering .tag {
-            background: rgba(0,200,180,0.12);
-            color: rgba(0,200,180,0.9);
+        .eng-card {
+            background: rgba(255,255,255,0.05);
             border: 1px solid rgba(0,200,180,0.2);
+            border-radius: 12px; padding: 10px 14px;
+            font-size: 11px; color: rgba(255,255,255,0.8);
+            min-width: 200px;
+            opacity: 0; transform: translateY(20px);
+            animation: slideUp 0.5s ease forwards;
         }
+        .eng-card:nth-child(1) { animation-delay: 0.5s; }
+        .eng-card:nth-child(2) { animation-delay: 0.75s; }
+        .eng-card:nth-child(3) { animation-delay: 1.0s; }
+        .eng-card .card-college { color: #fff; }
+        .eng-card .card-score   { color: rgba(0,200,180,0.75); }
 
-        /* ── STATS ── */
-        .stats-row {
-            display: flex; align-items: center; gap: 12px;
-            flex-wrap: wrap; margin-bottom: 32px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700; font-size: 12px;
-            color: rgba(255,255,255,0.55);
-        }
-        .stats-sep { opacity: 0.35; }
-
-        /* ── CTA BUTTON ── */
-        .cta-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            align-self: flex-start;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800; font-size: 15px;
-            padding: 14px 28px; border-radius: 50px;
-            border: none; cursor: pointer; text-decoration: none;
-            opacity: 0; transform: translateY(10px);
-            transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.2s;
-        }
-        .medical .cta-btn {
-            background: #FFD700; color: #1a0040;
-            box-shadow: 0 8px 32px rgba(255,215,0,0.25);
-        }
-        .engineering .cta-btn {
-            background: #00A896; color: #fff;
-            box-shadow: 0 8px 32px rgba(0,168,150,0.3);
-        }
-        .medical .cta-btn:hover   { box-shadow: 0 12px 40px rgba(255,215,0,0.45); }
-        .engineering .cta-btn:hover { box-shadow: 0 12px 40px rgba(0,168,150,0.5); }
-
-        .split:has(.medical:hover) .medical .cta-btn,
-        .split:has(.engineering:hover) .engineering .cta-btn {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── FLOATING CARDS ── */
-        .floating-cards {
-            position: absolute;
-            top: 50%; transform: translateY(-50%);
-            z-index: 4;
-            display: flex; flex-direction: column; gap: 12px;
-            opacity: 0; translate: 0 10px;
-            transition: opacity 0.4s 0.08s ease, translate 0.4s 0.08s ease;
-            pointer-events: none;
-        }
-        .medical   .floating-cards { right: 6%; }
-        .engineering .floating-cards { left: 10%; }
-
-        .split:has(.medical:hover) .medical .floating-cards,
-        .split:has(.engineering:hover) .engineering .floating-cards {
-            opacity: 1; translate: 0 0;
-        }
-
-        .float-card {
-            padding: 12px 16px; border-radius: 12px;
-            backdrop-filter: blur(12px); min-width: 178px;
-        }
-        .medical   .float-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,215,0,0.3); }
-        .engineering .float-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(0,200,180,0.3); }
-
-        .float-college {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700; font-size: 12px;
-            color: #fff; margin-bottom: 4px;
-        }
-        .medical   .float-score { font-size: 11px; color: rgba(255,215,0,0.75); }
-        .engineering .float-score { font-size: 11px; color: rgba(0,200,180,0.8); }
-
-        /* ── LIGHTNING BOLT ── */
+        /* ═══════════════════════════════════════
+           LIGHTNING BOLT
+        ═══════════════════════════════════════ */
         .lightning {
-            position: absolute;
-            left: 50%; top: 0;
+            position: absolute; left: 50%; top: 0;
             transform: translateX(-50%);
-            width: 60px; height: 100%;
+            width: 80px; height: 100vh;
             z-index: 10; pointer-events: none;
         }
 
-        /* ── CENTER LOGO ── */
+        /* ═══════════════════════════════════════
+           CENTER LOGO
+        ═══════════════════════════════════════ */
         .center-logo {
-            position: fixed;
-            left: 50%; top: 50%;
+            position: fixed; left: 50%; top: 50%;
             transform: translate(-50%, -50%);
             z-index: 20;
-            display: flex; flex-direction: column;
-            align-items: center; gap: 10px;
+            display: flex; flex-direction: column; align-items: center;
             pointer-events: none;
         }
+        .center-logo::before {
+            content: '';
+            position: absolute; left: 50%; top: 50%;
+            transform: translate(-50%, -50%);
+            width: 130px; height: 130px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.13) 0%, transparent 70%);
+        }
         .center-logo img {
-            height: 56px; width: auto;
-            object-fit: contain; mix-blend-mode: screen;
-            filter: drop-shadow(0 0 18px rgba(255,255,255,0.35));
+            height: 60px; width: auto; object-fit: contain;
+            position: relative; z-index: 1;
         }
         .center-logo-label {
-            font-size: 9px; letter-spacing: 3px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.4);
-            white-space: nowrap;
+            font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+            color: rgba(255,255,255,0.4); white-space: nowrap;
+            margin-top: 8px; text-align: center; position: relative; z-index: 1;
         }
 
-        /* ── HINTS ── */
+        /* ═══════════════════════════════════════
+           TOP LABEL  (split-colour via background-clip)
+        ═══════════════════════════════════════ */
         .top-label {
             position: fixed; top: 16px;
             left: 50%; transform: translateX(-50%);
             z-index: 30; pointer-events: none;
-            font-size: 9px; letter-spacing: 2px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.3);
+            font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+            font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
             white-space: nowrap;
+            /* dark left half, light right half */
+            background: linear-gradient(to right,
+                rgba(26,0,64,0.35) 0%,   rgba(26,0,64,0.35) 50%,
+                rgba(255,255,255,0.28) 50%, rgba(255,255,255,0.28) 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .bottom-hint {
-            position: fixed; bottom: 20px;
-            left: 50%; transform: translateX(-50%);
-            z-index: 30; pointer-events: none;
-            display: flex; align-items: center; gap: 12px;
-            color: rgba(255,255,255,0.35);
-            font-size: 10px; letter-spacing: 2px;
-            text-transform: uppercase; white-space: nowrap;
-        }
-        .bottom-hint-line { width: 36px; height: 1px; background: rgba(255,255,255,0.25); }
 
-        /* ── MOBILE ── */
+        /* ═══════════════════════════════════════
+           MOBILE
+        ═══════════════════════════════════════ */
         @media (max-width: 768px) {
             html, body { overflow: auto; }
             .split { flex-direction: column; height: auto; overflow: visible; }
-
-            .medical {
-                flex-basis: auto !important;
-                width: 100% !important;
-                height: 50vh;
-                clip-path: none;
-            }
-            .engineering {
-                flex-basis: auto !important;
-                width: 100% !important;
-                height: 50vh;
-                clip-path: none;
-                margin-left: 0;
-            }
-
+            .medical, .engineering { width: 100% !important; height: 50vh; }
             .lightning { display: none; }
             .center-logo { top: 50vh; }
-            .panel-h1 { font-size: 30px; }
             .medical-content { padding: 36px 24px; }
             .engineering-content { padding: 36px 24px; }
-            .floating-cards { display: none; }
-            .cta-btn { opacity: 1 !important; transform: translateY(0) !important; }
-            .bottom-hint { display: none; }
+            .med-cards, .eng-cards { display: none; }
+            .heartbeat-wrap { display: none; }
+            .panel-h1 { font-size: 28px; }
             .top-label { display: none; }
         }
     </style>
@@ -310,12 +355,15 @@
         <div class="medical-glow"></div>
 
         <div class="medical-content">
-            <div class="eyebrow">Medical Admissions</div>
+            <div class="med-logo">
+                <img src="asmi-logo.png" alt="ASMI Career"/>
+            </div>
+            <div class="eyebrow-pill">Medical Admissions</div>
             <h1 class="panel-h1">
-                Your NEET Score.<br/><span class="accent">Maximised.</span>
+                Every NEET Score<br/>Deserves The<br/><span class="accent">Best College.</span>
             </h1>
             <p class="panel-sub">
-                From rank day to reporting day — complete MBBS, BDS &amp; AYUSH counselling support.
+                From rank day to reporting day — MBBS, BDS &amp; AYUSH counselling. Zero guesswork.
             </p>
             <div class="tags">
                 <span class="tag">NEET UG</span>
@@ -325,67 +373,122 @@
                 <span class="tag">MCC AIQ</span>
             </div>
             <div class="stats-row">
-                <span>25K+ Admissions</span>
-                <span class="stats-sep">·</span>
-                <span>11+ Years</span>
-                <span class="stats-sep">·</span>
-                <span>4.8★ Rating</span>
+                <div class="stat-item">
+                    <span class="stat-num">25K+</span>
+                    <span class="stat-lbl">Admissions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">11+</span>
+                    <span class="stat-lbl">Years</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">4.8★</span>
+                    <span class="stat-lbl">Rating</span>
+                </div>
             </div>
             <a href="inquiry.html" class="cta-btn" onclick="event.stopPropagation()">
                 Start NEET Journey →
             </a>
         </div>
 
-        <!-- Floating cards — right side of medical panel -->
-        <div class="floating-cards">
-            <div class="float-card">
-                <div class="float-college">AIIMS New Delhi</div>
-                <div class="float-score">NEET: 715 · AIQ Rank 42</div>
+        <!-- Heartbeat ECG line at bottom -->
+        <div class="heartbeat-wrap">
+            <svg viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="heartbeat-path" d="
+                    M-200,40 H50
+                    L50,40 L70,15 L85,65 L98,5  L112,75 L127,40
+                    H250
+                    L270,15 L285,65 L298,5 L312,75 L327,40
+                    H450
+                    L470,15 L485,65 L498,5 L512,75 L527,40
+                    H650
+                    L670,15 L685,65 L698,5 L712,75 L727,40
+                    H850
+                    L870,15 L885,65 L898,5 L912,75 L927,40
+                    H1050
+                    L1070,15 L1085,65 L1098,5 L1112,75 L1127,40
+                    H1400
+                "/>
+            </svg>
+        </div>
+
+        <!-- Slide-up college cards -->
+        <div class="med-cards">
+            <div class="med-card">
+                <div class="card-college">Seth GS Medical, Mumbai</div>
+                <div class="card-row">
+                    <span class="card-score">Score 604</span>
+                    <span>🟢 Safe</span>
+                </div>
             </div>
-            <div class="float-card">
-                <div class="float-college">KEM Hospital Mumbai</div>
-                <div class="float-score">NEET: 640 · State Rank 180</div>
+            <div class="med-card">
+                <div class="card-college">AIIMS Nagpur</div>
+                <div class="card-row">
+                    <span class="card-score">Score 608</span>
+                    <span>🟡 Likely</span>
+                </div>
             </div>
-            <div class="float-card">
-                <div class="float-college">KMC Manipal</div>
-                <div class="float-score">NEET: 580 · Management</div>
+            <div class="med-card">
+                <div class="card-college">KMC Manipal</div>
+                <div class="card-row">
+                    <span class="card-score">Score 508</span>
+                    <span>🟠 Borderline</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ══ LIGHTNING BOLT DIVIDER ══ -->
-    <svg class="lightning" viewBox="0 0 60 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- ══ LIGHTNING BOLT ══ -->
+    <svg class="lightning" viewBox="0 0 80 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <linearGradient id="boltGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FFD700"/>
+                <stop offset="0%"   stop-color="#FFD700"/>
+                <stop offset="50%"  stop-color="#ffffff"/>
                 <stop offset="100%" stop-color="#00C8B4"/>
             </linearGradient>
-            <filter id="boltGlow" x="-120%" y="-5%" width="340%" height="110%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+            <filter id="boltGlow" x="-200%" y="-2%" width="500%" height="104%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
                 <feMerge>
                     <feMergeNode in="blur"/>
                     <feMergeNode in="SourceGraphic"/>
                 </feMerge>
             </filter>
         </defs>
-        <!-- Soft bloom -->
+
+        <!-- Bloom layer -->
         <polyline
-            points="30,0 18,18 38,18 10,42 42,42 8,65 35,65 30,100"
-            fill="none"
-            stroke="url(#boltGrad)"
-            stroke-width="8"
-            stroke-opacity="0.15"
-            stroke-linejoin="miter"
+            points="40,0 22,220 52,220 15,480 55,480 12,720 45,720 40,1000"
+            fill="none" stroke="url(#boltGrad)" stroke-width="12"
+            opacity="0.12" stroke-linejoin="miter"
         />
-        <!-- Sharp bolt with glow -->
+        <!-- Sharp bolt with glow filter -->
         <polyline
-            points="30,0 18,18 38,18 10,42 42,42 8,65 35,65 30,100"
-            fill="none"
-            stroke="url(#boltGrad)"
-            stroke-width="2.5"
-            stroke-linejoin="miter"
-            filter="url(#boltGlow)"
+            points="40,0 22,220 52,220 15,480 55,480 12,720 45,720 40,1000"
+            fill="none" stroke="url(#boltGrad)" stroke-width="3"
+            stroke-linejoin="miter" filter="url(#boltGlow)"
         />
+
+        <!-- Sparks travelling along the bolt path -->
+        <circle r="2" fill="#FFD700">
+            <animateMotion path="M40,0 L22,220 L52,220 L15,480 L55,480 L12,720 L45,720 L40,1000" dur="1.5s" repeatCount="indefinite" begin="0s"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="1.5s" repeatCount="indefinite" begin="0s"/>
+        </circle>
+        <circle r="2" fill="#ffffff">
+            <animateMotion path="M40,0 L22,220 L52,220 L15,480 L55,480 L12,720 L45,720 L40,1000" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+        </circle>
+        <circle r="2" fill="#00C8B4">
+            <animateMotion path="M40,0 L22,220 L52,220 L15,480 L55,480 L12,720 L45,720 L40,1000" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+            <animate attributeName="opacity" values="0;0.9;0.9;0" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+        </circle>
+        <circle r="1.5" fill="#FFD700">
+            <animateMotion path="M40,0 L22,220 L52,220 L15,480 L55,480 L12,720 L45,720 L40,1000" dur="1.5s" repeatCount="indefinite" begin="0.9s"/>
+            <animate attributeName="opacity" values="0;0.85;0.85;0" dur="1.5s" repeatCount="indefinite" begin="0.9s"/>
+        </circle>
+        <circle r="1.5" fill="#00C8B4">
+            <animateMotion path="M40,0 L22,220 L52,220 L15,480 L55,480 L12,720 L45,720 L40,1000" dur="1.5s" repeatCount="indefinite" begin="1.2s"/>
+            <animate attributeName="opacity" values="0;0.85;0.85;0" dur="1.5s" repeatCount="indefinite" begin="1.2s"/>
+        </circle>
     </svg>
 
     <!-- ══ ENGINEERING SIDE ══ -->
@@ -393,29 +496,32 @@
         <div class="engineering-grid"></div>
         <div class="engineering-glow"></div>
 
-        <!-- Floating cards — left side of engineering panel -->
-        <div class="floating-cards">
-            <div class="float-card">
-                <div class="float-college">IIT Bombay</div>
-                <div class="float-score">JEE Rank: 142 · CSE</div>
-            </div>
-            <div class="float-card">
-                <div class="float-college">BITS Pilani</div>
-                <div class="float-score">BITSAT: 385 · ECE</div>
-            </div>
-            <div class="float-card">
-                <div class="float-college">VIT Vellore</div>
-                <div class="float-score">MHT-CET: 145 PCM</div>
-            </div>
-        </div>
+        <!-- Circuit board SVG lines -->
+        <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
+            <path class="cpath" style="--l:580;--d:0.2s"  d="M0,160 H160 V110 H340 V70  H520"/>
+            <path class="cpath" style="--l:600;--d:0.6s"  d="M0,300 H130 V250 H310 V310 H500 V270"/>
+            <path class="cpath" style="--l:520;--d:1.1s"  d="M0,460 H200 V400 H390 V450 H540"/>
+            <path class="cpath" style="--l:480;--d:0.4s"  d="M80,0  V130 H160 V210 H230 V80"/>
+            <path class="cpath" style="--l:550;--d:1.4s"  d="M220,0 V90  H300 V170 H420 V110 H520"/>
+            <path class="cpath" style="--l:460;--d:0.9s"  d="M0,600 H170 V560 H310 V620 H450"/>
+            <path class="cpath" style="--l:430;--d:1.7s"  d="M400,0 V50  H480 V130 H540 V190"/>
+            <path class="cpath" style="--l:510;--d:1.0s"  d="M0,740 H110 V700 H260 V760 H400 V720"/>
+        </svg>
 
         <div class="engineering-content">
-            <div class="eyebrow">Engineering Admissions</div>
+            <div class="eyebrow-pill">Engineering Admissions</div>
+
+            <!-- Cycling rank counter -->
+            <div class="rank-counter">
+                <span class="rank-label">AIR&nbsp;#</span>
+                <span class="rank-num" id="rankNum">67</span>
+            </div>
+
             <h1 class="panel-h1">
                 Your Rank. Right<br/><span class="accent">College.</span> Guaranteed.
             </h1>
             <p class="panel-sub">
-                JEE, MHT-CET, BITS, Manipal, VIT — every counselling round covered, zero confusion.
+                JEE, MHT-CET, BITS, Manipal, VIT — every round covered. Algorithm-backed preference lists.
             </p>
             <div class="tags">
                 <span class="tag">JEE Mains</span>
@@ -426,31 +532,89 @@
                 <span class="tag">Manipal</span>
             </div>
             <div class="stats-row">
-                <span>10K+ Admissions</span>
-                <span class="stats-sep">·</span>
-                <span>500+ Colleges</span>
-                <span class="stats-sep">·</span>
-                <span>All India Coverage</span>
+                <div class="stat-item">
+                    <span class="stat-num">10K+</span>
+                    <span class="stat-lbl">Admissions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">500+</span>
+                    <span class="stat-lbl">Colleges</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">All India</span>
+                    <span class="stat-lbl">Coverage</span>
+                </div>
             </div>
             <a href="engineering.html" class="cta-btn" onclick="event.stopPropagation()">
                 Find My College →
             </a>
         </div>
+
+        <!-- Slide-up college cards -->
+        <div class="eng-cards">
+            <div class="eng-card">
+                <div class="card-college">IIT Bombay CSE</div>
+                <div class="card-row">
+                    <span class="card-score">JEE AIR 67</span>
+                    <span>🟢 Match</span>
+                </div>
+            </div>
+            <div class="eng-card">
+                <div class="card-college">BITS Pilani EEE</div>
+                <div class="card-row">
+                    <span class="card-score">BITSAT 340</span>
+                    <span>🟡 Target</span>
+                </div>
+            </div>
+            <div class="eng-card">
+                <div class="card-college">VIT Vellore CSE</div>
+                <div class="card-row">
+                    <span class="card-score">MHT-CET 145</span>
+                    <span>🟠 Safe</span>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
 
-<!-- ══ CENTER LOGO BADGE ══ -->
+<!-- ══ CENTER LOGO ══ -->
 <div class="center-logo">
     <img src="asmi-logo.png" alt="ASMI Career"/>
     <span class="center-logo-label">Choose Your Path</span>
 </div>
 
-<div class="bottom-hint">
-    <span class="bottom-hint-line"></span>
-    Medical · Engineering
-    <span class="bottom-hint-line"></span>
-</div>
+<script>
+    // ── Rank counter ──
+    const ranks = [67, 1240, 8900, 15000];
+    let rankIdx = 0;
+    const rankEl = document.getElementById('rankNum');
 
+    setInterval(() => {
+        rankEl.classList.add('changing');
+        setTimeout(() => {
+            rankIdx = (rankIdx + 1) % ranks.length;
+            rankEl.textContent = ranks[rankIdx].toLocaleString();
+            rankEl.classList.remove('changing');
+        }, 220);
+    }, 2000);
+
+    // ── Floating particles on medical panel ──
+    const medPanel = document.querySelector('.medical');
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 3 + Math.random() * 2;
+        p.style.cssText = [
+            `width:${size}px`,
+            `height:${size}px`,
+            `left:${Math.random() * 88}%`,
+            `bottom:${Math.random() * 55}%`,
+            `--dur:${3 + Math.random() * 3}s`,
+            `--delay:${Math.random() * 4}s`,
+        ].join(';');
+        medPanel.appendChild(p);
+    }
+</script>
 </body>
 </html>
