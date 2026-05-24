@@ -300,6 +300,12 @@ table.ctable th:not(:first-child){text-align:center;}
     <div id="editCoursePills" style="display:flex;gap:4px;flex-wrap:wrap"></div>
   </div>
   <button class="eb-apply" onclick="applyEdits()">Update ↺</button>
+  <div class="eb-divider-v"></div>
+  <button id="shortlistBadge" onclick="goToShortlist()" style="
+    background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);
+    font-family:'Montserrat',sans-serif;font-weight:800;font-size:.72rem;
+    padding:6px 14px;border:1px solid rgba(255,255,255,.25);border-radius:20px;
+    cursor:pointer;transition:.2s;display:none;">☆ Shortlist</button>
   <div class="eb-spacer"></div>
   <a class="eb-next" id="nextBtn" href="#">Next: Summary →</a>
 </div>
@@ -413,6 +419,40 @@ const STATE_LABELS={KA:'Karnataka',TS:'Telangana',TN:'Tamil Nadu',UP:'Uttar Prad
 
 let DB=null,FEE={},STUDENT={},currentPane=null,mhTab='govt',mhCourse='MBBS',aiimsOpen=false,osExpanded=null;
 
+// ── SHORTLIST ────────────────────────────────────────────────
+let shortlist = []; // array of {n, pool, poolGroup, c, prob, fee}
+
+function isShortlisted(name){ return shortlist.some(s=>s.n===name); }
+
+function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
+  if(isShortlisted(name)){
+    shortlist = shortlist.filter(s=>s.n!==name);
+  } else {
+    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee});
+  }
+  updateShortlistBadge();
+  // Re-render current pane to update star state
+  if(currentPane==='mh')   setMHTabContent();
+  if(currentPane==='mcc')  {} // MCC has no college rows currently
+  if(currentPane==='open') { if(osExpanded) expandOSState(osExpanded); }
+}
+
+function updateShortlistBadge(){
+  const badge = document.getElementById('shortlistBadge');
+  if(!badge) return;
+  badge.textContent = shortlist.length > 0
+    ? `★ Shortlisted (${shortlist.length})`
+    : '☆ Shortlist';
+  badge.style.background = shortlist.length > 0
+    ? 'linear-gradient(135deg,#FFD700,#f59e0b)'
+    : 'rgba(255,255,255,.15)';
+  badge.style.color = shortlist.length > 0 ? '#1a0040' : 'rgba(255,255,255,.7)';
+  // Save to session
+  try{ const s=getSess(); s.shortlist=shortlist; sessionStorage.setItem('asmi',JSON.stringify(s)); }catch(e){}
+}
+
+function isCounselMode(){ return getSess().mode==='counsel'; }
+
 function getSess(){try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};}}
 function setSess(k,v){const s=getSess();s[k]=v;sessionStorage.setItem('asmi',JSON.stringify(s));}
 function activeScore(){return parseInt(getSess().score||STUDENT.score||0);}
@@ -496,6 +536,24 @@ function renderTable(cols,showState=false){
   <tbody>${rows}</tbody></table>`;
 }
 
+function rowWithStar(c, pool, poolGroup){
+  const starred = isShortlisted(c.n);
+  const feeVal  = feeStr(c.n);
+  const cutoff  = c.openCutoff!==undefined ? c.openCutoff : c.c;
+  return `<tr>
+    <td class="college-name">${c.n}</td>
+    <td class="cutoff-val">${cutoff}</td>
+    <td class="fee-val">${feeVal}</td>
+    <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+    <td style="text-align:center">
+      <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${pool}','${poolGroup}',${c.c},'${c.prob.key}','${feeVal}')"
+        style="background:none;border:none;cursor:pointer;font-size:1.1rem;line-height:1;">
+        ${starred?'★':'☆'}
+      </button>
+    </td>
+  </tr>`;
+}
+
 function renderMHBlurred(cols){
   const userCat=activeCategory(),showDual=(userCat!=='General');
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
@@ -526,8 +584,14 @@ function renderMHBlurred(cols){
     const cc=showDual?(c.catCutoff!==null?`<td class="cutoff-val" style="color:var(--purple);font-weight:900">${c.catCutoff}</td>`:`<td class="cutoff-val" style="color:#ccc">—</td>`):'';
     return`<tr><td class="college-name">${c.n}</td>${oc}${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
   }
-  const thead=`<thead><tr><th>College</th><th>Open Cutoff</th>${dh}<th>Fee/yr</th><th>Chance</th></tr></thead>`;
+  const starHeader=isCounselMode()?'<th>★</th>':'';
+  const thead=`<thead><tr><th>College</th><th>Open Cutoff</th>${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
   const previewHtml=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
+  if(isCounselMode()){
+    // Show all colleges with star buttons — no blur
+    const allRows=sorted.map(c=>rowWithStar(c,'MH','Maharashtra')).join('');
+    return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
+  }
   if(!rest.length) return previewHtml;
   const blurHtml=`<table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table>`;
   return`${previewHtml}<div class="blur-section"><div class="blur-content">${blurHtml}</div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
@@ -554,6 +618,10 @@ function renderOSTable(stKey,cols){
   function row(c){return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;}
   const thead=`<thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
+  if(isCounselMode()){
+    const allRows=sorted.map(c=>rowWithStar(c, STATE_LABELS[stKey]||stKey, 'Open States')).join('');
+    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
+  }
   if(!rest.length) return ph;
   return`${ph}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Full college list unlocked after registration</span></div></div></div>`;
 }
@@ -868,6 +936,12 @@ function expandPane(id){
   currentPane=id;
   document.getElementById('panesContainer').classList.add('has-expanded');
   document.getElementById('editBar').classList.add('visible');
+  if(isCounselMode()){
+    document.getElementById('shortlistBadge').style.display='block';
+    // Restore shortlist from session
+    try{ const s=getSess(); if(s.shortlist) shortlist=s.shortlist; }catch(e){}
+    updateShortlistBadge();
+  }
   ['mh','mcc','open'].forEach(p=>{
     const el=document.getElementById('pane-'+p);
     if(p===id){el.classList.add('pane-active');el.classList.remove('pane-collapsed');}
@@ -893,6 +967,11 @@ function expandPane(id){
   const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
   document.getElementById('nextBtn').href='slide4_recommended.html?token='+encodeURIComponent(token);
 }
+function goToShortlist(){
+  const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
+  window.location.href='slide4_recommended.html?token='+encodeURIComponent(token)+'&mode=counsel';
+}
+
 function collapseAll(){
   currentPane=null;
   document.getElementById('panesContainer').classList.remove('has-expanded');
