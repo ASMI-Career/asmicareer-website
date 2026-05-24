@@ -387,6 +387,8 @@ const BUDGET_LABELS = {
   'NRI / Management 40-50L': 'NRI / Mgmt (₹40–60L)',
 };
 
+function getSess(){try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};}}
+
 function showError(msg) {
   document.getElementById('loadingState').style.display = 'none';
   const err = document.getElementById('errorState');
@@ -441,8 +443,16 @@ function populate(data) {
 const params = new URLSearchParams(window.location.search);
 const token  = params.get('token') || '';
 
-document.getElementById('navPrev').href = 'slide1_welcome.html?token=' + encodeURIComponent(token);
-document.getElementById('navNext').href = 'slide3_options.html?token=' + encodeURIComponent(token);
+const isCounsel = getSess().mode === 'counsel';
+document.getElementById('navPrev').href = isCounsel
+  ? '#'
+  : 'slide1_welcome.html?token=' + encodeURIComponent(token);
+document.getElementById('navNext').href =
+  'slide3_options.html?token=' + encodeURIComponent(token) + (isCounsel ? '&mode=counsel' : '');
+if(isCounsel){
+  document.getElementById('navPrev').style.opacity='0.2';
+  document.getElementById('navPrev').style.pointerEvents='none';
+}
 
 if (!token) {
   showError('No token in URL. Open this page from the dashboard link in the Google Sheet.');
