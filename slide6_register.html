@@ -326,14 +326,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-prices">
         <div class="price-now">
           <span class="price-now-lbl">Till 31st May</span>
-          <span class="price-now-val">₹30,000</span>
+          <span class="price-now-val" id="meritPriceNow">₹30,000</span>
         </div>
         <div class="price-later">
           <span class="price-later-lbl">After 31st May</span>
-          <span class="price-later-val">₹35,000</span>
+          <span class="price-later-val" id="meritPriceLater">₹35,000</span>
         </div>
       </div>
-      <span class="saving-pill">Save ₹5,000 if registered before 31st May</span>
+      <span class="saving-pill" id="meritSaving">Save ₹5,000 if registered before 31st May</span>
       <div class="pkg-note">For students admitted via general merit / category cutoffs. Covers MH State + MCC counselling.</div>
     </div>
 
@@ -344,14 +344,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-prices">
         <div class="price-now">
           <span class="price-now-lbl">Till 31st May</span>
-          <span class="price-now-val">₹60,000</span>
+          <span class="price-now-val" id="nriPriceNow">₹60,000</span>
         </div>
         <div class="price-later">
           <span class="price-later-lbl">After 31st May</span>
-          <span class="price-later-val" style="text-decoration:line-through;">₹70,000</span>
+          <span class="price-later-val" id="nriPriceLater" style="text-decoration:line-through;">₹70,000</span>
         </div>
       </div>
-      <span class="saving-pill">Save ₹10,000 if registered before 31st May</span>
+      <span class="saving-pill" id="nriSaving">Save ₹10,000 if registered before 31st May</span>
       <div class="pkg-note">For students pursuing NRI quota or management quota seats in private / deemed colleges.</div>
     </div>
 
@@ -451,19 +451,19 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pay-rows">
         <div class="pay-row">
           <span class="pay-key">Account Name</span>
-          <span class="pay-val">ASMI Youth Career Advisor LLP</span>
+          <span class="pay-val" id="payAccountName">ASMI Youth Career Advisor LLP</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">Account Number</span>
-          <span class="pay-val">50200030649290</span>
+          <span class="pay-val" id="payAccountNo">50200030649290</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">IFSC Code</span>
-          <span class="pay-val">HDFC0001274</span>
+          <span class="pay-val" id="payIfsc">HDFC0001274</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">UPI</span>
-          <span class="pay-val upi">asmicareer@ybl</span>
+          <span class="pay-val upi" id="payUpi">asmicareer@ybl</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">Also Accepts</span>
@@ -478,7 +478,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Registration Form</div>
         <div class="qr-img">
           <!-- Replace src with actual registration QR image -->
-          <img src="qr_registration.png" alt="Registration QR" style="width:100%;height:100%;object-fit:contain;">
+          <img id="qrRegImg" src="qr_registration.png" alt="Registration QR" style="width:100%;height:100%;object-fit:contain;">
         </div>
         <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to fill form</div>
       </div>
@@ -486,7 +486,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Payment</div>
         <div class="qr-img">
           <!-- Replace src with actual payment QR image -->
-          <img src="qr_payment.png" alt="Payment QR" style="width:100%;height:100%;object-fit:contain;">
+          <img id="qrPayImg" src="qr_payment.png" alt="Payment QR" style="width:100%;height:100%;object-fit:contain;">
         </div>
         <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to pay</div>
       </div>
@@ -497,14 +497,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="contact-row">
         <span class="contact-icon">📍</span>
         <div>
-          <div class="contact-val">42, A Wing, Silver Astra Building</div>
+          <div class="contact-val" id="branchAddress">42, A Wing, Silver Astra Building</div>
           <div class="contact-sub">JB Nagar Circle, Andheri East, Mumbai</div>
         </div>
       </div>
       <div class="contact-row">
         <span class="contact-icon">📞</span>
         <div>
-          <div class="contact-val">7410019077</div>
+          <div class="contact-val" id="branchContact">7410019077</div>
           <div class="contact-sub">Central Helpline</div>
         </div>
       </div>
@@ -542,6 +542,109 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 </nav>
 
 <script>
+// ── Session helper ───────────────────────────────────────────────
+function getSess(){ try{ return JSON.parse(sessionStorage.getItem('asmi')||'{}'); }catch(e){ return {}; } }
+
+// ── BRANCH CONFIG ──────────────────────────────────────────────
+// Replace all PLACEHOLDER values with real data per branch
+const BRANCH_CONFIG = {
+  // Group A: Mumbai (Andheri), Thane, Online
+  'Online':  buildBranchConfig('A'),
+  'Andheri': buildBranchConfig('A'),
+  'Thane':   buildBranchConfig('A'),
+  // Group B: Pune
+  'Pune':    buildBranchConfig('B'),
+  // Group C: Kolhapur
+  'Kolhapur':buildBranchConfig('C'),
+  // Group D: Sangli
+  'Sangli':  buildBranchConfig('D'),
+  // Group E: Sambhajinagar
+  'Sambhajinagar': buildBranchConfig('E'),
+};
+
+function buildBranchConfig(group){
+  const configs = {
+    A: {
+      meritBefore:  30000,
+      meritAfter:   35000,
+      nriBefore:    60000,
+      nriAfter:     70000,
+      accountName:  'ASMI Youth Career Advisor LLP',
+      accountNo:    '50200030649290',
+      ifsc:         'HDFC0001274',
+      upi:          'asmicareer@ybl',
+      address:      '42, A Wing, Silver Astra Building, JB Nagar Circle, Andheri East, Mumbai',
+      contact:      '7410019077',
+      qrReg:        'qr_registration.png',
+      qrPay:        'qr_payment.png',
+    },
+    B: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Pune Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_pune.png',
+      qrPay:        'qr_pay_pune.png',
+    },
+    C: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Kolhapur Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_kolhapur.png',
+      qrPay:        'qr_pay_kolhapur.png',
+    },
+    D: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Sangli Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_sangli.png',
+      qrPay:        'qr_pay_sangli.png',
+    },
+    E: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Sambhajinagar Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_sambhajinagar.png',
+      qrPay:        'qr_pay_sambhajinagar.png',
+    },
+  };
+  return configs[group];
+}
+
+// Get active branch config — falls back to Group A if branch unknown
+function getBranchConfig(){
+  const sess = getSess();
+  const branch = sess.branch || 'Online';
+  return BRANCH_CONFIG[branch] || BRANCH_CONFIG['Online'];
+}
+
 // ── Nav wiring ──────────────────────────────────────────────────
 (function(){
   const sess = (() => { try { return JSON.parse(sessionStorage.getItem('asmi') || '{}'); } catch(e) { return {}; } })();
@@ -583,6 +686,49 @@ function updateDaysLeft(){
   }
 }
 
+// ── Apply branch-specific pricing and payment details ────────────
+function applyBranchConfig(){
+  const cfg = getBranchConfig();
+
+  // ── MERIT PACKAGE ──
+  document.getElementById('meritPriceNow').textContent =
+    cfg.meritBefore !== 'PLACEHOLDER' ? `₹${cfg.meritBefore.toLocaleString('en-IN')}` : '₹ TBD';
+  document.getElementById('meritPriceLater').textContent =
+    cfg.meritAfter  !== 'PLACEHOLDER' ? `₹${cfg.meritAfter.toLocaleString('en-IN')}` : '₹ TBD';
+
+  if(cfg.meritBefore !== 'PLACEHOLDER' && cfg.meritAfter !== 'PLACEHOLDER'){
+    const saving = cfg.meritAfter - cfg.meritBefore;
+    document.getElementById('meritSaving').textContent = `Save ₹${saving.toLocaleString('en-IN')} if registered before 31st May`;
+  }
+
+  // ── NRI PACKAGE ──
+  document.getElementById('nriPriceNow').textContent =
+    cfg.nriBefore !== 'PLACEHOLDER' ? `₹${cfg.nriBefore.toLocaleString('en-IN')}` : '₹ TBD';
+  document.getElementById('nriPriceLater').textContent =
+    cfg.nriAfter  !== 'PLACEHOLDER' ? `₹${cfg.nriAfter.toLocaleString('en-IN')}` : '₹ TBD';
+
+  if(cfg.nriBefore !== 'PLACEHOLDER' && cfg.nriAfter !== 'PLACEHOLDER'){
+    const nriSaving = cfg.nriAfter - cfg.nriBefore;
+    document.getElementById('nriSaving').textContent = `Save ₹${nriSaving.toLocaleString('en-IN')} if registered before 31st May`;
+  }
+
+  // ── PAYMENT DETAILS ──
+  document.getElementById('payAccountName').textContent = cfg.accountName;
+  document.getElementById('payAccountNo').textContent   = cfg.accountNo;
+  document.getElementById('payIfsc').textContent        = cfg.ifsc;
+  document.getElementById('payUpi').textContent         = cfg.upi;
+
+  // ── CONTACT & ADDRESS ──
+  document.getElementById('branchAddress').textContent = cfg.address;
+  document.getElementById('branchContact').textContent = cfg.contact;
+
+  // ── QR CODES ──
+  const qrReg = document.getElementById('qrRegImg');
+  const qrPay = document.getElementById('qrPayImg');
+  if(qrReg) qrReg.src = cfg.qrReg;
+  if(qrPay) qrPay.src = cfg.qrPay;
+}
+
 // ── Animate service cards in ─────────────────────────────────────
 function animateServices(){
   document.querySelectorAll('.svc').forEach((el,i)=>{
@@ -591,6 +737,11 @@ function animateServices(){
   });
 }
 
+// Store branch in session (populated by init() once Apps Script response is wired)
+if(typeof STUDENT !== 'undefined' && STUDENT.branch){
+  const s = getSess(); s.branch = STUDENT.branch; sessionStorage.setItem('asmi', JSON.stringify(s));
+}
+applyBranchConfig();
 updateDaysLeft();
 document.fonts.ready.then(animateServices);
 </script>
