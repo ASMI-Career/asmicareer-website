@@ -1016,18 +1016,22 @@ function renderAllOverviews(){renderMHOverview();renderMCCOverview();renderOpenO
 // KEYBOARD NAV
 document.addEventListener('keydown',e=>{
   const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
+  const isCounsel=getSess().mode==='counsel';
+  const modeParam=isCounsel?'&mode=counsel':'';
   if(e.key==='Escape'&&currentPane){collapseAll();return;}
   if(currentPane) return;
-  if(e.key==='ArrowRight') window.location.href='slide4_recommended.html?token='+encodeURIComponent(token);
-  if(e.key==='ArrowLeft')  window.location.href='slide2_profile.html?token='+encodeURIComponent(token);
+  if(e.key==='ArrowRight') window.location.href='slide4_recommended.html?token='+encodeURIComponent(token)+modeParam;
+  if(e.key==='ArrowLeft')  window.location.href='slide2_profile.html?token='+encodeURIComponent(token)+modeParam;
 });
 
 // INIT
 async function init(){
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
-  document.getElementById('navPrev').href='slide2_profile.html?token='+encodeURIComponent(token);
-  document.getElementById('navNext').href='slide4_recommended.html?token='+encodeURIComponent(token);
+  const isCounsel=getSess().mode==='counsel';
+  const modeParam=isCounsel?'&mode=counsel':'';
+  document.getElementById('navPrev').href='slide2_profile.html?token='+encodeURIComponent(token)+modeParam;
+  document.getElementById('navNext').href='slide4_recommended.html?token='+encodeURIComponent(token)+modeParam;
   try{
     const[dbRes,feeRes,studentRes]=await Promise.all([
       fetch(DB_URL).then(r=>r.json()),
