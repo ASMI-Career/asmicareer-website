@@ -513,6 +513,190 @@
         .stat-num { font-size: 28px; }
     }
 
+    /* ═══════════════════════════════════════
+       SECTION 3 — TRUST STRIP
+    ═══════════════════════════════════════ */
+
+    .trust-strip {
+        background: #1a0040;
+        padding: 18px 0;
+        overflow: hidden;
+    }
+    .trust-track {
+        display: flex;
+        gap: 48px;
+        white-space: nowrap;
+        animation: marquee 25s linear infinite;
+    }
+    .trust-item {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        color: #FFD700;
+        letter-spacing: 1.5px;
+        flex-shrink: 0;
+    }
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 4 — PROBLEMS
+    ═══════════════════════════════════════ */
+
+    .problems {
+        position: relative;
+        background: #fffdf0;
+        padding: 100px 80px;
+        overflow: hidden;
+    }
+    .problems-noise {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='pnoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23pnoise)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+        z-index: 0;
+    }
+    .problems-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .prob-badge {
+        display: inline-block;
+        background: rgba(185,28,28,0.08);
+        color: #b91c1c;
+        border: 1px solid rgba(185,28,28,0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .prob-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #1a0040;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .prob-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(26,0,64,0.6);
+        margin-top: 12px;
+    }
+    .prob-table {
+        margin-top: 48px;
+    }
+    .prob-table-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        padding: 0 24px 14px;
+        border-bottom: 2px solid rgba(26,0,64,0.12);
+    }
+    .prob-col-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    .prob-col-label.red   { color: #b91c1c; }
+    .prob-col-label.green { color: #15803d; }
+    .prob-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(26,0,64,0.08);
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .prob-row:nth-child(even) { background: rgba(26,0,64,0.02); }
+    .prob-row.visible { opacity: 1; transform: translateY(0); }
+    .prob-cell-left {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    .prob-num {
+        flex-shrink: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(185,28,28,0.1);
+        color: #b91c1c;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+    }
+    .prob-text-left {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #1a0040;
+        line-height: 1.45;
+    }
+    .prob-cell-right {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .prob-check {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        color: #15803d;
+    }
+    .prob-text-right {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 15px;
+        color: rgba(26,0,64,0.7);
+        line-height: 1.55;
+    }
+    .prob-highlight {
+        background: #1a0040;
+        border-radius: 12px;
+        padding: 20px 32px;
+        margin-top: 40px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #FFD700;
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .prob-highlight.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+        .problems { padding: 80px 40px; }
+        .prob-headline { font-size: 40px; }
+    }
+    @media (max-width: 640px) {
+        .problems { padding: 60px 24px; }
+        .prob-headline { font-size: 30px; }
+        .prob-table-header { display: none; }
+        .prob-row { grid-template-columns: 1fr; gap: 12px; }
+    }
+
     </style>
 </head>
 <body>
@@ -649,6 +833,124 @@
 </section>
 
 
+<!-- ════════════════════════════════
+     SECTION 3 — TRUST STRIP
+════════════════════════════════ -->
+<section class="trust-strip" aria-label="Colleges our students have been admitted to">
+    <div class="trust-track" aria-hidden="true">
+        <span class="trust-item">AIIMS Delhi · Seth GS Medical Mumbai · Grant Medical College · KMC Manipal · DY Patil Pune · Kasturba Medical · JIPMER · BHU Medical · GMC Nagpur · AIIMS Nagpur · Maulana Azad · AFMC Pune ·</span>
+        <span class="trust-item">AIIMS Delhi · Seth GS Medical Mumbai · Grant Medical College · KMC Manipal · DY Patil Pune · Kasturba Medical · JIPMER · BHU Medical · GMC Nagpur · AIIMS Nagpur · Maulana Azad · AFMC Pune ·</span>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 4 — PROBLEMS
+════════════════════════════════ -->
+<section class="problems" aria-labelledby="prob-heading">
+    <div class="problems-noise" aria-hidden="true"></div>
+    <div class="problems-inner">
+
+        <div class="prob-header">
+            <span class="prob-badge">The Problem</span>
+            <h2 class="prob-headline" id="prob-heading">Students Fail Counselling —<br>Before It Even Starts.</h2>
+            <p class="prob-sub">Here's what goes wrong — and exactly how ASMI fixes it.</p>
+        </div>
+
+        <div class="prob-table" role="table" aria-label="Problems and ASMI solutions">
+
+            <div class="prob-table-header" role="row">
+                <span class="prob-col-label red" role="columnheader">The Problem</span>
+                <span class="prob-col-label green" role="columnheader">How ASMI Fixes It</span>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">01</span>
+                    <span class="prob-text-left">Wrong preference order = lost seat forever</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Algorithm-optimised preference list submitted before deadline</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">02</span>
+                    <span class="prob-text-left">Deadlines close in 24–72 hours. No mercy.</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">WhatsApp alerts for every round deadline instantly</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">03</span>
+                    <span class="prob-text-left">Fake agents charging ₹5–10L for guaranteed seats</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Only verified portals. No middlemen. Fixed transparent pricing</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">04</span>
+                    <span class="prob-text-left">Deposit cancellations can cost ₹1–5 Lakhs</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Full guidance on bonds, deposits &amp; refund eligibility upfront</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">05</span>
+                    <span class="prob-text-left">Missing open state college options</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Complete open state analysis — KA, KL, TS, UP, TN and more</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">06</span>
+                    <span class="prob-text-left">Wrong documents at reporting</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Complete document checklist and verification support</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">07</span>
+                    <span class="prob-text-left">Not understanding AIQ vs State Quota</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Clear quota strategy basis score, category and domicile</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="prob-highlight" data-animate>
+            💡 Students with lower marks often get better colleges due to smarter counselling strategy.
+        </div>
+
+    </div>
+</section>
+
+
 <script>
     /* ── Nav: scroll shadow ── */
     const nav = document.getElementById('mainNav');
@@ -689,6 +991,26 @@
             if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         });
     });
+
+    /* ── Problems: scroll-triggered animations ── */
+    if ('IntersectionObserver' in window) {
+        const animItems = document.querySelectorAll('[data-animate]');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const siblings = [...el.closest('.prob-table, .problems-inner').querySelectorAll('[data-animate]')];
+                    const idx = siblings.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.07) + 's';
+                    el.classList.add('visible');
+                    revealObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.12 });
+        animItems.forEach(el => revealObserver.observe(el));
+    } else {
+        document.querySelectorAll('[data-animate]').forEach(el => el.classList.add('visible'));
+    }
 </script>
 
 </body>
