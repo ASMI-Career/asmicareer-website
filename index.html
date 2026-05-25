@@ -26,33 +26,31 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── MEDICAL ── */
 .medical{
-  width:48%;
-  clip-path:none;
-  background-image:url('AIIMS_Delhi.jpg');
+  width:50%;
+  background-image:url('AIIMS Delhi.jpg');
   background-size:cover;
   background-position:center;
 }
 
 /* ── ENGINEERING ── */
 .engineering{
-  width:52%;
-  clip-path:none;
-  margin-left:0;
-  background-image:url('IIT_Bombay.jpg');
+  width:50%;
+  background-image:url('IIT Bombay.jpg');
   background-size:cover;
   background-position:center;
 }
 
-/* ── SKEWED DIVIDER ── */
-.split::after{
+/* ── SPLIT DIVIDER ── */
+.split::before{
   content:'';
   position:absolute;
   top:0;
-  left:calc(48% - 40px);
-  width:80px;
+  left:50%;
+  width:3px;
   height:100%;
-  background:linear-gradient(to bottom right, #FFD700 50%, #0a1628 50%);
-  z-index:5;
+  background:linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
+  transform:skewX(-3deg);
+  z-index:10;
   pointer-events:none;
 }
 
@@ -190,27 +188,35 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── CENTER LOGO ── */
 .center-logo{
-  position:absolute;left:48%;top:50%;
+  position:absolute;
+  left:50%;
+  top:50%;
   transform:translate(-50%,-50%);
-  z-index:10;pointer-events:none;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  transition:opacity 0.3s ease, transform 0.5s cubic-bezier(0.77,0,0.18,1);
+  z-index:20;
+  pointer-events:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  background:rgba(0,0,0,0.15);
+  backdrop-filter:blur(8px);
+  padding:12px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.15);
+  transition:transform 0.5s cubic-bezier(0.77,0,0.18,1);
 }
 .center-logo img{
-  height:56px;width:auto;object-fit:contain;
-  filter:drop-shadow(0 0 16px rgba(255,255,255,0.5))
-         drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+  height:52px;
+  width:auto;
+  object-fit:contain;
 }
 .logo-tagline{
-  font-size:9px;font-weight:700;letter-spacing:3px;
-  text-transform:uppercase;color:rgba(255,255,255,0.3);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
   white-space:nowrap;
-  opacity:0;
-  transition:opacity 0.3s ease;
-}
-.split:has(.medical:hover) .logo-tagline,
-.split:has(.engineering:hover) .logo-tagline{
-  opacity:1;
 }
 .split:has(.medical:hover) .center-logo{
   transform:translate(-60%,-50%);
