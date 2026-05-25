@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="ASMI Career — Maharashtra's most trusted NEET medical admissions counsellors. 11+ years, 25,000+ admissions. Expert guidance for MBBS, BDS, BAMS, BHMS."/>
+    <title>Medical Admissions — ASMI Career</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+    <link href="assets/shared.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --bg:         #FFD700;
+            --navy:       #1a0040;
+            --purple:     #6a0dad;
+            --mid:        #2D0A5E;
+            --soft:       #4a0080;
+            --card:       rgba(255,255,255,0.58);
+            --cb:         rgba(106,13,173,0.18);
+            --card-hover: rgba(255,255,255,0.82);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        * { margin: 0; padding: 0; }
+        body { background: var(--bg); font-family: 'Open Sans', sans-serif; color: var(--navy); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+
+        /* ── BG LAYERS ── */
+        .bg-deco {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background:
+                radial-gradient(circle at 90% 10%, rgba(106,13,173,.18) 0%, transparent 42%),
+                radial-gradient(circle at 10% 88%, rgba(45,10,94,.10) 0%, transparent 36%);
+        }
+        .bg-grid {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                linear-gradient(rgba(26,0,64,.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26,0,64,.055) 1px, transparent 1px);
+            background-size: 52px 52px;
+        }
+        nav, section, footer, .trust-strip { position: relative; z-index: 1; }
+
+        /* ── CONTAINERS ── */
+        .wrap    { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .wrap-md { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+        .wrap-sm { max-width: 740px;  margin: 0 auto; padding: 0 24px; }
+        .section { padding: 80px 0; }
+        @media (min-width: 768px) { .section { padding: 112px 0; } }
+
+        /* ── HERO ── */
+        .hero-section { background: #09090f; position: relative; overflow: hidden; }
+        .hero-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(123,65,179,.32) 0%, transparent 55%),
+                radial-gradient(ellipse 40% 40% at 85% 85%, rgba(255,215,0,.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            background-size: 64px 64px;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+            pointer-events: none;
+        }
+        .hero-inner {
+            display: grid; grid-template-columns: 1fr; gap: 48px;
+            align-items: center; padding: 80px 0; position: relative; z-index: 1;
+        }
+        @media (min-width: 1024px) { .hero-inner { grid-template-columns: 7fr 5fr; gap: 64px; padding: 128px 0; } }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px;
+            border-radius: 100px; padding: 6px 16px;
+            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10);
+        }
+        .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffd700; display: inline-block; }
+        .hero-badge-text {
+            color: rgba(255,255,255,.60);
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+            font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+        }
+        .hero-h1 {
+            font-family: 'Montserrat', sans-serif; font-weight: 900;
+            font-size: 3rem; line-height: 1.04; color: #fff;
+            letter-spacing: -.03em; margin-bottom: 24px;
+        }
+        @media (min-width: 640px)  { .hero-h1 { font-size: 3.75rem; } }
+        @media (min-width: 1024px) { .hero-h1 { font-size: 4.5rem; } }
+
+        .hero-p { font-size: 1.1rem; line-height: 1.7; color: rgba(255,255,255,.5); margin-bottom: 36px; max-width: 480px; }
+
+        .hero-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+        @media (min-width: 640px) { .hero-btns { flex-direction: row; } }
+
+        .btn-primary {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #1a0040, #6a0dad);
+            color: #FFD700; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem;
+            padding: 14px 28px; border-radius: 50px; border: none; cursor: pointer;
+            text-decoration: none; box-shadow: 0 8px 28px rgba(26,0,64,.28);
+            transition: transform .2s, box-shadow .2s; position: relative; overflow: hidden;
+        }
+        .btn-primary:hover { transform: scale(1.04); box-shadow: 0 12px 36px rgba(26,0,64,.35); }
+        .btn-primary::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+            transform: translateX(-100%) skewX(-20deg);
+        }
+        @keyframes shimmer { from { transform: translateX(-100%) skewX(-20deg); } to { transform: translateX(300%) skewX(-20deg); } }
+        .btn-primary:hover::after { animation: shimmer .55s ease; }
+
+        .btn-ghost {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: transparent; color: rgba(255,255,255,.55);
+            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1rem;
+            padding: 14px 20px; border-radius: 50px;
+            border: 1px solid rgba(255,255,255,.4); cursor: pointer;
+            text-decoration: none; transition: border-color .2s, color .2s;
+        }
+        .btn-ghost:hover { color: rgba(255,255,255,.9); border-color: rgba(255,255,255,.6); }
+
+        .hero-stats { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+        .hero-stat-val { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: -.02em; }
+        .hero-stat-lbl { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.35); margin-top: 2px; }
+        .hero-stat-div { width: 1px; height: 32px; background: rgba(255,255,255,.1); }
+
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+        .pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+
+        /* Hero card */
+        .hero-card { background: #111118; border: 1px solid rgba(255,255,255,.07); border-radius: 24px; overflow: hidden; }
+        .hero-card-header {
+            padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .hero-card-season { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.3); }
+        .hero-card-recent { font-size: .875rem; font-weight: 600; color: rgba(255,255,255,.75); margin-top: 2px; }
+        .hero-live-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: .7rem; font-weight: 600; border-radius: 100px; padding: 4px 10px;
+            background: rgba(255,215,0,.10); color: #ffd700; border: 1px solid rgba(255,215,0,.15);
+        }
+        .hero-adm-row {
+            padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,.04);
+            display: flex; align-items: center; justify-content: space-between; gap: 16px;
+            transition: background .2s;
+        }
+        .hero-adm-row:last-child { border-bottom: none; }
+        .hero-adm-row:hover { background: rgba(255,255,255,.03); }
+        .hero-adm-name { font-size: .875rem; font-weight: 600; color: rgba(255,255,255,.8); }
+        .hero-adm-college { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: 2px; }
+        .hero-adm-tag { font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; flex-shrink: 0; }
+        .hero-card-footer {
+            padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.06);
+            background: rgba(255,215,0,.04);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .hero-card-foot-note { font-size: .75rem; color: rgba(255,255,255,.35); }
+        .hero-card-foot-badge { font-size: .75rem; font-weight: 700; color: #ffd700; }
+
+        /* ── STATS BAR ── */
+        .trust-strip {
+            position: relative; z-index: 2;
+            background: linear-gradient(145deg, #1a0040, #2D0A5E);
+            border-radius: 16px; margin: 0 32px;
+            box-shadow: 0 12px 36px rgba(26,0,64,.25);
+        }
+        .trust-strip-inner {
+            display: grid; grid-template-columns: repeat(2, 1fr); padding: 28px 0;
+        }
+        @media (min-width: 768px) { .trust-strip-inner { grid-template-columns: repeat(4, 1fr); } }
+        .trust-stat { text-align: center; padding: 8px 16px; border-right: 1px solid rgba(255,255,255,.08); }
+        .trust-stat:last-child { border-right: none; }
+        .trust-stat-val {
+            font-family: 'Montserrat', sans-serif; font-weight: 900;
+            font-size: 2rem; color: #FFD700; letter-spacing: -.03em;
+        }
+        @media (min-width: 768px) { .trust-stat-val { font-size: 2.5rem; } }
+        .trust-stat-lbl { font-weight: 600; font-size: .65rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        /* ── SECTION HEADINGS ── */
+        .section-h2 {
+            font-family: 'Montserrat', sans-serif; font-weight: 900;
+            font-size: 2.5rem; line-height: 1.06; color: var(--navy);
+            letter-spacing: -.03em; margin-bottom: 16px;
+        }
+        @media (min-width: 768px) { .section-h2 { font-size: 3rem; } }
+        .section-lead { font-size: 1.05rem; line-height: 1.7; color: var(--mid); }
+
+        /* ── COURSES ── */
+        .courses-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 640px)  { .courses-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .courses-grid { grid-template-columns: repeat(4, 1fr); } }
+        .course-card { border-radius: 20px; padding: 32px; transition: transform .22s, box-shadow .22s; }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,.12); }
+        .course-ico { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+        .course-tag { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .course-h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1.15; margin-bottom: 12px; letter-spacing: -.02em; }
+        .course-p { font-size: .875rem; line-height: 1.65; margin-bottom: 20px; }
+        .course-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
+        .cpill { font-size: .72rem; font-weight: 600; padding: 4px 10px; border-radius: 8px; }
+        .course-link { display: inline-flex; align-items: center; gap: 6px; font-size: .875rem; font-weight: 600; text-decoration: none; transition: gap .2s; }
+        .course-link:hover { gap: 12px; }
+
+        /* ── ABOUT / WHY ASMI ── */
+        .about-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: start; }
+        @media (min-width: 1024px) { .about-grid { grid-template-columns: 1fr 1fr; gap: 96px; } }
+
+        .btn-about {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #1a0040, #6a0dad);
+            color: #FFD700; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .9rem;
+            padding: 12px 24px; border-radius: 50px; border: none; cursor: pointer;
+            text-decoration: none; box-shadow: 0 8px 28px rgba(26,0,64,.28); transition: transform .2s;
+        }
+        .btn-about:hover { transform: scale(1.03); }
+
+        .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+        .about-stat-box { border-radius: 16px; padding: 16px; background: var(--card); border: 1px solid var(--cb); }
+        .about-stat-val { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--purple); letter-spacing: -.03em; margin-bottom: 4px; }
+        .about-stat-lbl { font-size: .72rem; color: rgba(106,13,173,.6); font-weight: 600; }
+
+        .feature-card {
+            display: flex; align-items: flex-start; gap: 16px; padding: 20px;
+            border-radius: 16px; background: var(--card); border: 1px solid var(--cb); margin-bottom: 12px;
+            transition: background .2s, border-color .2s, transform .2s;
+        }
+        .feature-card:hover { background: var(--card-hover); border-color: var(--purple); transform: translateY(-3px); }
+        .feature-ico {
+            width: 42px; height: 42px; border-radius: 11px; background: rgba(106,13,173,.10);
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .feature-heading { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .875rem; color: var(--navy); margin-bottom: 4px; }
+        .feature-body { font-size: .82rem; color: var(--mid); line-height: 1.5; }
+
+        /* ── HOW IT WORKS ── */
+        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        @media (min-width: 768px) { .steps-grid { grid-template-columns: repeat(3, 1fr); } }
+        .step-wrap { text-align: center; }
+        .step-num {
+            width: 52px; height: 52px; border-radius: 50%;
+            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.25rem;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; flex-shrink: 0;
+        }
+        .step-h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; letter-spacing: -.02em; }
+        .step-p { font-size: .875rem; color: var(--mid); line-height: 1.65; }
+        .step-link { display: inline-flex; align-items: center; gap: 4px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .875rem; text-decoration: none; margin-top: 12px; }
+        .step-link:hover { text-decoration: underline; }
+
+        /* ── TOOLS ── */
+        .tools-header { display: flex; flex-direction: column; gap: 24px; margin-bottom: 48px; }
+        @media (min-width: 768px) { .tools-header { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
+        .tools-note { font-size: .875rem; color: var(--mid); line-height: 1.65; max-width: 280px; }
+        @media (min-width: 768px) { .tools-note { text-align: right; } }
+        .tools-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 768px)  { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .tools-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .tool-card {
+            background: var(--card); border: 1px solid var(--cb);
+            border-radius: 16px; padding: 28px; text-decoration: none; display: block;
+            transition: transform .22s, box-shadow .22s, background .2s, border-color .2s;
+        }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(106,13,173,.12); background: var(--card-hover); border-color: var(--purple); }
+        .tool-ico { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; background: rgba(106,13,173,.08); }
+        .tool-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; letter-spacing: -.02em; }
+        .tool-desc { font-size: .875rem; color: var(--mid); line-height: 1.65; margin-bottom: 16px; }
+        .tool-cta { display: flex; align-items: center; gap: 6px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .875rem; }
+
+        .tool-card-dark { background: var(--navy); border-color: rgba(255,255,255,.06); }
+        .tool-card-dark:hover { background: #2d0060; border-color: rgba(255,255,255,.12); box-shadow: 0 12px 40px rgba(26,0,64,.3); }
+        .tool-card-dark .tool-name { color: #fff; }
+        .tool-card-dark .tool-desc { color: rgba(255,255,255,.45); }
+        .tool-card-dark .tool-cta { color: #ffd700; }
+        .tool-card-dark .tool-ico { background: rgba(255,255,255,.05); }
+
+        /* ── TESTIMONIALS ── */
+        .testi-section { background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.10)); }
+        .testi-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .testi-grid { grid-template-columns: repeat(2, 1fr); } }
+        .testi-card {
+            background: rgba(255,255,255,.70); border: 1px solid var(--cb);
+            border-radius: 16px; padding: 32px; position: relative;
+            box-shadow: 0 8px 24px rgba(26,0,64,.08);
+        }
+        .testi-quote {
+            position: absolute; top: 20px; right: 28px;
+            font-size: 5.5rem; line-height: 1; font-family: Georgia, serif;
+            color: rgba(106,13,173,.06); user-select: none; pointer-events: none;
+        }
+        .testi-p { font-family: 'Open Sans', sans-serif; font-size: .875rem; color: var(--mid); line-height: 1.7; margin-bottom: 24px; padding-right: 40px; }
+        .testi-foot { display: flex; align-items: center; gap: 12px; }
+        .testi-av {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy), var(--purple));
+            color: #FFD700; font-weight: 700; font-size: .875rem;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .testi-name { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--navy); font-size: .9rem; }
+        .testi-college { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .75rem; color: var(--purple); margin-top: 2px; }
+        .testi-more { text-align: center; color: var(--soft); font-size: .75rem; margin-top: 32px; }
+
+        /* ── BRANCHES ── */
+        .branches-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 640px)  { .branches-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .branches-grid { grid-template-columns: repeat(3, 1fr); } }
+        .branch-card {
+            background: var(--card); border: 1px solid var(--cb);
+            border-radius: 16px; padding: 24px; transition: border-color .2s, box-shadow .2s;
+        }
+        .branch-card:hover { border-color: var(--purple); box-shadow: 0 4px 20px rgba(106,13,173,.08); }
+        .branch-head { border-top: 3px solid #ffd700; }
+        .branch-badge { display: inline-block; font-size: .7rem; font-weight: 700; border-radius: 100px; padding: 4px 10px; background: rgba(255,215,0,.20); color: rgba(90,68,0,.85); margin-bottom: 12px; }
+        .branch-ico { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(106,13,173,.08); margin-bottom: 12px; }
+        .branch-city { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); margin-bottom: 4px; }
+        .branch-addr { font-size: .82rem; color: var(--mid); line-height: 1.5; margin-bottom: 12px; }
+        .branch-link { display: inline-flex; align-items: center; gap: 8px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .82rem; text-decoration: none; }
+        .branch-link:hover { text-decoration: underline; }
+
+        .helpline-bar {
+            margin-top: 24px; padding: 20px 24px; border-radius: 16px;
+            display: flex; flex-direction: column; gap: 16px;
+            background: var(--card); border: 1px solid var(--cb);
+        }
+        @media (min-width: 640px) { .helpline-bar { flex-direction: row; align-items: center; justify-content: space-between; } }
+        .helpline-lbl { font-size: .65rem; font-weight: 700; color: rgba(106,13,173,.5); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+        .helpline-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--navy); letter-spacing: -.02em; }
+        .helpline-hours { font-size: .82rem; color: var(--mid); margin-top: 2px; }
+        .btn-call {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #1a0040, #6a0dad); color: #FFD700;
+            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .9rem;
+            padding: 12px 24px; border-radius: 50px; border: none; cursor: pointer;
+            text-decoration: none; flex-shrink: 0; transition: transform .2s;
+        }
+        .btn-call:hover { transform: scale(1.03); }
+
+        /* ── CTA SECTION ── */
+        .cta-section { background: #09090f; position: relative; overflow: hidden; }
+        .cta-section::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 90% 70% at 50% 110%, rgba(123,65,179,.28) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .cta-inner { position: relative; z-index: 1; text-align: center; }
+        .cta-badge {
+            display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; padding: 6px 16px; margin-bottom: 28px;
+            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10);
+        }
+        .cta-h2 {
+            font-family: 'Montserrat', sans-serif; font-weight: 900;
+            font-size: 3rem; color: #fff; letter-spacing: -.03em; line-height: 1.04; margin-bottom: 24px;
+        }
+        @media (min-width: 640px) { .cta-h2 { font-size: 3.75rem; } }
+        .cta-p { font-size: 1.1rem; line-height: 1.7; color: rgba(255,255,255,.45); max-width: 400px; margin: 0 auto 40px; }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #FFD700; color: var(--navy);
+            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.1rem;
+            padding: 14px 38px; border-radius: 50px; border: none; cursor: pointer;
+            text-decoration: none; box-shadow: 0 8px 32px rgba(255,215,0,.25); transition: transform .2s, box-shadow .2s;
+        }
+        .btn-cta:hover { transform: scale(1.04); box-shadow: 0 12px 40px rgba(255,215,0,.35); }
+        .cta-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.25); margin-top: 36px; }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<!-- ── NAVBAR ── -->
+<nav class="asmi-nav" id="mainNav">
+    <div class="asmi-nav-inner">
+        <a href="medical.html" class="asmi-nav-logo">
+            <img src="asmi-logo.png" alt="ASMI Career"/>
+        </a>
+        <ul class="asmi-nav-links">
+            <li><a href="medical.html" class="active">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="#tools">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="tools/rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="tools/college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="tools/cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="tools/events.html"><span>🎓</span> Events &amp; Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="nav-cta"><a href="inquiry.html">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="medical.html">Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="tools/rank-predictor.html">📊 Rank Predictor</a>
+        <a href="tools/college-search.html">🏥 College Search</a>
+        <a href="tools/cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="tools/documents-checklist.html">📋 Documents Checklist</a>
+        <a href="tools/events.html">🎓 Events &amp; Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="#about">About ASMI</a>
+        <a href="#contact">Contact &amp; Branches</a>
+        <a href="inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero-section">
+    <div class="hero-grid"></div>
+    <div class="wrap">
+        <div class="hero-inner">
+
+            <!-- Left -->
+            <div class="reveal">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot pulse-slow"></span>
+                    <span class="hero-badge-text">Maharashtra's #1 NEET Counsellors</span>
+                </div>
+
+                <h1 class="hero-h1">
+                    Your NEET Score<br/>Deserves the<br/><span style="color:#ffd700;">Right College.</span>
+                </h1>
+
+                <p class="hero-p">
+                    Expert, honest guidance through every round of counselling — from choice filling to confirmed admission. No confusion, no missed deadlines.
+                </p>
+
+                <div class="hero-btns">
+                    <a href="inquiry.html" class="btn-primary">
+                        Book Free Counselling
+                        <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
+                    </a>
+                    <a href="#tools" class="btn-ghost">
+                        Explore Free Tools
+                        <span class="material-symbols-outlined" style="font-size:18px;">construction</span>
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-val">25,000+</div>
+                        <div class="hero-stat-lbl">Admissions secured</div>
+                    </div>
+                    <div class="hero-stat-div"></div>
+                    <div>
+                        <div class="hero-stat-val">11+</div>
+                        <div class="hero-stat-lbl">Years experience</div>
+                    </div>
+                    <div class="hero-stat-div"></div>
+                    <div>
+                        <div class="hero-stat-val">6</div>
+                        <div class="hero-stat-lbl">Branches statewide</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Admissions feed -->
+            <div class="reveal reveal-delay-2">
+                <div class="hero-card">
+                    <div class="hero-card-header">
+                        <div>
+                            <div class="hero-card-season">2024–25 Season</div>
+                            <div class="hero-card-recent">Recent admissions</div>
+                        </div>
+                        <div class="hero-live-pill">
+                            <span class="pulse-slow" style="width:6px;height:6px;border-radius:50%;background:#ffd700;display:inline-block;"></span>
+                            Live
+                        </div>
+                    </div>
+
+                    <div class="hero-adm-row">
+                        <div>
+                            <div class="hero-adm-name">Shrihaan G.</div>
+                            <div class="hero-adm-college">AIIMS Delhi · MBBS</div>
+                        </div>
+                        <span class="hero-adm-tag" style="background:rgba(255,215,0,.12); color:#ffd700;">AIQ</span>
+                    </div>
+                    <div class="hero-adm-row">
+                        <div>
+                            <div class="hero-adm-name">Hazel P.</div>
+                            <div class="hero-adm-college">KEM Mumbai · MBBS</div>
+                        </div>
+                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
+                    </div>
+                    <div class="hero-adm-row">
+                        <div>
+                            <div class="hero-adm-name">Dhruv M.</div>
+                            <div class="hero-adm-college">KMC Manipal · MBBS</div>
+                        </div>
+                        <span class="hero-adm-tag" style="background:rgba(255,255,255,.07); color:rgba(255,255,255,.45);">Mgmt</span>
+                    </div>
+                    <div class="hero-adm-row">
+                        <div>
+                            <div class="hero-adm-name">Isha T.</div>
+                            <div class="hero-adm-college">KJ Somaiya · MBBS</div>
+                        </div>
+                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
+                    </div>
+                    <div class="hero-adm-row">
+                        <div>
+                            <div class="hero-adm-name">Riya K.</div>
+                            <div class="hero-adm-college">Nair Hospital Mumbai · BDS</div>
+                        </div>
+                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
+                    </div>
+
+                    <div class="hero-card-footer">
+                        <span class="hero-card-foot-note">+ 25,000 more across 11 years</span>
+                        <span class="hero-card-foot-badge">Maharashtra #1 ★</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ── STATS BAR ── -->
+<div class="trust-strip">
+    <div class="trust-strip-inner">
+        <div class="trust-stat reveal">
+            <div class="trust-stat-val">25,000+</div>
+            <div class="trust-stat-lbl">Admissions</div>
+        </div>
+        <div class="trust-stat reveal reveal-delay-1">
+            <div class="trust-stat-val">11+</div>
+            <div class="trust-stat-lbl">Years</div>
+        </div>
+        <div class="trust-stat reveal reveal-delay-2">
+            <div class="trust-stat-val">6</div>
+            <div class="trust-stat-lbl">Branches</div>
+        </div>
+        <div class="trust-stat reveal reveal-delay-3">
+            <div class="trust-stat-val">#1</div>
+            <div class="trust-stat-lbl">Maharashtra</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── COURSES ── -->
+<section id="services" class="section">
+    <div class="wrap">
+        <div style="margin-bottom:56px;" class="reveal">
+            <span class="section-label">What We Cover</span>
+            <h2 class="section-h2">
+                Every medical admission,<br/>handled end to end.
+            </h2>
+            <p class="section-lead" style="max-width:440px;">
+                From NEET score to college confirmation — across four disciplines, all quotas, every state.
+            </p>
+        </div>
+
+        <div class="courses-grid">
+            <!-- MBBS — dark card -->
+            <div class="course-card reveal" style="background:#09090f; color:#fff;">
+                <div class="course-ico" style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);">🩺</div>
+                <span class="course-tag" style="color:#ffd700;">MBBS</span>
+                <h3 class="course-h3" style="color:#fff;">Bachelor of Medicine</h3>
+                <p class="course-p" style="color:rgba(255,255,255,.45);">AIQ, State Quota, Management &amp; NRI quota across govt and private medical colleges.</p>
+                <div class="course-pills">
+                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">AIIMS Delhi</span>
+                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">KEM Mumbai</span>
+                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">Manipal</span>
+                </div>
+                <a href="inquiry.html" class="course-link" style="color:#ffd700;"
+                   onmouseover="this.style.gap='12px'" onmouseout="this.style.gap='6px'">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- BDS -->
+            <div class="course-card reveal reveal-delay-1" style="background:var(--card); border:1px solid var(--cb);">
+                <div class="course-ico" style="background:rgba(106,13,173,.09);">🦷</div>
+                <span class="course-tag" style="color:var(--purple);">BDS</span>
+                <h3 class="course-h3" style="color:var(--navy);">Bachelor of Dental Surgery</h3>
+                <p class="course-p" style="color:var(--mid);">Complete guidance for dental college admissions under AIQ and state counselling processes.</p>
+                <div class="course-pills">
+                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">MAIDS Delhi</span>
+                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">Nair Mumbai</span>
+                </div>
+                <a href="inquiry.html" class="course-link" style="color:var(--purple);">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- BAMS -->
+            <div class="course-card reveal reveal-delay-2" style="background:var(--card); border:1px solid var(--cb);">
+                <div class="course-ico" style="background:rgba(106,13,173,.09);">🌿</div>
+                <span class="course-tag" style="color:var(--purple);">BAMS</span>
+                <h3 class="course-h3" style="color:var(--navy);">Ayurvedic Medicine &amp; Surgery</h3>
+                <p class="course-p" style="color:var(--mid);">Expert guidance for AYUSH counselling — state and central, government and private.</p>
+                <div class="course-pills">
+                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">BHU Varanasi</span>
+                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">GAC Pune</span>
+                </div>
+                <a href="inquiry.html" class="course-link" style="color:var(--purple);">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+
+            <!-- BHMS — gold card -->
+            <div class="course-card reveal reveal-delay-3" style="background:#ffd700;">
+                <div class="course-ico" style="background:rgba(0,0,0,.07);">💊</div>
+                <span class="course-tag" style="color:rgba(90,68,0,.6);">BHMS</span>
+                <h3 class="course-h3" style="color:#09090f;">Homeopathic Medicine &amp; Surgery</h3>
+                <p class="course-p" style="color:rgba(90,68,0,.65);">Full support for homeopathy admissions across Maharashtra and other AYUSH states.</p>
+                <div class="course-pills">
+                    <span class="cpill" style="background:rgba(0,0,0,.07); color:rgba(90,68,0,.7);">NHMC Mumbai</span>
+                    <span class="cpill" style="background:rgba(0,0,0,.07); color:rgba(90,68,0,.7);">PHC Pune</span>
+                </div>
+                <a href="inquiry.html" class="course-link" style="color:#5a4400;">
+                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── WHY ASMI ── -->
+<section id="about" class="section">
+    <div class="wrap">
+        <div class="about-grid">
+            <!-- Left -->
+            <div class="reveal">
+                <span class="section-label">Why ASMI</span>
+                <h2 class="section-h2">
+                    Everything NEET.<br/>One team.
+                </h2>
+                <p class="section-lead" style="margin-bottom:32px;">
+                    NEET counselling has dozens of moving parts — AIQ rounds, state quotas, management seats, upgradations, documents, reporting. We handle every one.
+                </p>
+                <a href="inquiry.html" class="btn-about">
+                    Book free session
+                    <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
+                </a>
+                <div class="about-stats">
+                    <div class="about-stat-box">
+                        <div class="about-stat-val">All India</div>
+                        <div class="about-stat-lbl">Coverage — every state</div>
+                    </div>
+                    <div class="about-stat-box">
+                        <div class="about-stat-val">4 Courses</div>
+                        <div class="about-stat-lbl">MBBS · BDS · BAMS · BHMS</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Feature cards -->
+            <div class="reveal reveal-delay-1">
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">verified_user</span></div>
+                    <div>
+                        <div class="feature-heading">Complete Admission Guidance</div>
+                        <div class="feature-body">Every quota, every round — AIQ to state, government to private.</div>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">groups</span></div>
+                    <div>
+                        <div class="feature-heading">One-on-One Counselling</div>
+                        <div class="feature-body">A dedicated counsellor who knows your profile and goals personally.</div>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">analytics</span></div>
+                    <div>
+                        <div class="feature-heading">Accurate Round Cutoffs</div>
+                        <div class="feature-body">Real historical data — not guesswork. Know exactly where you stand.</div>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">notifications_active</span></div>
+                    <div>
+                        <div class="feature-heading">Real-time WhatsApp Alerts</div>
+                        <div class="feature-body">Updates on every deadline, schedule change, and allotment result.</div>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">fact_check</span></div>
+                    <div>
+                        <div class="feature-heading">Document Verification</div>
+                        <div class="feature-body">Every certificate checked before submission. No surprises at reporting.</div>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">support_agent</span></div>
+                    <div>
+                        <div class="feature-heading">Dedicated Helpline</div>
+                        <div class="feature-body">Direct access to your counsellor throughout the entire admission season.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section">
+    <div class="wrap-md">
+        <div style="text-align:center; margin-bottom:64px;" class="reveal">
+            <span class="section-label" style="display:inline-block;">How It Works</span>
+            <h2 class="section-h2" style="margin-top:8px;">
+                From NEET score<br/>to confirmed seat.
+            </h2>
+            <p class="section-lead" style="max-width:320px; margin:0 auto;">Three steps. We guide you through every detail.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-wrap reveal">
+                <div class="step-num" style="background:#ffd700; color:#1a0040;">1</div>
+                <h3 class="step-h3">Share Your Details</h3>
+                <p class="step-p">Fill the free inquiry form with your NEET score, category, and preferred courses. Takes 2 minutes.</p>
+                <a href="inquiry.html" class="step-link">
+                    Go to form <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
+                </a>
+            </div>
+
+            <div class="step-wrap reveal reveal-delay-1">
+                <div class="step-num" style="background:linear-gradient(135deg,#1a0040,#6a0dad); color:#FFD700;">2</div>
+                <h3 class="step-h3">Meet Your Counsellor</h3>
+                <p class="step-p">Your dedicated counsellor analyses your score, category, and budget — giving you a clear, honest picture of every college you can get.</p>
+            </div>
+
+            <div class="step-wrap reveal reveal-delay-2">
+                <div class="step-num" style="background:#ffd700; color:#1a0040;">3</div>
+                <h3 class="step-h3">Get Your Seat Confirmed</h3>
+                <p class="step-p">We guide you through every counselling round — choice filling, allotments, upgrades, documents, and reporting. Until you walk into your college.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TOOLS SHOWCASE ── -->
+<section id="tools" class="section">
+    <div class="wrap">
+        <div class="tools-header reveal">
+            <div>
+                <span class="section-label">Free Student Tools</span>
+                <h2 class="section-h2" style="margin-top:8px;">
+                    Research smarter.<br/>Decide with confidence.
+                </h2>
+            </div>
+            <p class="tools-note">Use our free tools before your counselling session to understand your options better.</p>
+        </div>
+
+        <div class="tools-grid">
+            <a href="tools/rank-predictor.html" class="tool-card reveal">
+                <div class="tool-ico">📊</div>
+                <div class="tool-name">Rank Predictor</div>
+                <p class="tool-desc">Estimate your All India Rank from your NEET score. Know where you stand before results are out.</p>
+                <div class="tool-cta">Try tool <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+
+            <a href="tools/college-search.html" class="tool-card reveal reveal-delay-1">
+                <div class="tool-ico">🏥</div>
+                <div class="tool-name">College Search</div>
+                <p class="tool-desc">Compare medical colleges across India by state, course, fees, and available seats.</p>
+                <div class="tool-cta">Search colleges <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+
+            <a href="tools/cutoff-explorer.html" class="tool-card reveal reveal-delay-2">
+                <div class="tool-ico">📈</div>
+                <div class="tool-name">Cutoff Explorer</div>
+                <p class="tool-desc">Browse 2025–26 cutoffs by state, course, and category. Know if your score qualifies.</p>
+                <div class="tool-cta">Explore cutoffs <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+
+            <a href="tools/documents-checklist.html" class="tool-card reveal reveal-delay-1">
+                <div class="tool-ico">📋</div>
+                <div class="tool-name">Documents Checklist</div>
+                <p class="tool-desc">Know exactly which documents you need for each counselling process — before it's urgent.</p>
+                <div class="tool-cta">View checklist <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+
+            <a href="tools/events.html" class="tool-card reveal reveal-delay-2">
+                <div class="tool-ico">🎓</div>
+                <div class="tool-name">Events &amp; Seminars</div>
+                <p class="tool-desc">Join free NEET counselling seminars across Maharashtra — in-person and online.</p>
+                <div class="tool-cta">See events <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+
+            <!-- CTA card -->
+            <a href="inquiry.html" class="tool-card tool-card-dark reveal reveal-delay-3">
+                <div class="tool-ico">🤝</div>
+                <div class="tool-name">Talk to a Counsellor</div>
+                <p class="tool-desc">Still confused? Book a free one-on-one session. We'll explain everything in your language.</p>
+                <div class="tool-cta">Book free session <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="testi-section section">
+    <div class="wrap">
+        <div style="text-align:center; margin-bottom:56px;" class="reveal">
+            <span class="section-label" style="display:inline-block;">Student Stories</span>
+            <h2 class="section-h2" style="margin-top:8px;">
+                Voices of success.
+            </h2>
+            <p style="color:var(--mid); font-size:.875rem;">Real students. Real colleges. Real results.</p>
+        </div>
+
+        <div class="testi-grid">
+            <div class="testi-card reveal">
+                <div class="testi-quote">"</div>
+                <p class="testi-p">ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle. His timely direction kept me stress-free and helped me make confident decisions that eventually led me to KEM Mumbai.</p>
+                <div class="testi-foot">
+                    <div class="testi-av">HP</div>
+                    <div>
+                        <div class="testi-name">Hazel Punmiya</div>
+                        <div class="testi-college">KEM, Mumbai</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testi-card reveal reveal-delay-1">
+                <div class="testi-quote">"</div>
+                <p class="testi-p">The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused. His guidance made the journey manageable and helped me reach AIIMS Delhi with complete confidence.</p>
+                <div class="testi-foot">
+                    <div class="testi-av">SG</div>
+                    <div>
+                        <div class="testi-name">Shrihaan Ghare</div>
+                        <div class="testi-college">AIIMS Delhi</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testi-card reveal reveal-delay-1">
+                <div class="testi-quote">"</div>
+                <p class="testi-p">Comparing top colleges was challenging, but ASMI Career helped me understand the bigger picture. Anish Sir's insights on reputation, exposure, and opportunities showed why KMC Manipal stands out nationally. That clarity made my final decision smooth and confident.</p>
+                <div class="testi-foot">
+                    <div class="testi-av">DM</div>
+                    <div>
+                        <div class="testi-name">Dhruv Mundra</div>
+                        <div class="testi-college">KMC Manipal</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testi-card reveal reveal-delay-2">
+                <div class="testi-quote">"</div>
+                <p class="testi-p">With a strong score and several options, what I needed most was clarity. Anish Sir helped me evaluate every college carefully and explained why KJ Somaiya offered better long-term stability than the newer GMCs. That direction shaped my decision and gave me confidence.</p>
+                <div class="testi-foot">
+                    <div class="testi-av">IT</div>
+                    <div>
+                        <div class="testi-name">Isha Tilak</div>
+                        <div class="testi-college">KJ Somaiya, Mumbai</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="testi-more reveal">…and 25,000+ more families guided across Maharashtra and India</p>
+    </div>
+</section>
+
+<!-- ── BRANCHES ── -->
+<section id="contact" class="section">
+    <div class="wrap">
+        <div style="margin-bottom:48px;" class="reveal">
+            <span class="section-label">Our Branches</span>
+            <h2 class="section-h2">
+                Find us near you.
+            </h2>
+            <p class="section-lead" style="max-width:400px;">6 branches across Maharashtra. Walk in, call, or visit — we're here for you.</p>
+        </div>
+
+        <div class="branches-grid">
+            <div class="branch-card branch-head reveal">
+                <div class="branch-badge">Head Office</div>
+                <h3 class="branch-city">Mumbai – Andheri</h3>
+                <p class="branch-addr">42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East</p>
+                <a href="tel:7410019077" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019077
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-1">
+                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
+                <h3 class="branch-city">Thane</h3>
+                <p class="branch-addr">Shah Avenue, Gokhale Road, Naupada, Thane West</p>
+                <a href="tel:7410019075" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019075
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-2">
+                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
+                <h3 class="branch-city">Pune</h3>
+                <p class="branch-addr">Business Guild Complex, Law College Road, Pune</p>
+                <a href="tel:7410013458" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410013458
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-1">
+                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
+                <h3 class="branch-city">Kolhapur</h3>
+                <p class="branch-addr">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=kolhapur" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-2">
+                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
+                <h3 class="branch-city">Sangli</h3>
+                <p class="branch-addr">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=sangli" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+
+            <div class="branch-card reveal reveal-delay-3">
+                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
+                <h3 class="branch-city">Ch. Sambhajinagar</h3>
+                <p class="branch-addr">Contact for branch address and appointment</p>
+                <a href="inquiry.html?source=sambhajinagar" class="branch-link">
+                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
+                </a>
+            </div>
+        </div>
+
+        <!-- Central helpline bar -->
+        <div class="helpline-bar reveal">
+            <div>
+                <div class="helpline-lbl">Central Helpline</div>
+                <div class="helpline-num">7410019074</div>
+                <div class="helpline-hours">Available Mon–Sat, 9am–7pm</div>
+            </div>
+            <a href="tel:7410019074" class="btn-call">
+                <span class="material-symbols-outlined" style="font-size:20px;">phone</span>
+                Call Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="cta-section section">
+    <div class="wrap-sm">
+        <div class="cta-inner reveal">
+            <div class="cta-badge">
+                <span style="width:6px;height:6px;border-radius:50%;background:#ffd700;display:inline-block;" class="pulse-slow"></span>
+                <span style="font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.5);">Free, no obligation</span>
+            </div>
+            <h2 class="cta-h2">
+                Ready to secure<br/>your medical seat?
+            </h2>
+            <p class="cta-p">
+                Book your free counselling session today. Honest advice from people who know NEET inside out.
+            </p>
+            <a href="inquiry.html" class="btn-cta">
+                Book Free Counselling
+                <span class="material-symbols-outlined" style="font-size:22px;">arrow_forward</span>
+            </a>
+            <div class="cta-trust">
+                <span>Free, no obligation</span>
+                <span>·</span>
+                <span>In-person or phone</span>
+                <span>·</span>
+                <span>Any NEET score welcome</span>
+                <span>·</span>
+                <span>All 6 Maharashtra branches</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="asmi-footer">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-grid">
+            <div class="asmi-footer-brand">
+                <img src="asmi-logo.png" alt="ASMI Career"/>
+                <p>Maharashtra's leading NEET medical admissions counselling company. 11+ years, 25,000+ admissions, and a team that genuinely cares about your future.</p>
+                <div style="margin-top:20px; font-size:.825rem; color:rgba(255,255,255,.3);">
+                    <div>Central: <a href="tel:7410019074" style="color:rgba(255,255,255,.5);">7410019074</a></div>
+                    <div>asmicareer.in</div>
+                </div>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="medical.html">Home</a></li>
+                    <li><a href="inquiry.html">Book Counselling</a></li>
+                    <li><a href="tools/rank-predictor.html">Rank Predictor</a></li>
+                    <li><a href="tools/cutoff-explorer.html">Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html">Documents Checklist</a></li>
+                    <li><a href="tools/events.html">Events</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Branches</h4>
+                <ul>
+                    <li><a href="inquiry.html?source=andheri">Mumbai – Andheri</a></li>
+                    <li><a href="inquiry.html?source=thane">Thane</a></li>
+                    <li><a href="inquiry.html?source=pune">Pune</a></li>
+                    <li><a href="inquiry.html?source=kolhapur">Kolhapur</a></li>
+                    <li><a href="inquiry.html?source=sangli">Sangli</a></li>
+                    <li><a href="inquiry.html?source=sambhajinagar">Ch. Sambhajinagar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <div class="asmi-footer-contact-item">
+                    <strong>Andheri (Head Office)</strong>
+                    42, 4th Floor, Silver Astra, J.B. Nagar, Andheri East
+                    <br/><a href="tel:7410019077">7410019077</a>
+                </div>
+                <div class="asmi-footer-contact-item">
+                    <strong>Thane</strong>
+                    Shah Avenue, Gokhale Road, Naupada
+                    <br/><a href="tel:7410019075">7410019075</a>
+                </div>
+                <div class="asmi-footer-contact-item">
+                    <strong>Pune</strong>
+                    Business Guild Complex, Law College Road
+                    <br/><a href="tel:7410013458">7410013458</a>
+                </div>
+            </div>
+        </div>
+        <div class="asmi-footer-bottom">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span>ASMI Career · asmicareer.in</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Navbar shadow on scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, { passive: true });
+
+    // Mobile menu toggle
+    document.getElementById('hamburger').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const el = document.querySelector(a.getAttribute('href'));
+            if (el) {
+                e.preventDefault();
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.getElementById('mobileMenu').classList.remove('open');
+            }
+        });
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

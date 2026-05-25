@@ -318,7 +318,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
           <span class="stat-lbl">User Rating</span>
         </div>
       </div>
-      <a href="inquiry.html" class="cta m-cta" id="m-cta">
+      <a href="medical.html" class="cta m-cta" id="m-cta">
         Start NEET Journey →
       </a>
     </div>
@@ -427,7 +427,7 @@ medical.addEventListener('click', function() {
   
   engContent.style.opacity = '0';
   centerLogo.style.opacity = '0';
-  
+
   const rect = mContent.getBoundingClientRect();
   let particles = [];
   for (let i = 0; i < 150; i++) {
@@ -442,23 +442,23 @@ medical.addEventListener('click', function() {
   mContent.style.opacity = '0';
 
   let animationStep = 0;
-  const totalNodes = 45; 
-  let growthProgress = 0; 
-  let timelineTicks = 0; 
+  const totalNodes = 45;
+  let growthProgress = 0;
+  let timelineTicks = 0;
 
   // ── Locked Vertical Trajectory at 35% Screen Width ──
-  const startX = w * 0.35;  
+  const startX = w * 0.35;
   const startY = h;
-  const endX = w * 0.35;   
+  const endX = w * 0.35;
   const endY = 0;
-  
+
   const deltaX = endX - startX;
   const deltaY = endY - startY;
-  const angleOfLine = Math.atan2(deltaY, deltaX); 
+  const angleOfLine = Math.atan2(deltaY, deltaX);
 
   function renderGlobalCinematicLoop() {
     mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-    animationStep += 0.055; 
+    animationStep += 0.055;
     timelineTicks++;
 
     particles.forEach(p => {
@@ -466,7 +466,7 @@ medical.addEventListener('click', function() {
       const destY = startY + deltaY * p.targetProgress;
       const dx = destX - p.x;
       const dy = destY - p.y;
-      
+
       p.x += dx * 0.06;
       p.y += dy * 0.06;
 
@@ -486,28 +486,28 @@ medical.addEventListener('click', function() {
       }
     });
 
-    if (timelineTicks > 20) { 
+    if (timelineTicks > 20) {
       if (growthProgress < 1) {
-        growthProgress += 0.018; 
+        growthProgress += 0.018;
       } else {
         clearInterval(dnaInterval);
         flashCurtain.style.opacity = '1';
-        
+
         setTimeout(() => {
           medical.style.width = '100%';
           seamLine.style.width = '100%';
           medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
           seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
-          
+
           setTimeout(() => {
             flashCurtain.style.opacity = '0';
-            setTimeout(() => { window.location.href = 'inquiry.html'; }, 300);
+            setTimeout(() => { window.location.href = 'medical.html'; }, 300);
           }, 150);
         }, 100);
         return;
       }
     }
-    
+
     for (let i = 0; i < totalNodes; i++) {
       const nodeProgress = i / totalNodes;
       if (nodeProgress > growthProgress) continue;
@@ -515,33 +515,33 @@ medical.addEventListener('click', function() {
       const centerX = startX + deltaX * nodeProgress;
       const centerY = startY + deltaY * nodeProgress;
       const angle1 = animationStep + (i * 0.28);
-      const angle2 = angle1 + Math.PI; 
-      
-      const radius = 35 + (nodeProgress * 20); 
+      const angle2 = angle1 + Math.PI;
+
+      const radius = 35 + (nodeProgress * 20);
       const orbitOffset1 = Math.sin(angle1) * radius;
       const orbitOffset2 = Math.sin(angle2) * radius;
       const perpAngle = angleOfLine + Math.PI / 2;
-      
+
       const nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
       const nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
       const nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
       const nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
-      
+
       mCtx.beginPath();
       mCtx.moveTo(nodeX1, nodeY1);
       mCtx.lineTo(nodeX2, nodeY2);
       mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
       mCtx.lineWidth = 2.5;
       mCtx.stroke();
-      
+
       const z1 = Math.cos(angle1);
       const z2 = Math.cos(angle2);
-      
+
       mCtx.beginPath();
       mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
       mCtx.fillStyle = z1 > 0 ? 'rgba(106, 13, 189, 1)' : 'rgba(148, 92, 212, 0.65)';
       mCtx.fill();
-      
+
       mCtx.beginPath();
       mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
       mCtx.fillStyle = z2 > 0 ? 'rgba(26, 0, 64, 1)' : 'rgba(69, 43, 110, 0.65)';
