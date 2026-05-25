@@ -20,58 +20,67 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── SHARED SIDE STYLES ── */
 .medical,.engineering{
   position:relative;overflow:hidden;cursor:pointer;
-  transition:width 0.65s cubic-bezier(0.77,0,0.18,1),
-             opacity 0.3s ease;
 }
 
 /* ── MEDICAL ── */
 .medical{
-  width:50%;
-  background-image:url('AIIMS_Delhi.jpg');
+  width:52%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  background-image:url('AIIMS Delhi.jpg');
   background-size:cover;
   background-position:center;
+  transition:width 0.55s cubic-bezier(0.77,0,0.18,1),
+             clip-path 0.55s cubic-bezier(0.77,0,0.18,1);
+  z-index:2;
 }
 
 /* ── ENGINEERING ── */
 .engineering{
-  width:50%;
-  background-image:url('IIT_Bombay.jpg');
+  width:52%;
+  margin-left:-4%;
+  background-image:url('IIT Bombay.jpg');
   background-size:cover;
   background-position:center;
+  z-index:1;
+  transition:width 0.55s cubic-bezier(0.77,0,0.18,1),
+             margin-left 0.55s cubic-bezier(0.77,0,0.18,1);
 }
 
-/* ── SPLIT DIVIDER ── */
-.split::before{
+/* ── DIAGONAL EDGE LINE ── */
+.medical::after{
   content:'';
   position:absolute;
   top:0;
-  left:50%;
+  right:0;
   width:3px;
-  height:100%;
+  height:141%;
   background:linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
-  transform:skewX(-3deg);
-  z-index:10;
+  transform-origin:top right;
+  transform:rotate(-6deg) translateY(-20%);
   pointer-events:none;
+  z-index:3;
 }
 
 /* ── HOVER EXPAND ── */
-.split:has(.medical:hover) .medical{ width:60%; }
-.split:has(.medical:hover) .engineering{ width:45%; }
-.split:has(.engineering:hover) .engineering{ width:60%; }
-.split:has(.engineering:hover) .medical{ width:45%; }
+.split:has(.medical:hover) .medical{
+  width:62%;
+  clip-path:polygon(0 0, 90% 0, 100% 100%, 0 100%);
+}
+.split:has(.medical:hover) .engineering{
+  width:42%;
+  margin-left:-4%;
+}
+.split:has(.medical:hover) .center-logo{ left:58%; }
 
-/* ── CLICK EXPANDING STATES ── */
-.medical.expanding{
-  width:100% !important;
+.split:has(.engineering:hover) .medical{
+  width:42%;
+  clip-path:polygon(0 0, 86% 0, 100% 100%, 0 100%);
 }
-.engineering.expanding{
-  width:100% !important;
+.split:has(.engineering:hover) .engineering{
+  width:62%;
+  margin-left:-4%;
 }
-.side-collapsing{
-  width:0% !important;
-  opacity:0 !important;
-  pointer-events:none;
-}
+.split:has(.engineering:hover) .center-logo{ left:42%; }
 
 /* ── BACKGROUND LAYERS ── */
 .bg-photo{
@@ -198,12 +207,14 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   flex-direction:column;
   align-items:center;
   gap:6px;
-  background:rgba(0,0,0,0.15);
-  backdrop-filter:blur(8px);
-  padding:12px 16px;
-  border-radius:16px;
+  background:rgba(0,0,0,0.25);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  padding:10px 14px;
+  border-radius:14px;
   border:1px solid rgba(255,255,255,0.15);
-  transition:transform 0.5s cubic-bezier(0.77,0,0.18,1);
+  transition:left 0.55s cubic-bezier(0.77,0,0.18,1),
+             transform 0.55s cubic-bezier(0.77,0,0.18,1);
 }
 .center-logo img{
   height:52px;
@@ -215,14 +226,8 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   font-weight:700;
   letter-spacing:3px;
   text-transform:uppercase;
-  color:rgba(255,255,255,0.5);
+  color:rgba(255,255,255,0.45);
   white-space:nowrap;
-}
-.split:has(.medical:hover) .center-logo{
-  transform:translate(-60%,-50%);
-}
-.split:has(.engineering:hover) .center-logo{
-  transform:translate(-40%,-50%);
 }
 
 /* ── TOP HINT ── */
@@ -394,32 +399,30 @@ document.getElementById('e-cta').addEventListener('click', function(e){
 
 // Medical click
 medical.addEventListener('click', function(){
-  // Expand medical
-  medical.classList.add('expanding');
-  // Collapse engineering
-  engineering.classList.add('side-collapsing');
-  // Fade logo and hint
+  medical.style.width = '100%';
+  medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+  medical.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), clip-path 0.65s cubic-bezier(0.77,0,0.18,1)';
+  engineering.style.width = '0%';
+  engineering.style.opacity = '0';
+  engineering.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease';
   centerLogo.style.opacity = '0';
-  topHint.style.opacity    = '0';
-  // Navigate after animation
-  setTimeout(() => {
-    window.location.href = 'inquiry.html';
-  }, 700);
+  centerLogo.style.transition = 'opacity 0.3s ease';
+  topHint.style.opacity = '0';
+  setTimeout(() => window.location.href = 'inquiry.html', 700);
 });
 
 // Engineering click
 engineering.addEventListener('click', function(){
-  // Expand engineering
-  engineering.classList.add('expanding');
-  // Collapse medical
-  medical.classList.add('side-collapsing');
-  // Fade logo and hint
+  engineering.style.width = '100%';
+  engineering.style.marginLeft = '0';
+  engineering.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1)';
+  medical.style.width = '0%';
+  medical.style.opacity = '0';
+  medical.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease';
   centerLogo.style.opacity = '0';
-  topHint.style.opacity    = '0';
-  // Navigate after animation
-  setTimeout(() => {
-    window.location.href = 'engineering.html';
-  }, 700);
+  centerLogo.style.transition = 'opacity 0.3s ease';
+  topHint.style.opacity = '0';
+  setTimeout(() => window.location.href = 'engineering.html', 700);
 });
 </script>
 
