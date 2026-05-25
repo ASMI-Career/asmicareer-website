@@ -40,7 +40,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .engineering{
   position:absolute;
   top:0;
-  left:0;
+  right:0; /* ── CHANGE THIS FROM left TO right ── */
   width:100%;
   height:100%;
   background-image:url('IIT_Bombay.jpg');
@@ -94,7 +94,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── CONTENT ── */
 .m-content,.e-content{
   position:relative;z-index:2;
-  height:100vh;display:flex;flex-direction:column;
+  height:100%;display:flex;flex-direction:column;
   justify-content:center;
 }
 .m-content{ padding:56px 52px; }
@@ -230,19 +230,63 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   .side-collapsing{ width:0 !important;height:0 !important; }
 }
 
+/* ── MOTION GRAPHICS OVERLAYS ── */
+#globalCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 99;
+  pointer-events: none;
+  display: none;
+}
+#engCanvas {
+  position: absolute;
+  top: 0; right: 0;
+  width: 48%; height: 100%;
+  z-index: 5;
+  pointer-events: none;
+  display: none;
+}
+.flash-curtain {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
+}
+.eng-wipe-overlay {
+  position: absolute;
+  top: 0; right: 0;
+  width: 48%; height: 0%;
+  background: #0a1628;
+  z-index: 6;
+  transition: height 0.45s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+/* ── ESSENTIAL TRANSITION TWEAKS ── */
+.m-content, .e-content {
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.seam-line {
+  transition: width 0.75s cubic-bezier(0.77, 0, 0.18, 1), clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
 </style>
 </head>
 <body>
 
-<div class="split" id="split">
+<div class="flash-curtain" id="flashCurtain"></div>
+<canvas id="globalCanvas"></canvas>
 
-  <!-- ══ MEDICAL ══ -->
+<div class="split" id="split">
   <div class="medical" id="medical">
 
     <div class="bg-wash m-wash"></div>
     <div class="m-vignette"></div>
 
-    <div class="m-content">
+    <div class="m-content" id="mContent">
       <p class="eyebrow m-eyebrow">Medical</p>
       <h1 class="headline m-headline">
         Every NEET Score<br>
@@ -280,12 +324,11 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
     </div>
   </div>
 <div class="seam-line" id="seamLine"></div>
-  <!-- ══ ENGINEERING ══ -->
-  <div class="engineering" id="engineering">
-
+<div class="engineering" id="engineering">
     <div class="bg-wash e-wash"></div>
+    <canvas id="engCanvas"></canvas>
+    <div class="eng-wipe-overlay" id="engWipe"></div>
 
-    <!-- Circuit board pattern -->
     <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
       <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
       <path d="M 320 40 L 320 120 L 480 120 L 480 240" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
@@ -305,7 +348,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
       <circle cx="420" cy="620" r="3" fill="rgba(0,200,180,0.2)"/>
     </svg>
 
-    <div class="e-content">
+    <div class="e-content" id="eContent">
       <p class="eyebrow e-eyebrow">Engineering</p>
       <h1 class="headline e-headline">
         Engineering Counselling<br>
@@ -349,47 +392,216 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
      </div>
 
 <script>
-const medical    = document.getElementById('medical');
-const engineering= document.getElementById('engineering');
-const centerLogo = document.getElementById('centerLogo');
-const topHint    = document.getElementById('topHint');
+const medical      = document.getElementById('medical');
+const engineering  = document.getElementById('engineering');
+const seamLine     = document.getElementById('seamLine');
+const centerLogo   = document.getElementById('centerLogo');
+const mContent     = document.getElementById('mContent'); 
+const engContent   = document.getElementById('eContent'); 
+const engWipe      = document.getElementById('engWipe');
+const flashCurtain = document.getElementById('flashCurtain');
 
-// Prevent CTA clicks from triggering the side click
-document.getElementById('m-cta').addEventListener('click', function(e){
-  e.stopPropagation();
-});
-document.getElementById('e-cta').addEventListener('click', function(e){
-  e.stopPropagation();
-});
+const mCanvas = document.getElementById('globalCanvas');
+const mCtx    = mCanvas.getContext('2d');
 
-// Medical click
-medical.addEventListener('click', function(){
-  medical.style.width = '100%';
-  medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
-  medical.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), clip-path 0.65s cubic-bezier(0.77,0,0.18,1)';
-  engineering.style.width = '0%';
-  engineering.style.opacity = '0';
-  engineering.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease';
+const eCanvas = document.getElementById('engCanvas');
+const eCtx    = eCanvas.getContext('2d');
+
+let isTransitioning = false;
+
+// ── Stops CTA buttons from instantly jumping the page ──
+document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
+document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
+
+// ── MEDICAL TRANSITION CLICK ──
+medical.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  
+  mCanvas.style.display = 'block';
+  mCanvas.width = w;
+  mCanvas.height = h;
+  
+  engContent.style.opacity = '0';
   centerLogo.style.opacity = '0';
-  centerLogo.style.transition = 'opacity 0.3s ease';
-  topHint.style.opacity = '0';
-  setTimeout(() => window.location.href = 'inquiry.html', 700);
+  
+  const rect = mContent.getBoundingClientRect();
+  let particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: rect.left + Math.random() * rect.width,
+      y: rect.top + Math.random() * rect.height,
+      alpha: 1,
+      targetProgress: Math.random()
+    });
+  }
+
+  mContent.style.opacity = '0';
+
+  let animationStep = 0;
+  const totalNodes = 45; 
+  let growthProgress = 0; 
+  let timelineTicks = 0; 
+
+  // ── Locked Vertical Trajectory at 35% Screen Width ──
+  const startX = w * 0.35;  
+  const startY = h;
+  const endX = w * 0.35;   
+  const endY = 0;
+  
+  const deltaX = endX - startX;
+  const deltaY = endY - startY;
+  const angleOfLine = Math.atan2(deltaY, deltaX); 
+
+  function renderGlobalCinematicLoop() {
+    mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+    animationStep += 0.055; 
+    timelineTicks++;
+
+    particles.forEach(p => {
+      const destX = startX + deltaX * p.targetProgress;
+      const destY = startY + deltaY * p.targetProgress;
+      const dx = destX - p.x;
+      const dy = destY - p.y;
+      
+      p.x += dx * 0.06;
+      p.y += dy * 0.06;
+
+      if (Math.abs(dx) > 2) {
+        mCtx.beginPath();
+        mCtx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        mCtx.fillStyle = '#1a0040';
+        mCtx.fill();
+      } else {
+        p.alpha *= 0.85;
+        if (p.alpha > 0.02) {
+          mCtx.beginPath();
+          mCtx.arc(destX, destY, 2.5, 0, Math.PI * 2);
+          mCtx.fillStyle = `rgba(26, 0, 64, ${p.alpha})`;
+          mCtx.fill();
+        }
+      }
+    });
+
+    if (timelineTicks > 20) { 
+      if (growthProgress < 1) {
+        growthProgress += 0.018; 
+      } else {
+        clearInterval(dnaInterval);
+        flashCurtain.style.opacity = '1';
+        
+        setTimeout(() => {
+          medical.style.width = '100%';
+          seamLine.style.width = '100%';
+          medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          
+          setTimeout(() => {
+            flashCurtain.style.opacity = '0';
+            setTimeout(() => { window.location.href = 'inquiry.html'; }, 300);
+          }, 150);
+        }, 100);
+        return;
+      }
+    }
+    
+    for (let i = 0; i < totalNodes; i++) {
+      const nodeProgress = i / totalNodes;
+      if (nodeProgress > growthProgress) continue;
+
+      const centerX = startX + deltaX * nodeProgress;
+      const centerY = startY + deltaY * nodeProgress;
+      const angle1 = animationStep + (i * 0.28);
+      const angle2 = angle1 + Math.PI; 
+      
+      const radius = 35 + (nodeProgress * 20); 
+      const orbitOffset1 = Math.sin(angle1) * radius;
+      const orbitOffset2 = Math.sin(angle2) * radius;
+      const perpAngle = angleOfLine + Math.PI / 2;
+      
+      const nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
+      const nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
+      const nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
+      const nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
+      
+      mCtx.beginPath();
+      mCtx.moveTo(nodeX1, nodeY1);
+      mCtx.lineTo(nodeX2, nodeY2);
+      mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
+      mCtx.lineWidth = 2.5;
+      mCtx.stroke();
+      
+      const z1 = Math.cos(angle1);
+      const z2 = Math.cos(angle2);
+      
+      mCtx.beginPath();
+      mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      mCtx.fillStyle = z1 > 0 ? 'rgba(106, 13, 189, 1)' : 'rgba(148, 92, 212, 0.65)';
+      mCtx.fill();
+      
+      mCtx.beginPath();
+      mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      mCtx.fillStyle = z2 > 0 ? 'rgba(26, 0, 64, 1)' : 'rgba(69, 43, 110, 0.65)';
+      mCtx.fill();
+    }
+  }
+  const dnaInterval = setInterval(renderGlobalCinematicLoop, 16);
 });
 
-// Engineering click
-engineering.addEventListener('click', function(){
-  engineering.style.width = '100%';
-  engineering.style.marginLeft = '0';
-  engineering.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1)';
-  medical.style.width = '0%';
-  medical.style.opacity = '0';
-  medical.style.transition = 'width 0.65s cubic-bezier(0.77,0,0.18,1), opacity 0.3s ease';
+// ── ENGINEERING TRANSITION CLICK ──
+engineering.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  mContent.style.opacity = '0';
+  engContent.style.opacity = '0';
   centerLogo.style.opacity = '0';
-  centerLogo.style.transition = 'opacity 0.3s ease';
-  topHint.style.opacity = '0';
-  setTimeout(() => window.location.href = 'engineering.html', 700);
+  
+  eCanvas.style.display = 'block';
+  eCanvas.width = window.innerWidth * 0.48;
+  eCanvas.height = window.innerHeight;
+  
+  const columns = Math.floor(eCanvas.width / 14);
+  const drops = Array(columns).fill(0);
+  
+  function drawMatrix() {
+    eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)'; 
+    eCtx.fillRect(0, 0, eCanvas.width, eCanvas.height);
+    eCtx.fillStyle = '#00C8B4'; 
+    eCtx.font = '900 12px monospace';
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = Math.random() > 0.5 ? "1" : "0";
+      const x = i * 14;
+      const y = drops[i] * 14;
+      eCtx.fillText(text, x, y);
+      
+      if (y > eCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  const matrixInterval = setInterval(drawMatrix, 18);
+  
+  setTimeout(() => {
+    engWipe.style.height = '100%';
+    setTimeout(() => {
+      medical.style.width = '0%';
+      seamLine.style.width = '0%';
+      medical.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      seamLine.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      
+      setTimeout(() => { 
+        clearInterval(matrixInterval);
+        window.location.href = 'engineering.html';
+      }, 500);
+    }, 350);
+  }, 500);
 });
 </script>
-
 </body>
 </html>
