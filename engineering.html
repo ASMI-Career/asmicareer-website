@@ -1,1087 +1,2517 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="description" content="ASMI Career — Maharashtra's most trusted JEE/MHT-CET engineering admissions counsellors. 11+ years, 25,000+ admissions. Expert guidance for B.Tech, BDS, BAMS, BHMS."/>
+    <meta name="description" content="India's most trusted JEE and engineering counselling."/>
     <title>Engineering Admissions — ASMI Career</title>
+    <link rel="icon" href="asmi-logo.png" type="image/png"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
-    <link href="assets/shared.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
-        :root {
-            --bg:         #0a1628;
-            --navy:       #1a0040;
-            --purple:     #6a0dad;
-            --mid:        #2D0A5E;
-            --soft:       #4a0080;
-            --card:       rgba(255,255,255,0.58);
-            --cb:         rgba(106,13,173,0.18);
-            --card-hover: rgba(255,255,255,0.82);
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        * { margin: 0; padding: 0; }
-        body { background: var(--bg); font-family: 'Open Sans', sans-serif; color: var(--navy); }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
 
-        /* ── BG LAYERS ── */
-        .bg-deco {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            background:
-                radial-gradient(circle at 90% 10%, rgba(106,13,173,.18) 0%, transparent 42%),
-                radial-gradient(circle at 10% 88%, rgba(45,10,94,.10) 0%, transparent 36%);
-        }
-        .bg-grid {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            background-image:
-                linear-gradient(rgba(26,0,64,.055) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(26,0,64,.055) 1px, transparent 1px);
-            background-size: 52px 52px;
-        }
-        nav, section, footer, .trust-strip { position: relative; z-index: 1; }
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Open Sans', sans-serif; background: var(--bg); color: var(--navy); -webkit-font-smoothing: antialiased; }
 
-        /* ── CONTAINERS ── */
-        .wrap    { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        .wrap-md { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
-        .wrap-sm { max-width: 740px;  margin: 0 auto; padding: 0 24px; }
-        .section { padding: 80px 0; }
-        @media (min-width: 768px) { .section { padding: 112px 0; } }
+    /* ── CSS VARIABLES ── */
+    :root {
+        --teal:   #00C8B4;
+        --navy:   #0a1628;
+        --accent: #00A896;
+        --mid:    #0d1f35;
+        --white:  #ffffff;
+        --bg:     #0a1628;
+        --soft:   rgba(0,200,180,0.55);
+    }
 
-        /* ── HERO ── */
-        .hero-section { background: #09090f; position: relative; overflow: hidden; }
-        .hero-section::before {
-            content: '';
-            position: absolute; inset: 0;
-            background:
-                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(123,65,179,.32) 0%, transparent 55%),
-                radial-gradient(ellipse 40% 40% at 85% 85%, rgba(255,215,0,.04) 0%, transparent 50%);
-            pointer-events: none;
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
         }
-        .hero-grid {
-            position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-            background-size: 64px 64px;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-            pointer-events: none;
-        }
-        .hero-inner {
-            display: grid; grid-template-columns: 1fr; gap: 48px;
-            align-items: center; padding: 80px 0; position: relative; z-index: 1;
-        }
-        @media (min-width: 1024px) { .hero-inner { grid-template-columns: 7fr 5fr; gap: 64px; padding: 128px 0; } }
+    }
 
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px;
-            border-radius: 100px; padding: 6px 16px;
-            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10);
-        }
-        .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffd700; display: inline-block; }
-        .hero-badge-text {
-            color: rgba(255,255,255,.60);
-            font-family: 'Montserrat', sans-serif; font-weight: 700;
-            font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
-        }
-        .hero-h1 {
-            font-family: 'Montserrat', sans-serif; font-weight: 900;
-            font-size: 3rem; line-height: 1.04; color: #fff;
-            letter-spacing: -.03em; margin-bottom: 24px;
-        }
-        @media (min-width: 640px)  { .hero-h1 { font-size: 3.75rem; } }
-        @media (min-width: 1024px) { .hero-h1 { font-size: 4.5rem; } }
+    /* ── ANIMATIONS ── */
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulseDot {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.4; }
+    }
 
-        .hero-p { font-size: 1.1rem; line-height: 1.7; color: rgba(255,255,255,.5); margin-bottom: 36px; max-width: 480px; }
+    /* ═══════════════════════════════════════
+       SECTION 1 — FIXED NAV
+    ═══════════════════════════════════════ */
 
-        .hero-btns { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
-        @media (min-width: 640px) { .hero-btns { flex-direction: row; } }
+    .nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 64px;
+        z-index: 100;
+        background: #030912;
+        display: flex;
+        align-items: center;
+        transition: box-shadow 0.3s ease;
+    }
+    .nav.scrolled {
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
 
-        .btn-primary {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: linear-gradient(135deg, #1a0040, #6a0dad);
-            color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem;
-            padding: 14px 28px; border-radius: 50px; border: none; cursor: pointer;
-            text-decoration: none; box-shadow: 0 8px 28px rgba(26,0,64,.28);
-            transition: transform .2s, box-shadow .2s; position: relative; overflow: hidden;
-        }
-        .btn-primary:hover { transform: scale(1.04); box-shadow: 0 12px 36px rgba(26,0,64,.35); }
-        .btn-primary::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
-            transform: translateX(-100%) skewX(-20deg);
-        }
-        @keyframes shimmer { from { transform: translateX(-100%) skewX(-20deg); } to { transform: translateX(300%) skewX(-20deg); } }
-        .btn-primary:hover::after { animation: shimmer .55s ease; }
+    .nav-inner {
+        width: 100%;
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        position: relative;
+    }
 
-        .btn-ghost {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: transparent; color: rgba(255,255,255,.55);
-            font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1rem;
-            padding: 14px 20px; border-radius: 50px;
-            border: 1px solid rgba(255,255,255,.4); cursor: pointer;
-            text-decoration: none; transition: border-color .2s, color .2s;
-        }
-        .btn-ghost:hover { color: rgba(255,255,255,.9); border-color: rgba(255,255,255,.6); }
+    /* Back link */
+    .nav-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: rgba(255,255,255,0.4);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        text-decoration: none;
+        padding: 8px 14px 8px 0;
+        min-height: 44px;
+        white-space: nowrap;
+        transition: color 0.2s ease;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .nav-back:hover { color: rgba(255,255,255,0.75); }
+    .nav-back:focus-visible { outline: 2px solid #00C8B4; outline-offset: 2px; border-radius: 4px; }
 
-        .hero-stats { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
-        .hero-stat-val { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: #fff; letter-spacing: -.02em; }
-        .hero-stat-lbl { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.35); margin-top: 2px; }
-        .hero-stat-div { width: 1px; height: 32px; background: rgba(255,255,255,.1); }
+    /* Logo */
+    .nav-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        margin-right: auto;
+        flex-shrink: 0;
+        cursor: pointer;
+        min-height: 44px;
+    }
+    .nav-logo img {
+        height: 40px;
+        width: auto;
+        mix-blend-mode: screen;
+        display: block;
+    }
+    .nav-logo:focus-visible { outline: 2px solid #00C8B4; outline-offset: 4px; border-radius: 4px; }
 
-        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
-        .pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+    /* Center links */
+    .nav-links {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        list-style: none;
+    }
+    .nav-links a {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: 44px;
+        padding: 0 15px;
+        color: rgba(255,255,255,0.65);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: 10px;
+        left: 15px;
+        right: 15px;
+        height: 2px;
+        background: #00C8B4;
+        border-radius: 1px;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: #00C8B4; }
+    .nav-links a:hover::after { transform: scaleX(1); }
+    .nav-links a:focus-visible { outline: 2px solid #00C8B4; outline-offset: -2px; border-radius: 4px; color: #00C8B4; }
 
-        /* Hero card */
-        .hero-card { background: #111118; border: 1px solid rgba(255,255,255,.07); border-radius: 24px; overflow: hidden; }
-        .hero-card-header {
-            padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,.06);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .hero-card-season { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.3); }
-        .hero-card-recent { font-size: .875rem; font-weight: 600; color: rgba(255,255,255,.75); margin-top: 2px; }
-        .hero-live-pill {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: .7rem; font-weight: 600; border-radius: 100px; padding: 4px 10px;
-            background: rgba(255,215,0,.10); color: #ffd700; border: 1px solid rgba(255,215,0,.15);
-        }
-        .hero-adm-row {
-            padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,.04);
-            display: flex; align-items: center; justify-content: space-between; gap: 16px;
-            transition: background .2s;
-        }
-        .hero-adm-row:last-child { border-bottom: none; }
-        .hero-adm-row:hover { background: rgba(255,255,255,.03); }
-        .hero-adm-name { font-size: .875rem; font-weight: 600; color: rgba(255,255,255,.8); }
-        .hero-adm-college { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: 2px; }
-        .hero-adm-tag { font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; flex-shrink: 0; }
-        .hero-card-footer {
-            padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.06);
-            background: rgba(255,215,0,.04);
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .hero-card-foot-note { font-size: .75rem; color: rgba(255,255,255,.35); }
-        .hero-card-foot-badge { font-size: .75rem; font-weight: 700; color: #ffd700; }
+    /* Right CTA */
+    .nav-cta {
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+    .nav-cta a {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: #00C8B4;
+        color: var(--navy);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 13.5px;
+        padding: 10px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        min-height: 44px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-cta a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,200,180,0.4);
+    }
+    .nav-cta a:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; border-radius: 50px; }
 
-        /* ── STATS BAR ── */
-        .trust-strip {
-            position: relative; z-index: 2;
-            background: linear-gradient(145deg, #1a0040, #2D0A5E);
-            border-radius: 16px; margin: 0 32px;
-            box-shadow: 0 12px 36px rgba(26,0,64,.25);
-        }
-        .trust-strip-inner {
-            display: grid; grid-template-columns: repeat(2, 1fr); padding: 28px 0;
-        }
-        @media (min-width: 768px) { .trust-strip-inner { grid-template-columns: repeat(4, 1fr); } }
-        .trust-stat { text-align: center; padding: 8px 16px; border-right: 1px solid rgba(255,255,255,.08); }
-        .trust-stat:last-child { border-right: none; }
-        .trust-stat-val {
-            font-family: 'Montserrat', sans-serif; font-weight: 900;
-            font-size: 2rem; color: #0a1628; letter-spacing: -.03em;
-        }
-        @media (min-width: 768px) { .trust-stat-val { font-size: 2.5rem; } }
-        .trust-stat-lbl { font-weight: 600; font-size: .65rem; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+    /* Hamburger */
+    .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 44px;
+        height: 44px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        margin-left: 14px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+    .nav-hamburger:hover { background: rgba(255,255,255,0.08); }
+    .nav-hamburger:focus-visible { outline: 2px solid #00C8B4; outline-offset: 2px; }
+    .nav-hamburger span {
+        display: block;
+        height: 2px;
+        background: rgba(255,255,255,0.75);
+        border-radius: 1px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* ── SECTION HEADINGS ── */
-        .section-h2 {
-            font-family: 'Montserrat', sans-serif; font-weight: 900;
-            font-size: 2.5rem; line-height: 1.06; color: var(--navy);
-            letter-spacing: -.03em; margin-bottom: 16px;
-        }
-        @media (min-width: 768px) { .section-h2 { font-size: 3rem; } }
-        .section-lead { font-size: 1.05rem; line-height: 1.7; color: var(--mid); }
+    /* Mobile drawer */
+    .nav-drawer {
+        position: fixed;
+        top: 64px;
+        left: 0; right: 0;
+        background: #030912;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding: 4px 0 16px;
+        z-index: 99;
+        transform: translateY(-105%);
+        transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        display: none;
+    }
+    .nav-drawer.open { transform: translateY(0); }
+    .nav-drawer a {
+        display: flex;
+        align-items: center;
+        padding: 13px 28px;
+        color: rgba(255,255,255,0.65);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        min-height: 44px;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        transition: color 0.2s, background 0.2s;
+    }
+    .nav-drawer a:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+    .nav-drawer a:focus-visible { outline: 2px solid #00C8B4; outline-offset: -2px; }
+    .nav-drawer .drawer-cta {
+        margin: 12px 28px 0;
+        background: #00C8B4;
+        color: var(--navy);
+        font-weight: 800;
+        border-radius: 50px;
+        justify-content: center;
+        border-bottom: none;
+    }
+    .nav-drawer .drawer-cta:hover { background: #00e5d0; color: var(--navy); }
 
-        /* ── COURSES ── */
-        .courses-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 640px)  { .courses-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .courses-grid { grid-template-columns: repeat(4, 1fr); } }
-        .course-card { border-radius: 20px; padding: 32px; transition: transform .22s, box-shadow .22s; }
-        .course-card:hover { transform: translateY(-5px); box-shadow: 0 20px 60px rgba(0,0,0,.12); }
-        .course-ico { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
-        .course-tag { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .course-h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.3rem; line-height: 1.15; margin-bottom: 12px; letter-spacing: -.02em; }
-        .course-p { font-size: .875rem; line-height: 1.65; margin-bottom: 20px; }
-        .course-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
-        .cpill { font-size: .72rem; font-weight: 600; padding: 4px 10px; border-radius: 8px; }
-        .course-link { display: inline-flex; align-items: center; gap: 6px; font-size: .875rem; font-weight: 600; text-decoration: none; transition: gap .2s; }
-        .course-link:hover { gap: 12px; }
+    /* ═══════════════════════════════════════
+       SECTION 2 — HERO
+    ═══════════════════════════════════════ */
 
-        /* ── ABOUT / WHY ASMI ── */
-        .about-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: start; }
-        @media (min-width: 1024px) { .about-grid { grid-template-columns: 1fr 1fr; gap: 96px; } }
+    .hero {
+        position: relative;
+        height: 100vh;
+        min-height: 600px;
+        padding-top: 64px;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
 
-        .btn-about {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: linear-gradient(135deg, #1a0040, #6a0dad);
-            color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .9rem;
-            padding: 12px 24px; border-radius: 50px; border: none; cursor: pointer;
-            text-decoration: none; box-shadow: 0 8px 28px rgba(26,0,64,.28); transition: transform .2s;
-        }
-        .btn-about:hover { transform: scale(1.03); }
+    /* Photo background */
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: url('IIT_Bombay.jpg') center center / cover no-repeat;
+        z-index: 0;
+    }
 
-        .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
-        .about-stat-box { border-radius: 16px; padding: 16px; background: var(--card); border: 1px solid var(--cb); }
-        .about-stat-val { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--purple); letter-spacing: -.03em; margin-bottom: 4px; }
-        .about-stat-lbl { font-size: .72rem; color: rgba(106,13,173,.6); font-weight: 600; }
+    /* Gradient overlay */
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(10,22,40,0.92) 0%,
+            rgba(0,168,150,0.45) 100%
+        );
+        z-index: 1;
+    }
 
-        .feature-card {
-            display: flex; align-items: flex-start; gap: 16px; padding: 20px;
-            border-radius: 16px; background: var(--card); border: 1px solid var(--cb); margin-bottom: 12px;
-            transition: background .2s, border-color .2s, transform .2s;
-        }
-        .feature-card:hover { background: var(--card-hover); border-color: var(--purple); transform: translateY(-3px); }
-        .feature-ico {
-            width: 42px; height: 42px; border-radius: 11px; background: rgba(106,13,173,.10);
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .feature-heading { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .875rem; color: var(--navy); margin-bottom: 4px; }
-        .feature-body { font-size: .82rem; color: var(--mid); line-height: 1.5; }
+    /* Grid texture */
+    .hero-grid {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background-image:
+            linear-gradient(rgba(0,200,180,0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,200,180,0.05) 1px, transparent 1px);
+        background-size: 52px 52px;
+    }
 
-        /* ── HOW IT WORKS ── */
-        .steps-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
-        @media (min-width: 768px) { .steps-grid { grid-template-columns: repeat(3, 1fr); } }
-        .step-wrap { text-align: center; }
-        .step-num {
-            width: 52px; height: 52px; border-radius: 50%;
-            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.25rem;
-            display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; flex-shrink: 0;
-        }
-        .step-h3 { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; letter-spacing: -.02em; }
-        .step-p { font-size: .875rem; color: var(--mid); line-height: 1.65; }
-        .step-link { display: inline-flex; align-items: center; gap: 4px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .875rem; text-decoration: none; margin-top: 12px; }
-        .step-link:hover { text-decoration: underline; }
+    /* Grain */
+    .hero-grain {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.028;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+        mix-blend-mode: multiply;
+    }
 
-        /* ── TOOLS ── */
-        .tools-header { display: flex; flex-direction: column; gap: 24px; margin-bottom: 48px; }
-        @media (min-width: 768px) { .tools-header { flex-direction: row; align-items: flex-end; justify-content: space-between; } }
-        .tools-note { font-size: .875rem; color: var(--mid); line-height: 1.65; max-width: 280px; }
-        @media (min-width: 768px) { .tools-note { text-align: right; } }
-        .tools-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 768px)  { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .tools-grid { grid-template-columns: repeat(3, 1fr); } }
+    /* Content */
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        max-width: 640px;
+        padding-left: 80px;
+        width: 100%;
+    }
 
-        .tool-card {
-            background: var(--card); border: 1px solid var(--cb);
-            border-radius: 16px; padding: 28px; text-decoration: none; display: block;
-            transition: transform .22s, box-shadow .22s, background .2s, border-color .2s;
-        }
-        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(106,13,173,.12); background: var(--card-hover); border-color: var(--purple); }
-        .tool-ico { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 16px; background: rgba(106,13,173,.08); }
-        .tool-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; letter-spacing: -.02em; }
-        .tool-desc { font-size: .875rem; color: var(--mid); line-height: 1.65; margin-bottom: 16px; }
-        .tool-cta { display: flex; align-items: center; gap: 6px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .875rem; }
+    /* Badge */
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        background: rgba(0,200,180,0.15);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.3);
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+        animation: fadeInDown 0.6s ease both;
+    }
+    .badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #00C8B4;
+        flex-shrink: 0;
+        animation: pulseDot 2.2s ease-in-out infinite;
+    }
 
-        .tool-card-dark { background: var(--navy); border-color: rgba(255,255,255,.06); }
-        .tool-card-dark:hover { background: #2d0060; border-color: rgba(255,255,255,.12); box-shadow: 0 12px 40px rgba(26,0,64,.3); }
-        .tool-card-dark .tool-name { color: #fff; }
-        .tool-card-dark .tool-desc { color: rgba(255,255,255,.45); }
-        .tool-card-dark .tool-cta { color: #ffd700; }
-        .tool-card-dark .tool-ico { background: rgba(255,255,255,.05); }
+    /* Headline */
+    .hero-h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 64px;
+        line-height: 1.0;
+        color: #ffffff;
+        letter-spacing: -0.03em;
+        margin-bottom: 0;
+        animation: fadeInUp 0.8s ease both;
+        animation-delay: 0.2s;
+    }
+    .hero-h1 span { color: #00C8B4; }
 
-        /* ── TESTIMONIALS ── */
-        .testi-section { background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.10)); }
-        .testi-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .testi-grid { grid-template-columns: repeat(2, 1fr); } }
-        .testi-card {
-            background: rgba(255,255,255,.70); border: 1px solid var(--cb);
-            border-radius: 16px; padding: 32px; position: relative;
-            box-shadow: 0 8px 24px rgba(26,0,64,.08);
-        }
-        .testi-quote {
-            position: absolute; top: 20px; right: 28px;
-            font-size: 5.5rem; line-height: 1; font-family: Georgia, serif;
-            color: rgba(106,13,173,.06); user-select: none; pointer-events: none;
-        }
-        .testi-p { font-family: 'Open Sans', sans-serif; font-size: .875rem; color: var(--mid); line-height: 1.7; margin-bottom: 24px; padding-right: 40px; }
-        .testi-foot { display: flex; align-items: center; gap: 12px; }
-        .testi-av {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--navy), var(--purple));
-            color: #0a1628; font-weight: 700; font-size: .875rem;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .testi-name { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--navy); font-size: .9rem; }
-        .testi-college { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .75rem; color: var(--purple); margin-top: 2px; }
-        .testi-more { text-align: center; color: var(--soft); font-size: .75rem; margin-top: 32px; }
+    /* Sub */
+    .hero-sub {
+        font-size: 16px;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.72);
+        max-width: 480px;
+        margin-top: 20px;
+        font-weight: 400;
+        animation: fadeInUp 0.8s ease both;
+        animation-delay: 0.4s;
+    }
 
-        /* ── BRANCHES ── */
-        .branches-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-        @media (min-width: 640px)  { .branches-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .branches-grid { grid-template-columns: repeat(3, 1fr); } }
-        .branch-card {
-            background: var(--card); border: 1px solid var(--cb);
-            border-radius: 16px; padding: 24px; transition: border-color .2s, box-shadow .2s;
-        }
-        .branch-card:hover { border-color: var(--purple); box-shadow: 0 4px 20px rgba(106,13,173,.08); }
-        .branch-head { border-top: 3px solid #ffd700; }
-        .branch-badge { display: inline-block; font-size: .7rem; font-weight: 700; border-radius: 100px; padding: 4px 10px; background: rgba(255,215,0,.20); color: rgba(90,68,0,.85); margin-bottom: 12px; }
-        .branch-ico { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(106,13,173,.08); margin-bottom: 12px; }
-        .branch-city { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); margin-bottom: 4px; }
-        .branch-addr { font-size: .82rem; color: var(--mid); line-height: 1.5; margin-bottom: 12px; }
-        .branch-link { display: inline-flex; align-items: center; gap: 8px; color: var(--purple); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: .82rem; text-decoration: none; }
-        .branch-link:hover { text-decoration: underline; }
+    /* CTA row */
+    .hero-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-top: 36px;
+        animation: fadeInUp 0.8s ease both;
+        animation-delay: 0.6s;
+    }
 
-        .helpline-bar {
-            margin-top: 24px; padding: 20px 24px; border-radius: 16px;
-            display: flex; flex-direction: column; gap: 16px;
-            background: var(--card); border: 1px solid var(--cb);
-        }
-        @media (min-width: 640px) { .helpline-bar { flex-direction: row; align-items: center; justify-content: space-between; } }
-        .helpline-lbl { font-size: .65rem; font-weight: 700; color: rgba(106,13,173,.5); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
-        .helpline-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--navy); letter-spacing: -.02em; }
-        .helpline-hours { font-size: .82rem; color: var(--mid); margin-top: 2px; }
-        .btn-call {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: linear-gradient(135deg, #1a0040, #6a0dad); color: #0a1628;
-            font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: .9rem;
-            padding: 12px 24px; border-radius: 50px; border: none; cursor: pointer;
-            text-decoration: none; flex-shrink: 0; transition: transform .2s;
-        }
-        .btn-call:hover { transform: scale(1.03); }
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #00C8B4;
+        color: #0a1628;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 16px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        min-height: 56px;
+        cursor: pointer;
+        transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,200,180,0.4);
+    }
+    .btn-primary:focus-visible { outline: 3px solid #00C8B4; outline-offset: 3px; }
 
-        /* ── CTA SECTION ── */
-        .cta-section { background: #09090f; position: relative; overflow: hidden; }
-        .cta-section::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 90% 70% at 50% 110%, rgba(123,65,179,.28) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .cta-inner { position: relative; z-index: 1; text-align: center; }
-        .cta-badge {
-            display: inline-flex; align-items: center; gap: 8px; border-radius: 100px; padding: 6px 16px; margin-bottom: 28px;
-            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10);
-        }
-        .cta-h2 {
-            font-family: 'Montserrat', sans-serif; font-weight: 900;
-            font-size: 3rem; color: #fff; letter-spacing: -.03em; line-height: 1.04; margin-bottom: 24px;
-        }
-        @media (min-width: 640px) { .cta-h2 { font-size: 3.75rem; } }
-        .cta-p { font-size: 1.1rem; line-height: 1.7; color: rgba(255,255,255,.45); max-width: 400px; margin: 0 auto 40px; }
-        .btn-cta {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #0a1628; color: var(--navy);
-            font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.1rem;
-            padding: 14px 38px; border-radius: 50px; border: none; cursor: pointer;
-            text-decoration: none; box-shadow: 0 8px 32px rgba(255,215,0,.25); transition: transform .2s, box-shadow .2s;
-        }
-        .btn-cta:hover { transform: scale(1.04); box-shadow: 0 12px 40px rgba(255,215,0,.35); }
-        .cta-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; font-size: .75rem; font-weight: 500; color: rgba(255,255,255,.25); margin-top: 36px; }
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: #00C8B4;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 16px 40px;
+        border-radius: 50px;
+        border: 2px solid rgba(0,200,180,0.35);
+        text-decoration: none;
+        white-space: nowrap;
+        min-height: 56px;
+        cursor: pointer;
+        transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        background: rgba(0,200,180,0.08);
+        border-color: rgba(0,200,180,0.55);
+    }
+    .btn-secondary:focus-visible { outline: 3px solid #00C8B4; outline-offset: 3px; }
 
-        /* ── ANIMATIONS ── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    /* Stats row */
+    .hero-stats {
+        display: flex;
+        align-items: center;
+        margin-top: 48px;
+        animation: fadeInUp 0.8s ease both;
+        animation-delay: 0.8s;
+    }
+
+    .hero-stat {
+        display: flex;
+        flex-direction: column;
+        padding: 0 32px;
+    }
+    .hero-stat:first-child { padding-left: 0; }
+
+    .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: rgba(255,255,255,0.15);
+        align-self: center;
+        flex-shrink: 0;
+    }
+
+    .stat-num {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: -0.03em;
+    }
+    .stat-lbl {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: rgba(255,255,255,0.5);
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+
+    /* Hide desktop links at 1024px */
+    @media (max-width: 1024px) {
+        .nav-links  { display: none; }
+        .nav-cta    { display: none; }
+        .nav-hamburger { display: flex; }
+        .nav-drawer    { display: block; }
+    }
+
+    /* Tablet */
+    @media (max-width: 768px) {
+        .hero-content { padding-left: 40px; max-width: 100%; padding-right: 40px; }
+        .hero-h1 { font-size: 48px; }
+        .btn-primary, .btn-secondary { font-size: 16px; padding: 14px 32px; }
+        .stat-num { font-size: 32px; }
+        .hero-stat { padding: 0 20px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 640px) {
+        .hero-content { padding-left: 24px; padding-right: 24px; }
+        .hero-h1 { font-size: 38px; }
+        .hero-sub { font-size: 15px; }
+        .hero-ctas { flex-direction: column; gap: 12px; }
+        .btn-primary, .btn-secondary { font-size: 15px; padding: 14px 28px; width: 100%; justify-content: center; }
+        .hero-stats { flex-wrap: wrap; gap: 16px 0; }
+        .stat-divider { display: none; }
+        .hero-stat { padding: 0; width: 50%; }
+        .stat-num { font-size: 28px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 3 — TRUST STRIP
+    ═══════════════════════════════════════ */
+
+    .trust-strip {
+        background: #0a1628;
+        padding: 18px 0;
+        overflow: hidden;
+    }
+    .trust-track {
+        display: flex;
+        gap: 48px;
+        white-space: nowrap;
+        animation: marquee 25s linear infinite;
+    }
+    .trust-item {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        color: #00C8B4;
+        letter-spacing: 1.5px;
+        flex-shrink: 0;
+    }
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 4 — PROBLEMS
+    ═══════════════════════════════════════ */
+
+    .problems {
+        position: relative;
+        background: #0d1f35;
+        padding: 100px 80px;
+        overflow: hidden;
+    }
+    .problems-noise {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='pnoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23pnoise)'/%3E%3C/svg%3E");
+        background-size: 200px 200px;
+        z-index: 0;
+    }
+    .problems-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .prob-badge {
+        display: inline-block;
+        background: rgba(185,28,28,0.08);
+        color: #b91c1c;
+        border: 1px solid rgba(185,28,28,0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .prob-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #00C8B4;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .prob-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.6);
+        margin-top: 12px;
+    }
+    .prob-table {
+        margin-top: 48px;
+    }
+    .prob-table-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        padding: 0 24px 14px;
+        border-bottom: 2px solid rgba(0,200,180,0.12);
+    }
+    .prob-col-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+    .prob-col-label.red   { color: #b91c1c; }
+    .prob-col-label.green { color: #15803d; }
+    .prob-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0,200,180,0.08);
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .prob-row:nth-child(even) { background: rgba(0,200,180,0.02); }
+    .prob-row.visible { opacity: 1; transform: translateY(0); }
+    .prob-cell-left {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    .prob-num {
+        flex-shrink: 0;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: rgba(185,28,28,0.1);
+        color: #b91c1c;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+    }
+    .prob-text-left {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: rgba(255,255,255,0.9);
+        line-height: 1.45;
+    }
+    .prob-cell-right {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .prob-check {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        color: #15803d;
+    }
+    .prob-text-right {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 15px;
+        color: rgba(0,200,180,0.7);
+        line-height: 1.55;
+    }
+    .prob-highlight {
+        background: #0a1628;
+        border-radius: 12px;
+        padding: 20px 32px;
+        margin-top: 40px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #00C8B4;
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .prob-highlight.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+        .problems { padding: 80px 40px; }
+        .prob-headline { font-size: 40px; }
+    }
+    @media (max-width: 640px) {
+        .problems { padding: 60px 24px; }
+        .prob-headline { font-size: 30px; }
+        .prob-table-header { display: none; }
+        .prob-row { grid-template-columns: 1fr; gap: 12px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 5 — COUNSELLING PROCESS
+    ═══════════════════════════════════════ */
+
+    .process {
+        position: relative;
+        background: #0a1628;
+        padding: 100px 80px;
+        background-image:
+            radial-gradient(rgba(0,200,180,0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        background-position: 24px 24px;
+    }
+    .process-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .process-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.12);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .process-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #00C8B4;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .process-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.55);
+        margin-top: 12px;
+    }
+    .process-rows {
+        margin-top: 56px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+    .process-row {
+        display: flex;
+        align-items: flex-start;
+    }
+    .process-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    .step-circle {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(0,200,180,0.1);
+        border: 1.5px solid rgba(0,200,180,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        color: #00C8B4;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .process-step:hover .step-circle {
+        background: rgba(0,200,180,0.2);
+        border-color: rgba(0,200,180,0.6);
+    }
+    .step-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 12px;
+        color: #00C8B4;
+        text-align: center;
+        margin-top: 8px;
+        max-width: 80px;
+        line-height: 1.3;
+    }
+    .step-arrow {
+        flex: 1;
+        height: 1.5px;
+        background: linear-gradient(90deg, rgba(0,200,180,0.3), rgba(0,200,180,0.6));
+        align-self: center;
+        margin: 0 8px;
+        margin-bottom: 24px;
+        flex-shrink: 1;
+    }
+
+    /* Terms row */
+    .process-terms {
+        display: flex;
+        gap: 16px;
+        margin-top: 56px;
+        flex-wrap: wrap;
+    }
+    .term-card {
+        background: rgba(0,200,180,0.06);
+        border: 1px solid rgba(0,200,180,0.15);
+        border-radius: 12px;
+        padding: 16px 20px;
+        flex: 1;
+        min-width: 160px;
+        cursor: default;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .term-card:hover {
+        background: rgba(0,200,180,0.1);
+        transform: translateY(-2px);
+    }
+    .term-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        color: #00C8B4;
+        margin-bottom: 6px;
+    }
+    .term-def {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: rgba(0,200,180,0.55);
+        line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+        .process { padding: 80px 40px; }
+        .process-headline { font-size: 40px; }
+        .process-terms { gap: 12px; }
+        .term-card { min-width: 140px; }
+    }
+    @media (max-width: 640px) {
+        .process { padding: 60px 24px; }
+        .process-headline { font-size: 30px; }
+        .process-row { flex-wrap: wrap; gap: 16px; justify-content: center; }
+        .step-arrow { display: none; }
+        .process-step { width: calc(33% - 16px); }
+        .process-terms { flex-direction: column; }
+        .term-card { min-width: unset; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 6 — WHY ASMI
+    ═══════════════════════════════════════ */
+
+    .why-asmi {
+        background: #0d1f35;
+        padding: 100px 80px;
+    }
+    .why-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .why-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.1);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .why-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #00C8B4;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .why-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.6);
+        margin-top: 12px;
+    }
+    .why-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 56px;
+    }
+    .why-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(0,200,180,0.1);
+        border-radius: 16px;
+        padding: 28px;
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+        cursor: default;
+    }
+    .why-card.visible { opacity: 1; transform: translateY(0); }
+    .why-card:hover {
+        border-color: rgba(0,200,180,0.3);
+        box-shadow: 0 8px 32px rgba(0,200,180,0.08);
+        transform: translateY(-3px);
+    }
+    .why-card.visible:hover { transform: translateY(-3px); }
+    .why-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+        display: block;
+        line-height: 1;
+    }
+    .why-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        color: rgba(255,255,255,0.95);
+        margin-bottom: 8px;
+    }
+    .why-body {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(255,255,255,0.55);
+        line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+        .why-asmi { padding: 80px 40px; }
+        .why-headline { font-size: 40px; }
+        .why-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+        .why-asmi { padding: 60px 24px; }
+        .why-headline { font-size: 30px; }
+        .why-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 7 — TOOLS
+    ═══════════════════════════════════════ */
+
+    .tools {
+        background: #0a1628;
+        padding: 100px 80px;
+        background-image: radial-gradient(rgba(0,200,180,0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        background-position: 24px 24px;
+    }
+    .tools-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .tools-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.12);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .tools-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #00C8B4;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .tools-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.55);
+        margin-top: 12px;
+        max-width: 560px;
+        line-height: 1.6;
+    }
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 56px;
+    }
+    .tool-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(0,200,180,0.2);
+        border-radius: 16px;
+        padding: 32px;
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.25s, background 0.25s, transform 0.25s;
+    }
+    .tool-card:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(0,200,180,0.4);
+    }
+    .tool-tier-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.15);
+        color: #00C8B4;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1px;
+        padding: 3px 12px;
+        border-radius: 20px;
+        align-self: flex-start;
+    }
+    .tool-tier-badge.paid {
+        background: rgba(0,200,180,0.1);
+    }
+    .tool-icon {
+        font-size: 32px;
+        margin: 12px 0;
+        line-height: 1;
+        display: block;
+    }
+    .tool-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: #00C8B4;
+        line-height: 1.2;
+    }
+    .tool-body {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(0,200,180,0.6);
+        line-height: 1.6;
+        margin: 12px 0;
+        flex: 1;
+    }
+    .tool-cta {
+        display: inline-block;
+        background: #00C8B4;
+        color: #0a1628;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 12px 28px;
+        border-radius: 50px;
+        text-decoration: none;
+        margin-top: auto;
+        align-self: flex-start;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+    }
+    .tool-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,200,180,0.3);
+    }
+    .tool-cta.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: rgba(0,200,180,0.1);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.2);
+        box-shadow: none;
+        transform: none;
+        pointer-events: none;
+    }
+    .tool-cta.paid-cta {
+        background: #00A896;
+        color: #00C8B4;
+    }
+    .tool-cta.paid-cta:hover {
+        box-shadow: 0 8px 20px rgba(106,13,173,0.4);
+    }
+
+    @media (max-width: 900px) {
+        .tools { padding: 80px 40px; }
+        .tools-headline { font-size: 40px; }
+        .tools-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+    @media (max-width: 640px) {
+        .tools { padding: 60px 24px; }
+        .tools-headline { font-size: 30px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 8 — PACKAGES
+    ═══════════════════════════════════════ */
+
+    .packages {
+        background: #0d1f35;
+        padding: 100px 80px;
+    }
+    .packages-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .packages-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.1);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .packages-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #00C8B4;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .packages-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.6);
+        margin-top: 12px;
+        line-height: 1.6;
+    }
+    .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-top: 56px;
+    }
+    .pkg-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(0,200,180,0.1);
+        border-radius: 16px;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+    }
+    .pkg-card.visible { opacity: 1; transform: translateY(0); }
+    .pkg-card:hover {
+        border-color: rgba(0,200,180,0.3);
+        box-shadow: 0 8px 32px rgba(0,200,180,0.1);
+        transform: translateY(-3px);
+    }
+    .pkg-card.visible:hover { transform: translateY(-3px); }
+    .pkg-card.popular {
+        border: 2px solid #00C8B4;
+    }
+    .pkg-stream-badge {
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 20px;
+        align-self: flex-start;
+        background: rgba(0,200,180,0.06);
+        color: rgba(0,200,180,0.5);
+    }
+    .pkg-card.popular .pkg-stream-badge {
+        background: rgba(0,200,180,0.15);
+        color: #00C8B4;
+    }
+    .pkg-popular-label {
+        display: inline-block;
+        background: #00C8B4;
+        color: #0a1628;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 10px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-left: 8px;
+    }
+    .pkg-course {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        color: rgba(255,255,255,0.9);
+        margin: 12px 0 4px;
+        line-height: 1.3;
+    }
+    .pkg-price {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 32px;
+        color: #00C8B4;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+    }
+    .pkg-features {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+        margin-bottom: 24px;
+    }
+    .pkg-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(0,200,180,0.7);
+        line-height: 1.4;
+    }
+    .pkg-features li::before {
+        content: '✓';
+        color: #00A896;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+    .pkg-cta {
+        display: block;
+        text-align: center;
+        border: 1.5px solid rgba(0,200,180,0.25);
+        color: rgba(255,255,255,0.7);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 12px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        margin-top: auto;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .pkg-cta:hover {
+        background: #00C8B4;
+        color: #0a1628;
+        border-color: #00C8B4;
+    }
+
+    @media (max-width: 1100px) {
+        .packages-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    }
+    @media (max-width: 900px) {
+        .packages { padding: 80px 40px; }
+        .packages-headline { font-size: 40px; }
+    }
+    @media (max-width: 640px) {
+        .packages { padding: 60px 24px; }
+        .packages-headline { font-size: 30px; }
+        .packages-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Generic scroll-reveal ── */
+    .animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .animate.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══════════════════════════════════════
+       SECTION 11 — CTA BANNER
+    ═══════════════════════════════════════ */
+
+    .cta-banner {
+        position: relative;
+        background: linear-gradient(135deg, #030912 0%, #0d1f35 50%, #00A896 100%);
+        padding: 100px 80px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .cta-deco {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .cta-deco-1 {
+        width: 300px; height: 300px;
+        background: rgba(0,200,180,0.05);
+        top: -100px; right: -100px;
+    }
+    .cta-deco-2 {
+        width: 200px; height: 200px;
+        background: rgba(0,200,180,0.03);
+        bottom: -50px; left: -50px;
+    }
+    .cta-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+    .cta-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 56px;
+        color: #00C8B4;
+        line-height: 1.0;
+        letter-spacing: -0.02em;
+    }
+    .cta-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        color: rgba(0,200,180,0.65);
+        max-width: 520px;
+        margin: 20px auto 0;
+        line-height: 1.6;
+    }
+    .cta-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 40px;
+    }
+    .cta-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        background: #00C8B4;
+        color: #0a1628;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 18px 44px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0,200,180,0.35);
+    }
+    .cta-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        background: transparent;
+        color: #00C8B4;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 18px 44px;
+        border-radius: 50px;
+        border: 2px solid rgba(0,200,180,0.35);
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .cta-btn-secondary:hover {
+        background: rgba(0,200,180,0.08);
+        border-color: rgba(0,200,180,0.55);
+    }
+    @media (max-width: 900px) {
+        .cta-banner { padding: 80px 40px; }
+        .cta-headline { font-size: 44px; }
+    }
+    @media (max-width: 640px) {
+        .cta-banner { padding: 60px 24px; }
+        .cta-headline { font-size: 36px; }
+        .cta-sub { font-size: 16px; }
+        .cta-buttons { flex-direction: column; gap: 12px; }
+        .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; font-size: 16px; padding: 16px 32px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 12 — FOOTER
+    ═══════════════════════════════════════ */
+
+    .footer {
+        background: #030912;
+        padding: 64px 80px 32px;
+    }
+    .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 48px;
+    }
+    .footer-logo-img {
+        height: 44px;
+        width: auto;
+        mix-blend-mode: screen;
+        display: block;
+        margin-bottom: 16px;
+    }
+    .footer-tagline {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: rgba(255,255,255,0.4);
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .footer-socials {
+        display: flex;
+        gap: 12px;
+    }
+    .footer-social {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        flex-shrink: 0;
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .footer-social:hover {
+        background: rgba(0,200,180,0.1);
+        border-color: rgba(0,200,180,0.3);
+        color: #00C8B4;
+    }
+    .footer-col-header {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        color: rgba(255,255,255,0.3);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        display: block;
+    }
+    .footer-link {
+        display: block;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(255,255,255,0.55);
+        text-decoration: none;
+        margin-bottom: 10px;
+        transition: color 0.2s;
+    }
+    .footer-link:hover { color: #00C8B4; }
+    .footer-bottom {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .footer-bottom-text {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: rgba(255,255,255,0.25);
+    }
+    @media (max-width: 900px) {
+        .footer { padding: 48px 40px 24px; }
+        .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 640px) {
+        .footer { padding: 40px 24px 24px; }
+        .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+        .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 9 — TESTIMONIALS
+    ═══════════════════════════════════════ */
+
+    .testimonials {
+        background: #0a1628;
+        padding: 100px 80px;
+        background-image: radial-gradient(rgba(0,200,180,0.06) 1px, transparent 1px);
+        background-size: 48px 48px;
+        background-position: 24px 24px;
+    }
+    .testi-inner { max-width: 1200px; margin: 0 auto; }
+    .testi-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.12);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.25);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .testi-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #ffffff;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .testi-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.6);
+        margin-top: 12px;
+    }
+    .testi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 56px;
+    }
+    .testi-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(0,200,180,0.15);
+        border-radius: 16px;
+        padding: 28px;
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .testi-card.visible { opacity: 1; transform: translateY(0); }
+    .testi-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0,200,180,0.15);
+        border: 1.5px solid rgba(0,200,180,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        color: #00C8B4;
+        margin-bottom: 16px;
+    }
+    .testi-name {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 2px;
+    }
+    .testi-detail {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: rgba(0,200,180,0.6);
+        margin-bottom: 12px;
+    }
+    .testi-score {
+        display: block;
+        width: fit-content;
+        background: rgba(0,200,180,0.1);
+        border: 1px solid rgba(0,200,180,0.2);
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        color: #00C8B4;
+        letter-spacing: 0.5px;
+        margin-bottom: 16px;
+    }
+    .testi-quote {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(255,255,255,0.65);
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+    .testi-stars {
+        color: #00C8B4;
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+    @media (max-width: 900px) {
+        .testimonials { padding: 80px 40px; }
+        .testi-headline { font-size: 40px; }
+        .testi-grid { grid-template-columns: 1fr; gap: 16px; }
+    }
+    @media (max-width: 640px) {
+        .testimonials { padding: 60px 24px; }
+        .testi-headline { font-size: 30px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 10 — FAQ
+    ═══════════════════════════════════════ */
+
+    .faq-section {
+        background: #0d1f35;
+        padding: 100px 80px;
+    }
+    .faq-inner {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .faq-badge {
+        display: inline-block;
+        background: rgba(0,200,180,0.1);
+        color: #00C8B4;
+        border: 1px solid rgba(0,200,180,0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+    .faq-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        color: #ffffff;
+        line-height: 1.0;
+        margin-top: 12px;
+        letter-spacing: -0.02em;
+    }
+    .faq-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 16px;
+        color: rgba(0,200,180,0.6);
+        margin-top: 12px;
+    }
+    .faq-list { margin-top: 48px; }
+    .faq-item {
+        border-bottom: 1px solid rgba(0,200,180,0.1);
+        padding: 28px 0;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .faq-item.visible { opacity: 1; transform: translateY(0); }
+    .faq-q {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    .faq-a {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(0,200,180,0.65);
+        line-height: 1.7;
+    }
+    @media (max-width: 900px) {
+        .faq-section { padding: 80px 40px; }
+        .faq-headline { font-size: 40px; }
+    }
+    @media (max-width: 640px) {
+        .faq-section { padding: 60px 24px; }
+        .faq-headline { font-size: 30px; }
+    }
+
     </style>
 </head>
 <body>
 
-<div class="bg-deco"></div>
-<div class="bg-grid"></div>
+<!-- ════════════════════════════════
+     SECTION 1 — FIXED NAV
+════════════════════════════════ -->
+<nav class="nav" id="mainNav" aria-label="Main navigation">
+    <div class="nav-inner">
 
-<!-- ── NAVBAR ── -->
-<nav class="asmi-nav" id="mainNav">
-    <div class="asmi-nav-inner">
-        <a href="engineering.html" class="asmi-nav-logo">
+        <a href="index.html" class="nav-back" aria-label="Back to home">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Home
+        </a>
+
+        <a href="medical.html" class="nav-logo" aria-label="ASMI Career">
             <img src="asmi-logo.png" alt="ASMI Career"/>
         </a>
-        <ul class="asmi-nav-links">
-            <li><a href="engineering.html" class="active">Home</a></li>
-            <li class="nav-dropdown">
-                <a href="#tools">Tools</a>
-                <ul class="nav-dropdown-menu">
-                    <li><a href="tools/rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
-                    <li><a href="tools/college-search.html"><span>🏥</span> College Search</a></li>
-                    <li><a href="tools/cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
-                    <li><a href="tools/documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
-                    <li><a href="tools/events.html"><span>🎓</span> Events &amp; Seminars</a></li>
-                </ul>
-            </li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="nav-cta"><a href="inquiry-engineering.html">Book Free Counselling</a></li>
+
+        <ul class="nav-links" role="list">
+            <li><a href="#colleges">Colleges</a></li>
+            <li><a href="#counselling">Counselling</a></li>
+            <li><a href="#packages">Packages</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#events">News &amp; Events</a></li>
         </ul>
-        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
-            <span></span><span></span><span></span>
+
+        <div class="nav-cta">
+            <a href="inquiry-engineering.html" aria-label="Book a free counselling session">
+                Book Free Session
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                    <path d="M2 6.5H11M7.5 3L11 6.5L7.5 10" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
-    </div>
-    <div class="asmi-mobile-menu" id="mobileMenu">
-        <a href="engineering.html">Home</a>
-        <div class="mobile-section-label">Tools</div>
-        <a href="tools/rank-predictor.html">📊 Rank Predictor</a>
-        <a href="tools/college-search.html">🏥 College Search</a>
-        <a href="tools/cutoff-explorer.html">📈 Cutoff Explorer</a>
-        <a href="tools/documents-checklist.html">📋 Documents Checklist</a>
-        <a href="tools/events.html">🎓 Events &amp; Seminars</a>
-        <div class="mobile-section-label">Company</div>
-        <a href="#about">About ASMI</a>
-        <a href="#contact">Contact &amp; Branches</a>
-        <a href="inquiry-engineering.html" class="mobile-cta">Book Free Counselling →</a>
+
     </div>
 </nav>
 
-<!-- ── HERO ── -->
-<section class="hero-section">
-    <div class="hero-grid"></div>
-    <div class="wrap">
-        <div class="hero-inner">
-
-            <!-- Left -->
-            <div class="reveal">
-                <div class="hero-badge">
-                    <span class="hero-badge-dot pulse-slow"></span>
-                    <span class="hero-badge-text">Maharashtra's #1 JEE/MHT-CET Counsellors</span>
-                </div>
-
-                <h1 class="hero-h1">
-                    Your JEE/MHT-CET Score<br/>Deserves the<br/><span style="color:#ffd700;">Right College.</span>
-                </h1>
-
-                <p class="hero-p">
-                    Expert, honest guidance through every round of counselling — from choice filling to confirmed admission. No confusion, no missed deadlines.
-                </p>
-
-                <div class="hero-btns">
-                    <a href="inquiry-engineering.html" class="btn-primary">
-                        Book Free Counselling
-                        <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
-                    </a>
-                    <a href="#tools" class="btn-ghost">
-                        Explore Free Tools
-                        <span class="material-symbols-outlined" style="font-size:18px;">construction</span>
-                    </a>
-                </div>
-
-                <div class="hero-stats">
-                    <div>
-                        <div class="hero-stat-val">25,000+</div>
-                        <div class="hero-stat-lbl">Admissions secured</div>
-                    </div>
-                    <div class="hero-stat-div"></div>
-                    <div>
-                        <div class="hero-stat-val">11+</div>
-                        <div class="hero-stat-lbl">Years experience</div>
-                    </div>
-                    <div class="hero-stat-div"></div>
-                    <div>
-                        <div class="hero-stat-val">6</div>
-                        <div class="hero-stat-lbl">Branches statewide</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Admissions feed -->
-            <div class="reveal reveal-delay-2">
-                <div class="hero-card">
-                    <div class="hero-card-header">
-                        <div>
-                            <div class="hero-card-season">2024–25 Season</div>
-                            <div class="hero-card-recent">Recent admissions</div>
-                        </div>
-                        <div class="hero-live-pill">
-                            <span class="pulse-slow" style="width:6px;height:6px;border-radius:50%;background:#ffd700;display:inline-block;"></span>
-                            Live
-                        </div>
-                    </div>
-
-                    <div class="hero-adm-row">
-                        <div>
-                            <div class="hero-adm-name">Shrihaan G.</div>
-                            <div class="hero-adm-college">AIIMS Delhi · B.Tech</div>
-                        </div>
-                        <span class="hero-adm-tag" style="background:rgba(255,215,0,.12); color:#ffd700;">AIQ</span>
-                    </div>
-                    <div class="hero-adm-row">
-                        <div>
-                            <div class="hero-adm-name">Hazel P.</div>
-                            <div class="hero-adm-college">KEM Mumbai · B.Tech</div>
-                        </div>
-                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
-                    </div>
-                    <div class="hero-adm-row">
-                        <div>
-                            <div class="hero-adm-name">Dhruv M.</div>
-                            <div class="hero-adm-college">KMC Manipal · B.Tech</div>
-                        </div>
-                        <span class="hero-adm-tag" style="background:rgba(255,255,255,.07); color:rgba(255,255,255,.45);">Mgmt</span>
-                    </div>
-                    <div class="hero-adm-row">
-                        <div>
-                            <div class="hero-adm-name">Isha T.</div>
-                            <div class="hero-adm-college">KJ Somaiya · B.Tech</div>
-                        </div>
-                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
-                    </div>
-                    <div class="hero-adm-row">
-                        <div>
-                            <div class="hero-adm-name">Riya K.</div>
-                            <div class="hero-adm-college">Nair Hospital Mumbai · BDS</div>
-                        </div>
-                        <span class="hero-adm-tag" style="background:rgba(123,65,179,.25); color:rgba(180,140,220,.9);">State</span>
-                    </div>
-
-                    <div class="hero-card-footer">
-                        <span class="hero-card-foot-note">+ 25,000 more across 11 years</span>
-                        <span class="hero-card-foot-badge">Maharashtra #1 ★</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- ── STATS BAR ── -->
-<div class="trust-strip">
-    <div class="trust-strip-inner">
-        <div class="trust-stat reveal">
-            <div class="trust-stat-val">25,000+</div>
-            <div class="trust-stat-lbl">Admissions</div>
-        </div>
-        <div class="trust-stat reveal reveal-delay-1">
-            <div class="trust-stat-val">11+</div>
-            <div class="trust-stat-lbl">Years</div>
-        </div>
-        <div class="trust-stat reveal reveal-delay-2">
-            <div class="trust-stat-val">6</div>
-            <div class="trust-stat-lbl">Branches</div>
-        </div>
-        <div class="trust-stat reveal reveal-delay-3">
-            <div class="trust-stat-val">#1</div>
-            <div class="trust-stat-lbl">Maharashtra</div>
-        </div>
-    </div>
+<!-- Mobile navigation drawer -->
+<div class="nav-drawer" id="navDrawer" role="navigation" aria-label="Mobile navigation">
+    <a href="index.html">← Home</a>
+    <a href="#colleges">Colleges</a>
+    <a href="#counselling">Counselling</a>
+    <a href="#packages">Packages</a>
+    <a href="#services">Services</a>
+    <a href="#events">News &amp; Events</a>
+    <a href="inquiry-engineering.html" class="drawer-cta">Book Free Session →</a>
 </div>
 
-<!-- ── COURSES ── -->
-<section id="services" class="section">
-    <div class="wrap">
-        <div style="margin-bottom:56px;" class="reveal">
-            <span class="section-label">What We Cover</span>
-            <h2 class="section-h2">
-                Every engineering admission,<br/>handled end to end.
-            </h2>
-            <p class="section-lead" style="max-width:440px;">
-                From JEE/MHT-CET score to college confirmation — across four disciplines, all quotas, every state.
-            </p>
+
+<!-- ════════════════════════════════
+     SECTION 2 — HERO
+════════════════════════════════ -->
+<section class="hero" aria-labelledby="hero-heading">
+
+    <div class="hero-bg" role="img" aria-label="IIT Bombay — premier engineering institution"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-grain" aria-hidden="true"></div>
+
+    <div class="hero-content">
+
+        <div class="hero-badge" aria-label="JEE 2026 admissions are open">
+            <span class="badge-dot" aria-hidden="true"></span>
+            JEE 2026 Admissions Open
         </div>
 
-        <div class="courses-grid">
-            <!-- B.Tech — dark card -->
-            <div class="course-card reveal" style="background:#09090f; color:#fff;">
-                <div class="course-ico" style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);">🩺</div>
-                <span class="course-tag" style="color:#ffd700;">B.Tech</span>
-                <h3 class="course-h3" style="color:#fff;">Bachelor of Medicine</h3>
-                <p class="course-p" style="color:rgba(255,255,255,.45);">AIQ, State Quota, Management &amp; NRI quota across govt and private engineering colleges.</p>
-                <div class="course-pills">
-                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">AIIMS Delhi</span>
-                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">KEM Mumbai</span>
-                    <span class="cpill" style="background:rgba(255,255,255,.06); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.07);">Manipal</span>
-                </div>
-                <a href="inquiry-engineering.html" class="course-link" style="color:#ffd700;"
-                   onmouseover="this.style.gap='12px'" onmouseout="this.style.gap='6px'">
-                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-                </a>
-            </div>
+        <h1 class="hero-h1" id="hero-heading">
+            Your Rank.<br>
+            Right College.<br>
+            <span>Guaranteed.</span>
+        </h1>
 
-            <!-- BDS -->
-            <div class="course-card reveal reveal-delay-1" style="background:var(--card); border:1px solid var(--cb);">
-                <div class="course-ico" style="background:rgba(106,13,173,.09);">🦷</div>
-                <span class="course-tag" style="color:var(--purple);">BDS</span>
-                <h3 class="course-h3" style="color:var(--navy);">Bachelor of Dental Surgery</h3>
-                <p class="course-p" style="color:var(--mid);">Complete guidance for dental college admissions under AIQ and state counselling processes.</p>
-                <div class="course-pills">
-                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">MAIDS Delhi</span>
-                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">Nair Mumbai</span>
-                </div>
-                <a href="inquiry-engineering.html" class="course-link" style="color:var(--purple);">
-                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-                </a>
-            </div>
+        <p class="hero-sub">
+            From JEE rank day to admission day — complete B.Tech counselling across JEE, MHT-CET, BITS, Manipal and VIT. Zero guesswork.
+        </p>
 
-            <!-- BAMS -->
-            <div class="course-card reveal reveal-delay-2" style="background:var(--card); border:1px solid var(--cb);">
-                <div class="course-ico" style="background:rgba(106,13,173,.09);">🌿</div>
-                <span class="course-tag" style="color:var(--purple);">BAMS</span>
-                <h3 class="course-h3" style="color:var(--navy);">Ayurvedic Medicine &amp; Surgery</h3>
-                <p class="course-p" style="color:var(--mid);">Expert guidance for AYUSH counselling — state and central, government and private.</p>
-                <div class="course-pills">
-                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">BHU Varanasi</span>
-                    <span class="cpill" style="background:rgba(255,255,255,.7); color:var(--mid); border:1px solid var(--cb);">GAC Pune</span>
-                </div>
-                <a href="inquiry-engineering.html" class="course-link" style="color:var(--purple);">
-                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-                </a>
-            </div>
-
-            <!-- BHMS — gold card -->
-            <div class="course-card reveal reveal-delay-3" style="background:#ffd700;">
-                <div class="course-ico" style="background:rgba(0,0,0,.07);">💊</div>
-                <span class="course-tag" style="color:rgba(90,68,0,.6);">BHMS</span>
-                <h3 class="course-h3" style="color:#09090f;">Homeopathic Medicine &amp; Surgery</h3>
-                <p class="course-p" style="color:rgba(90,68,0,.65);">Full support for homeopathy admissions across Maharashtra and other AYUSH states.</p>
-                <div class="course-pills">
-                    <span class="cpill" style="background:rgba(0,0,0,.07); color:rgba(90,68,0,.7);">NHMC Mumbai</span>
-                    <span class="cpill" style="background:rgba(0,0,0,.07); color:rgba(90,68,0,.7);">PHC Pune</span>
-                </div>
-                <a href="inquiry-engineering.html" class="course-link" style="color:#5a4400;">
-                    Get counselled <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-                </a>
-            </div>
+        <div class="hero-ctas">
+            <a href="inquiry-engineering.html" class="btn-primary">
+                Start Engineering Journey
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M3 9H15M10 4L15 9L10 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <a href="#tools" class="btn-secondary">
+                Explore Free Tools
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                    <path d="M3 9H15M10 4L15 9L10 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
         </div>
+
+        <div class="hero-stats" role="list" aria-label="Key statistics">
+
+            <div class="hero-stat" role="listitem">
+                <span class="stat-num" id="stat-students" aria-label="10,000 plus students guided">10K+</span>
+                <span class="stat-lbl">Students Guided</span>
+            </div>
+
+            <div class="stat-divider" aria-hidden="true"></div>
+
+            <div class="hero-stat" role="listitem">
+                <span class="stat-num" id="stat-years" aria-label="11 plus years experience">11+</span>
+                <span class="stat-lbl">Years Experience</span>
+            </div>
+
+            <div class="stat-divider" aria-hidden="true"></div>
+
+            <div class="hero-stat" role="listitem">
+                <span class="stat-num" id="stat-colleges" aria-label="500 plus colleges">500+</span>
+                <span class="stat-lbl">Colleges</span>
+            </div>
+
+            <div class="stat-divider" aria-hidden="true"></div>
+
+            <div class="hero-stat" role="listitem">
+                <span class="stat-num" id="stat-rating" aria-label="4.9 star Google rating">4.9&#9733;</span>
+                <span class="stat-lbl">Google Rating</span>
+            </div>
+
+        </div>
+
     </div>
 </section>
 
-<!-- ── WHY ASMI ── -->
-<section id="about" class="section">
-    <div class="wrap">
-        <div class="about-grid">
-            <!-- Left -->
-            <div class="reveal">
-                <span class="section-label">Why ASMI</span>
-                <h2 class="section-h2">
-                    Everything JEE/MHT-CET.<br/>One team.
-                </h2>
-                <p class="section-lead" style="margin-bottom:32px;">
-                    JEE/MHT-CET counselling has dozens of moving parts — AIQ rounds, state quotas, management seats, upgradations, documents, reporting. We handle every one.
-                </p>
-                <a href="inquiry-engineering.html" class="btn-about">
-                    Book free session
-                    <span class="material-symbols-outlined" style="font-size:20px;">arrow_forward</span>
-                </a>
-                <div class="about-stats">
-                    <div class="about-stat-box">
-                        <div class="about-stat-val">All India</div>
-                        <div class="about-stat-lbl">Coverage — every state</div>
-                    </div>
-                    <div class="about-stat-box">
-                        <div class="about-stat-val">4 Courses</div>
-                        <div class="about-stat-lbl">B.Tech · BDS · BAMS · BHMS</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Right: Feature cards -->
-            <div class="reveal reveal-delay-1">
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">verified_user</span></div>
-                    <div>
-                        <div class="feature-heading">Complete Admission Guidance</div>
-                        <div class="feature-body">Every quota, every round — AIQ to state, government to private.</div>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">groups</span></div>
-                    <div>
-                        <div class="feature-heading">One-on-One Counselling</div>
-                        <div class="feature-body">A dedicated counsellor who knows your profile and goals personally.</div>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">analytics</span></div>
-                    <div>
-                        <div class="feature-heading">Accurate Round Cutoffs</div>
-                        <div class="feature-body">Real historical data — not guesswork. Know exactly where you stand.</div>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">notifications_active</span></div>
-                    <div>
-                        <div class="feature-heading">Real-time WhatsApp Alerts</div>
-                        <div class="feature-body">Updates on every deadline, schedule change, and allotment result.</div>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">fact_check</span></div>
-                    <div>
-                        <div class="feature-heading">Document Verification</div>
-                        <div class="feature-body">Every certificate checked before submission. No surprises at reporting.</div>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:22px; font-variation-settings:'FILL' 1;">support_agent</span></div>
-                    <div>
-                        <div class="feature-heading">Dedicated Helpline</div>
-                        <div class="feature-body">Direct access to your counsellor throughout the entire admission season.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- ════════════════════════════════
+     SECTION 3 — TRUST STRIP
+════════════════════════════════ -->
+<section class="trust-strip" aria-label="Colleges our students have been admitted to">
+    <div class="trust-track" aria-hidden="true">
+        <span class="trust-item">IIT Bombay · IIT Delhi · NIT Trichy · BITS Pilani · VIT Vellore · Manipal MIT · IIT Madras · NIT Warangal · COEP Pune · VJTI Mumbai · IIT Kharagpur · IIIT Hyderabad ·</span>
+        <span class="trust-item">IIT Bombay · IIT Delhi · NIT Trichy · BITS Pilani · VIT Vellore · Manipal MIT · IIT Madras · NIT Warangal · COEP Pune · VJTI Mumbai · IIT Kharagpur · IIIT Hyderabad ·</span>
     </div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
-<section class="section">
-    <div class="wrap-md">
-        <div style="text-align:center; margin-bottom:64px;" class="reveal">
-            <span class="section-label" style="display:inline-block;">How It Works</span>
-            <h2 class="section-h2" style="margin-top:8px;">
-                From JEE/MHT-CET score<br/>to confirmed seat.
-            </h2>
-            <p class="section-lead" style="max-width:320px; margin:0 auto;">Three steps. We guide you through every detail.</p>
+
+<!-- ════════════════════════════════
+     SECTION 4 — PROBLEMS
+════════════════════════════════ -->
+<section class="problems" aria-labelledby="prob-heading">
+    <div class="problems-noise" aria-hidden="true"></div>
+    <div class="problems-inner">
+
+        <div class="prob-header">
+            <span class="prob-badge">The Problem</span>
+            <h2 class="prob-headline" id="prob-heading">Students Miss Their College —<br>Before JoSAA Even Begins.</h2>
+            <p class="prob-sub">Here's what goes wrong — and exactly how ASMI fixes it.</p>
         </div>
 
-        <div class="steps-grid">
-            <div class="step-wrap reveal">
-                <div class="step-num" style="background:#ffd700; color:#1a0040;">1</div>
-                <h3 class="step-h3">Share Your Details</h3>
-                <p class="step-p">Fill the free inquiry form with your JEE/MHT-CET score, category, and preferred courses. Takes 2 minutes.</p>
-                <a href="inquiry-engineering.html" class="step-link">
-                    Go to form <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span>
-                </a>
+        <div class="prob-table" role="table" aria-label="Problems and ASMI solutions">
+
+            <div class="prob-table-header" role="row">
+                <span class="prob-col-label red" role="columnheader">The Problem</span>
+                <span class="prob-col-label green" role="columnheader">How ASMI Fixes It</span>
             </div>
 
-            <div class="step-wrap reveal reveal-delay-1">
-                <div class="step-num" style="background:linear-gradient(135deg,#1a0040,#6a0dad); color:#0a1628;">2</div>
-                <h3 class="step-h3">Meet Your Counsellor</h3>
-                <p class="step-p">Your dedicated counsellor analyses your score, category, and budget — giving you a clear, honest picture of every college you can get.</p>
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">01</span>
+                    <span class="prob-text-left">Wrong branch/college preference order</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Algorithm-optimised JoSAA preference list submitted before deadline</span>
+                </div>
             </div>
 
-            <div class="step-wrap reveal reveal-delay-2">
-                <div class="step-num" style="background:#ffd700; color:#1a0040;">3</div>
-                <h3 class="step-h3">Get Your Seat Confirmed</h3>
-                <p class="step-p">We guide you through every counselling round — choice filling, allotments, upgrades, documents, and reporting. Until you walk into your college.</p>
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">02</span>
+                    <span class="prob-text-left">JoSAA freeze/float/slide confusion</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Clear strategy explained for each round option</span>
+                </div>
             </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">03</span>
+                    <span class="prob-text-left">Missing open state college options</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Complete state CET analysis — MH, KA, TS, AP and more</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">04</span>
+                    <span class="prob-text-left">CSAB special round confusion</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Complete CSAB guidance — who qualifies and what to do</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">05</span>
+                    <span class="prob-text-left">Not understanding home state vs other state quota</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Clear domicile strategy for each state CET</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">06</span>
+                    <span class="prob-text-left">Incorrect documents at reporting</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Complete document checklist for engineering college reporting</span>
+                </div>
+            </div>
+
+            <div class="prob-row" role="row" data-animate>
+                <div class="prob-cell-left" role="cell">
+                    <span class="prob-num" aria-hidden="true">07</span>
+                    <span class="prob-text-left">Last minute choice filling errors</span>
+                </div>
+                <div class="prob-cell-right" role="cell">
+                    <svg class="prob-check" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="8.5" stroke="#15803d" stroke-width="1"/><path d="M5.5 9.5L7.5 11.5L12.5 6.5" stroke="#15803d" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="prob-text-right">Real-time support during the choice filling window</span>
+                </div>
+            </div>
+
         </div>
+
+        <div class="prob-highlight" data-animate>
+            💡 Students with lower ranks often get better branches due to smarter JoSAA choice filling strategy.
+        </div>
+
     </div>
 </section>
 
-<!-- ── TOOLS SHOWCASE ── -->
-<section id="tools" class="section">
-    <div class="wrap">
-        <div class="tools-header reveal">
-            <div>
-                <span class="section-label">Free Student Tools</span>
-                <h2 class="section-h2" style="margin-top:8px;">
-                    Research smarter.<br/>Decide with confidence.
-                </h2>
+
+<!-- ════════════════════════════════
+     SECTION 5 — COUNSELLING PROCESS
+════════════════════════════════ -->
+<section class="process" aria-labelledby="process-heading">
+    <div class="process-inner">
+
+        <span class="process-badge">Our Process</span>
+        <h2 class="process-headline" id="process-heading">Your Path From JEE Rank<br>To Engineering Seat.</h2>
+        <p class="process-sub">Simple. Transparent. Student-first.</p>
+
+        <div class="process-rows" aria-label="JoSAA counselling process steps">
+
+            <div class="process-row" role="list">
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">1</div>
+                    <span class="step-label">JEE Result</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">2</div>
+                    <span class="step-label">JoSAA Registration</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">3</div>
+                    <span class="step-label">Document Upload</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">4</div>
+                    <span class="step-label">Choice Filling</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">5</div>
+                    <span class="step-label">Seat Allotment</span>
+                </div>
             </div>
-            <p class="tools-note">Use our free tools before your counselling session to understand your options better.</p>
+
+            <div class="process-row" role="list">
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">R1</div>
+                    <span class="step-label">Round 1</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">R2</div>
+                    <span class="step-label">Round 2</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">R3</div>
+                    <span class="step-label">Round 3</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">CS</div>
+                    <span class="step-label">CSAB Round</span>
+                </div>
+                <div class="step-arrow" aria-hidden="true"></div>
+                <div class="process-step" role="listitem">
+                    <div class="step-circle">IR</div>
+                    <span class="step-label">Institutional Rounds</span>
+                </div>
+            </div>
+
         </div>
+
+        <div class="process-terms" aria-label="Important JoSAA terms">
+            <div class="term-card">
+                <div class="term-label">Freeze</div>
+                <div class="term-def">Lock current allotted seat — no more upgrades</div>
+            </div>
+            <div class="term-card">
+                <div class="term-label">Float</div>
+                <div class="term-def">Keep current seat, try for better options</div>
+            </div>
+            <div class="term-card">
+                <div class="term-label">Slide</div>
+                <div class="term-def">Upgrade only within same institute</div>
+            </div>
+            <div class="term-card">
+                <div class="term-label">CSAB</div>
+                <div class="term-def">Central Seat Allocation Board special rounds</div>
+            </div>
+            <div class="term-card">
+                <div class="term-label">Spot Round</div>
+                <div class="term-def">Last-chance institutional seat filling</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 6 — WHY ASMI
+════════════════════════════════ -->
+<section class="why-asmi" aria-labelledby="why-heading">
+    <div class="why-inner">
+
+        <span class="why-badge">Why ASMI</span>
+        <h2 class="why-headline" id="why-heading">The Difference Is In The Details.</h2>
+        <p class="why-sub">11 years. 10,000+ engineering admissions. Zero false promises.</p>
+
+        <div class="why-grid">
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">👁</span>
+                <div class="why-title">Transparent Guidance</div>
+                <div class="why-body">No false promises. No agent commissions. Fixed transparent pricing.</div>
+            </div>
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">🔬</span>
+                <div class="why-title">Real College Research</div>
+                <div class="why-body">Updated JoSAA cutoffs, branch-wise analysis — verified every round.</div>
+            </div>
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">🎓</span>
+                <div class="why-title">Experienced Counsellors</div>
+                <div class="why-body">11+ years. 10,000+ engineering admissions guided personally.</div>
+            </div>
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">🗺</span>
+                <div class="why-title">All India Support</div>
+                <div class="why-body">JEE, MHT-CET, KCET, TSEAMCET and 10+ state CETs covered.</div>
+            </div>
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">❤️</span>
+                <div class="why-title">Student-First Approach</div>
+                <div class="why-body">Your rank, branch preference and budget — every recommendation personalised.</div>
+            </div>
+
+            <div class="why-card" data-why-animate>
+                <span class="why-icon" aria-hidden="true">📊</span>
+                <div class="why-title">Round-wise Tracking</div>
+                <div class="why-body">JoSAA rounds 1-6, CSAB, institutional rounds — nothing missed.</div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 7 — TOOLS
+════════════════════════════════ -->
+<section class="tools" id="tools" aria-labelledby="tools-heading">
+    <div class="tools-inner">
+
+        <span class="tools-badge">Free Tools</span>
+        <h2 class="tools-headline" id="tools-heading">Everything You Need.<br>Built For You.</h2>
+        <p class="tools-sub">Engineering-specific tools coming soon. Book a free session and our counsellors will run your JoSAA strategy manually.</p>
 
         <div class="tools-grid">
-            <a href="tools/rank-predictor.html" class="tool-card reveal">
-                <div class="tool-ico">📊</div>
-                <div class="tool-name">Rank Predictor</div>
-                <p class="tool-desc">Estimate your All India Rank from your JEE/MHT-CET score. Know where you stand before results are out.</p>
-                <div class="tool-cta">Try tool <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
 
-            <a href="tools/college-search.html" class="tool-card reveal reveal-delay-1">
-                <div class="tool-ico">🏥</div>
-                <div class="tool-name">College Search</div>
-                <p class="tool-desc">Compare engineering colleges across India by state, course, fees, and available seats.</p>
-                <div class="tool-cta">Search colleges <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
+            <div class="tool-card">
+                <span class="tool-tier-badge">FREE · COMING SOON</span>
+                <span class="tool-icon" aria-hidden="true">🔍</span>
+                <div class="tool-title">JoSAA Cutoff Explorer</div>
+                <p class="tool-body">Search IIT, NIT, IIIT and GFTI cutoffs by branch, category and rank. Updated with 2025 actual data.</p>
+                <span class="tool-cta disabled" aria-disabled="true">Coming Soon</span>
+            </div>
 
-            <a href="tools/cutoff-explorer.html" class="tool-card reveal reveal-delay-2">
-                <div class="tool-ico">📈</div>
-                <div class="tool-name">Cutoff Explorer</div>
-                <p class="tool-desc">Browse 2025–26 cutoffs by state, course, and category. Know if your score qualifies.</p>
-                <div class="tool-cta">Explore cutoffs <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
+            <div class="tool-card">
+                <span class="tool-tier-badge">FREE · COMING SOON</span>
+                <span class="tool-icon" aria-hidden="true">🏛</span>
+                <div class="tool-title">College Comparator</div>
+                <p class="tool-body">Compare IITs, NITs and private colleges by branch, fees, placement data and location side-by-side.</p>
+                <span class="tool-cta disabled" aria-disabled="true">Coming Soon</span>
+            </div>
 
-            <a href="tools/documents-checklist.html" class="tool-card reveal reveal-delay-1">
-                <div class="tool-ico">📋</div>
-                <div class="tool-name">Documents Checklist</div>
-                <p class="tool-desc">Know exactly which documents you need for each counselling process — before it's urgent.</p>
-                <div class="tool-cta">View checklist <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
+            <div class="tool-card">
+                <span class="tool-tier-badge paid">PAID · ₹PLACEHOLDER</span>
+                <span class="tool-icon" aria-hidden="true">📊</span>
+                <div class="tool-title">Rank Predictor</div>
+                <p class="tool-body">Enter your JEE rank and category. Instantly see every eligible college and branch across JoSAA, CSAB and state CETs.</p>
+                <a href="inquiry-engineering.html" class="tool-cta paid-cta">Get Access →</a>
+            </div>
 
-            <a href="tools/events.html" class="tool-card reveal reveal-delay-2">
-                <div class="tool-ico">🎓</div>
-                <div class="tool-name">Events &amp; Seminars</div>
-                <p class="tool-desc">Join free JEE/MHT-CET counselling seminars across Maharashtra — in-person and online.</p>
-                <div class="tool-cta">See events <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
-
-            <!-- CTA card -->
-            <a href="inquiry-engineering.html" class="tool-card tool-card-dark reveal reveal-delay-3">
-                <div class="tool-ico">🤝</div>
-                <div class="tool-name">Talk to a Counsellor</div>
-                <p class="tool-desc">Still confused? Book a free one-on-one session. We'll explain everything in your language.</p>
-                <div class="tool-cta">Book free session <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span></div>
-            </a>
         </div>
+
     </div>
 </section>
 
-<!-- ── TESTIMONIALS ── -->
-<section class="testi-section section">
-    <div class="wrap">
-        <div style="text-align:center; margin-bottom:56px;" class="reveal">
-            <span class="section-label" style="display:inline-block;">Student Stories</span>
-            <h2 class="section-h2" style="margin-top:8px;">
-                Voices of success.
-            </h2>
-            <p style="color:var(--mid); font-size:.875rem;">Real students. Real colleges. Real results.</p>
+
+<!-- ════════════════════════════════
+     SECTION 8 — PACKAGES
+════════════════════════════════ -->
+<section class="packages" id="packages" aria-labelledby="packages-heading">
+    <div class="packages-inner">
+
+        <span class="packages-badge">Packages</span>
+        <h2 class="packages-headline" id="packages-heading">Every Admission Path, Covered.</h2>
+        <p class="packages-sub">From JEE Mains to BITS Pilani — expert support for every exam and every round.</p>
+
+        <div class="packages-grid">
+
+            <div class="pkg-card" data-pkg-animate>
+                <div>
+                    <span class="pkg-stream-badge">JEE MAINS</span>
+                </div>
+                <div class="pkg-course">B.Tech Counselling</div>
+                <div class="pkg-price">₹PLACEHOLDER</div>
+                <ul class="pkg-features" aria-label="Package features">
+                    <li>JoSAA counselling</li>
+                    <li>State CET strategy</li>
+                    <li>Branch analysis</li>
+                    <li>Document verification</li>
+                    <li>Round-wise WhatsApp alerts</li>
+                </ul>
+                <a href="inquiry-engineering.html" class="pkg-cta">Learn More →</a>
+            </div>
+
+            <div class="pkg-card popular" data-pkg-animate>
+                <div>
+                    <span class="pkg-stream-badge">JEE</span>
+                    <span class="pkg-popular-label">POPULAR</span>
+                </div>
+                <div class="pkg-course">B.Tech Premium</div>
+                <div class="pkg-price">₹PLACEHOLDER</div>
+                <ul class="pkg-features" aria-label="Package features">
+                    <li>All of above</li>
+                    <li>CSAB rounds</li>
+                    <li>Institutional rounds</li>
+                    <li>BITS/Manipal/VIT guidance</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="inquiry-engineering.html" class="pkg-cta">Learn More →</a>
+            </div>
+
+            <div class="pkg-card" data-pkg-animate>
+                <div>
+                    <span class="pkg-stream-badge">MHT-CET</span>
+                </div>
+                <div class="pkg-course">Maharashtra B.Tech</div>
+                <div class="pkg-price">₹PLACEHOLDER</div>
+                <ul class="pkg-features" aria-label="Package features">
+                    <li>CAP rounds guidance</li>
+                    <li>College preference strategy</li>
+                    <li>Home state quota analysis</li>
+                    <li>Document support</li>
+                    <li>Round tracking</li>
+                </ul>
+                <a href="inquiry-engineering.html" class="pkg-cta">Learn More →</a>
+            </div>
+
+            <div class="pkg-card" data-pkg-animate>
+                <div>
+                    <span class="pkg-stream-badge">BITS/VIT/MANIPAL</span>
+                </div>
+                <div class="pkg-course">Private Universities</div>
+                <div class="pkg-price">₹PLACEHOLDER</div>
+                <ul class="pkg-features" aria-label="Package features">
+                    <li>BITSAT strategy</li>
+                    <li>Campus &amp; branch guidance</li>
+                    <li>VITEEE &amp; MET counselling</li>
+                    <li>Fee &amp; placement analysis</li>
+                    <li>Application support</li>
+                </ul>
+                <a href="inquiry-engineering.html" class="pkg-cta">Learn More →</a>
+            </div>
+
         </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 9 — TESTIMONIALS
+════════════════════════════════ -->
+<section class="testimonials" aria-labelledby="testi-heading">
+    <div class="testi-inner">
+
+        <span class="testi-badge">Student Success</span>
+        <h2 class="testi-headline" id="testi-heading">Straight From The Students.</h2>
+        <p class="testi-sub">Real results from real students we've guided into top engineering colleges.</p>
 
         <div class="testi-grid">
-            <div class="testi-card reveal">
-                <div class="testi-quote">"</div>
-                <p class="testi-p">ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle. His timely direction kept me stress-free and helped me make confident decisions that eventually led me to KEM Mumbai.</p>
-                <div class="testi-foot">
-                    <div class="testi-av">HP</div>
-                    <div>
-                        <div class="testi-name">Hazel Punmiya</div>
-                        <div class="testi-college">KEM, Mumbai</div>
-                    </div>
-                </div>
+
+            <div class="testi-card" data-testi-animate>
+                <div class="testi-avatar">RS</div>
+                <div class="testi-name">Rohan S.</div>
+                <div class="testi-detail">B.Tech CSE · IIT Bombay</div>
+                <span class="testi-score">JEE AIR [XXX]</span>
+                <p class="testi-quote">"ASMI helped me navigate JoSAA rounds perfectly. Got CSE at IIT Bombay which I thought was out of reach."</p>
+                <div class="testi-stars">★★★★★</div>
             </div>
 
-            <div class="testi-card reveal reveal-delay-1">
-                <div class="testi-quote">"</div>
-                <p class="testi-p">The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused. His guidance made the journey manageable and helped me reach AIIMS Delhi with complete confidence.</p>
-                <div class="testi-foot">
-                    <div class="testi-av">SG</div>
-                    <div>
-                        <div class="testi-name">Shrihaan Ghare</div>
-                        <div class="testi-college">AIIMS Delhi</div>
-                    </div>
-                </div>
+            <div class="testi-card" data-testi-animate>
+                <div class="testi-avatar">PP</div>
+                <div class="testi-name">Priya P.</div>
+                <div class="testi-detail">B.Tech ECE · NIT Trichy</div>
+                <span class="testi-score">MHT-CET [XX] percentile</span>
+                <p class="testi-quote">"Their MHT-CET counselling strategy helped me get ECE at NIT Trichy. Worth every rupee."</p>
+                <div class="testi-stars">★★★★★</div>
             </div>
 
-            <div class="testi-card reveal reveal-delay-1">
-                <div class="testi-quote">"</div>
-                <p class="testi-p">Comparing top colleges was challenging, but ASMI Career helped me understand the bigger picture. Anish Sir's insights on reputation, exposure, and opportunities showed why KMC Manipal stands out nationally. That clarity made my final decision smooth and confident.</p>
-                <div class="testi-foot">
-                    <div class="testi-av">DM</div>
-                    <div>
-                        <div class="testi-name">Dhruv Mundra</div>
-                        <div class="testi-college">KMC Manipal</div>
-                    </div>
-                </div>
+            <div class="testi-card" data-testi-animate>
+                <div class="testi-avatar">AS</div>
+                <div class="testi-name">Aarav S.</div>
+                <div class="testi-detail">B.Tech CS · BITS Pilani</div>
+                <span class="testi-score">BITSAT [XXX]</span>
+                <p class="testi-quote">"ASMI's BITS counselling support was exceptional. They knew exactly which campus and branch to target."</p>
+                <div class="testi-stars">★★★★★</div>
             </div>
 
-            <div class="testi-card reveal reveal-delay-2">
-                <div class="testi-quote">"</div>
-                <p class="testi-p">With a strong score and several options, what I needed most was clarity. Anish Sir helped me evaluate every college carefully and explained why KJ Somaiya offered better long-term stability than the newer GMCs. That direction shaped my decision and gave me confidence.</p>
-                <div class="testi-foot">
-                    <div class="testi-av">IT</div>
-                    <div>
-                        <div class="testi-name">Isha Tilak</div>
-                        <div class="testi-college">KJ Somaiya, Mumbai</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <p class="testi-more reveal">…and 25,000+ more families guided across Maharashtra and India</p>
     </div>
 </section>
 
-<!-- ── BRANCHES ── -->
-<section id="contact" class="section">
-    <div class="wrap">
-        <div style="margin-bottom:48px;" class="reveal">
-            <span class="section-label">Our Branches</span>
-            <h2 class="section-h2">
-                Find us near you.
-            </h2>
-            <p class="section-lead" style="max-width:400px;">6 branches across Maharashtra. Walk in, call, or visit — we're here for you.</p>
+
+<!-- ════════════════════════════════
+     SECTION 10 — FAQ
+════════════════════════════════ -->
+<section class="faq-section" aria-labelledby="faq-heading">
+    <div class="faq-inner">
+
+        <span class="faq-badge">FAQ</span>
+        <h2 class="faq-headline" id="faq-heading">Questions Answered.</h2>
+        <p class="faq-sub">Everything you need to know about JEE counselling with ASMI.</p>
+
+        <div class="faq-list">
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">What is JEE counselling and how does ASMI help?</div>
+                <div class="faq-a">JEE counselling is the process of filling preferences for engineering colleges through JoSAA after your JEE result. ASMI provides end-to-end support — from understanding your rank and category to filling the right preferences at the right time across JoSAA, CSAB and state CET rounds.</div>
+            </div>
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">How is ASMI different from free YouTube JEE advice?</div>
+                <div class="faq-a">YouTube gives general advice. ASMI gives personalised guidance based on your exact rank, branch preference, domicile and budget. Our counsellors track every JoSAA round for you and alert you in real time.</div>
+            </div>
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">Does ASMI cover JEE Mains, Advanced and state CETs?</div>
+                <div class="faq-a">Yes. We cover JoSAA for JEE Mains and Advanced, CSAB, MHT-CET, KCET, TSEAMCET and 10+ other state CETs — all in one package.</div>
+            </div>
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">What are your engineering counselling package prices?</div>
+                <div class="faq-a">Our packages start at ₹PLACEHOLDER. Pricing depends on the exams and states you need covered. Book a free session and we will recommend the right package.</div>
+            </div>
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">What if I don't get my preferred branch after paying?</div>
+                <div class="faq-a">We guide you through every available round including CSAB and institutional rounds. We also help you evaluate upgrade options and alternative branches strategically.</div>
+            </div>
+
+            <div class="faq-item" data-faq-animate>
+                <div class="faq-q">Can parents track the JoSAA counselling process?</div>
+                <div class="faq-a">Absolutely. We send WhatsApp updates to both the student and parents after every JoSAA round. You are never in the dark.</div>
+            </div>
+
         </div>
 
-        <div class="branches-grid">
-            <div class="branch-card branch-head reveal">
-                <div class="branch-badge">Head Office</div>
-                <h3 class="branch-city">Mumbai – Andheri</h3>
-                <p class="branch-addr">42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East</p>
-                <a href="tel:7410019077" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019077
-                </a>
-            </div>
+    </div>
+</section>
 
-            <div class="branch-card reveal reveal-delay-1">
-                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
-                <h3 class="branch-city">Thane</h3>
-                <p class="branch-addr">Shah Avenue, Gokhale Road, Naupada, Thane West</p>
-                <a href="tel:7410019075" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410019075
-                </a>
-            </div>
 
-            <div class="branch-card reveal reveal-delay-2">
-                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
-                <h3 class="branch-city">Pune</h3>
-                <p class="branch-addr">Business Guild Complex, Law College Road, Pune</p>
-                <a href="tel:7410013458" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">phone</span> 7410013458
-                </a>
-            </div>
-
-            <div class="branch-card reveal reveal-delay-1">
-                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
-                <h3 class="branch-city">Kolhapur</h3>
-                <p class="branch-addr">Contact for branch address and appointment</p>
-                <a href="inquiry.html?source=kolhapur" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
-                </a>
-            </div>
-
-            <div class="branch-card reveal reveal-delay-2">
-                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
-                <h3 class="branch-city">Sangli</h3>
-                <p class="branch-addr">Contact for branch address and appointment</p>
-                <a href="inquiry.html?source=sangli" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
-                </a>
-            </div>
-
-            <div class="branch-card reveal reveal-delay-3">
-                <div class="branch-ico"><span class="material-symbols-outlined" style="color:var(--purple); font-size:16px;">location_on</span></div>
-                <h3 class="branch-city">Ch. Sambhajinagar</h3>
-                <p class="branch-addr">Contact for branch address and appointment</p>
-                <a href="inquiry.html?source=sambhajinagar" class="branch-link">
-                    <span class="material-symbols-outlined" style="font-size:16px;">arrow_forward</span> Inquire here
-                </a>
-            </div>
-        </div>
-
-        <!-- Central helpline bar -->
-        <div class="helpline-bar reveal">
-            <div>
-                <div class="helpline-lbl">Central Helpline</div>
-                <div class="helpline-num">7410019074</div>
-                <div class="helpline-hours">Available Mon–Sat, 9am–7pm</div>
-            </div>
-            <a href="tel:7410019074" class="btn-call">
-                <span class="material-symbols-outlined" style="font-size:20px;">phone</span>
-                Call Now
-            </a>
+<!-- ════════════════════════════════
+     SECTION 11 — CTA BANNER
+════════════════════════════════ -->
+<section class="cta-banner" aria-labelledby="cta-heading">
+    <div class="cta-deco cta-deco-1" aria-hidden="true"></div>
+    <div class="cta-deco cta-deco-2" aria-hidden="true"></div>
+    <div class="cta-inner">
+        <h2 class="cta-headline animate" id="cta-heading">Take The First Step.</h2>
+        <p class="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
+        <div class="cta-buttons animate">
+            <a href="inquiry-engineering.html" class="cta-btn-primary">Book My Free Session →</a>
+            <a href="#" class="cta-btn-secondary">WhatsApp Us →</a>
         </div>
     </div>
 </section>
 
-<!-- ── FINAL CTA ── -->
-<section class="cta-section section">
-    <div class="wrap-sm">
-        <div class="cta-inner reveal">
-            <div class="cta-badge">
-                <span style="width:6px;height:6px;border-radius:50%;background:#ffd700;display:inline-block;" class="pulse-slow"></span>
-                <span style="font-size:.72rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.5);">Free, no obligation</span>
-            </div>
-            <h2 class="cta-h2">
-                Ready to secure<br/>your engineering seat?
-            </h2>
-            <p class="cta-p">
-                Book your free counselling session today. Honest advice from people who know JEE/MHT-CET inside out.
-            </p>
-            <a href="inquiry-engineering.html" class="btn-cta">
-                Book Free Counselling
-                <span class="material-symbols-outlined" style="font-size:22px;">arrow_forward</span>
-            </a>
-            <div class="cta-trust">
-                <span>Free, no obligation</span>
-                <span>·</span>
-                <span>In-person or phone</span>
-                <span>·</span>
-                <span>Any JEE/MHT-CET score welcome</span>
-                <span>·</span>
-                <span>All 6 Maharashtra branches</span>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- ── FOOTER ── -->
-<footer class="asmi-footer">
-    <div class="asmi-footer-inner">
-        <div class="asmi-footer-grid">
-            <div class="asmi-footer-brand">
-                <img src="asmi-logo.png" alt="ASMI Career"/>
-                <p>Maharashtra's leading JEE/MHT-CET engineering admissions counselling company. 11+ years, 25,000+ admissions, and a team that genuinely cares about your future.</p>
-                <div style="margin-top:20px; font-size:.825rem; color:rgba(255,255,255,.3);">
-                    <div>Central: <a href="tel:7410019074" style="color:rgba(255,255,255,.5);">7410019074</a></div>
-                    <div>asmicareer.in</div>
+<!-- ════════════════════════════════
+     SECTION 12 — FOOTER
+════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+
+        <div class="footer-grid">
+
+            <div class="footer-col-brand">
+                <img src="asmi-logo.png" alt="ASMI Career" class="footer-logo-img"/>
+                <p class="footer-tagline">Guiding Futures, Building Engineers</p>
+                <div class="footer-socials" aria-label="Social media links">
+                    <a href="#" class="footer-social" aria-label="Facebook">f</a>
+                    <a href="#" class="footer-social" aria-label="Instagram">ig</a>
+                    <a href="#" class="footer-social" aria-label="YouTube">yt</a>
+                    <a href="#" class="footer-social" aria-label="WhatsApp">wa</a>
                 </div>
             </div>
+
             <div>
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="engineering.html">Home</a></li>
-                    <li><a href="inquiry-engineering.html">Book Counselling</a></li>
-                    <li><a href="tools/rank-predictor.html">Rank Predictor</a></li>
-                    <li><a href="tools/cutoff-explorer.html">Cutoff Explorer</a></li>
-                    <li><a href="tools/documents-checklist.html">Documents Checklist</a></li>
-                    <li><a href="tools/events.html">Events</a></li>
-                </ul>
+                <span class="footer-col-header">Get</span>
+                <a href="#" class="footer-link">Counselling</a>
+                <a href="#" class="footer-link">Services</a>
+                <a href="#packages" class="footer-link">Packages</a>
+                <a href="/tools/cutoff-explorer" class="footer-link">Cutoff Explorer</a>
+                <a href="#" class="footer-link">Resources</a>
             </div>
+
             <div>
-                <h4>Branches</h4>
-                <ul>
-                    <li><a href="inquiry.html?source=andheri">Mumbai – Andheri</a></li>
-                    <li><a href="inquiry.html?source=thane">Thane</a></li>
-                    <li><a href="inquiry.html?source=pune">Pune</a></li>
-                    <li><a href="inquiry.html?source=kolhapur">Kolhapur</a></li>
-                    <li><a href="inquiry.html?source=sangli">Sangli</a></li>
-                    <li><a href="inquiry.html?source=sambhajinagar">Ch. Sambhajinagar</a></li>
-                </ul>
+                <span class="footer-col-header">Explore</span>
+                <a href="#" class="footer-link">Universities</a>
+                <a href="#" class="footer-link">Updates &amp; Events</a>
+                <a href="#" class="footer-link">Success Stories</a>
+                <a href="#" class="footer-link">FAQs</a>
+                <a href="#" class="footer-link">Webinars &amp; Video Guides</a>
             </div>
+
             <div>
-                <h4>Contact</h4>
-                <div class="asmi-footer-contact-item">
-                    <strong>Andheri (Head Office)</strong>
-                    42, 4th Floor, Silver Astra, J.B. Nagar, Andheri East
-                    <br/><a href="tel:7410019077">7410019077</a>
-                </div>
-                <div class="asmi-footer-contact-item">
-                    <strong>Thane</strong>
-                    Shah Avenue, Gokhale Road, Naupada
-                    <br/><a href="tel:7410019075">7410019075</a>
-                </div>
-                <div class="asmi-footer-contact-item">
-                    <strong>Pune</strong>
-                    Business Guild Complex, Law College Road
-                    <br/><a href="tel:7410013458">7410013458</a>
-                </div>
+                <span class="footer-col-header">Company</span>
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Contact Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
             </div>
+
         </div>
-        <div class="asmi-footer-bottom">
-            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
-            <span>ASMI Career · asmicareer.in</span>
+
+        <div class="footer-bottom">
+            <span class="footer-bottom-text">© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span class="footer-bottom-text">asmicareer.com · asmicareer.in</span>
         </div>
+
     </div>
 </footer>
 
+
 <script>
-    // Navbar shadow on scroll
+    /* ── Nav: scroll shadow ── */
     const nav = document.getElementById('mainNav');
     window.addEventListener('scroll', () => {
         nav.classList.toggle('scrolled', window.scrollY > 8);
     }, { passive: true });
 
-    // Mobile menu toggle
-    document.getElementById('hamburger').addEventListener('click', () => {
-        document.getElementById('mobileMenu').classList.toggle('open');
+    /* ── Nav: hamburger toggle ── */
+    const hamburger = document.getElementById('hamburger');
+    const drawer    = document.getElementById('navDrawer');
+
+    hamburger.addEventListener('click', () => {
+        const open = hamburger.classList.toggle('open');
+        drawer.classList.toggle('open', open);
+        hamburger.setAttribute('aria-expanded', open);
     });
 
-    // Smooth scroll
+    drawer.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            drawer.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    document.addEventListener('click', e => {
+        if (!nav.contains(e.target) && !drawer.contains(e.target)) {
+            hamburger.classList.remove('open');
+            drawer.classList.remove('open');
+            hamburger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    /* ── Smooth scroll for anchor links ── */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', e => {
             const el = document.querySelector(a.getAttribute('href'));
-            if (el) {
-                e.preventDefault();
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                document.getElementById('mobileMenu').classList.remove('open');
-            }
+            if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         });
     });
 
-    // Scroll reveal
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                observer.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    /* ── Problems: scroll-triggered animations ── */
+    if ('IntersectionObserver' in window) {
+        const animItems = document.querySelectorAll('[data-animate]');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const siblings = [...el.closest('.prob-table, .problems-inner').querySelectorAll('[data-animate]')];
+                    const idx = siblings.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.07) + 's';
+                    el.classList.add('visible');
+                    revealObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.12 });
+        animItems.forEach(el => revealObserver.observe(el));
+    } else {
+        document.querySelectorAll('[data-animate]').forEach(el => el.classList.add('visible'));
+    }
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    /* ── Why ASMI cards: staggered scroll reveal ── */
+    const whyCards = document.querySelectorAll('[data-why-animate]');
+    if (whyCards.length && 'IntersectionObserver' in window) {
+        const whyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const allCards = [...document.querySelectorAll('[data-why-animate]')];
+                    const idx = allCards.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.1) + 's';
+                    el.classList.add('visible');
+                    whyObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.1 });
+        whyCards.forEach(el => whyObserver.observe(el));
+    } else {
+        whyCards.forEach(el => el.classList.add('visible'));
+    }
+
+    /* ── Package cards: staggered scroll reveal ── */
+    const pkgCards = document.querySelectorAll('[data-pkg-animate]');
+    if (pkgCards.length && 'IntersectionObserver' in window) {
+        const pkgObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const allPkg = [...document.querySelectorAll('[data-pkg-animate]')];
+                    const idx = allPkg.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.1) + 's';
+                    el.classList.add('visible');
+                    pkgObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.1 });
+        pkgCards.forEach(el => pkgObserver.observe(el));
+    } else {
+        pkgCards.forEach(el => el.classList.add('visible'));
+    }
+
+    /* ── Generic .animate reveal ── */
+    const animateEls = document.querySelectorAll('.animate');
+    if (animateEls.length && 'IntersectionObserver' in window) {
+        const animateObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    animateObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        animateEls.forEach(el => animateObserver.observe(el));
+    } else {
+        animateEls.forEach(el => el.classList.add('visible'));
+    }
+
+    /* ── Testimonial cards: scroll reveal ── */
+    const testiCards = document.querySelectorAll('[data-testi-animate]');
+    if (testiCards.length && 'IntersectionObserver' in window) {
+        const testiObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const allTesti = [...document.querySelectorAll('[data-testi-animate]')];
+                    const idx = allTesti.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.1) + 's';
+                    el.classList.add('visible');
+                    testiObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.1 });
+        testiCards.forEach(el => testiObserver.observe(el));
+    } else { testiCards.forEach(el => el.classList.add('visible')); }
+
+    /* ── FAQ items: scroll reveal ── */
+    const faqItems = document.querySelectorAll('[data-faq-animate]');
+    if (faqItems.length && 'IntersectionObserver' in window) {
+        const faqObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const allFaq = [...document.querySelectorAll('[data-faq-animate]')];
+                    const idx = allFaq.indexOf(el);
+                    el.style.transitionDelay = (idx * 0.07) + 's';
+                    el.classList.add('visible');
+                    faqObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.1 });
+        faqItems.forEach(el => faqObserver.observe(el));
+    } else { faqItems.forEach(el => el.classList.add('visible')); }
 </script>
+
 </body>
 </html>
+
+
