@@ -1260,6 +1260,218 @@
         .packages-grid { grid-template-columns: 1fr; }
     }
 
+    /* ── Generic scroll-reveal ── */
+    .animate {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .animate.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══════════════════════════════════════
+       SECTION 11 — CTA BANNER
+    ═══════════════════════════════════════ */
+
+    .cta-banner {
+        position: relative;
+        background: linear-gradient(135deg, #1a0040 0%, #2D0A5E 50%, #6a0dad 100%);
+        padding: 100px 80px;
+        text-align: center;
+        overflow: hidden;
+    }
+    .cta-deco {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .cta-deco-1 {
+        width: 300px; height: 300px;
+        background: rgba(255,215,0,0.05);
+        top: -100px; right: -100px;
+    }
+    .cta-deco-2 {
+        width: 200px; height: 200px;
+        background: rgba(255,215,0,0.03);
+        bottom: -50px; left: -50px;
+    }
+    .cta-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 640px;
+        margin: 0 auto;
+    }
+    .cta-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 56px;
+        color: #FFD700;
+        line-height: 1.0;
+        letter-spacing: -0.02em;
+    }
+    .cta-sub {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 18px;
+        color: rgba(255,215,0,0.65);
+        max-width: 520px;
+        margin: 20px auto 0;
+        line-height: 1.6;
+    }
+    .cta-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 40px;
+    }
+    .cta-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 18px 44px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(255,215,0,0.35);
+    }
+    .cta-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        background: transparent;
+        color: #FFD700;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        padding: 18px 44px;
+        border-radius: 50px;
+        border: 2px solid rgba(255,215,0,0.35);
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.2s, border-color 0.2s;
+    }
+    .cta-btn-secondary:hover {
+        background: rgba(255,215,0,0.08);
+        border-color: rgba(255,215,0,0.55);
+    }
+    @media (max-width: 900px) {
+        .cta-banner { padding: 80px 40px; }
+        .cta-headline { font-size: 44px; }
+    }
+    @media (max-width: 640px) {
+        .cta-banner { padding: 60px 24px; }
+        .cta-headline { font-size: 36px; }
+        .cta-sub { font-size: 16px; }
+        .cta-buttons { flex-direction: column; gap: 12px; }
+        .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; font-size: 16px; padding: 16px 32px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 12 — FOOTER
+    ═══════════════════════════════════════ */
+
+    .footer {
+        background: #0d0020;
+        padding: 64px 80px 32px;
+    }
+    .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr;
+        gap: 48px;
+    }
+    .footer-logo-img {
+        height: 44px;
+        width: auto;
+        mix-blend-mode: screen;
+        display: block;
+        margin-bottom: 16px;
+    }
+    .footer-tagline {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: rgba(255,255,255,0.4);
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .footer-socials {
+        display: flex;
+        gap: 12px;
+    }
+    .footer-social {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        flex-shrink: 0;
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .footer-social:hover {
+        background: rgba(255,215,0,0.1);
+        border-color: rgba(255,215,0,0.3);
+        color: #FFD700;
+    }
+    .footer-col-header {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        color: rgba(255,255,255,0.3);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+        display: block;
+    }
+    .footer-link {
+        display: block;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: rgba(255,255,255,0.55);
+        text-decoration: none;
+        margin-bottom: 10px;
+        transition: color 0.2s;
+    }
+    .footer-link:hover { color: #FFD700; }
+    .footer-bottom {
+        margin-top: 48px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .footer-bottom-text {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: rgba(255,255,255,0.25);
+    }
+    @media (max-width: 900px) {
+        .footer { padding: 48px 40px 24px; }
+        .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 640px) {
+        .footer { padding: 40px 24px 24px; }
+        .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+        .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
     </style>
 </head>
 <body>
@@ -1783,6 +1995,79 @@
 </section>
 
 
+<!-- ════════════════════════════════
+     SECTION 11 — CTA BANNER
+════════════════════════════════ -->
+<section class="cta-banner" aria-labelledby="cta-heading">
+    <div class="cta-deco cta-deco-1" aria-hidden="true"></div>
+    <div class="cta-deco cta-deco-2" aria-hidden="true"></div>
+    <div class="cta-inner">
+        <h2 class="cta-headline animate" id="cta-heading">Take The First Step.</h2>
+        <p class="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
+        <div class="cta-buttons animate">
+            <a href="inquiry.html" class="cta-btn-primary">Book My Free Session →</a>
+            <a href="#" class="cta-btn-secondary">WhatsApp Us →</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION 12 — FOOTER
+════════════════════════════════ -->
+<footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+
+        <div class="footer-grid">
+
+            <div class="footer-col-brand">
+                <img src="asmi-logo.png" alt="ASMI Career" class="footer-logo-img"/>
+                <p class="footer-tagline">Guiding Futures, Building Doctors</p>
+                <div class="footer-socials" aria-label="Social media links">
+                    <a href="#" class="footer-social" aria-label="Facebook">f</a>
+                    <a href="#" class="footer-social" aria-label="Instagram">ig</a>
+                    <a href="#" class="footer-social" aria-label="YouTube">yt</a>
+                    <a href="#" class="footer-social" aria-label="WhatsApp">wa</a>
+                </div>
+            </div>
+
+            <div>
+                <span class="footer-col-header">Get</span>
+                <a href="#" class="footer-link">Counselling</a>
+                <a href="#" class="footer-link">Services</a>
+                <a href="#packages" class="footer-link">Packages</a>
+                <a href="/tools/cutoff-explorer" class="footer-link">Cutoff Explorer</a>
+                <a href="#" class="footer-link">Resources</a>
+            </div>
+
+            <div>
+                <span class="footer-col-header">Explore</span>
+                <a href="#" class="footer-link">Universities</a>
+                <a href="#" class="footer-link">Updates &amp; Events</a>
+                <a href="#" class="footer-link">Success Stories</a>
+                <a href="#" class="footer-link">FAQs</a>
+                <a href="#" class="footer-link">Webinars &amp; Video Guides</a>
+            </div>
+
+            <div>
+                <span class="footer-col-header">Company</span>
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Contact Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-bottom-text">© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span class="footer-bottom-text">asmicareer.com · asmicareer.in</span>
+        </div>
+
+    </div>
+</footer>
+
+
 <script>
     /* ── Nav: scroll shadow ── */
     const nav = document.getElementById('mainNav');
@@ -1882,6 +2167,22 @@
         pkgCards.forEach(el => pkgObserver.observe(el));
     } else {
         pkgCards.forEach(el => el.classList.add('visible'));
+    }
+
+    /* ── Generic .animate reveal ── */
+    const animateEls = document.querySelectorAll('.animate');
+    if (animateEls.length && 'IntersectionObserver' in window) {
+        const animateObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    animateObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        animateEls.forEach(el => animateObserver.observe(el));
+    } else {
+        animateEls.forEach(el => el.classList.add('visible'));
     }
 </script>
 
