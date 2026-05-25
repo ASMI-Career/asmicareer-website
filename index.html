@@ -30,6 +30,9 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .medical{
   width:50%;
   clip-path:polygon(0 0, 90% 0, 100% 100%, 0 100%);
+  background-image:url('AIIMS_Delhi.jpg');
+  background-size:cover;
+  background-position:center;
 }
 
 /* ── ENGINEERING ── */
@@ -37,6 +40,9 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   width:50%;
   clip-path:polygon(0 0, 100% 0, 100% 100%, 10% 100%);
   margin-left:-5%;
+  background-image:url('IIT_Bombay.jpg');
+  background-size:cover;
+  background-position:center;
 }
 
 /* ── HOVER EXPAND ── */
@@ -84,7 +90,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── CONTENT ── */
 .m-content,.e-content{
   position:relative;z-index:2;
-  height:100%;display:flex;flex-direction:column;
+  height:100vh;display:flex;flex-direction:column;
   justify-content:center;
 }
 .m-content{ padding:56px 52px; }
@@ -176,21 +182,27 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── CENTER LOGO ── */
 .center-logo{
-  position:absolute;left:49%;top:50%;
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
   z-index:20;pointer-events:none;
   display:flex;flex-direction:column;align-items:center;gap:8px;
   transition:opacity 0.3s ease;
 }
 .center-logo img{
-  height:88px;width:auto;object-fit:contain;
-  filter:drop-shadow(0 0 20px rgba(255,255,255,0.4))
-         drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  height:72px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 0 16px rgba(255,255,255,0.5))
+         drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
 .logo-tagline{
   font-size:9px;font-weight:700;letter-spacing:3px;
   text-transform:uppercase;color:rgba(255,255,255,0.3);
   white-space:nowrap;
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.split:has(.medical:hover) .logo-tagline,
+.split:has(.engineering:hover) .logo-tagline{
+  opacity:1;
 }
 
 /* ── TOP HINT ── */
@@ -229,7 +241,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   <!-- ══ MEDICAL ══ -->
   <div class="medical" id="medical">
 
-    <img class="bg-photo" src="AIIMS_Delhi.jpg" alt="AIIMS Delhi">
     <div class="bg-wash m-wash"></div>
     <div class="m-vignette"></div>
 
@@ -274,7 +285,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   <!-- ══ ENGINEERING ══ -->
   <div class="engineering" id="engineering">
 
-    <img class="bg-photo" src="IIT_Bombay.jpg" alt="IIT Bombay">
     <div class="bg-wash e-wash"></div>
 
     <!-- Circuit board pattern -->
