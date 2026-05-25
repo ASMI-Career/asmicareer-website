@@ -24,63 +24,52 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── MEDICAL ── */
 .medical{
+  position:absolute;
+  top:0;
+  left:0;
   width:52%;
+  height:100%;
   clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
   background-image:url('AIIMS_Delhi.jpg');
   background-size:cover;
   background-position:center;
-  transition:width 0.55s cubic-bezier(0.77,0,0.18,1),
-             clip-path 0.55s cubic-bezier(0.77,0,0.18,1);
   z-index:2;
 }
 
 /* ── ENGINEERING ── */
 .engineering{
-  width:52%;
-  margin-left:-4%;
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
   background-image:url('IIT_Bombay.jpg');
   background-size:cover;
   background-position:center;
   z-index:1;
-  transition:width 0.55s cubic-bezier(0.77,0,0.18,1),
-             margin-left 0.55s cubic-bezier(0.77,0,0.18,1);
+  display:flex;
+  justify-content:flex-end;
 }
 
 /* ── DIAGONAL EDGE LINE ── */
-.medical::after{
-  content:'';
-  position:absolute;
-  top:0;
-  right:0;
-  width:3px;
-  height:141%;
-  background:linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
-  transform-origin:top right;
-  transform:rotate(-6deg) translateY(-20%);
-  pointer-events:none;
-  z-index:3;
+.seam-line {
+  position: absolute;
+  inset: 0;
+  width: 52%;
+  height: 100%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  z-index: 3;
+  pointer-events: none;
 }
-
-/* ── HOVER EXPAND ── */
-.split:has(.medical:hover) .medical{
-  width:62%;
-  clip-path:polygon(0 0, 90% 0, 100% 100%, 0 100%);
+.seam-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
 }
-.split:has(.medical:hover) .engineering{
-  width:42%;
-  margin-left:-4%;
-}
-.split:has(.medical:hover) .center-logo{ left:58%; }
-
-.split:has(.engineering:hover) .medical{
-  width:42%;
-  clip-path:polygon(0 0, 86% 0, 100% 100%, 0 100%);
-}
-.split:has(.engineering:hover) .engineering{
-  width:62%;
-  margin-left:-4%;
-}
-.split:has(.engineering:hover) .center-logo{ left:42%; }
 
 /* ── BACKGROUND LAYERS ── */
 .bg-photo{
@@ -122,7 +111,8 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* HEADLINE */
 .headline{
   font-size:52px;font-weight:900;
-  line-height:1.0;margin-bottom:16px;
+  line-height:1.15; /* Changed from 1.0 to 1.15 to clear the overlapping letters */
+  margin-bottom:16px;
 }
 .m-headline{ color:#1a0040; }
 .m-headline span{ color:#6a0dad; }
@@ -207,17 +197,10 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   flex-direction:column;
   align-items:center;
   gap:6px;
-  background:rgba(0,0,0,0.25);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
   padding:10px 14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.15);
-  transition:left 0.55s cubic-bezier(0.77,0,0.18,1),
-             transform 0.55s cubic-bezier(0.77,0,0.18,1);
 }
 .center-logo img{
-  height:52px;
+  height:100px;
   width:auto;
   object-fit:contain;
 }
@@ -228,16 +211,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   text-transform:uppercase;
   color:rgba(255,255,255,0.45);
   white-space:nowrap;
-}
-
-/* ── TOP HINT ── */
-.top-hint{
-  position:absolute;top:20px;left:50%;
-  transform:translateX(-50%);z-index:30;
-  font-size:9px;letter-spacing:3px;text-transform:uppercase;
-  color:rgba(255,255,255,0.25);white-space:nowrap;
-  pointer-events:none;
-  transition:opacity 0.3s ease;
 }
 
 /* ── MOBILE ── */
@@ -306,7 +279,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
       </a>
     </div>
   </div>
-
+<div class="seam-line" id="seamLine"></div>
   <!-- ══ ENGINEERING ══ -->
   <div class="engineering" id="engineering">
 
@@ -373,15 +346,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   <!-- ══ CENTER LOGO ══ -->
   <div class="center-logo" id="centerLogo">
     <img src="asmi-logo.png" alt="">
-    <span class="logo-tagline">Choose Your Path</span>
-  </div>
-
-  <!-- ══ TOP HINT ══ -->
-  <div class="top-hint" id="topHint">
-    Hover to explore · Click to begin
-  </div>
-
-</div>
+     </div>
 
 <script>
 const medical    = document.getElementById('medical');
