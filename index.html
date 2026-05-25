@@ -21,15 +21,13 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .medical,.engineering{
   position:relative;overflow:hidden;cursor:pointer;
   transition:width 0.65s cubic-bezier(0.77,0,0.18,1),
-             clip-path 0.65s cubic-bezier(0.77,0,0.18,1),
-             opacity 0.3s ease,
-             margin-left 0.65s cubic-bezier(0.77,0,0.18,1);
+             opacity 0.3s ease;
 }
 
 /* ── MEDICAL ── */
 .medical{
-  width:50%;
-  clip-path:polygon(0 0, 90% 0, 100% 100%, 0 100%);
+  width:48%;
+  clip-path:none;
   background-image:url('AIIMS_Delhi.jpg');
   background-size:cover;
   background-position:center;
@@ -37,12 +35,25 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── ENGINEERING ── */
 .engineering{
-  width:50%;
-  clip-path:polygon(0 0, 100% 0, 100% 100%, 10% 100%);
-  margin-left:-5%;
+  width:52%;
+  clip-path:none;
+  margin-left:0;
   background-image:url('IIT_Bombay.jpg');
   background-size:cover;
   background-position:center;
+}
+
+/* ── SKEWED DIVIDER ── */
+.split::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:calc(48% - 40px);
+  width:80px;
+  height:100%;
+  background:linear-gradient(to bottom right, #FFD700 50%, #0a1628 50%);
+  z-index:5;
+  pointer-events:none;
 }
 
 /* ── HOVER EXPAND ── */
@@ -54,12 +65,9 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── CLICK EXPANDING STATES ── */
 .medical.expanding{
   width:100% !important;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%) !important;
 }
 .engineering.expanding{
   width:100% !important;
-  clip-path:polygon(0 0,100% 0,100% 100%,0 100%) !important;
-  margin-left:0 !important;
 }
 .side-collapsing{
   width:0% !important;
@@ -182,14 +190,14 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── CENTER LOGO ── */
 .center-logo{
-  position:absolute;left:50%;top:42%;
+  position:absolute;left:48%;top:50%;
   transform:translate(-50%,-50%);
-  z-index:20;pointer-events:none;
+  z-index:10;pointer-events:none;
   display:flex;flex-direction:column;align-items:center;gap:8px;
-  transition:opacity 0.3s ease;
+  transition:opacity 0.3s ease, transform 0.5s cubic-bezier(0.77,0,0.18,1);
 }
 .center-logo img{
-  height:60px;width:auto;object-fit:contain;
+  height:56px;width:auto;object-fit:contain;
   filter:drop-shadow(0 0 16px rgba(255,255,255,0.5))
          drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
@@ -203,6 +211,12 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .split:has(.medical:hover) .logo-tagline,
 .split:has(.engineering:hover) .logo-tagline{
   opacity:1;
+}
+.split:has(.medical:hover) .center-logo{
+  transform:translate(-60%,-50%);
+}
+.split:has(.engineering:hover) .center-logo{
+  transform:translate(-40%,-50%);
 }
 
 /* ── TOP HINT ── */
@@ -347,7 +361,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
   <!-- ══ CENTER LOGO ══ -->
   <div class="center-logo" id="centerLogo">
-    <img src="asmi-logo.png" alt="ASMI Career">
+    <img src="asmi-logo.png" alt="">
     <span class="logo-tagline">Choose Your Path</span>
   </div>
 
