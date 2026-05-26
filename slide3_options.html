@@ -768,6 +768,14 @@ function renderMCCOverview(){
     <div class="pd-stat"><span class="pd-stat-label">Deemed</span><span class="pd-stat-val">${di}/${dt}</span></div>`;
   document.getElementById('mcc-slim-count').textContent=`${ti}/${tt}`;
 }
+function toggleDeemedBand(id, btn){
+  const list=document.getElementById(id);
+  if(!list) return;
+  const isOpen=list.style.display==='block';
+  list.style.display=isOpen?'none':'block';
+  btn.textContent=isOpen?'▼ Show':'▲ Hide';
+  btn.style.color=isOpen?'rgba(255,255,255,0.6)':'#FFD700';
+}
 function renderMCCExpanded(){
   const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
   aiimsOpen=false;
@@ -831,11 +839,33 @@ function renderMCCExpanded(){
     const mbbsDemed=getColleges('DEEMED','MBBS',['OPEN'],'deemed');
     const bands=getDeemedBands(mbbsDemed);
     if(hasBDS) deemedHtml+=`<div class="deemed-label" style="margin-top:0;margin-bottom:6px">MBBS Deemed</div>`;
-    deemedHtml+=bands.map(b=>`
-      <div class="deemed-band">
-        <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
-        <div><div class="db-count">${b.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${b.total}</span></div><div class="db-sub">in reach / total</div></div>
-      </div>`).join('');
+    deemedHtml+=bands.map((b,i)=>{
+      const bandId=`deemed-mbbs-band-${i}`;
+      const colRows=isCounselMode()?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
+      const colTable=isCounselMode()?`
+        <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
+          <table class="ctable" style="width:100%">
+            <thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <tbody>${colRows}</tbody>
+          </table>
+        </div>`:'';
+      const expandBtn=isCounselMode()?`
+        <button onclick="toggleDeemedBand('${bandId}',this)" style="
+          background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;
+          color:rgba(255,255,255,0.6);font-size:11px;font-family:Montserrat,sans-serif;
+          font-weight:700;padding:3px 10px;cursor:pointer;margin-left:8px;
+          transition:.2s;">▼ Show</button>`:'';
+      return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
+          <div style="display:flex;align-items:center;">
+            <div><div class="db-count">${b.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${b.total}</span></div><div class="db-sub">in reach / total</div></div>
+            ${expandBtn}
+          </div>
+        </div>
+        ${colTable}
+      </div>`;
+    }).join('');
   }
 
   // BDS Deemed — MH+KA vs Rest
@@ -846,15 +876,38 @@ function renderMCCExpanded(){
     function bandStats(cols){return{inReach:cols.filter(c=>c.prob&&c.prob.key!=='reach').length,total:cols.length};}
     const s1=bandStats(mhKa),s2=bandStats(rest);
     if(hasMBBS) deemedHtml+=`<div class="deemed-label" style="margin-top:10px;margin-bottom:6px">BDS Deemed</div>`;
-    deemedHtml+=`
-      <div class="deemed-band">
-        <div><div class="db-fee">🏛️ MH & Karnataka Deemed</div><div class="db-label">Manipal · DY Patil · JSS · KLE and others</div></div>
-        <div><div class="db-count">${s1.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${s1.total}</span></div><div class="db-sub">in reach / total</div></div>
-      </div>
-      <div class="deemed-band">
-        <div><div class="db-fee">🌏 Other State Deemed</div><div class="db-label">Amrita · SRM · Saveetha and others</div></div>
-        <div><div class="db-count">${s2.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${s2.total}</span></div><div class="db-sub">in reach / total</div></div>
+
+    const bdsBands=[
+      {id:'deemed-bds-band-0',icon:'🏛️',label:'MH & Karnataka Deemed',sub:'Manipal · DY Patil · JSS · KLE and others',cols:mhKa,stats:s1},
+      {id:'deemed-bds-band-1',icon:'🌏',label:'Other State Deemed',sub:'Amrita · SRM · Saveetha and others',cols:rest,stats:s2},
+    ];
+
+    deemedHtml+=bdsBands.map(b=>{
+      const colRows=isCounselMode()?b.cols.map(c=>rowWithStar(c,'Deemed BDS','MCC AIQ')).join(''):'';
+      const colTable=isCounselMode()?`
+        <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
+          <table class="ctable" style="width:100%">
+            <thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <tbody>${colRows}</tbody>
+          </table>
+        </div>`:'';
+      const expandBtn=isCounselMode()?`
+        <button onclick="toggleDeemedBand('${b.id}',this)" style="
+          background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;
+          color:rgba(255,255,255,0.6);font-size:11px;font-family:Montserrat,sans-serif;
+          font-weight:700;padding:3px 10px;cursor:pointer;margin-left:8px;
+          transition:.2s;">▼ Show</button>`:'';
+      return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">${b.sub}</div></div>
+          <div style="display:flex;align-items:center;">
+            <div><div class="db-count">${b.stats.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${b.stats.total}</span></div><div class="db-sub">in reach / total</div></div>
+            ${expandBtn}
+          </div>
+        </div>
+        ${colTable}
       </div>`;
+    }).join('');
   }
   document.getElementById('deemed-bands').innerHTML=deemedHtml;
 }
