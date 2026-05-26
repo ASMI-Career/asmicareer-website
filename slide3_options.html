@@ -991,8 +991,8 @@ function expandOSState(stKey){
   document.getElementById('os-acc-header').style.display='block';
   document.getElementById('os-no-sel').style.display='none';
   const el=document.getElementById('os-college-list');
-  el.style.display='block';el.style.flex='1';el.style.overflow='hidden';
-  el.innerHTML=`<div style="height:100%;overflow-y:auto;border-radius:12px;border:1px solid var(--cb);background:rgba(255,255,255,.5);">${renderOSTable(stKey,found.colleges)}</div>`;
+  el.style.display='block';el.style.flex='1';el.style.overflow='visible';
+  el.innerHTML=`<div style="max-height:420px;overflow-y:auto;overflow-x:hidden;border-radius:12px;border:1px solid var(--cb);background:rgba(255,255,255,.5);">${renderOSTable(stKey,found.colleges)}</div>`;
 }
 
 // PANE CONTROL
