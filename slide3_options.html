@@ -545,11 +545,14 @@ function renderTable(cols,showState=false){
   <tbody>${rows}</tbody></table>`;
 }
 
-function rowWithStar(c, pool, poolGroup){
-  const starred  = isShortlisted(c.n);
-  const feeVal   = feeStr(c.n);
-  const actual   = c.openCutoff!==undefined ? c.openCutoff : c.c;
+function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
+  const starred   = isShortlisted(c.n);
+  const feeVal    = feeStr(c.n);
+  const actual    = c.openCutoff!==undefined ? c.openCutoff : c.c;
   const projected = actual + 15;
+  const catCell   = showCatCutoff
+    ? `<td class="cutoff-val" style="text-align:center;color:var(--purple)">${c.catCutoff!==undefined&&c.catCutoff!==null ? c.catCutoff : '—'}</td>`
+    : '';
   return `<tr>
     <td class="college-name">${c.n}</td>
     <td class="cutoff-val" style="text-align:center">${actual}</td>
@@ -559,6 +562,7 @@ function rowWithStar(c, pool, poolGroup){
         ${projected}
       </span>
     </td>
+    ${catCell}
     <td class="fee-val" style="text-align:center">${feeVal}</td>
     <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
     <td style="text-align:center">
@@ -606,7 +610,7 @@ function renderMHBlurred(cols){
   const previewHtml=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
     // Show all colleges with star buttons — no blur
-    const allRows=sorted.map(c=>rowWithStar(c,'MH','Maharashtra')).join('');
+    const allRows=sorted.map(c=>rowWithStar(c,'MH','Maharashtra',true)).join('');
     return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return previewHtml;
