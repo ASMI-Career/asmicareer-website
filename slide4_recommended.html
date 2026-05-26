@@ -352,7 +352,7 @@ function getStatus(score, lastCutoff){
   if(gap>=15)  return{key:'safe',      label:'Safe',       cls:'status-safe'};
   if(gap>=0)   return{key:'likely',    label:'Likely',     cls:'status-likely'};
   if(gap>=-10) return{key:'borderline',label:'Borderline', cls:'status-borderline'};
-  return             {key:'reach',     label:'Reach',      cls:'status-reach'};
+  return             {key:'reach',     label:'Out of Reach',cls:'status-reach'};
 }
 
 // ── GET COLLEGES ─────────────────────────────────────────────────
@@ -713,7 +713,7 @@ async function downloadShortlistPDF(){
     }
     const statusColor=c.probKey==='safe'?'#15803d':c.probKey==='likely'?'#0369a1':c.probKey==='borderline'?'#b45309':'#b91c1c';
     const statusBg=c.probKey==='safe'?'rgba(21,128,61,.12)':c.probKey==='likely'?'rgba(56,189,248,.12)':c.probKey==='borderline'?'rgba(251,146,60,.12)':'rgba(185,28,28,.08)';
-    const statusLabel=c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Reach';
+    const statusLabel=c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Out of Reach';
     tableRows+=`<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
       <td style="padding:7px 10px;font-size:11px;font-weight:700">${c.n}</td>
       <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:700">${c.c}</td>
