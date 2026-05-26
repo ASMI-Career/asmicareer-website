@@ -181,7 +181,6 @@ table.ctable th:not(:first-child){text-align:center;}
 .os-accordion{flex:1;min-height:0;display:flex;flex-direction:column;}
 .os-acc-header{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:5px;flex-shrink:0;}
 .os-no-sel{flex:1;display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--soft);}
-.os-summary{flex-shrink:0;margin-top:7px;background:rgba(255,255,255,.45);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:7px 12px;font-size:.68rem;color:var(--mid);}
 .no-data{padding:20px;text-align:center;font-size:.76rem;color:var(--soft);}
 .exp-count-badge{display:inline-block;background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;font-family:'Montserrat',sans-serif;font-weight:800;font-size:.75rem;padding:4px 14px;border-radius:20px;letter-spacing:.5px;margin-left:10px;vertical-align:middle;}
 /* SLIDE NAV */
@@ -404,7 +403,6 @@ table.ctable th:not(:first-child){text-align:center;}
         <div class="os-no-sel" id="os-no-sel">← Select a state above to view colleges</div>
         <div id="os-college-list" style="display:none;flex:1;min-height:0;"></div>
       </div>
-      <div class="os-summary" id="os-summary"></div>
     </div>
   </div>
 
@@ -975,8 +973,7 @@ function renderOpenExpanded(){
       <div class="os-state-name">${r.label}</div>
       <div class="os-count">${r.inReach}/${r.total} in reach</div>
     </div>`).join('')||'<div class="no-data">No open state colleges reachable at this score.</div>';
-  const hc=OPEN_STATES.length-osResults.length;
-  document.getElementById('os-summary').textContent=hc>0?`+ ${hc} more state${hc>1?'s':''} have colleges but below current score`:'All states shown';
+
   document.getElementById('os-no-sel').style.display='flex';
   document.getElementById('os-college-list').style.display='none';
   document.getElementById('os-acc-header').style.display='none';
