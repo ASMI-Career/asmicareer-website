@@ -852,10 +852,16 @@ function renderMCCExpanded(){
         aiqTotal=[...aiq,...extraCols];
         aiqReach=[...aiqR,...extraReach];
       }
-      return `<div class="mcc-count-card">
-        <div class="mcc-card-title">AIQ Govt</div>
-        <div class="mcc-card-num">${num(aiqReach.length,aiqTotal.length)}</div>
-        <div class="mcc-card-sub">${hasMBBS&&hasBDS?'MBBS + BDS combined':'colleges in reach'}</div>
+      const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ')).join(''):'';
+      const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
+      const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
+      return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="mcc-card-title">AIQ Govt</div>
+          <div><div class="mcc-card-num">${num(aiqReach.length,aiqTotal.length)}</div>
+          <div class="mcc-card-sub">${hasMBBS&&hasBDS?'MBBS + BDS combined':'colleges in reach'}</div></div>
+        </div>
+        ${aiqToggleBtn}
       </div>`;
     })()}
     <div class="mcc-count-card ${hasMBBS?'clickable':''}" id="aiims-card" ${hasMBBS?'onclick="toggleAIIMS()"':''}>
@@ -866,23 +872,37 @@ function renderMCCExpanded(){
         :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
            <div class="mcc-card-sub">BDS not applicable</div>`}
     </div>
-    <div class="mcc-count-card">
-      <div class="mcc-card-title">JIPMER</div>
-      ${hasMBBS
-        ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div>
-           <div class="mcc-card-sub">of ${jipmer.length} reachable</div>`
-        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
-           <div class="mcc-card-sub">BDS not applicable</div>`}
-    </div>
+    ${(()=>{
+      const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
+      const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
+      const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
+      return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="mcc-card-title">JIPMER</div>
+          <div>${hasMBBS
+            ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">of ${jipmer.length} reachable</div>`
+            :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div><div class="mcc-card-sub">BDS not applicable</div>`}
+          </div>
+        </div>
+        ${jipmerToggle}
+      </div>`;
+    })()}
     ${(()=>{
       const jmiCols=hasBDS?getColleges('CENTRAL','BDS',keys,'central').filter(c=>c.n.includes('Jamia')):[];
       const jmiR=jmiCols.filter(c=>c.prob&&c.prob.key!=='reach');
       const totalCentral=central.length+(hasBDS?jmiCols.length:0);
       const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
-      return `<div class="mcc-count-card">
-        <div class="mcc-card-title">Central Univ.</div>
-        <div class="mcc-card-num">${num(reachCentral,totalCentral)}</div>
-        <div class="mcc-card-sub">BHU · AMU${hasBDS?' · JMI':''}</div>
+      const centralAll=[...central,...(hasBDS?jmiCols:[])];
+      const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ')).join(''):'';
+      const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
+      const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
+      return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="mcc-card-title">Central Univ.</div>
+          <div><div class="mcc-card-num">${num(reachCentral,totalCentral)}</div>
+          <div class="mcc-card-sub">BHU · AMU${hasBDS?' · JMI':''}</div></div>
+        </div>
+        ${centralToggle}
       </div>`;
     })()}`;
   document.getElementById('aiims-list').innerHTML=aiims.length?renderAIIMSList(aiims):'';
