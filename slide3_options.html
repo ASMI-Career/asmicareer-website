@@ -550,8 +550,15 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
   const feeVal    = feeStr(c.n);
   const actual    = c.openCutoff!==undefined ? c.openCutoff : c.c;
   const projected = actual + 15;
-  const catCell   = showCatCutoff
-    ? `<td class="cutoff-val" style="text-align:center;color:var(--purple)">${c.catCutoff!==undefined&&c.catCutoff!==null ? c.catCutoff : '—'}</td>`
+  const catActual  = c.catCutoff!==undefined&&c.catCutoff!==null ? c.catCutoff : null;
+  const catProj    = catActual!==null ? catActual+15 : null;
+  const catCell    = showCatCutoff
+    ? `<td style="text-align:center">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <span class="cutoff-val" style="color:var(--purple)">${catActual!==null?catActual:'—'}</span>
+          ${catProj!==null?`<span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>`:''}
+        </div>
+      </td>`
     : '';
   return `<tr>
     <td class="college-name">${c.n}</td>
@@ -797,6 +804,33 @@ function toggleDeemedBand(id, btn){
   btn.textContent=isOpen?'▼ Show':'▲ Hide';
   btn.style.color=isOpen?'rgba(255,255,255,0.6)':'#FFD700';
 }
+function renderAIIMSList(cols){
+  if(!cols.length) return '';
+  const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||b.c-a.c);
+  const aiimsThead=`<thead><tr>
+    <th>College</th>
+    <th>Last Cutoff</th>
+    <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+    <th>Fee/yr</th>
+    <th>Chance</th>
+    ${isCounselMode()?'<th>★</th>':''}
+  </tr></thead>`;
+  const row=c=>{const actual=c.c,projected=actual+15;return`<tr>
+    <td class="college-name">${c.n}</td>
+    <td class="cutoff-val" style="text-align:center">${actual}</td>
+    <td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>
+    <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+    <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+  </tr>`;};
+  if(isCounselMode()){
+    const allRows=sorted.map(c=>rowWithStar(c,'AIIMS','MCC AIQ')).join('');
+    return`<table class="ctable">${aiimsThead}<tbody>${allRows}</tbody></table>`;
+  }
+  const preview=sorted.slice(0,5),rest=sorted.slice(5);
+  const previewHtml=`<table class="ctable">${aiimsThead}<tbody>${preview.map(row).join('')}</tbody></table>`;
+  if(!rest.length) return previewHtml;
+  return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all AIIMS options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+}
 function renderMCCExpanded(){
   const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
   aiimsOpen=false;
@@ -851,7 +885,7 @@ function renderMCCExpanded(){
         <div class="mcc-card-sub">BHU · AMU${hasBDS?' · JMI':''}</div>
       </div>`;
     })()}`;
-  document.getElementById('aiims-list').innerHTML=aiims.length?renderTable(aiims):'';
+  document.getElementById('aiims-list').innerHTML=aiims.length?renderAIIMSList(aiims):'';
   document.getElementById('aiims-list').classList.remove('open');
   let deemedHtml='';
 
