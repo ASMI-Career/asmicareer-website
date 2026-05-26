@@ -720,12 +720,12 @@ function computeMCC(){
     central,centralR:central.filter(c=>c.prob.key!=='reach'),deemed};
 }
 function getDeemedBands(deemed){
-  const bands=[{label:'₹10–20L / year',icon:'💰',min:10,max:20,inReach:0,total:0},
-    {label:'₹21–25L / year',icon:'💳',min:21,max:25,inReach:0,total:0},
-    {label:'₹26–35L / year',icon:'🏛️',min:26,max:35,inReach:0,total:0}];
+  const bands=[{label:'₹10–20L / year',icon:'💰',min:10,max:20,inReach:0,total:0,cols:[]},
+    {label:'₹21–25L / year',icon:'💳',min:21,max:25,inReach:0,total:0,cols:[]},
+    {label:'₹26–35L / year',icon:'🏛️',min:26,max:35,inReach:0,total:0,cols:[]}];
   deemed.forEach(col=>{
     const fee=FEE[col.n];if(!fee) return;
-    bands.forEach(b=>{if(fee>=b.min&&fee<=b.max){b.total++;if(col.prob.key!=='reach') b.inReach++;}});
+    bands.forEach(b=>{if(fee>=b.min&&fee<=b.max){b.total++;b.cols.push(col);if(col.prob.key!=='reach') b.inReach++;}});
   });
   return bands;
 }
@@ -841,7 +841,7 @@ function renderMCCExpanded(){
     if(hasBDS) deemedHtml+=`<div class="deemed-label" style="margin-top:0;margin-bottom:6px">MBBS Deemed</div>`;
     deemedHtml+=bands.map((b,i)=>{
       const bandId=`deemed-mbbs-band-${i}`;
-      const colRows=isCounselMode()?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
@@ -883,7 +883,7 @@ function renderMCCExpanded(){
     ];
 
     deemedHtml+=bdsBands.map(b=>{
-      const colRows=isCounselMode()?b.cols.map(c=>rowWithStar(c,'Deemed BDS','MCC AIQ')).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed BDS','MCC AIQ')).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
