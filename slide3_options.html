@@ -154,18 +154,17 @@ table.ctable th:not(:first-child){text-align:center;}
 .deemed-bands{display:flex;flex-direction:column;gap:8px;}
 .deemed-band{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;transition:.22s;overflow:visible;}
 .deemed-band:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
-.deemed-college-list{margin-top:8px;border-radius:8px;overflow-y:auto;max-height:280px;background:rgba(0,0,0,0.3);}
-.deemed-college-list .ctable{width:100%;background:transparent;}
-.deemed-college-list .ctable thead tr{background:rgba(26,0,64,0.8);}
-.deemed-college-list .ctable thead th{color:#FFD700;font-size:.72rem;padding:8px 10px;white-space:nowrap;}
-.deemed-college-list .ctable tbody tr{background:rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);}
-.deemed-college-list .ctable tbody tr:hover{background:rgba(255,255,255,0.1);}
-.deemed-college-list .ctable tbody td{color:rgba(255,255,255,0.85);font-size:.75rem;padding:8px 10px;}
-.deemed-college-list .college-name{color:#ffffff;font-weight:700;}
-.deemed-college-list .cutoff-val{color:#FFD700;font-weight:700;text-align:center;}
-.deemed-college-list .fee-val{color:rgba(255,255,255,0.6);text-align:center;}
-.deemed-college-list .prob{font-size:.68rem;padding:2px 8px;border-radius:6px;}
-.deemed-college-list button{color:rgba(255,255,255,0.6)!important;}
+.deemed-college-list{margin-top:8px;border-radius:8px;overflow-y:auto;max-height:280px;}
+.deemed-college-list .ctable{width:100%;}
+.deemed-college-list .ctable thead tr{background:var(--navy);}
+.deemed-college-list .ctable thead th{color:var(--yellow);font-size:.72rem;padding:8px 10px;white-space:nowrap;letter-spacing:.5px;}
+.deemed-college-list .ctable tbody tr{background:rgba(255,255,255,0.55);border-bottom:1px solid rgba(26,0,64,0.08);}
+.deemed-college-list .ctable tbody tr:nth-child(even){background:rgba(255,255,255,0.35);}
+.deemed-college-list .ctable tbody tr:hover{background:rgba(255,255,255,0.75);}
+.deemed-college-list .ctable tbody td{color:var(--navy);font-size:.75rem;padding:8px 10px;}
+.deemed-college-list .college-name{font-weight:700;color:var(--navy);}
+.deemed-college-list .cutoff-val{font-weight:800;color:var(--purple);text-align:center;}
+.deemed-college-list .fee-val{color:rgba(26,0,64,0.65);text-align:center;}
 .db-fee{font-family:'Montserrat';font-weight:900;font-size:1rem;color:var(--navy);}
 .db-label{font-size:.65rem;color:var(--soft);margin-top:2px;}
 .db-count{font-family:'Montserrat';font-weight:900;font-size:1.5rem;color:var(--purple);line-height:1;text-align:right;}
@@ -863,10 +862,10 @@ function renderMCCExpanded(){
         </div>`:'';
       const expandBtn=isCounselMode()?`
         <button onclick="toggleDeemedBand('${bandId}',this)" style="
-          background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;
-          color:rgba(255,255,255,0.6);font-size:11px;font-family:Montserrat,sans-serif;
-          font-weight:700;padding:3px 10px;cursor:pointer;margin-left:8px;
-          transition:.2s;">▼ Show</button>`:'';
+          background:rgba(26,0,64,0.1);border:1px solid rgba(26,0,64,0.25);border-radius:6px;
+          color:var(--navy);font-size:11px;font-family:Montserrat,sans-serif;
+          font-weight:700;padding:4px 12px;cursor:pointer;margin-left:8px;
+          transition:.2s;white-space:nowrap;">▼ Show</button>`:'';
       return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
@@ -905,10 +904,10 @@ function renderMCCExpanded(){
         </div>`:'';
       const expandBtn=isCounselMode()?`
         <button onclick="toggleDeemedBand('${b.id}',this)" style="
-          background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;
-          color:rgba(255,255,255,0.6);font-size:11px;font-family:Montserrat,sans-serif;
-          font-weight:700;padding:3px 10px;cursor:pointer;margin-left:8px;
-          transition:.2s;">▼ Show</button>`:'';
+          background:rgba(26,0,64,0.1);border:1px solid rgba(26,0,64,0.25);border-radius:6px;
+          color:var(--navy);font-size:11px;font-family:Montserrat,sans-serif;
+          font-weight:700;padding:4px 12px;cursor:pointer;margin-left:8px;
+          transition:.2s;white-space:nowrap;">▼ Show</button>`:'';
       return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">${b.sub}</div></div>
