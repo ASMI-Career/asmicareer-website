@@ -585,7 +585,7 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
 function renderMHBlurred(cols){
   const userCat=activeCategory(),showDual=(userCat!=='General');
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
-  const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
     Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)));
@@ -630,7 +630,7 @@ function renderMHBlurred(cols){
 
 function renderOSTable(stKey,cols){
   if(!cols.length) return '<div class="no-data">No colleges found.</div>';
-  const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
     Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)));
@@ -1022,10 +1022,11 @@ function computeOS(){
       allCols=cols;
     }
     if(inReachCount>0){
-      const sorted=allCols.sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+      const sorted=allCols.sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
       osResults.push({stKey,label:STATE_LABELS[stKey]||stKey,colleges:sorted,inReach:inReachCount,total:totalCount});
     }
   });
+  osResults.sort((a,b)=>b.inReach-a.inReach);
 }
 function renderOpenOverview(){
   computeOS();
