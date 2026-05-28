@@ -475,12 +475,12 @@ document.addEventListener('keydown', function(e){
   const prev = document.getElementById('navPrev');
   const next = document.getElementById('navNext');
   if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){
-    if(next && next.href && next.href !== '#' && !next.style.pointerEvents === 'none'){
+    if(next && next.href && next.href !== '#' && next.style.pointerEvents !== 'none'){
       e.preventDefault(); next.click();
     }
   }
   if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){
-    if(prev && prev.href && prev.href !== '#' && !prev.style.pointerEvents === 'none'){
+    if(prev && prev.href && prev.href !== '#' && prev.style.pointerEvents !== 'none'){
       e.preventDefault(); prev.click();
     }
   }
