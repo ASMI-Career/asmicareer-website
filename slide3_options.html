@@ -1146,13 +1146,16 @@ function renderAllOverviews(){renderMHOverview();renderMCCOverview();renderOpenO
 
 // KEYBOARD NAV
 document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
   const token=getSess().token||new URLSearchParams(location.search).get('token')||'';
   const isCounsel=getSess().mode==='counsel';
   const modeParam=isCounsel?'&mode=counsel':'';
   if(e.key==='Escape'&&currentPane){collapseAll();return;}
   if(currentPane) return;
-  if(e.key==='ArrowRight') window.location.href='slide4_recommended.html?token='+encodeURIComponent(token)+modeParam;
-  if(e.key==='ArrowLeft')  window.location.href='slide2_profile.html?token='+encodeURIComponent(token)+modeParam;
+  if(e.key==='ArrowRight'||e.key==='ArrowUp')
+    window.location.href='slide4_recommended.html?token='+encodeURIComponent(token)+modeParam;
+  if(e.key==='ArrowLeft'||e.key==='ArrowDown')
+    window.location.href='slide2_profile.html?token='+encodeURIComponent(token)+modeParam;
 });
 
 // INIT
