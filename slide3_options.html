@@ -342,9 +342,9 @@ table.ctable th:not(:first-child){text-align:center;}
       <div class="course-tabs">
         <button class="ctab active" onclick="setMHCourse('MBBS',this)">MBBS</button>
         <button class="ctab" onclick="setMHCourse('BDS',this)">BDS</button>
-        <button class="ctab" disabled title="Coming Soon">BPTH ⏳</button>
-        <button class="ctab" disabled title="Coming Soon">BAMS ⏳</button>
-        <button class="ctab" disabled title="Coming Soon">BHMS ⏳</button>
+        <button class="ctab" onclick="setMHCourse('BPTH',this)">BPTH</button>
+        <button class="ctab" onclick="setMHCourse('BAMS',this)">BAMS</button>
+        <button class="ctab" onclick="setMHCourse('BHMS',this)">BHMS</button>
       </div>
       <div class="sub-tabs">
         <button class="stab active" onclick="setMHTab('govt',this)">Govt Colleges</button>
@@ -1174,7 +1174,7 @@ async function init(){
     if(!sess.course)   setSess('course',(STUDENT.courses||'MBBS').split(',')[0].trim());
     // Set MH course to student's first MH-compatible course
     const stuC=(STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
-    mhCourse=stuC.find(c=>['MBBS','BDS'].includes(c))||'MBBS';
+    mhCourse=stuC.find(c=>['MBBS','BDS','BPTH','BAMS','BHMS'].includes(c))||'MBBS';
     document.querySelectorAll('.course-tabs .ctab').forEach(btn=>{
       if(!btn.disabled) btn.classList.toggle('active',btn.textContent.trim()===mhCourse);
     });
