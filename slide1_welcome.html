@@ -394,6 +394,17 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   document.getElementById('navNext').href = 'slide2_profile.html?token=' + encodeURIComponent(token);
   document.getElementById('startBtn').href =
     'slide2_profile.html?token=' + encodeURIComponent(token);
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e){
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  const next = document.getElementById('navNext');
+  if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){
+    if(next && next.href && next.style.pointerEvents !== 'none'){
+      e.preventDefault(); next.click();
+    }
+  }
+});
 </script>
 
 </body>
