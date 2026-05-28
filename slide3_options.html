@@ -550,16 +550,17 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
   const feeVal    = feeStr(c.n);
   const actual    = c.openCutoff!==undefined ? c.openCutoff : c.c;
   const projected = actual + 15;
-  const catActual  = c.catCutoff!==undefined&&c.catCutoff!==null ? c.catCutoff : null;
+  const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
   const catProj    = catActual!==null ? catActual+15 : null;
-  const catCell    = showCatCutoff
+  const catCell    = showCatCutoff && catActual!==null
     ? `<td style="text-align:center">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-          <span class="cutoff-val" style="color:var(--purple)">${catActual!==null?catActual:'—'}</span>
-          ${catProj!==null?`<span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>`:''}
+          <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
+          <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;
+            padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
         </div>
       </td>`
-    : '';
+    : showCatCutoff ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
   return `<tr>
     <td class="college-name">${c.n}</td>
     <td class="cutoff-val" style="text-align:center">${actual}</td>
@@ -604,8 +605,9 @@ function renderMHBlurred(cols){
   // fill to 5 from reach if still not enough
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
-  const catLabel=userCat+' Cutoff';
-  const dh=showDual?`<th style="color:rgba(255,215,0,.75)">${catLabel}</th>`:'';
+  const dh = activeCategory()==='General' || activeCategory()==='OPEN'
+    ? ''
+    : `<th>${activeCategory()} CUTOFF</th>`;
   function row(c){
     const oc=c.openCutoff!==null?`<td class="cutoff-val">${c.openCutoff}</td>`:`<td class="cutoff-val" style="color:#ccc">—</td>`;
     const cc=showDual?(c.catCutoff!==null?`<td class="cutoff-val" style="color:var(--purple);font-weight:900">${c.catCutoff}</td>`:`<td class="cutoff-val" style="color:#ccc">—</td>`):'';
@@ -617,7 +619,8 @@ function renderMHBlurred(cols){
   const previewHtml=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
     // Show all colleges with star buttons — no blur
-    const allRows=sorted.map(c=>rowWithStar(c,'MH','Maharashtra',true)).join('');
+    const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
+    const allRows=sorted.map(c=>rowWithStar(c,'MH','Maharashtra',showCat)).join('');
     return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return previewHtml;
