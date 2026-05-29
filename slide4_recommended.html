@@ -948,6 +948,35 @@ function getStateForCollege(name, pool, stKey){
   return '—';
 }
 
+function isShortlisted(name){
+  const shortlist = getSess().shortlist || [];
+  return shortlist.some(s=>s.n===name);
+}
+
+function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
+  const sess = getSess();
+  let shortlist = sess.shortlist || [];
+  if(isShortlisted(name)){
+    shortlist = shortlist.filter(s=>s.n!==name);
+  } else {
+    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee});
+  }
+  sess.shortlist = shortlist;
+  sessionStorage.setItem('asmi', JSON.stringify(sess));
+  // Update shortlist badge count
+  const badge = document.getElementById('totalBadge');
+  if(badge) badge.textContent = shortlist.length + ' shortlisted';
+  // Re-render shortlist tab if active
+  const sl = document.getElementById('s4-shortlist');
+  if(sl) sl.innerHTML = renderShortlistTable();
+  // Update star in top25 table
+  const btn = event.target;
+  if(btn) btn.textContent = isShortlisted(name) ? '★' : '☆';
+  // Update My Shortlist tab count
+  const tabs = document.querySelectorAll('.s4-tab');
+  if(tabs[1]) tabs[1].textContent = `★ My Shortlist (${shortlist.length})`;
+}
+
 function prob(score, cutoff){
   const projected = cutoff + 15;
   if(score >= projected + 15) return {key:'safe',       label:'Safe',         cls:'safe'};
