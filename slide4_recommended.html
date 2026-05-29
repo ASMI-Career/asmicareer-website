@@ -175,21 +175,21 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
 
 /* S4 TABS */
 .s4-tabs{display:flex;gap:8px;margin-bottom:20px;}
-.s4-tab{font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:800;padding:8px 20px;border-radius:20px;cursor:pointer;border:1.5px solid rgba(26,0,64,0.2);background:rgba(255,255,255,0.5);color:var(--navy);transition:.2s;letter-spacing:.3px;}
-.s4-tab.active{background:var(--navy);color:var(--yellow);border-color:var(--navy);}
+.s4-tab{font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:800;padding:8px 20px;border-radius:20px;cursor:pointer;border:1.5px solid rgba(26,0,64,0.2);background:rgba(255,255,255,0.5);color:#1a0040;transition:.2s;letter-spacing:.3px;}
+.s4-tab.active{background:#1a0040;color:#FFD700;border-color:#1a0040;}
 .s4-tab-content{display:none;}
 .s4-tab-content.active{display:block;}
 .top25-table{width:100%;border-collapse:collapse;}
-.top25-table thead tr{background:var(--navy);}
-.top25-table thead th{color:var(--yellow);font-size:.72rem;font-weight:700;padding:10px 12px;text-align:left;letter-spacing:.5px;white-space:nowrap;}
+.top25-table thead tr{background:#1a0040;}
+.top25-table thead th{color:#FFD700;font-size:.72rem;font-weight:700;padding:10px 12px;text-align:left;letter-spacing:.5px;white-space:nowrap;}
 .top25-table tbody tr{background:rgba(255,255,255,0.55);border-bottom:1px solid rgba(26,0,64,0.08);transition:background .15s;}
 .top25-table tbody tr:nth-child(even){background:rgba(255,255,255,0.35);}
 .top25-table tbody tr:hover{background:rgba(255,255,255,0.8);}
 .top25-table tbody td{padding:9px 12px;font-size:.76rem;color:var(--navy);}
 .top25-college-name{font-weight:800;}
-.top25-pool-badge{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(26,0,64,0.08);color:var(--navy);white-space:nowrap;}
-.top25-proj{background:linear-gradient(135deg,var(--navy),var(--purple));color:var(--yellow);padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;}
-.top25-divider{background:var(--purple);color:var(--yellow);font-size:.7rem;font-weight:800;padding:6px 12px;letter-spacing:1px;text-transform:uppercase;}
+.top25-pool-badge{font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(26,0,64,0.1);color:#1a0040;border:1px solid rgba(26,0,64,0.15);white-space:nowrap;display:inline-block;}
+.top25-proj{background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:2px 10px;border-radius:12px;font-size:.72rem;font-weight:800;display:inline-block;}
+.top25-divider{background:#6a0dad;color:#FFD700;font-size:.7rem;font-weight:800;padding:8px 12px;letter-spacing:1px;text-transform:uppercase;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
 @media (max-width: 768px) {
@@ -588,7 +588,7 @@ function renderTop25Table(){
       <th>State</th>
       <th>Pool</th>
       <th style="text-align:center">Last Cutoff</th>
-      <th style="text-align:center;background:linear-gradient(135deg,var(--navy),var(--purple));color:var(--yellow)">Projected</th>
+      <th style="text-align:center;background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;">Projected</th>
       <th style="text-align:center">Fee/yr</th>
       <th style="text-align:center">Chance</th>
       <th style="text-align:center">★</th>
