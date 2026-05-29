@@ -365,7 +365,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 <nav class="slide-nav">
   <a class="snav-btn" id="navPrev" href="#">←</a>
-  <span class="snav-label">SLIDE 2 OF 6</span>
+  <span class="snav-label" id="snavLabel">SLIDE 2 OF 6</span>
   <a class="snav-btn" id="navNext" href="#">→</a>
 </nav>
 
@@ -452,6 +452,7 @@ document.getElementById('navNext').href =
 if(isCounsel){
   document.getElementById('navPrev').style.opacity='0.2';
   document.getElementById('navPrev').style.pointerEvents='none';
+  document.getElementById('snavLabel').textContent='SLIDE 1 OF 3 — COUNSEL';
 }
 
 if (!token) {
