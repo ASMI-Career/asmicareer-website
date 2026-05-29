@@ -384,7 +384,7 @@ function getColleges(stateKey,courseKey,keys,listType){
       else if(col.c<seen.get(col.n).c) seen.set(col.n,col);
     });
   });
-  return Array.from(seen.values());
+  return Array.from(seen.values()).map(col=>({...col, prob:prob(score,col.c)}));
 }
 
 // ── MEDIAN FEE ───────────────────────────────────────────────────
@@ -572,7 +572,7 @@ function renderTop25Table(){
       <td style="text-align:center;font-weight:800;color:var(--purple)">${actual}</td>
       <td style="text-align:center"><span class="top25-proj">${projected}</span></td>
       <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
-      <td style="text-align:center"><span class="status ${c.prob.cls}">${c.prob.label}</span></td>
+      <td style="text-align:center"><span class="status status-${c.prob.key}">${c.prob.label}</span></td>
       <td style="text-align:center">
         <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
           style="background:none;border:none;cursor:pointer;font-size:1.1rem;">
@@ -950,16 +950,15 @@ function getStateForCollege(name, pool, stKey){
 
 function prob(score, cutoff){
   const projected = cutoff + 15;
-  if(score >= projected + 15) return {key:'safe',       label:'Safe',         cls:'status-safe'};
-  if(score >= projected)      return {key:'likely',     label:'Likely',       cls:'status-likely'};
-  if(score >= projected - 10) return {key:'borderline', label:'Borderline',   cls:'status-borderline'};
-  return                             {key:'reach',      label:'Out of Reach', cls:'status-reach'};
+  if(score >= projected + 15) return {key:'safe',       label:'Safe',         cls:'safe'};
+  if(score >= projected)      return {key:'likely',     label:'Likely',       cls:'likely'};
+  if(score >= projected - 10) return {key:'borderline', label:'Borderline',   cls:'borderline'};
+  return                             {key:'reach',      label:'Out of Reach', cls:'reach'};
 }
 
 function feeStr(name){
-  const f = FEE && FEE[name];
-  if(!f) return '—';
-  return `₹${f}L/yr`;
+  if(!FEE || !FEE[name]) return '—';
+  return `₹${Number(FEE[name]).toFixed(2)}L/yr`;
 }
 
 function getTop25(){
