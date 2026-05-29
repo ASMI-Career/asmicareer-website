@@ -870,7 +870,7 @@ function renderMCCExpanded(){
       <div class="mcc-card-title">AIIMS</div>
       ${hasMBBS
         ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
-           <div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
+           <div class="mcc-card-sub">colleges in reach</div>`
         :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
            <div class="mcc-card-sub">BDS not applicable</div>`}
     </div>
@@ -882,7 +882,7 @@ function renderMCCExpanded(){
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div class="mcc-card-title">JIPMER</div>
           <div>${hasMBBS
-            ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">of ${jipmer.length} reachable</div>`
+            ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">colleges in reach</div>`
             :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div><div class="mcc-card-sub">BDS not applicable</div>`}
           </div>
         </div>
