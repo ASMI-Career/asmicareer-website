@@ -136,16 +136,16 @@ table.ctable th:not(:first-child){text-align:center;}
 .cs-sub{font-size:.72rem;color:var(--soft);}
 /* MCC */
 .mcc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-shrink:0;margin-bottom:10px;}
-.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;text-align:right;}
 .mcc-count-card.clickable{cursor:pointer;}
 .mcc-count-card.clickable:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
 .mcc-count-card.active-card{background:linear-gradient(135deg,var(--navy),var(--purple));border-color:var(--purple);}
 .mcc-count-card.active-card .mcc-card-title{color:rgba(255,215,0,.8);}
 .mcc-count-card.active-card .mcc-card-num{color:#FFD700;}
 .mcc-count-card.active-card .mcc-card-sub{color:rgba(255,255,255,.55);}
-.mcc-card-title{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:3px;}
-.mcc-card-num{font-family:'Montserrat';font-weight:900;font-size:1.6rem;color:var(--navy);line-height:1;}
-.mcc-card-sub{font-size:.64rem;color:var(--soft);margin-top:2px;}
+.mcc-card-title{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:3px;text-align:left;align-self:flex-start;}
+.mcc-card-num{font-family:'Montserrat';font-weight:900;font-size:1.6rem;color:var(--navy);line-height:1;text-align:right;}
+.mcc-card-sub{font-size:.64rem;color:var(--soft);margin-top:2px;text-align:right;}
 .aiims-list{display:none;margin-bottom:8px;border-radius:10px;overflow:hidden;border:1px solid var(--cb);}
 .aiims-list.open{display:block;}
 /* DEEMED BANDS */
@@ -870,9 +870,9 @@ function renderMCCExpanded(){
       <div class="mcc-card-title">AIIMS</div>
       ${hasMBBS
         ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
-           <div class="mcc-card-sub" style="text-align:center">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
-        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft);text-align:center">N/A</div>
-           <div class="mcc-card-sub" style="text-align:center">BDS not applicable</div>`}
+           <div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
+        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
+           <div class="mcc-card-sub">BDS not applicable</div>`}
     </div>
     ${(()=>{
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
