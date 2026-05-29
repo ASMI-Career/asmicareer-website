@@ -1044,13 +1044,39 @@ function getTop25(){
   const seen = new Set();
   const unique = allCols.filter(c=>{ if(seen.has(c.n)) return false; seen.add(c.n); return true; });
 
-  // Split by probability
-  const safe   = unique.filter(c=>c.prob&&c.prob.key==='safe')
-                        .sort((a,b)=>b.c-a.c)
-                        .slice(0,20);
-  const likely = unique.filter(c=>c.prob&&c.prob.key==='likely')
-                        .sort((a,b)=>b.c-a.c)
-                        .slice(0,5);
+  // ── TIER DEFINITIONS ──────────────────────────────────────
+  const TIER_ORDER = {
+    'MH Govt':          1,
+    'MH Pvt':           2,
+    'AIIMS':            3,
+    'JIPMER':           3,
+    'Central':          3,
+    'Karnataka':        4,
+    'Telangana':        5,
+    'Andhra Pradesh':   6,
+    'Uttar Pradesh':    7,
+    'Deemed':           8,
+    // All other open states → tier 9
+  };
+
+  function getTier(col){
+    if(col.pool && col.pool.toLowerCase().includes('deemed')) return 8;
+    return TIER_ORDER[col.pool] || 9;
+  }
+
+  function tierSort(a, b){
+    const ta = getTier(a), tb = getTier(b);
+    if(ta !== tb) return ta - tb;
+    return b.c - a.c;
+  }
+
+  // Filter Safe and Likely separately
+  const safeAll  = unique.filter(c=>c.prob&&c.prob.key==='safe').sort(tierSort);
+  const likelyAll= unique.filter(c=>c.prob&&c.prob.key==='likely').sort(tierSort);
+
+  // Take top 20 safe + top 5 likely
+  const safe  = safeAll.slice(0,20);
+  const likely= likelyAll.slice(0,5);
 
   return [...safe, ...likely];
 }
