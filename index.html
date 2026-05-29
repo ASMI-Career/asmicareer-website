@@ -15,11 +15,17 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .split{
   display:flex;width:100%;height:100vh;
   position:relative;
+  perspective:1400px;
+  transform-style:preserve-3d;
 }
 
 /* ── SHARED SIDE STYLES ── */
 .medical,.engineering{
   position:relative;overflow:hidden;cursor:pointer;
+  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
+             filter 0.4s ease,
+             box-shadow 0.4s ease;
+  transform-origin:center center;
 }
 
 /* ── MEDICAL ── */
@@ -29,18 +35,19 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   left:0;
   width:52%;
   height:100%;
-  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  clip-path:url(#tearClip);
   background-image:url('AIIMS_Delhi.jpg');
   background-size:cover;
   background-position:center;
   z-index:2;
+  box-shadow:inset -8px 0 20px rgba(0,0,0,0.25);
 }
 
 /* ── ENGINEERING ── */
 .engineering{
   position:absolute;
   top:0;
-  right:0; /* ── CHANGE THIS FROM left TO right ── */
+  right:0;
   width:100%;
   height:100%;
   background-image:url('IIT_Bombay.jpg');
@@ -51,24 +58,36 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   justify-content:flex-end;
 }
 
+/* ── 3D HOVER ── */
+.medical:hover{
+  transform:translateZ(50px) scale(1.02);
+  filter:brightness(1.05);
+  box-shadow:0 40px 80px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.3);
+  z-index:5;
+}
+.engineering:hover{
+  transform:translateZ(50px) scale(1.02);
+  filter:brightness(1.05);
+  z-index:5;
+}
+.split:has(.medical:hover) .engineering{
+  transform:translateZ(-30px) scale(0.97);
+  filter:brightness(0.6);
+}
+.split:has(.engineering:hover) .medical{
+  transform:translateZ(-30px) scale(0.97);
+  filter:brightness(0.6);
+}
+
 /* ── DIAGONAL EDGE LINE ── */
 .seam-line {
   position: absolute;
   inset: 0;
   width: 52%;
   height: 100%;
-  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  clip-path:url(#tearClip);
   z-index: 3;
   pointer-events: none;
-}
-.seam-line::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 3px;
-  height: 100%;
-  background: linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
 }
 
 /* ── BACKGROUND LAYERS ── */
@@ -111,7 +130,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* HEADLINE */
 .headline{
   font-size:52px;font-weight:900;
-  line-height:1.15; /* Changed from 1.0 to 1.15 to clear the overlapping letters */
+  line-height:1.15;
   margin-bottom:16px;
 }
 .m-headline{ color:#1a0040; }
@@ -198,6 +217,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   align-items:center;
   gap:6px;
   padding:10px 14px;
+  transition:opacity 0.3s ease;
 }
 .center-logo img{
   height:100px;
@@ -256,14 +276,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   pointer-events: none;
   transition: opacity 0.15s ease-out;
 }
-.eng-wipe-overlay {
-  position: absolute;
-  top: 0; right: 0;
-  width: 48%; height: 0%;
-  background: #0a1628;
-  z-index: 6;
-  transition: height 0.45s cubic-bezier(0.77, 0, 0.18, 1);
-}
 
 /* ── ESSENTIAL TRANSITION TWEAKS ── */
 .m-content, .e-content {
@@ -276,6 +288,15 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 </style>
 </head>
 <body>
+
+<!-- Torn paper clip path — objectBoundingBox so it scales with the element -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <clipPath id="tearClip" clipPathUnits="objectBoundingBox">
+      <path d="M 0 0 L 0.880 0 L 0.898 0.05 L 0.873 0.10 L 0.915 0.15 L 0.889 0.20 L 0.928 0.25 L 0.902 0.30 L 0.942 0.35 L 0.916 0.40 L 0.952 0.45 L 0.926 0.50 L 0.963 0.55 L 0.944 0.60 L 0.978 0.65 L 0.956 0.70 L 0.990 0.75 L 0.971 0.80 L 0.998 0.85 L 0.977 0.90 L 1.000 0.95 L 1.000 1.0 L 0 1.0 Z"/>
+    </clipPath>
+  </defs>
+</svg>
 
 <div class="flash-curtain" id="flashCurtain"></div>
 <canvas id="globalCanvas"></canvas>
@@ -327,7 +348,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 <div class="engineering" id="engineering">
     <div class="bg-wash e-wash"></div>
     <canvas id="engCanvas"></canvas>
-    <div class="eng-wipe-overlay" id="engWipe"></div>
 
     <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
       <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
@@ -396,9 +416,8 @@ const medical      = document.getElementById('medical');
 const engineering  = document.getElementById('engineering');
 const seamLine     = document.getElementById('seamLine');
 const centerLogo   = document.getElementById('centerLogo');
-const mContent     = document.getElementById('mContent'); 
-const engContent   = document.getElementById('eContent'); 
-const engWipe      = document.getElementById('engWipe');
+const mContent     = document.getElementById('mContent');
+const engContent   = document.getElementById('eContent');
 const flashCurtain = document.getElementById('flashCurtain');
 
 const mCanvas = document.getElementById('globalCanvas');
@@ -409,7 +428,6 @@ const eCtx    = eCanvas.getContext('2d');
 
 let isTransitioning = false;
 
-// ── Stops CTA buttons from instantly jumping the page ──
 document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
 
@@ -417,190 +435,245 @@ document.getElementById('e-cta').addEventListener('click', function(e){ e.preven
 medical.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
-  
+
   const w = window.innerWidth;
   const h = window.innerHeight;
-  
-  mCanvas.style.display = 'block';
-  mCanvas.width = w;
-  mCanvas.height = h;
-  
-  engContent.style.opacity = '0';
-  centerLogo.style.opacity = '0';
 
-  const rect = mContent.getBoundingClientRect();
-  let particles = [];
-  for (let i = 0; i < 150; i++) {
-    particles.push({
-      x: rect.left + Math.random() * rect.width,
-      y: rect.top + Math.random() * rect.height,
-      alpha: 1,
-      targetProgress: Math.random()
+  // Step 1: fade out content over 300ms
+  mContent.style.opacity    = '0';
+  engContent.style.opacity  = '0';
+  centerLogo.style.opacity  = '0';
+
+  // Step 2 at 300ms: yellow flood expands from 52% to full viewport
+  setTimeout(function() {
+    var flood = document.createElement('div');
+    Object.assign(flood.style, {
+      position: 'fixed', inset: '0', zIndex: '50',
+      background: '#FFD700',
+      width: '52%', height: '100%',
+      transition: 'width 600ms cubic-bezier(0.77, 0, 0.18, 1)',
+      pointerEvents: 'none'
     });
-  }
+    document.body.appendChild(flood);
+    flood.getBoundingClientRect(); // force reflow before transition
+    flood.style.width = '100%';
 
-  mContent.style.opacity = '0';
+    // Step 3 at 900ms: show canvas, fade in logo
+    setTimeout(function() {
+      mCanvas.style.display = 'block';
+      mCanvas.width  = w;
+      mCanvas.height = h;
 
-  let animationStep = 0;
-  const totalNodes = 45;
-  let growthProgress = 0;
-  let timelineTicks = 0;
+      var logoImg = centerLogo.querySelector('img');
+      var maxDim  = 150;
+      var nw = logoImg.naturalWidth  || maxDim;
+      var nh = logoImg.naturalHeight || maxDim;
+      var sc = Math.min(maxDim / nw, maxDim / nh);
+      var logoW = nw * sc, logoH = nh * sc;
+      var logoX = (w - logoW) / 2, logoY = (h - logoH) / 2;
 
-  // ── Locked Vertical Trajectory at 35% Screen Width ──
-  const startX = w * 0.35;
-  const startY = h;
-  const endX = w * 0.35;
-  const endY = 0;
+      var logoAlpha    = 0;
+      var fadeInFrames = Math.round(400 / 16);
+      var fadeInCount  = 0;
 
-  const deltaX = endX - startX;
-  const deltaY = endY - startY;
-  const angleOfLine = Math.atan2(deltaY, deltaX);
+      var logoFadeIn = setInterval(function() {
+        fadeInCount++;
+        logoAlpha = Math.min(fadeInCount / fadeInFrames, 1);
+        mCtx.clearRect(0, 0, w, h);
+        mCtx.globalAlpha = logoAlpha;
+        mCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+        mCtx.globalAlpha = 1;
 
-  function renderGlobalCinematicLoop() {
-    mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
-    animationStep += 0.055;
-    timelineTicks++;
+        if (fadeInCount >= fadeInFrames) {
+          clearInterval(logoFadeIn);
 
-    particles.forEach(p => {
-      const destX = startX + deltaX * p.targetProgress;
-      const destY = startY + deltaY * p.targetProgress;
-      const dx = destX - p.x;
-      const dy = destY - p.y;
+          // Step 4: logo fades out while DNA helix fades in
+          var animationStep  = 0;
+          var growthProgress = 0;
+          var timelineTicks  = 0;
+          var overlapCount   = 0;
+          var overlapFrames  = Math.round(300 / 16);
+          var totalNodes     = 45;
 
-      p.x += dx * 0.06;
-      p.y += dy * 0.06;
+          var startX = w * 0.35, startY = h, endX = w * 0.35, endY = 0;
+          var deltaX = endX - startX, deltaY = endY - startY;
+          var angleOfLine = Math.atan2(deltaY, deltaX);
 
-      if (Math.abs(dx) > 2) {
-        mCtx.beginPath();
-        mCtx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-        mCtx.fillStyle = '#1a0040';
-        mCtx.fill();
-      } else {
-        p.alpha *= 0.85;
-        if (p.alpha > 0.02) {
-          mCtx.beginPath();
-          mCtx.arc(destX, destY, 2.5, 0, Math.PI * 2);
-          mCtx.fillStyle = `rgba(26, 0, 64, ${p.alpha})`;
-          mCtx.fill();
+          var dnaInterval = setInterval(function() {
+            mCtx.clearRect(0, 0, w, h);
+
+            overlapCount++;
+            var logoOut = Math.max(1 - overlapCount / overlapFrames, 0);
+            var helixIn = Math.min(overlapCount / overlapFrames, 1);
+
+            if (logoOut > 0) {
+              mCtx.globalAlpha = logoOut;
+              mCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+            }
+
+            animationStep += 0.055;
+            timelineTicks++;
+            if (timelineTicks > 20 && growthProgress < 1) growthProgress += 0.018;
+
+            mCtx.globalAlpha = helixIn;
+
+            for (var i = 0; i < totalNodes; i++) {
+              var nodeProgress = i / totalNodes;
+              if (nodeProgress > growthProgress) continue;
+
+              var centerX = startX + deltaX * nodeProgress;
+              var centerY = startY + deltaY * nodeProgress;
+              var angle1  = animationStep + (i * 0.28);
+              var angle2  = angle1 + Math.PI;
+              var radius  = 35 + nodeProgress * 20;
+              var orbitOffset1 = Math.sin(angle1) * radius;
+              var orbitOffset2 = Math.sin(angle2) * radius;
+              var perpAngle    = angleOfLine + Math.PI / 2;
+
+              var nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
+              var nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
+              var nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
+              var nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
+
+              mCtx.beginPath();
+              mCtx.moveTo(nodeX1, nodeY1);
+              mCtx.lineTo(nodeX2, nodeY2);
+              mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
+              mCtx.lineWidth   = 2.5;
+              mCtx.stroke();
+
+              var z1 = Math.cos(angle1), z2 = Math.cos(angle2);
+
+              mCtx.beginPath();
+              mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+              mCtx.fillStyle = z1 > 0 ? 'rgba(106,13,189,1)' : 'rgba(148,92,212,0.65)';
+              mCtx.fill();
+
+              mCtx.beginPath();
+              mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+              mCtx.fillStyle = z2 > 0 ? 'rgba(26,0,64,1)' : 'rgba(69,43,110,0.65)';
+              mCtx.fill();
+            }
+
+            mCtx.globalAlpha = 1;
+          }, 16);
+
+          // Step 5 at 2500ms total: white flash → navigate
+          setTimeout(function() {
+            clearInterval(dnaInterval);
+            flashCurtain.style.opacity = '1';
+            setTimeout(function() { window.location.href = 'medical.html'; }, 100);
+          }, 1200);
         }
-      }
-    });
-
-    if (timelineTicks > 20) {
-      if (growthProgress < 1) {
-        growthProgress += 0.018;
-      } else {
-        clearInterval(dnaInterval);
-        flashCurtain.style.opacity = '1';
-
-        setTimeout(() => {
-          medical.style.width = '100%';
-          seamLine.style.width = '100%';
-          medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
-          seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
-
-          setTimeout(() => {
-            flashCurtain.style.opacity = '0';
-            setTimeout(() => { window.location.href = 'medical.html'; }, 300);
-          }, 150);
-        }, 100);
-        return;
-      }
-    }
-
-    for (let i = 0; i < totalNodes; i++) {
-      const nodeProgress = i / totalNodes;
-      if (nodeProgress > growthProgress) continue;
-
-      const centerX = startX + deltaX * nodeProgress;
-      const centerY = startY + deltaY * nodeProgress;
-      const angle1 = animationStep + (i * 0.28);
-      const angle2 = angle1 + Math.PI;
-
-      const radius = 35 + (nodeProgress * 20);
-      const orbitOffset1 = Math.sin(angle1) * radius;
-      const orbitOffset2 = Math.sin(angle2) * radius;
-      const perpAngle = angleOfLine + Math.PI / 2;
-
-      const nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
-      const nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
-      const nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
-      const nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
-
-      mCtx.beginPath();
-      mCtx.moveTo(nodeX1, nodeY1);
-      mCtx.lineTo(nodeX2, nodeY2);
-      mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
-      mCtx.lineWidth = 2.5;
-      mCtx.stroke();
-
-      const z1 = Math.cos(angle1);
-      const z2 = Math.cos(angle2);
-
-      mCtx.beginPath();
-      mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
-      mCtx.fillStyle = z1 > 0 ? 'rgba(106, 13, 189, 1)' : 'rgba(148, 92, 212, 0.65)';
-      mCtx.fill();
-
-      mCtx.beginPath();
-      mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
-      mCtx.fillStyle = z2 > 0 ? 'rgba(26, 0, 64, 1)' : 'rgba(69, 43, 110, 0.65)';
-      mCtx.fill();
-    }
-  }
-  const dnaInterval = setInterval(renderGlobalCinematicLoop, 16);
+      }, 16);
+    }, 600);
+  }, 300);
 });
 
 // ── ENGINEERING TRANSITION CLICK ──
 engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
-  
-  mContent.style.opacity = '0';
+
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+
+  // Step 1: fade out content over 300ms
+  mContent.style.opacity   = '0';
   engContent.style.opacity = '0';
   centerLogo.style.opacity = '0';
-  
-  eCanvas.style.display = 'block';
-  eCanvas.width = window.innerWidth * 0.48;
-  eCanvas.height = window.innerHeight;
-  
-  const columns = Math.floor(eCanvas.width / 14);
-  const drops = Array(columns).fill(0);
-  
-  function drawMatrix() {
-    eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)'; 
-    eCtx.fillRect(0, 0, eCanvas.width, eCanvas.height);
-    eCtx.fillStyle = '#00C8B4'; 
-    eCtx.font = '900 12px monospace';
-    
-    for (let i = 0; i < drops.length; i++) {
-      const text = Math.random() > 0.5 ? "1" : "0";
-      const x = i * 14;
-      const y = drops[i] * 14;
-      eCtx.fillText(text, x, y);
-      
-      if (y > eCanvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-      drops[i]++;
-    }
-  }
-  const matrixInterval = setInterval(drawMatrix, 18);
-  
-  setTimeout(() => {
-    engWipe.style.height = '100%';
-    setTimeout(() => {
-      medical.style.width = '0%';
-      seamLine.style.width = '0%';
-      medical.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
-      seamLine.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
-      
-      setTimeout(() => { 
-        clearInterval(matrixInterval);
-        window.location.href = 'engineering.html';
-      }, 500);
-    }, 350);
-  }, 500);
+
+  // Step 2 at 300ms: dark flood expands from right edge to full viewport
+  setTimeout(function() {
+    var flood = document.createElement('div');
+    Object.assign(flood.style, {
+      position: 'fixed', top: '0', right: '0', bottom: '0', left: 'auto',
+      zIndex: '50',
+      background: '#0a1628',
+      width: '48%', height: '100%',
+      transition: 'width 600ms cubic-bezier(0.77, 0, 0.18, 1)',
+      pointerEvents: 'none'
+    });
+    document.body.appendChild(flood);
+    flood.getBoundingClientRect(); // force reflow before transition
+    flood.style.width = '100%';
+
+    // Step 3 at 900ms: engCanvas goes full viewport, logo fades in
+    setTimeout(function() {
+      Object.assign(eCanvas.style, {
+        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0',
+        width: '100vw', height: '100vh', zIndex: '99', display: 'block'
+      });
+      eCanvas.width  = w;
+      eCanvas.height = h;
+
+      var logoImg = centerLogo.querySelector('img');
+      var maxDim  = 150;
+      var nw = logoImg.naturalWidth  || maxDim;
+      var nh = logoImg.naturalHeight || maxDim;
+      var sc = Math.min(maxDim / nw, maxDim / nh);
+      var logoW = nw * sc, logoH = nh * sc;
+      var logoX = (w - logoW) / 2, logoY = (h - logoH) / 2;
+
+      var logoAlpha    = 0;
+      var fadeInFrames = Math.round(400 / 16);
+      var fadeInCount  = 0;
+
+      var logoFadeIn = setInterval(function() {
+        fadeInCount++;
+        logoAlpha = Math.min(fadeInCount / fadeInFrames, 1);
+        eCtx.clearRect(0, 0, w, h);
+        eCtx.globalAlpha = logoAlpha;
+        eCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+        eCtx.globalAlpha = 1;
+
+        if (fadeInCount >= fadeInFrames) {
+          clearInterval(logoFadeIn);
+
+          // Step 4: logo fades out, binary rain fades in
+          var columns = Math.floor(w / 14);
+          var drops   = Array.from({length: columns}, function() { return Math.floor(Math.random() * -20); });
+          var overlapCount  = 0;
+          var overlapFrames = Math.round(300 / 16);
+
+          var rainLoop = setInterval(function() {
+            overlapCount++;
+            var logoOut = Math.max(1 - overlapCount / overlapFrames, 0);
+            var rainIn  = Math.min(overlapCount / overlapFrames, 1);
+
+            eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)';
+            eCtx.fillRect(0, 0, w, h);
+
+            if (logoOut > 0) {
+              eCtx.globalAlpha = logoOut;
+              eCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+            }
+
+            eCtx.globalAlpha = rainIn;
+            eCtx.fillStyle   = '#00C8B4';
+            eCtx.font        = '900 12px monospace';
+
+            for (var i = 0; i < drops.length; i++) {
+              var text = Math.random() > 0.5 ? '1' : '0';
+              eCtx.fillText(text, i * 14, drops[i] * 14);
+              if (drops[i] * 14 > h && Math.random() > 0.975) drops[i] = 0;
+              drops[i]++;
+            }
+
+            eCtx.globalAlpha = 1;
+          }, 18);
+
+          // Step 5 at 2500ms total: dark flash → navigate
+          setTimeout(function() {
+            clearInterval(rainLoop);
+            flashCurtain.style.background = '#0a1628';
+            flashCurtain.style.opacity    = '1';
+            setTimeout(function() { window.location.href = 'engineering.html'; }, 100);
+          }, 1200);
+        }
+      }, 16);
+    }, 600);
+  }, 300);
 });
 </script>
 </body>
