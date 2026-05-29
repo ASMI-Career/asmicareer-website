@@ -121,7 +121,7 @@ table.ctable th:not(:first-child){text-align:center;}
 .quota{display:inline-block;font-family:'Montserrat';font-size:.55rem;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(106,13,173,.10);color:var(--purple);border:1px solid rgba(106,13,173,.2);}
 .quota-open{background:rgba(26,0,64,.08);color:var(--navy);border-color:rgba(26,0,64,.15);}
 /* BLUR SECTION */
-.blur-section{position:relative;overflow:hidden;}
+.blur-section{position:relative;overflow:hidden;min-height:80px;}
 .blur-content{filter:blur(3px);user-select:none;pointer-events:none;}
 .blur-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   background:rgba(26,0,64,.58);z-index:10;}
@@ -136,7 +136,7 @@ table.ctable th:not(:first-child){text-align:center;}
 .cs-sub{font-size:.72rem;color:var(--soft);}
 /* MCC */
 .mcc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-shrink:0;margin-bottom:10px;}
-.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;}
+.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
 .mcc-count-card.clickable{cursor:pointer;}
 .mcc-count-card.clickable:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
 .mcc-count-card.active-card{background:linear-gradient(135deg,var(--navy),var(--purple));border-color:var(--purple);}
@@ -350,7 +350,7 @@ table.ctable th:not(:first-child){text-align:center;}
         <button class="stab active" onclick="setMHTab('govt',this)">Govt Colleges</button>
         <button class="stab" onclick="setMHTab('pvt',this)">Private Colleges</button>
       </div>
-      <div id="mh-table-area" style="flex:1;min-height:0;overflow-y:auto;"></div>
+      <div id="mh-table-area" style="flex:1;min-height:0;overflow:visible;"></div>
     </div>
   </div>
 
@@ -624,8 +624,7 @@ function renderMHBlurred(cols){
     return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return previewHtml;
-  const blurHtml=`<table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table>`;
-  return`${previewHtml}<div class="blur-section"><div class="blur-content">${blurHtml}</div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+  return`${previewHtml}<div class="blur-section"><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
 }
 
 function renderOSTable(stKey,cols){
@@ -654,7 +653,7 @@ function renderOSTable(stKey,cols){
     return`<table class="ctable"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
-  return`${ph}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Full college list unlocked after registration</span></div></div></div>`;
+  return`${ph}<div class="blur-section"><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all ${cols.length} ${STATE_LABELS[stKey]||stKey} options<span>Schedule a session to unlock your complete list</span></div></div></div>`;
 }
 
 function getOSColleges(stKey,course){
@@ -867,13 +866,13 @@ function renderMCCExpanded(){
         ${aiqToggleBtn}
       </div>`;
     })()}
-    <div class="mcc-count-card ${hasMBBS?'clickable':''}" id="aiims-card" ${hasMBBS?'onclick="toggleAIIMS()"':''}>
+    <div class="mcc-count-card ${hasMBBS&&aiimsR.length>0?'clickable':''}" ${hasMBBS&&aiimsR.length>0?'id="aiims-card" onclick="toggleAIIMS()"':''}>
       <div class="mcc-card-title">AIIMS</div>
       ${hasMBBS
         ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
-           <div class="mcc-card-sub">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
-        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
-           <div class="mcc-card-sub">BDS not applicable</div>`}
+           <div class="mcc-card-sub" style="text-align:center">${aiimsR.length>0?'tap to view colleges':'below your reach'}</div>`
+        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft);text-align:center">N/A</div>
+           <div class="mcc-card-sub" style="text-align:center">BDS not applicable</div>`}
     </div>
     ${(()=>{
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
