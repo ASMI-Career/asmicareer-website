@@ -808,6 +808,133 @@ document.addEventListener('keydown',e=>{
   if((e.key==='ArrowRight'||e.key==='ArrowUp')&&!isCounsel) window.location.href='slide5_problems.html?token='+encodeURIComponent(token);
 });
 
+// ── TOP 25 BEST OPTIONS ───────────────────────────────────────
+const AIIMS_STATE_MAP = {
+  'AIIMS New Delhi':           'Delhi',
+  'AIIMS Delhi':               'Delhi',
+  'AIIMS Bhopal':              'Madhya Pradesh',
+  'AIIMS Bhubaneswar':         'Odisha',
+  'AIIMS Jodhpur':             'Rajasthan',
+  'AIIMS Patna':               'Bihar',
+  'AIIMS Raipur':              'Chhattisgarh',
+  'AIIMS Rishikesh':           'Uttarakhand',
+  'AIIMS Nagpur':              'Maharashtra',
+  'AIIMS Mumbai':              'Maharashtra',
+  'AIIMS Mangalagiri':         'Andhra Pradesh',
+  'AIIMS Bibinagar':           'Telangana',
+  'AIIMS Gorakhpur':           'Uttar Pradesh',
+  'AIIMS Rajkot':              'Gujarat',
+  'AIIMS Kalyani':             'West Bengal',
+  'AIIMS Deoghar':             'Jharkhand',
+  'AIIMS Guwahati':            'Assam',
+  'AIIMS Bathinda':            'Punjab',
+  'AIIMS Vijaypur':            'Jammu & Kashmir',
+  'AIIMS Madurai':             'Tamil Nadu',
+};
+
+const CENTRAL_STATE_MAP = {
+  'Institute of Medical Sciences, BHU':           'Uttar Pradesh',
+  'Jawaharlal Nehru Medical College, AMU':        'Uttar Pradesh',
+  'Jamia Hamdard':                                'Delhi',
+  'Faculty of Medicine, Jamia Millia Islamia':    'Delhi',
+};
+
+const OPEN_STATE_NAME_MAP = {
+  KA:'Karnataka', KL:'Kerala', TS:'Telangana', TN:'Tamil Nadu',
+  UP:'Uttar Pradesh', AP:'Andhra Pradesh', HR:'Haryana',
+  WB:'West Bengal', BR:'Bihar', UK:'Uttarakhand', CG:'Chhattisgarh',
+  PY:'Puducherry', JH:'Jharkhand', TR:'Tripura', MN:'Manipur',
+  ML:'Meghalaya', HP:'Himachal Pradesh',
+};
+
+function getStateForCollege(name, pool, stKey){
+  if(pool === 'MH Govt' || pool === 'MH Pvt') return 'Maharashtra';
+  if(pool === 'AIIMS'){
+    for(const k of Object.keys(AIIMS_STATE_MAP)){
+      if(name.includes(k.split(' ').slice(-1)[0]) || name.includes(k)) return AIIMS_STATE_MAP[k];
+    }
+    return 'All India';
+  }
+  if(pool === 'JIPMER'){
+    if(name.toLowerCase().includes('karaikal')) return 'Tamil Nadu';
+    return 'Puducherry';
+  }
+  if(pool === 'Central'){
+    for(const k of Object.keys(CENTRAL_STATE_MAP)){
+      if(name.includes('BHU')) return 'Uttar Pradesh';
+      if(name.includes('AMU')) return 'Uttar Pradesh';
+      if(name.includes('Jamia')) return 'Delhi';
+    }
+    return 'All India';
+  }
+  if(pool === 'Deemed') return stKey || 'All India';
+  if(stKey && OPEN_STATE_NAME_MAP[stKey]) return OPEN_STATE_NAME_MAP[stKey];
+  return '—';
+}
+
+function getTop25(){
+  const score  = activeScore();
+  const cat    = activeCategory();
+  const sess   = getSess();
+  const selectedCourses = (sess.course || activeCourse()).split(',').map(c=>c.trim());
+  const keys   = catKeys(cat);
+  const allCols = [];
+
+  function addCols(cols, pool, stKey){
+    cols.forEach(c=>{
+      const state = getStateForCollege(c.n, pool, stKey);
+      allCols.push({...c, pool, state});
+    });
+  }
+
+  selectedCourses.forEach(course=>{
+    // MH Govt + Pvt
+    addCols(getColleges('MH', course, keys, 'mh_govt'), 'MH Govt', 'MH');
+    addCols(getColleges('MH', course, keys, 'mh_pvt'),  'MH Pvt',  'MH');
+
+    if(course === 'MBBS'){
+      // AIIMS
+      addCols(getColleges('AIIMS','MBBS',keys,'aiims'), 'AIIMS', null);
+      // JIPMER
+      addCols(getColleges('JIPMER','MBBS',keys,'jipmer'), 'JIPMER', null);
+      // Central
+      addCols(getColleges('CENTRAL',course,keys,'central'), 'Central', null);
+      // Deemed — all 3 bands combined
+      const deemed = getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+      addCols(deemed, 'Deemed', null);
+      // Deemed state fix — use c.s from DB
+      allCols.filter(c=>c.pool==='Deemed').forEach(c=>{ c.state = c.s || 'All India'; });
+      // Open States
+      const OPEN_STATES = ['KA','KL','TS','TN','UP','AP','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
+      OPEN_STATES.forEach(stKey=>{
+        addCols(getColleges(stKey,course,['OPEN'],'open_pvt'), stKey, stKey);
+        // fix pool label
+        allCols.filter(c=>c.pool===stKey).forEach(c=>{ c.pool=OPEN_STATE_NAME_MAP[stKey]||stKey; });
+      });
+    }
+    if(course === 'BDS'){
+      addCols(getColleges('AIIMS','MBBS',keys,'aiims'), 'AIIMS', null);
+      const deemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
+      addCols(deemed, 'Deemed', null);
+      allCols.filter(c=>c.pool==='Deemed').forEach(c=>{ c.state = c.s || 'All India'; });
+    }
+  });
+
+  // Deduplicate by college name
+  const seen = new Set();
+  const unique = allCols.filter(c=>{ if(seen.has(c.n)) return false; seen.add(c.n); return true; });
+
+  // Split by probability
+  const safe   = unique.filter(c=>c.prob&&c.prob.key==='safe')
+                        .sort((a,b)=>b.c-a.c)
+                        .slice(0,20);
+  const likely = unique.filter(c=>c.prob&&c.prob.key==='likely')
+                        .sort((a,b)=>b.c-a.c)
+                        .slice(0,5);
+
+  return [...safe, ...likely];
+}
+
 // ── INIT ─────────────────────────────────────────────────────────
 async function init(){
   const params=new URLSearchParams(location.search);
