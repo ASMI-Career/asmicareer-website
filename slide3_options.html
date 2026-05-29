@@ -121,14 +121,14 @@ table.ctable th:not(:first-child){text-align:center;}
 .quota{display:inline-block;font-family:'Montserrat';font-size:.55rem;font-weight:800;padding:2px 6px;border-radius:5px;background:rgba(106,13,173,.10);color:var(--purple);border:1px solid rgba(106,13,173,.2);}
 .quota-open{background:rgba(26,0,64,.08);color:var(--navy);border-color:rgba(26,0,64,.15);}
 /* BLUR SECTION */
-.blur-section{position:relative;overflow:hidden;min-height:80px;}
+.blur-section{position:relative;width:100%;}
 .blur-content{filter:blur(3px);user-select:none;pointer-events:none;}
-.blur-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(26,0,64,.58);z-index:10;}
-.blur-overlay-inner{background:rgba(255,255,255,.10);border:1px solid rgba(255,215,0,.3);
-  border-radius:12px;padding:12px 20px;text-align:center;font-family:'Montserrat';
-  font-weight:800;font-size:.78rem;color:#FFD700;line-height:1.5;max-width:280px;}
-.blur-overlay-inner span{display:block;font-size:.65rem;font-weight:600;color:rgba(255,255,255,.6);margin-top:4px;}
+.blur-overlay{width:100%;background:rgba(45,10,94,0.85);border-radius:10px;padding:24px 20px;
+  text-align:center;margin-top:8px;display:flex;align-items:center;justify-content:center;
+  box-sizing:border-box;}
+.blur-overlay-inner{display:flex;flex-direction:column;align-items:center;gap:6px;
+  font-family:'Montserrat',sans-serif;font-size:.95rem;font-weight:800;color:#FFD700;}
+.blur-overlay-inner span{font-size:.78rem;color:rgba(255,215,0,.6);font-weight:500;}
 /* COMING SOON */
 .coming-soon-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .cs-icon{font-size:2rem;}
@@ -624,7 +624,7 @@ function renderMHBlurred(cols){
     return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return previewHtml;
-  return`${previewHtml}<div class="blur-section"><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+  return`${previewHtml}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
 }
 
 function renderOSTable(stKey,cols){
@@ -653,7 +653,7 @@ function renderOSTable(stKey,cols){
     return`<table class="ctable"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
-  return`${ph}<div class="blur-section"><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all ${cols.length} ${STATE_LABELS[stKey]||stKey} options<span>Schedule a session to unlock your complete list</span></div></div></div>`;
+  return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all ${cols.length} ${STATE_LABELS[stKey]||stKey} options<span>Schedule a session to unlock your complete list</span></div></div></div>`;
 }
 
 function getOSColleges(stKey,course){
@@ -831,7 +831,7 @@ function renderAIIMSList(cols){
   const preview=sorted.slice(0,5),rest=sorted.slice(5);
   const previewHtml=`<table class="ctable">${aiimsThead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(!rest.length) return previewHtml;
-  return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all AIIMS options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+  return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all AIIMS options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
 }
 function renderMCCExpanded(){
   const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
