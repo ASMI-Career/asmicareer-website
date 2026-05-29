@@ -614,12 +614,15 @@ async function downloadPDF(){
 
   // Build full A4 PDF div
   const pdfDiv=document.getElementById('pdfTemplate');
-  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;padding:30px;';
+  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:\'Helvetica\',Arial,sans-serif;padding:30px;';
   pdfDiv.innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
-      <div>
-        <div style="font-size:22px;font-weight:900;color:#1a0040;letter-spacing:-0.5px">ASMI Career</div>
-        <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Medical Admission Analysis Report</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="asmi-logo.png" style="height:48px;width:auto;object-fit:contain;" crossorigin="anonymous">
+        <div>
+          <div style="font-size:22px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif;letter-spacing:-0.5px">ASMI Career</div>
+          <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif">Medical Admission Analysis Report</div>
+        </div>
       </div>
       <div style="text-align:right;font-size:10px;color:#888;line-height:1.6">
         <div>Generated: ${date}</div>
@@ -655,7 +658,7 @@ async function downloadPDF(){
     </div>`;
 
   try{
-    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,logging:false});
+    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
     const imgData=canvas.toDataURL('image/png');
     const{jsPDF}=window.jspdf;
     const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
@@ -724,12 +727,15 @@ async function downloadShortlistPDF(){
   });
 
   const pdfDiv=document.getElementById('pdfTemplate');
-  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:Arial,sans-serif;padding:30px;';
+  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:\'Helvetica\',Arial,sans-serif;padding:30px;';
   pdfDiv.innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
-      <div>
-        <div style="font-size:22px;font-weight:900;color:#1a0040">ASMI Career</div>
-        <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Counselling Session — College Preference List</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <img src="asmi-logo.png" style="height:48px;width:auto;object-fit:contain;" crossorigin="anonymous">
+        <div>
+          <div style="font-size:22px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif">ASMI Career</div>
+          <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif">Counselling Session — College Preference List</div>
+        </div>
       </div>
       <div style="text-align:right;font-size:10px;color:#888;line-height:1.6">
         <div>Session Date: ${date}</div>
@@ -761,7 +767,7 @@ async function downloadShortlistPDF(){
     </div>`;
 
   try{
-    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,logging:false});
+    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
     const imgData=canvas.toDataURL('image/png');
     const{jsPDF}=window.jspdf;
     const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
