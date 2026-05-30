@@ -262,11 +262,10 @@ body:has(.engineering:hover) .center-logo {
   <defs>
     <!-- Medical: fills left of the tear edge -->
     <clipPath id="tearMed" clipPathUnits="userSpaceOnUse">
-      <path id="tearMedPath" d="M0,0 L638,0 L632,38 L618,52 L641,79 L624,94 L644,118 L621,139 L645,158 L628,177 L647,201 L625,218 L643,247 L619,263 L638,289 L617,308 L641,334 L622,351 L644,379 L620,398 L639,421 L616,442 L637,465 L614,488 L633,512 L611,531 L629,558 L608,578 L624,601 L603,624 L619,651 L601,672 L616,698 L598,718 L612,745 L594,768 L608,800 L0,800 Z"/>
+      <path id="tearMedPath" d=""/>
     </clipPath>
-    <!-- Engineering: fills right of the tear edge — exact mirror -->
     <clipPath id="tearEng" clipPathUnits="userSpaceOnUse">
-      <path id="tearEngPath" d="M638,0 L1600,0 L1600,800 L608,800 L594,768 L612,745 L598,718 L616,698 L601,672 L619,651 L603,624 L624,601 L608,578 L629,558 L611,531 L633,512 L614,488 L637,465 L616,442 L639,421 L620,398 L644,379 L622,351 L641,334 L617,308 L638,289 L619,263 L643,247 L625,218 L647,201 L628,177 L645,158 L621,139 L644,118 L624,94 L641,79 L618,52 L632,38 L638,0 Z"/>
+      <path id="tearEngPath" d=""/>
     </clipPath>
   </defs>
 </svg>
@@ -395,25 +394,50 @@ const eCanvas     = document.getElementById('engCanvas');
 
 let isTransitioning = false;
 
-// ── TEAR BOUNDARY HOVER ANIMATION ──
+// ── TEAR BOUNDARY — responsive build + hover animation ──
 const tearMedPath = document.getElementById('tearMedPath');
 const tearEngPath = document.getElementById('tearEngPath');
 
-const baseTearX = [638,632,618,641,624,644,621,645,628,647,625,643,619,638,617,641,622,644,620,639,616,637,614,633,611,629,608,624,603,619,601,616,598,612,594,608];
-const tearY     = [0,38,52,79,94,118,139,158,177,201,218,247,263,289,308,334,351,379,398,421,442,465,488,512,531,558,578,601,624,651,672,698,718,745,768,800];
+// dx offsets (px) from viewport center — same pattern at any screen width
+const tearDeltas = [
+  { dx: -6,  dy: 0    }, { dx: -8,  dy: 0.06 }, { dx: +3,  dy: 0.09 },
+  { dx: -14, dy: 0.13 }, { dx: +1,  dy: 0.16 }, { dx: -17, dy: 0.20 },
+  { dx: +6,  dy: 0.23 }, { dx: -20, dy: 0.29 }, { dx: +4,  dy: 0.33 },
+  { dx: -16, dy: 0.39 }, { dx: +5,  dy: 0.43 }, { dx: -19, dy: 0.46 },
+  { dx: +3,  dy: 0.52 }, { dx: -16, dy: 0.55 }, { dx: +7,  dy: 0.61 },
+  { dx: -21, dy: 0.64 }, { dx: +2,  dy: 0.69 }, { dx: -18, dy: 0.72 },
+  { dx: +5,  dy: 0.77 }, { dx: -22, dy: 0.81 }, { dx: +1,  dy: 0.86 },
+  { dx: -17, dy: 0.89 }, { dx: +6,  dy: 0.94 }, { dx: -14, dy: 1.0  },
+];
 
+let tearXs = [];
+let tearYs = [];
 let currentOffset = 0;
 let targetOffset  = 0;
 let tearFrame     = null;
 
+function buildTearPaths() {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const cx = W / 2;
+  tearXs = tearDeltas.map(p => cx + p.dx);
+  tearYs = tearDeltas.map(p => p.dy * H);
+  tearMedPath.setAttribute('d', buildMedPath(currentOffset));
+  tearEngPath.setAttribute('d', buildEngPath(currentOffset));
+}
+
 function buildMedPath(o) {
-  let d = `M0,0 L${638+o},0`;
-  for (let i = 1; i < baseTearX.length; i++) d += ` L${baseTearX[i]+o},${tearY[i]}`;
-  return d + ' L0,800 Z';
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  let d = `M0,0 L${tearXs[0]+o},0`;
+  for (let i = 1; i < tearXs.length; i++) d += ` L${tearXs[i]+o},${tearYs[i]}`;
+  return d + ` L0,${H} Z`;
 }
 function buildEngPath(o) {
-  let d = `M${638+o},0 L1600,0 L1600,800`;
-  for (let i = baseTearX.length - 1; i >= 0; i--) d += ` L${baseTearX[i]+o},${tearY[i]}`;
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  let d = `M${tearXs[0]+o},0 L${W},0 L${W},${H}`;
+  for (let i = tearXs.length - 1; i >= 0; i--) d += ` L${tearXs[i]+o},${tearYs[i]}`;
   return d + ' Z';
 }
 function animateTear() {
@@ -435,8 +459,11 @@ function setTearTarget(offset) {
   if (!tearFrame) tearFrame = requestAnimationFrame(animateTear);
 }
 
-medical.addEventListener('mouseenter',    () => setTearTarget(60));
-medical.addEventListener('mouseleave',    () => setTearTarget(0));
+buildTearPaths();
+window.addEventListener('resize', buildTearPaths);
+
+medical.addEventListener('mouseenter',     () => setTearTarget(60));
+medical.addEventListener('mouseleave',     () => setTearTarget(0));
 engineering.addEventListener('mouseenter', () => setTearTarget(-60));
 engineering.addEventListener('mouseleave', () => setTearTarget(0));
 
