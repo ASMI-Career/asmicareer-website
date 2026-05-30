@@ -655,7 +655,7 @@ function removeFromShortlist(name, btn){
 
 // ── PDF DOWNLOAD ─────────────────────────────────────────────────
 async function downloadPDF(){
-  if(isCounselMode()){ downloadShortlistPDF(); return; }
+  if(isCounselMode()){ downloadTop50PDF(); return; }
   const btn=document.getElementById('pdfBtn');
   btn.textContent='⏳ Generating...';
   btn.classList.add('loading');
@@ -765,111 +765,255 @@ async function downloadPDF(){
   }
 }
 
+function buildPDFHTML(title, subtitle, sections, studentData){
+  const {name, token, score, cat, date} = studentData;
+
+  let totalSafe=0, totalLikely=0;
+  Object.values(sections).forEach(section=>{
+    if(Array.isArray(section)){
+      totalSafe   += section.filter(c=>c.prob&&c.prob.key==='safe').length;
+      totalLikely += section.filter(c=>c.prob&&c.prob.key==='likely').length;
+    } else if(typeof section === 'object'){
+      Object.values(section).forEach(arr=>{
+        if(Array.isArray(arr)){
+          totalSafe   += arr.filter(c=>c.prob&&c.prob.key==='safe').length;
+          totalLikely += arr.filter(c=>c.prob&&c.prob.key==='likely').length;
+        }
+      });
+    }
+  });
+
+  function tableRows(cols){
+    if(!cols||!cols.length) return `<tr><td colspan="6" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
+    return cols.map((c,i)=>{
+      const actual    = c.openCutoff!==undefined?c.openCutoff:c.c;
+      const projected = actual+15;
+      const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
+      const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
+      const statusBg    = c.prob.key==='safe'?'rgba(21,128,61,.1)':c.prob.key==='likely'?'rgba(3,105,161,.1)':'rgba(185,28,28,.08)';
+      return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+        <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
+        <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
+        <td style="padding:6px 8px;font-size:10px;text-align:center;font-weight:700;font-family:Helvetica,Arial,sans-serif">${actual}</td>
+        <td style="padding:6px 8px;text-align:center">
+          <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projected}</span>
+        </td>
+        <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
+        <td style="padding:6px 8px;text-align:center">
+          <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function sectionBlock(sectionTitle, subsections){
+    let html = `<div style="margin-bottom:16px;">
+      <div style="background:#1a0040;color:#FFD700;font-family:Helvetica,Arial,sans-serif;font-weight:800;font-size:11px;padding:8px 12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0;">
+        ${sectionTitle}
+      </div>`;
+    Object.entries(subsections).forEach(([subTitle, cols])=>{
+      if(!cols||!cols.length) return;
+      html+=`
+        <div style="background:rgba(26,0,64,0.06);padding:4px 12px;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:700;color:#6a0dad;letter-spacing:1px;text-transform:uppercase;">
+          ${subTitle} — ${cols.length} options
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#2D0A5E;">
+              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Last Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Projected</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+            </tr>
+          </thead>
+          <tbody>${tableRows(cols)}</tbody>
+        </table>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  let sectionsHTML = '';
+  Object.entries(sections).forEach(([secTitle, subsections])=>{
+    sectionsHTML += sectionBlock(secTitle, subsections);
+  });
+
+  return `
+    <div style="font-family:Helvetica,Arial,sans-serif;background:#fff;padding:28px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="asmi-logo.png" style="height:44px;width:auto;" crossorigin="anonymous">
+          <div>
+            <div style="font-size:20px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif;">${title}</div>
+            <div style="font-size:9px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${subtitle}</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-size:9px;color:#888;line-height:1.6;font-family:Helvetica,Arial,sans-serif;">
+          <div>Generated: ${date}</div>
+          <div>asmicareer.com · 7410019077</div>
+        </div>
+      </div>
+      <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:14px;"></div>
+      <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:24px;flex-wrap:wrap;">
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Student</div><div style="font-weight:800;font-size:12px;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${name}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${token}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${cat}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Safe Options</div><div style="font-weight:900;font-size:18px;color:#15803d;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalSafe}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Likely Options</div><div style="font-weight:900;font-size:18px;color:#0369a1;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalLikely}</div></div>
+      </div>
+      ${sectionsHTML}
+      <div style="margin-top:16px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#aaa;text-align:center;font-family:Helvetica,Arial,sans-serif;">
+        ASMI Career · asmicareer.com · 7410019077 · Counselling Session Report · ${date}
+      </div>
+    </div>`;
+}
+
+async function downloadTop50PDF(){
+  const btn = document.getElementById('pdfBtn');
+  btn.textContent = '⏳ Generating...';
+  btn.classList.add('loading');
+
+  const name  = STUDENT.name||'Student';
+  const token = STUDENT.token||getSess().token||'—';
+  const score = activeScore();
+  const cat   = activeCategory();
+  const date  = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+  const data = getTop50();
+
+  const sections = {
+    'MH Process': {
+      'MH Government Colleges': data.mhProcess['MH Govt'],
+      'MH Private Colleges':    data.mhProcess['MH Pvt'],
+    },
+    'MCC Process': {
+      'AIIMS':                      data.mccProcess['AIIMS'],
+      'JIPMER':                     data.mccProcess['JIPMER'],
+      'Central Universities':       data.mccProcess['Central'],
+      'Deemed ₹10–20L/yr':         data.mccProcess['Deemed ₹10–20L/yr'],
+      'Deemed ₹21–25L/yr':         data.mccProcess['Deemed ₹21–25L/yr'],
+      'Deemed ₹26–35L/yr':         data.mccProcess['Deemed ₹26–35L/yr'],
+    },
+    'Open States': data.openStates,
+  };
+
+  const html = buildPDFHTML(
+    'ASMI Career',
+    'Counselling Session — Best Options Report',
+    sections,
+    {name, token, score, cat, date}
+  );
+
+  const pdfDiv = document.getElementById('pdfTemplate');
+  pdfDiv.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+  pdfDiv.innerHTML = html;
+
+  try{
+    const canvas = await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
+    const imgData = canvas.toDataURL('image/png');
+    const{jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW  = pageW;
+    const imgH  = (canvas.height*imgW)/canvas.width;
+    let yPos=0, remaining=imgH;
+    while(remaining>0){
+      pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
+      remaining-=pageH; yPos+=pageH;
+      if(remaining>0) pdf.addPage();
+    }
+    const safeName = name.replace(/[^a-zA-Z0-9]/g,'_');
+    pdf.save(`ASMI_BestOptions_${safeName}_${token}.pdf`);
+  }catch(err){
+    console.error('PDF error:',err);
+    alert('PDF generation failed. Try again.');
+  }finally{
+    pdfDiv.style.display='none';
+    btn.textContent='⬇ Best Options PDF';
+    btn.classList.remove('loading');
+  }
+}
+
 async function downloadShortlistPDF(){
-  const btn=document.getElementById('pdfBtn');
-  btn.textContent='⏳ Generating...';btn.classList.add('loading');
+  const btn = document.getElementById('pdfBtn');
+  btn.textContent = '⏳ Generating...';
+  btn.classList.add('loading');
 
-  const score=activeScore(),cat=activeCategory();
-  const name=STUDENT.name||'Student';
-  const token=STUDENT.token||getSess().token||'—';
-  const date=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-  const shortlist=getSess().shortlist||[];
+  const name  = STUDENT.name||'Student';
+  const token = STUDENT.token||getSess().token||'—';
+  const score = activeScore();
+  const cat   = activeCategory();
+  const date  = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const shortlist = getSess().shortlist||[];
 
-  const POOL_ORDER=['MH Govt','MH Private','AIQ Govt','AIIMS','JIPMER',
-    'Central Univ.','Deemed','Open States'];
-  const PROB_MAP={safe:0,likely:1,borderline:2,reach:3};
-  const sorted=[...shortlist].sort((a,b)=>{
-    const pa=POOL_ORDER.indexOf(a.pool),pb=POOL_ORDER.indexOf(b.pool);
-    if(pa!==pb) return pa-pb;
+  if(!shortlist.length){
+    alert('No colleges shortlisted yet. Star colleges in Slide 3 first.');
+    btn.textContent='⬇ Download PDF';
+    btn.classList.remove('loading');
+    return;
+  }
+
+  const POOL_ORDER = ['MH Govt','MH Pvt','AIIMS','JIPMER','Central','Deemed','Karnataka',
+    'Telangana','Andhra Pradesh','Uttar Pradesh','Kerala','Haryana','West Bengal',
+    'Bihar','Uttarakhand','Chhattisgarh','Puducherry','Jharkhand','Tripura'];
+  const PROB_MAP = {safe:0,likely:1,borderline:2,reach:3};
+
+  const sorted = [...shortlist].sort((a,b)=>{
+    const pa = POOL_ORDER.indexOf(a.pool), pb = POOL_ORDER.indexOf(b.pool);
+    if(pa!==pb) return (pa===-1?99:pa)-(pb===-1?99:pb);
     return (PROB_MAP[a.probKey]||0)-(PROB_MAP[b.probKey]||0);
   });
 
-  let lastPool='', tableRows='';
-  sorted.forEach((c,i)=>{
-    if(c.pool!==lastPool){
-      lastPool=c.pool;
-      tableRows+=`<tr style="background:#1a0040"><td colspan="5" style="color:#FFD700;font-weight:800;font-size:10px;padding:6px 10px;letter-spacing:1px;text-transform:uppercase">${c.pool}</td></tr>`;
-    }
-    const statusColor=c.probKey==='safe'?'#15803d':c.probKey==='likely'?'#0369a1':c.probKey==='borderline'?'#b45309':'#b91c1c';
-    const statusBg=c.probKey==='safe'?'rgba(21,128,61,.12)':c.probKey==='likely'?'rgba(56,189,248,.12)':c.probKey==='borderline'?'rgba(251,146,60,.12)':'rgba(185,28,28,.08)';
-    const statusLabel=c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Out of Reach';
-    tableRows+=`<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
-      <td style="padding:7px 10px;font-size:11px;font-weight:700">${c.n}</td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:700">${c.c}</td>
-      <td style="padding:7px 10px;text-align:center"><span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:900">${c.c+15}</span></td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center">${c.fee}</td>
-      <td style="padding:7px 10px;text-align:center"><span style="background:${statusBg};color:${statusColor};padding:2px 9px;border-radius:6px;font-size:10px;font-weight:800">${statusLabel}</span></td>
-    </tr>`;
+  const grouped = {};
+  sorted.forEach(c=>{
+    const pool = c.pool||'Other';
+    if(!grouped[pool]) grouped[pool]=[];
+    grouped[pool].push({
+      n:c.n, c:c.c, state:c.state||'—', pool:c.pool,
+      prob:{key:c.probKey,label:c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Out of Reach',cls:c.probKey},
+    });
   });
 
-  const pdfDiv=document.getElementById('pdfTemplate');
-  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:\'Helvetica\',Arial,sans-serif;padding:30px;';
-  pdfDiv.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <img src="asmi-logo.png" style="height:48px;width:auto;object-fit:contain;" crossorigin="anonymous">
-        <div>
-          <div style="font-size:22px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif">ASMI Career</div>
-          <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif">Counselling Session — College Preference List</div>
-        </div>
-      </div>
-      <div style="text-align:right;font-size:10px;color:#888;line-height:1.6">
-        <div>Session Date: ${date}</div>
-        <div>asmicareer.com · 7410019077</div>
-      </div>
-    </div>
-    <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:16px"></div>
-    <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;gap:28px;flex-wrap:wrap">
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div><div style="font-weight:800;font-size:13px;color:#1a0040;margin-top:2px">${name}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${token}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px">${score}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${cat}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Total Shortlisted</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px">${shortlist.length}</div></div>
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:11px">
-      <thead>
-        <tr style="background:#1a0040">
-          <th style="color:#FFD700;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.5px">College</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Last Cutoff</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Projected</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Fee/yr</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Status</th>
-        </tr>
-      </thead>
-      <tbody>${tableRows}</tbody>
-    </table>
-    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:9px;color:#aaa;text-align:center">
-      ASMI Career · asmicareer.com · 7410019077 · This preference list is prepared basis 2025–26 cutoffs with +15 projection
-    </div>`;
+  const sections = {'College Preference List': grouped};
+
+  const html = buildPDFHTML(
+    'ASMI Career',
+    'Counselling Session — College Preference List',
+    sections,
+    {name, token, score, cat, date}
+  );
+
+  const pdfDiv = document.getElementById('pdfTemplate');
+  pdfDiv.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+  pdfDiv.innerHTML = html;
 
   try{
-    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
-    const imgData=canvas.toDataURL('image/png');
-    const{jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pageW=pdf.internal.pageSize.getWidth();
-    const pageH=pdf.internal.pageSize.getHeight();
-    const imgW=pageW;
-    const imgH=(canvas.height*imgW)/canvas.width;
-    let yPos=0;
-    if(imgH<=pageH){
-      pdf.addImage(imgData,'PNG',0,0,imgW,imgH);
-    } else {
-      let remaining=imgH;
-      while(remaining>0){
-        pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
-        remaining-=pageH;yPos+=pageH;
-        if(remaining>0) pdf.addPage();
-      }
+    const canvas = await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
+    const imgData = canvas.toDataURL('image/png');
+    const{jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW  = pageW;
+    const imgH  = (canvas.height*imgW)/canvas.width;
+    let yPos=0, remaining=imgH;
+    while(remaining>0){
+      pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
+      remaining-=pageH; yPos+=pageH;
+      if(remaining>0) pdf.addPage();
     }
-    const safeName=name.replace(/[^a-zA-Z0-9]/g,'_');
+    const safeName = name.replace(/[^a-zA-Z0-9]/g,'_');
     pdf.save(`ASMI_PreferenceList_${safeName}_${token}.pdf`);
   }catch(err){
     console.error('PDF error:',err);
     alert('PDF generation failed. Try again.');
   }finally{
     pdfDiv.style.display='none';
-    btn.textContent='⬇ Download PDF';
+    btn.textContent='⬇ Shortlist PDF';
     btn.classList.remove('loading');
   }
 }
@@ -1196,6 +1340,17 @@ async function init(){
     document.getElementById('navNext').style.opacity='0.2';
     document.getElementById('navNext').style.pointerEvents='none';
     document.getElementById('snavLabel').textContent='SLIDE 3 OF 3 — COUNSEL';
+    const pdfBtn = document.getElementById('pdfBtn');
+    if(pdfBtn){
+      pdfBtn.textContent = '⬇ Best Options PDF';
+      pdfBtn.onclick = downloadTop50PDF;
+      const slBtn = document.createElement('button');
+      slBtn.textContent = '⬇ Shortlist PDF';
+      slBtn.className = pdfBtn.className;
+      slBtn.style.cssText = 'margin-left:8px;background:rgba(106,13,173,0.15);color:#6a0dad;border:1.5px solid #6a0dad;';
+      slBtn.onclick = downloadShortlistPDF;
+      pdfBtn.parentNode.insertBefore(slBtn, pdfBtn.nextSibling);
+    }
   }
   document.getElementById('nextBtn').href='slide5_problems.html?token='+encodeURIComponent(token);
 
