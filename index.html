@@ -48,21 +48,19 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   background-size:cover;
   background-position:center;
   z-index:1;
-  display:flex;
-  justify-content:flex-end;
   transition:filter 0.4s ease;
 }
 
-/* ── LIFT LAYERS — sit above panels, use mask-image (mask doesn't flatten 3D) ── */
+/* ── LIFT LAYERS ── */
 .lift-layer {
   position:absolute;
   top:0; left:0;
   width:100%; height:100%;
   opacity:0;
   pointer-events:none;
-  transition:opacity 0.35s ease,
-             transform 0.4s cubic-bezier(0.23,1,0.32,1),
-             box-shadow 0.4s ease;
+  transition:opacity 0.3s ease,
+             transform 0.45s cubic-bezier(0.34,1.56,0.64,1),
+             box-shadow 0.45s ease;
   transform:translateZ(0) scale(1);
 }
 #liftMedical {
@@ -70,12 +68,16 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   background-size:cover;
   background-position:center;
   z-index:10;
+  mask:url(#mMed);
+  -webkit-mask:url(#mMed);
 }
 #liftEngineering {
   background-image:url('IIT_Bombay.jpg');
   background-size:cover;
   background-position:center;
   z-index:10;
+  mask:url(#mEng);
+  -webkit-mask:url(#mEng);
 }
 
 /* ── BACKGROUND LAYERS ── */
@@ -94,15 +96,31 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   pointer-events:none;
 }
 
-/* ── CONTENT ── */
-.m-content,.e-content{
-  position:relative;z-index:2;
-  height:100%;display:flex;flex-direction:column;
+/* ── CONTENT — hoisted above lift layers, always visible ── */
+.m-content{
+  position:absolute;
+  top:0; left:0;
+  width:50%; height:100%;
+  display:flex;flex-direction:column;
   justify-content:center;
+  padding:56px 52px;
+  z-index:20;
+  pointer-events:none;
   transition:opacity 0.3s ease;
 }
-.m-content{ padding:56px 52px; }
-.e-content{ padding:56px 52px 56px 44%; }
+.e-content{
+  position:absolute;
+  top:0; right:0;
+  width:50%; height:100%;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding:56px 52px;
+  z-index:20;
+  pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+.m-content .cta,
+.e-content .cta{ pointer-events:auto; }
 
 /* EYEBROW */
 .eyebrow{
@@ -232,7 +250,18 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
     margin-left:0 !important;
   }
   .lift-layer{ display:none; }
-  .m-content,.e-content{ padding:32px 28px; }
+  .m-content{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:50vh;
+    padding:32px 28px;
+  }
+  .e-content{
+    position:absolute;
+    top:50vh; left:0;
+    width:100%; height:50vh;
+    padding:32px 28px;
+  }
   .headline{ font-size:32px !important; }
   .e-headline{ font-size:30px !important; }
   .stat-num{ font-size:22px !important; }
@@ -263,7 +292,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 </head>
 <body>
 
-<!-- Torn paper clip paths — JS fills d attributes on load/resize -->
+<!-- Torn paper clip paths + SVG masks — JS fills d attributes on load/resize -->
 <svg width="0" height="0" style="position:absolute;pointer-events:none;overflow:hidden;">
   <defs>
     <clipPath id="tearMed" clipPathUnits="userSpaceOnUse">
@@ -272,6 +301,12 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
     <clipPath id="tearEng" clipPathUnits="userSpaceOnUse">
       <path id="tearEngPath" d=""/>
     </clipPath>
+    <mask id="mMed">
+      <path id="maskMedPath" d="" fill="white"/>
+    </mask>
+    <mask id="mEng">
+      <path id="maskEngPath" d="" fill="white"/>
+    </mask>
   </defs>
 </svg>
 
@@ -285,46 +320,8 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 <div class="split" id="split">
   <div class="medical" id="medical">
-
     <div class="bg-wash m-wash"></div>
     <div class="m-vignette"></div>
-
-    <div class="m-content" id="mContent">
-      <p class="eyebrow m-eyebrow">Medical</p>
-      <h1 class="headline m-headline">
-        Every NEET Score<br>
-        Deserves The<br>
-        <span>Best College.</span>
-      </h1>
-      <p class="sub m-sub">
-        Guiding 25,000+ students to their dream medical
-        seats through data-driven counselling.
-      </p>
-      <div class="tags">
-        <span class="tag m-tag">NEET UG</span>
-        <span class="tag m-tag">MBBS</span>
-        <span class="tag m-tag">BDS</span>
-        <span class="tag m-tag">AYUSH</span>
-        <span class="tag m-tag">BPTH</span>
-      </div>
-      <div class="stats">
-        <div class="stat m-stat">
-          <span class="stat-num">25K+</span>
-          <span class="stat-lbl">Admissions</span>
-        </div>
-        <div class="stat m-stat">
-          <span class="stat-num">11+</span>
-          <span class="stat-lbl">Years Experience</span>
-        </div>
-        <div class="stat m-stat">
-          <span class="stat-num">4.9★</span>
-          <span class="stat-lbl">User Rating</span>
-        </div>
-      </div>
-      <a href="medical.html" class="cta m-cta" id="m-cta">
-        Start NEET Journey →
-      </a>
-    </div>
   </div>
 
   <div class="engineering" id="engineering">
@@ -348,48 +345,86 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
       <circle cx="260" cy="600" r="3" fill="rgba(0,200,180,0.2)"/>
       <circle cx="420" cy="620" r="3" fill="rgba(0,200,180,0.2)"/>
     </svg>
-
-    <div class="e-content" id="eContent">
-      <p class="eyebrow e-eyebrow">Engineering</p>
-      <h1 class="headline e-headline">
-        Engineering Counselling<br>
-        Built Around <span>Your<br>
-        Rank & Branch.</span>
-      </h1>
-      <p class="sub e-sub">
-        Guiding students to their dream engineering colleges
-        and branches through data-driven counselling.
-      </p>
-      <div class="tags">
-        <span class="tag e-tag">JEE</span>
-        <span class="tag e-tag">MHT-CET</span>
-        <span class="tag e-tag">BITS</span>
-        <span class="tag e-tag">Manipal</span>
-        <span class="tag e-tag">VIT</span>
-      </div>
-      <div class="stats">
-        <div class="stat e-stat">
-          <span class="stat-num">10K+</span>
-          <span class="stat-lbl">Admissions</span>
-        </div>
-        <div class="stat e-stat">
-          <span class="stat-num">500+</span>
-          <span class="stat-lbl">Colleges</span>
-        </div>
-        <div class="stat e-stat">
-          <span class="stat-num">All India</span>
-          <span class="stat-lbl">Reach</span>
-        </div>
-      </div>
-      <a href="engineering.html" class="cta e-cta" id="e-cta">
-        Find My Branch & College →
-      </a>
-    </div>
   </div>
 
-  <!-- Lift layers — mask-image allows translateZ (unlike clip-path) -->
+  <!-- Lift layers — SVG mask allows translateZ (unlike clip-path) -->
   <div class="lift-layer" id="liftMedical"></div>
   <div class="lift-layer" id="liftEngineering"></div>
+
+  <!-- Content hoisted above lift layers — always visible, pointer-events:none lets clicks through -->
+  <div class="m-content" id="mContent">
+    <p class="eyebrow m-eyebrow">Medical</p>
+    <h1 class="headline m-headline">
+      Every NEET Score<br>
+      Deserves The<br>
+      <span>Best College.</span>
+    </h1>
+    <p class="sub m-sub">
+      Guiding 25,000+ students to their dream medical
+      seats through data-driven counselling.
+    </p>
+    <div class="tags">
+      <span class="tag m-tag">NEET UG</span>
+      <span class="tag m-tag">MBBS</span>
+      <span class="tag m-tag">BDS</span>
+      <span class="tag m-tag">AYUSH</span>
+      <span class="tag m-tag">BPTH</span>
+    </div>
+    <div class="stats">
+      <div class="stat m-stat">
+        <span class="stat-num">25K+</span>
+        <span class="stat-lbl">Admissions</span>
+      </div>
+      <div class="stat m-stat">
+        <span class="stat-num">11+</span>
+        <span class="stat-lbl">Years Experience</span>
+      </div>
+      <div class="stat m-stat">
+        <span class="stat-num">4.9★</span>
+        <span class="stat-lbl">User Rating</span>
+      </div>
+    </div>
+    <a href="medical.html" class="cta m-cta" id="m-cta">
+      Start NEET Journey →
+    </a>
+  </div>
+
+  <div class="e-content" id="eContent">
+    <p class="eyebrow e-eyebrow">Engineering</p>
+    <h1 class="headline e-headline">
+      Engineering Counselling<br>
+      Built Around <span>Your<br>
+      Rank & Branch.</span>
+    </h1>
+    <p class="sub e-sub">
+      Guiding students to their dream engineering colleges
+      and branches through data-driven counselling.
+    </p>
+    <div class="tags">
+      <span class="tag e-tag">JEE</span>
+      <span class="tag e-tag">MHT-CET</span>
+      <span class="tag e-tag">BITS</span>
+      <span class="tag e-tag">Manipal</span>
+      <span class="tag e-tag">VIT</span>
+    </div>
+    <div class="stats">
+      <div class="stat e-stat">
+        <span class="stat-num">10K+</span>
+        <span class="stat-lbl">Admissions</span>
+      </div>
+      <div class="stat e-stat">
+        <span class="stat-num">500+</span>
+        <span class="stat-lbl">Colleges</span>
+      </div>
+      <div class="stat e-stat">
+        <span class="stat-num">All India</span>
+        <span class="stat-lbl">Reach</span>
+      </div>
+    </div>
+    <a href="engineering.html" class="cta e-cta" id="e-cta">
+      Find My Branch & College →
+    </a>
+  </div>
 </div>
 
 <script>
@@ -405,9 +440,11 @@ const liftEng     = document.getElementById('liftEngineering');
 
 let isTransitioning = false;
 
-// ── TEAR BOUNDARY — responsive, static, built on load/resize ──
-const tearMedPath = document.getElementById('tearMedPath');
-const tearEngPath = document.getElementById('tearEngPath');
+// ── TEAR BOUNDARY — responsive, static, rebuilt on load/resize ──
+const tearMedPath  = document.getElementById('tearMedPath');
+const tearEngPath  = document.getElementById('tearEngPath');
+const maskMedPath  = document.getElementById('maskMedPath');
+const maskEngPath  = document.getElementById('maskEngPath');
 
 const tearDeltas = [
   { dx: -6,  dy: 0    }, { dx: -8,  dy: 0.06 }, { dx: +3,  dy: 0.09 },
@@ -427,7 +464,6 @@ function buildTearPaths() {
   const xs = tearDeltas.map(p => cx + p.dx);
   const ys = tearDeltas.map(p => p.dy * H);
 
-  // Clip-path d strings
   let medD = `M0,0 L${xs[0]},0`;
   for (let i = 1; i < xs.length; i++) medD += ` L${xs[i]},${ys[i]}`;
   medD += ` L0,${H} Z`;
@@ -436,24 +472,13 @@ function buildTearPaths() {
   for (let i = xs.length - 1; i >= 0; i--) engD += ` L${xs[i]},${ys[i]}`;
   engD += ' Z';
 
+  // Clip-paths for base panels
   tearMedPath.setAttribute('d', medD);
   tearEngPath.setAttribute('d', engD);
 
-  // Inline SVG masks for lift layers (mask-image doesn't flatten 3D)
-  const medSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs><mask id='mMed'><path d='${medD}' fill='white'/></mask></defs><rect width='${W}' height='${H}' fill='white' mask='url(#mMed)'/></svg>`;
-  const engSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs><mask id='mEng'><path d='${engD}' fill='white'/></mask></defs><rect width='${W}' height='${H}' fill='white' mask='url(#mEng)'/></svg>`;
-  const medURL = 'data:image/svg+xml,' + encodeURIComponent(medSVG);
-  const engURL = 'data:image/svg+xml,' + encodeURIComponent(engSVG);
-
-  liftMed.style.maskImage = `url("${medURL}")`;
-  liftMed.style.webkitMaskImage = `url("${medURL}")`;
-  liftMed.style.maskSize = '100% 100%';
-  liftMed.style.webkitMaskSize = '100% 100%';
-
-  liftEng.style.maskImage = `url("${engURL}")`;
-  liftEng.style.webkitMaskImage = `url("${engURL}")`;
-  liftEng.style.maskSize = '100% 100%';
-  liftEng.style.webkitMaskSize = '100% 100%';
+  // SVG masks for lift layers (referenced by CSS mask:url(#mMed/mEng))
+  maskMedPath.setAttribute('d', medD);
+  maskEngPath.setAttribute('d', engD);
 
   // Color washes inside lift layers
   liftMed.innerHTML = '<div style="position:absolute;inset:0;background:#FFD700;opacity:0.82;pointer-events:none;"></div>';
@@ -467,7 +492,7 @@ window.addEventListener('resize', buildTearPaths);
 function activateLift(liftEl, otherPanel, invert) {
   liftEl.style.opacity = '1';
   liftEl.style.pointerEvents = 'auto';
-  liftEl.style.transform = 'translateZ(70px) scale(1.03)';
+  liftEl.style.transform = 'translateZ(50px) scale(1.025)';
   liftEl.style.boxShadow = invert
     ? '-12px 0 80px rgba(0,0,0,0.6), -4px 0 30px rgba(0,0,0,0.4)'
     : '12px 0 80px rgba(0,0,0,0.6), 4px 0 30px rgba(0,0,0,0.4)';
