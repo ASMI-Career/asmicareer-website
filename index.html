@@ -494,34 +494,6 @@ function buildTearPaths() {
 buildTearPaths();
 window.addEventListener('resize', buildTearPaths);
 
-// ── LIFT LAYER HOVER ──
-function activateLift(liftEl, otherPanel, invert) {
-  liftEl.style.opacity = '1';
-
-  liftEl.style.transform = 'translateZ(50px) scale(1.025)';
-  liftEl.style.boxShadow = invert
-    ? '-12px 0 80px rgba(0,0,0,0.6), -4px 0 30px rgba(0,0,0,0.4)'
-    : '12px 0 80px rgba(0,0,0,0.6), 4px 0 30px rgba(0,0,0,0.4)';
-  otherPanel.style.filter = 'brightness(0.45)';
-  otherPanel.style.transition = 'filter 0.4s ease';
-  centerLogo.style.transform = 'translate(-50%,-50%) translateZ(90px) scale(1.06)';
-  centerLogo.style.filter = 'drop-shadow(0 24px 40px rgba(0,0,0,0.7))';
-}
-
-function deactivateLift(liftEl, otherPanel) {
-  liftEl.style.opacity = '0';
-  liftEl.style.pointerEvents = 'none';
-  liftEl.style.transform = 'translateZ(0) scale(1)';
-  liftEl.style.boxShadow = 'none';
-  otherPanel.style.filter = 'brightness(1)';
-  centerLogo.style.transform = 'translate(-50%,-50%)';
-  centerLogo.style.filter = 'none';
-}
-
-medical.addEventListener('mouseenter',     () => activateLift(liftMed, engineering, false));
-medical.addEventListener('mouseleave',     () => deactivateLift(liftMed, engineering));
-engineering.addEventListener('mouseenter', () => activateLift(liftEng, medical, true));
-engineering.addEventListener('mouseleave', () => deactivateLift(liftEng, medical));
 
 document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
