@@ -548,53 +548,70 @@ function switchS4Tab(tab, btn){
 
 // ── TOP 25 TABLE ─────────────────────────────────────────────────
 function renderTop25Table(){
-  const cols = getTop25();
-  if(!cols.length) return '<div class="no-data">No Safe or Likely options found for current score and category.</div>';
+  const data = getTop25();
 
-  let html = '';
-  let lastProb = '';
-  cols.forEach((c,i)=>{
-    if(c.prob.key !== lastProb){
-      lastProb = c.prob.key;
-      const label = c.prob.key==='safe'
-        ? `✅ Safe Options — Score comfortably above projected cutoff`
-        : `🔵 Likely Options — Score at or near projected cutoff`;
-      html += `<tr><td colspan="8" class="top25-divider">${label}</td></tr>`;
-    }
-    const actual    = c.openCutoff!==undefined ? c.openCutoff : c.c;
-    const projected = actual + 15;
-    const feeVal    = feeStr(c.n);
-    const starred   = isShortlisted ? isShortlisted(c.n) : false;
-    html += `<tr>
-      <td class="top25-college-name">${c.n}</td>
-      <td style="white-space:nowrap;font-size:.72rem;color:rgba(26,0,64,0.65)">${c.state||'—'}</td>
-      <td><span class="top25-pool-badge">${c.pool}</span></td>
-      <td style="text-align:center;font-weight:800;color:var(--purple)">${actual}</td>
-      <td style="text-align:center"><span class="top25-proj">${projected}</span></td>
-      <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
-      <td style="text-align:center"><span class="status status-${c.prob.key}">${c.prob.label}</span></td>
-      <td style="text-align:center">
-        <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
-          style="background:none;border:none;cursor:pointer;font-size:1.1rem;">
-          ${starred?'★':'☆'}
-        </button>
-      </td>
-    </tr>`;
-  });
+  function subRows(cols){
+    if(!cols||!cols.length) return '';
+    return cols.map((c,i)=>{
+      const actual    = c.openCutoff!==undefined?c.openCutoff:c.c;
+      const projected = actual+15;
+      const feeVal    = feeStr(c.n);
+      const starred   = isShortlisted(c.n);
+      const probCls   = c.prob.key==='safe'?'safe':c.prob.key==='likely'?'likely':'borderline';
+      return `<tr style="background:${i%2===0?'rgba(255,255,255,0.55)':'rgba(255,255,255,0.35)'}">
+        <td class="top25-college-name">${c.n}</td>
+        <td style="font-size:.72rem;color:rgba(26,0,64,0.65);text-align:center">${c.state||'—'}</td>
+        <td style="text-align:center;font-weight:800;color:#6a0dad">${actual}</td>
+        <td style="text-align:center"><span class="top25-proj">${projected}</span></td>
+        <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
+        <td style="text-align:center"><span class="prob ${probCls}">${c.prob.label}</span></td>
+        <td style="text-align:center">
+          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
+            style="background:none;border:none;cursor:pointer;font-size:1.1rem;">${starred?'★':'☆'}</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
 
-  return `<table class="top25-table">
-    <thead><tr>
-      <th>College</th>
-      <th>State</th>
-      <th>Pool</th>
-      <th style="text-align:center">Last Cutoff</th>
-      <th style="text-align:center;background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;">Projected</th>
-      <th style="text-align:center">Fee/yr</th>
-      <th style="text-align:center">Chance</th>
-      <th style="text-align:center">★</th>
-    </tr></thead>
-    <tbody>${html}</tbody>
-  </table>`;
+  function sectionBlock(title, subsections){
+    const entries = Object.entries(subsections).filter(([,cols])=>cols&&cols.length);
+    if(!entries.length) return '';
+    let html=`<div style="margin-bottom:12px;">
+      <div style="background:#1a0040;color:#FFD700;font-family:'Montserrat',sans-serif;font-weight:800;
+        font-size:.75rem;padding:8px 14px;letter-spacing:1.5px;text-transform:uppercase;border-radius:8px 8px 0 0;">
+        ${title}
+      </div>`;
+    entries.forEach(([subTitle,cols])=>{
+      html+=`<div style="background:rgba(106,13,173,0.08);padding:5px 14px;
+        font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;
+        color:#6a0dad;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(26,0,64,0.08);">
+        ${subTitle} — ${cols.length} options
+      </div>
+      <table class="top25-table">
+        <thead><tr>
+          <th>College</th><th style="text-align:center">State</th>
+          <th style="text-align:center">Last Cutoff</th>
+          <th style="text-align:center;background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700">Projected</th>
+          <th style="text-align:center">Fee/yr</th>
+          <th style="text-align:center">Chance</th>
+          <th style="text-align:center">★</th>
+        </tr></thead>
+        <tbody>${subRows(cols)}</tbody>
+      </table>`;
+    });
+    html+=`</div>`;
+    return html;
+  }
+
+  const mhHtml  = sectionBlock('MH Process',  data.mhProcess);
+  const mccHtml = sectionBlock('MCC Process', data.mccProcess);
+  const openEntries = Object.entries(data.openStates).filter(([,c])=>c&&c.length);
+  const openHtml = openEntries.length ? sectionBlock('Open States', Object.fromEntries(openEntries)) : '';
+
+  if(!mhHtml && !mccHtml && !openHtml){
+    return '<div class="no-data">No Safe or Likely options found for current score and category.</div>';
+  }
+  return `<div>${mhHtml}${mccHtml}${openHtml}</div>`;
 }
 
 // ── SHORTLIST VIEW ───────────────────────────────────────────────
@@ -1138,91 +1155,93 @@ function getTop25(){
   const score  = activeScore();
   const cat    = activeCategory();
   const sess   = getSess();
-  const selectedCourses = (sess.course || activeCourse()).split(',').map(c=>c.trim());
+  const selectedCourses = (sess.course||activeCourse()).split(',').map(c=>c.trim());
   const keys   = catKeys(cat);
-  const allCols = [];
 
-  function addCols(cols, pool, stKey){
+  const MH_GOVT=[], MH_PVT=[];
+  const AIIMS_C=[], JIPMER_C=[], CENTRAL_C=[];
+  const DEEMED_BANDS={'₹10–20L/yr':[],'₹21–25L/yr':[],'₹26–35L/yr':[]};
+  const OPEN_PRIORITY=['KA','TS','AP','UP'];
+  const OPEN_OTHERS=['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
+  const OPEN_COLS={};
+
+  function addWithProb(arr, cols, pool, stKey){
     cols.forEach(c=>{
-      const state = getStateForCollege(c.n, pool, stKey);
-      allCols.push({...c, pool, state, prob: prob(score, c.c)});
+      arr.push({...c, pool, state: getStateForCollege(c.n, pool, stKey)});
     });
   }
 
   selectedCourses.forEach(course=>{
-    // MH Govt + Pvt
-    addCols(getColleges('MH', course, keys, 'mh_govt'), 'MH Govt', 'MH');
-    addCols(getColleges('MH', course, keys, 'mh_pvt'),  'MH Pvt',  'MH');
+    addWithProb(MH_GOVT, getColleges('MH',course,keys,'mh_govt'),'MH Govt','MH');
+    addWithProb(MH_PVT,  getColleges('MH',course,keys,'mh_pvt'), 'MH Pvt', 'MH');
 
-    if(course === 'MBBS'){
-      // AIIMS
-      addCols(getColleges('AIIMS','MBBS',keys,'aiims'), 'AIIMS', null);
-      // JIPMER
-      addCols(getColleges('JIPMER','MBBS',keys,'jipmer'), 'JIPMER', null);
-      // Central
-      addCols(getColleges('CENTRAL',course,keys,'central'), 'Central', null);
-      // Deemed — all 3 bands combined
-      const deemed = getColleges('DEEMED','MBBS',['OPEN'],'deemed');
-      addCols(deemed, 'Deemed', null);
-      // Deemed state fix — use c.s from DB
-      allCols.filter(c=>c.pool==='Deemed').forEach(c=>{ c.state = c.s || 'All India'; });
-      // Open States
-      const OPEN_STATES = ['KA','KL','TS','TN','UP','AP','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
-      OPEN_STATES.forEach(stKey=>{
-        addCols(getColleges(stKey,course,['OPEN'],'open_pvt'), stKey, stKey);
-        // fix pool label
-        allCols.filter(c=>c.pool===stKey).forEach(c=>{ c.pool=OPEN_STATE_NAME_MAP[stKey]||stKey; });
+    if(course==='MBBS'){
+      addWithProb(AIIMS_C,   getColleges('AIIMS','MBBS',keys,'aiims'),    'AIIMS',   null);
+      addWithProb(JIPMER_C,  getColleges('JIPMER','MBBS',keys,'jipmer'),  'JIPMER',  null);
+      addWithProb(CENTRAL_C, getColleges('CENTRAL',course,keys,'central'),'Central', null);
+
+      const deemed=getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+      deemed.forEach(c=>{
+        const entry={...c, pool:'Deemed', state:c.s||'All India'};
+        const f=FEE&&FEE[c.n];
+        if(f&&f>=10&&f<=20)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
+        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push(entry);
+        else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push(entry);
+        else                      DEEMED_BANDS['₹21–25L/yr'].push(entry);
+      });
+
+      [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
+        const cols=getColleges(stKey,course,['OPEN'],'open_pvt');
+        if(cols.length){
+          OPEN_COLS[stKey]=cols.map(c=>({
+            ...c, pool:OPEN_STATE_NAME_MAP[stKey]||stKey,
+            state:OPEN_STATE_NAME_MAP[stKey]||stKey
+          }));
+        }
       });
     }
-    if(course === 'BDS'){
-      addCols(getColleges('AIIMS','MBBS',keys,'aiims'), 'AIIMS', null);
-      const deemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
-      addCols(deemed, 'Deemed', null);
-      allCols.filter(c=>c.pool==='Deemed').forEach(c=>{ c.state = c.s || 'All India'; });
+
+    if(course==='BDS'){
+      addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null);
+      const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
+      bdsDemed.forEach(c=>{
+        const entry={...c,pool:'Deemed',state:c.s||'All India'};
+        const f=FEE&&FEE[c.n];
+        if(f&&f>=10&&f<=20)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
+        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push(entry);
+        else                      DEEMED_BANDS['₹26–35L/yr'].push(entry);
+      });
     }
   });
 
-  console.log('getTop25 allCols:', allCols.length, 'safe:', allCols.filter(c=>c.prob&&c.prob.key==='safe').length);
+  function safeAndLikely(arr){
+    return arr.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'))
+              .sort((a,b)=>b.c-a.c);
+  }
 
-  // Deduplicate by college name
-  const seen = new Set();
-  const unique = allCols.filter(c=>{ if(seen.has(c.n)) return false; seen.add(c.n); return true; });
+  const openStates={};
+  [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
+    if(OPEN_COLS[stKey]){
+      const sl=safeAndLikely(OPEN_COLS[stKey]);
+      if(sl.length) openStates[OPEN_STATE_NAME_MAP[stKey]||stKey]=sl;
+    }
+  });
 
-  // ── TIER DEFINITIONS ──────────────────────────────────────
-  const TIER_ORDER = {
-    'MH Govt':          1,
-    'MH Pvt':           2,
-    'AIIMS':            3,
-    'JIPMER':           3,
-    'Central':          3,
-    'Karnataka':        4,
-    'Telangana':        5,
-    'Andhra Pradesh':   6,
-    'Uttar Pradesh':    7,
-    'Deemed':           8,
-    // All other open states → tier 9
+  return {
+    mhProcess:{
+      'MH Government Colleges': safeAndLikely(MH_GOVT),
+      'MH Private Colleges':    safeAndLikely(MH_PVT),
+    },
+    mccProcess:{
+      'AIIMS':                safeAndLikely(AIIMS_C),
+      'JIPMER':               safeAndLikely(JIPMER_C),
+      'Central Universities': safeAndLikely(CENTRAL_C),
+      'Deemed ₹10–20L/yr':   safeAndLikely(DEEMED_BANDS['₹10–20L/yr']),
+      'Deemed ₹21–25L/yr':   safeAndLikely(DEEMED_BANDS['₹21–25L/yr']),
+      'Deemed ₹26–35L/yr':   safeAndLikely(DEEMED_BANDS['₹26–35L/yr']),
+    },
+    openStates,
   };
-
-  function getTier(col){
-    if(col.pool && col.pool.toLowerCase().includes('deemed')) return 8;
-    return TIER_ORDER[col.pool] || 9;
-  }
-
-  function tierSort(a, b){
-    const ta = getTier(a), tb = getTier(b);
-    if(ta !== tb) return ta - tb;
-    return b.c - a.c;
-  }
-
-  // Filter Safe and Likely separately
-  const safeAll  = unique.filter(c=>c.prob&&c.prob.key==='safe').sort(tierSort);
-  const likelyAll= unique.filter(c=>c.prob&&c.prob.key==='likely').sort(tierSort);
-
-  // Take top 20 safe + top 5 likely
-  const safe  = safeAll.slice(0,20);
-  const likely= likelyAll.slice(0,5);
-
-  return [...safe, ...likely];
 }
 
 function getTop50(){
