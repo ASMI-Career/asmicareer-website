@@ -16,41 +16,36 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   display:flex;width:100%;height:100vh;
   position:relative;
   perspective:1400px;
-  transform-style:preserve-3d;
+  perspective-origin:center center;
 }
 
 /* ── SHARED SIDE STYLES ── */
 .medical,.engineering{
-  position:relative;overflow:hidden;cursor:pointer;
-  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
-             filter 0.4s ease,
-             box-shadow 0.4s ease;
+  overflow:hidden;cursor:pointer;
 }
 
 /* ── MEDICAL ── */
 .medical{
   position:absolute;
-  top:0;
-  left:0;
-  width:52%;
-  height:100%;
-  clip-path:url(#tearClip);
+  top:0; left:0;
+  width:100%; height:100%;
+  clip-path:url(#tearMed);
   background-image:url('AIIMS_Delhi.jpg');
   background-size:cover;
   background-position:center;
   z-index:2;
-  box-shadow:inset -8px 0 20px rgba(0,0,0,0.25);
   transform-origin:left center;
+  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
+             filter 0.4s ease,
+             box-shadow 0.4s ease;
 }
 
 /* ── ENGINEERING ── */
 .engineering{
   position:absolute;
-  top:0;
-  left:48%;
-  width:52%;
-  height:100%;
-  clip-path:url(#tearClipEng);
+  top:0; left:0;
+  width:100%; height:100%;
+  clip-path:url(#tearEng);
   background-image:url('IIT_Bombay.jpg');
   background-size:cover;
   background-position:center;
@@ -63,44 +58,29 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
              box-shadow 0.4s ease;
 }
 
-/* ── 3D HOVER ── */
+/* ── 3D HOVER LIFT ── */
 .medical:hover {
-  transform: translateZ(55px) scale(1.02);
+  transform: translateZ(60px) scale(1.03);
   filter: brightness(1.06);
-  box-shadow: 20px 0 80px rgba(0,0,0,0.5);
+  box-shadow: 8px 0 60px rgba(0,0,0,0.4);
   z-index: 4;
 }
 .engineering:hover {
-  transform: translateZ(55px) scale(1.02);
+  transform: translateZ(60px) scale(1.03);
   filter: brightness(1.06);
-  box-shadow: -20px 0 80px rgba(0,0,0,0.5);
-  z-index: 5;
+  box-shadow: -8px 0 60px rgba(0,0,0,0.4);
+  z-index: 4;
 }
-.split:has(.medical:hover) .engineering{
-  transform:translateZ(-25px) scale(0.97);
-  filter:brightness(0.55);
+.split:has(.medical:hover) .engineering {
+  transform: translateZ(-30px) scale(0.97);
+  filter: brightness(0.55);
 }
-.split:has(.engineering:hover) .medical{
-  transform:translateZ(-25px) scale(0.97);
-  filter:brightness(0.55);
-}
-
-/* ── DIAGONAL EDGE LINE ── */
-.seam-line {
-  position: absolute;
-  inset: 0;
-  width: 52%;
-  height: 100%;
-  clip-path:url(#tearClip);
-  z-index: 3;
-  pointer-events: none;
+.split:has(.engineering:hover) .medical {
+  transform: translateZ(-30px) scale(0.97);
+  filter: brightness(0.55);
 }
 
 /* ── BACKGROUND LAYERS ── */
-.bg-photo{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center;
-}
 .bg-wash{position:absolute;inset:0;}
 .m-wash{background:#FFD700;opacity:0.82;}
 .e-wash{background:#0a1628;opacity:0.88;}
@@ -121,9 +101,10 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   position:relative;z-index:2;
   height:100%;display:flex;flex-direction:column;
   justify-content:center;
+  transition:opacity 0.3s ease;
 }
 .m-content{ padding:56px 52px; }
-.e-content{ padding:56px 52px 56px 80px; }
+.e-content{ padding:56px 52px 56px 44%; }
 
 /* EYEBROW */
 .eyebrow{
@@ -195,16 +176,12 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   transition:transform 0.2s ease,box-shadow 0.2s ease;
   align-self:flex-start;
 }
-.m-cta{
-  background:#1a0040;color:#FFD700;
-}
+.m-cta{ background:#1a0040;color:#FFD700; }
 .m-cta:hover{
   transform:translateY(-2px);
   box-shadow:0 8px 24px rgba(26,0,64,0.35);
 }
-.e-cta{
-  background:#00A896;color:#ffffff;
-}
+.e-cta{ background:#00A896;color:#ffffff; }
 .e-cta:hover{
   transform:translateY(-2px);
   box-shadow:0 8px 24px rgba(0,168,150,0.45);
@@ -213,8 +190,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── CENTER LOGO ── */
 .center-logo{
   position:fixed;
-  left:50%;
-  top:50%;
+  left:50%; top:50%;
   transform:translate(-50%,-50%);
   z-index:100;
   pointer-events:none;
@@ -243,14 +219,14 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── LOGO LIFTS WITH HOVERED PANEL ── */
 body:has(.medical:hover) .center-logo,
 body:has(.engineering:hover) .center-logo {
-  transform: translate(-50%, -50%) translateZ(60px) scale(1.05);
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+  transform: translate(-50%,-50%) translateZ(80px) scale(1.06);
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
 }
 
 /* ── LOGO PULSE DURING TRANSITION ── */
 @keyframes logoPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1.0); }
-  50%       { transform: translate(-50%, -50%) scale(1.04); }
+  0%,100% { transform: translate(-50%,-50%) scale(1.0); }
+  50%      { transform: translate(-50%,-50%) scale(1.05); }
 }
 .logo-pulse {
   animation: logoPulse 1.5s ease-in-out infinite;
@@ -285,92 +261,34 @@ body:has(.engineering:hover) .center-logo {
 #engCanvas {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100vw; height: 100vh;
   z-index: 99;
   pointer-events: none;
   display: none;
-}
-.flash-curtain {
-  position: fixed;
-  inset: 0;
-  background: #ffffff;
-  z-index: 98;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease-out;
-}
-
-/* ── ESSENTIAL TRANSITION TWEAKS ── */
-.m-content, .e-content {
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-}
-.seam-line {
-  transition: none;
 }
 
 </style>
 </head>
 <body>
 
-<!-- Torn paper clip path — objectBoundingBox so it scales with the element -->
-<svg width="0" height="0" style="position:absolute;overflow:hidden">
+<!-- Torn paper clip paths (userSpaceOnUse — calibrated ~1440px wide viewport) -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none;overflow:hidden;">
   <defs>
-    <clipPath id="tearClip" clipPathUnits="objectBoundingBox">
-      <path d="M 0 0 L 0.880 0 L 0.898 0.05 L 0.873 0.10 L 0.915 0.15 L 0.889 0.20 L 0.928 0.25 L 0.902 0.30 L 0.942 0.35 L 0.916 0.40 L 0.952 0.45 L 0.926 0.50 L 0.963 0.55 L 0.944 0.60 L 0.978 0.65 L 0.956 0.70 L 0.990 0.75 L 0.971 0.80 L 0.998 0.85 L 0.977 0.90 L 1.000 0.95 L 1.000 1.0 L 0 1.0 Z"/>
+    <!-- Medical: fills left of the tear edge -->
+    <clipPath id="tearMed" clipPathUnits="userSpaceOnUse">
+      <path d="M0,0 L638,0 L632,38 L618,52 L641,79 L624,94 L644,118 L621,139 L645,158 L628,177 L647,201 L625,218 L643,247 L619,263 L638,289 L617,308 L641,334 L622,351 L644,379 L620,398 L639,421 L616,442 L637,465 L614,488 L633,512 L611,531 L629,558 L608,578 L624,601 L603,624 L619,651 L601,672 L616,698 L598,718 L612,745 L594,768 L608,800 L0,800 Z"/>
     </clipPath>
-    <clipPath id="tearClipEng" clipPathUnits="userSpaceOnUse">
-      <path d="
-        M 632,0
-        L 1600,0
-        L 1600,800
-        L 601,800
-        L 608,768
-        L 594,745
-        L 612,718
-        L 598,698
-        L 616,672
-        L 601,651
-        L 619,624
-        L 603,601
-        L 624,578
-        L 608,558
-        L 629,531
-        L 611,512
-        L 633,488
-        L 614,465
-        L 637,442
-        L 616,421
-        L 639,398
-        L 620,379
-        L 644,351
-        L 622,334
-        L 641,308
-        L 617,289
-        L 638,263
-        L 619,247
-        L 643,218
-        L 625,201
-        L 647,177
-        L 628,158
-        L 645,139
-        L 624,118
-        L 641,94
-        L 621,79
-        L 638,52
-        L 618,38
-        L 632,0
-        Z
-      " />
+    <!-- Engineering: fills right of the tear edge — exact mirror -->
+    <clipPath id="tearEng" clipPathUnits="userSpaceOnUse">
+      <path d="M638,0 L1600,0 L1600,800 L608,800 L594,768 L612,745 L598,718 L616,698 L601,672 L619,651 L603,624 L624,601 L608,578 L629,558 L611,531 L633,512 L614,488 L637,465 L616,442 L639,421 L620,398 L644,379 L622,351 L641,334 L617,308 L638,289 L619,263 L643,247 L625,218 L647,201 L628,177 L645,158 L621,139 L644,118 L624,94 L641,79 L618,52 L632,38 L638,0 Z"/>
     </clipPath>
   </defs>
 </svg>
 
-<div class="flash-curtain" id="flashCurtain"></div>
 <canvas id="globalCanvas"></canvas>
 <canvas id="engCanvas"></canvas>
 
-<!-- ══ CENTER LOGO — outside .split to escape its stacking context ══ -->
+<!-- ══ CENTER LOGO — direct body child, escapes .split stacking context ══ -->
 <div class="center-logo" id="centerLogo">
   <img src="asmi-logo.png" alt="">
 </div>
@@ -418,8 +336,8 @@ body:has(.engineering:hover) .center-logo {
       </a>
     </div>
   </div>
-<div class="seam-line" id="seamLine"></div>
-<div class="engineering" id="engineering">
+
+  <div class="engineering" id="engineering">
     <div class="bg-wash e-wash"></div>
 
     <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
@@ -478,22 +396,16 @@ body:has(.engineering:hover) .center-logo {
       </a>
     </div>
   </div>
-
-
+</div>
 
 <script>
-const medical      = document.getElementById('medical');
-const engineering  = document.getElementById('engineering');
-const seamLine     = document.getElementById('seamLine');
-const centerLogo   = document.getElementById('centerLogo');
-const mContent     = document.getElementById('mContent');
-const engContent   = document.getElementById('eContent');
-const flashCurtain = document.getElementById('flashCurtain');
-
-const mCanvas = document.getElementById('globalCanvas');
-const mCtx    = mCanvas.getContext('2d');
-
-const eCanvas = document.getElementById('engCanvas');
+const medical    = document.getElementById('medical');
+const engineering = document.getElementById('engineering');
+const centerLogo  = document.getElementById('centerLogo');
+const mContent    = document.getElementById('mContent');
+const engContent  = document.getElementById('eContent');
+const mCanvas     = document.getElementById('globalCanvas');
+const eCanvas     = document.getElementById('engCanvas');
 
 let isTransitioning = false;
 
@@ -501,276 +413,192 @@ document.getElementById('m-cta').addEventListener('click', function(e){ e.preven
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
 
 // ── MEDICAL TRANSITION ──
-// DNA Helix + Radial Pulse + Cell Division around logo
+// Yellow flood → DNA helix + radial pulses + cell division → white flash → navigate
 medical.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  var w = window.innerWidth;
-  var h = window.innerHeight;
-
-  // Step 1 (0ms): fade content only — logo untouched
-  mContent.style.opacity   = '0';
+  mContent.style.opacity = '0';
   engContent.style.opacity = '0';
 
-  // Step 2 (300ms): yellow flood + logo pulse
-  setTimeout(function() {
-    var floodMed = document.createElement('div');
-    floodMed.id = 'floodMed';
-    Object.assign(floodMed.style, {
-      position: 'fixed', inset: '0',
-      background: '#FFD700',
-      zIndex: '50',
-      opacity: '0',
-      pointerEvents: 'none',
-      transition: 'opacity 500ms ease'
-    });
-    document.body.appendChild(floodMed);
-    floodMed.getBoundingClientRect();
-    floodMed.style.opacity = '1';
+  setTimeout(() => {
+    const flood = document.createElement('div');
+    flood.style.cssText = 'position:fixed;inset:0;background:#FFD700;z-index:50;opacity:0;transition:opacity 0.5s ease;pointer-events:none;';
+    document.body.appendChild(flood);
+    requestAnimationFrame(() => { flood.style.opacity = '1'; });
     centerLogo.classList.add('logo-pulse');
 
-    // Step 3 (800ms): launch all 3 patterns
-    setTimeout(function() {
-      Object.assign(mCanvas.style, {
-        position: 'fixed', top: '0', left: '0',
-        width: '100vw', height: '100vh',
-        zIndex: '99', display: 'block',
-        pointerEvents: 'none'
-      });
-      mCanvas.width  = w;
+    setTimeout(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      mCanvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:99;display:block;pointer-events:none;';
+      mCanvas.width = w;
       mCanvas.height = h;
+      const ctx = mCanvas.getContext('2d');
 
-      var startTime = performance.now();
-      var duration  = 2000;
-      var animStep  = 0;
+      let startTime = null;
+      const duration = 2200;
 
-      // Pattern B state — radial rings
-      var rings        = [];
-      var lastRingTime = -Infinity;
+      // Cell division state
+      let cells = [{ x: w/2, y: h/2, r: 55, vx: 0, vy: 0, gen: 0, color: 0 }];
+      let lastSplit = 0;
 
-      // Pattern C state — cell division
-      var cells = [{ x: w / 2, y: h / 2, vx: 0, vy: 0, generation: 1 }];
-      var divideCount = 0;
+      // Radial pulses
+      let pulses = [];
+      let lastPulse = 0;
 
-      function medLoop(now) {
-        var elapsed  = now - startTime;
-        var progress = Math.min(elapsed / duration, 1);
-        var timeSec  = elapsed / 1000;
-        animStep += 0.03;
+      function animate(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
+        const t = elapsed / 1000;
 
-        // Step 4: duration elapsed — white flash then navigate
-        if (elapsed > duration) {
-          var flashStart = performance.now();
-          var flashDur   = 100;
-          function doFlash(t) {
-            var p = Math.min((t - flashStart) / flashDur, 1);
-            mCtx.fillStyle = 'rgba(255,255,255,' + p + ')';
-            mCtx.fillRect(0, 0, w, h);
-            if (p < 1) { requestAnimationFrame(doFlash); }
-            else {
-              centerLogo.classList.remove('logo-pulse');
-              window.location.href = 'medical.html';
-            }
-          }
-          requestAnimationFrame(doFlash);
-          return;
+        ctx.clearRect(0, 0, w, h);
+
+        // Pattern B: Radial pulses (draw first)
+        if (elapsed - lastPulse > 350) {
+          pulses.push({ r: 0, maxR: Math.max(w, h) * 0.9, born: elapsed, color: pulses.length % 2 });
+          lastPulse = elapsed;
         }
-
-        mCtx.clearRect(0, 0, w, h);
-
-        // ── Pattern B: Radial pulses (draw first) ──
-        var maxRadius = Math.max(w, h) * 0.85;
-        if (elapsed - lastRingTime >= 350) {
-          rings.push({ spawnAt: elapsed, colorIdx: rings.length % 2 });
-          lastRingTime = elapsed;
-        }
-        rings = rings.filter(function(r) { return elapsed - r.spawnAt < 1000; });
-        for (var ri = 0; ri < rings.length; ri++) {
-          var ring   = rings[ri];
-          var age    = elapsed - ring.spawnAt;
-          var rp     = age / 1000;
-          var radius = maxRadius * rp;
-          var alpha  = 1 - rp;
-          mCtx.beginPath();
-          mCtx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
-          mCtx.strokeStyle = ring.colorIdx === 0
-            ? 'rgba(106,13,173,' + (0.2 * alpha) + ')'
-            : 'rgba(255,215,0,' + (0.35 * alpha) + ')';
-          mCtx.lineWidth = 2;
-          mCtx.stroke();
-        }
-
-        // ── Pattern C: Cell division (draw second) ──
-        while (divideCount < 5 && elapsed >= (divideCount + 1) * 400) {
-          var newCells = [];
-          var limit    = cells.length;
-          for (var ci = 0; ci < limit; ci++) {
-            if (cells.length + newCells.length >= 32) break;
-            var cell   = cells[ci];
-            var angle1 = Math.random() * Math.PI * 2;
-            var speed  = 0.4 + Math.random() * 0.4;
-            cell.vx = Math.cos(angle1) * speed;
-            cell.vy = Math.sin(angle1) * speed;
-            cell.generation = Math.min(cell.generation + 1, 5);
-            var angle2 = angle1 + Math.PI + (Math.random() - 0.5) * 0.8;
-            newCells.push({
-              x: cell.x, y: cell.y,
-              vx: Math.cos(angle2) * speed,
-              vy: Math.sin(angle2) * speed,
-              generation: cell.generation
-            });
-          }
-          cells = cells.concat(newCells).slice(0, 32);
-          divideCount++;
-        }
-
-        cells = cells.filter(function(c) {
-          return c.x > -100 && c.x < w + 100 && c.y > -100 && c.y < h + 100;
+        pulses = pulses.filter(p => p.r < p.maxR);
+        pulses.forEach(p => {
+          p.r += 6;
+          const progress = p.r / p.maxR;
+          const alpha = (1 - progress) * 0.25;
+          ctx.beginPath();
+          ctx.arc(w/2, h/2, p.r, 0, Math.PI*2);
+          ctx.strokeStyle = p.color === 0 ? `rgba(106,13,173,${alpha})` : `rgba(255,215,0,${alpha*1.4})`;
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
         });
-        for (var ci = 0; ci < cells.length; ci++) {
-          var cell = cells[ci];
-          cell.x += cell.vx;
-          cell.y += cell.vy;
-          if (Math.abs(cell.x - w / 2) < 90 && Math.abs(cell.y - h / 2) < 60) continue;
-          var baseR = 55 / Math.sqrt(cell.generation);
-          var r     = Math.max(baseR + Math.sin(timeSec * 3) * 3, 3);
-          mCtx.beginPath();
-          mCtx.arc(cell.x, cell.y, r, 0, Math.PI * 2);
-          mCtx.fillStyle = cell.generation % 2 === 1
-            ? 'rgba(26,0,64,0.3)'
-            : 'rgba(106,13,173,0.35)';
-          mCtx.fill();
+
+        // Pattern C: Cell division (draw second)
+        if (elapsed - lastSplit > 400 && cells.length < 32) {
+          const newCells = [];
+          cells.forEach(c => {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 0.4 + Math.random() * 0.3;
+            const gen = c.gen + 1;
+            const r = 55 / Math.sqrt(gen + 1);
+            newCells.push(
+              { x: c.x, y: c.y, r, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, gen, color: gen%2 },
+              { x: c.x, y: c.y, r, vx: -Math.cos(angle)*speed, vy: -Math.sin(angle)*speed, gen, color: (gen+1)%2 }
+            );
+          });
+          cells = newCells;
+          lastSplit = elapsed;
+        }
+        cells.forEach(c => {
+          c.x += c.vx; c.y += c.vy;
+          const pulse = Math.sin(t * 3) * 2;
+          if (!(Math.abs(c.x - w/2) < 90 && Math.abs(c.y - h/2) < 60)) {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, Math.max(c.r + pulse, 3), 0, Math.PI*2);
+            ctx.fillStyle = c.color === 0 ? 'rgba(106,13,173,0.35)' : 'rgba(26,0,64,0.3)';
+            ctx.fill();
+          }
+        });
+
+        // Pattern A: DNA helix (draw on top)
+        const nodes = 45;
+        const progress = Math.min(elapsed / duration, 1);
+        for (let i = 0; i < nodes; i++) {
+          const np = i / nodes;
+          if (np > progress) continue;
+          const cy = h - (np * h);
+          if (Math.abs(cy - h/2) < 70) continue; // logo safe zone
+          const angle = t * 1.2 + i * 0.28;
+          const radius = 40 + np * 15;
+          const x1 = w/2 + Math.cos(angle) * radius;
+          const x2 = w/2 + Math.cos(angle + Math.PI) * radius;
+          const z1 = Math.cos(angle);
+          ctx.beginPath(); ctx.moveTo(x1, cy); ctx.lineTo(x2, cy);
+          ctx.strokeStyle = 'rgba(26,0,64,0.18)'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x1, cy, z1>0 ? 7 : 4.5, 0, Math.PI*2);
+          ctx.fillStyle = z1>0 ? 'rgba(106,13,189,0.9)' : 'rgba(148,92,212,0.6)'; ctx.fill();
+          ctx.beginPath(); ctx.arc(x2, cy, z1>0 ? 4.5 : 7, 0, Math.PI*2);
+          ctx.fillStyle = z1>0 ? 'rgba(69,43,110,0.6)' : 'rgba(26,0,64,0.9)'; ctx.fill();
         }
 
-        // ── Pattern A: DNA Helix (draw on top) ──
-        var totalNodes = 60;
-        for (var ni = 0; ni < totalNodes; ni++) {
-          var nodeProgress = ni / totalNodes;
-          if (nodeProgress > progress) continue;
-
-          var cy     = h - nodeProgress * h;
-          var angle1 = animStep + ni * 0.28;
-          var angle2 = angle1 + Math.PI;
-          var hRad   = 45;
-
-          // Skip entire level if inside logo safe zone (helix center is always w/2)
-          if (Math.abs(cy - h / 2) < 60) continue;
-
-          var x1 = w / 2 + Math.cos(angle1) * hRad;
-          var x2 = w / 2 + Math.cos(angle2) * hRad;
-
-          mCtx.beginPath();
-          mCtx.moveTo(x1, cy);
-          mCtx.lineTo(x2, cy);
-          mCtx.strokeStyle = 'rgba(26,0,64,0.18)';
-          mCtx.lineWidth   = 2;
-          mCtx.stroke();
-
-          mCtx.beginPath();
-          mCtx.arc(x1, cy, 6, 0, Math.PI * 2);
-          mCtx.fillStyle = '#6a0dad';
-          mCtx.fill();
-
-          mCtx.beginPath();
-          mCtx.arc(x2, cy, 6, 0, Math.PI * 2);
-          mCtx.fillStyle = '#1a0040';
-          mCtx.fill();
+        if (elapsed < duration) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          centerLogo.classList.remove('logo-pulse');
+          setTimeout(() => { window.location.href = 'medical.html'; }, 150);
         }
-
-        requestAnimationFrame(medLoop);
       }
-
-      requestAnimationFrame(medLoop);
-    }, 500); // 800ms total − 300ms step2 delay = 500ms
+      requestAnimationFrame(animate);
+    }, 500);
   }, 300);
 });
 
 // ── ENGINEERING TRANSITION ──
-// Full-viewport binary rain growing from center, logo stays still
+// Dark flood → binary rain center-outward → dark fill → navigate
 engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  // Fresh context — canvas was 0×0 at page load; resize resets it
-  eCanvas.width  = window.innerWidth;
-  eCanvas.height = window.innerHeight;
-  eCanvas.style.display = 'block';
-  var eCtx = eCanvas.getContext('2d');
-  if (!eCtx) return;
-
-  var w = eCanvas.width;
-  var h = eCanvas.height;
-
-  // Step 1 (0ms): fade content only — logo untouched
-  mContent.style.opacity   = '0';
+  mContent.style.opacity = '0';
   engContent.style.opacity = '0';
 
-  // Step 2 (300ms): dark flood + logo pulse
-  setTimeout(function() {
-    var floodEng = document.createElement('div');
-    floodEng.id = 'floodEng';
-    Object.assign(floodEng.style, {
-      position: 'fixed', inset: '0',
-      background: '#0a1628',
-      zIndex: '50',
-      opacity: '0',
-      pointerEvents: 'none',
-      transition: 'opacity 400ms ease'
-    });
-    document.body.appendChild(floodEng);
-    floodEng.getBoundingClientRect();
-    floodEng.style.opacity = '1';
+  setTimeout(() => {
+    const flood = document.createElement('div');
+    flood.style.cssText = 'position:fixed;inset:0;background:#0a1628;z-index:50;opacity:0;transition:opacity 0.4s ease;pointer-events:none;';
+    document.body.appendChild(flood);
+    requestAnimationFrame(() => { flood.style.opacity = '1'; });
     centerLogo.classList.add('logo-pulse');
 
-    // Step 3 (700ms): binary rain RAF loop
-    setTimeout(function() {
-      var colW     = 14;
-      var colCount = Math.floor(w / colW);
-      var drops    = new Array(colCount).fill(1);
-      var centerCol = colCount / 2;
-      var colDelays = drops.map(function(_, i) {
-        var dist = Math.abs(i - centerCol) / centerCol;
-        return dist * 600; // 0ms at center → 600ms at edges
+    setTimeout(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      eCanvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:99;display:block;pointer-events:none;';
+      eCanvas.width = w;
+      eCanvas.height = h;
+      const ctx = eCanvas.getContext('2d');
+      if (!ctx) return;
+
+      const colW = 14;
+      const colCount = Math.floor(w / colW);
+      const drops = new Array(colCount).fill(1);
+      const centerX = w / 2;
+      const colDelays = Array.from({length: colCount}, (_, i) => {
+        return (Math.abs(i * colW - centerX) / centerX) * 600;
       });
 
-      var rainStart = null;
+      let startTime = null;
+      const duration = 1800;
 
-      function drawRain(timestamp) {
-        if (!rainStart) rainStart = timestamp;
-        var elapsed = timestamp - rainStart;
+      function drawRain(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
 
-        eCtx.fillStyle = 'rgba(10,22,40,0.13)';
-        eCtx.fillRect(0, 0, w, h);
-        eCtx.font = '900 13px Montserrat, monospace';
+        ctx.fillStyle = 'rgba(10,22,40,0.13)';
+        ctx.fillRect(0, 0, w, h);
+        ctx.font = '900 13px Montserrat, monospace';
 
-        for (var i = 0; i < colCount; i++) {
+        for (let i = 0; i < colCount; i++) {
           if (elapsed < colDelays[i]) continue;
-          var x = i * colW;
-          var y = drops[i] * colW;
-          if (Math.abs(x - w / 2) < 90 && Math.abs(y - h / 2) < 60) {
-            drops[i]++;
-            continue;
-          }
-          // Lead char bright white, trail teal
-          eCtx.fillStyle = drops[i] % 2 === 0 ? '#ffffff' : '#00C8B4';
-          eCtx.fillText(Math.random() > 0.5 ? '1' : '0', x, y);
+          const x = i * colW;
+          const y = drops[i] * colW;
+          if (Math.abs(x - w/2) < 90 && Math.abs(y - h/2) < 60) { drops[i]++; continue; }
+          ctx.fillStyle = drops[i] % 3 === 0 ? '#ffffff' : '#00C8B4';
+          ctx.fillText(Math.random() > 0.5 ? '1' : '0', x, y);
           if (y > h && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
         }
 
-        if (elapsed < 1800) {
+        if (elapsed < duration) {
           requestAnimationFrame(drawRain);
         } else {
-          eCtx.fillStyle = '#0a1628';
-          eCtx.fillRect(0, 0, w, h);
+          ctx.fillStyle = '#0a1628';
+          ctx.fillRect(0, 0, w, h);
           centerLogo.classList.remove('logo-pulse');
-          setTimeout(function() { window.location.href = 'engineering.html'; }, 150);
+          setTimeout(() => { window.location.href = 'engineering.html'; }, 150);
         }
       }
-
       requestAnimationFrame(drawRain);
-    }, 400); // 700ms total − 300ms step2 delay = 400ms
+    }, 400);
   }, 300);
 });
 </script>
