@@ -178,19 +178,31 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .pay-val.upi{color:var(--purple);}
 
 /* QR codes */
-.qr-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;flex-shrink:0;}
+.qr-row{
+  display:flex;flex-direction:row;align-items:stretch;
+  gap:12px;width:100%;margin-bottom:12px;flex-shrink:0;
+}
 .qr-box{
-  flex:1;background:rgba(255,255,255,.7);border:1px solid var(--cb);border-radius:12px;
-  padding:10px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  flex:1;padding:12px;
+  background:rgba(255,255,255,.6);border:1px solid rgba(26,0,64,.12);border-radius:12px;
   margin-top:0;
 }
-.qr-label{font-family:'Montserrat';font-size:.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--purple);text-align:center;}
-.qr-img{
-  width:80px;height:80px;border-radius:6px;overflow:hidden;
-  background:var(--navy);display:flex;align-items:center;justify-content:center;
+.qr-label{
+  font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:800;
+  color:#6a0dad;letter-spacing:1px;text-transform:uppercase;
+  text-align:center;margin-bottom:8px;
 }
-.qr-img img{width:100%;height:100%;object-fit:contain;}
-.qr-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:rgba(255,255,255,.4);font-family:'Montserrat';font-weight:700;text-align:center;padding:4px;}
+.qr-img{
+  width:100%;max-width:110px;
+  border-radius:6px;overflow:hidden;
+  margin:0 auto;
+}
+.qr-img img{width:100%;height:auto;display:block;object-fit:contain;}
+.qr-scan{
+  font-size:.72rem;font-weight:600;
+  color:rgba(26,0,64,.6);text-align:center;margin-top:8px;
+}
 
 /* Contact + address */
 .contact-box{
@@ -471,17 +483,17 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Registration Form</div>
         <div class="qr-img">
           <!-- Replace src with actual registration QR image -->
-          <img id="qrRegImg" src="qr_registration.png" alt="Registration QR" style="width:100%;height:100%;object-fit:contain;">
+          <img id="qrRegImg" src="qr_registration.png" alt="Registration QR">
         </div>
-        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to fill form</div>
+        <div class="qr-scan">Scan to fill form</div>
       </div>
       <div class="qr-box">
         <div class="qr-label">Payment</div>
         <div class="qr-img">
           <!-- Replace src with actual payment QR image -->
-          <img id="qrPayImg" src="qr_payment.png" alt="Payment QR" style="width:100%;height:100%;object-fit:contain;">
+          <img id="qrPayImg" src="qr_payment.png" alt="Payment QR">
         </div>
-        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to pay</div>
+        <div class="qr-scan">Scan to pay</div>
       </div>
     </div>
 
