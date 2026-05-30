@@ -68,16 +68,22 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   background-size:cover;
   background-position:center;
   z-index:10;
+  pointer-events:none !important;
   mask:url(#mMed);
   -webkit-mask:url(#mMed);
+  mask-size:100% 100%;
+  -webkit-mask-size:100% 100%;
 }
 #liftEngineering {
   background-image:url('IIT_Bombay.jpg');
   background-size:cover;
   background-position:center;
   z-index:10;
+  pointer-events:none !important;
   mask:url(#mEng);
   -webkit-mask:url(#mEng);
+  mask-size:100% 100%;
+  -webkit-mask-size:100% 100%;
 }
 
 /* ── BACKGROUND LAYERS ── */
@@ -104,7 +110,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   display:flex;flex-direction:column;
   justify-content:center;
   padding:56px 52px;
-  z-index:20;
+  z-index:30;
   pointer-events:none;
   transition:opacity 0.3s ease;
 }
@@ -114,8 +120,8 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   width:50%; height:100%;
   display:flex;flex-direction:column;
   justify-content:center;
-  padding:56px 52px;
-  z-index:20;
+  padding:56px 52px 56px 80px;
+  z-index:30;
   pointer-events:none;
   transition:opacity 0.3s ease;
 }
@@ -491,7 +497,7 @@ window.addEventListener('resize', buildTearPaths);
 // ── LIFT LAYER HOVER ──
 function activateLift(liftEl, otherPanel, invert) {
   liftEl.style.opacity = '1';
-  liftEl.style.pointerEvents = 'auto';
+
   liftEl.style.transform = 'translateZ(50px) scale(1.025)';
   liftEl.style.boxShadow = invert
     ? '-12px 0 80px rgba(0,0,0,0.6), -4px 0 30px rgba(0,0,0,0.4)'
