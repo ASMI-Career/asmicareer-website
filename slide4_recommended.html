@@ -1081,6 +1081,106 @@ function getTop25(){
   return [...safe, ...likely];
 }
 
+function getTop50(){
+  const score  = activeScore();
+  const cat    = activeCategory();
+  const sess   = getSess();
+  const selectedCourses = (sess.course||activeCourse()).split(',').map(c=>c.trim());
+  const keys   = catKeys(cat);
+
+  const MH_GOVT  = [], MH_PVT  = [];
+  const AIIMS_C  = [], JIPMER_C= [], CENTRAL_C= [];
+  const DEEMED_BANDS = {'₹10–20L/yr':[], '₹21–25L/yr':[], '₹26–35L/yr':[]};
+  const OPEN_PRIORITY = ['KA','TS','AP','UP'];
+  const OPEN_OTHERS   = ['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
+  const OPEN_COLS     = {};
+
+  function addWithProb(arr, cols, pool, stKey){
+    cols.forEach(c=>{
+      const state = getStateForCollege(c.n, pool, stKey);
+      arr.push({...c, pool, state});
+    });
+  }
+
+  selectedCourses.forEach(course=>{
+    addWithProb(MH_GOVT,  getColleges('MH',course,keys,'mh_govt'), 'MH Govt',  'MH');
+    addWithProb(MH_PVT,   getColleges('MH',course,keys,'mh_pvt'),  'MH Pvt',   'MH');
+
+    if(course==='MBBS'){
+      addWithProb(AIIMS_C,  getColleges('AIIMS','MBBS',keys,'aiims'),   'AIIMS',   null);
+      addWithProb(JIPMER_C, getColleges('JIPMER','MBBS',keys,'jipmer'), 'JIPMER',  null);
+      addWithProb(CENTRAL_C,getColleges('CENTRAL',course,keys,'central'),'Central',null);
+
+      // Deemed — split by fee band
+      const deemed = getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+      deemed.forEach(c=>{
+        c.state = c.s||'All India';
+        const f = FEE&&FEE[c.n];
+        if(f&&f>=10&&f<=20) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
+        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+        else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
+        else DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+      });
+
+      // Open States
+      [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
+        const cols = getColleges(stKey,course,['OPEN'],'open_pvt');
+        if(cols.length){
+          OPEN_COLS[stKey] = cols.map(c=>({
+            ...c,
+            pool: OPEN_STATE_NAME_MAP[stKey]||stKey,
+            state: OPEN_STATE_NAME_MAP[stKey]||stKey
+          }));
+        }
+      });
+    }
+
+    if(course==='BDS'){
+      addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null);
+      const bdsDemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
+      bdsDemed.forEach(c=>{
+        c.state = c.s||'All India';
+        const f = FEE&&FEE[c.n];
+        if(f&&f>=10&&f<=20) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
+        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+        else DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
+      });
+    }
+  });
+
+  function safeAndLikely(arr){
+    return arr.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'))
+              .sort((a,b)=>b.c-a.c);
+  }
+
+  // Build structured result
+  const result = {
+    mhProcess: {
+      'MH Govt': safeAndLikely(MH_GOVT),
+      'MH Pvt':  safeAndLikely(MH_PVT),
+    },
+    mccProcess: {
+      'AIIMS':   safeAndLikely(AIIMS_C),
+      'JIPMER':  safeAndLikely(JIPMER_C),
+      'Central': safeAndLikely(CENTRAL_C),
+      'Deemed ₹10–20L/yr': safeAndLikely(DEEMED_BANDS['₹10–20L/yr']),
+      'Deemed ₹21–25L/yr': safeAndLikely(DEEMED_BANDS['₹21–25L/yr']),
+      'Deemed ₹26–35L/yr': safeAndLikely(DEEMED_BANDS['₹26–35L/yr']),
+    },
+    openStates: {},
+  };
+
+  // Open States — priority first then others
+  [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
+    if(OPEN_COLS[stKey]){
+      const sl = safeAndLikely(OPEN_COLS[stKey]);
+      if(sl.length) result.openStates[OPEN_STATE_NAME_MAP[stKey]||stKey] = sl;
+    }
+  });
+
+  return result;
+}
+
 // ── INIT ─────────────────────────────────────────────────────────
 async function init(){
   const params=new URLSearchParams(location.search);
