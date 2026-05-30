@@ -32,10 +32,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   background-size:cover;
   background-position:center;
   z-index:2;
-  transform-origin:center center;
-  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
-             filter 0.4s ease,
-             box-shadow 0.4s ease;
+  transition:filter 0.4s ease;
 }
 
 /* ── ENGINEERING ── */
@@ -50,29 +47,22 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   z-index:1;
   display:flex;
   justify-content:flex-end;
-  transform-origin:center center;
-  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
-             filter 0.4s ease,
-             box-shadow 0.4s ease;
+  transition:filter 0.4s ease;
 }
 
-/* ── HOVER LIFT ── */
+/* ── HOVER — brightness only, tear boundary moves via JS ── */
 .medical:hover {
-  transform: scale(1.04);
-  filter: brightness(1.08) drop-shadow(0 20px 60px rgba(0,0,0,0.5));
+  filter: brightness(1.08) drop-shadow(8px 0 30px rgba(0,0,0,0.4));
   z-index: 4;
 }
 .engineering:hover {
-  transform: scale(1.04);
-  filter: brightness(1.08) drop-shadow(0 20px 60px rgba(0,0,0,0.5));
+  filter: brightness(1.08) drop-shadow(-8px 0 30px rgba(0,0,0,0.4));
   z-index: 4;
 }
 .split:has(.medical:hover) .engineering {
-  transform: scale(0.96);
   filter: brightness(0.5);
 }
 .split:has(.engineering:hover) .medical {
-  transform: scale(0.96);
   filter: brightness(0.5);
 }
 
@@ -215,7 +205,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 /* ── LOGO LIFTS WITH HOVERED PANEL ── */
 body:has(.medical:hover) .center-logo,
 body:has(.engineering:hover) .center-logo {
-  transform: translate(-50%,-50%) translateZ(80px) scale(1.06);
+  transform: translate(-50%,-50%) scale(1.06);
   filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
 }
 
@@ -272,11 +262,11 @@ body:has(.engineering:hover) .center-logo {
   <defs>
     <!-- Medical: fills left of the tear edge -->
     <clipPath id="tearMed" clipPathUnits="userSpaceOnUse">
-      <path d="M0,0 L638,0 L632,38 L618,52 L641,79 L624,94 L644,118 L621,139 L645,158 L628,177 L647,201 L625,218 L643,247 L619,263 L638,289 L617,308 L641,334 L622,351 L644,379 L620,398 L639,421 L616,442 L637,465 L614,488 L633,512 L611,531 L629,558 L608,578 L624,601 L603,624 L619,651 L601,672 L616,698 L598,718 L612,745 L594,768 L608,800 L0,800 Z"/>
+      <path id="tearMedPath" d="M0,0 L638,0 L632,38 L618,52 L641,79 L624,94 L644,118 L621,139 L645,158 L628,177 L647,201 L625,218 L643,247 L619,263 L638,289 L617,308 L641,334 L622,351 L644,379 L620,398 L639,421 L616,442 L637,465 L614,488 L633,512 L611,531 L629,558 L608,578 L624,601 L603,624 L619,651 L601,672 L616,698 L598,718 L612,745 L594,768 L608,800 L0,800 Z"/>
     </clipPath>
     <!-- Engineering: fills right of the tear edge — exact mirror -->
     <clipPath id="tearEng" clipPathUnits="userSpaceOnUse">
-      <path d="M638,0 L1600,0 L1600,800 L608,800 L594,768 L612,745 L598,718 L616,698 L601,672 L619,651 L603,624 L624,601 L608,578 L629,558 L611,531 L633,512 L614,488 L637,465 L616,442 L639,421 L620,398 L644,379 L622,351 L641,334 L617,308 L638,289 L619,263 L643,247 L625,218 L647,201 L628,177 L645,158 L621,139 L644,118 L624,94 L641,79 L618,52 L632,38 L638,0 Z"/>
+      <path id="tearEngPath" d="M638,0 L1600,0 L1600,800 L608,800 L594,768 L612,745 L598,718 L616,698 L601,672 L619,651 L603,624 L624,601 L608,578 L629,558 L611,531 L633,512 L614,488 L637,465 L616,442 L639,421 L620,398 L644,379 L622,351 L641,334 L617,308 L638,289 L619,263 L643,247 L625,218 L647,201 L628,177 L645,158 L621,139 L644,118 L624,94 L641,79 L618,52 L632,38 L638,0 Z"/>
     </clipPath>
   </defs>
 </svg>
@@ -404,6 +394,51 @@ const mCanvas     = document.getElementById('globalCanvas');
 const eCanvas     = document.getElementById('engCanvas');
 
 let isTransitioning = false;
+
+// ── TEAR BOUNDARY HOVER ANIMATION ──
+const tearMedPath = document.getElementById('tearMedPath');
+const tearEngPath = document.getElementById('tearEngPath');
+
+const baseTearX = [638,632,618,641,624,644,621,645,628,647,625,643,619,638,617,641,622,644,620,639,616,637,614,633,611,629,608,624,603,619,601,616,598,612,594,608];
+const tearY     = [0,38,52,79,94,118,139,158,177,201,218,247,263,289,308,334,351,379,398,421,442,465,488,512,531,558,578,601,624,651,672,698,718,745,768,800];
+
+let currentOffset = 0;
+let targetOffset  = 0;
+let tearFrame     = null;
+
+function buildMedPath(o) {
+  let d = `M0,0 L${638+o},0`;
+  for (let i = 1; i < baseTearX.length; i++) d += ` L${baseTearX[i]+o},${tearY[i]}`;
+  return d + ' L0,800 Z';
+}
+function buildEngPath(o) {
+  let d = `M${638+o},0 L1600,0 L1600,800`;
+  for (let i = baseTearX.length - 1; i >= 0; i--) d += ` L${baseTearX[i]+o},${tearY[i]}`;
+  return d + ' Z';
+}
+function animateTear() {
+  const diff = targetOffset - currentOffset;
+  if (Math.abs(diff) < 0.5) {
+    currentOffset = targetOffset;
+    tearMedPath.setAttribute('d', buildMedPath(currentOffset));
+    tearEngPath.setAttribute('d', buildEngPath(currentOffset));
+    tearFrame = null;
+    return;
+  }
+  currentOffset += diff * 0.12;
+  tearMedPath.setAttribute('d', buildMedPath(currentOffset));
+  tearEngPath.setAttribute('d', buildEngPath(currentOffset));
+  tearFrame = requestAnimationFrame(animateTear);
+}
+function setTearTarget(offset) {
+  targetOffset = offset;
+  if (!tearFrame) tearFrame = requestAnimationFrame(animateTear);
+}
+
+medical.addEventListener('mouseenter',    () => setTearTarget(60));
+medical.addEventListener('mouseleave',    () => setTearTarget(0));
+engineering.addEventListener('mouseenter', () => setTearTarget(-60));
+engineering.addEventListener('mouseleave', () => setTearTarget(0));
 
 document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
