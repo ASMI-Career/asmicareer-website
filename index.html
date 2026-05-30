@@ -15,6 +15,9 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 .split{
   display:flex;width:100%;height:100vh;
   position:relative;
+  perspective:1200px;
+  perspective-origin:center center;
+  transform-style:preserve-3d;
 }
 
 /* ── SHARED SIDE STYLES ── */
@@ -50,20 +53,29 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   transition:filter 0.4s ease;
 }
 
-/* ── HOVER — brightness only, tear boundary moves via JS ── */
-.medical:hover {
-  filter: brightness(1.08) drop-shadow(8px 0 30px rgba(0,0,0,0.4));
-  z-index: 4;
+/* ── LIFT LAYERS — sit above panels, use mask-image (mask doesn't flatten 3D) ── */
+.lift-layer {
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.35s ease,
+             transform 0.4s cubic-bezier(0.23,1,0.32,1),
+             box-shadow 0.4s ease;
+  transform:translateZ(0) scale(1);
 }
-.engineering:hover {
-  filter: brightness(1.08) drop-shadow(-8px 0 30px rgba(0,0,0,0.4));
-  z-index: 4;
+#liftMedical {
+  background-image:url('AIIMS_Delhi.jpg');
+  background-size:cover;
+  background-position:center;
+  z-index:10;
 }
-.split:has(.medical:hover) .engineering {
-  filter: brightness(0.5);
-}
-.split:has(.engineering:hover) .medical {
-  filter: brightness(0.5);
+#liftEngineering {
+  background-image:url('IIT_Bombay.jpg');
+  background-size:cover;
+  background-position:center;
+  z-index:10;
 }
 
 /* ── BACKGROUND LAYERS ── */
@@ -202,13 +214,6 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   white-space:nowrap;
 }
 
-/* ── LOGO LIFTS WITH HOVERED PANEL ── */
-body:has(.medical:hover) .center-logo,
-body:has(.engineering:hover) .center-logo {
-  transform: translate(-50%,-50%) scale(1.06);
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
-}
-
 /* ── LOGO PULSE DURING TRANSITION ── */
 @keyframes logoPulse {
   0%,100% { transform: translate(-50%,-50%) scale(1.0); }
@@ -226,6 +231,7 @@ body:has(.engineering:hover) .center-logo {
     clip-path:none !important;
     margin-left:0 !important;
   }
+  .lift-layer{ display:none; }
   .m-content,.e-content{ padding:32px 28px; }
   .headline{ font-size:32px !important; }
   .e-headline{ font-size:30px !important; }
@@ -257,10 +263,9 @@ body:has(.engineering:hover) .center-logo {
 </head>
 <body>
 
-<!-- Torn paper clip paths (userSpaceOnUse — calibrated ~1440px wide viewport) -->
+<!-- Torn paper clip paths — JS fills d attributes on load/resize -->
 <svg width="0" height="0" style="position:absolute;pointer-events:none;overflow:hidden;">
   <defs>
-    <!-- Medical: fills left of the tear edge -->
     <clipPath id="tearMed" clipPathUnits="userSpaceOnUse">
       <path id="tearMedPath" d=""/>
     </clipPath>
@@ -273,7 +278,7 @@ body:has(.engineering:hover) .center-logo {
 <canvas id="globalCanvas"></canvas>
 <canvas id="engCanvas"></canvas>
 
-<!-- ══ CENTER LOGO — direct body child, escapes .split stacking context ══ -->
+<!-- ══ CENTER LOGO — direct body child, above all stacking contexts ══ -->
 <div class="center-logo" id="centerLogo">
   <img src="asmi-logo.png" alt="">
 </div>
@@ -381,24 +386,29 @@ body:has(.engineering:hover) .center-logo {
       </a>
     </div>
   </div>
+
+  <!-- Lift layers — mask-image allows translateZ (unlike clip-path) -->
+  <div class="lift-layer" id="liftMedical"></div>
+  <div class="lift-layer" id="liftEngineering"></div>
 </div>
 
 <script>
-const medical    = document.getElementById('medical');
+const medical     = document.getElementById('medical');
 const engineering = document.getElementById('engineering');
 const centerLogo  = document.getElementById('centerLogo');
 const mContent    = document.getElementById('mContent');
 const engContent  = document.getElementById('eContent');
 const mCanvas     = document.getElementById('globalCanvas');
 const eCanvas     = document.getElementById('engCanvas');
+const liftMed     = document.getElementById('liftMedical');
+const liftEng     = document.getElementById('liftEngineering');
 
 let isTransitioning = false;
 
-// ── TEAR BOUNDARY — responsive build + hover animation ──
+// ── TEAR BOUNDARY — responsive, static, built on load/resize ──
 const tearMedPath = document.getElementById('tearMedPath');
 const tearEngPath = document.getElementById('tearEngPath');
 
-// dx offsets (px) from viewport center — same pattern at any screen width
 const tearDeltas = [
   { dx: -6,  dy: 0    }, { dx: -8,  dy: 0.06 }, { dx: +3,  dy: 0.09 },
   { dx: -14, dy: 0.13 }, { dx: +1,  dy: 0.16 }, { dx: -17, dy: 0.20 },
@@ -410,68 +420,82 @@ const tearDeltas = [
   { dx: -17, dy: 0.89 }, { dx: +6,  dy: 0.94 }, { dx: -14, dy: 1.0  },
 ];
 
-let tearXs = [];
-let tearYs = [];
-let currentOffset = 0;
-let targetOffset  = 0;
-let tearFrame     = null;
-
 function buildTearPaths() {
   const W = window.innerWidth;
   const H = window.innerHeight;
   const cx = W / 2;
-  tearXs = tearDeltas.map(p => cx + p.dx);
-  tearYs = tearDeltas.map(p => p.dy * H);
-  tearMedPath.setAttribute('d', buildMedPath(currentOffset));
-  tearEngPath.setAttribute('d', buildEngPath(currentOffset));
-}
+  const xs = tearDeltas.map(p => cx + p.dx);
+  const ys = tearDeltas.map(p => p.dy * H);
 
-function buildMedPath(o) {
-  const W = window.innerWidth;
-  const H = window.innerHeight;
-  let d = `M0,0 L${tearXs[0]+o},0`;
-  for (let i = 1; i < tearXs.length; i++) d += ` L${tearXs[i]+o},${tearYs[i]}`;
-  return d + ` L0,${H} Z`;
-}
-function buildEngPath(o) {
-  const W = window.innerWidth;
-  const H = window.innerHeight;
-  let d = `M${tearXs[0]+o},0 L${W},0 L${W},${H}`;
-  for (let i = tearXs.length - 1; i >= 0; i--) d += ` L${tearXs[i]+o},${tearYs[i]}`;
-  return d + ' Z';
-}
-function animateTear() {
-  const diff = targetOffset - currentOffset;
-  if (Math.abs(diff) < 0.5) {
-    currentOffset = targetOffset;
-    tearMedPath.setAttribute('d', buildMedPath(currentOffset));
-    tearEngPath.setAttribute('d', buildEngPath(currentOffset));
-    tearFrame = null;
-    return;
-  }
-  currentOffset += diff * 0.12;
-  tearMedPath.setAttribute('d', buildMedPath(currentOffset));
-  tearEngPath.setAttribute('d', buildEngPath(currentOffset));
-  tearFrame = requestAnimationFrame(animateTear);
-}
-function setTearTarget(offset) {
-  targetOffset = offset;
-  if (!tearFrame) tearFrame = requestAnimationFrame(animateTear);
+  // Clip-path d strings
+  let medD = `M0,0 L${xs[0]},0`;
+  for (let i = 1; i < xs.length; i++) medD += ` L${xs[i]},${ys[i]}`;
+  medD += ` L0,${H} Z`;
+
+  let engD = `M${xs[0]},0 L${W},0 L${W},${H}`;
+  for (let i = xs.length - 1; i >= 0; i--) engD += ` L${xs[i]},${ys[i]}`;
+  engD += ' Z';
+
+  tearMedPath.setAttribute('d', medD);
+  tearEngPath.setAttribute('d', engD);
+
+  // Inline SVG masks for lift layers (mask-image doesn't flatten 3D)
+  const medSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs><mask id='mMed'><path d='${medD}' fill='white'/></mask></defs><rect width='${W}' height='${H}' fill='white' mask='url(#mMed)'/></svg>`;
+  const engSVG = `<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}'><defs><mask id='mEng'><path d='${engD}' fill='white'/></mask></defs><rect width='${W}' height='${H}' fill='white' mask='url(#mEng)'/></svg>`;
+  const medURL = 'data:image/svg+xml,' + encodeURIComponent(medSVG);
+  const engURL = 'data:image/svg+xml,' + encodeURIComponent(engSVG);
+
+  liftMed.style.maskImage = `url("${medURL}")`;
+  liftMed.style.webkitMaskImage = `url("${medURL}")`;
+  liftMed.style.maskSize = '100% 100%';
+  liftMed.style.webkitMaskSize = '100% 100%';
+
+  liftEng.style.maskImage = `url("${engURL}")`;
+  liftEng.style.webkitMaskImage = `url("${engURL}")`;
+  liftEng.style.maskSize = '100% 100%';
+  liftEng.style.webkitMaskSize = '100% 100%';
+
+  // Color washes inside lift layers
+  liftMed.innerHTML = '<div style="position:absolute;inset:0;background:#FFD700;opacity:0.82;pointer-events:none;"></div>';
+  liftEng.innerHTML = '<div style="position:absolute;inset:0;background:#0a1628;opacity:0.88;pointer-events:none;"></div>';
 }
 
 buildTearPaths();
 window.addEventListener('resize', buildTearPaths);
 
-medical.addEventListener('mouseenter',     () => setTearTarget(60));
-medical.addEventListener('mouseleave',     () => setTearTarget(0));
-engineering.addEventListener('mouseenter', () => setTearTarget(-60));
-engineering.addEventListener('mouseleave', () => setTearTarget(0));
+// ── LIFT LAYER HOVER ──
+function activateLift(liftEl, otherPanel, invert) {
+  liftEl.style.opacity = '1';
+  liftEl.style.pointerEvents = 'auto';
+  liftEl.style.transform = 'translateZ(70px) scale(1.03)';
+  liftEl.style.boxShadow = invert
+    ? '-12px 0 80px rgba(0,0,0,0.6), -4px 0 30px rgba(0,0,0,0.4)'
+    : '12px 0 80px rgba(0,0,0,0.6), 4px 0 30px rgba(0,0,0,0.4)';
+  otherPanel.style.filter = 'brightness(0.45)';
+  otherPanel.style.transition = 'filter 0.4s ease';
+  centerLogo.style.transform = 'translate(-50%,-50%) translateZ(90px) scale(1.06)';
+  centerLogo.style.filter = 'drop-shadow(0 24px 40px rgba(0,0,0,0.7))';
+}
+
+function deactivateLift(liftEl, otherPanel) {
+  liftEl.style.opacity = '0';
+  liftEl.style.pointerEvents = 'none';
+  liftEl.style.transform = 'translateZ(0) scale(1)';
+  liftEl.style.boxShadow = 'none';
+  otherPanel.style.filter = 'brightness(1)';
+  centerLogo.style.transform = 'translate(-50%,-50%)';
+  centerLogo.style.filter = 'none';
+}
+
+medical.addEventListener('mouseenter',     () => activateLift(liftMed, engineering, false));
+medical.addEventListener('mouseleave',     () => deactivateLift(liftMed, engineering));
+engineering.addEventListener('mouseenter', () => activateLift(liftEng, medical, true));
+engineering.addEventListener('mouseleave', () => deactivateLift(liftEng, medical));
 
 document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
 
 // ── MEDICAL TRANSITION ──
-// Yellow flood → DNA helix + radial pulses + cell division → white flash → navigate
 medical.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
@@ -496,12 +520,8 @@ medical.addEventListener('click', function() {
 
       let startTime = null;
       const duration = 2200;
-
-      // Cell division state
       let cells = [{ x: w/2, y: h/2, r: 55, vx: 0, vy: 0, gen: 0, color: 0 }];
       let lastSplit = 0;
-
-      // Radial pulses
       let pulses = [];
       let lastPulse = 0;
 
@@ -509,10 +529,9 @@ medical.addEventListener('click', function() {
         if (!startTime) startTime = ts;
         const elapsed = ts - startTime;
         const t = elapsed / 1000;
-
         ctx.clearRect(0, 0, w, h);
 
-        // Pattern B: Radial pulses (draw first)
+        // Radial pulses
         if (elapsed - lastPulse > 350) {
           pulses.push({ r: 0, maxR: Math.max(w, h) * 0.9, born: elapsed, color: pulses.length % 2 });
           lastPulse = elapsed;
@@ -520,8 +539,7 @@ medical.addEventListener('click', function() {
         pulses = pulses.filter(p => p.r < p.maxR);
         pulses.forEach(p => {
           p.r += 6;
-          const progress = p.r / p.maxR;
-          const alpha = (1 - progress) * 0.25;
+          const alpha = (1 - p.r / p.maxR) * 0.25;
           ctx.beginPath();
           ctx.arc(w/2, h/2, p.r, 0, Math.PI*2);
           ctx.strokeStyle = p.color === 0 ? `rgba(106,13,173,${alpha})` : `rgba(255,215,0,${alpha*1.4})`;
@@ -529,7 +547,7 @@ medical.addEventListener('click', function() {
           ctx.stroke();
         });
 
-        // Pattern C: Cell division (draw second)
+        // Cell division
         if (elapsed - lastSplit > 400 && cells.length < 32) {
           const newCells = [];
           cells.forEach(c => {
@@ -538,7 +556,7 @@ medical.addEventListener('click', function() {
             const gen = c.gen + 1;
             const r = 55 / Math.sqrt(gen + 1);
             newCells.push(
-              { x: c.x, y: c.y, r, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, gen, color: gen%2 },
+              { x: c.x, y: c.y, r, vx:  Math.cos(angle)*speed, vy:  Math.sin(angle)*speed, gen, color: gen%2 },
               { x: c.x, y: c.y, r, vx: -Math.cos(angle)*speed, vy: -Math.sin(angle)*speed, gen, color: (gen+1)%2 }
             );
           });
@@ -547,34 +565,32 @@ medical.addEventListener('click', function() {
         }
         cells.forEach(c => {
           c.x += c.vx; c.y += c.vy;
-          const pulse = Math.sin(t * 3) * 2;
           if (!(Math.abs(c.x - w/2) < 90 && Math.abs(c.y - h/2) < 60)) {
             ctx.beginPath();
-            ctx.arc(c.x, c.y, Math.max(c.r + pulse, 3), 0, Math.PI*2);
+            ctx.arc(c.x, c.y, Math.max(c.r + Math.sin(t*3)*2, 3), 0, Math.PI*2);
             ctx.fillStyle = c.color === 0 ? 'rgba(106,13,173,0.35)' : 'rgba(26,0,64,0.3)';
             ctx.fill();
           }
         });
 
-        // Pattern A: DNA helix (draw on top)
-        const nodes = 45;
+        // DNA helix
         const progress = Math.min(elapsed / duration, 1);
-        for (let i = 0; i < nodes; i++) {
-          const np = i / nodes;
+        for (let i = 0; i < 45; i++) {
+          const np = i / 45;
           if (np > progress) continue;
           const cy = h - (np * h);
-          if (Math.abs(cy - h/2) < 70) continue; // logo safe zone
+          if (Math.abs(cy - h/2) < 70) continue;
           const angle = t * 1.2 + i * 0.28;
           const radius = 40 + np * 15;
           const x1 = w/2 + Math.cos(angle) * radius;
           const x2 = w/2 + Math.cos(angle + Math.PI) * radius;
           const z1 = Math.cos(angle);
-          ctx.beginPath(); ctx.moveTo(x1, cy); ctx.lineTo(x2, cy);
-          ctx.strokeStyle = 'rgba(26,0,64,0.18)'; ctx.lineWidth = 2; ctx.stroke();
-          ctx.beginPath(); ctx.arc(x1, cy, z1>0 ? 7 : 4.5, 0, Math.PI*2);
-          ctx.fillStyle = z1>0 ? 'rgba(106,13,189,0.9)' : 'rgba(148,92,212,0.6)'; ctx.fill();
-          ctx.beginPath(); ctx.arc(x2, cy, z1>0 ? 4.5 : 7, 0, Math.PI*2);
-          ctx.fillStyle = z1>0 ? 'rgba(69,43,110,0.6)' : 'rgba(26,0,64,0.9)'; ctx.fill();
+          ctx.beginPath(); ctx.moveTo(x1,cy); ctx.lineTo(x2,cy);
+          ctx.strokeStyle='rgba(26,0,64,0.18)'; ctx.lineWidth=2; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x1,cy, z1>0?7:4.5, 0, Math.PI*2);
+          ctx.fillStyle = z1>0?'rgba(106,13,189,0.9)':'rgba(148,92,212,0.6)'; ctx.fill();
+          ctx.beginPath(); ctx.arc(x2,cy, z1>0?4.5:7, 0, Math.PI*2);
+          ctx.fillStyle = z1>0?'rgba(69,43,110,0.6)':'rgba(26,0,64,0.9)'; ctx.fill();
         }
 
         if (elapsed < duration) {
@@ -592,7 +608,6 @@ medical.addEventListener('click', function() {
 });
 
 // ── ENGINEERING TRANSITION ──
-// Dark flood → binary rain center-outward → dark fill → navigate
 engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
@@ -620,12 +635,11 @@ engineering.addEventListener('click', function() {
       const colCount = Math.floor(w / colW);
       const drops = new Array(colCount).fill(1);
       const centerX = w / 2;
-      const colDelays = Array.from({length: colCount}, (_, i) => {
-        return (Math.abs(i * colW - centerX) / centerX) * 600;
-      });
+      const colDelays = Array.from({length: colCount}, (_, i) =>
+        (Math.abs(i * colW - centerX) / centerX) * 600
+      );
 
       let startTime = null;
-      const duration = 1800;
 
       function drawRain(ts) {
         if (!startTime) startTime = ts;
@@ -646,7 +660,7 @@ engineering.addEventListener('click', function() {
           drops[i]++;
         }
 
-        if (elapsed < duration) {
+        if (elapsed < 1800) {
           requestAnimationFrame(drawRain);
         } else {
           ctx.fillStyle = '#0a1628';
