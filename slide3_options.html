@@ -866,14 +866,41 @@ function renderMCCExpanded(){
         ${aiqToggleBtn}
       </div>`;
     })()}
-    <div class="mcc-count-card ${hasMBBS&&aiimsR.length>0?'clickable':''}" ${hasMBBS&&aiimsR.length>0?'id="aiims-card" onclick="toggleAIIMS()"':''}>
-      <div class="mcc-card-title">AIIMS</div>
-      ${hasMBBS
-        ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
-           <div class="mcc-card-sub">colleges in reach</div>`
-        :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
-           <div class="mcc-card-sub">BDS not applicable</div>`}
-    </div>
+    ${(()=>{
+      const aiimsColRows=isCounselMode()?aiims.map(c=>rowWithStar(c,'AIIMS','MCC AIQ')).join(''):'';
+      const aiimsTable=isCounselMode()?`
+        <table class="ctable" style="width:100%">
+          <thead><tr>
+            <th>College</th>
+            <th>Last Cutoff</th>
+            <th style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700">Projected</th>
+            <th>Fee/yr</th>
+            <th>Chance</th>
+            <th>★</th>
+          </tr></thead>
+          <tbody>${aiimsColRows}</tbody>
+        </table>`:'';
+      const aiimsToggle=isCounselMode()?`
+        <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'"
+          style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;
+          color:#FFD700;font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;
+          padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button>
+        <div style="display:none;max-height:280px;overflow-y:auto;">${aiimsTable}</div>`:'';
+      return `<div class="mcc-count-card ${!isCounselMode()&&aiimsR.length>0?'clickable':''}"
+        ${!isCounselMode()&&aiimsR.length>0?'id="aiims-card" onclick="toggleAIIMS()"':''}>
+        <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+          <div class="mcc-card-title">AIIMS</div>
+          <div>
+            ${hasMBBS
+              ?`<div class="mcc-card-num">${num(aiimsR.length,aiims.length)}</div>
+                 <div class="mcc-card-sub">colleges in reach</div>`
+              :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div>
+                 <div class="mcc-card-sub">BDS not applicable</div>`}
+          </div>
+        </div>
+        ${aiimsToggle}
+      </div>`;
+    })()}
     ${(()=>{
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
       const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
