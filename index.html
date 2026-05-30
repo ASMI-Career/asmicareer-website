@@ -89,6 +89,7 @@ body:has(.engineering:hover) .center-logo{
 .m-vignette{
   position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(26,0,64,0.15) 0%,transparent 60%);
+  pointer-events:none;
 }
 
 /* ── CIRCUIT SVG ── */
@@ -218,7 +219,7 @@ body:has(.engineering:hover) .center-logo{
 <canvas id="engCanvas"></canvas>
 
 <div class="center-logo" id="centerLogo">
-  <img src="asmi-logo.png" alt="">
+  <img src="asmi-logo.png" alt="ASMI Career">
 </div>
 
 <div class="split" id="split">
@@ -342,6 +343,7 @@ document.getElementById('e-cta').addEventListener('click', function(e){ e.preven
 medical.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
+  deactivateLift(liftMed, engineering);
 
   mContent.style.opacity = '0';
   engContent.style.opacity = '0';
@@ -351,6 +353,8 @@ medical.addEventListener('click', function() {
     flood.style.cssText = 'position:fixed;inset:0;background:#FFD700;z-index:50;opacity:0;transition:opacity 0.5s ease;pointer-events:none;';
     document.body.appendChild(flood);
     requestAnimationFrame(() => { flood.style.opacity = '1'; });
+    centerLogo.style.transform = 'translate(-50%,-50%)';
+    centerLogo.style.filter = 'none';
     centerLogo.classList.add('logo-pulse');
 
     setTimeout(() => {
@@ -374,9 +378,8 @@ medical.addEventListener('click', function() {
         const t = elapsed / 1000;
         ctx.clearRect(0, 0, w, h);
 
-        // Radial pulses
         if (elapsed - lastPulse > 350) {
-          pulses.push({ r: 0, maxR: Math.max(w, h) * 0.9, born: elapsed, color: pulses.length % 2 });
+          pulses.push({ r: 0, maxR: Math.max(w, h) * 0.9, color: pulses.length % 2 });
           lastPulse = elapsed;
         }
         pulses = pulses.filter(p => p.r < p.maxR);
@@ -390,7 +393,6 @@ medical.addEventListener('click', function() {
           ctx.stroke();
         });
 
-        // Cell division
         if (elapsed - lastSplit > 400 && cells.length < 32) {
           const newCells = [];
           cells.forEach(c => {
@@ -416,7 +418,6 @@ medical.addEventListener('click', function() {
           }
         });
 
-        // DNA helix
         const progress = Math.min(elapsed / duration, 1);
         for (let i = 0; i < 45; i++) {
           const np = i / 45;
@@ -454,6 +455,7 @@ medical.addEventListener('click', function() {
 engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
+  deactivateLift(liftEng, medical);
 
   mContent.style.opacity = '0';
   engContent.style.opacity = '0';
@@ -463,6 +465,8 @@ engineering.addEventListener('click', function() {
     flood.style.cssText = 'position:fixed;inset:0;background:#0a1628;z-index:50;opacity:0;transition:opacity 0.4s ease;pointer-events:none;';
     document.body.appendChild(flood);
     requestAnimationFrame(() => { flood.style.opacity = '1'; });
+    centerLogo.style.transform = 'translate(-50%,-50%)';
+    centerLogo.style.filter = 'none';
     centerLogo.classList.add('logo-pulse');
 
     setTimeout(() => {
