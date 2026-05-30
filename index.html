@@ -59,24 +59,19 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 }
 
 /* ── 3D HOVER ── */
-.medical:hover{
-  transform:translateZ(50px) scale(1.02);
-  filter:brightness(1.05);
-  box-shadow:0 40px 80px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.3);
-  z-index:5;
-}
-.engineering:hover{
-  transform:translateZ(50px) scale(1.02);
-  filter:brightness(1.05);
-  z-index:5;
+.medical:hover, .engineering:hover {
+  transform: translateZ(50px) scale(1.02);
+  filter: brightness(1.06);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 20px 40px rgba(0,0,0,0.3);
+  z-index: 5;
 }
 .split:has(.medical:hover) .engineering{
   transform:translateZ(-30px) scale(0.97);
-  filter:brightness(0.6);
+  filter:brightness(0.55);
 }
 .split:has(.engineering:hover) .medical{
   transform:translateZ(-30px) scale(0.97);
-  filter:brightness(0.6);
+  filter:brightness(0.55);
 }
 
 /* ── DIAGONAL EDGE LINE ── */
@@ -206,18 +201,19 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 /* ── CENTER LOGO ── */
 .center-logo{
-  position:absolute;
+  position:fixed;
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  z-index:20;
+  z-index:100;
   pointer-events:none;
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:6px;
   padding:10px 14px;
-  transition:opacity 0.3s ease;
+  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1), filter 0.4s ease;
+  transform-origin:center center;
 }
 .center-logo img{
   height:100px;
@@ -231,6 +227,22 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   text-transform:uppercase;
   color:rgba(255,255,255,0.45);
   white-space:nowrap;
+}
+
+/* ── LOGO LIFTS WITH HOVERED PANEL ── */
+.split:has(.medical:hover) .center-logo,
+.split:has(.engineering:hover) .center-logo {
+  transform: translate(-50%, -50%) translateZ(60px) scale(1.05);
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+}
+
+/* ── LOGO PULSE DURING TRANSITION ── */
+@keyframes logoPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1.0); }
+  50%       { transform: translate(-50%, -50%) scale(1.04); }
+}
+.logo-pulse {
+  animation: logoPulse 1.5s ease-in-out infinite;
 }
 
 /* ── MOBILE ── */
@@ -271,7 +283,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
   position: fixed;
   inset: 0;
   background: #ffffff;
-  z-index: 100;
+  z-index: 98;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease-out;
@@ -431,146 +443,194 @@ let isTransitioning = false;
 document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
 document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
 
-// ── MEDICAL TRANSITION CLICK ──
+// ── MEDICAL TRANSITION ──
+// DNA Helix + Radial Pulse + Cell Division around logo
 medical.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  const w = window.innerWidth;
-  const h = window.innerHeight;
+  var w = window.innerWidth;
+  var h = window.innerHeight;
 
-  // Step 1: fade out content over 300ms
-  mContent.style.opacity    = '0';
-  engContent.style.opacity  = '0';
-  centerLogo.style.opacity  = '0';
+  // Step 1 (0ms): fade content only — logo untouched
+  mContent.style.opacity   = '0';
+  engContent.style.opacity = '0';
 
-  // Step 2 at 300ms: yellow flood expands from 52% to full viewport
+  // Step 2 (300ms): yellow flood + logo pulse
   setTimeout(function() {
-    var flood = document.createElement('div');
-    Object.assign(flood.style, {
-      position: 'fixed', inset: '0', zIndex: '50',
+    var floodMed = document.createElement('div');
+    floodMed.id = 'floodMed';
+    Object.assign(floodMed.style, {
+      position: 'fixed', inset: '0',
       background: '#FFD700',
-      width: '52%', height: '100%',
-      transition: 'width 600ms cubic-bezier(0.77, 0, 0.18, 1)',
-      pointerEvents: 'none'
+      zIndex: '50',
+      opacity: '0',
+      pointerEvents: 'none',
+      transition: 'opacity 500ms ease'
     });
-    document.body.appendChild(flood);
-    flood.getBoundingClientRect(); // force reflow before transition
-    flood.style.width = '100%';
+    document.body.appendChild(floodMed);
+    floodMed.getBoundingClientRect();
+    floodMed.style.opacity = '1';
+    centerLogo.classList.add('logo-pulse');
 
-    // Step 3 at 900ms: show canvas, fade in logo
+    // Step 3 (800ms): launch all 3 patterns
     setTimeout(function() {
-      mCanvas.style.display = 'block';
+      Object.assign(mCanvas.style, {
+        position: 'fixed', top: '0', left: '0',
+        width: '100vw', height: '100vh',
+        zIndex: '99', display: 'block',
+        pointerEvents: 'none'
+      });
       mCanvas.width  = w;
       mCanvas.height = h;
 
-      var logoImg = centerLogo.querySelector('img');
-      var maxDim  = 150;
-      var nw = logoImg.naturalWidth  || maxDim;
-      var nh = logoImg.naturalHeight || maxDim;
-      var sc = Math.min(maxDim / nw, maxDim / nh);
-      var logoW = nw * sc, logoH = nh * sc;
-      var logoX = (w - logoW) / 2, logoY = (h - logoH) / 2;
+      var startTime = performance.now();
+      var duration  = 2000;
+      var animStep  = 0;
 
-      var logoAlpha    = 0;
-      var fadeInFrames = Math.round(400 / 16);
-      var fadeInCount  = 0;
+      // Pattern B state — radial rings
+      var rings        = [];
+      var lastRingTime = -Infinity;
 
-      var logoFadeIn = setInterval(function() {
-        fadeInCount++;
-        logoAlpha = Math.min(fadeInCount / fadeInFrames, 1);
-        mCtx.clearRect(0, 0, w, h);
-        mCtx.globalAlpha = logoAlpha;
-        mCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
-        mCtx.globalAlpha = 1;
+      // Pattern C state — cell division
+      var cells = [{ x: w / 2, y: h / 2, vx: 0, vy: 0, generation: 1 }];
+      var divideCount = 0;
 
-        if (fadeInCount >= fadeInFrames) {
-          clearInterval(logoFadeIn);
+      function medLoop(now) {
+        var elapsed  = now - startTime;
+        var progress = Math.min(elapsed / duration, 1);
+        var timeSec  = elapsed / 1000;
+        animStep += 0.03;
 
-          // Step 4: logo fades out while DNA helix fades in
-          var animationStep  = 0;
-          var growthProgress = 0;
-          var timelineTicks  = 0;
-          var overlapCount   = 0;
-          var overlapFrames  = Math.round(300 / 16);
-          var totalNodes     = 45;
-
-          var startX = w * 0.35, startY = h, endX = w * 0.35, endY = 0;
-          var deltaX = endX - startX, deltaY = endY - startY;
-          var angleOfLine = Math.atan2(deltaY, deltaX);
-
-          var dnaInterval = setInterval(function() {
-            mCtx.clearRect(0, 0, w, h);
-
-            overlapCount++;
-            var logoOut = Math.max(1 - overlapCount / overlapFrames, 0);
-            var helixIn = Math.min(overlapCount / overlapFrames, 1);
-
-            if (logoOut > 0) {
-              mCtx.globalAlpha = logoOut;
-              mCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+        // Step 4: duration elapsed — white flash then navigate
+        if (elapsed > duration) {
+          var flashStart = performance.now();
+          var flashDur   = 100;
+          function doFlash(t) {
+            var p = Math.min((t - flashStart) / flashDur, 1);
+            mCtx.fillStyle = 'rgba(255,255,255,' + p + ')';
+            mCtx.fillRect(0, 0, w, h);
+            if (p < 1) { requestAnimationFrame(doFlash); }
+            else {
+              centerLogo.classList.remove('logo-pulse');
+              window.location.href = 'medical.html';
             }
-
-            animationStep += 0.055;
-            timelineTicks++;
-            if (timelineTicks > 20 && growthProgress < 1) growthProgress += 0.018;
-
-            mCtx.globalAlpha = helixIn;
-
-            for (var i = 0; i < totalNodes; i++) {
-              var nodeProgress = i / totalNodes;
-              if (nodeProgress > growthProgress) continue;
-
-              var centerX = startX + deltaX * nodeProgress;
-              var centerY = startY + deltaY * nodeProgress;
-              var angle1  = animationStep + (i * 0.28);
-              var angle2  = angle1 + Math.PI;
-              var radius  = 35 + nodeProgress * 20;
-              var orbitOffset1 = Math.sin(angle1) * radius;
-              var orbitOffset2 = Math.sin(angle2) * radius;
-              var perpAngle    = angleOfLine + Math.PI / 2;
-
-              var nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
-              var nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
-              var nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
-              var nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
-
-              mCtx.beginPath();
-              mCtx.moveTo(nodeX1, nodeY1);
-              mCtx.lineTo(nodeX2, nodeY2);
-              mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
-              mCtx.lineWidth   = 2.5;
-              mCtx.stroke();
-
-              var z1 = Math.cos(angle1), z2 = Math.cos(angle2);
-
-              mCtx.beginPath();
-              mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
-              mCtx.fillStyle = z1 > 0 ? 'rgba(106,13,189,1)' : 'rgba(148,92,212,0.65)';
-              mCtx.fill();
-
-              mCtx.beginPath();
-              mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
-              mCtx.fillStyle = z2 > 0 ? 'rgba(26,0,64,1)' : 'rgba(69,43,110,0.65)';
-              mCtx.fill();
-            }
-
-            mCtx.globalAlpha = 1;
-          }, 16);
-
-          // Step 5 at 2500ms total: white flash → navigate
-          setTimeout(function() {
-            clearInterval(dnaInterval);
-            flashCurtain.style.opacity = '1';
-            setTimeout(function() { window.location.href = 'medical.html'; }, 100);
-          }, 1200);
+          }
+          requestAnimationFrame(doFlash);
+          return;
         }
-      }, 16);
-    }, 600);
+
+        mCtx.clearRect(0, 0, w, h);
+
+        // ── Pattern B: Radial pulses (draw first) ──
+        var maxRadius = Math.max(w, h) * 0.85;
+        if (elapsed - lastRingTime >= 350) {
+          rings.push({ spawnAt: elapsed, colorIdx: rings.length % 2 });
+          lastRingTime = elapsed;
+        }
+        rings = rings.filter(function(r) { return elapsed - r.spawnAt < 1000; });
+        for (var ri = 0; ri < rings.length; ri++) {
+          var ring   = rings[ri];
+          var age    = elapsed - ring.spawnAt;
+          var rp     = age / 1000;
+          var radius = maxRadius * rp;
+          var alpha  = 1 - rp;
+          mCtx.beginPath();
+          mCtx.arc(w / 2, h / 2, radius, 0, Math.PI * 2);
+          mCtx.strokeStyle = ring.colorIdx === 0
+            ? 'rgba(106,13,173,' + (0.2 * alpha) + ')'
+            : 'rgba(255,215,0,' + (0.35 * alpha) + ')';
+          mCtx.lineWidth = 2;
+          mCtx.stroke();
+        }
+
+        // ── Pattern C: Cell division (draw second) ──
+        while (divideCount < 5 && elapsed >= (divideCount + 1) * 400) {
+          var newCells = [];
+          var limit    = cells.length;
+          for (var ci = 0; ci < limit; ci++) {
+            if (cells.length + newCells.length >= 32) break;
+            var cell   = cells[ci];
+            var angle1 = Math.random() * Math.PI * 2;
+            var speed  = 0.4 + Math.random() * 0.4;
+            cell.vx = Math.cos(angle1) * speed;
+            cell.vy = Math.sin(angle1) * speed;
+            cell.generation = Math.min(cell.generation + 1, 5);
+            var angle2 = angle1 + Math.PI + (Math.random() - 0.5) * 0.8;
+            newCells.push({
+              x: cell.x, y: cell.y,
+              vx: Math.cos(angle2) * speed,
+              vy: Math.sin(angle2) * speed,
+              generation: cell.generation
+            });
+          }
+          cells = cells.concat(newCells).slice(0, 32);
+          divideCount++;
+        }
+
+        cells = cells.filter(function(c) {
+          return c.x > -100 && c.x < w + 100 && c.y > -100 && c.y < h + 100;
+        });
+        for (var ci = 0; ci < cells.length; ci++) {
+          var cell = cells[ci];
+          cell.x += cell.vx;
+          cell.y += cell.vy;
+          if (Math.abs(cell.x - w / 2) < 90 && Math.abs(cell.y - h / 2) < 60) continue;
+          var baseR = 55 / Math.sqrt(cell.generation);
+          var r     = Math.max(baseR + Math.sin(timeSec * 3) * 3, 3);
+          mCtx.beginPath();
+          mCtx.arc(cell.x, cell.y, r, 0, Math.PI * 2);
+          mCtx.fillStyle = cell.generation % 2 === 1
+            ? 'rgba(26,0,64,0.3)'
+            : 'rgba(106,13,173,0.35)';
+          mCtx.fill();
+        }
+
+        // ── Pattern A: DNA Helix (draw on top) ──
+        var totalNodes = 60;
+        for (var ni = 0; ni < totalNodes; ni++) {
+          var nodeProgress = ni / totalNodes;
+          if (nodeProgress > progress) continue;
+
+          var cy     = h - nodeProgress * h;
+          var angle1 = animStep + ni * 0.28;
+          var angle2 = angle1 + Math.PI;
+          var hRad   = 45;
+
+          // Skip entire level if inside logo safe zone (helix center is always w/2)
+          if (Math.abs(cy - h / 2) < 60) continue;
+
+          var x1 = w / 2 + Math.cos(angle1) * hRad;
+          var x2 = w / 2 + Math.cos(angle2) * hRad;
+
+          mCtx.beginPath();
+          mCtx.moveTo(x1, cy);
+          mCtx.lineTo(x2, cy);
+          mCtx.strokeStyle = 'rgba(26,0,64,0.18)';
+          mCtx.lineWidth   = 2;
+          mCtx.stroke();
+
+          mCtx.beginPath();
+          mCtx.arc(x1, cy, 6, 0, Math.PI * 2);
+          mCtx.fillStyle = '#6a0dad';
+          mCtx.fill();
+
+          mCtx.beginPath();
+          mCtx.arc(x2, cy, 6, 0, Math.PI * 2);
+          mCtx.fillStyle = '#1a0040';
+          mCtx.fill();
+        }
+
+        requestAnimationFrame(medLoop);
+      }
+
+      requestAnimationFrame(medLoop);
+    }, 500); // 800ms total − 300ms step2 delay = 500ms
   }, 300);
 });
 
-// ── ENGINEERING TRANSITION CLICK ──
+// ── ENGINEERING TRANSITION ──
+// Full-viewport binary rain growing from center, logo stays still
 engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
@@ -578,101 +638,90 @@ engineering.addEventListener('click', function() {
   var w = window.innerWidth;
   var h = window.innerHeight;
 
-  // Step 1: fade out content over 300ms
+  // Step 1 (0ms): fade content only — logo untouched
   mContent.style.opacity   = '0';
   engContent.style.opacity = '0';
-  centerLogo.style.opacity = '0';
 
-  // Step 2 at 300ms: dark flood expands from right edge to full viewport
+  // Step 2 (300ms): dark flood + logo pulse
   setTimeout(function() {
-    var flood = document.createElement('div');
-    Object.assign(flood.style, {
-      position: 'fixed', top: '0', right: '0', bottom: '0', left: 'auto',
-      zIndex: '50',
+    var floodEng = document.createElement('div');
+    floodEng.id = 'floodEng';
+    Object.assign(floodEng.style, {
+      position: 'fixed', inset: '0',
       background: '#0a1628',
-      width: '48%', height: '100%',
-      transition: 'width 600ms cubic-bezier(0.77, 0, 0.18, 1)',
-      pointerEvents: 'none'
+      zIndex: '50',
+      opacity: '0',
+      pointerEvents: 'none',
+      transition: 'opacity 400ms ease'
     });
-    document.body.appendChild(flood);
-    flood.getBoundingClientRect(); // force reflow before transition
-    flood.style.width = '100%';
+    document.body.appendChild(floodEng);
+    floodEng.getBoundingClientRect();
+    floodEng.style.opacity = '1';
+    centerLogo.classList.add('logo-pulse');
 
-    // Step 3 at 900ms: engCanvas goes full viewport, logo fades in
+    // Step 3 (700ms): binary rain full viewport
     setTimeout(function() {
       Object.assign(eCanvas.style, {
-        position: 'fixed', top: '0', right: '0', bottom: '0', left: '0',
-        width: '100vw', height: '100vh', zIndex: '99', display: 'block'
+        position: 'fixed', top: '0', left: '0',
+        width: '100vw', height: '100vh',
+        zIndex: '99', display: 'block',
+        pointerEvents: 'none'
       });
       eCanvas.width  = w;
       eCanvas.height = h;
 
-      var logoImg = centerLogo.querySelector('img');
-      var maxDim  = 150;
-      var nw = logoImg.naturalWidth  || maxDim;
-      var nh = logoImg.naturalHeight || maxDim;
-      var sc = Math.min(maxDim / nw, maxDim / nh);
-      var logoW = nw * sc, logoH = nh * sc;
-      var logoX = (w - logoW) / 2, logoY = (h - logoH) / 2;
+      var columns          = Math.floor(w / 14);
+      var drops            = [];
+      var activationDelays = [];
 
-      var logoAlpha    = 0;
-      var fadeInFrames = Math.round(400 / 16);
-      var fadeInCount  = 0;
+      for (var i = 0; i < columns; i++) {
+        var colX = i * 14 + 7;
+        var dist = Math.abs(colX - w / 2);
+        var delay = dist < 100 ? 0 : dist < 300 ? 200 : 400;
+        drops.push(Math.floor(Math.random() * -20));
+        activationDelays.push(delay);
+      }
 
-      var logoFadeIn = setInterval(function() {
-        fadeInCount++;
-        logoAlpha = Math.min(fadeInCount / fadeInFrames, 1);
-        eCtx.clearRect(0, 0, w, h);
-        eCtx.globalAlpha = logoAlpha;
-        eCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
-        eCtx.globalAlpha = 1;
+      var rainStart    = performance.now();
+      var rainInterval = setInterval(function() {
+        var elapsed = performance.now() - rainStart;
 
-        if (fadeInCount >= fadeInFrames) {
-          clearInterval(logoFadeIn);
+        eCtx.fillStyle = 'rgba(10,22,40,0.12)';
+        eCtx.fillRect(0, 0, w, h);
 
-          // Step 4: logo fades out, binary rain fades in
-          var columns = Math.floor(w / 14);
-          var drops   = Array.from({length: columns}, function() { return Math.floor(Math.random() * -20); });
-          var overlapCount  = 0;
-          var overlapFrames = Math.round(300 / 16);
+        eCtx.fillStyle = '#00C8B4';
+        eCtx.font      = '900 13px Montserrat';
 
-          var rainLoop = setInterval(function() {
-            overlapCount++;
-            var logoOut = Math.max(1 - overlapCount / overlapFrames, 0);
-            var rainIn  = Math.min(overlapCount / overlapFrames, 1);
-
-            eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)';
-            eCtx.fillRect(0, 0, w, h);
-
-            if (logoOut > 0) {
-              eCtx.globalAlpha = logoOut;
-              eCtx.drawImage(logoImg, logoX, logoY, logoW, logoH);
-            }
-
-            eCtx.globalAlpha = rainIn;
-            eCtx.fillStyle   = '#00C8B4';
-            eCtx.font        = '900 12px monospace';
-
-            for (var i = 0; i < drops.length; i++) {
-              var text = Math.random() > 0.5 ? '1' : '0';
-              eCtx.fillText(text, i * 14, drops[i] * 14);
-              if (drops[i] * 14 > h && Math.random() > 0.975) drops[i] = 0;
-              drops[i]++;
-            }
-
-            eCtx.globalAlpha = 1;
-          }, 18);
-
-          // Step 5 at 2500ms total: dark flash → navigate
-          setTimeout(function() {
-            clearInterval(rainLoop);
-            flashCurtain.style.background = '#0a1628';
-            flashCurtain.style.opacity    = '1';
-            setTimeout(function() { window.location.href = 'engineering.html'; }, 100);
-          }, 1200);
+        for (var i = 0; i < columns; i++) {
+          if (elapsed < activationDelays[i]) continue;
+          var x = i * 14;
+          var y = drops[i] * 14;
+          if (Math.abs(x - w / 2) < 90 && Math.abs(y - h / 2) < 60) {
+            drops[i]++;
+            continue;
+          }
+          eCtx.fillText(Math.random() > 0.5 ? '1' : '0', x, y);
+          if (y > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
         }
-      }, 16);
-    }, 600);
+      }, 18);
+
+      // Step 4 (1900ms total = 1200ms after rain starts): fill dark, navigate
+      setTimeout(function() {
+        clearInterval(rainInterval);
+        var fillAlpha    = 0;
+        var fillInterval = setInterval(function() {
+          fillAlpha = Math.min(fillAlpha + 18 / 200, 1);
+          eCtx.fillStyle = 'rgba(10,22,40,' + fillAlpha + ')';
+          eCtx.fillRect(0, 0, w, h);
+          if (fillAlpha >= 1) {
+            clearInterval(fillInterval);
+            centerLogo.classList.remove('logo-pulse');
+            window.location.href = 'engineering.html';
+          }
+        }, 18);
+      }, 1200);
+    }, 400); // 700ms total − 300ms step2 delay = 400ms
   }, 300);
 });
 </script>
