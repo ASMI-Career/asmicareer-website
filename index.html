@@ -278,10 +278,11 @@ body:has(.engineering:hover) .center-logo {
   display: none;
 }
 #engCanvas {
-  position: absolute;
-  top: 0; right: 0;
-  width: 48%; height: 100%;
-  z-index: 5;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
   pointer-events: none;
   display: none;
 }
@@ -318,6 +319,7 @@ body:has(.engineering:hover) .center-logo {
 
 <div class="flash-curtain" id="flashCurtain"></div>
 <canvas id="globalCanvas"></canvas>
+<canvas id="engCanvas"></canvas>
 
 <!-- ══ CENTER LOGO — outside .split to escape its stacking context ══ -->
 <div class="center-logo" id="centerLogo">
@@ -370,7 +372,6 @@ body:has(.engineering:hover) .center-logo {
 <div class="seam-line" id="seamLine"></div>
 <div class="engineering" id="engineering">
     <div class="bg-wash e-wash"></div>
-    <canvas id="engCanvas"></canvas>
 
     <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
       <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
@@ -444,7 +445,6 @@ const mCanvas = document.getElementById('globalCanvas');
 const mCtx    = mCanvas.getContext('2d');
 
 const eCanvas = document.getElementById('engCanvas');
-const eCtx    = eCanvas.getContext('2d');
 
 let isTransitioning = false;
 
@@ -643,16 +643,12 @@ engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  // Force canvas to full viewport immediately — before any async steps
-  eCanvas.style.position = 'fixed';
-  eCanvas.style.inset    = '0';
-  eCanvas.style.width    = '100vw';
-  eCanvas.style.height   = '100vh';
-  eCanvas.style.zIndex   = '99';
-  eCanvas.style.display  = 'block';
-  eCanvas.style.pointerEvents = 'none';
+  // Fresh context — canvas was 0×0 at page load; resize resets it
   eCanvas.width  = window.innerWidth;
   eCanvas.height = window.innerHeight;
+  eCanvas.style.display = 'block';
+  var eCtx = eCanvas.getContext('2d');
+  if (!eCtx) return;
 
   var w = eCanvas.width;
   var h = eCanvas.height;
@@ -680,15 +676,14 @@ engineering.addEventListener('click', function() {
 
     // Step 3 (700ms): binary rain RAF loop
     setTimeout(function() {
-      var colCount   = Math.floor(w / 14);
-      var drops      = [];
-      var colDelays  = [];
-      for (var i = 0; i < colCount; i++) {
-        var colX = i * 14;
-        var dist = Math.abs(colX - w / 2);
-        colDelays[i] = (dist / (w / 2)) * 500; // 0ms at center → 500ms at edges
-        drops[i] = 1;
-      }
+      var colW     = 14;
+      var colCount = Math.floor(w / colW);
+      var drops    = new Array(colCount).fill(1);
+      var centerCol = colCount / 2;
+      var colDelays = drops.map(function(_, i) {
+        var dist = Math.abs(i - centerCol) / centerCol;
+        return dist * 600; // 0ms at center → 600ms at edges
+      });
 
       var rainStart = null;
 
@@ -698,17 +693,18 @@ engineering.addEventListener('click', function() {
 
         eCtx.fillStyle = 'rgba(10,22,40,0.13)';
         eCtx.fillRect(0, 0, w, h);
-        eCtx.fillStyle = '#00C8B4';
-        eCtx.font      = '900 13px Montserrat';
+        eCtx.font = '900 13px Montserrat, monospace';
 
         for (var i = 0; i < colCount; i++) {
           if (elapsed < colDelays[i]) continue;
-          var x = i * 14;
-          var y = drops[i] * 14;
+          var x = i * colW;
+          var y = drops[i] * colW;
           if (Math.abs(x - w / 2) < 90 && Math.abs(y - h / 2) < 60) {
             drops[i]++;
             continue;
           }
+          // Lead char bright white, trail teal
+          eCtx.fillStyle = drops[i] % 2 === 0 ? '#ffffff' : '#00C8B4';
           eCtx.fillText(Math.random() > 0.5 ? '1' : '0', x, y);
           if (y > h && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
@@ -720,7 +716,7 @@ engineering.addEventListener('click', function() {
           eCtx.fillStyle = '#0a1628';
           eCtx.fillRect(0, 0, w, h);
           centerLogo.classList.remove('logo-pulse');
-          setTimeout(function() { window.location.href = 'engineering.html'; }, 200);
+          setTimeout(function() { window.location.href = 'engineering.html'; }, 150);
         }
       }
 
