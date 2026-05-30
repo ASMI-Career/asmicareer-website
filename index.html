@@ -59,7 +59,13 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 }
 
 /* ── 3D HOVER ── */
-.medical:hover, .engineering:hover {
+.medical:hover {
+  transform: translateZ(50px) scale(1.02);
+  filter: brightness(1.06);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 20px 40px rgba(0,0,0,0.3);
+  z-index: 5;
+}
+.engineering:hover {
   transform: translateZ(50px) scale(1.02);
   filter: brightness(1.06);
   box-shadow: 0 40px 80px rgba(0,0,0,0.55), 0 20px 40px rgba(0,0,0,0.3);
@@ -230,8 +236,8 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 }
 
 /* ── LOGO LIFTS WITH HOVERED PANEL ── */
-.split:has(.medical:hover) .center-logo,
-.split:has(.engineering:hover) .center-logo {
+body:has(.medical:hover) .center-logo,
+body:has(.engineering:hover) .center-logo {
   transform: translate(-50%, -50%) translateZ(60px) scale(1.05);
   filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
 }
@@ -312,6 +318,11 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
 
 <div class="flash-curtain" id="flashCurtain"></div>
 <canvas id="globalCanvas"></canvas>
+
+<!-- ══ CENTER LOGO — outside .split to escape its stacking context ══ -->
+<div class="center-logo" id="centerLogo">
+  <img src="asmi-logo.png" alt="">
+</div>
 
 <div class="split" id="split">
   <div class="medical" id="medical">
@@ -418,10 +429,7 @@ html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-
     </div>
   </div>
 
-  <!-- ══ CENTER LOGO ══ -->
-  <div class="center-logo" id="centerLogo">
-    <img src="asmi-logo.png" alt="">
-     </div>
+
 
 <script>
 const medical      = document.getElementById('medical');
@@ -635,8 +643,19 @@ engineering.addEventListener('click', function() {
   if (isTransitioning) return;
   isTransitioning = true;
 
-  var w = window.innerWidth;
-  var h = window.innerHeight;
+  // Force canvas to full viewport immediately — before any async steps
+  eCanvas.style.position = 'fixed';
+  eCanvas.style.inset    = '0';
+  eCanvas.style.width    = '100vw';
+  eCanvas.style.height   = '100vh';
+  eCanvas.style.zIndex   = '99';
+  eCanvas.style.display  = 'block';
+  eCanvas.style.pointerEvents = 'none';
+  eCanvas.width  = window.innerWidth;
+  eCanvas.height = window.innerHeight;
+
+  var w = eCanvas.width;
+  var h = eCanvas.height;
 
   // Step 1 (0ms): fade content only — logo untouched
   mContent.style.opacity   = '0';
@@ -659,41 +678,31 @@ engineering.addEventListener('click', function() {
     floodEng.style.opacity = '1';
     centerLogo.classList.add('logo-pulse');
 
-    // Step 3 (700ms): binary rain full viewport
+    // Step 3 (700ms): binary rain RAF loop
     setTimeout(function() {
-      Object.assign(eCanvas.style, {
-        position: 'fixed', top: '0', left: '0',
-        width: '100vw', height: '100vh',
-        zIndex: '99', display: 'block',
-        pointerEvents: 'none'
-      });
-      eCanvas.width  = w;
-      eCanvas.height = h;
-
-      var columns          = Math.floor(w / 14);
-      var drops            = [];
-      var activationDelays = [];
-
-      for (var i = 0; i < columns; i++) {
-        var colX = i * 14 + 7;
+      var colCount   = Math.floor(w / 14);
+      var drops      = [];
+      var colDelays  = [];
+      for (var i = 0; i < colCount; i++) {
+        var colX = i * 14;
         var dist = Math.abs(colX - w / 2);
-        var delay = dist < 100 ? 0 : dist < 300 ? 200 : 400;
-        drops.push(Math.floor(Math.random() * -20));
-        activationDelays.push(delay);
+        colDelays[i] = (dist / (w / 2)) * 500; // 0ms at center → 500ms at edges
+        drops[i] = 1;
       }
 
-      var rainStart    = performance.now();
-      var rainInterval = setInterval(function() {
-        var elapsed = performance.now() - rainStart;
+      var rainStart = null;
 
-        eCtx.fillStyle = 'rgba(10,22,40,0.12)';
+      function drawRain(timestamp) {
+        if (!rainStart) rainStart = timestamp;
+        var elapsed = timestamp - rainStart;
+
+        eCtx.fillStyle = 'rgba(10,22,40,0.13)';
         eCtx.fillRect(0, 0, w, h);
-
         eCtx.fillStyle = '#00C8B4';
         eCtx.font      = '900 13px Montserrat';
 
-        for (var i = 0; i < columns; i++) {
-          if (elapsed < activationDelays[i]) continue;
+        for (var i = 0; i < colCount; i++) {
+          if (elapsed < colDelays[i]) continue;
           var x = i * 14;
           var y = drops[i] * 14;
           if (Math.abs(x - w / 2) < 90 && Math.abs(y - h / 2) < 60) {
@@ -704,23 +713,18 @@ engineering.addEventListener('click', function() {
           if (y > h && Math.random() > 0.975) drops[i] = 0;
           drops[i]++;
         }
-      }, 18);
 
-      // Step 4 (1900ms total = 1200ms after rain starts): fill dark, navigate
-      setTimeout(function() {
-        clearInterval(rainInterval);
-        var fillAlpha    = 0;
-        var fillInterval = setInterval(function() {
-          fillAlpha = Math.min(fillAlpha + 18 / 200, 1);
-          eCtx.fillStyle = 'rgba(10,22,40,' + fillAlpha + ')';
+        if (elapsed < 1800) {
+          requestAnimationFrame(drawRain);
+        } else {
+          eCtx.fillStyle = '#0a1628';
           eCtx.fillRect(0, 0, w, h);
-          if (fillAlpha >= 1) {
-            clearInterval(fillInterval);
-            centerLogo.classList.remove('logo-pulse');
-            window.location.href = 'engineering.html';
-          }
-        }, 18);
-      }, 1200);
+          centerLogo.classList.remove('logo-pulse');
+          setTimeout(function() { window.location.href = 'engineering.html'; }, 200);
+        }
+      }
+
+      requestAnimationFrame(drawRain);
     }, 400); // 700ms total − 300ms step2 delay = 400ms
   }, 300);
 });
