@@ -58,13 +58,14 @@
         top: 0; left: 0; right: 0;
         height: 64px;
         z-index: 100;
-        background: var(--navy);
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.08);
         display: flex;
         align-items: center;
         transition: box-shadow 0.3s ease;
     }
     .nav.scrolled {
-        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .nav-inner {
@@ -83,7 +84,7 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        color: rgba(255,255,255,0.4);
+        color: rgba(26,0,64,0.45);
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
         font-size: 12px;
@@ -95,7 +96,7 @@
         cursor: pointer;
         flex-shrink: 0;
     }
-    .nav-back:hover { color: rgba(255,255,255,0.75); }
+    .nav-back:hover { color: rgba(26,0,64,0.85); }
     .nav-back:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; border-radius: 4px; }
 
     /* Logo */
@@ -111,7 +112,6 @@
     .nav-logo img {
         height: 40px;
         width: auto;
-        mix-blend-mode: screen;
         display: block;
     }
     .nav-logo:focus-visible { outline: 2px solid var(--yellow); outline-offset: 4px; border-radius: 4px; }
@@ -132,7 +132,7 @@
         align-items: center;
         height: 44px;
         padding: 0 15px;
-        color: rgba(255,255,255,0.65);
+        color: rgba(26,0,64,0.65);
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
         font-size: 14px;
@@ -148,15 +148,15 @@
         left: 15px;
         right: 15px;
         height: 2px;
-        background: var(--yellow);
+        background: var(--purple);
         border-radius: 1px;
         transform: scaleX(0);
         transform-origin: left center;
         transition: transform 0.25s ease;
     }
-    .nav-links a:hover { color: var(--yellow); }
+    .nav-links a:hover { color: var(--navy); }
     .nav-links a:hover::after { transform: scaleX(1); }
-    .nav-links a:focus-visible { outline: 2px solid var(--yellow); outline-offset: -2px; border-radius: 4px; color: var(--yellow); }
+    .nav-links a:focus-visible { outline: 2px solid var(--purple); outline-offset: -2px; border-radius: 4px; color: var(--navy); }
 
     /* Right CTA */
     .nav-cta {
@@ -208,7 +208,7 @@
     .nav-hamburger span {
         display: block;
         height: 2px;
-        background: rgba(255,255,255,0.75);
+        background: rgba(26,0,64,0.75);
         border-radius: 1px;
         transition: transform 0.25s ease, opacity 0.25s ease;
     }
@@ -262,255 +262,1398 @@
     ═══════════════════════════════════════ */
 
     .hero {
-        position: relative;
-        height: 100vh;
-        min-height: 600px;
+        background: #FFD700;
+        min-height: 88vh;
         padding-top: 64px;
         display: flex;
         align-items: center;
         overflow: hidden;
     }
 
-    /* Photo background */
-    .hero-bg {
-        position: absolute;
-        inset: 0;
-        background: url('AIIMS_Delhi.jpg') center center / cover no-repeat;
-        z-index: 0;
-    }
-
-    /* Gradient overlay */
-    .hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            135deg,
-            rgba(255,215,0,0.88) 0%,
-            rgba(26,0,64,0.65) 100%
-        );
-        z-index: 1;
-    }
-
-    /* Grid texture */
-    .hero-grid {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        background-image:
-            linear-gradient(rgba(26,0,64,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(26,0,64,0.05) 1px, transparent 1px);
-        background-size: 52px 52px;
-    }
-
-    /* Grain */
-    .hero-grain {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        pointer-events: none;
-        opacity: 0.028;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-        background-size: 200px 200px;
-        mix-blend-mode: multiply;
-    }
-
-    /* Content */
-    .hero-content {
-        position: relative;
-        z-index: 3;
-        max-width: 640px;
-        padding-left: 80px;
+    .hero-inner {
         width: 100%;
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: 60px 80px;
+        display: flex;
+        align-items: center;
+        gap: 60px;
     }
 
-    /* Badge */
-    .hero-badge {
+    .hero-left {
+        flex: 0 0 55%;
+        max-width: 55%;
+    }
+
+    .hero-eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 9px;
-        background: rgba(26,0,64,0.12);
-        color: var(--navy);
-        border: 1px solid rgba(26,0,64,0.2);
-        border-radius: 20px;
-        padding: 6px 16px;
+        gap: 8px;
+        color: #6a0dad;
         font-family: 'Montserrat', sans-serif;
         font-weight: 700;
         font-size: 11px;
         letter-spacing: 2px;
         text-transform: uppercase;
-        margin-bottom: 28px;
-        animation: fadeInDown 0.6s ease both;
+        margin-bottom: 24px;
     }
-    .badge-dot {
+    .eyebrow-dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: var(--navy);
+        background: #6a0dad;
         flex-shrink: 0;
         animation: pulseDot 2.2s ease-in-out infinite;
     }
 
-    /* Headline */
     .hero-h1 {
         font-family: 'Montserrat', sans-serif;
         font-weight: 900;
-        font-size: 64px;
-        line-height: 1.0;
-        color: var(--navy);
-        letter-spacing: -0.03em;
-        margin-bottom: 0;
-        animation: fadeInUp 0.8s ease both;
-        animation-delay: 0.2s;
+        font-size: 58px;
+        line-height: 1.1;
+        color: #1a0040;
+        letter-spacing: -0.02em;
+        margin-bottom: 20px;
     }
-    .hero-h1 span { color: var(--purple); }
+    .hero-h1 .accent { color: #6a0dad; }
 
-    /* Sub */
     .hero-sub {
-        font-size: 16px;
+        font-size: 14px;
         line-height: 1.7;
-        color: rgba(26,0,64,0.72);
+        color: rgba(26,0,64,0.65);
         max-width: 480px;
-        margin-top: 20px;
-        font-weight: 400;
-        animation: fadeInUp 0.8s ease both;
-        animation-delay: 0.4s;
+        margin-bottom: 32px;
     }
 
-    /* CTA row */
-    .hero-ctas {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 14px;
-        margin-top: 36px;
-        animation: fadeInUp 0.8s ease both;
-        animation-delay: 0.6s;
-    }
-
-    .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: var(--navy);
-        color: var(--yellow);
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        font-size: 18px;
-        padding: 16px 40px;
-        border-radius: 50px;
-        text-decoration: none;
-        white-space: nowrap;
-        min-height: 56px;
-        cursor: pointer;
-        transition: transform 0.22s ease, box-shadow 0.22s ease;
-    }
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(26,0,64,0.4);
-    }
-    .btn-primary:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
-
-    .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: transparent;
-        color: var(--navy);
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        font-size: 18px;
-        padding: 16px 40px;
-        border-radius: 50px;
-        border: 2px solid rgba(26,0,64,0.35);
-        text-decoration: none;
-        white-space: nowrap;
-        min-height: 56px;
-        cursor: pointer;
-        transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
-    }
-    .btn-secondary:hover {
-        transform: translateY(-2px);
-        background: rgba(26,0,64,0.08);
-        border-color: rgba(26,0,64,0.55);
-    }
-    .btn-secondary:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
-
-    /* Stats row */
     .hero-stats {
         display: flex;
-        align-items: center;
-        margin-top: 48px;
-        animation: fadeInUp 0.8s ease both;
-        animation-delay: 0.8s;
+        gap: 40px;
+        margin-bottom: 32px;
     }
-
     .hero-stat {
         display: flex;
         flex-direction: column;
-        padding: 0 32px;
+        gap: 4px;
     }
-    .hero-stat:first-child { padding-left: 0; }
-
-    .stat-divider {
-        width: 1px;
-        height: 40px;
-        background: rgba(26,0,64,0.15);
-        align-self: center;
-        flex-shrink: 0;
-    }
-
     .stat-num {
         font-family: 'Montserrat', sans-serif;
         font-weight: 900;
-        font-size: 40px;
+        font-size: 32px;
         line-height: 1;
-        color: var(--navy);
-        letter-spacing: -0.03em;
+        color: #1a0040;
+        letter-spacing: -0.02em;
     }
     .stat-lbl {
-        font-family: 'Open Sans', sans-serif;
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 1.5px;
+        color: rgba(26,0,64,0.55);
         text-transform: uppercase;
-        color: rgba(26,0,64,0.5);
-        margin-top: 4px;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .hero-ctas {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        background: #6a0dad;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 14px 28px;
+        border-radius: 50px;
+        text-decoration: none;
         white-space: nowrap;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(106,13,173,0.4);
+    }
+    .btn-primary:focus-visible { outline: 3px solid #1a0040; outline-offset: 3px; }
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        background: #1a0040;
+        color: #FFD700;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 14px 28px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(26,0,64,0.35);
+    }
+    .btn-secondary:focus-visible { outline: 3px solid #6a0dad; outline-offset: 3px; }
+
+    .hero-right {
+        flex: 0 0 45%;
+        max-width: 45%;
+        position: relative;
+    }
+
+    .hero-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 20px 60px rgba(26,0,64,0.15);
+    }
+
+    .card-top-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    .card-pill-grey {
+        background: #f0f0f0;
+        color: #555;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        padding: 5px 12px;
+        border-radius: 20px;
+    }
+    .card-top-bold {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        color: #1a0040;
+    }
+
+    .card-inner {
+        background: #f8f6ff;
+        border-radius: 14px;
+        padding: 20px;
+    }
+    .card-inner-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    .card-inner-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        color: #1a0040;
+    }
+    .card-ai-pill {
+        background: #6a0dad;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .rank-display {
+        text-align: center;
+        margin-bottom: 16px;
+    }
+    .rank-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #999;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .rank-number {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 52px;
+        line-height: 1;
+        color: #6a0dad;
+        letter-spacing: -0.02em;
+    }
+    .rank-sub {
+        font-size: 11px;
+        color: #999;
+        margin-top: 4px;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: 1px;
+    }
+
+    .college-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        list-style: none;
+    }
+    .college-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .college-dot-name {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .college-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .college-dot.green  { background: #4caf50; }
+    .college-dot.yellow { background: #ffb300; }
+    .college-dot.blue   { background: #2196f3; }
+    .college-name {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 12px;
+        color: #1a0040;
+    }
+    .likelihood-pill {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 10px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+    .pill-likely   { background: #e8f5e9; color: #2e7d32; }
+    .pill-possible { background: #fff8e1; color: #f57c00; }
+    .pill-safe     { background: #e3f2fd; color: #1565c0; }
+
+    .card-bottom-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .card-bottom-label {
+        font-size: 12px;
+        color: rgba(26,0,64,0.5);
+    }
+    .card-bottom-bold {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 13px;
+        color: #1a0040;
     }
 
     /* ═══════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════ */
 
-    /* Hide desktop links at 1024px */
     @media (max-width: 1024px) {
-        .nav-links  { display: none; }
-        .nav-cta    { display: none; }
+        .nav-links     { display: none; }
+        .nav-cta       { display: none; }
         .nav-hamburger { display: flex; }
         .nav-drawer    { display: block; }
     }
 
-    /* Tablet */
-    @media (max-width: 768px) {
-        .hero-content { padding-left: 40px; max-width: 100%; padding-right: 40px; }
-        .hero-h1 { font-size: 48px; }
-        .btn-primary, .btn-secondary { font-size: 16px; padding: 14px 32px; }
-        .stat-num { font-size: 32px; }
-        .hero-stat { padding: 0 20px; }
+    @media (max-width: 900px) {
+        .hero-inner { flex-direction: column; padding: 40px 40px 60px; gap: 40px; }
+        .hero-left, .hero-right { flex: none; max-width: 100%; width: 100%; }
+        .hero-h1 { font-size: 44px; }
+    }
+    @media (max-width: 640px) {
+        .hero-inner { padding: 32px 24px 48px; }
+        .hero-h1 { font-size: 34px; }
+        .hero-stats { gap: 24px; flex-wrap: wrap; }
+        .hero-ctas { flex-direction: column; }
+        .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
     }
 
-    /* Mobile */
+    /* ═══════════════════════════════════════
+       SECTION 2b — IMPORTANT EVENTS
+    ═══════════════════════════════════════ */
+
+    .events-section {
+        background: #ffffff;
+        padding: 48px 80px;
+    }
+    .events-inner {
+        max-width: 1360px;
+        margin: 0 auto;
+    }
+    .events-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    .events-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: #1a0040;
+    }
+    .events-title-dot { color: #6a0dad; }
+    .events-view-all {
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .events-view-all:hover { opacity: 0.75; }
+    .events-cards {
+        display: flex;
+        gap: 20px;
+    }
+    .event-card {
+        flex: 1;
+        background: #ffffff;
+        border: 1px solid rgba(26,0,64,0.08);
+        border-radius: 12px;
+        padding: 20px;
+    }
+    .event-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .event-tag {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 9px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 1px;
+    }
+    .tag-engineering { background: #e8f0ff; color: #6a0dad; }
+    .tag-urgent      { background: #fff0f0; color: #d32f2f; }
+    .tag-medical     { background: #f3e5ff; color: #6a0dad; }
+    .event-time {
+        font-size: 11px;
+        color: #999;
+    }
+    .event-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        color: #1a0040;
+        line-height: 1.4;
+        margin-bottom: 6px;
+    }
+    .event-body {
+        font-size: 12px;
+        color: rgba(26,0,64,0.6);
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .events-section { padding: 40px; }
+        .events-cards { flex-direction: column; }
+    }
     @media (max-width: 640px) {
-        .hero-content { padding-left: 24px; padding-right: 24px; }
-        .hero-h1 { font-size: 38px; }
-        .hero-sub { font-size: 15px; }
-        .hero-ctas { flex-direction: column; gap: 12px; }
-        .btn-primary, .btn-secondary { font-size: 15px; padding: 14px 28px; width: 100%; justify-content: center; }
-        .hero-stats { flex-wrap: wrap; gap: 16px 0; }
-        .stat-divider { display: none; }
-        .hero-stat { padding: 0; width: 50%; }
-        .stat-num { font-size: 28px; }
+        .events-section { padding: 32px 24px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION 2c — TOP TIER UNIVERSITIES
+    ═══════════════════════════════════════ */
+
+    .unis-section {
+        background: #ffffff;
+        padding: 60px 80px;
+    }
+    .unis-inner {
+        max-width: 1360px;
+        margin: 0 auto;
+    }
+    .unis-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+    .unis-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: #1a0040;
+    }
+    .unis-title-dot { color: #6a0dad; }
+    .unis-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .unis-view-all {
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .unis-view-all:hover { opacity: 0.75; }
+    .unis-arrow-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(26,0,64,0.15);
+        background: #ffffff;
+        color: #1a0040;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, color 0.2s ease;
+        flex-shrink: 0;
+        line-height: 1;
+    }
+    .unis-arrow-btn:hover { background: #1a0040; color: #ffffff; }
+
+    .unis-track {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+    }
+    .unis-track::-webkit-scrollbar { display: none; }
+
+    .uni-card {
+        flex: 0 0 calc(25% - 15px);
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(26,0,64,0.08);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .uni-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(26,0,64,0.15);
+    }
+
+    .uni-img {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #e8e0f5 0%, #d4c5f0 100%);
+    }
+    .uni-rating {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: rgba(255,255,255,0.92);
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        border-radius: 20px;
+        padding: 3px 10px;
+    }
+    .uni-heart {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        color: rgba(26,0,64,0.4);
+        font-size: 18px;
+        line-height: 1;
+    }
+    .uni-recommend-badge {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 0.5px;
+        padding: 4px 10px;
+        border-radius: 4px;
+    }
+
+    .uni-content {
+        padding: 16px;
+    }
+    .uni-meta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+        font-size: 11px;
+        color: rgba(26,0,64,0.5);
+        font-weight: 600;
+    }
+    .uni-name {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: #1a0040;
+        line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+        .unis-section { padding: 48px 40px; }
+        .uni-card { flex: 0 0 calc(50% - 10px); }
+    }
+    @media (max-width: 640px) {
+        .unis-section { padding: 32px 24px; }
+        .uni-card { flex: 0 0 calc(80% - 10px); }
+        .unis-title { font-size: 18px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Ps — PROBLEM / SOLUTION
+    ═══════════════════════════════════════ */
+
+    .ps-section {
+        background: #ffffff;
+        padding: 72px 80px;
+    }
+    .ps-inner {
+        max-width: 1360px;
+        margin: 0 auto;
+    }
+    .ps-header {
+        text-align: center;
+        margin-bottom: 56px;
+    }
+    .ps-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #1a0040;
+        line-height: 1.2;
+    }
+    .ps-sub {
+        font-size: 15px;
+        color: rgba(26,0,64,0.55);
+        margin-top: 12px;
+    }
+    .ps-grid {
+        display: flex;
+        gap: 0;
+        align-items: stretch;
+    }
+    .ps-left, .ps-right {
+        flex: 0 0 33%;
+        width: 33%;
+        padding: 0 32px;
+    }
+    .ps-left  { padding-left: 0; }
+    .ps-right { padding-right: 0; }
+    .ps-img-col {
+        flex: 0 0 34%;
+        width: 34%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        height: 420px;
+        background: linear-gradient(160deg, #e8e0f5 0%, #c8b4e8 100%);
+    }
+    .ps-col-lbl {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: rgba(26,0,64,0.5);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .ps-dot-red   { color: #d32f2f; }
+    .ps-dot-green { color: #2e7d32; }
+    .ps-item {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 28px;
+        align-items: flex-start;
+    }
+    .ps-num {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid rgba(26,0,64,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 14px;
+        color: #1a0040;
+    }
+    .ps-num.solution { border-color: rgba(46,125,50,0.3); }
+    .ps-item-body {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        flex: 1;
+    }
+    .ps-bar {
+        flex-shrink: 0;
+        width: 3px;
+        align-self: stretch;
+        border-radius: 2px;
+        min-height: 20px;
+    }
+    .ps-bar.red   { background: #d32f2f; }
+    .ps-bar.green { background: #2e7d32; }
+    .ps-text {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: #1a0040;
+        line-height: 1.5;
+    }
+    .ps-vs {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #6a0dad;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(106,13,173,0.4);
+    }
+
+    @media (max-width: 900px) {
+        .ps-section { padding: 56px 40px; }
+        .ps-grid { flex-direction: column; gap: 40px; }
+        .ps-left, .ps-right { flex: none; width: 100%; padding: 0; }
+        .ps-img-col { flex: none; width: 100%; height: 260px; }
+        .ps-headline { font-size: 28px; }
+    }
+    @media (max-width: 640px) {
+        .ps-section { padding: 40px 24px; }
+        .ps-headline { font-size: 22px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Why — WHY ASMI
+    ═══════════════════════════════════════ */
+
+    .why-section {
+        background: #FFD700;
+        padding: 72px 80px;
+    }
+    .why-inner {
+        max-width: 1360px;
+        margin: 0 auto;
+        display: flex;
+        gap: 60px;
+        align-items: center;
+    }
+    .why-left {
+        flex: 0 0 45%;
+        max-width: 45%;
+    }
+    .why-eyebrow {
+        display: inline-block;
+        background: #1a0040;
+        color: #FFD700;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+    .why-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #1a0040;
+        line-height: 1.15;
+        margin-bottom: 12px;
+    }
+    .why-sub {
+        font-size: 14px;
+        color: rgba(26,0,64,0.65);
+        margin-bottom: 36px;
+    }
+    .why-features {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+    .why-feature {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    .why-icon {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        background: rgba(26,0,64,0.08);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+    .why-feature-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        color: #1a0040;
+    }
+    .why-feature-body {
+        font-size: 13px;
+        color: rgba(26,0,64,0.6);
+        line-height: 1.6;
+        margin-top: 3px;
+    }
+    .why-right {
+        flex: 0 0 55%;
+        max-width: 55%;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 440px;
+        background: linear-gradient(160deg, #1a0040 0%, #6a0dad 100%);
+    }
+    .why-overlay-card {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.95);
+        border-radius: 14px;
+        padding: 18px 22px;
+    }
+    .why-overlay-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        color: #6a0dad;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .why-overlay-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        color: #1a0040;
+        margin-top: 6px;
+    }
+    .why-overlay-sub {
+        font-size: 12px;
+        color: rgba(26,0,64,0.6);
+        margin-top: 4px;
+        margin-bottom: 14px;
+        line-height: 1.5;
+    }
+    .why-overlay-btns {
+        display: flex;
+        gap: 10px;
+    }
+    .why-btn-dark {
+        background: #1a0040;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 12px;
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .why-btn-dark:hover { opacity: 0.85; }
+    .why-btn-purple {
+        background: #6a0dad;
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 12px;
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .why-btn-purple:hover { opacity: 0.85; }
+
+    @media (max-width: 900px) {
+        .why-section { padding: 56px 40px; }
+        .why-inner { flex-direction: column; gap: 40px; }
+        .why-left, .why-right { flex: none; max-width: 100%; width: 100%; }
+        .why-right { height: 360px; }
+        .why-headline { font-size: 28px; }
+    }
+    @media (max-width: 640px) {
+        .why-section { padding: 40px 24px; }
+        .why-headline { font-size: 24px; }
+        .why-overlay-btns { flex-direction: column; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Journey — ADMISSION JOURNEY
+    ═══════════════════════════════════════ */
+
+    .journey-section {
+        background: #1a0040;
+        padding: 72px 80px;
+    }
+    .journey-inner {
+        max-width: 1360px;
+        margin: 0 auto;
+    }
+    .journey-header {
+        text-align: center;
+        margin-bottom: 56px;
+    }
+    .journey-icon { font-size: 20px; }
+    .journey-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #FFD700;
+        margin-top: 12px;
+    }
+    .journey-sub {
+        font-size: 15px;
+        color: rgba(255,255,255,0.55);
+        margin-top: 10px;
+    }
+    .journey-steps-wrap { position: relative; }
+    .journey-line-left {
+        position: absolute;
+        top: 28px;
+        left: 11%;
+        width: 28%;
+        height: 2px;
+        background: #FFD700;
+        z-index: 0;
+    }
+    .journey-line-right {
+        position: absolute;
+        top: 28px;
+        left: 50%;
+        width: 28%;
+        height: 2px;
+        background: #6a0dad;
+        z-index: 0;
+    }
+    .journey-runner {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 28px;
+        z-index: 2;
+        line-height: 1;
+    }
+    .journey-steps {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        z-index: 1;
+    }
+    .journey-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 22%;
+    }
+    .journey-circle {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+    }
+    .journey-circle.gold   { background: #FFD700; color: #1a0040; }
+    .journey-circle.purple { background: transparent; border: 2px solid #6a0dad; color: #6a0dad; }
+    .journey-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 15px;
+        margin-top: 16px;
+    }
+    .journey-label.gold   { color: #FFD700; }
+    .journey-label.purple { color: #6a0dad; }
+    .journey-body {
+        font-size: 13px;
+        color: rgba(255,255,255,0.5);
+        margin-top: 8px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+        .journey-section { padding: 56px 40px; }
+        .journey-headline { font-size: 28px; }
+        .journey-steps { flex-wrap: wrap; gap: 40px; justify-content: center; }
+        .journey-step { width: 44%; }
+        .journey-line-left, .journey-line-right, .journey-runner { display: none; }
+    }
+    @media (max-width: 640px) {
+        .journey-section { padding: 40px 24px; }
+        .journey-step { width: 100%; }
+        .journey-headline { font-size: 24px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Pricing
+    ═══════════════════════════════════════ */
+
+    .pricing-section { background: #ffffff; padding: 72px 80px; }
+    .pricing-inner { max-width: 1360px; margin: 0 auto; }
+    .pricing-header { text-align: center; margin-bottom: 48px; }
+    .pricing-eyebrow {
+        display: inline-block;
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 4px 16px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+    .pricing-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #1a0040;
+    }
+    .pricing-sub1 { font-size: 14px; color: rgba(26,0,64,0.55); margin-top: 10px; }
+    .pricing-sub2 { font-size: 14px; color: #1a0040; font-weight: 700; margin-top: 6px; }
+    .pricing-sub2 .ps2-purple { color: #6a0dad; }
+    .pricing-sub2 .ps2-muted  { color: rgba(26,0,64,0.55); font-weight: 400; }
+    .pricing-cards { display: flex; gap: 20px; }
+    .pricing-card {
+        flex: 1;
+        border-radius: 16px;
+        padding: 28px;
+        background: #f8f6ff;
+        border: 1.5px solid rgba(106,13,173,0.08);
+        position: relative;
+    }
+    .pricing-card.featured { border: 2px solid #6a0dad; }
+    .pricing-popular {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+    .pricing-exam {
+        font-size: 11px;
+        font-weight: 700;
+        color: #6a0dad;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+    .pricing-course {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        color: #1a0040;
+    }
+    .pricing-type { font-size: 13px; color: rgba(26,0,64,0.55); }
+    .pricing-price {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 36px;
+        color: #1a0040;
+        margin: 20px 0;
+    }
+    .pricing-btn-default {
+        width: 100%;
+        padding: 13px;
+        border-radius: 50px;
+        border: 1.5px solid rgba(26,0,64,0.2);
+        background: transparent;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .pricing-btn-default:hover { background: #1a0040; color: #ffffff; }
+    .pricing-btn-featured {
+        width: 100%;
+        padding: 13px;
+        border-radius: 50px;
+        border: none;
+        background: linear-gradient(135deg, #6a0dad 0%, #9c27b0 100%);
+        color: #ffffff;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .pricing-btn-featured:hover { opacity: 0.9; }
+    .pricing-banner {
+        background: linear-gradient(135deg, #6a0dad 0%, #c2185b 50%, #1565c0 100%);
+        border-radius: 20px;
+        padding: 52px 60px;
+        text-align: center;
+        margin-top: 48px;
+    }
+    .pricing-banner-h { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; color: #ffffff; }
+    .pricing-banner-sub { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 32px; color: #ffffff; margin-top: 8px; }
+    .pricing-banner-body {
+        font-size: 15px;
+        color: rgba(255,255,255,0.7);
+        margin-top: 16px;
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+    .pricing-banner-btns { display: flex; justify-content: center; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
+    .banner-btn-white {
+        background: #ffffff;
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 14px 32px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .banner-btn-white:hover { opacity: 0.9; }
+    .banner-btn-yellow {
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        padding: 14px 32px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: opacity 0.2s;
+    }
+    .banner-btn-yellow:hover { opacity: 0.9; }
+
+    @media (max-width: 900px) {
+        .pricing-section { padding: 56px 40px; }
+        .pricing-cards { flex-wrap: wrap; }
+        .pricing-card { flex: 0 0 calc(50% - 10px); }
+        .pricing-banner { padding: 40px 32px; }
+        .pricing-banner-h { font-size: 28px; }
+        .pricing-banner-sub { font-size: 24px; }
+    }
+    @media (max-width: 640px) {
+        .pricing-section { padding: 40px 24px; }
+        .pricing-card { flex: 0 0 100%; }
+        .pricing-banner { padding: 32px 24px; }
+        .pricing-headline { font-size: 28px; }
+        .pricing-banner-h { font-size: 24px; }
+        .pricing-banner-sub { font-size: 20px; }
+        .pricing-banner-btns { flex-direction: column; align-items: center; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Testimonials
+    ═══════════════════════════════════════ */
+
+    .testi-section { background: rgba(106,13,173,0.06); padding: 72px 80px; }
+    .testi-inner { max-width: 1360px; margin: 0 auto; }
+    .testi-header { text-align: center; margin-bottom: 40px; }
+    .testi-eyebrow {
+        display: inline-block;
+        background: #f3e5ff;
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 4px 16px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+    .testi-headline { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; color: #1a0040; }
+    .testi-sub { font-size: 14px; color: rgba(26,0,64,0.55); margin-top: 10px; }
+    .testi-leaf { font-size: 20px; margin-top: 8px; }
+    .testi-avatars {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+    .testi-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid transparent;
+        flex-shrink: 0;
+        transition: border-color 0.2s;
+    }
+    .testi-avatar.active { border-color: #6a0dad; }
+    .testi-cards { display: flex; gap: 20px; }
+    .testi-card {
+        flex: 1;
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 4px 20px rgba(106,13,173,0.08);
+    }
+    .testi-stars { color: #FFD700; font-size: 16px; margin-bottom: 16px; }
+    .testi-student-row { display: flex; gap: 12px; align-items: center; }
+    .testi-avatar-sm {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #e8d5f5;
+        flex-shrink: 0;
+    }
+    .testi-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; color: #1a0040; }
+    .testi-tag { font-size: 11px; color: #6a0dad; line-height: 1.5; }
+    .testi-quote-mark { color: #6a0dad; font-size: 28px; margin: 16px 0 8px; line-height: 1; }
+    .testi-body { font-size: 13px; color: rgba(26,0,64,0.7); line-height: 1.7; }
+    .testi-nav { display: flex; justify-content: center; gap: 12px; margin-top: 32px; }
+    .testi-arrow {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(106,13,173,0.2);
+        background: #ffffff;
+        color: #6a0dad;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+    }
+    .testi-arrow:hover { background: #6a0dad; color: #ffffff; }
+
+    @media (max-width: 900px) {
+        .testi-section { padding: 56px 40px; }
+        .testi-cards { flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+        .testi-section { padding: 40px 24px; }
+        .testi-headline { font-size: 28px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION Resources
+    ═══════════════════════════════════════ */
+
+    .resources-section { background: #ffffff; padding: 72px 80px; }
+    .resources-inner { max-width: 1360px; margin: 0 auto; }
+    .resources-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        gap: 40px;
+    }
+    .resources-headline { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; color: #1a0040; }
+    .resources-sub { font-size: 13px; color: rgba(26,0,64,0.55); margin-top: 6px; max-width: 480px; line-height: 1.6; }
+    .resources-view-all {
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: opacity 0.2s;
+    }
+    .resources-view-all:hover { opacity: 0.75; }
+    .resources-cards { display: flex; gap: 20px; }
+    .resource-card {
+        flex: 1;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(26,0,64,0.08);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    .resource-card:hover { transform: translateY(-4px); }
+    .resource-img {
+        height: 180px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .resource-img-emoji {
+        font-size: 48px;
+        opacity: 0.4;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .resource-tag {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 9px;
+        letter-spacing: 1px;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+    .resource-content { padding: 20px; }
+    .resource-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 15px;
+        color: #1a0040;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+    .resource-body { font-size: 12px; color: rgba(26,0,64,0.55); line-height: 1.6; margin-bottom: 16px; }
+    .resource-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid rgba(26,0,64,0.06);
+        padding-top: 14px;
+    }
+    .resource-meta { font-size: 11px; color: rgba(26,0,64,0.4); }
+    .resource-cta-link {
+        color: #6a0dad;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        text-decoration: none;
+    }
+    .resource-cta-btn {
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 12px;
+        padding: 8px 18px;
+        border-radius: 50px;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+        .resources-section { padding: 56px 40px; }
+        .resources-cards { flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+        .resources-section { padding: 40px 24px; }
+        .resources-header { flex-direction: column; gap: 12px; }
+    }
+
+    /* ═══════════════════════════════════════
+       SECTION FAQs
+    ═══════════════════════════════════════ */
+
+    .faq-section { background: #f8f6ff; padding: 72px 80px; }
+    .faq-inner { max-width: 1360px; margin: 0 auto; }
+    .faq-header { text-align: center; margin-bottom: 48px; }
+    .faq-eyebrow {
+        display: inline-block;
+        background: #FFD700;
+        color: #1a0040;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 4px 16px;
+        border-radius: 20px;
+        margin-bottom: 16px;
+    }
+    .faq-headline { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; color: #1a0040; }
+    .faq-sub { font-size: 14px; color: rgba(26,0,64,0.55); margin-top: 10px; }
+    .faq-accordion { max-width: 680px; margin: 0 auto; }
+    .faq-item {
+        background: #ffffff;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(106,13,173,0.08);
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 24px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: #1a0040;
+        user-select: none;
+    }
+    .faq-icon {
+        color: #6a0dad;
+        font-size: 20px;
+        font-weight: 300;
+        line-height: 1;
+        flex-shrink: 0;
+        margin-left: 16px;
+    }
+    .faq-answer {
+        display: none;
+        padding: 16px 24px 20px;
+        font-size: 13px;
+        color: rgba(26,0,64,0.6);
+        line-height: 1.7;
+        border-top: 1px solid rgba(106,13,173,0.06);
+    }
+
+    @media (max-width: 900px) { .faq-section { padding: 56px 40px; } }
+    @media (max-width: 640px) {
+        .faq-section { padding: 40px 24px; }
+        .faq-headline { font-size: 28px; }
+        .faq-question { font-size: 14px; padding: 16px 20px; }
+        .faq-answer { padding: 12px 20px 16px; }
     }
 
     /* ═══════════════════════════════════════
@@ -1489,7 +2632,7 @@
             Home
         </a>
 
-        <a href="medical.html" class="nav-logo" aria-label="ASMI Career">
+        <a href="index.html" class="nav-logo" aria-label="ASMI Career">
             <img src="asmi-logo.png" alt="ASMI Career"/>
         </a>
 
@@ -1535,71 +2678,715 @@
      SECTION 2 — HERO
 ════════════════════════════════ -->
 <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-inner">
 
-    <div class="hero-bg" role="img" aria-label="AIIMS Delhi — premier medical institution"></div>
-    <div class="hero-overlay" aria-hidden="true"></div>
-    <div class="hero-grid" aria-hidden="true"></div>
-    <div class="hero-grain" aria-hidden="true"></div>
+        <!-- LEFT -->
+        <div class="hero-left">
 
-    <div class="hero-content">
+            <div class="hero-eyebrow" aria-label="India's smartest youth career platform">
+                <span class="eyebrow-dot" aria-hidden="true"></span>
+                INDIA'S SMARTEST YOUTH CAREER PLATFORM
+            </div>
 
-        <div class="hero-badge" aria-label="NEET 2026 admissions are open">
-            <span class="badge-dot" aria-hidden="true"></span>
-            NEET 2026 Admissions Open
+            <h1 class="hero-h1" id="hero-heading">
+                Asmi gives you the<br>
+                seat you <span class="accent">deserve.</span>
+            </h1>
+
+            <p class="hero-sub">
+                NEET &amp; JEE counselling by verified experts — a real counsellor
+                who knows your file, from rank day to admission day. Zero guesswork.
+            </p>
+
+            <div class="hero-stats" role="list" aria-label="Key statistics">
+                <div class="hero-stat" role="listitem">
+                    <span class="stat-num">10+</span>
+                    <span class="stat-lbl">Years of experience</span>
+                </div>
+                <div class="hero-stat" role="listitem">
+                    <span class="stat-num">20k+</span>
+                    <span class="stat-lbl">Admissions done!</span>
+                </div>
+                <div class="hero-stat" role="listitem">
+                    <span class="stat-num">4.9 rating ★</span>
+                    <span class="stat-lbl">on google reviews</span>
+                </div>
+            </div>
+
+            <div class="hero-ctas">
+                <a href="#tools" class="btn-primary">Explore tools ↓</a>
+                <a href="#counselling" class="btn-secondary">How it works ↓</a>
+            </div>
+
         </div>
 
-        <h1 class="hero-h1" id="hero-heading">
-            Every NEET Score<br>
-            Deserves The<br>
-            <span>Best College.</span>
-        </h1>
+        <!-- RIGHT -->
+        <div class="hero-right">
+            <div class="hero-card">
 
-        <p class="hero-sub">
-            From rank day to reporting day — complete MBBS, BDS &amp; AYUSH counselling.
-            Expert guidance for MCC AIQ, State Quota and Deemed rounds.
-        </p>
+                <div class="card-top-row">
+                    <span class="card-pill-grey">Expert mentors</span>
+                    <span class="card-top-bold">100+ Counsellors</span>
+                </div>
 
-        <div class="hero-ctas">
-            <a href="inquiry.html" class="btn-primary">
-                Start NEET Journey
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M3 9H15M10 4L15 9L10 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
-            <a href="#tools" class="btn-secondary">
-                Explore Free Tools
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                    <path d="M3 9H15M10 4L15 9L10 14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </a>
+                <div class="card-inner">
+
+                    <div class="card-inner-header">
+                        <span class="card-inner-title">Your College Matches</span>
+                        <span class="card-ai-pill">AI · Live</span>
+                    </div>
+
+                    <div class="rank-display">
+                        <div class="rank-label">NEET RANK</div>
+                        <div class="rank-number">2,847</div>
+                        <div class="rank-sub">AIR · NEET UG 2026</div>
+                    </div>
+
+                    <ul class="college-list" aria-label="College matches">
+                        <li class="college-item">
+                            <div class="college-dot-name">
+                                <span class="college-dot green" aria-hidden="true"></span>
+                                <span class="college-name">AIIMS New Delhi</span>
+                            </div>
+                            <span class="likelihood-pill pill-likely">Likely ✓</span>
+                        </li>
+                        <li class="college-item">
+                            <div class="college-dot-name">
+                                <span class="college-dot yellow" aria-hidden="true"></span>
+                                <span class="college-name">Maulana Azad Medical</span>
+                            </div>
+                            <span class="likelihood-pill pill-possible">Possible</span>
+                        </li>
+                        <li class="college-item">
+                            <div class="college-dot-name">
+                                <span class="college-dot blue" aria-hidden="true"></span>
+                                <span class="college-name">Grant Medical College</span>
+                            </div>
+                            <span class="likelihood-pill pill-safe">Safe Seat</span>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="card-bottom-row">
+                    <span class="card-bottom-label">Success rate</span>
+                    <span class="card-bottom-bold">90%+ students</span>
+                </div>
+
+            </div>
         </div>
 
-        <div class="hero-stats" role="list" aria-label="Key statistics">
+    </div>
+</section>
 
-            <div class="hero-stat" role="listitem">
-                <span class="stat-num" id="stat-students" aria-label="25,000 plus students guided">25K+</span>
-                <span class="stat-lbl">Students Guided</span>
+
+<!-- ════════════════════════════════
+     SECTION 2b — IMPORTANT EVENTS
+════════════════════════════════ -->
+<section class="events-section" id="events" aria-labelledby="events-heading">
+    <div class="events-inner">
+        <div class="events-header">
+            <div class="events-title" id="events-heading">
+                <span class="events-title-dot" aria-hidden="true">●</span>
+                News and events
+            </div>
+            <a href="#" class="events-view-all">View all →</a>
+        </div>
+
+        <div class="events-cards">
+
+            <div class="event-card">
+                <div class="event-card-top">
+                    <span class="event-tag tag-engineering">ENGINEERING</span>
+                    <span class="event-time">2 hours ago</span>
+                </div>
+                <div class="event-headline">JEE Advanced 2024 Registration Open</div>
+                <p class="event-body">Last date to apply is May 7th, 2024. Don't miss the deadline.</p>
             </div>
 
-            <div class="stat-divider" aria-hidden="true"></div>
-
-            <div class="hero-stat" role="listitem">
-                <span class="stat-num" id="stat-years" aria-label="11 plus years experience">11+</span>
-                <span class="stat-lbl">Years Experience</span>
+            <div class="event-card">
+                <div class="event-card-top">
+                    <span class="event-tag tag-urgent">URGENT</span>
+                    <span class="event-time">5 hours ago</span>
+                </div>
+                <div class="event-headline">NEET UG Admit Card Released</div>
+                <p class="event-body">Download your hall tickets now from the official website.</p>
             </div>
 
-            <div class="stat-divider" aria-hidden="true"></div>
-
-            <div class="hero-stat" role="listitem">
-                <span class="stat-num" id="stat-transparent" aria-label="100 percent transparent">100%</span>
-                <span class="stat-lbl">Transparent</span>
+            <div class="event-card">
+                <div class="event-card-top">
+                    <span class="event-tag tag-medical">MEDICAL</span>
+                    <span class="event-time">Yesterday</span>
+                </div>
+                <div class="event-headline">NEET Results Announcement</div>
+                <p class="event-body">Results scheduled for the second week of June. Stay tuned.</p>
             </div>
 
-            <div class="stat-divider" aria-hidden="true"></div>
+        </div>
+    </div>
+</section>
 
-            <div class="hero-stat" role="listitem">
-                <span class="stat-num" id="stat-rating" aria-label="4.9 star Google rating">4.9&#9733;</span>
-                <span class="stat-lbl">Google Rating</span>
+
+<!-- ════════════════════════════════
+     SECTION 2c — TOP TIER UNIVERSITIES
+════════════════════════════════ -->
+<section class="unis-section" aria-labelledby="unis-heading">
+    <div class="unis-inner">
+
+        <div class="unis-header">
+            <div class="unis-title" id="unis-heading">
+                <span class="unis-title-dot" aria-hidden="true">🔵</span>
+                Top tier universities
+            </div>
+            <div class="unis-header-right">
+                <a href="#" class="unis-view-all">View all →</a>
+                <button class="unis-arrow-btn" id="uniPrev" aria-label="Previous universities">‹</button>
+                <button class="unis-arrow-btn" id="uniNext" aria-label="Next universities">›</button>
+            </div>
+        </div>
+
+        <div class="unis-track" id="uniTrack" role="list">
+
+            <!-- Card 1 -->
+            <div class="uni-card" role="listitem">
+                <div class="uni-img">
+                    <span class="uni-rating">★ 3.8/5</span>
+                    <span class="uni-heart" aria-hidden="true">♡</span>
+                </div>
+                <div class="uni-content">
+                    <div class="uni-meta">
+                        <span>📍 Pune</span>
+                        <span>🎓 Medical</span>
+                    </div>
+                    <div class="uni-name">Symbiosis Medical College for Women (SMCW)</div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="uni-card" role="listitem">
+                <div class="uni-img">
+                    <span class="uni-rating">★ 4.8/5</span>
+                    <span class="uni-heart" aria-hidden="true">♡</span>
+                </div>
+                <div class="uni-content">
+                    <div class="uni-meta">
+                        <span>📍 Bangalore</span>
+                        <span>🎓 Medical</span>
+                    </div>
+                    <div class="uni-name">Kasturba Medical College, Manipal</div>
+                </div>
+            </div>
+
+            <!-- Card 3 — ASMI RECOMMENDS -->
+            <div class="uni-card" role="listitem">
+                <div class="uni-img">
+                    <span class="uni-rating">★ 4.8/5</span>
+                    <span class="uni-heart" aria-hidden="true">♡</span>
+                    <span class="uni-recommend-badge">★ ASMI RECOMMENDS</span>
+                </div>
+                <div class="uni-content">
+                    <div class="uni-meta">
+                        <span>📍 Mumbai</span>
+                        <span>🎓 Medical</span>
+                    </div>
+                    <div class="uni-name">Grant Medical College &amp; Sir J.J. Hospitals</div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="uni-card" role="listitem">
+                <div class="uni-img">
+                    <span class="uni-rating">★ 4.8/5</span>
+                    <span class="uni-heart" aria-hidden="true">♡</span>
+                </div>
+                <div class="uni-content">
+                    <div class="uni-meta">
+                        <span>📍 Delhi</span>
+                        <span>🎓 Medical</span>
+                    </div>
+                    <div class="uni-name">Maulana Azad Medical College</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Ps — PROBLEM / SOLUTION
+════════════════════════════════ -->
+<section class="ps-section" aria-labelledby="ps-heading">
+    <div class="ps-inner">
+
+        <div class="ps-header">
+            <h2 class="ps-headline" id="ps-heading">Students Fail Counselling — Before It Even Starts.</h2>
+            <p class="ps-sub">Here's what goes wrong — and exactly how ASMI fixes it.</p>
+        </div>
+
+        <div class="ps-grid">
+
+            <!-- LEFT: PROBLEM -->
+            <div class="ps-left">
+                <div class="ps-col-lbl">
+                    <span class="ps-dot-red" aria-hidden="true">●</span> THE PROBLEM
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num" aria-hidden="true">1</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar red" aria-hidden="true"></span>
+                        <span class="ps-text">Wrong Preference Order = Seat Lost Forever</span>
+                    </div>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num" aria-hidden="true">2</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar red" aria-hidden="true"></span>
+                        <span class="ps-text">Deadlines Close in 24–72 Hours. No Mercy.</span>
+                    </div>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num" aria-hidden="true">3</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar red" aria-hidden="true"></span>
+                        <span class="ps-text">Fake Agents Charging ₹5–10L for 'Guaranteed' Seats</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTER: IMAGE -->
+            <div class="ps-img-col" role="img" aria-label="Problem vs Solution comparison">
+                <div class="ps-vs" aria-label="VS">VS</div>
+            </div>
+
+            <!-- RIGHT: SOLUTION -->
+            <div class="ps-right">
+                <div class="ps-col-lbl">
+                    <span class="ps-dot-green" aria-hidden="true">●</span> THE SOLUTION
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num solution" aria-hidden="true">1</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar green" aria-hidden="true"></span>
+                        <span class="ps-text">Algorithm-optimised preference list, submitted before deadline.</span>
+                    </div>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num solution" aria-hidden="true">2</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar green" aria-hidden="true"></span>
+                        <span class="ps-text">WhatsApp alerts for every round deadline instantly.</span>
+                    </div>
+                </div>
+                <div class="ps-item">
+                    <span class="ps-num solution" aria-hidden="true">3</span>
+                    <div class="ps-item-body">
+                        <span class="ps-bar green" aria-hidden="true"></span>
+                        <span class="ps-text">Only verified portals. No middlemen. Fixed transparent pricing.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Why — WHY ASMI
+════════════════════════════════ -->
+<section class="why-section" aria-labelledby="why-heading">
+    <div class="why-inner">
+
+        <div class="why-left">
+            <span class="why-eyebrow">WHY ASMI</span>
+            <h2 class="why-headline" id="why-heading">India's Most Trusted Admission Platform</h2>
+            <p class="why-sub">11 years. 25,000+ seats. Here's what makes the difference.</p>
+
+            <div class="why-features">
+                <div class="why-feature">
+                    <div class="why-icon" aria-hidden="true">👤</div>
+                    <div>
+                        <div class="why-feature-title">Verified Counsellors</div>
+                        <div class="why-feature-body">Credentialed, background-checked experts. No anonymous advisors.</div>
+                    </div>
+                </div>
+                <div class="why-feature">
+                    <div class="why-icon" aria-hidden="true">🗄️</div>
+                    <div>
+                        <div class="why-feature-title">Official Data Only</div>
+                        <div class="why-feature-body">Cutoffs pulled directly from MCC, JoSAA, and state portals. No guesswork.</div>
+                    </div>
+                </div>
+                <div class="why-feature">
+                    <div class="why-icon" aria-hidden="true">🔔</div>
+                    <div>
+                        <div class="why-feature-title">Real-Time Alerts</div>
+                        <div class="why-feature-body">WhatsApp updates to student and parent — every round, every deadline.</div>
+                    </div>
+                </div>
+                <div class="why-feature">
+                    <div class="why-icon" aria-hidden="true">₹</div>
+                    <div>
+                        <div class="why-feature-title">Transparent Pricing</div>
+                        <div class="why-feature-body">Fixed packages, fully documented. No hidden fees, no commissions.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="why-right" role="img" aria-label="Why ASMI counselling platform">
+            <div class="why-overlay-card">
+                <div class="why-overlay-label">
+                    <span aria-hidden="true">●</span> CRACK THE NEXT STEP
+                </div>
+                <div class="why-overlay-headline">How ASMI helps students win</div>
+                <p class="why-overlay-sub">See how we guide 25,000+ students through every step — from rank to reporting date.</p>
+                <div class="why-overlay-btns">
+                    <a href="inquiry.html" class="why-btn-dark">Book a Free Call 📞</a>
+                    <a href="#" class="why-btn-purple">Watch Video</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Journey — ADMISSION JOURNEY
+════════════════════════════════ -->
+<section class="journey-section" aria-labelledby="journey-heading">
+    <div class="journey-inner">
+
+        <div class="journey-header">
+            <div class="journey-icon" aria-hidden="true">🌱</div>
+            <h2 class="journey-headline" id="journey-heading">The ASMI Admission Journey</h2>
+            <p class="journey-sub">4 phases from your rank to your admission letter.</p>
+        </div>
+
+        <div class="journey-steps-wrap">
+            <div class="journey-line-left" aria-hidden="true"></div>
+            <div class="journey-line-right" aria-hidden="true"></div>
+            <div class="journey-runner" aria-hidden="true">🏃</div>
+            <div class="journey-steps" role="list">
+
+                <div class="journey-step" role="listitem">
+                    <div class="journey-circle gold">1</div>
+                    <div class="journey-label gold">Cutoff Seminar</div>
+                    <p class="journey-body">Understand real trends before you fill any preference.</p>
+                </div>
+
+                <div class="journey-step" role="listitem">
+                    <div class="journey-circle gold">2</div>
+                    <div class="journey-label gold">1-on-1 Strategy</div>
+                    <p class="journey-body">Dedicated counsellor builds your personalised plan.</p>
+                </div>
+
+                <div class="journey-step" role="listitem">
+                    <div class="journey-circle purple">3</div>
+                    <div class="journey-label purple">Smart Pref List</div>
+                    <p class="journey-body">Algorithm-optimised preference list. Zero guesswork.</p>
+                </div>
+
+                <div class="journey-step" role="listitem">
+                    <div class="journey-circle purple">4</div>
+                    <div class="journey-label purple">Final Admission</div>
+                    <p class="journey-body">Support through to your reporting date.</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Pricing
+════════════════════════════════ -->
+<section class="pricing-section" aria-labelledby="pricing-heading">
+    <div class="pricing-inner">
+
+        <div class="pricing-header">
+            <span class="pricing-eyebrow">SERVICES</span>
+            <h2 class="pricing-headline" id="pricing-heading">Every Admission Path, Covered.</h2>
+            <p class="pricing-sub1">From NEET to JEE to MBBS Abroad — expert support for every stream and every round.</p>
+            <p class="pricing-sub2"><span class="ps2-purple">Big</span> On Data. <span class="ps2-muted">Light</span> On Your Pocket. Access all the data you need, without overpaying for it.</p>
+        </div>
+
+        <div class="pricing-cards">
+
+            <div class="pricing-card">
+                <div class="pricing-exam">NEET UG</div>
+                <div class="pricing-course">NEET UG</div>
+                <div class="pricing-type">UG Counselling</div>
+                <div class="pricing-price">₹2,499</div>
+                <button class="pricing-btn-default">Learn More</button>
+            </div>
+
+            <div class="pricing-card featured">
+                <span class="pricing-popular">★ POPULAR</span>
+                <div class="pricing-exam">NEET PG</div>
+                <div class="pricing-course">NEET PG</div>
+                <div class="pricing-type">PG Counselling</div>
+                <div class="pricing-price">₹3,999</div>
+                <button class="pricing-btn-featured">Learn More</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-exam">JEE</div>
+                <div class="pricing-course">JEE</div>
+                <div class="pricing-type">B.Tech Counselling</div>
+                <div class="pricing-price">₹3,999</div>
+                <button class="pricing-btn-default">Learn More</button>
+            </div>
+
+            <div class="pricing-card">
+                <div class="pricing-exam">MBBS ABROAD</div>
+                <div class="pricing-course">MBBS Abroad</div>
+                <div class="pricing-type">Admission Guidance</div>
+                <div class="pricing-price">₹3,999</div>
+                <button class="pricing-btn-default">Learn More</button>
+            </div>
+
+        </div>
+
+        <div class="pricing-banner">
+            <div class="pricing-banner-h">Take the first step.</div>
+            <div class="pricing-banner-sub">Book a FREE 1-to-1 with an Asmi Counsellor.</div>
+            <p class="pricing-banner-body">Talk to a real mentor in under 24 hours. No payment, no obligation — just clarity on what your future could look like.</p>
+            <div class="pricing-banner-btns">
+                <a href="inquiry.html" class="banner-btn-white">Book My Free Session →</a>
+                <a href="#" class="banner-btn-yellow">WhatsApp Us 💬</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Testimonials
+════════════════════════════════ -->
+<section class="testi-section" aria-labelledby="testi-heading">
+    <div class="testi-inner">
+
+        <div class="testi-header">
+            <span class="testi-eyebrow">RESULTS</span>
+            <h2 class="testi-headline" id="testi-heading">Real Students. Real Seats.</h2>
+            <p class="testi-sub">Names, colleges — no vague praise.</p>
+            <div class="testi-leaf" aria-hidden="true">🍃</div>
+        </div>
+
+        <div class="testi-avatars" aria-label="Student testimonials">
+            <div class="testi-avatar active" style="background:#e8d5f5" aria-label="Student 1"></div>
+            <div class="testi-avatar" style="background:#d4c5f0" aria-label="Student 2"></div>
+            <div class="testi-avatar" style="background:#c8b4e8" aria-label="Student 3"></div>
+            <div class="testi-avatar" style="background:#e8d5f5" aria-label="Student 4"></div>
+            <div class="testi-avatar" style="background:#d4c5f0" aria-label="Student 5"></div>
+            <div class="testi-avatar" style="background:#c8b4e8" aria-label="Student 6"></div>
+            <div class="testi-avatar" style="background:#e8d5f5" aria-label="Student 7"></div>
+            <div class="testi-avatar" style="background:#d4c5f0" aria-label="Student 8"></div>
+            <div class="testi-avatar" style="background:#c8b4e8" aria-label="Student 9"></div>
+        </div>
+
+        <div class="testi-cards">
+
+            <div class="testi-card">
+                <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+                <div class="testi-student-row">
+                    <div class="testi-avatar-sm" aria-hidden="true"></div>
+                    <div>
+                        <div class="testi-name">Dr. Sarang Chaudhari</div>
+                        <div class="testi-tag">NEET UG 2024</div>
+                        <div class="testi-tag">AIIMS New Delhi</div>
+                    </div>
+                </div>
+                <div class="testi-quote-mark" aria-hidden="true">❝</div>
+                <p class="testi-body">"ASMI's counsellor guided me through every round of MCC counselling. Got my first preference college."</p>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+                <div class="testi-student-row">
+                    <div class="testi-avatar-sm" aria-hidden="true"></div>
+                    <div>
+                        <div class="testi-name">Anannya Ayer</div>
+                        <div class="testi-tag">NEET UG 2024</div>
+                        <div class="testi-tag">Grant Medical College</div>
+                    </div>
+                </div>
+                <div class="testi-quote-mark" aria-hidden="true">❝</div>
+                <p class="testi-body">"The preference list they built for me was perfect. Zero panic, all clarity from day one."</p>
+            </div>
+
+            <div class="testi-card">
+                <div class="testi-stars" aria-label="5 stars">★★★★★</div>
+                <div class="testi-student-row">
+                    <div class="testi-avatar-sm" aria-hidden="true"></div>
+                    <div>
+                        <div class="testi-name">Dr. Pooja Kulkarni</div>
+                        <div class="testi-tag">NEET PG 2024</div>
+                        <div class="testi-tag">Kasturba Medical College</div>
+                    </div>
+                </div>
+                <div class="testi-quote-mark" aria-hidden="true">❝</div>
+                <p class="testi-body">"Paid ₹3,999 and saved lakhs in wrong decisions. Best investment of my medical journey."</p>
+            </div>
+
+        </div>
+
+        <div class="testi-nav">
+            <button class="testi-arrow" aria-label="Previous testimonials">‹</button>
+            <button class="testi-arrow" aria-label="Next testimonials">›</button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION Resources
+════════════════════════════════ -->
+<section class="resources-section" aria-labelledby="resources-heading">
+    <div class="resources-inner">
+
+        <div class="resources-header">
+            <div>
+                <h2 class="resources-headline" id="resources-heading">Resources</h2>
+                <p class="resources-sub">Access high-quality guides, research-backed articles, and downloadable templates curated for student success</p>
+            </div>
+            <a href="#" class="resources-view-all">View all →</a>
+        </div>
+
+        <div class="resources-cards">
+
+            <div class="resource-card">
+                <div class="resource-img" style="background:linear-gradient(135deg,#1a237e 0%,#283593 100%)">
+                    <span class="resource-img-emoji" aria-hidden="true">🧠</span>
+                    <span class="resource-tag" style="background:#3949ab;color:#ffffff">ARTICLE</span>
+                </div>
+                <div class="resource-content">
+                    <div class="resource-title">Mastering Focus in the Digital Age</div>
+                    <p class="resource-body">Learn why multi-tasking is a myth and how to regain your deep focus hours without draining...</p>
+                    <div class="resource-footer">
+                        <span class="resource-meta">2000 words</span>
+                        <a href="#" class="resource-cta-link">Read more →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-img" style="background:linear-gradient(135deg,#f5f5dc 0%,#e8f5e9 100%)">
+                    <span class="resource-img-emoji" aria-hidden="true">📄</span>
+                    <span class="resource-tag" style="background:#FFD700;color:#1a0040">DOWNLOAD</span>
+                </div>
+                <div class="resource-content">
+                    <div class="resource-title">Study Planner Pro Template</div>
+                    <p class="resource-body">A comprehensive weekly planner designed for university students to track the latest updates...</p>
+                    <div class="resource-footer">
+                        <span class="resource-meta">PDF · 1.2 MB</span>
+                        <a href="#" class="resource-cta-btn">Get it Now ↓</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resource-card">
+                <div class="resource-img" style="background:linear-gradient(135deg,#e8f5e9 0%,#b2dfdb 100%)">
+                    <span class="resource-img-emoji" aria-hidden="true">▶️</span>
+                    <span class="resource-tag" style="background:#00897b;color:#ffffff">VIDEO</span>
+                </div>
+                <div class="resource-content">
+                    <div class="resource-title">Mental Wellness for Students</div>
+                    <p class="resource-body">A complete guide to navigating stress, anxiety, and burnout during final exam...</p>
+                    <div class="resource-footer">
+                        <span class="resource-meta">7 min 21 sec</span>
+                        <a href="#" class="resource-cta-link">Watch →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ════════════════════════════════
+     SECTION FAQs
+════════════════════════════════ -->
+<section class="faq-section" aria-labelledby="faq-heading">
+    <div class="faq-inner">
+
+        <div class="faq-header">
+            <span class="faq-eyebrow">FAQs</span>
+            <h2 class="faq-headline" id="faq-heading">Frequently Asked</h2>
+            <p class="faq-sub">The questions every student and parent asks us first.</p>
+        </div>
+
+        <div class="faq-accordion">
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is NEET counselling and how does ASMI help?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    NEET counselling is the process of selecting and filling college preferences after your NEET result. ASMI assigns you a dedicated counsellor who builds your preference list, tracks deadlines, and guides you through every round — MCC AIQ, state quota, and deemed.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How is ASMI different from free YouTube advice?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    YouTube gives general information. ASMI gives you a personalised strategy based on your specific rank, category, state, and target colleges — with a real counsellor accountable to your outcome.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Does ASMI cover both NEET UG and JEE?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes. ASMI has dedicated teams for NEET UG, NEET PG, JEE Main, JEE Advanced, MHT-CET, and MBBS Abroad counselling.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How much do your packages cost?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    Packages start at ₹2,499 for basic counselling and go up to ₹3,999 for full-service end-to-end support. All pricing is fixed — no hidden charges.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    What if I don't get a seat after paying?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    We don't guarantee seats — no honest counsellor can. But we guarantee a complete, optimised strategy built around your rank. Most students who follow our preference list secure a seat in round 1 or 2.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can parents stay updated throughout?
+                    <span class="faq-icon" aria-hidden="true">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes. Parents receive WhatsApp updates at every stage — round results, deadline reminders, document checklists, and reporting date alerts.
+                </div>
             </div>
 
         </div>
@@ -2069,6 +3856,15 @@
 
 
 <script>
+    /* ── Universities carousel ── */
+    const uniTrack = document.getElementById('uniTrack');
+    document.getElementById('uniPrev').addEventListener('click', () => {
+        uniTrack.scrollBy({ left: -320, behavior: 'smooth' });
+    });
+    document.getElementById('uniNext').addEventListener('click', () => {
+        uniTrack.scrollBy({ left: 320, behavior: 'smooth' });
+    });
+
     /* ── Nav: scroll shadow ── */
     const nav = document.getElementById('mainNav');
     window.addEventListener('scroll', () => {
@@ -2184,6 +3980,23 @@
     } else {
         animateEls.forEach(el => el.classList.add('visible'));
     }
+
+    /* ── FAQ accordion ── */
+    document.querySelectorAll('.faq-item').forEach(item => {
+        item.querySelector('.faq-question').addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(i => {
+                i.classList.remove('open');
+                i.querySelector('.faq-answer').style.display = 'none';
+                i.querySelector('.faq-icon').textContent = '+';
+            });
+            if (!isOpen) {
+                item.classList.add('open');
+                item.querySelector('.faq-answer').style.display = 'block';
+                item.querySelector('.faq-icon').textContent = '−';
+            }
+        });
+    });
 </script>
 
 </body>
