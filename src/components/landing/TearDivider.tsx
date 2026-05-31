@@ -35,6 +35,8 @@ export function buildTearPaths(W: number, H: number) {
 
 export default function TearDivider({ onPathsReady }: TearDividerProps) {
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     function update() {
       const { medD, engD } = buildTearPaths(window.innerWidth, window.innerHeight)
       onPathsReady(medD, engD)
