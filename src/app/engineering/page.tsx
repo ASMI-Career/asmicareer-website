@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import Hero from '@/components/engineering/Hero'
 import ImportantEvents from '@/components/engineering/ImportantEvents'
 import TopUniversities from '@/components/engineering/TopUniversities'
@@ -25,16 +26,18 @@ export default function EngineeringPage() {
   return (
     <>
       <Navbar variant="engineering" />
-      <Hero />
-      <ImportantEvents />
-      <TopUniversities />
-      <ProblemSolution />
-      <WhyASMI />
-      <AdmissionJourney />
-      <Pricing />
-      <Testimonials />
-      <Resources />
-      <FAQs />
+      <ErrorBoundary>
+        <Hero />
+        <ImportantEvents />
+        <TopUniversities />
+        <ProblemSolution />
+        <WhyASMI />
+        <AdmissionJourney />
+        <Pricing />
+        <Testimonials />
+        <Resources />
+        <FAQs />
+      </ErrorBoundary>
       <Footer />
     </>
   )
