@@ -4,13 +4,17 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function ScrollToTop() {
+  const [mounted, setMounted] = useState(false)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => setVisible(window.scrollY > 400)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  if (!mounted) return null
 
   return (
     <AnimatePresence>

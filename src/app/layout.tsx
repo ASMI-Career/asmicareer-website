@@ -26,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} font-sans`}>
+      <body className={`${montserrat.variable} font-sans`} suppressHydrationWarning>
         {children}
         <WhatsAppButton />
         <ScrollToTop />
