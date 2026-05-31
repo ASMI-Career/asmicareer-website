@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Medical palette */
+  --med-primary: #FFD700;
+  --med-dark: #1a0040;
+  --med-accent: #6a0dad;
+
+  /* Engineering palette */
+  --eng-primary: #0a1628;
+  --eng-accent: #00C8B4;
+  --eng-secondary: #00A896;
+}
+
+html, body {
+  font-family: var(--font-montserrat), sans-serif;
+}
