@@ -616,10 +616,16 @@
     }
     .event-card {
         flex: 1;
-        background: #ffffff;
-        border: 1px solid rgba(26,0,64,0.08);
+        background: #fafafa;
+        border: 1px solid rgba(26,0,64,0.10);
         border-radius: 12px;
         padding: 20px;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .event-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(26,0,64,0.08);
     }
     .event-card-top {
         display: flex;
@@ -1209,7 +1215,7 @@
     .journey-label.purple { color: #6a0dad; }
     .journey-body {
         font-size: 13px;
-        color: rgba(255,255,255,0.5);
+        color: rgba(255,255,255,0.72);
         margin-top: 8px;
         line-height: 1.5;
     }
@@ -1264,6 +1270,12 @@
         background: #f8f6ff;
         border: 1.5px solid rgba(106,13,173,0.08);
         position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pricing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 36px rgba(106,13,173,0.12);
     }
     .pricing-card.featured { border: 2px solid #6a0dad; }
     .pricing-popular {
