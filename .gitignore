@@ -1,0 +1,22 @@
+# Next.js
+.next/
+out/
+
+# Cloudflare / Vercel
+.vercel/
+.wrangler/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
