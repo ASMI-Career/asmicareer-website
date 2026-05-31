@@ -1864,15 +1864,17 @@
     .pricing-btn-default:hover { background: #00C8B4; color: #0a1628; }
     .pricing-btn-featured { width: 100%; padding: 13px; border-radius: 50px; border: none; background: linear-gradient(135deg, #00C8B4 0%, #00A896 100%); color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 13px; cursor: pointer; transition: opacity 0.2s; }
     .pricing-btn-featured:hover { opacity: 0.9; }
-    .pricing-banner { background: linear-gradient(135deg, #00A896 0%, #0097A7 50%, #00695C 100%); border-radius: 20px; padding: 52px 60px; text-align: center; margin-top: 48px; }
-    .pricing-banner-h { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; color: #ffffff; }
-    .pricing-banner-sub { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 32px; color: #ffffff; margin-top: 8px; }
+    .pricing-banner { background: #061020; border-radius: 20px; padding: 52px 60px; text-align: center; margin-top: 48px; border-top: 4px solid #00C8B4; position: relative; overflow: hidden; }
+    .pricing-banner::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; background: rgba(0,200,180,0.05); pointer-events: none; }
+    .pricing-banner::after { content: ''; position: absolute; bottom: -60px; left: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(0,200,180,0.04); pointer-events: none; }
+    .pricing-banner-h { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 48px; color: #00C8B4; position: relative; }
+    .pricing-banner-sub { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; color: rgba(255,255,255,0.8); margin-top: 10px; position: relative; }
     .pricing-banner-body { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 16px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
     .pricing-banner-btns { display: flex; justify-content: center; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
-    .banner-btn-white { background: #ffffff; color: #00A896; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; padding: 14px 32px; border-radius: 50px; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; }
-    .banner-btn-white:hover { opacity: 0.9; }
-    .banner-btn-yellow { background: #00C8B4; color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; padding: 14px 32px; border-radius: 50px; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; }
-    .banner-btn-yellow:hover { opacity: 0.9; }
+    .banner-btn-white { background: #00C8B4; color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; padding: 14px 32px; border-radius: 50px; text-decoration: none; white-space: nowrap; transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; }
+    .banner-btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,200,180,0.35); }
+    .banner-btn-yellow { background: transparent; color: rgba(255,255,255,0.85); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; padding: 14px 32px; border-radius: 50px; text-decoration: none; white-space: nowrap; border: 1.5px solid rgba(255,255,255,0.25); transition: border-color 0.2s, color 0.2s; position: relative; }
+    .banner-btn-yellow:hover { border-color: rgba(255,255,255,0.6); color: #ffffff; }
     @media (max-width: 900px) { .pricing-section { padding: 56px 40px; } .pricing-cards { flex-wrap: wrap; } .pricing-card { flex: 0 0 calc(50% - 10px); } .pricing-banner { padding: 40px 32px; } .pricing-banner-h { font-size: 28px; } .pricing-banner-sub { font-size: 24px; } }
     @media (max-width: 640px) { .pricing-section { padding: 40px 24px; } .pricing-card { flex: 0 0 100%; } .pricing-banner { padding: 32px 24px; } .pricing-headline { font-size: 28px; } .pricing-banner-h { font-size: 24px; } .pricing-banner-sub { font-size: 20px; } .pricing-banner-btns { flex-direction: column; align-items: center; } }
 
@@ -1938,6 +1940,21 @@
     .faq-answer { display: none; padding: 16px 24px 20px; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; border-top: 1px solid rgba(0,200,180,0.1); }
     @media (max-width: 900px) { .faq-section { padding: 56px 40px; } }
     @media (max-width: 640px) { .faq-section { padding: 40px 24px; } .faq-headline { font-size: 28px; } .faq-question { font-size: 14px; padding: 16px 20px; } .faq-answer { padding: 12px 20px 16px; } }
+
+    /* ─── Featured testimonial (middle card breaks identical grid) ─── */
+    .testi-cards .testi-card:nth-child(2) {
+        background: #00C8B4;
+        box-shadow: 0 12px 40px rgba(0,200,180,0.25);
+        transform: translateY(-6px);
+        border: none;
+    }
+    .testi-cards .testi-card:nth-child(2) .testi-stars { color: #0a1628; }
+    .testi-cards .testi-card:nth-child(2) .testi-name  { color: #0a1628; }
+    .testi-cards .testi-card:nth-child(2) .testi-tag   { color: rgba(10,22,40,0.75); }
+    .testi-cards .testi-card:nth-child(2) .testi-quote-mark { color: #0a1628; }
+    .testi-cards .testi-card:nth-child(2) .testi-body  { color: rgba(10,22,40,0.85); }
+    .testi-cards .testi-card:nth-child(2) .testi-avatar-sm { background: rgba(10,22,40,0.12); }
+    .testi-cards .testi-card:nth-child(2):hover { transform: translateY(-10px); }
 
     </style>
 </head>
