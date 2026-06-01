@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Career — Medical & Engineering Admissions</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-serif;}
+
+/* ── SPLIT ── */
+.split{
+  display:flex;
+  width:100%; height:100vh;
+  overflow:visible;
+}
+
+/* ── PANELS ── */
+.medical,.engineering{
+  width:50%; height:100%;
+  position:relative;
+  cursor:pointer;
+  transition:transform 0.45s cubic-bezier(0.34,1.2,0.64,1),
+             filter 0.45s ease,
+             box-shadow 0.45s ease;
+  will-change:transform;
+}
+
+.medical{
+  background-image:url('AIIMS_Delhi.jpg');
+  background-size:cover;
+  background-position:center;
+  transform-origin:center center;
+}
+
+.engineering{
+  background-image:url('IIT_Bombay.jpg');
+  background-size:cover;
+  background-position:center;
+  transform-origin:center center;
+}
+
+/* ── HOVER ── */
+.medical:hover{
+  transform:scale(1.02);
+  box-shadow:8px 0 60px rgba(0,0,0,0.5), 16px 0 40px rgba(0,0,0,0.3);
+  z-index:2;
+}
+.split:has(.medical:hover) .engineering{
+  transform:scale(0.97);
+  filter:brightness(0.5);
+}
+
+.engineering:hover{
+  transform:scale(1.02);
+  box-shadow:-8px 0 60px rgba(0,0,0,0.5), -16px 0 40px rgba(0,0,0,0.3);
+  z-index:2;
+}
+.split:has(.engineering:hover) .medical{
+  transform:scale(0.97);
+  filter:brightness(0.5);
+}
+
+/* Logo lifts on hover */
+body:has(.medical:hover) .center-logo,
+body:has(.engineering:hover) .center-logo{
+  transform:translate(-50%,-50%) scale(1.08);
+  filter:drop-shadow(0 16px 32px rgba(0,0,0,0.6));
+}
+
+/* ── DIVIDER ── */
+.divider{
+  position:fixed;
+  left:50%; top:0;
+  width:1px; height:100vh;
+  background:rgba(255,255,255,0.25);
+  z-index:10;
+  pointer-events:none;
+  transform:translateX(-50%);
+}
+
+/* ── BACKGROUND OVERLAYS ── */
+.bg-wash{position:absolute;inset:0;}
+.m-wash{background:#FFD700;opacity:0.82;}
+.e-wash{background:#0a1628;opacity:0.88;}
+.m-vignette{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,0,64,0.15) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+/* ── CIRCUIT SVG ── */
+.circuit-svg{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+
+/* ── CONTENT ── */
+.m-content{
+  position:relative; z-index:2;
+  height:100%;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:56px 52px;
+  transition:opacity 0.3s ease;
+}
+.e-content{
+  position:relative; z-index:2;
+  height:100%;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:56px 52px 56px 80px;
+  transition:opacity 0.3s ease;
+}
+
+/* EYEBROW */
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:2px;margin-bottom:12px;}
+.m-eyebrow{color:rgba(26,0,64,0.55);}
+.e-eyebrow{color:rgba(0,200,180,0.7);}
+
+/* HEADLINE */
+.headline{font-size:52px;font-weight:900;line-height:1.15;margin-bottom:16px;}
+.m-headline{color:#1a0040;}
+.m-headline span{color:#6a0dad;}
+.e-headline{color:#ffffff;font-size:46px;}
+.e-headline span{color:#00C8B4;}
+
+/* SUB */
+.sub{font-size:14px;line-height:1.6;max-width:400px;margin-bottom:20px;}
+.m-sub{color:rgba(26,0,64,0.65);}
+.e-sub{color:rgba(255,255,255,0.5);}
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.tag{font-size:9px;font-weight:700;letter-spacing:0.5px;padding:4px 12px;border-radius:20px;}
+.m-tag{background:rgba(26,0,64,0.1);color:#1a0040;border:1px solid rgba(26,0,64,0.18);}
+.e-tag{background:rgba(0,200,180,0.1);color:rgba(0,200,180,0.85);border:1px solid rgba(0,200,180,0.2);}
+
+/* STATS */
+.stats{display:flex;margin:0 0 28px;}
+.stat{padding:0 24px;}
+.stat:first-child{padding-left:0;}
+.m-stat{border-right:1px solid rgba(26,0,64,0.15);}
+.e-stat{border-right:1px solid rgba(255,255,255,0.1);}
+.stat:last-child{border-right:none;}
+.stat-num{display:block;font-size:32px;font-weight:900;line-height:1.1;}
+.m-stat .stat-num{color:#1a0040;}
+.e-stat .stat-num{color:#ffffff;}
+.stat-lbl{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.m-stat .stat-lbl{color:rgba(26,0,64,0.5);}
+.e-stat .stat-lbl{color:rgba(255,255,255,0.4);}
+
+/* CTA */
+.cta{
+  display:inline-block;font-size:14px;font-weight:800;
+  padding:15px 36px;border-radius:50px;
+  text-decoration:none;letter-spacing:0.3px;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+  align-self:flex-start;
+}
+.m-cta{background:#1a0040;color:#FFD700;}
+.m-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,0,64,0.35);}
+.e-cta{background:#00A896;color:#ffffff;}
+.e-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,168,150,0.45);}
+
+/* ── CENTER LOGO ── */
+.center-logo{
+  position:fixed;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  z-index:100;
+  pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;
+  gap:6px;padding:10px 14px;
+  transition:transform 0.4s cubic-bezier(0.23,1,0.32,1), filter 0.4s ease;
+}
+.center-logo img{height:100px;width:auto;object-fit:contain;}
+
+/* ── LOGO PULSE ── */
+@keyframes logoPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1.0);}
+  50%{transform:translate(-50%,-50%) scale(1.05);}
+}
+.logo-pulse{animation:logoPulse 1.5s ease-in-out infinite;}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .split{flex-direction:column;}
+  .medical,.engineering{width:100%;height:50vh;}
+  .m-content,.e-content{padding:32px 28px;}
+  .headline{font-size:32px !important;}
+  .e-headline{font-size:30px !important;}
+  .stat-num{font-size:22px !important;}
+  .center-logo{top:50vh;}
+  .divider{display:none;}
+}
+
+/* ── CANVAS OVERLAYS ── */
+#globalCanvas{
+  position:fixed;top:0;left:0;
+  width:100vw;height:100vh;
+  z-index:99;pointer-events:none;display:none;
+}
+#engCanvas{
+  position:fixed;inset:0;
+  width:100vw;height:100vh;
+  z-index:99;pointer-events:none;display:none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="divider"></div>
+
+<canvas id="globalCanvas"></canvas>
+<canvas id="engCanvas"></canvas>
+
+<div class="center-logo" id="centerLogo">
+  <img src="asmi-logo.png" alt="ASMI Career">
+</div>
+
+<div class="split" id="split">
+
+  <div class="medical" id="medical">
+    <div class="bg-wash m-wash"></div>
+    <div class="m-vignette"></div>
+    <div class="m-content" id="mContent">
+      <p class="eyebrow m-eyebrow">Medical</p>
+      <h1 class="headline m-headline">
+        Every NEET Score<br>
+        Deserves The<br>
+        <span>Best College.</span>
+      </h1>
+      <p class="sub m-sub">
+        Guiding 25,000+ students to their dream medical
+        seats through data-driven counselling.
+      </p>
+      <div class="tags">
+        <span class="tag m-tag">NEET UG</span>
+        <span class="tag m-tag">MBBS</span>
+        <span class="tag m-tag">BDS</span>
+        <span class="tag m-tag">AYUSH</span>
+        <span class="tag m-tag">BPTH</span>
+      </div>
+      <div class="stats">
+        <div class="stat m-stat">
+          <span class="stat-num">25K+</span>
+          <span class="stat-lbl">Admissions</span>
+        </div>
+        <div class="stat m-stat">
+          <span class="stat-num">11+</span>
+          <span class="stat-lbl">Years Experience</span>
+        </div>
+        <div class="stat m-stat">
+          <span class="stat-num">4.9★</span>
+          <span class="stat-lbl">User Rating</span>
+        </div>
+      </div>
+      <a href="medical.html" class="cta m-cta" id="m-cta">
+        Start NEET Journey →
+      </a>
+    </div>
+  </div>
+
+  <div class="engineering" id="engineering">
+    <div class="bg-wash e-wash"></div>
+    <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
+      <path d="M 320 40 L 320 120 L 480 120 L 480 240" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
+      <path d="M 120 300 L 280 300 L 280 420 L 400 420" fill="none" stroke="rgba(0,200,180,0.08)" stroke-width="1"/>
+      <path d="M 60 450 L 60 560 L 200 560" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
+      <path d="M 350 350 L 500 350 L 500 480 L 580 480" fill="none" stroke="rgba(0,200,180,0.08)" stroke-width="1"/>
+      <path d="M 100 600 L 260 600 L 260 700" fill="none" stroke="rgba(0,200,180,0.07)" stroke-width="1"/>
+      <path d="M 420 500 L 420 620 L 560 620" fill="none" stroke="rgba(0,200,180,0.09)" stroke-width="1"/>
+      <path d="M 180 720 L 360 720 L 360 800" fill="none" stroke="rgba(0,200,180,0.07)" stroke-width="1"/>
+      <circle cx="80" cy="180" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="320" cy="120" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="280" cy="300" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="480" cy="240" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="60" cy="560" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="500" cy="350" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="260" cy="600" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="420" cy="620" r="3" fill="rgba(0,200,180,0.2)"/>
+    </svg>
+    <div class="e-content" id="eContent">
+      <p class="eyebrow e-eyebrow">Engineering</p>
+      <h1 class="headline e-headline">
+        Engineering Counselling<br>
+        Built Around <span>Your<br>
+        Rank & Branch.</span>
+      </h1>
+      <p class="sub e-sub">
+        Guiding students to their dream engineering colleges
+        and branches through data-driven counselling.
+      </p>
+      <div class="tags">
+        <span class="tag e-tag">JEE</span>
+        <span class="tag e-tag">MHT-CET</span>
+        <span class="tag e-tag">BITS</span>
+        <span class="tag e-tag">Manipal</span>
+        <span class="tag e-tag">VIT</span>
+      </div>
+      <div class="stats">
+        <div class="stat e-stat">
+          <span class="stat-num">10K+</span>
+          <span class="stat-lbl">Admissions</span>
+        </div>
+        <div class="stat e-stat">
+          <span class="stat-num">500+</span>
+          <span class="stat-lbl">Colleges</span>
+        </div>
+        <div class="stat e-stat">
+          <span class="stat-num">All India</span>
+          <span class="stat-lbl">Reach</span>
+        </div>
+      </div>
+      <a href="engineering.html" class="cta e-cta" id="e-cta">
+        Find My Branch & College →
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const medical     = document.getElementById('medical');
+const engineering = document.getElementById('engineering');
+const centerLogo  = document.getElementById('centerLogo');
+const mContent    = document.getElementById('mContent');
+const engContent  = document.getElementById('eContent');
+const mCanvas     = document.getElementById('globalCanvas');
+const eCanvas     = document.getElementById('engCanvas');
+
+let isTransitioning = false;
+
+document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
+document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
+
+// ── MEDICAL TRANSITION ──
+medical.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  mContent.style.opacity = '0';
+  engContent.style.opacity = '0';
+
+  setTimeout(() => {
+    const flood = document.createElement('div');
+    flood.style.cssText = 'position:fixed;inset:0;background:#FFD700;z-index:50;opacity:0;transition:opacity 0.5s ease;pointer-events:none;';
+    document.body.appendChild(flood);
+    requestAnimationFrame(() => { flood.style.opacity = '1'; });
+    centerLogo.style.transform = 'translate(-50%,-50%)';
+    centerLogo.style.filter = 'none';
+    centerLogo.classList.add('logo-pulse');
+
+    setTimeout(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      mCanvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:99;display:block;pointer-events:none;';
+      mCanvas.width = w;
+      mCanvas.height = h;
+      const ctx = mCanvas.getContext('2d');
+
+      let startTime = null;
+      const duration = 2200;
+      let cells = [{ x: w/2, y: h/2, r: 55, vx: 0, vy: 0, gen: 0, color: 0 }];
+      let lastSplit = 0;
+      let pulses = [];
+      let lastPulse = 0;
+
+      function animate(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
+        const t = elapsed / 1000;
+        ctx.clearRect(0, 0, w, h);
+
+        if (elapsed - lastPulse > 350) {
+          pulses.push({ r: 0, maxR: Math.max(w, h) * 0.9, color: pulses.length % 2 });
+          lastPulse = elapsed;
+        }
+        pulses = pulses.filter(p => p.r < p.maxR);
+        pulses.forEach(p => {
+          p.r += 6;
+          const alpha = (1 - p.r / p.maxR) * 0.25;
+          ctx.beginPath();
+          ctx.arc(w/2, h/2, p.r, 0, Math.PI*2);
+          ctx.strokeStyle = p.color === 0 ? `rgba(106,13,173,${alpha})` : `rgba(255,215,0,${alpha*1.4})`;
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+        });
+
+        if (elapsed - lastSplit > 400 && cells.length < 32) {
+          const newCells = [];
+          cells.forEach(c => {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 0.4 + Math.random() * 0.3;
+            const gen = c.gen + 1;
+            const r = 55 / Math.sqrt(gen + 1);
+            newCells.push(
+              { x: c.x, y: c.y, r, vx:  Math.cos(angle)*speed, vy:  Math.sin(angle)*speed, gen, color: gen%2 },
+              { x: c.x, y: c.y, r, vx: -Math.cos(angle)*speed, vy: -Math.sin(angle)*speed, gen, color: (gen+1)%2 }
+            );
+          });
+          cells = newCells;
+          lastSplit = elapsed;
+        }
+        cells.forEach(c => {
+          c.x += c.vx; c.y += c.vy;
+          if (!(Math.abs(c.x - w/2) < 90 && Math.abs(c.y - h/2) < 60)) {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, Math.max(c.r + Math.sin(t*3)*2, 3), 0, Math.PI*2);
+            ctx.fillStyle = c.color === 0 ? 'rgba(106,13,173,0.35)' : 'rgba(26,0,64,0.3)';
+            ctx.fill();
+          }
+        });
+
+        const progress = Math.min(elapsed / duration, 1);
+        for (let i = 0; i < 45; i++) {
+          const np = i / 45;
+          if (np > progress) continue;
+          const cy = h - (np * h);
+          if (Math.abs(cy - h/2) < 70) continue;
+          const angle = t * 1.2 + i * 0.28;
+          const radius = 40 + np * 15;
+          const x1 = w/2 + Math.cos(angle) * radius;
+          const x2 = w/2 + Math.cos(angle + Math.PI) * radius;
+          const z1 = Math.cos(angle);
+          ctx.beginPath(); ctx.moveTo(x1,cy); ctx.lineTo(x2,cy);
+          ctx.strokeStyle='rgba(26,0,64,0.18)'; ctx.lineWidth=2; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x1,cy, z1>0?7:4.5, 0, Math.PI*2);
+          ctx.fillStyle = z1>0?'rgba(106,13,189,0.9)':'rgba(148,92,212,0.6)'; ctx.fill();
+          ctx.beginPath(); ctx.arc(x2,cy, z1>0?4.5:7, 0, Math.PI*2);
+          ctx.fillStyle = z1>0?'rgba(69,43,110,0.6)':'rgba(26,0,64,0.9)'; ctx.fill();
+        }
+
+        if (elapsed < duration) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, w, h);
+          centerLogo.classList.remove('logo-pulse');
+          setTimeout(() => { window.location.href = 'medical.html'; }, 150);
+        }
+      }
+      requestAnimationFrame(animate);
+    }, 500);
+  }, 300);
+});
+
+// ── ENGINEERING TRANSITION ──
+engineering.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+
+  mContent.style.opacity = '0';
+  engContent.style.opacity = '0';
+
+  setTimeout(() => {
+    const flood = document.createElement('div');
+    flood.style.cssText = 'position:fixed;inset:0;background:#0a1628;z-index:50;opacity:0;transition:opacity 0.4s ease;pointer-events:none;';
+    document.body.appendChild(flood);
+    requestAnimationFrame(() => { flood.style.opacity = '1'; });
+    centerLogo.style.transform = 'translate(-50%,-50%)';
+    centerLogo.style.filter = 'none';
+    centerLogo.classList.add('logo-pulse');
+
+    setTimeout(() => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      eCanvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:99;display:block;pointer-events:none;';
+      eCanvas.width = w;
+      eCanvas.height = h;
+      const ctx = eCanvas.getContext('2d');
+      if (!ctx) return;
+
+      const colW = 14;
+      const colCount = Math.floor(w / colW);
+      const drops = new Array(colCount).fill(1);
+      const centerX = w / 2;
+      const colDelays = Array.from({length: colCount}, (_, i) =>
+        (Math.abs(i * colW - centerX) / centerX) * 600
+      );
+
+      let startTime = null;
+
+      function drawRain(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
+
+        ctx.fillStyle = 'rgba(10,22,40,0.13)';
+        ctx.fillRect(0, 0, w, h);
+        ctx.font = '900 13px Montserrat, monospace';
+
+        for (let i = 0; i < colCount; i++) {
+          if (elapsed < colDelays[i]) continue;
+          const x = i * colW;
+          const y = drops[i] * colW;
+          if (Math.abs(x - w/2) < 90 && Math.abs(y - h/2) < 60) { drops[i]++; continue; }
+          ctx.fillStyle = drops[i] % 3 === 0 ? '#ffffff' : '#00C8B4';
+          ctx.fillText(Math.random() > 0.5 ? '1' : '0', x, y);
+          if (y > h && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+
+        if (elapsed < 1800) {
+          requestAnimationFrame(drawRain);
+        } else {
+          ctx.fillStyle = '#0a1628';
+          ctx.fillRect(0, 0, w, h);
+          centerLogo.classList.remove('logo-pulse');
+          setTimeout(() => { window.location.href = 'engineering.html'; }, 150);
+        }
+      }
+      requestAnimationFrame(drawRain);
+    }, 400);
+  }, 300);
+});
+</script>
+</body>
+</html>
