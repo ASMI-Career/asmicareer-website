@@ -421,11 +421,11 @@ const DB_URL='ASMI_DB_Final.json';
 const FEE_URL='fee_map.json';
 const BLUR_STATES=['KA','KL','TS','UP','AP','TN'];
 const KA_MGMT_ONLY=[];
-const OPEN_STATES=['KA','TS','TN','UP','KL','AP','HR','WB','BR','UK','CG','JH','HP','PY','TR','MN','ML'];
+const OPEN_STATES=['KA','TS','TN','UP','KL','AP','HR','WB','BR','UK','CG','JH','HP','PY','TR','MN','ML','SK'];
 const STATE_LABELS={KA:'Karnataka',TS:'Telangana',TN:'Tamil Nadu',UP:'Uttar Pradesh',
   UK:'Uttarakhand',PY:'Pondicherry',WB:'West Bengal',MN:'Manipur',ML:'Meghalaya',
   AP:'Andhra Pradesh',BR:'Bihar',HR:'Haryana',JH:'Jharkhand',CG:'Chhattisgarh',
-  KL:'Kerala',HP:'Himachal Pradesh',TR:'Tripura'};
+  KL:'Kerala',HP:'Himachal Pradesh',TR:'Tripura',SK:'Sikkim'};
 
 let DB=null,FEE={},STUDENT={},currentPane=null,mhTab='govt',mhCourse='MBBS',aiimsOpen=false,osExpanded=null;
 
@@ -938,13 +938,34 @@ function renderMCCExpanded(){
           </div>
         </div>
         ${aiimsToggle}
+        ${(()=>{
+          const {preview:aiimsPrev, rest:aiimsRest} = mccPreview(aiims);
+          return !isCounselMode() && hasMBBS && aiims.length ? `
+            <table class="ctable" style="width:100%;margin-top:8px;">
+              <thead><tr>
+                <th>College</th><th>Last Cutoff</th>
+                <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+                <th>Fee/yr</th><th>Chance</th>
+              </tr></thead>
+              <tbody>${aiimsPrev.map(c=>row(c)).join('')}</tbody>
+            </table>
+            ${aiimsRest.length?`<div class="blur-section" style="margin-top:0;">
+              <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
+                <div class="blur-overlay-inner">
+                  🔒 Register with ASMI to unlock all ${aiims.length} AIIMS options
+                  <span>Schedule a session to unlock your complete list</span>
+                </div>
+              </div>
+            </div>`:''}` : '';
+        })()}
       </div>`;
     })()}
     ${(()=>{
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
       const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
       const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
-      const {preview:jipPrev, rest:jipRest} = mccPreview(jipmer);
+      const jipmerShowAll = jipmer.length <= 5;
+      const {preview:jipPrev, rest:jipRest} = jipmerShowAll ? {preview:jipmer, rest:[]} : mccPreview(jipmer);
       const jipmerPreviewHtml = !isCounselMode() && hasMBBS ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
@@ -982,7 +1003,8 @@ function renderMCCExpanded(){
       const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ')).join(''):'';
       const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
       const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
-      const {preview:cenPrev, rest:cenRest} = mccPreview(centralAll);
+      const centralShowAll = centralAll.length <= 5;
+      const {preview:cenPrev, rest:cenRest} = centralShowAll ? {preview:centralAll, rest:[]} : mccPreview(centralAll);
       const centralPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
@@ -1020,6 +1042,33 @@ function renderMCCExpanded(){
     if(hasBDS) deemedHtml+=`<div class="deemed-label" style="margin-top:0;margin-bottom:6px">MBBS Deemed</div>`;
     deemedHtml+=bands.map((b,i)=>{
       const bandId=`deemed-mbbs-band-${i}`;
+      if(!isCounselMode() && b.cols && b.cols.length){
+        const {preview:dPrev, rest:dRest} = mccPreview(b.cols);
+        const dPreviewTable=`
+          <table class="ctable" style="width:100%;margin-top:8px;">
+            <thead><tr>
+              <th>College</th><th>Last Cutoff</th>
+              <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+              <th>Fee/yr</th><th>Chance</th>
+            </tr></thead>
+            <tbody>${dPrev.map(c=>row(c)).join('')}</tbody>
+          </table>
+          ${dRest.length?`<div class="blur-section" style="margin-top:0;">
+            <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
+              <div class="blur-overlay-inner">
+                🔒 Register with ASMI to unlock all ${b.cols.length} options in this fee band
+                <span>Schedule a session to unlock your complete list</span>
+              </div>
+            </div>
+          </div>`:''}`;
+        return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
+            <div><div class="db-count">${b.inReach}<span style="font-size:.85rem;font-weight:600;color:var(--soft)">/${b.total}</span></div><div class="db-sub">in reach / total</div></div>
+          </div>
+          ${dPreviewTable}
+        </div>`;
+      }
       const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
@@ -1031,9 +1080,8 @@ function renderMCCExpanded(){
       const expandBtn=isCounselMode()?`
         <button onclick="toggleDeemedBand('${bandId}',this)" style="
           background:rgba(26,0,64,0.1);border:1px solid rgba(26,0,64,0.25);border-radius:6px;
-          color:var(--navy);font-size:11px;font-family:Montserrat,sans-serif;
-          font-weight:700;padding:4px 12px;cursor:pointer;margin-left:8px;
-          transition:.2s;white-space:nowrap;">▼ Show</button>`:'';
+          color:var(--navy);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;
+          padding:4px 12px;cursor:pointer;margin-left:8px;white-space:nowrap;">▼ Show</button>`:'';
       return `<div class="deemed-band" style="flex-direction:column;align-items:stretch;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div><div class="db-fee">${b.icon} ${b.label}</div><div class="db-label">Open to all states · no domicile required</div></div>
