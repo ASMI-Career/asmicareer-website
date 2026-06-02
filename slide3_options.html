@@ -136,7 +136,8 @@ table.ctable th:not(:first-child){text-align:center;}
 .cs-sub{font-size:.72rem;color:var(--soft);}
 /* MCC */
 .mcc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex-shrink:0;margin-bottom:10px;}
-.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;text-align:right;}
+.mcc-count-card{background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;padding:12px 14px;transition:.22s;display:flex;flex-direction:column;align-items:stretch;}
+.mcc-card-inner{display:flex;justify-content:space-between;align-items:center;width:100%;}
 .mcc-count-card.clickable{cursor:pointer;}
 .mcc-count-card.clickable:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
 .mcc-count-card.active-card{background:linear-gradient(135deg,var(--navy),var(--purple));border-color:var(--purple);}
@@ -833,6 +834,19 @@ function renderAIIMSList(cols){
   if(!rest.length) return previewHtml;
   return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all AIIMS options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
 }
+function mccPreview(cols){
+  if(!cols||!cols.length) return {preview:[], rest:[]};
+  const score = activeScore();
+  const byClosest = arr=>[...arr].sort((a,b)=>
+    Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)));
+  const safe   = byClosest(cols.filter(c=>c.prob&&c.prob.key==='safe')).slice(0,2);
+  const likely = byClosest(cols.filter(c=>c.prob&&c.prob.key==='likely')).slice(0,2);
+  const reach  = byClosest(cols.filter(c=>c.prob&&c.prob.key==='reach')).slice(0,1);
+  const preview = [...safe,...likely,...reach];
+  const previewNames = new Set(preview.map(c=>c.n));
+  const rest = cols.filter(c=>!previewNames.has(c.n));
+  return {preview, rest};
+}
 function renderMCCExpanded(){
   const{aiqR,aiq,aiimsR,aiims,jipmerR,jipmer,centralR,central,deemed}=computeMCC();
   aiimsOpen=false;
@@ -842,6 +856,13 @@ function renderMCCExpanded(){
   const hasMBBS=selectedCourses.includes('MBBS');
   const hasBDS=selectedCourses.includes('BDS');
   const isMBBS=hasMBBS; // keep for count grid compatibility
+  const row=c=>{const actual=c.c,projected=actual+15;return`<tr>
+    <td class="college-name">${c.n}</td>
+    <td class="cutoff-val" style="text-align:center">${actual}</td>
+    <td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>
+    <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+    <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+  </tr>`;};
   document.getElementById('mcc-count-grid').innerHTML=`
     ${(()=>{
       let aiqTotal=aiq, aiqReach=aiqR;
@@ -857,13 +878,31 @@ function renderMCCExpanded(){
       const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ')).join(''):'';
       const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
+      const {preview:aiqPrev, rest:aiqRest} = mccPreview(aiqTotal);
+      const aiqPreviewHtml = !isCounselMode() ? `
+        <table class="ctable" style="width:100%;margin-top:8px;">
+          <thead><tr>
+            <th>College</th><th>Last Cutoff</th>
+            <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+            <th>Fee/yr</th><th>Chance</th>
+          </tr></thead>
+          <tbody>${aiqPrev.map(c=>row(c)).join('')}</tbody>
+        </table>
+        ${aiqRest.length?`<div class="blur-section" style="margin-top:0;">
+          <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
+            <div class="blur-overlay-inner">
+              🔒 Register with ASMI to unlock all ${aiqTotal.length} AIQ options
+              <span>Schedule a session to unlock your complete list</span>
+            </div>
+          </div>
+        </div>`:''}` : '';
       return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="mcc-card-inner">
           <div class="mcc-card-title">AIQ Govt</div>
           <div><div class="mcc-card-num">${num(aiqReach.length,aiqTotal.length)}</div>
           <div class="mcc-card-sub">${hasMBBS&&hasBDS?'MBBS + BDS combined':'colleges in reach'}</div></div>
         </div>
-        ${aiqToggleBtn}
+        ${aiqToggleBtn}${aiqPreviewHtml}
       </div>`;
     })()}
     ${(()=>{
@@ -888,7 +927,7 @@ function renderMCCExpanded(){
         <div style="display:none;max-height:280px;overflow-y:auto;">${aiimsTable}</div>`:'';
       return `<div class="mcc-count-card ${!isCounselMode()&&aiimsR.length>0?'clickable':''}"
         ${!isCounselMode()&&aiimsR.length>0?'id="aiims-card" onclick="toggleAIIMS()"':''}>
-        <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+        <div class="mcc-card-inner">
           <div class="mcc-card-title">AIIMS</div>
           <div>
             ${hasMBBS
@@ -905,15 +944,33 @@ function renderMCCExpanded(){
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
       const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
       const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
+      const {preview:jipPrev, rest:jipRest} = mccPreview(jipmer);
+      const jipmerPreviewHtml = !isCounselMode() && hasMBBS ? `
+        <table class="ctable" style="width:100%;margin-top:8px;">
+          <thead><tr>
+            <th>College</th><th>Last Cutoff</th>
+            <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+            <th>Fee/yr</th><th>Chance</th>
+          </tr></thead>
+          <tbody>${jipPrev.map(c=>row(c)).join('')}</tbody>
+        </table>
+        ${jipRest.length?`<div class="blur-section" style="margin-top:0;">
+          <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
+            <div class="blur-overlay-inner">
+              🔒 Register with ASMI to unlock all ${jipmer.length} JIPMER options
+              <span>Schedule a session to unlock your complete list</span>
+            </div>
+          </div>
+        </div>`:''}` : '';
       return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="mcc-card-inner">
           <div class="mcc-card-title">JIPMER</div>
           <div>${hasMBBS
             ?`<div class="mcc-card-num">${num(jipmerR.length,jipmer.length)}</div><div class="mcc-card-sub">colleges in reach</div>`
             :`<div class="mcc-card-num" style="font-size:1rem;color:var(--soft)">N/A</div><div class="mcc-card-sub">BDS not applicable</div>`}
           </div>
         </div>
-        ${jipmerToggle}
+        ${jipmerToggle}${jipmerPreviewHtml}
       </div>`;
     })()}
     ${(()=>{
@@ -925,13 +982,31 @@ function renderMCCExpanded(){
       const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ')).join(''):'';
       const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
       const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
+      const {preview:cenPrev, rest:cenRest} = mccPreview(centralAll);
+      const centralPreviewHtml = !isCounselMode() ? `
+        <table class="ctable" style="width:100%;margin-top:8px;">
+          <thead><tr>
+            <th>College</th><th>Last Cutoff</th>
+            <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+            <th>Fee/yr</th><th>Chance</th>
+          </tr></thead>
+          <tbody>${cenPrev.map(c=>row(c)).join('')}</tbody>
+        </table>
+        ${cenRest.length?`<div class="blur-section" style="margin-top:0;">
+          <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
+            <div class="blur-overlay-inner">
+              🔒 Register with ASMI to unlock all ${centralAll.length} Central options
+              <span>Schedule a session to unlock your complete list</span>
+            </div>
+          </div>
+        </div>`:''}` : '';
       return `<div class="mcc-count-card" style="flex-direction:column;align-items:stretch;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="mcc-card-inner">
           <div class="mcc-card-title">Central Univ.</div>
           <div><div class="mcc-card-num">${num(reachCentral,totalCentral)}</div>
           <div class="mcc-card-sub">BHU · AMU${hasBDS?' · JMI':''}</div></div>
         </div>
-        ${centralToggle}
+        ${centralToggle}${centralPreviewHtml}
       </div>`;
     })()}`;
   document.getElementById('aiims-list').innerHTML=aiims.length?renderAIIMSList(aiims):'';
