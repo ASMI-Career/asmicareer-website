@@ -1184,8 +1184,8 @@ function getTop25(){
       deemed.forEach(c=>{
         const entry={...c, pool:'Deemed', state:c.s||'All India'};
         const f=FEE&&FEE[c.n];
-        if(f&&f>=10&&f<=20)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
-        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push(entry);
+        if(f&&f>=10&&f<21)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
+        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push(entry);
         else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push(entry);
         else                      DEEMED_BANDS['₹21–25L/yr'].push(entry);
       });
@@ -1207,8 +1207,8 @@ function getTop25(){
       bdsDemed.forEach(c=>{
         const entry={...c,pool:'Deemed',state:c.s||'All India'};
         const f=FEE&&FEE[c.n];
-        if(f&&f>=10&&f<=20)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
-        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push(entry);
+        if(f&&f>=10&&f<21)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
+        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push(entry);
         else                      DEEMED_BANDS['₹26–35L/yr'].push(entry);
       });
     }
@@ -1279,8 +1279,8 @@ function getTop50(){
       deemed.forEach(c=>{
         c.state = c.s||'All India';
         const f = FEE&&FEE[c.n];
-        if(f&&f>=10&&f<=20) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
-        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+        if(f&&f>=10&&f<21) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
+        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
         else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
         else DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
       });
@@ -1304,8 +1304,8 @@ function getTop50(){
       bdsDemed.forEach(c=>{
         c.state = c.s||'All India';
         const f = FEE&&FEE[c.n];
-        if(f&&f>=10&&f<=20) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
-        else if(f&&f>=21&&f<=25) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+        if(f&&f>=10&&f<21) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
+        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
         else DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
       });
     }
