@@ -625,7 +625,7 @@ function renderMHBlurred(cols){
     return`<table class="ctable">${thead}<tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return previewHtml;
-  return`${previewHtml}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+  return`${previewHtml}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
 }
 
 function renderOSTable(stKey,cols){
@@ -654,7 +654,7 @@ function renderOSTable(stKey,cols){
     return`<table class="ctable"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
-  return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all ${cols.length} ${STATE_LABELS[stKey]||stKey} options<span>Schedule a session to unlock your complete list</span></div></div></div>`;
+  return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
 }
 
 function getOSColleges(stKey,course){
@@ -832,7 +832,7 @@ function renderAIIMSList(cols){
   const preview=sorted.slice(0,5),rest=sorted.slice(5);
   const previewHtml=`<table class="ctable">${aiimsThead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(!rest.length) return previewHtml;
-  return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI to unlock all AIIMS options<span>Schedule a session to unlock your complete college list</span></div></div></div>`;
+  return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
 }
 function mccPreview(cols){
   if(!cols||!cols.length) return {preview:[], rest:[]};
@@ -891,8 +891,7 @@ function renderMCCExpanded(){
         ${aiqRest.length?`<div class="blur-section" style="margin-top:0;">
           <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
             <div class="blur-overlay-inner">
-              🔒 Register with ASMI to unlock all ${aiqTotal.length} AIQ options
-              <span>Schedule a session to unlock your complete list</span>
+              🔒 Register with ASMI — your counsellor will guide you through all ${aiqTotal.length} options
             </div>
           </div>
         </div>`:''}` : '';
@@ -939,7 +938,8 @@ function renderMCCExpanded(){
         </div>
         ${aiimsToggle}
         ${(()=>{
-          const {preview:aiimsPrev, rest:aiimsRest} = mccPreview(aiims);
+          const aiimsPrev = aiims.slice(0,5);
+          const aiimsRest = aiims.slice(5);
           return !isCounselMode() && hasMBBS && aiims.length ? `
             <table class="ctable" style="width:100%;margin-top:8px;">
               <thead><tr>
@@ -952,8 +952,7 @@ function renderMCCExpanded(){
             ${aiimsRest.length?`<div class="blur-section" style="margin-top:0;">
               <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
                 <div class="blur-overlay-inner">
-                  🔒 Register with ASMI to unlock all ${aiims.length} AIIMS options
-                  <span>Schedule a session to unlock your complete list</span>
+                  🔒 Register with ASMI — your counsellor will guide you through all ${aiims.length} options
                 </div>
               </div>
             </div>`:''}` : '';
@@ -978,8 +977,7 @@ function renderMCCExpanded(){
         ${jipRest.length?`<div class="blur-section" style="margin-top:0;">
           <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
             <div class="blur-overlay-inner">
-              🔒 Register with ASMI to unlock all ${jipmer.length} JIPMER options
-              <span>Schedule a session to unlock your complete list</span>
+              🔒 Register with ASMI — your counsellor will guide you through all ${jipmer.length} options
             </div>
           </div>
         </div>`:''}` : '';
@@ -1017,8 +1015,7 @@ function renderMCCExpanded(){
         ${cenRest.length?`<div class="blur-section" style="margin-top:0;">
           <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
             <div class="blur-overlay-inner">
-              🔒 Register with ASMI to unlock all ${centralAll.length} Central options
-              <span>Schedule a session to unlock your complete list</span>
+              🔒 Register with ASMI — your counsellor will guide you through all ${centralAll.length} options
             </div>
           </div>
         </div>`:''}` : '';
@@ -1043,7 +1040,8 @@ function renderMCCExpanded(){
     deemedHtml+=bands.map((b,i)=>{
       const bandId=`deemed-mbbs-band-${i}`;
       if(!isCounselMode() && b.cols && b.cols.length){
-        const {preview:dPrev, rest:dRest} = mccPreview(b.cols);
+        const dPrev = b.cols.slice(0,5);
+        const dRest = b.cols.slice(5);
         const dPreviewTable=`
           <table class="ctable" style="width:100%;margin-top:8px;">
             <thead><tr>
@@ -1056,8 +1054,7 @@ function renderMCCExpanded(){
           ${dRest.length?`<div class="blur-section" style="margin-top:0;">
             <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
               <div class="blur-overlay-inner">
-                🔒 Register with ASMI to unlock all ${b.cols.length} options in this fee band
-                <span>Schedule a session to unlock your complete list</span>
+                🔒 Register with ASMI — your counsellor will guide you through all ${b.cols.length} options
               </div>
             </div>
           </div>`:''}`;
