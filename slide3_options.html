@@ -938,8 +938,11 @@ function renderMCCExpanded(){
         </div>
         ${aiimsToggle}
         ${(()=>{
-          const aiimsPrev = aiims.slice(0,5);
-          const aiimsRest = aiims.slice(5);
+          const _sc = activeScore();
+          const aiimsClosest = [...aiims].sort((a,b)=>
+            Math.abs(_sc-(a.c+15)) - Math.abs(_sc-(b.c+15)));
+          const aiimsPrev = aiimsClosest.slice(0,5);
+          const aiimsRest = aiimsClosest.slice(5);
           return !isCounselMode() && hasMBBS && aiims.length ? `
             <table class="ctable" style="width:100%;margin-top:8px;">
               <thead><tr>
@@ -1040,8 +1043,11 @@ function renderMCCExpanded(){
     deemedHtml+=bands.map((b,i)=>{
       const bandId=`deemed-mbbs-band-${i}`;
       if(!isCounselMode() && b.cols && b.cols.length){
-        const dPrev = b.cols.slice(0,5);
-        const dRest = b.cols.slice(5);
+        const _dsc = activeScore();
+        const byClosest = [...b.cols].sort((a,b)=>
+          Math.abs(_dsc-(a.c+15)) - Math.abs(_dsc-(b.c+15)));
+        const dPrev = byClosest.slice(0,5);
+        const dRest = byClosest.slice(5);
         const dPreviewTable=`
           <table class="ctable" style="width:100%;margin-top:8px;">
             <thead><tr>
