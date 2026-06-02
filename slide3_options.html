@@ -878,7 +878,11 @@ function renderMCCExpanded(){
       const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ')).join(''):'';
       const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
-      const {preview:aiqPrev, rest:aiqRest} = mccPreview(aiqTotal);
+      const _aqsc = activeScore();
+      const aiqClosest = [...aiqTotal].sort((a,b)=>
+        Math.abs(_aqsc-(a.c+15)) - Math.abs(_aqsc-(b.c+15)));
+      const aiqPrev = aiqClosest.slice(0,5);
+      const aiqRest = aiqClosest.slice(5);
       const aiqPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
