@@ -886,7 +886,7 @@ const aiqSafe   = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'safe')).sli
 const aiqLikely = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'likely')).slice(0, 2);
 const aiqReach1 = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'reach')).slice(0, 1);
 
-let aiqPrev = [...aiqSafe, ...aiqLikely, ...aiqReach1];
+let aiqPrev = [...aiqReach1, ...aiqLikely, ...aiqSafe];
 
 // Always fill to 5 — pull closest remaining (borderline first, then more reach)
 if (aiqPrev.length < 5) {
