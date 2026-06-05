@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET College Predictor | ASMI Career</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ── CUSTOM VANILLA CSS DESIGN SYSTEM ── */
+        :root {
+            --yellow: #FFD700;
+            --yellow-hover: #e6c200;
+            --navy: #1a0040;
+            --navy-light: #2d0d66;
+            --purple: #6a0dad;
+            --purple-light: #8b25cc;
+            --bg-dark: #070114;
+            --card-bg: rgba(45, 13, 102, 0.15);
+            --card-border: rgba(139, 37, 204, 0.2);
+            --text-light: #f3f0ff;
+            --text-muted: #a78bfa;
+            
+            /* Badges colors */
+            --safe-color: #10b981;
+            --safe-bg: rgba(16, 185, 129, 0.12);
+            --safe-border: rgba(16, 185, 129, 0.25);
+            
+            --likely-color: #3b82f6;
+            --likely-bg: rgba(59, 130, 246, 0.12);
+            --likely-border: rgba(59, 130, 246, 0.25);
+            
+            --borderline-color: #f59e0b;
+            --borderline-bg: rgba(245, 158, 11, 0.12);
+            --borderline-border: rgba(245, 158, 11, 0.25);
+            
+            --reach-color: #ef4444;
+            --reach-bg: rgba(239, 68, 68, 0.1);
+            --reach-border: rgba(239, 68, 68, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Background Glows */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: -10vh;
+            width: 60vh;
+            height: 60vh;
+            background: radial-gradient(circle, rgba(106, 13, 173, 0.3) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            right: -10vh;
+            width: 70vh;
+            height: 70vh;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        /* ── HEADER NAVIGATION ── */
+        .header {
+            background-color: rgba(26, 0, 64, 0.85);
+            border-bottom: 1px solid rgba(139, 37, 204, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 72px;
+            transition: all 0.3s ease;
+        }
+
+        .header-inner {
+            max-width: 1280px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 44px;
+            width: auto;
+            display: block;
+        }
+
+        .header-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-welcome {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .user-welcome span {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .btn {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 13.5px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-yellow {
+            background-color: var(--yellow);
+            color: var(--navy);
+        }
+
+        .btn-yellow:hover {
+            background-color: var(--yellow-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-yellow:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-star {
+            background-color: rgba(255, 215, 0, 0.1);
+            color: var(--yellow);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+        }
+
+        .btn-star:hover {
+            background-color: rgba(255, 215, 0, 0.18);
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
+        }
+
+        .logout-link {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .logout-link:hover {
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.08);
+        }
+
+        /* ── HERO BANNER (FREE MODE) ── */
+        .hero-section {
+            max-width: 680px;
+            margin: 60px auto 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 38px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-title span {
+            color: var(--yellow);
+            -webkit-text-fill-color: initial;
+        }
+
+        .hero-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        /* ── CENTRALIZED RANK INPUT CONTAINER ── */
+        .rank-form-card {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.7) 0%, rgba(45, 13, 102, 0.4) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 36px 32px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rank-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple), var(--yellow), var(--purple), transparent);
+        }
+
+        .rank-label {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .rank-input-wrapper {
+            display: flex;
+            max-width: 460px;
+            margin: 0 auto;
+            position: relative;
+            background: rgba(7, 1, 20, 0.6);
+            border: 1px solid rgba(139, 37, 204, 0.4);
+            border-radius: 50px;
+            padding: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .rank-input-wrapper:focus-within {
+            border-color: var(--yellow);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .rank-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            padding: 8px 20px;
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+
+        .rank-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .rank-submit-btn {
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 12px 28px;
+            border: none;
+            background-color: var(--yellow);
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rank-submit-btn:hover {
+            background-color: var(--yellow-hover);
+            transform: scale(1.02);
+        }
+
+        .rank-submit-btn:active {
+            transform: scale(1);
+        }
+
+        .rank-info-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 14px;
+            display: block;
+        }
+
+        /* Locked Rank Badge */
+        .locked-rank-card {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.7) 0%, rgba(45, 13, 102, 0.4) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .locked-rank-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-align: left;
+        }
+
+        .locked-rank-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--yellow);
+        }
+
+        .lock-icon {
+            font-size: 18px;
+            color: var(--text-muted);
+        }
+
+        /* ── MAIN LAYOUT (Tiers 2 & 3) ── */
+        .dashboard-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px 80px 24px;
+        }
+
+        /* Mobile Filter Toggle Float */
+        .mobile-filter-bar {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 90;
+            width: calc(100% - 48px);
+            max-width: 320px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 32px;
+            align-items: start;
+            margin-top: 10px;
+        }
+
+        /* ── FILTER PANEL (LEFT SIDEBAR) ── */
+        .filter-panel {
+            background: rgba(26, 0, 64, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            position: sticky;
+            top: 96px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .filter-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .filter-panel::-webkit-scrollbar-thumb {
+            background: var(--purple-light);
+            border-radius: 2px;
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .filter-title {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+        }
+
+        .btn-clear-filters {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        .btn-clear-filters:hover {
+            color: var(--yellow);
+        }
+
+        .filter-group {
+            margin-bottom: 28px;
+        }
+
+        .filter-group-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        /* Custom Toggle Pills for Type */
+        .type-pills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .pill-toggle {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pill-toggle:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .pill-toggle.active {
+            background-color: var(--purple);
+            border-color: var(--purple-light);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(106, 13, 173, 0.3);
+        }
+
+        .pill-toggle.active-all {
+            background-color: var(--yellow);
+            border-color: var(--yellow);
+            color: var(--navy);
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Searchable Custom State Dropdown */
+        .state-select-wrapper {
+            position: relative;
+        }
+
+        .state-select-trigger {
+            background: rgba(7, 1, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .state-select-trigger:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .state-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #14082c;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            z-index: 50;
+            display: none;
+            overflow: hidden;
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        .state-search-box {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .state-search-input {
+            width: 100%;
+            background: rgba(7, 1, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .state-search-input:focus {
+            border-color: var(--purple-light);
+        }
+
+        .state-options-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .state-options-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .state-options-list::-webkit-scrollbar-thumb {
+            background: var(--purple-light);
+            border-radius: 2px;
+        }
+
+        .state-option {
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .state-option:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .state-option input[type="checkbox"] {
+            accent-color: var(--purple-light);
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .state-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .state-tag {
+            background: rgba(139, 37, 204, 0.15);
+            border: 1px solid rgba(139, 37, 204, 0.3);
+            color: var(--text-light);
+            padding: 3px 8px 3px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .state-tag-remove {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .state-tag-remove:hover {
+            color: #ffffff;
+        }
+
+        /* Budget Slider styling */
+        .slider-label-val {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--yellow);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            outline: none;
+            accent-color: var(--yellow);
+            cursor: pointer;
+        }
+
+        /* Sort select styling */
+        .sort-select {
+            width: 100%;
+            background: rgba(7, 1, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13.5px;
+            color: var(--text-light);
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .sort-select:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .sort-select option {
+            background: #14082c;
+            color: var(--text-light);
+            padding: 8px;
+        }
+
+        /* ── RESULTS PANEL (RIGHT SIDE) ── */
+        .results-panel {
+            width: 100%;
+        }
+
+        .results-summary-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .results-count span {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        /* ── RESULT CARD STYLING ── */
+        .college-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .college-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--purple-light);
+            box-shadow: 0 10px 25px rgba(106, 13, 173, 0.15);
+            background: rgba(45, 13, 102, 0.22);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Probability Badges */
+        .badge-safe {
+            background-color: var(--safe-bg);
+            color: var(--safe-color);
+            border: 1px solid var(--safe-border);
+        }
+
+        .badge-likely {
+            background-color: var(--likely-bg);
+            color: var(--likely-color);
+            border: 1px solid var(--likely-border);
+        }
+
+        .badge-borderline {
+            background-color: var(--borderline-bg);
+            color: var(--borderline-color);
+            border: 1px solid var(--borderline-border);
+        }
+
+        .badge-reach {
+            background-color: var(--reach-bg);
+            color: var(--reach-color);
+            border: 1px solid var(--reach-border);
+        }
+
+        .pill-type, .pill-state {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+        }
+
+        .btn-bookmark {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 20px;
+            transition: all 0.2s;
+            padding: 2px;
+            line-height: 1;
+            margin-top: -4px;
+        }
+
+        .btn-bookmark:hover {
+            color: var(--yellow-hover);
+            transform: scale(1.15);
+        }
+
+        .btn-bookmark.active {
+            color: var(--yellow);
+        }
+
+        .card-middle {
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .college-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            transition: filter 0.2s;
+        }
+
+        /* BLURRED COLLEGE NAME IN FREE MODE */
+        .college-name.blurred {
+            filter: blur(5.5px);
+            user-select: none;
+            -webkit-user-select: none;
+            pointer-events: none;
+        }
+
+        .college-location {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 12px;
+        }
+
+        .info-block-lbl {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .info-block-val {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .info-block-rank {
+            text-align: right;
+        }
+
+        .info-block-rank .info-block-val {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--yellow);
+        }
+
+        /* ── UPSELL CTA CARD (MODE 1, CARD 11) ── */
+        .cta-card {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.9) 0%, rgba(106, 13, 173, 0.3) 100%);
+            border: 2px dashed rgba(255, 215, 0, 0.35);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            max-width: 420px;
+        }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(26, 0, 64, 0.25);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .empty-desc {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* ── SKELETON LOADING STATE ── */
+        .skeleton-card {
+            background: rgba(45, 13, 102, 0.08);
+            border: 1px solid rgba(139, 37, 204, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skeleton-block {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.04) 75%);
+            background-size: 200% 100%;
+            animation: loadingPulse 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes loadingPulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ── STICKY BOTTOM BANNER (MODE 2) ── */
+        .sticky-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(26, 0, 64, 0.95);
+            border-top: 1px solid rgba(255, 215, 0, 0.25);
+            padding: 16px 24px;
+            text-align: center;
+            z-index: 80;
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .sticky-banner-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .sticky-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .sticky-text span {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        /* ── SHORTLIST DRAWERS (MODE 3) ── */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 100%;
+            max-width: 450px;
+            height: 100%;
+            background: #100524;
+            border-left: 1px solid var(--card-border);
+            box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+            z-index: 1010;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drawer-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-close-drawer {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-close-drawer:hover {
+            color: #ffffff;
+        }
+
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .drawer-content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .drawer-content::-webkit-scrollbar-thumb {
+            background: var(--purple-light);
+            border-radius: 2px;
+        }
+
+        .shortlist-item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .shortlist-item-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+            padding-right: 20px;
+        }
+
+        .shortlist-item-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-remove-shortlist {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 16px;
+        }
+
+        .btn-remove-shortlist:hover {
+            opacity: 1;
+        }
+
+        /* ── LOGIN MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            animation: fadeIn 0.25s ease-out;
+            padding: 20px;
+        }
+
+        .modal {
+            background: #13052a;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            max-width: 420px;
+            width: 100%;
+            padding: 36px 32px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .btn-close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .btn-close-modal:hover {
+            color: #ffffff;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .social-login-btn {
+            width: 100%;
+            background: #ffffff;
+            color: #1a0040;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 13.5px;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+            transition: all 0.2s;
+        }
+
+        .social-login-btn:hover {
+            background: #f3f0ff;
+            transform: translateY(-1px);
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin: 20px 0;
+        }
+
+        .login-divider::before, .login-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .login-divider:not(:empty)::before { margin-right: .5em; }
+        .login-divider:not(:empty)::after { margin-left: .5em; }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(7, 1, 20, 0.6);
+            border: 1px solid rgba(139, 37, 204, 0.3);
+            border-radius: 10px;
+            padding: 11px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--yellow);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
+        }
+
+        .otp-group-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-send-otp {
+            background: rgba(106, 13, 173, 0.3);
+            border: 1px solid var(--card-border);
+            color: var(--text-light);
+            border-radius: 10px;
+            padding: 0 16px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .btn-send-otp:hover {
+            background: rgba(106, 13, 173, 0.5);
+            border-color: var(--purple-light);
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ── RESPONSIVE MEDIA QUERIES ── */
+        @media (max-width: 900px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-panel {
+                display: none; /* Collapsed on mobile, triggered as a bottom sheet drawer */
+                position: fixed;
+                inset: auto 0 0 0;
+                top: auto;
+                max-height: 80vh;
+                z-index: 2000;
+                background: #0f0521;
+                border-radius: 24px 24px 0 0;
+                border: none;
+                border-top: 2px solid var(--card-border);
+                box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.7);
+                animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .filter-panel.mobile-open {
+                display: block;
+            }
+
+            .mobile-filter-bar {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 30px;
+            }
+
+            .sticky-banner {
+                padding-bottom: 90px; /* Space for the floating mobile filters button */
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-inner {
+                padding: 0 16px;
+            }
+
+            .logo-img {
+                height: 36px;
+            }
+
+            .dashboard-container {
+                padding: 0 16px 120px 16px;
+            }
+
+            .hero-section {
+                margin: 40px auto 30px auto;
+            }
+
+            .rank-form-card {
+                padding: 24px 20px;
+                border-radius: 18px;
+            }
+
+            .rank-input-wrapper {
+                flex-direction: column;
+                background: transparent;
+                border: none;
+                padding: 0;
+                gap: 12px;
+            }
+
+            .rank-input-wrapper:focus-within {
+                box-shadow: none;
+            }
+
+            .rank-input {
+                background: rgba(7, 1, 20, 0.6);
+                border: 1px solid rgba(139, 37, 204, 0.4);
+                border-radius: 30px;
+                padding: 12px 20px;
+                text-align: center;
+            }
+
+            .rank-input:focus {
+                border-color: var(--yellow);
+                box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            }
+
+            .rank-submit-btn {
+                width: 100%;
+                padding: 14px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-card {
+                padding: 30px 20px;
+            }
+
+            .cta-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── HEADER NAVIGATION ── -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo-link">
+                <img src="../../asmi-logo.png" alt="ASMI Career" class="logo-img" onerror="this.src='https://asmicareer.com/wp-content/uploads/2021/04/ASMI-Logo.png';">
+            </a>
+            <div class="header-nav-right" id="headerNavRight">
+                <!-- Dynamic right menu based on active mode -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Shell -->
+    <main id="mainContainer">
+        <!-- Dynamic views will mount here -->
+    </main>
+
+    <!-- ── SHORTLIST SIDE PANEL DRAWER (MODE 3) ── -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeShortlistDrawer()"></div>
+    <div class="drawer" id="shortlistDrawer">
+        <div class="drawer-header">
+            <h3 class="drawer-title">⭐ Shortlisted Colleges</h3>
+            <button class="btn-close-drawer" onclick="closeShortlistDrawer()">&times;</button>
+        </div>
+        <div class="drawer-content" id="drawerContent">
+            <!-- Shortlisted items list dynamically populated -->
+        </div>
+    </div>
+
+    <!-- ── LOGIN / SIGN UP FREE MODAL ── -->
+    <div class="modal-overlay" id="loginModalOverlay">
+        <div class="modal">
+            <button class="btn-close-modal" onclick="closeLoginModal()">&times;</button>
+            <h3 class="modal-title">Unlock College Names</h3>
+            <p class="modal-desc">Login free to see complete college profiles, annual fees, and enable state & budget filters.</p>
+            
+            <button class="social-login-btn" onclick="submitSocialLogin()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="margin-right:4px;">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                </svg>
+                Continue with Google
+            </button>
+            
+            <div class="login-divider">or use mobile</div>
+            
+            <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="loginName" class="form-input" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mobile Number</label>
+                    <div class="otp-group-wrapper">
+                        <input type="tel" class="form-input" placeholder="10-digit number" pattern="[0-9]{10}">
+                        <button type="button" class="btn-send-otp" onclick="alert('OTP sent successfully! (Placeholder)')">Send OTP</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Enter OTP</label>
+                    <input type="text" class="form-input" placeholder="4-digit OTP" pattern="[0-9]{4}">
+                </div>
+                <button type="submit" class="btn btn-yellow" style="width: 100%; margin-top: 10px; border-radius:10px; padding: 12px;">Complete Free Registration</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── CORE APPLICATION LOGIC ── -->
+    <script>
+        // Reactive State Manager
+        const state = {
+            tier: 'free', // 'free' | 'login' | 'registered'
+            name: '',
+            userRank: null,
+            rankChanged: false,
+            colleges: [],
+            filteredColleges: [],
+            shortlist: [],
+            filters: {
+                types: [], // Empty means show All
+                states: [], // Empty means show All
+                maxBudget: 3000000,
+                sort: 'rank_asc' // 'rank_asc' | 'rank_desc' | 'fee_asc'
+            },
+            ui: {
+                mobileFilterOpen: false,
+                stateDropdownOpen: false
+            }
+        };
+
+        // Cache unique lists
+        let uniqueStatesList = [];
+        let isDataLoading = false;
+
+        // Initialize state
+        function initState() {
+            // 1. Detect tier from URL (?tier=registered)
+            const urlParams = new URLSearchParams(window.location.search);
+            const tierParam = urlParams.get('tier');
+            if (tierParam === 'registered') {
+                localStorage.setItem('tier', 'registered');
+                // Strip the tier query parameter from URL cleanly without page reload
+                urlParams.delete('tier');
+                const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+                window.history.replaceState({}, '', newUrl);
+            }
+
+            // 2. Load from localStorage
+            state.tier = localStorage.getItem('tier') || 'free';
+            state.name = localStorage.getItem('name') || '';
+            const rankVal = localStorage.getItem('rank');
+            state.userRank = rankVal ? parseInt(rankVal, 10) : null;
+            state.rankChanged = localStorage.getItem('rankChanged') === 'true';
+
+            try {
+                state.shortlist = JSON.parse(localStorage.getItem('shortlist')) || [];
+            } catch (e) {
+                state.shortlist = [];
+            }
+
+            console.log("App Initialized. Mode:", state.tier, "Rank:", state.userRank, "Name:", state.name);
+        }
+
+        // Fetch rank_db.json
+        async function fetchCollegesData() {
+            if (state.colleges.length > 0) return;
+            isDataLoading = true;
+            renderView(); // Show skeleton loaders
+            try {
+                const response = await fetch('/data/rank_db.json');
+                if (!response.ok) throw new Error("Database fetch failed");
+                const data = await response.json();
+                state.colleges = data;
+                
+                // Extract and sort unique states dynamically
+                const states = new Set(data.map(c => c.state).filter(Boolean));
+                uniqueStatesList = Array.from(states).sort();
+                
+                console.log(`Successfully fetched ${state.colleges.length} colleges. states count: ${uniqueStatesList.length}`);
+            } catch (err) {
+                console.error("Error fetching rank data:", err);
+                alert("Unable to load predictor data. Please check your network connection.");
+            } finally {
+                isDataLoading = false;
+            }
+        }
+
+        // Clean fee values (strip commas, spaces)
+        function cleanFee(feesStr) {
+            if (!feesStr) return 0;
+            return parseInt(String(feesStr).replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        // Display formatting logic
+        function formatFees(feesStr) {
+            const rawFee = cleanFee(feesStr);
+            if (rawFee === 0) return '₹ — / yr';
+            if (rawFee < 100000) {
+                return `₹${rawFee.toLocaleString('en-IN')} / yr`;
+            } else {
+                const lakhs = (rawFee / 100000).toFixed(2);
+                return `₹${lakhs} L / yr`;
+            }
+        }
+
+        // Admission probability logic
+        function calculateChance(cutoff, userRank) {
+            const diff = cutoff - userRank;
+            if (diff >= 500) {
+                return { key: 'safe', label: 'Safe', class: 'badge-safe' };
+            } else if (diff >= 0) {
+                return { key: 'likely', label: 'Likely', class: 'badge-likely' };
+            } else if (diff >= -1000) {
+                return { key: 'borderline', label: 'Borderline', class: 'badge-borderline' };
+            } else {
+                return { key: 'reach', label: 'Out of Reach', class: 'badge-reach' };
+            }
+        }
+
+        // Main filter and sort function
+        function applyFiltersAndSort() {
+            if (!state.userRank || state.colleges.length === 0) {
+                state.filteredColleges = [];
+                return;
+            }
+
+            let result = [...state.colleges];
+
+            // 1. In Free mode, show only Safe + Likely + Borderline (user_rank <= cutoff + 1000)
+            if (state.tier === 'free') {
+                result = result.filter(c => state.userRank <= c.cutoff + 1000);
+            } else {
+                // In login/registered mode, we display everything, unless filters narrow it down.
+            }
+
+            // 2. Apply Institution Type Pill Filter
+            if (state.tier !== 'free' && state.filters.types.length > 0) {
+                result = result.filter(c => state.filters.types.includes(c.type));
+            }
+
+            // 3. Apply State multiselect Filter
+            if (state.tier !== 'free' && state.filters.states.length > 0) {
+                result = result.filter(c => state.filters.states.includes(c.state));
+            }
+
+            // 4. Apply Max Budget slider Filter
+            if (state.tier !== 'free' && state.filters.maxBudget < 3000000) {
+                result = result.filter(c => cleanFee(c.fees) <= state.filters.maxBudget);
+            }
+
+            // 5. Sorting
+            if (state.filters.sort === 'rank_asc') {
+                result.sort((a, b) => a.cutoff - b.cutoff); // Low to high cutoff rank (best first)
+            } else if (state.filters.sort === 'rank_desc') {
+                result.sort((a, b) => b.cutoff - a.cutoff);
+            } else if (state.filters.sort === 'fee_asc') {
+                result.sort((a, b) => cleanFee(a.fees) - cleanFee(b.fees));
+            }
+
+            state.filteredColleges = result;
+        }
+
+        // Actions
+        async function handleFreeRankSubmit(e) {
+            e.preventDefault();
+            const rankVal = document.getElementById('freeRankInput').value;
+            const parsedRank = parseInt(rankVal, 10);
+            if (isNaN(parsedRank) || parsedRank <= 0) {
+                alert("Please enter a valid rank.");
+                return;
+            }
+            state.userRank = parsedRank;
+            await fetchCollegesData();
+            applyFiltersAndSort();
+            renderView();
+            
+            // Scroll to results
+            const resultsSection = document.getElementById('resultsAnchor');
+            if (resultsSection) {
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function handleEditRank(e) {
+            e.preventDefault();
+            const newRankVal = document.getElementById('editRankInput').value;
+            const parsedRank = parseInt(newRankVal, 10);
+            if (isNaN(parsedRank) || parsedRank <= 0) {
+                alert("Please enter a valid rank.");
+                return;
+            }
+            
+            state.userRank = parsedRank;
+            state.rankChanged = true;
+            localStorage.setItem('rank', parsedRank);
+            localStorage.setItem('rankChanged', 'true');
+            
+            applyFiltersAndSort();
+            renderView();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('tier');
+            localStorage.removeItem('name');
+            localStorage.removeItem('rank');
+            localStorage.removeItem('rankChanged');
+            // Keep shortlist saved
+            state.tier = 'free';
+            state.name = '';
+            state.userRank = null;
+            state.rankChanged = false;
+            state.filteredColleges = [];
+            
+            // Reset filters
+            state.filters.types = [];
+            state.filters.states = [];
+            state.filters.maxBudget = 3000000;
+            state.filters.sort = 'rank_asc';
+            
+            renderView();
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModalOverlay').style.display = 'flex';
+            document.getElementById('loginName').focus();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModalOverlay').style.display = 'none';
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const nameVal = document.getElementById('loginName').value.trim();
+            if (!nameVal) {
+                alert("Please enter your name.");
+                return;
+            }
+            
+            localStorage.setItem('name', nameVal);
+            localStorage.setItem('tier', 'login');
+            localStorage.setItem('rank', state.userRank || '');
+            localStorage.setItem('rankChanged', 'false');
+            
+            closeLoginModal();
+            initState();
+            
+            // Reload to active login mode
+            window.location.reload();
+        }
+
+        function submitSocialLogin() {
+            // Placeholder: simulate google oauth by requesting name
+            const placeholderName = prompt("Enter your Name for Google Account simulation:", state.name || "Student");
+            if (placeholderName) {
+                localStorage.setItem('name', placeholderName);
+                localStorage.setItem('tier', 'login');
+                localStorage.setItem('rank', state.userRank || '');
+                localStorage.setItem('rankChanged', 'false');
+                window.location.reload();
+            }
+        }
+
+        function toggleShortlist(name, event) {
+            if (event) event.stopPropagation();
+            const index = state.shortlist.indexOf(name);
+            if (index > -1) {
+                state.shortlist.splice(index, 1);
+            } else {
+                state.shortlist.push(name);
+            }
+            localStorage.setItem('shortlist', JSON.stringify(state.shortlist));
+            renderView();
+            if (state.ui.shortlistDrawerOpen) {
+                renderShortlistDrawer();
+            }
+        }
+
+        function toggleTypeFilter(type) {
+            if (type === 'All') {
+                state.filters.types = [];
+            } else {
+                const idx = state.filters.types.indexOf(type);
+                if (idx > -1) {
+                    state.filters.types.splice(idx, 1);
+                } else {
+                    state.filters.types.push(type);
+                }
+            }
+            applyFiltersAndSort();
+            renderView();
+        }
+
+        function toggleStateFilter(stateName) {
+            const idx = state.filters.states.indexOf(stateName);
+            if (idx > -1) {
+                state.filters.states.splice(idx, 1);
+            } else {
+                state.filters.states.push(stateName);
+            }
+            applyFiltersAndSort();
+            renderView();
+        }
+
+        function clearAllFilters() {
+            state.filters.types = [];
+            state.filters.states = [];
+            state.filters.maxBudget = 3000000;
+            state.filters.sort = 'rank_asc';
+            applyFiltersAndSort();
+            renderView();
+        }
+
+        // State Dropdown control
+        function toggleStateDropdown(event) {
+            if (event) event.stopPropagation();
+            const dropdown = document.getElementById('stateSelectDropdown');
+            if (!dropdown) return;
+            state.ui.stateDropdownOpen = !state.ui.stateDropdownOpen;
+            dropdown.style.display = state.ui.stateDropdownOpen ? 'block' : 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            const dropdown = document.getElementById('stateSelectDropdown');
+            if (dropdown && state.ui.stateDropdownOpen) {
+                state.ui.stateDropdownOpen = false;
+                dropdown.style.display = 'none';
+            }
+        });
+
+        function handleStateSearch(event) {
+            event.stopPropagation();
+            const term = event.target.value.toLowerCase();
+            const options = document.querySelectorAll('.state-option');
+            options.forEach(opt => {
+                const text = opt.textContent.toLowerCase();
+                if (text.includes(term)) {
+                    opt.style.display = 'flex';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        }
+
+        // Slide-in panel shortlist (Mode 3)
+        function openShortlistDrawer() {
+            renderShortlistDrawer();
+            document.getElementById('drawerOverlay').style.display = 'block';
+            document.getElementById('shortlistDrawer').classList.add('open');
+            state.ui.shortlistDrawerOpen = true;
+        }
+
+        function closeShortlistDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'none';
+            document.getElementById('shortlistDrawer').classList.remove('open');
+            state.ui.shortlistDrawerOpen = false;
+        }
+
+        function renderShortlistDrawer() {
+            const container = document.getElementById('drawerContent');
+            if (!container) return;
+            
+            if (state.shortlist.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding: 40px 10px; color: var(--text-muted);">
+                        <span style="font-size: 32px; display:block; margin-bottom:12px;">⭐</span>
+                        <p style="font-size:14px; font-weight:600;">No colleges shortlisted yet.</p>
+                        <p style="font-size:12px; margin-top:4px;">Star items from the matching list to shortlist them.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Find full college data for shortlisted names
+            const items = state.shortlist.map(name => {
+                return state.colleges.find(c => c.name === name);
+            }).filter(Boolean);
+
+            container.innerHTML = items.map(c => {
+                const prob = calculateChance(c.cutoff, state.userRank);
+                return `
+                    <div class="shortlist-item-card">
+                        <button class="btn-remove-shortlist" onclick="toggleShortlist('${c.name.replace(/'/g, "\\'")}', event)">&times;</button>
+                        <div class="shortlist-item-name">${c.name}</div>
+                        <div class="shortlist-item-meta">
+                            <span class="badge ${prob.class}" style="font-size:8px; padding:2px 6px;">${prob.label}</span>
+                            <span>${c.location}, ${c.state}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+                            <span>Fee: <strong>${formatFees(c.fees)}</strong></span>
+                            <span>Rank: <strong style="color:var(--yellow); font-family:Montserrat;">#${c.cutoff.toLocaleString()}</strong></span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle Mobile Bottom Filters Sheet
+        function toggleMobileFilters() {
+            state.ui.mobileFilterOpen = !state.ui.mobileFilterOpen;
+            const filterPanel = document.getElementById('filterPanel');
+            if (state.ui.mobileFilterOpen) {
+                filterPanel.classList.add('mobile-open');
+                
+                // Add overlay if not exists
+                let overlay = document.getElementById('mobileFilterOverlay');
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = 'mobileFilterOverlay';
+                    overlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1900;';
+                    overlay.onclick = toggleMobileFilters;
+                    document.body.appendChild(overlay);
+                }
+                overlay.style.display = 'block';
+            } else {
+                filterPanel.classList.remove('mobile-open');
+                const overlay = document.getElementById('mobileFilterOverlay');
+                if (overlay) overlay.style.display = 'none';
+            }
+        }
+
+
+        // ── RENDER SYSTEM ──
+        function renderView() {
+            // 1. Render Header Nav
+            renderHeaderNav();
+
+            // 2. Render Body content depending on view state
+            const container = document.getElementById('mainContainer');
+            if (!container) return;
+
+            if (isDataLoading) {
+                container.innerHTML = renderSkeletonLoader();
+                return;
+            }
+
+            if (!state.userRank) {
+                // Render rank input landing screen
+                container.innerHTML = renderLandingView();
+            } else {
+                // Render predictor dashboard
+                container.innerHTML = renderPredictorView();
+                // Attach events that can't be easily done via template strings
+                attachDashboardEvents();
+            }
+        }
+
+        function renderHeaderNav() {
+            const rightNav = document.getElementById('headerNavRight');
+            if (!rightNav) return;
+
+            if (state.tier === 'free') {
+                rightNav.innerHTML = `
+                    <button class="btn btn-yellow" onclick="openLoginModal()">Login / Sign Up Free</button>
+                `;
+            } else if (state.tier === 'login') {
+                rightNav.innerHTML = `
+                    <div class="user-welcome">Welcome, <span>${state.name}</span></div>
+                    <a href="#" class="logout-link" onclick="handleLogout()">Logout</a>
+                `;
+            } else if (state.tier === 'registered') {
+                rightNav.innerHTML = `
+                    <button class="btn btn-star" onclick="openShortlistDrawer()">⭐ <span id="shortlistCountText">${state.shortlist.length}</span> Shortlisted</button>
+                    <a href="#" class="logout-link" onclick="handleLogout()">Logout</a>
+                `;
+            }
+        }
+
+        function renderSkeletonLoader() {
+            return `
+                <div class="dashboard-container" style="margin-top: 40px;">
+                    <div class="text-center" style="margin-bottom: 40px;">
+                        <h2 style="font-family: Montserrat; font-weight: 800; font-size: 24px; margin-bottom: 8px;">Fetching Database...</h2>
+                        <p style="color: var(--text-muted); font-size: 14px;">Analyzing ranks and processing fees</p>
+                    </div>
+                    <div class="grid-layout" style="grid-template-columns: 1fr;">
+                        <div class="cards-grid">
+                            ${Array(6).fill().map(() => `
+                                <div class="skeleton-card">
+                                    <div style="display:flex; justify-content:space-between;">
+                                        <div class="skeleton-block" style="width: 80px; height: 18px; border-radius:10px;"></div>
+                                        <div class="skeleton-block" style="width: 60px; height: 18px; border-radius:10px;"></div>
+                                    </div>
+                                    <div class="skeleton-block" style="width: 90%; height: 20px; margin-top: 20px;"></div>
+                                    <div class="skeleton-block" style="width: 50%; height: 14px; margin-top: 10px;"></div>
+                                    <div style="display:flex; justify-content:space-between; margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                                        <div class="skeleton-block" style="width: 70px; height: 14px;"></div>
+                                        <div class="skeleton-block" style="width: 60px; height: 20px;"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLandingView() {
+            return `
+                <div class="hero-section">
+                    <h1 class="hero-title">NEET MBBS <span>College Predictor</span></h1>
+                    <p class="hero-desc">Enter your NEET All India Rank (AIR) below to instantly predict eligible medical colleges. We match your score against official MCC cutoffs.</p>
+                    
+                    <div class="rank-form-card">
+                        <form onsubmit="handleFreeRankSubmit(event)">
+                            <label class="rank-label" for="freeRankInput">Enter your NEET AIR (All India Rank)</label>
+                            <div class="rank-input-wrapper">
+                                <input type="number" id="freeRankInput" class="rank-input" placeholder="e.g. 15450" required min="1">
+                                <button type="submit" class="rank-submit-btn">Predict Colleges</button>
+                            </div>
+                        </form>
+                        <span class="rank-info-note">Showing Open category cutoffs · More categories coming soon</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPredictorView() {
+            const isFree = state.tier === 'free';
+            const isRegistered = state.tier === 'registered';
+            
+            // Check active filters count
+            const hasActiveFilters = state.filters.types.length > 0 || state.filters.states.length > 0 || state.filters.maxBudget < 3000000;
+            
+            // Determine result display limits
+            let displayCount = state.filteredColleges.length;
+            let showCapped = false;
+            let displayList = [...state.filteredColleges];
+            
+            if (isFree) {
+                showCapped = displayList.length > 10;
+                displayList = displayList.slice(0, 10);
+            } else if (state.tier === 'login' && !hasActiveFilters) {
+                // Mode 2 without filters: capped at 50
+                showCapped = displayList.length > 50;
+                displayList = displayList.slice(0, 50);
+            }
+
+            return `
+                <div class="dashboard-container" style="margin-top: 24px;">
+                    
+                    <!-- Top Info/Rank Bar -->
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        ${isRegistered ? `
+                            <!-- Locked rank badge -->
+                            <div class="locked-rank-card">
+                                <div>
+                                    <div class="locked-rank-title">Your NEET Rank</div>
+                                    <div class="locked-rank-value">#${state.userRank.toLocaleString()}</div>
+                                </div>
+                                <div class="lock-icon">🔒</div>
+                            </div>
+                        ` : `
+                            <!-- Editable rank form -->
+                            <div class="locked-rank-card" style="padding: 12px 20px;">
+                                <form onsubmit="handleEditRank(event)" style="display:flex; align-items:center; gap:12px;">
+                                    <div style="text-align:left;">
+                                        <label class="locked-rank-title" for="editRankInput">Your NEET Rank</label>
+                                        <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                                            <input type="number" id="editRankInput" class="form-input" 
+                                                   style="width: 100px; padding: 4px 8px; font-weight:800; font-family:Montserrat; font-size:16px; border-color: rgba(255,215,0,0.3);" 
+                                                   value="${state.userRank}" 
+                                                   ${state.rankChanged ? 'disabled' : ''}>
+                                            ${state.rankChanged ? '' : '<button type="submit" class="btn btn-yellow" style="padding: 4px 12px; font-size:11px;">Update</button>'}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        `}
+                        <div style="font-size:12px; color:var(--text-muted); margin-top:-16px; margin-bottom: 20px;">
+                            Showing Open category cutoffs · More categories coming soon
+                        </div>
+                    </div>
+
+                    <div id="resultsAnchor"></div>
+
+                    <!-- Layout Grid -->
+                    <div class="grid-layout">
+                        
+                        <!-- 1. LEFT FILTER PANEL (Collapsible on mobile) -->
+                        <aside class="filter-panel" id="filterPanel">
+                            <div class="filter-header">
+                                <h3 class="filter-title">Filters</h3>
+                                <button class="btn-clear-filters" onclick="clearAllFilters()">Reset All</button>
+                            </div>
+                            
+                            <!-- Type selection -->
+                            <div class="filter-group">
+                                <span class="filter-group-label">Institution Type</span>
+                                <div class="type-pills-container">
+                                    <button class="pill-toggle ${state.filters.types.length === 0 ? 'active-all' : ''}" onclick="toggleTypeFilter('All')">All</button>
+                                    ${['Government', 'Private', 'AIIMS', 'JIPMER', 'Central', 'Deemed'].map(type => `
+                                        <button class="pill-toggle ${state.filters.types.includes(type) ? 'active' : ''}" onclick="toggleTypeFilter('${type}')">${type}</button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <!-- State dropdown multiselect -->
+                            <div class="filter-group">
+                                <span class="filter-group-label">State</span>
+                                <div class="state-select-wrapper">
+                                    <div class="state-select-trigger" onclick="toggleStateDropdown(event)">
+                                        <span>Select States</span>
+                                        <span>▼</span>
+                                    </div>
+                                    <div class="state-select-dropdown" id="stateSelectDropdown">
+                                        <div class="state-search-box" onclick="event.stopPropagation()">
+                                            <input type="text" class="state-search-input" placeholder="Search state..." onkeyup="handleStateSearch(event)">
+                                        </div>
+                                        <div class="state-options-list">
+                                            ${uniqueStatesList.map(stateName => `
+                                                <div class="state-option" onclick="toggleStateFilter('${stateName}')">
+                                                    <input type="checkbox" ${state.filters.states.includes(stateName) ? 'checked' : ''} onclick="event.stopPropagation(); toggleStateFilter('${stateName}')">
+                                                    <span>${stateName}</span>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="state-tags-container">
+                                        ${state.filters.states.map(stateName => `
+                                            <span class="state-tag">
+                                                ${stateName}
+                                                <span class="state-tag-remove" onclick="toggleStateFilter('${stateName}')">&times;</span>
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Max Budget slider -->
+                            <div class="filter-group">
+                                <span class="filter-group-label">Max Annual Budget</span>
+                                <div>
+                                    <span class="slider-label-val" id="budgetLabel">${formatSliderBudget(state.filters.maxBudget)}</span>
+                                    <input type="range" class="range-slider" id="budgetSlider" min="0" max="3000000" step="50000" value="${state.filters.maxBudget}">
+                                    <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-top:6px;">
+                                        <span>₹0</span>
+                                        <span>₹15 L</span>
+                                        <span>₹30 L+</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Sort dropdown -->
+                            <div class="filter-group" style="margin-bottom: 0;">
+                                <span class="filter-group-label">Sort Colleges By</span>
+                                <select class="sort-select" id="sortSelect" onchange="state.filters.sort = this.value; applyFiltersAndSort(); renderView();">
+                                    <option value="rank_asc" ${state.filters.sort === 'rank_asc' ? 'selected' : ''}>Rank (Low → High)</option>
+                                    <option value="rank_desc" ${state.filters.sort === 'rank_desc' ? 'selected' : ''}>Rank (High → Low)</option>
+                                    <option value="fee_asc" ${state.filters.sort === 'fee_asc' ? 'selected' : ''}>Fees (Low → High)</option>
+                                </select>
+                            </div>
+
+                            <!-- Mobile close panel button -->
+                            <button class="btn btn-yellow" style="width:100%; margin-top:20px; display:none; border-radius:10px;" id="mobileCloseFilterBtn" onclick="toggleMobileFilters()">Apply Filters</button>
+                        </aside>
+
+                        <!-- 2. RIGHT RESULTS CONTENT -->
+                        <section class="results-panel">
+                            
+                            <!-- Results Stats header -->
+                            <div class="results-summary-bar">
+                                <div class="results-count">
+                                    Showing <span>${displayList.length}</span> of <span>${state.filteredColleges.length}</span> matching colleges
+                                </div>
+                                
+                                <!-- Free Mode header CTA warning -->
+                                ${isFree ? `
+                                    <div style="font-size:12px; color:var(--yellow); font-weight:700;">🔒 Names & Fees locked</div>
+                                ` : ''}
+                            </div>
+
+                            <!-- Cards Grid -->
+                            <div class="cards-grid">
+                                ${displayList.length === 0 ? `
+                                    <div class="empty-state">
+                                        <span class="empty-icon">🔍</span>
+                                        <h4 class="empty-title">No colleges found</h4>
+                                        <p class="empty-desc">No colleges match your rank and active filters. Try expanding your budget, type, or region filters.</p>
+                                    </div>
+                                ` : displayList.map(c => renderCollegeCard(c)).join('')}
+
+                                <!-- Mode 1 (Free) Capped Upsell CTA -->
+                                ${isFree && showCapped ? `
+                                    <div class="cta-card">
+                                        <h4 class="cta-title">🔒 You have ${state.filteredColleges.length - 10}+ more matching colleges</h4>
+                                        <p class="cta-desc">Sign up for a free ASMI Career account to unlock exact college names, annual tuition fees, and complete search filters.</p>
+                                        <button class="btn btn-yellow" onclick="openLoginModal()">Login / Sign Up Free</button>
+                                    </div>
+                                ` : ''}
+
+                                <!-- Mode 2 Capped Upsell CTA -->
+                                ${state.tier === 'login' && !hasActiveFilters && showCapped ? `
+                                    <div class="cta-card" style="border-style: solid; border-color: var(--purple);">
+                                        <h4 class="cta-title">🎯 Customize your search with filters</h4>
+                                        <p class="cta-desc">You are viewing the top 50 matches. Activate any filter on the left (state, budget, or type) to view all ${state.filteredColleges.length} matches!</p>
+                                        <button class="btn btn-outline" onclick="document.getElementById('filterPanel').scrollIntoView({behavior:'smooth'})">Go to Filters</button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Sticky bottom enrollment banner in Mode 2 -->
+                ${state.tier === 'login' ? `
+                    <div class="sticky-banner">
+                        <div class="sticky-banner-inner">
+                            <span class="sticky-text">Want a personalised, expert-verified shortlist? <span>Enrol with ASMI Counselling today.</span></span>
+                            <a href="/inquiry.html" class="btn btn-yellow" style="padding: 6px 18px; font-size:12px;">Enrol Now →</a>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <!-- Mobile Filter Toggler Button float -->
+                <div class="mobile-filter-bar">
+                    <button class="btn btn-yellow" style="width:100%; box-shadow:0 4px 15px rgba(106,13,173,0.4);" onclick="toggleMobileFilters()">
+                        ⚙️ Filter & Sort Options (${hasActiveFilters ? 'Active' : 'All'})
+                    </button>
+                </div>
+            `;
+        }
+
+        function formatSliderBudget(val) {
+            const rawVal = parseInt(val, 10);
+            if (rawVal === 0) return '₹0';
+            if (rawVal >= 3000000) return '₹30.00 L+ (Unlimited)';
+            if (rawVal < 100000) {
+                return `₹${rawVal.toLocaleString('en-IN')}`;
+            } else {
+                return `₹${(rawVal / 100000).toFixed(2)} L`;
+            }
+        }
+
+        function renderCollegeCard(c) {
+            const isFree = state.tier === 'free';
+            const isRegistered = state.tier === 'registered';
+            
+            // Calculate admissions chances
+            const prob = calculateChance(c.cutoff, state.userRank);
+            
+            // Shortlist bookmarked status
+            const isStarred = state.shortlist.includes(c.name);
+
+            return `
+                <div class="college-card">
+                    
+                    <!-- Card Top (Badges & Bookmark) -->
+                    <div class="card-top">
+                        <div class="badge-list">
+                            <span class="badge ${prob.class}">${prob.label}</span>
+                            <span class="badge pill-type">${c.type}</span>
+                            <span class="badge pill-state">${c.state}</span>
+                        </div>
+                        
+                        <!-- Star button shown only in Mode 3 (Registered) -->
+                        ${isRegistered ? `
+                            <button class="btn-bookmark ${isStarred ? 'active' : ''}" 
+                                    onclick="toggleShortlist('${c.name.replace(/'/g, "\\'")}', event)" 
+                                    title="${isStarred ? 'Remove from Shortlist' : 'Add to Shortlist'}">
+                                ★
+                            </button>
+                        ` : ''}
+                    </div>
+
+                    <!-- Card Middle (College Profile) -->
+                    <div class="card-middle">
+                        <h4 class="college-name ${isFree ? 'blurred' : ''}" title="${isFree ? 'Login to see name' : c.name}">
+                            ${isFree ? 'DY Patil Medical College Pune' : c.name}
+                        </h4>
+                        <div class="college-location">
+                            <span style="font-size:14px;">📍</span>
+                            <span>${c.location}, ${c.state} (${c.quota} Quota)</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Bottom (Fees & Ranks) -->
+                    <div class="card-bottom">
+                        <div>
+                            <div class="info-block-lbl">Annual Fee</div>
+                            <div class="info-block-val">${isFree ? '₹ — / yr' : formatFees(c.fees)}</div>
+                        </div>
+                        <div class="info-block-rank">
+                            <div class="info-block-lbl">Closing AIR</div>
+                            <div class="info-block-val">#${c.cutoff.toLocaleString()}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Attach listeners dynamically after DOM renders
+        function attachDashboardEvents() {
+            // Budget slider input listener
+            const slider = document.getElementById('budgetSlider');
+            const label = document.getElementById('budgetLabel');
+            if (slider && label) {
+                slider.addEventListener('input', (e) => {
+                    label.textContent = formatSliderBudget(e.target.value);
+                });
+                
+                slider.addEventListener('change', (e) => {
+                    state.filters.maxBudget = parseInt(e.target.value, 10);
+                    applyFiltersAndSort();
+                    renderView();
+                });
+            }
+
+            // Adjust styles for mobile close button
+            if (window.innerWidth <= 900) {
+                const closeBtn = document.getElementById('mobileCloseFilterBtn');
+                if (closeBtn) closeBtn.style.display = 'block';
+            }
+        }
+
+        // Bootstrapping
+        window.addEventListener('DOMContentLoaded', async () => {
+            initState();
+            
+            // If they already entered rank in Free mode or logged in, fetch data immediately
+            if (state.userRank) {
+                await fetchCollegesData();
+                applyFiltersAndSort();
+            }
+            
+            renderView();
+        });
+    </script>
+</body>
+</html>
