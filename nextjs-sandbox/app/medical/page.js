@@ -180,8 +180,8 @@ export default function MedicalPortal() {
                       </div>
           
                       <h1 className="hero-h1" id="hero-heading">
-                          Asmi gives you the<br />
-                          seat you <span className="accent">deserve.</span>
+                          ASMI turns your NEET rank into<br />
+                          the admission you <span className="accent">deserve.</span>
                       </h1>
           
                       <p className="hero-sub">
