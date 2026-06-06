@@ -1,3 +1,8 @@
+@keyframes eventsScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
 .medicalPortal {
 
     /*      RESET      */
@@ -617,10 +622,6 @@
         animation-play-state: paused;
     }
 
-    @keyframes eventsScroll {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
 
     .event-card {
         flex-shrink: 0;
