@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engineering Branch Assessment 2026 | ASMI Career</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --maroon: #7B1A1A;
+    --maroon-dark: #5A1010;
+    --maroon-light: #9B2C2C;
+    --gold: #C9923A;
+    --gold-light: #E8B96A;
+    --gold-pale: #FBF3E8;
+    --cream: #FDFAF5;
+    --text: #1A1208;
+    --text-muted: #6B5B45;
+    --text-light: #9C8B78;
+    --border: rgba(123,26,26,0.15);
+    --border-gold: rgba(201,146,58,0.3);
+    --surface: #FFFFFF;
+    --surface-warm: #FBF7F2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Decorative background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(201,146,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 10% 80%, rgba(123,26,26,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .header {
+    background: var(--maroon);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+  }
+
+  .logo span { color: var(--gold-light); }
+
+  .header-tag {
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 60px 40px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold-pale);
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    color: var(--maroon);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 520px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--maroon);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 720px;
+    margin: 0 auto 0;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .progress-pct {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(123,26,26,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--maroon), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  .section-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(123,26,26,0.15);
+    transition: all 0.3s;
+  }
+
+  .dot.active { background: var(--maroon); transform: scale(1.3); }
+  .dot.done { background: var(--gold); }
+
+  /* Main form container */
+  .form-container {
+    max-width: 720px;
+    margin: 32px auto 60px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Section */
+  .section {
+    display: none;
+    animation: fadeSlide 0.4s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-group {
+    margin-bottom: 28px;
+  }
+
+  .group-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-gold);
+  }
+
+  /* Form fields */
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .q-num {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background: var(--maroon);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface-warm);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="text"]:focus,
+  input[type="tel"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--gold);
+    background: #fff;
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Radio / Checkbox pills */
+  .options-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .option-pill {
+    display: none;
+  }
+
+  .option-pill + label {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    cursor: pointer;
+    background: var(--surface-warm);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    user-select: none;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .option-pill + label:hover {
+    border-color: var(--gold);
+    color: var(--text);
+  }
+
+  .option-pill:checked + label {
+    background: var(--maroon);
+    border-color: var(--maroon);
+    color: #fff;
+  }
+
+  /* Likert scale */
+  .likert-item {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(123,26,26,0.06);
+  }
+
+  .likert-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .likert-q {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .likert-scale {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .likert-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.5px;
+  }
+
+  .likert-btn {
+    flex: 1;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-warm);
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+
+  .likert-btn:hover {
+    border-color: var(--gold);
+    color: var(--text);
+  }
+
+  .likert-btn.selected {
+    background: var(--maroon);
+    border-color: var(--maroon);
+    color: #fff;
+  }
+
+  /* Navigation */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary {
+    background: var(--maroon);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--maroon-dark); transform: translateY(-1px); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #fff;
+    padding: 14px 36px;
+    font-size: 15px;
+  }
+
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,146,58,0.35); }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  /* Validation error */
+  .error-msg {
+    font-size: 12px;
+    color: #C0392B;
+    margin-top: 24px;
+    padding: 10px 16px;
+    background: #FEF2F2;
+    border-radius: 8px;
+    border-left: 3px solid #C0392B;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  /* ===================== RESULTS PAGE ===================== */
+  #results { display: none; }
+
+  .results-hero {
+    text-align: center;
+    padding: 48px 24px 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .results-hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--maroon);
+    margin-bottom: 8px;
+  }
+
+  .results-hero p {
+    color: var(--text-muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 560px) {
+    .results-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Score bars */
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .score-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .score-bar-wrap {
+    margin-bottom: 10px;
+  }
+
+  .score-bar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .score-bar-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .score-bar-val {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--maroon);
+  }
+
+  .score-bar-track {
+    height: 6px;
+    background: rgba(123,26,26,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--maroon), var(--gold));
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+  }
+
+  /* Top branches */
+  .branch-rank {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+
+  .branch-rank:first-child {
+    border-color: var(--gold);
+    background: var(--gold-pale);
+  }
+
+  .rank-badge {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .rank-1 { background: var(--gold); color: #fff; }
+  .rank-2 { background: var(--maroon); color: #fff; }
+  .rank-3 { background: rgba(123,26,26,0.15); color: var(--maroon); }
+
+  .branch-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .branch-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .branch-score-pill {
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(123,26,26,0.08);
+    color: var(--maroon);
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* AI report */
+  .ai-report-card {
+    background: var(--surface);
+    border: 1px solid var(--border-gold);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-report-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--maroon), var(--gold));
+  }
+
+  .ai-report-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--gold-pale);
+    border: 1px solid var(--border-gold);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  .ai-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .ai-report-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text);
+    font-weight: 300;
+    white-space: pre-wrap;
+  }
+
+  .ai-loading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .ai-spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border-gold);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Industries */
+  .industry-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .industry-chip {
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--surface-warm);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .industry-chip.highlight {
+    background: var(--maroon);
+    border-color: var(--maroon);
+    color: #fff;
+  }
+
+  /* CTA */
+  .cta-card {
+    background: var(--maroon);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .cta-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .cta-card p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-white {
+    background: #fff;
+    color: var(--maroon);
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-white:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+  .btn-outline-white {
+    background: transparent;
+    color: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-outline-white:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+  }
+
+  /* Section label in results */
+  .results-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 600px) {
+    .header { padding: 16px 20px; }
+    .hero { padding: 40px 20px 28px; }
+    .form-container { margin: 24px auto 40px; padding: 0 16px; }
+    .nav-row { flex-direction: column-reverse; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo">ASMI <span>Career</span></div>
+  <div class="header-tag">Engineering Assessment 2026</div>
+</div>
+
+<!-- Hero -->
+<div class="hero" id="heroSection">
+  <div class="hero-badge">Career Discovery Tool</div>
+  <h1>Find Your <em>Perfect</em><br>Engineering Branch</h1>
+  <p>Answer 31 questions about your interests, strengths, and goals. Get a personalised branch recommendation — built by counselling data, not trends.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">40K+</div><div class="stat-label">Students guided</div></div>
+    <div class="stat"><div class="stat-num">9 yrs</div><div class="stat-label">Maharashtra expertise</div></div>
+    <div class="stat"><div class="stat-num">5 min</div><div class="stat-label">To complete</div></div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap" id="progressSection" style="display:none">
+  <div class="progress-header">
+    <span class="progress-label" id="progressLabel">Section 1 of 5</span>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="section-dots" id="sectionDots">
+    <div class="dot" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+    <div class="dot" data-i="3"></div>
+    <div class="dot" data-i="4"></div>
+  </div>
+</div>
+
+<!-- Form -->
+<div class="form-container" id="formContainer">
+
+  <!-- Section 0: Start screen -->
+  <div class="section active" id="sec-start">
+    <div style="text-align:center; padding: 20px 0 32px;">
+      <p style="color:var(--text-muted); font-size:14px; font-weight:300; line-height:1.8; max-width:480px; margin:0 auto 32px;">
+        This assessment analyses your academic interests, work style, and career goals to recommend the engineering branches best suited for <em>you</em> — not just the ones everyone picks.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:36px;">
+        <span style="padding:6px 14px; border:1px solid var(--border); border-radius:100px; font-size:12px; color:var(--text-muted);">31 questions</span>
+        <span style="padding:6px 14px; border:1px solid var(--border); border-radius:100px; font-size:12px; color:var(--text-muted);">5 sections</span>
+        <span style="padding:6px 14px; border:1px solid var(--border); border-radius:100px; font-size:12px; color:var(--text-muted);">AI-powered report</span>
+        <span style="padding:6px 14px; border:1px solid var(--border); border-radius:100px; font-size:12px; color:var(--text-muted);">Instant results</span>
+      </div>
+      <button class="btn btn-gold" onclick="startForm()">Begin Assessment →</button>
+    </div>
+  </div>
+
+  <!-- Section 1: Basic Info -->
+  <div class="section" id="sec-1">
+    <div class="section-header">
+      <div class="section-tag">Section 1</div>
+      <div class="section-title">Basic Information</div>
+      <div class="section-desc">Tell us a little about yourself to personalise your results.</div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label><span class="q-num">1</span>Full Name</label>
+        <input type="text" id="q1" placeholder="Your full name" />
+      </div>
+      <div class="field">
+        <label><span class="q-num">2</span>Mobile Number</label>
+        <input type="tel" id="q2" placeholder="10-digit mobile number" />
+      </div>
+      <div class="field">
+        <label><span class="q-num">3</span>City</label>
+        <input type="text" id="q3" placeholder="Your city" />
+      </div>
+      <div class="field">
+        <label><span class="q-num">4</span>Board</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q4" id="q4a" value="State Board"><label for="q4a">State Board</label>
+          <input type="radio" class="option-pill" name="q4" id="q4b" value="CBSE"><label for="q4b">CBSE</label>
+          <input type="radio" class="option-pill" name="q4" id="q4c" value="ICSE"><label for="q4c">ICSE</label>
+          <input type="radio" class="option-pill" name="q4" id="q4d" value="Other"><label for="q4d">Other</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">5</span>Entrance Exam Appeared <span style="font-weight:300; color:var(--text-light)">(select all that apply)</span></label>
+        <div class="options-grid">
+          <input type="checkbox" class="option-pill" name="q5" id="q5a" value="JEE Main"><label for="q5a">JEE Main</label>
+          <input type="checkbox" class="option-pill" name="q5" id="q5b" value="JEE Advanced"><label for="q5b">JEE Advanced</label>
+          <input type="checkbox" class="option-pill" name="q5" id="q5c" value="MHT-CET"><label for="q5c">MHT-CET</label>
+          <input type="checkbox" class="option-pill" name="q5" id="q5d" value="COMEDK"><label for="q5d">COMEDK</label>
+          <input type="checkbox" class="option-pill" name="q5" id="q5e" value="Other"><label for="q5e">Other</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">6</span>Expected Percentile / Rank</label>
+        <input type="text" id="q6" placeholder="e.g. 92.5 percentile or AIR 8500" />
+      </div>
+    </div>
+    <div class="error-msg" id="err-1">Please fill in your name, mobile number, and select your board before continuing.</div>
+    <div class="nav-row">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo(2)">Next: Interest Assessment →</button>
+    </div>
+  </div>
+
+  <!-- Section 2: Interest Assessment (Likert) -->
+  <div class="section" id="sec-2">
+    <div class="section-header">
+      <div class="section-tag">Section 2</div>
+      <div class="section-title">Academic Interest Assessment</div>
+      <div class="section-desc">Rate each statement from 1 (Strongly Disagree) to 5 (Strongly Agree). Be honest — there are no right answers.</div>
+    </div>
+
+    <div id="likertCards"></div>
+
+    <div class="error-msg" id="err-2">Please rate all statements before continuing.</div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Next: Work Style →</button>
+    </div>
+  </div>
+
+  <!-- Section 3: Work Style -->
+  <div class="section" id="sec-3">
+    <div class="section-header">
+      <div class="section-tag">Section 3</div>
+      <div class="section-title">Work Style Assessment</div>
+      <div class="section-desc">How you prefer to work matters as much as what you know.</div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label><span class="q-num">21</span>Preferred Work Environment</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q21" id="q21a" value="Mostly Office"><label for="q21a">Mostly Office</label>
+          <input type="radio" class="option-pill" name="q21" id="q21b" value="Mostly Field Work"><label for="q21b">Mostly Field Work</label>
+          <input type="radio" class="option-pill" name="q21" id="q21c" value="Mix of Both"><label for="q21c">Mix of Both</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">22</span>Which activity sounds most interesting?</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q22" id="q22a" value="Building Software"><label for="q22a">Building Software</label>
+          <input type="radio" class="option-pill" name="q22" id="q22b" value="Designing Machines"><label for="q22b">Designing Machines</label>
+          <input type="radio" class="option-pill" name="q22" id="q22c" value="Creating Electronic Devices"><label for="q22c">Creating Electronic Devices</label>
+          <input type="radio" class="option-pill" name="q22" id="q22d" value="Constructing Infrastructure"><label for="q22d">Constructing Infrastructure</label>
+          <input type="radio" class="option-pill" name="q22" id="q22e" value="Working with Energy Systems"><label for="q22e">Working with Energy Systems</label>
+          <input type="radio" class="option-pill" name="q22" id="q22f" value="Researching New Technologies"><label for="q22f">Researching New Technologies</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">23</span>What type of problems do you enjoy solving?</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q23" id="q23a" value="Logical Problems"><label for="q23a">Logical Problems</label>
+          <input type="radio" class="option-pill" name="q23" id="q23b" value="Technical Problems"><label for="q23b">Technical Problems</label>
+          <input type="radio" class="option-pill" name="q23" id="q23c" value="Design Problems"><label for="q23c">Design Problems</label>
+          <input type="radio" class="option-pill" name="q23" id="q23d" value="Real-world Infrastructure Problems"><label for="q23d">Infrastructure Problems</label>
+          <input type="radio" class="option-pill" name="q23" id="q23e" value="Scientific Problems"><label for="q23e">Scientific Problems</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">24</span>Which project would excite you most?</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q24" id="q24a" value="Mobile App"><label for="q24a">Mobile App</label>
+          <input type="radio" class="option-pill" name="q24" id="q24b" value="AI Model"><label for="q24b">AI Model</label>
+          <input type="radio" class="option-pill" name="q24" id="q24c" value="Robot"><label for="q24c">Robot</label>
+          <input type="radio" class="option-pill" name="q24" id="q24d" value="Electric Vehicle"><label for="q24d">Electric Vehicle</label>
+          <input type="radio" class="option-pill" name="q24" id="q24e" value="Smart Building"><label for="q24e">Smart Building</label>
+          <input type="radio" class="option-pill" name="q24" id="q24f" value="New Drug/Biotech Product"><label for="q24f">Biotech Product</label>
+        </div>
+      </div>
+    </div>
+    <div class="error-msg" id="err-3">Please answer all questions in this section.</div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Next: Career Goals →</button>
+    </div>
+  </div>
+
+  <!-- Section 4: Career Goals -->
+  <div class="section" id="sec-4">
+    <div class="section-header">
+      <div class="section-tag">Section 4</div>
+      <div class="section-title">Career Goals</div>
+      <div class="section-desc">Your ambitions and priorities shape which branch is right for you long-term.</div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label><span class="q-num">25</span>What matters most to you? <span style="font-weight:300; color:var(--text-light)">(select all that apply)</span></label>
+        <div class="options-grid">
+          <input type="checkbox" class="option-pill" name="q25" id="q25a" value="High Salary"><label for="q25a">High Salary</label>
+          <input type="checkbox" class="option-pill" name="q25" id="q25b" value="Innovation"><label for="q25b">Innovation</label>
+          <input type="checkbox" class="option-pill" name="q25" id="q25c" value="Job Security"><label for="q25c">Job Security</label>
+          <input type="checkbox" class="option-pill" name="q25" id="q25d" value="Work-Life Balance"><label for="q25d">Work-Life Balance</label>
+          <input type="checkbox" class="option-pill" name="q25" id="q25e" value="Entrepreneurship"><label for="q25e">Entrepreneurship</label>
+          <input type="checkbox" class="option-pill" name="q25" id="q25f" value="International Opportunities"><label for="q25f">International Opportunities</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">26</span>Do you want to pursue higher studies?</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q26" id="q26a" value="Definitely Yes"><label for="q26a">Definitely Yes</label>
+          <input type="radio" class="option-pill" name="q26" id="q26b" value="Maybe"><label for="q26b">Maybe</label>
+          <input type="radio" class="option-pill" name="q26" id="q26c" value="Not Sure"><label for="q26c">Not Sure</label>
+          <input type="radio" class="option-pill" name="q26" id="q26d" value="No"><label for="q26d">No</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">27</span>Interested in studying abroad?</label>
+        <div class="options-grid">
+          <input type="radio" class="option-pill" name="q27" id="q27a" value="Yes"><label for="q27a">Yes</label>
+          <input type="radio" class="option-pill" name="q27" id="q27b" value="Maybe"><label for="q27b">Maybe</label>
+          <input type="radio" class="option-pill" name="q27" id="q27c" value="No"><label for="q27c">No</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">28</span>Countries of interest <span style="font-weight:300; color:var(--text-light)">(select all that apply)</span></label>
+        <div class="options-grid">
+          <input type="checkbox" class="option-pill" name="q28" id="q28a" value="USA"><label for="q28a">USA</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28b" value="Canada"><label for="q28b">Canada</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28c" value="Germany"><label for="q28c">Germany</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28d" value="Australia"><label for="q28d">Australia</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28e" value="Japan"><label for="q28e">Japan</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28f" value="South Korea"><label for="q28f">South Korea</label>
+          <input type="checkbox" class="option-pill" name="q28" id="q28g" value="Not Interested"><label for="q28g">Not Interested</label>
+        </div>
+      </div>
+    </div>
+    <div class="error-msg" id="err-4">Please answer all required questions in this section.</div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(5)">Next: Branch Preferences →</button>
+    </div>
+  </div>
+
+  <!-- Section 5: Branch Preferences -->
+  <div class="section" id="sec-5">
+    <div class="section-header">
+      <div class="section-tag">Section 5</div>
+      <div class="section-title">Branch Preference Test</div>
+      <div class="section-desc">Almost done! Tell us what you're currently considering — even if you're unsure.</div>
+    </div>
+    <div class="card">
+      <div class="field">
+        <label><span class="q-num">29</span>Select TOP 3 branches you are currently considering</label>
+        <div class="options-grid">
+          <input type="checkbox" class="option-pill" name="q29" id="q29a" value="Computer Engineering"><label for="q29a">Computer Engineering</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29b" value="Information Technology"><label for="q29b">Information Technology</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29c" value="AI & Data Science"><label for="q29c">AI & Data Science</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29d" value="Electronics & Telecommunication"><label for="q29d">Electronics & Telecom</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29e" value="Electrical Engineering"><label for="q29e">Electrical Engineering</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29f" value="Mechanical Engineering"><label for="q29f">Mechanical Engineering</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29g" value="Civil Engineering"><label for="q29g">Civil Engineering</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29h" value="Chemical Engineering"><label for="q29h">Chemical Engineering</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29i" value="Biotechnology"><label for="q29i">Biotechnology</label>
+          <input type="checkbox" class="option-pill" name="q29" id="q29j" value="Not Decided Yet"><label for="q29j">Not Decided Yet</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">30</span>Why are you considering these branches? <span style="font-weight:300; color:var(--text-light)">(select all that apply)</span></label>
+        <div class="options-grid">
+          <input type="checkbox" class="option-pill" name="q30" id="q30a" value="Placement Opportunities"><label for="q30a">Placement Opportunities</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30b" value="Personal Interest"><label for="q30b">Personal Interest</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30c" value="Family Suggestion"><label for="q30c">Family Suggestion</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30d" value="Friend's Recommendation"><label for="q30d">Friend's Recommendation</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30e" value="Future Scope"><label for="q30e">Future Scope</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30f" value="College Availability"><label for="q30f">College Availability</label>
+          <input type="checkbox" class="option-pill" name="q30" id="q30g" value="Not Sure"><label for="q30g">Not Sure</label>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="q-num">31</span>In one sentence, describe your dream career after engineering.</label>
+        <textarea id="q31" placeholder="e.g. I want to build AI products that solve real healthcare problems in India..."></textarea>
+      </div>
+    </div>
+    <div class="error-msg" id="err-5">Please complete the required fields.</div>
+    <div class="nav-row">
+      <button class="btn btn-secondary" onclick="goTo(4)">← Back</button>
+      <button class="btn btn-gold" onclick="submitForm()">Get My Results →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- RESULTS PAGE -->
+<div id="results">
+  <div class="results-hero">
+    <div class="hero-badge">Your Assessment Report</div>
+    <h2>Here are your <em style="font-style:italic; color:var(--gold)">recommended branches</em>, <span id="r-name">—</span></h2>
+    <p>Based on your interests, work style, and career goals — not popularity or trends.</p>
+  </div>
+
+  <div class="form-container" style="margin-top:0;">
+
+    <!-- Top 3 branches -->
+    <div class="results-section-label">Top Recommended Branches</div>
+    <div id="topBranches"></div>
+
+    <div class="divider"></div>
+
+    <!-- Score breakdown -->
+    <div class="results-grid">
+      <div class="score-card">
+        <h3>Interest Score Breakdown</h3>
+        <div id="scoreBreakdown"></div>
+      </div>
+      <div class="score-card">
+        <h3>Your Career Alignment</h3>
+        <div id="careerAlignment"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- AI Report -->
+    <div class="results-section-label">AI-Powered Personalised Report</div>
+    <div class="ai-report-card">
+      <div class="ai-report-header">
+        <div class="ai-badge"><div class="ai-dot"></div>ASMI AI Analysis</div>
+      </div>
+      <div id="aiReportContent">
+        <div class="ai-loading">
+          <div class="ai-spinner"></div>
+          <span>Generating your personalised report...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Industries -->
+    <div class="results-section-label">Future Industries You Align With</div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="industry-chips" id="industryChips"></div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <h3>Ready for the next step?</h3>
+      <p>ASMI counsellors will help you match these branches with the right colleges, cutoffs, and admission strategy — specific to your score and city.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/917410019077?text=Hi%2C%20I%20completed%20the%20Engineering%20Branch%20Assessment%20and%20would%20like%20counselling." class="btn-white" target="_blank">Talk to a Counsellor</a>
+        <a href="https://asmicareer.com" class="btn-outline-white" target="_blank">Visit asmicareer.com</a>
+      </div>
+      <p style="color:rgba(255,255,255,0.45); font-size:12px; margin-top:20px; margin-bottom:0;">Mumbai: 7410019077 · Thane: 7410019075</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ===== LIKERT DATA =====
+const likertGroups = [
+  {
+    label: "Mathematics",
+    category: "math",
+    questions: [
+      "I enjoy solving mathematical problems.",
+      "I can spend hours solving logical questions.",
+      "Mathematics is one of my strongest subjects."
+    ]
+  },
+  {
+    label: "Programming & Technology",
+    category: "coding",
+    questions: [
+      "I am curious about coding and software.",
+      "I enjoy learning about AI, apps, and technology.",
+      "I can imagine myself working on computers daily."
+    ]
+  },
+  {
+    label: "Electronics",
+    category: "electronics",
+    questions: [
+      "I like understanding how gadgets work.",
+      "Electronic devices and circuits interest me.",
+      "I enjoy learning about communication technology."
+    ]
+  },
+  {
+    label: "Machines & Engineering Design",
+    category: "machines",
+    questions: [
+      "I am fascinated by automobiles and machines.",
+      "I like understanding how mechanical systems work.",
+      "Robotics and automation excite me."
+    ]
+  },
+  {
+    label: "Construction & Infrastructure",
+    category: "infra",
+    questions: [
+      "I am interested in buildings, bridges, and cities.",
+      "I like seeing large infrastructure projects.",
+      "I can imagine myself working on site projects."
+    ]
+  },
+  {
+    label: "Chemistry & Process Industries",
+    category: "chem",
+    questions: [
+      "Chemistry is one of my favourite subjects.",
+      "Industrial processes interest me.",
+      "I am interested in energy and manufacturing industries."
+    ]
+  },
+  {
+    label: "Biology & Life Sciences",
+    category: "bio",
+    questions: [
+      "Biology and healthcare innovations interest me.",
+      "Biotechnology and genetic research sound exciting."
+    ]
+  }
+];
+
+const categoryBranchMap = {
+  coding: ["Computer Engineering", "Information Technology", "AI & Data Science"],
+  electronics: ["Electronics & Telecommunication"],
+  machines: ["Mechanical Engineering"],
+  infra: ["Civil Engineering"],
+  chem: ["Chemical Engineering"],
+  bio: ["Biotechnology"],
+  math: ["Computer Engineering", "Electrical Engineering"]
+};
+
+const categoryLabels = {
+  coding: "Coding & Technology",
+  electronics: "Electronics",
+  machines: "Machines & Design",
+  infra: "Infrastructure",
+  chem: "Chemistry & Process",
+  bio: "Biology & Life Sciences",
+  math: "Mathematics"
+};
+
+const branchDetails = {
+  "Computer Engineering":       { short: "CSE", industries: ["IT", "AI", "Startups", "Finance"] },
+  "Information Technology":     { short: "IT", industries: ["IT", "Cloud", "Cybersecurity"] },
+  "AI & Data Science":          { short: "AI-DS", industries: ["AI", "Data Analytics", "Research"] },
+  "Electronics & Telecommunication": { short: "E&TC", industries: ["Semiconductor", "Telecom", "IoT"] },
+  "Electrical Engineering":     { short: "EE", industries: ["EV", "Energy", "Power Systems"] },
+  "Mechanical Engineering":     { short: "Mech", industries: ["EV", "Manufacturing", "Aerospace"] },
+  "Civil Engineering":          { short: "Civil", industries: ["Infrastructure", "Construction", "Urban Planning"] },
+  "Chemical Engineering":       { short: "Chem", industries: ["Pharma", "Energy", "Manufacturing"] },
+  "Biotechnology":              { short: "Biotech", industries: ["Healthcare", "Biotech", "Research"] }
+};
+
+const allIndustries = ["AI", "EV", "Semiconductor", "Infrastructure", "Energy", "Biotechnology", "IT", "Healthcare", "Pharma", "Research"];
+
+let likertAnswers = {}; // key: "cat_idx" → value 1-5
+let currentSection = 0;
+
+// Build likert cards
+function buildLikertCards() {
+  const container = document.getElementById('likertCards');
+  let qNum = 1;
+  likertGroups.forEach((group, gi) => {
+    const card = document.createElement('div');
+    card.className = 'card card-group';
+    card.innerHTML = `<div class="group-label">${group.label}</div>`;
+    group.questions.forEach((q, qi) => {
+      const key = `${group.category}_${qi}`;
+      const item = document.createElement('div');
+      item.className = 'likert-item';
+      item.innerHTML = `
+        <div class="likert-q"><strong style="color:var(--maroon); font-size:11px; margin-right:6px;">${qNum}.</strong>${q}</div>
+        <div class="likert-scale" id="scale_${key}">
+          ${[1,2,3,4,5].map(v => `<button class="likert-btn" data-key="${key}" data-val="${v}" onclick="setLikert('${key}',${v})">${v}</button>`).join('')}
+        </div>
+        <div class="likert-labels"><span>Strongly Disagree</span><span>Strongly Agree</span></div>
+      `;
+      card.appendChild(item);
+      qNum++;
+    });
+    container.appendChild(card);
+  });
+}
+
+function setLikert(key, val) {
+  likertAnswers[key] = val;
+  const scale = document.getElementById(`scale_${key}`);
+  scale.querySelectorAll('.likert-btn').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.dataset.val) === val);
+  });
+}
+
+function startForm() {
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('progressSection').style.display = 'block';
+  document.getElementById('sec-start').classList.remove('active');
+  goToSection(1);
+}
+
+function goTo(n) {
+  if (!validateSection(currentSection)) return;
+  goToSection(n);
+}
+
+function goToSection(n) {
+  // Hide all
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`sec-${n}`).classList.add('active');
+  currentSection = n;
+  updateProgress(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(n) {
+  const pct = Math.round(((n - 1) / 5) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  const sectionNames = ['', 'Basic Info', 'Interests', 'Work Style', 'Career Goals', 'Branch Preferences'];
+  document.getElementById('progressLabel').textContent = `Section ${n} of 5 — ${sectionNames[n]}`;
+
+  document.querySelectorAll('.dot').forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i + 1 < n) dot.classList.add('done');
+    else if (i + 1 === n) dot.classList.add('active');
+  });
+}
+
+function validateSection(n) {
+  const err = document.getElementById(`err-${n}`);
+  if (err) err.classList.remove('show');
+
+  if (n === 1) {
+    const name = document.getElementById('q1').value.trim();
+    const mobile = document.getElementById('q2').value.trim();
+    const board = document.querySelector('input[name="q4"]:checked');
+    if (!name || !mobile || !board) {
+      document.getElementById('err-1').classList.add('show');
+      return false;
+    }
+  }
+
+  if (n === 2) {
+    let total = 0;
+    let answered = 0;
+    likertGroups.forEach(g => {
+      g.questions.forEach((_, qi) => {
+        total++;
+        if (likertAnswers[`${g.category}_${qi}`]) answered++;
+      });
+    });
+    if (answered < total) {
+      document.getElementById('err-2').classList.add('show');
+      return false;
+    }
+  }
+
+  if (n === 3) {
+    const q21 = document.querySelector('input[name="q21"]:checked');
+    const q22 = document.querySelector('input[name="q22"]:checked');
+    const q23 = document.querySelector('input[name="q23"]:checked');
+    const q24 = document.querySelector('input[name="q24"]:checked');
+    if (!q21 || !q22 || !q23 || !q24) {
+      document.getElementById('err-3').classList.add('show');
+      return false;
+    }
+  }
+
+  if (n === 4) {
+    const q26 = document.querySelector('input[name="q26"]:checked');
+    const q27 = document.querySelector('input[name="q27"]:checked');
+    if (!q26 || !q27) {
+      document.getElementById('err-4').classList.add('show');
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function submitForm() {
+  if (!validateSection(5)) return;
+
+  // Collect all data
+  const data = collectFormData();
+
+  // Hide form, show results
+  document.getElementById('formContainer').style.display = 'none';
+  document.getElementById('progressSection').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Compute rule-based scores
+  const scores = computeScores(data);
+  renderResults(data, scores);
+
+  // Call AI
+  generateAIReport(data, scores);
+}
+
+function collectFormData() {
+  const get = id => document.getElementById(id)?.value || '';
+  const radio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+  const checks = name => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
+
+  return {
+    name: get('q1'),
+    mobile: get('q2'),
+    city: get('q3'),
+    board: radio('q4'),
+    exams: checks('q5'),
+    rank: get('q6'),
+    likert: { ...likertAnswers },
+    workEnv: radio('q21'),
+    activity: radio('q22'),
+    problemType: radio('q23'),
+    excitingProject: radio('q24'),
+    priorities: checks('q25'),
+    higherStudies: radio('q26'),
+    studyAbroad: radio('q27'),
+    countries: checks('q28'),
+    topBranches: checks('q29'),
+    branchReason: checks('q30'),
+    dreamCareer: get('q31')
+  };
+}
+
+function computeScores(data) {
+  // Category raw scores from likert
+  const catScores = {};
+  likertGroups.forEach(g => {
+    let total = 0;
+    g.questions.forEach((_, qi) => {
+      total += (data.likert[`${g.category}_${qi}`] || 3);
+    });
+    catScores[g.category] = Math.round((total / (g.questions.length * 5)) * 100);
+  });
+
+  // Branch scores
+  const branchScores = {};
+  Object.keys(branchDetails).forEach(b => { branchScores[b] = 0; });
+
+  // From category mapping
+  Object.entries(categoryBranchMap).forEach(([cat, branches]) => {
+    branches.forEach(b => {
+      if (branchScores[b] !== undefined) {
+        branchScores[b] += catScores[cat] || 0;
+      }
+    });
+  });
+
+  // Normalize branch scores
+  const maxBranch = Math.max(...Object.values(branchScores));
+  Object.keys(branchScores).forEach(b => {
+    branchScores[b] = Math.round((branchScores[b] / (maxBranch || 1)) * 100);
+  });
+
+  // Boost from work style answers
+  const boostMap = {
+    "Building Software": ["Computer Engineering", "Information Technology", "AI & Data Science"],
+    "Designing Machines": ["Mechanical Engineering"],
+    "Creating Electronic Devices": ["Electronics & Telecommunication"],
+    "Constructing Infrastructure": ["Civil Engineering"],
+    "Working with Energy Systems": ["Electrical Engineering", "Chemical Engineering"],
+    "Researching New Technologies": ["AI & Data Science", "Biotechnology"]
+  };
+  if (data.activity && boostMap[data.activity]) {
+    boostMap[data.activity].forEach(b => { branchScores[b] = Math.min(100, branchScores[b] + 15); });
+  }
+
+  const projectMap = {
+    "Mobile App": ["Computer Engineering", "Information Technology"],
+    "AI Model": ["AI & Data Science", "Computer Engineering"],
+    "Robot": ["Mechanical Engineering", "Electronics & Telecommunication"],
+    "Electric Vehicle": ["Mechanical Engineering", "Electrical Engineering"],
+    "Smart Building": ["Civil Engineering", "Electrical Engineering"],
+    "New Drug/Biotech Product": ["Biotechnology", "Chemical Engineering"]
+  };
+  if (data.excitingProject && projectMap[data.excitingProject]) {
+    projectMap[data.excitingProject].forEach(b => { branchScores[b] = Math.min(100, branchScores[b] + 10); });
+  }
+
+  // Sort branches by score
+  const sortedBranches = Object.entries(branchScores)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  return { catScores, branchScores, sortedBranches };
+}
+
+function renderResults(data, scores) {
+  document.getElementById('r-name').textContent = data.name.split(' ')[0];
+
+  // Top 3 branches
+  const topContainer = document.getElementById('topBranches');
+  scores.sortedBranches.slice(0, 3).forEach(([branch, score], i) => {
+    const info = branchDetails[branch] || { short: branch };
+    const div = document.createElement('div');
+    div.className = 'branch-rank';
+    div.innerHTML = `
+      <div class="rank-badge rank-${i+1}">${i+1}</div>
+      <div class="branch-info">
+        <h4>${branch} <span style="font-size:11px; color:var(--text-light); font-weight:400">(${info.short})</span></h4>
+        <p>${(info.industries || []).join(' · ')}</p>
+      </div>
+      <div class="branch-score-pill">${score}% match</div>
+    `;
+    topContainer.appendChild(div);
+  });
+
+  // Score breakdown
+  const sbContainer = document.getElementById('scoreBreakdown');
+  Object.entries(scores.catScores)
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([cat, score]) => {
+      sbContainer.innerHTML += `
+        <div class="score-bar-wrap">
+          <div class="score-bar-header">
+            <span class="score-bar-name">${categoryLabels[cat]}</span>
+            <span class="score-bar-val">${score}%</span>
+          </div>
+          <div class="score-bar-track"><div class="score-bar-fill" style="width:${score}%"></div></div>
+        </div>
+      `;
+    });
+
+  // Career alignment
+  const caContainer = document.getElementById('careerAlignment');
+  const alignItems = [
+    { label: "Work Environment", val: data.workEnv || "—" },
+    { label: "Excited by", val: data.excitingProject || "—" },
+    { label: "Preferred Problems", val: data.problemType || "—" },
+    { label: "Higher Studies", val: data.higherStudies || "—" },
+    { label: "Top Priority", val: (data.priorities || [])[0] || "—" }
+  ];
+  alignItems.forEach(item => {
+    caContainer.innerHTML += `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:13px;">
+        <span style="color:var(--text-muted)">${item.label}</span>
+        <span style="font-weight:500; color:var(--text)">${item.val}</span>
+      </div>
+    `;
+  });
+
+  // Industries
+  const top3Branches = scores.sortedBranches.slice(0, 3).map(b => b[0]);
+  const relevantIndustries = new Set();
+  top3Branches.forEach(b => {
+    (branchDetails[b]?.industries || []).forEach(i => relevantIndustries.add(i));
+  });
+
+  const chipsContainer = document.getElementById('industryChips');
+  allIndustries.forEach(ind => {
+    const chip = document.createElement('span');
+    chip.className = 'industry-chip' + (relevantIndustries.has(ind) ? ' highlight' : '');
+    chip.textContent = ind;
+    chipsContainer.appendChild(chip);
+  });
+
+  // Animate score bars after a short delay
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 50);
+    });
+  }, 300);
+}
+
+async function generateAIReport(data, scores) {
+  const top3 = scores.sortedBranches.slice(0, 3).map(b => b[0]).join(', ');
+  const topCategories = Object.entries(scores.catScores)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([cat, score]) => `${categoryLabels[cat]} (${score}%)`)
+    .join(', ');
+
+  const prompt = `You are an expert engineering admissions counsellor at ASMI Career, a top counselling firm in Maharashtra, India with 9+ years of experience and 40,000+ students guided.
+
+A student has just completed our Engineering Branch Assessment. Based on their responses, write a personalised 4-5 paragraph career counselling report for them.
+
+Student Profile:
+- Name: ${data.name}
+- City: ${data.city}
+- Board: ${data.board}
+- Exams appeared: ${data.exams.join(', ') || 'Not specified'}
+- Expected rank/percentile: ${data.rank || 'Not specified'}
+
+Assessment Results:
+- Top recommended branches: ${top3}
+- Strongest interest areas: ${topCategories}
+- Preferred work environment: ${data.workEnv}
+- Most exciting activity: ${data.activity}
+- Most exciting project: ${data.excitingProject}
+- Career priorities: ${data.priorities.join(', ') || 'Not specified'}
+- Wants higher studies: ${data.higherStudies}
+- Interested in abroad: ${data.studyAbroad}
+- Currently considering: ${data.topBranches.join(', ') || 'Undecided'}
+- Why considering these: ${data.branchReason.join(', ') || 'Not specified'}
+- Dream career: ${data.dreamCareer || 'Not specified'}
+
+Write the report directly addressing ${data.name.split(' ')[0]} by first name. Be warm, specific, and encouraging. Reference their specific answers. Do NOT use bullet points — only flowing paragraphs. Do NOT use section headers. Keep it to 200-250 words. Write as if this is a personal counselling session note they are reading.`;
+
+  try {
+    const response = await fetch("/api/ai-report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const result = await response.json();
+    const text = result.text || '';
+
+    const reportEl = document.getElementById('aiReportContent');
+    if (text) {
+      reportEl.innerHTML = `<div class="ai-report-text">${text}</div>`;
+    } else {
+      reportEl.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">Report generation encountered an issue. Please speak with an ASMI counsellor for a personalised analysis.</p>`;
+    }
+  } catch (err) {
+    document.getElementById('aiReportContent').innerHTML = `<p style="color:var(--text-muted); font-size:14px;">AI report unavailable at this moment. Our counsellors will provide a personalised analysis when you reach out.</p>`;
+  }
+}
+
+// Init
+buildLikertCards();
+</script>
+</body>
+</html>
