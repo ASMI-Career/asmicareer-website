@@ -1,0 +1,404 @@
+/* ── SPLIT PAGE CSS MODULE ── */
+
+.splitContainer {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+.split {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: visible;
+}
+
+/* ── PANELS ── */
+.panel {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1),
+              filter 0.45s ease,
+              box-shadow 0.45s ease;
+  will-change: transform;
+}
+
+.medical {
+  composes: panel;
+  background-image: url('/AIIMS_Delhi.jpg');
+  background-size: cover;
+  background-position: center;
+  transform-origin: center center;
+}
+
+.engineering {
+  composes: panel;
+  background-image: url('/IIT_Bombay.jpg');
+  background-size: cover;
+  background-position: center;
+  transform-origin: center center;
+}
+
+/* ── HOVER STATES ── */
+.medical:hover {
+  transform: scale(1.02);
+  box-shadow: 8px 0 60px rgba(0,0,0,0.5), 16px 0 40px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.split:has(.medical:hover) .engineering {
+  transform: scale(0.97);
+  filter: brightness(0.5);
+}
+
+.engineering:hover {
+  transform: scale(1.02);
+  box-shadow: -8px 0 60px rgba(0,0,0,0.5), -16px 0 40px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.split:has(.engineering:hover) .medical {
+  transform: scale(0.97);
+  filter: brightness(0.5);
+}
+
+/* Logo lifts on hover */
+.splitContainer:has(.medical:hover) .centerLogo,
+.splitContainer:has(.engineering:hover) .centerLogo {
+  transform: translate(-50%,-50%) scale(1.08);
+  filter: drop-shadow(0 16px 32px rgba(0,0,0,0.6));
+}
+
+/* ── DIVIDER ── */
+.divider {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.25);
+  z-index: 10;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+/* ── BACKGROUND OVERLAYS ── */
+.bgWash {
+  position: absolute;
+  inset: 0;
+}
+
+.mWash {
+  composes: bgWash;
+  background: #FFD700;
+  opacity: 0.82;
+}
+
+.eWash {
+  composes: bgWash;
+  background: #0a1628;
+  opacity: 0.88;
+}
+
+.mVignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(26, 0, 64, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── CIRCUIT SVG ── */
+.circuitSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ── CONTENT ── */
+.content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.mContent {
+  composes: content;
+  padding: 56px 52px;
+}
+
+.eContent {
+  composes: content;
+  padding: 56px 52px 56px 80px;
+}
+
+/* EYEBROW */
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.mEyebrow {
+  composes: eyebrow;
+  color: rgba(26, 0, 64, 0.55);
+}
+
+.eEyebrow {
+  composes: eyebrow;
+  color: rgba(0, 200, 180, 0.7);
+}
+
+/* HEADLINE */
+.headline {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.mHeadline {
+  composes: headline;
+  color: #1a0040;
+}
+
+.mHeadline span {
+  color: #6a0dad;
+}
+
+.eHeadline {
+  composes: headline;
+  color: #ffffff;
+  font-size: 46px;
+}
+
+.eHeadline span {
+  color: #00C8B4;
+}
+
+/* SUB */
+.sub {
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 400px;
+  margin-bottom: 20px;
+  font-family: var(--font-opensans), sans-serif;
+}
+
+.mSub {
+  composes: sub;
+  color: rgba(26, 0, 64, 0.65);
+}
+
+.eSub {
+  composes: sub;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* TAGS */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.mTag {
+  composes: tag;
+  background: rgba(26, 0, 64, 0.1);
+  color: #1a0040;
+  border: 1px solid rgba(26, 0, 64, 0.18);
+}
+
+.eTag {
+  composes: tag;
+  background: rgba(0, 200, 180, 0.1);
+  color: rgba(0, 200, 180, 0.85);
+  border: 1px solid rgba(0, 200, 180, 0.2);
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  margin: 0 0 28px;
+}
+
+.stat {
+  padding: 0 24px;
+}
+
+.stat:first-child {
+  padding-left: 0;
+}
+
+.mStat {
+  composes: stat;
+  border-right: 1px solid rgba(26, 0, 64, 0.15);
+}
+
+.eStat {
+  composes: stat;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat:last-child {
+  border-right: none;
+}
+
+.statNum {
+  display: block;
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.mStat .statNum {
+  color: #1a0040;
+}
+
+.eStat .statNum {
+  color: #ffffff;
+}
+
+.statLbl {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.mStat .statLbl {
+  color: rgba(26, 0, 64, 0.5);
+}
+
+.eStat .statLbl {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* CTA */
+.cta {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 15px 36px;
+  border-radius: 50px;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  align-self: flex-start;
+}
+
+.mCta {
+  composes: cta;
+  background: #1a0040;
+  color: #FFD700;
+}
+
+.mCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(26, 0, 64, 0.35);
+}
+
+.eCta {
+  composes: cta;
+  background: #00A896;
+  color: #ffffff;
+}
+
+.eCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 168, 150, 0.45);
+}
+
+/* ── CENTER LOGO ── */
+.centerLogo {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), filter 0.4s ease;
+}
+
+.centerLogo img {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ── LOGO PULSE ── */
+@keyframes logoPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1.0);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+.logoPulse {
+  animation: logoPulse 1.5s ease-in-out infinite;
+}
+
+/* ── CANVAS OVERLAYS ── */
+.globalCanvas, .engCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  pointer-events: none;
+  display: none;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .split {
+    flex-direction: column;
+  }
+  .panel {
+    width: 100%;
+    height: 50vh;
+  }
+  .mContent, .eContent {
+    padding: 32px 28px;
+  }
+  .mHeadline, .eHeadline {
+    font-size: 32px !important;
+  }
+  .statNum {
+    font-size: 22px !important;
+  }
+  .centerLogo {
+    top: 50vh;
+  }
+  .divider {
+    display: none;
+  }
+}
