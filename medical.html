@@ -2742,7 +2742,7 @@
         <!-- LEFT -->
         <div class="hero-left">
 
-            <div class="hero-eyebrow" aria-label="India's smartest youth career platform">
+            <div class="hero-eyebrow" aria-label="Maharashtra's #1 NEET counsellors">
                 <span class="eyebrow-dot" aria-hidden="true"></span>
                 MAHARASHTRA'S #1 NEET COUNSELLORS
             </div>
@@ -2753,25 +2753,24 @@
             </h1>
 
             <p class="hero-sub">
-                NEET &amp; JEE counselling by verified experts — a real counsellor
-                who knows your file, from rank day to admission day. Zero guesswork.
+                From your NEET rank to your MBBS seat — we handle college selection, preference filling, document verification and every round until you're admitted.
             </p>
 
             <div class="hero-stats" role="list" aria-label="Key statistics">
                 <div class="hero-stat" role="listitem">
-                    <span class="stat-num">11+</span>
+                    <span class="stat-num" data-target="11" data-suffix="+">0+</span>
                     <span class="stat-lbl">Years of experience</span>
                 </div>
                 <div class="hero-stat" role="listitem">
-                    <span class="stat-num">25K+</span>
+                    <span class="stat-num" data-target="25000" data-suffix="+" data-format="k">0K+</span>
                     <span class="stat-lbl">Admissions done</span>
                 </div>
                 <div class="hero-stat" role="listitem">
-                    <span class="stat-num">4.9 ★</span>
+                    <span class="stat-num" data-target="4.9" data-suffix=" ★" data-decimal="1">0 ★</span>
                     <span class="stat-lbl">Google rating</span>
                 </div>
                 <div class="hero-stat" role="listitem">
-                    <span class="stat-num">1000+</span>
+                    <span class="stat-num" data-target="1000" data-suffix="+">0+</span>
                     <span class="stat-lbl">Seminars conducted</span>
                 </div>
             </div>
@@ -4138,6 +4137,51 @@
             }
         });
     });
+</script>
+
+<script>
+(function() {
+    function animateCounter(el) {
+        const target = parseFloat(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        const format = el.dataset.format || '';
+        const decimal = parseInt(el.dataset.decimal) || 0;
+        const duration = 2000;
+        const steps = 60;
+        const increment = target / steps;
+        let current = 0;
+        let step = 0;
+
+        const timer = setInterval(function() {
+            step++;
+            current = increment * step;
+            if (step >= steps) {
+                current = target;
+                clearInterval(timer);
+            }
+            let display = decimal > 0
+                ? current.toFixed(decimal)
+                : Math.floor(current);
+            if (format === 'k') {
+                display = Math.floor(current / 1000) + 'K';
+            }
+            el.textContent = display + suffix;
+        }, duration / steps);
+    }
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.stat-num[data-target]').forEach(function(el) {
+        observer.observe(el);
+    });
+})();
 </script>
 
 </body>
