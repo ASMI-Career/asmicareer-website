@@ -71,7 +71,7 @@
 
             <div className="hero-eyebrow" aria-label="India's smartest youth career platform">
                 <span className="eyebrow-dot" aria-hidden="true"></span>
-                INDIA'S SMARTEST YOUTH CAREER PLATFORM
+                MAHARASHTRA'S #1 NEET COUNSELLORS
             </div>
 
             <h1 className="hero-h1" id="hero-heading">
@@ -97,6 +97,10 @@
                     <span className="stat-num">4.9 ★</span>
                     <span className="stat-lbl">Google rating</span>
                 </div>
+                <div className="hero-stat" role="listitem">
+                    <span className="stat-num">1000+</span>
+                    <span className="stat-lbl">Seminars conducted</span>
+                </div>
             </div>
 
             <div className="hero-ctas">
@@ -111,44 +115,44 @@
             <div className="hero-card">
 
                 <div className="card-top-row">
-                    <span className="card-pill-grey">Expert mentors</span>
-                    <span className="card-top-bold">100+ Counsellors</span>
+                    <span className="card-pill-grey">Your Admission Portal</span>
+                    <span className="card-top-bold">ASMI Dashboard</span>
                 </div>
 
                 <div className="card-inner">
 
                     <div className="card-inner-header">
-                        <span className="card-inner-title">Your College Matches</span>
-                        <span className="card-ai-pill">AI · Live</span>
+                        <span className="card-inner-title">Your College Shortlist</span>
+                        <span className="card-ai-pill">Live · Personalised</span>
                     </div>
 
                     <div className="rank-display">
-                        <div className="rank-label">NEET RANK</div>
-                        <div className="rank-number">2,847</div>
-                        <div className="rank-sub">AIR · NEET UG 2026</div>
+                        <div className="rank-label">YOUR NEET RANK</div>
+                        <div className="rank-number">25,678</div>
+                        <div className="rank-sub">AIR · Open Category</div>
                     </div>
 
-                    <ul className="college-list" aria-label="College matches">
+                    <ul className="college-list" aria-label="College shortlist">
                         <li className="college-item">
                             <div className="college-dot-name">
                                 <span className="college-dot green" aria-hidden="true"></span>
-                                <span className="college-name">AIIMS New Delhi</span>
+                                <span className="college-name">GMC Pune</span>
                             </div>
-                            <span className="likelihood-pill pill-likely">Likely ✓</span>
+                            <span className="likelihood-pill pill-safe">Safe ✓</span>
                         </li>
                         <li className="college-item">
                             <div className="college-dot-name">
                                 <span className="college-dot yellow" aria-hidden="true"></span>
-                                <span className="college-name">Maulana Azad Medical</span>
+                                <span className="college-name">GMC Nagpur</span>
                             </div>
-                            <span className="likelihood-pill pill-possible">Possible</span>
+                            <span className="likelihood-pill pill-likely">Likely</span>
                         </li>
                         <li className="college-item">
                             <div className="college-dot-name">
                                 <span className="college-dot blue" aria-hidden="true"></span>
-                                <span className="college-name">Grant Medical College</span>
+                                <span className="college-name">Seth GS Medical, Mumbai</span>
                             </div>
-                            <span className="likelihood-pill pill-safe">Safe Seat</span>
+                            <span className="likelihood-pill pill-possible">Borderline</span>
                         </li>
                     </ul>
 
