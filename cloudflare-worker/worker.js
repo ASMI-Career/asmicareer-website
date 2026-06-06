@@ -5,7 +5,7 @@
  */
 
 const ALLOWED_ORIGIN = "https://asmicareer.in";
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-flash-latest";
 
 export default {
   async fetch(request, env) {
