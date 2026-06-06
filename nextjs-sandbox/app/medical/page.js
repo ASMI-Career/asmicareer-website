@@ -11,6 +11,8 @@ export default function MedicalPortal() {
   const [events, setEvents] = useState([]);
 
   const uniTrackRef = useRef(null);
+  const statRefs = useRef([]);
+  const statsAnimated = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +30,45 @@ export default function MedicalPortal() {
         setEvents(sorted);
       })
       .catch(err => console.warn('Events feed unavailable:', err));
+  }, []);
+
+  useEffect(() => {
+    const stats = [
+      { target: 11,    suffix: '+',  format: null, decimal: 0 },
+      { target: 25000, suffix: '+',  format: 'k',  decimal: 0 },
+      { target: 4.9,   suffix: ' ★', format: null, decimal: 1 },
+      { target: 1000,  suffix: '+',  format: null, decimal: 0 },
+    ];
+
+    function animateCounter(el, config) {
+      const { target, suffix, format, decimal } = config;
+      const duration = 2000;
+      const steps = 60;
+      const increment = target / steps;
+      let current = 0;
+      let step = 0;
+      const timer = setInterval(() => {
+        step++;
+        current = increment * step;
+        if (step >= steps) { current = target; clearInterval(timer); }
+        let display = decimal > 0 ? current.toFixed(decimal) : Math.floor(current);
+        if (format === 'k') display = Math.floor(current / 1000) + 'K';
+        el.textContent = display + suffix;
+      }, duration / steps);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !statsAnimated.current) {
+          statsAnimated.current = true;
+          statRefs.current.forEach((el, i) => { if (el) animateCounter(el, stats[i]); });
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (statRefs.current[0]) observer.observe(statRefs.current[0]);
+    return () => observer.disconnect();
   }, []);
 
   // IntersectionObserver for reveal animation
@@ -201,19 +242,19 @@ export default function MedicalPortal() {
           
                       <div className="hero-stats" role="list" aria-label="Key statistics">
                           <div className="hero-stat" role="listitem">
-                              <span className="stat-num">11+</span>
+                              <span className="stat-num" ref={el => statRefs.current[0] = el}>11+</span>
                               <span className="stat-lbl">Years of experience</span>
                           </div>
                           <div className="hero-stat" role="listitem">
-                              <span className="stat-num">25K+</span>
+                              <span className="stat-num" ref={el => statRefs.current[1] = el}>25K+</span>
                               <span className="stat-lbl">Admissions done</span>
                           </div>
                           <div className="hero-stat" role="listitem">
-                              <span className="stat-num">4.9 ★</span>
+                              <span className="stat-num" ref={el => statRefs.current[2] = el}>4.9 ★</span>
                               <span className="stat-lbl">Google rating</span>
                           </div>
                           <div className="hero-stat" role="listitem">
-                              <span className="stat-num">1000+</span>
+                              <span className="stat-num" ref={el => statRefs.current[3] = el}>1000+</span>
                               <span className="stat-lbl">Seminars conducted</span>
                           </div>
                       </div>
