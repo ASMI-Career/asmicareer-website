@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI — Your Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFD700;--navy:#1a0040;--purple:#6a0dad;--mid:#2D0A5E;--soft:#4a0080;
+  --card:rgba(255,255,255,.58);--cb:rgba(106,13,173,.18);
+  --safe:#15803d;--safe-bg:rgba(34,197,94,.12);--safe-border:rgba(34,197,94,.25);
+  --likely:#0369a1;--likely-bg:rgba(56,189,248,.12);--likely-border:rgba(56,189,248,.25);
+  --border-col:rgba(106,13,173,.10);--reach:#b91c1c;--reach-bg:rgba(239,68,68,.08);--reach-border:rgba(239,68,68,.2);
+  --borderline:#b45309;--borderline-bg:rgba(251,146,60,.12);--borderline-border:rgba(251,146,60,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
+
+.bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 90% 10%,rgba(106,13,173,.14) 0%,transparent 40%),
+             radial-gradient(circle at 10% 90%,rgba(45,10,94,.09) 0%,transparent 35%);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(26,0,64,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,0,64,.05) 1px,transparent 1px);
+  background-size:52px 52px;}
+
+/* ── EDIT BAR (fixed top, shown when pane expanded) ── */
+.edit-bar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--navy);padding:8px 24px;
+  display:none;align-items:center;gap:16px;
+  border-bottom:2px solid rgba(255,215,0,.2);
+}
+.edit-bar.visible{display:flex;}
+.eb-logo{height:32px;width:auto;object-fit:contain;flex-shrink:0;}
+.eb-divider-v{width:1px;height:28px;background:rgba(255,255,255,.15);}
+.eb-label{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,215,0,.6);}
+.eb-group{display:flex;flex-direction:column;gap:2px;}
+.eb-group input,.eb-group select{
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-family:'Montserrat';font-weight:700;font-size:.82rem;
+  padding:4px 10px;border-radius:6px;outline:none;min-width:90px;
+}
+.eb-group select option{background:var(--navy);color:#fff;}
+.eb-apply{
+  background:#FFD700;color:var(--navy);font-family:'Montserrat';font-weight:800;
+  font-size:.75rem;padding:6px 16px;border:none;border-radius:20px;cursor:pointer;
+  letter-spacing:.5px;transition:.2s;margin-left:4px;
+}
+.eb-apply:hover{background:#ffe44d;}
+.eb-back{
+  background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);
+  font-family:'Montserrat';font-size:.72rem;font-weight:700;
+  padding:6px 14px;border-radius:20px;cursor:pointer;transition:.2s;
+}
+.eb-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.eb-spacer{flex:1;}
+.eb-next{
+  background:linear-gradient(135deg,var(--purple),var(--navy));
+  color:#FFD700;font-family:'Montserrat';font-weight:800;font-size:.75rem;
+  padding:7px 20px;border-radius:20px;border:none;cursor:pointer;
+  text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;
+}
+.eb-next:hover{opacity:.88;}
+
+/* ── LOADING / ERROR OVERLAYS ── */
+.overlay{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);}
+.overlay.hidden{display:none;}
+.spinner{width:40px;height:40px;border:4px solid rgba(106,13,173,.15);border-top:4px solid var(--purple);border-radius:50%;animation:spin .9s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.ov-text{font-family:'Montserrat';font-size:.8rem;font-weight:700;color:var(--soft);letter-spacing:1px;}
+.ov-err-icon{font-size:2.5rem;}
+.ov-err-title{font-family:'Montserrat';font-weight:900;font-size:1.1rem;color:#b91c1c;}
+.ov-err-sub{font-size:.8rem;color:var(--soft);max-width:360px;text-align:center;line-height:1.5;}
+
+/* ── 3-PANE CONTAINER ── */
+.panes{
+  position:relative;z-index:1;
+  display:flex;width:100%;height:100%;
+  transition:none;
+}
+
+/* Each pane */
+.pane{
+  flex:1;overflow:hidden;position:relative;
+  transition:flex .45s cubic-bezier(.4,0,.2,1);
+  border-right:1px solid rgba(26,0,64,.10);
+}
+.pane:last-child{border-right:none;}
+
+/* When a pane is expanded */
+.panes.has-expanded .pane.pane-active{flex:5.5;}
+.panes.has-expanded .pane.pane-collapsed{flex:.35;cursor:pointer;}
+
+/* ── PANE DEFAULT (overview) ── */
+.pane-default{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:stretch;
+  padding:28px 24px;cursor:pointer;
+  transition:background .25s;
+}
+.pane-default:hover{background:rgba(255,255,255,.12);}
+.pane-collapsed .pane-default,.pane-active .pane-default{display:none!important;}
+
+.pd-eyebrow{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pd-title{font-family:'Montserrat';font-weight:900;font-size:1.6rem;color:var(--navy);line-height:1.1;margin-bottom:18px;}
+.pd-stats{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+.pd-stat{background:rgba(255,255,255,.55);border:1px solid var(--cb);border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;}
+.pd-stat-label{font-size:.76rem;color:var(--mid);font-weight:600;}
+.pd-stat-val{font-family:'Montserrat';font-weight:900;font-size:1.2rem;color:var(--purple);}
+.pd-cta{
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  color:#FFD700;font-family:'Montserrat';font-weight:800;font-size:.76rem;
+  padding:10px 0;border-radius:50px;text-align:center;letter-spacing:.5px;
+  margin-top:auto;
+}
+
+/* ── PANE SLIM (collapsed strip) ── */
+.pane-slim{
+  display:none;width:100%;height:100%;
+  flex-direction:column;align-items:center;justify-content:center;gap:10px;
+}
+.pane-collapsed .pane-slim{display:flex;}
+.pane-active .pane-slim{display:none!important;}
+.slim-label{
+  font-family:'Montserrat';font-weight:900;font-size:.72rem;letter-spacing:3px;
+  text-transform:uppercase;color:var(--soft);
+  writing-mode:vertical-rl;transform:rotate(180deg);
+}
+.slim-count{
+  font-family:'Montserrat';font-weight:900;font-size:1.3rem;color:var(--purple);
+}
+
+/* ── PANE EXPANDED VIEW ── */
+.pane-expanded{
+  display:none;width:100%;height:100%;
+  flex-direction:column;
+  padding:58px 20px 48px; /* top: edit bar height */
+  overflow:hidden;
+}
+.pane-active .pane-expanded{display:flex;}
+
+/* Section header inside expanded */
+.exp-header{flex-shrink:0;margin-bottom:12px;}
+.exp-title{font-family:'Montserrat';font-weight:900;font-size:1.4rem;color:var(--navy);}
+.exp-sub{font-size:.78rem;color:var(--soft);margin-top:3px;}
+
+/* Sub-tabs */
+.sub-tabs{display:flex;gap:6px;margin-bottom:10px;flex-shrink:0;}
+.stab{
+  font-family:'Montserrat';font-size:.72rem;font-weight:800;
+  padding:6px 16px;border-radius:8px;cursor:pointer;border:none;
+  background:rgba(255,255,255,.45);color:var(--soft);transition:.2s;letter-spacing:.3px;
+}
+.stab.active{background:var(--navy);color:#FFD700;}
+.stab:hover:not(.active){background:rgba(255,255,255,.7);}
+
+/* ── COLLEGE TABLE ── */
+.table-wrap{flex:1;min-height:0;overflow-y:auto;border-radius:12px;border:1px solid var(--cb);background:rgba(255,255,255,.5);}
+.table-wrap::-webkit-scrollbar{width:4px;}
+.table-wrap::-webkit-scrollbar-thumb{background:rgba(106,13,173,.3);border-radius:10px;}
+table.ctable{width:100%;border-collapse:collapse;}
+table.ctable thead th{
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  color:#FFD700;font-family:'Montserrat';font-size:.65rem;font-weight:800;
+  letter-spacing:.8px;text-transform:uppercase;padding:10px 12px;text-align:left;
+  position:sticky;top:0;z-index:2;
+}
+table.ctable tbody tr:nth-child(odd){background:rgba(255,255,255,.55);}
+table.ctable tbody tr:nth-child(even){background:rgba(255,255,255,.35);}
+table.ctable tbody tr:hover{background:rgba(106,13,173,.06)!important;}
+table.ctable td{padding:8px 12px;font-size:.76rem;color:var(--navy);border-bottom:1px solid var(--border-col);}
+table.ctable td.college-name{font-family:'Montserrat';font-weight:700;max-width:260px;}
+table.ctable td.cutoff-val{font-family:'Montserrat';font-weight:800;text-align:center;}
+table.ctable td.fee-val{text-align:center;color:var(--soft);}
+table.ctable th:not(:first-child){text-align:center;}
+
+/* Probability badges */
+.prob{display:inline-block;font-family:'Montserrat';font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:8px;letter-spacing:.3px;}
+.prob-safe{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
+.prob-likely{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
+.prob-borderline{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
+.prob-reach{background:var(--reach-bg);color:var(--reach);border:1px solid var(--reach-border);}
+
+/* Quota badge */
+.quota{display:inline-block;font-family:'Montserrat';font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(106,13,173,.10);color:var(--purple);border:1px solid rgba(106,13,173,.2);}
+.quota-open{background:rgba(26,0,64,.08);color:var(--navy);border-color:rgba(26,0,64,.15);}
+
+/* ── MCC LAYOUT ── */
+.mcc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex-shrink:0;margin-bottom:12px;}
+.mcc-count-card{
+  background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:12px;
+  padding:14px 16px;transition:.22s;
+}
+.mcc-count-card.clickable{cursor:pointer;}
+.mcc-count-card.clickable:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
+.mcc-count-card.active-card{background:linear-gradient(135deg,var(--navy),var(--purple));border-color:var(--purple);}
+.mcc-count-card.active-card .mcc-card-title{color:rgba(255,215,0,.8);}
+.mcc-count-card.active-card .mcc-card-num{color:#FFD700;}
+.mcc-count-card.active-card .mcc-card-sub{color:rgba(255,255,255,.55);}
+.mcc-card-title{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.mcc-card-num{font-family:'Montserrat';font-weight:900;font-size:1.8rem;color:var(--navy);line-height:1;}
+.mcc-card-sub{font-size:.68rem;color:var(--soft);margin-top:3px;}
+
+/* AIIMS expandable */
+.aiims-list{display:none;margin-top:8px;border-radius:10px;overflow:hidden;border:1px solid var(--cb);}
+.aiims-list.open{display:block;}
+
+/* ── DEEMED TABLE wrapper ── */
+.deemed-section{flex:1;min-height:0;display:flex;flex-direction:column;}
+.deemed-label{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;flex-shrink:0;}
+
+/* ── OPEN STATE LAYOUT ── */
+.os-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex-shrink:0;margin-bottom:10px;}
+.os-card{
+  background:rgba(255,255,255,.6);border:1px solid var(--cb);border-radius:10px;
+  padding:10px 12px;cursor:pointer;transition:.22s;
+}
+.os-card:hover{background:rgba(255,255,255,.85);border-color:var(--purple);}
+.os-card.active-os{background:linear-gradient(135deg,var(--navy),var(--purple));border-color:var(--purple);}
+.os-card.active-os .os-state-name{color:#FFD700;}
+.os-card.active-os .os-count{color:rgba(255,215,0,.7);}
+.os-state-name{font-family:'Montserrat';font-size:.76rem;font-weight:800;color:var(--navy);}
+.os-count{font-size:.67rem;color:var(--soft);margin-top:2px;}
+
+.os-accordion{flex:1;min-height:0;display:flex;flex-direction:column;}
+.os-accordion-header{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;flex-shrink:0;}
+.os-no-selection{flex:1;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--soft);}
+.os-summary{flex-shrink:0;margin-top:8px;background:rgba(255,255,255,.45);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:8px 14px;font-size:.72rem;color:var(--mid);}
+
+/* ── NO DATA ── */
+.no-data{padding:24px;text-align:center;font-size:.8rem;color:var(--soft);}
+
+/* ── SLIDE COUNTER ── */
+.slide-counter{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<!-- ── LOADING OVERLAY ── -->
+<div class="overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="ov-text">Loading your options...</div>
+</div>
+
+<!-- ── ERROR OVERLAY ── -->
+<div class="overlay hidden" id="errorOverlay">
+  <div class="ov-err-icon">⚠️</div>
+  <div class="ov-err-title">Could not load data</div>
+  <div class="ov-err-sub" id="errMsg">Check your connection and refresh.</div>
+</div>
+
+<!-- ── EDIT BAR (fixed top) ── -->
+<div class="edit-bar" id="editBar">
+  <img src="ASMI Logo.png" alt="ASMI" class="eb-logo">
+  <div class="eb-divider-v"></div>
+  <button class="eb-back" onclick="collapseAll()">← Back</button>
+  <div class="eb-divider-v"></div>
+  <div class="eb-group">
+    <span class="eb-label">Score</span>
+    <input type="number" id="editScore" min="0" max="720" placeholder="Score">
+  </div>
+  <div class="eb-group">
+    <span class="eb-label">Category</span>
+    <select id="editCategory">
+      <option>General</option><option>OBC</option><option>SC</option>
+      <option>ST</option><option>EWS</option><option>SEBC</option>
+      <option>VJ</option><option>NT1</option><option>NT2</option><option>NT3</option>
+    </select>
+  </div>
+  <div class="eb-group">
+    <span class="eb-label">Course</span>
+    <select id="editCourse">
+      <option>MBBS</option><option>BDS</option>
+    </select>
+  </div>
+  <button class="eb-apply" onclick="applyEdits()">Update ↺</button>
+  <div class="eb-spacer"></div>
+  <a class="eb-next" id="nextBtn" href="#">Next: Summary →</a>
+</div>
+
+<!-- ── 3 PANES ── -->
+<div class="panes hidden" id="panesContainer">
+
+  <!-- ══════ PANE 1: MH STATE ══════ -->
+  <div class="pane" id="pane-mh" onclick="handlePaneClick('mh')">
+
+    <!-- Default overview -->
+    <div class="pane-default">
+      <div class="pd-eyebrow">Maharashtra</div>
+      <div class="pd-title">MH State<br>Admissions</div>
+      <div class="pd-stats" id="mh-overview-stats"></div>
+      <div class="pd-cta">Explore Options →</div>
+    </div>
+
+    <!-- Slim strip -->
+    <div class="pane-slim">
+      <div class="slim-label">MH State</div>
+      <div class="slim-count" id="mh-slim-count">—</div>
+    </div>
+
+    <!-- Expanded view -->
+    <div class="pane-expanded" id="mh-expanded" onclick="e=>e.stopPropagation()">
+      <div class="exp-header">
+        <div class="exp-title">Maharashtra State Colleges</div>
+        <div class="exp-sub" id="mh-exp-sub">Score-matched, category-adjusted results</div>
+      </div>
+      <div class="sub-tabs">
+        <button class="stab active" onclick="setMHTab('govt',this)">Govt Colleges</button>
+        <button class="stab" onclick="setMHTab('pvt',this)">Private Colleges</button>
+      </div>
+      <div class="table-wrap" id="mh-table-wrap"></div>
+    </div>
+  </div>
+
+  <!-- ══════ PANE 2: MCC AIQ ══════ -->
+  <div class="pane" id="pane-mcc" onclick="handlePaneClick('mcc')">
+
+    <div class="pane-default">
+      <div class="pd-eyebrow">Central / National</div>
+      <div class="pd-title">MCC AIQ<br>Admissions</div>
+      <div class="pd-stats" id="mcc-overview-stats"></div>
+      <div class="pd-cta">Explore Options →</div>
+    </div>
+
+    <div class="pane-slim">
+      <div class="slim-label">MCC AIQ</div>
+      <div class="slim-count" id="mcc-slim-count">—</div>
+    </div>
+
+    <div class="pane-expanded" id="mcc-expanded" onclick="e=>e.stopPropagation()">
+      <div class="exp-header">
+        <div class="exp-title">MCC AIQ — All India Quota</div>
+        <div class="exp-sub">Central counselling: Govt · AIIMS · JIPMER · Central Universities · Deemed</div>
+      </div>
+      <!-- Count cards -->
+      <div class="mcc-grid" id="mcc-count-grid"></div>
+      <!-- AIIMS expandable list -->
+      <div class="aiims-list" id="aiims-list"></div>
+      <!-- Deemed section -->
+      <div class="deemed-section">
+        <div class="deemed-label">Deemed Universities — Top 10 (closest to your score)</div>
+        <div class="table-wrap" id="deemed-table-wrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ PANE 3: OPEN STATE ══════ -->
+  <div class="pane" id="pane-open" onclick="handlePaneClick('open')">
+
+    <div class="pane-default">
+      <div class="pd-eyebrow">Pan-India</div>
+      <div class="pd-title">Open State<br>Options</div>
+      <div class="pd-stats" id="open-overview-stats"></div>
+      <div class="pd-cta">Explore Options →</div>
+    </div>
+
+    <div class="pane-slim">
+      <div class="slim-label">Open State</div>
+      <div class="slim-count" id="open-slim-count">—</div>
+    </div>
+
+    <div class="pane-expanded" id="open-expanded" onclick="e=>e.stopPropagation()">
+      <div class="exp-header">
+        <div class="exp-title">Open State Colleges</div>
+        <div class="exp-sub">Management quota seats open to all-India students · click a state to view colleges</div>
+      </div>
+      <div class="os-grid" id="os-state-grid"></div>
+      <div class="os-accordion">
+        <div class="os-accordion-header" id="os-acc-header" style="display:none">Colleges in Selected State</div>
+        <div class="os-no-selection" id="os-no-sel">← Select a state above to view colleges</div>
+        <div class="table-wrap" id="os-college-list" style="display:none"></div>
+      </div>
+      <div class="os-summary" id="os-summary"></div>
+    </div>
+  </div>
+
+</div><!-- /panes -->
+
+<div class="slide-counter">SLIDE 3 OF 6</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
+const DB_URL          = 'ASMI_DB_Final.json';
+const FEE_URL         = 'fee_map.json';
+
+// ── GLOBALS ─────────────────────────────────────────────────────
+let DB = null, FEE = {}, STUDENT = {};
+let currentPane = null;
+let mhTab = 'govt';
+let osExpanded = null;
+
+const OPEN_STATES = ['KA','TS','TN','UP','KL','AP','HR','WB','BR','UK','CG','JH','HP','PY','TR','MN','ML'];
+const STATE_LABELS = {KA:'Karnataka',TS:'Telangana',TN:'Tamil Nadu',UP:'Uttar Pradesh',UK:'Uttarakhand',PY:'Pondicherry',WB:'West Bengal',MN:'Manipur',ML:'Meghalaya',AP:'Andhra Pradesh',BR:'Bihar',HR:'Haryana',JH:'Jharkhand',CG:'Chhattisgarh',KL:'Kerala',HP:'Himachal Pradesh',TR:'Tripura'};
+
+// ── SESSION HELPERS ──────────────────────────────────────────────
+function getSess(){ try{ return JSON.parse(sessionStorage.getItem('asmi')||'{}'); }catch{ return {}; } }
+function setSess(k,v){ const s=getSess(); s[k]=v; sessionStorage.setItem('asmi',JSON.stringify(s)); }
+
+function activeScore(){    return parseInt(getSess().score    || STUDENT.score    || 0); }
+function activeCategory(){ return getSess().category || STUDENT.category || 'General'; }
+function activeCourse(){   return getSess().course   || (STUDENT.courses||'MBBS').split(',')[0].trim(); }
+
+// ── CATEGORY KEY MAPPING ─────────────────────────────────────────
+function catKeys(cat){
+  const map={General:['OPEN'],OBC:['OBC','OPEN'],SC:['SC','OPEN'],ST:['ST','OPEN'],
+    EWS:['EWS','OPEN'],SEBC:['SEBC','OPEN'],VJ:['VJ','OPEN'],NT1:['NT1','OPEN'],
+    NT2:['NT2','OPEN'],NT3:['NT3','OPEN'],IQ:['IQ','OPEN']};
+  return map[cat]||['OPEN'];
+}
+
+// ── PROBABILITY ──────────────────────────────────────────────────
+function prob(score, cutoff){
+  const adj = cutoff + 15;
+  const gap = score - adj;
+  if(gap>=15)  return {key:'safe',      label:'Safe',       cls:'prob-safe'};
+  if(gap>=0)   return {key:'likely',    label:'Likely',     cls:'prob-likely'};
+  if(gap>=-10) return {key:'borderline',label:'Borderline', cls:'prob-borderline'};
+  return              {key:'reach',     label:'Reach',      cls:'prob-reach'};
+}
+const PROB_ORDER = {safe:0,likely:1,borderline:2,reach:3};
+
+// ── GET COLLEGES from DB ─────────────────────────────────────────
+function getColleges(stateKey, courseKey, keys, listType){
+  if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
+  const seen = new Map();
+  const score = activeScore();
+  keys.forEach(catKey=>{
+    const catData = DB[stateKey][courseKey][catKey];
+    if(!catData||!catData[listType]) return;
+    catData[listType].forEach(col=>{
+      const p = prob(score, col.c);
+      const entry = {...col, quota:catKey, prob:p};
+      if(!seen.has(col.n)){
+        seen.set(col.n, entry);
+      } else {
+        // Keep best probability (lowest adjusted cutoff = easiest)
+        const ex = seen.get(col.n);
+        if(col.c < ex.c) seen.set(col.n, entry);
+      }
+    });
+  });
+  return Array.from(seen.values());
+}
+
+// ── FEE LOOKUP ───────────────────────────────────────────────────
+function feeStr(name){ const f=FEE[name]; return f?`₹${f}L/yr`:'—'; }
+
+// ── RENDER: college table rows ───────────────────────────────────
+function renderTable(cols, showState=false){
+  if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
+  const sorted = [...cols].sort((a,b)=> PROB_ORDER[a.prob.key]-PROB_ORDER[b.prob.key] || b.c-a.c);
+  const stateCol = showState ? `<th>State</th>` : '';
+  const rows = sorted.map(c=>{
+    const stateTd = showState ? `<td>${c.s||''}</td>` : '';
+    const quotaClass = c.quota==='OPEN'?'quota quota-open':'quota';
+    return `<tr>
+      <td class="college-name">${c.n}</td>
+      ${stateTd}
+      <td style="text-align:center"><span class="${quotaClass}">${c.quota}</span></td>
+      <td class="cutoff-val">${c.c}</td>
+      <td class="fee-val">${feeStr(c.n)}</td>
+      <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+    </tr>`;
+  }).join('');
+  return `<table class="ctable">
+    <thead><tr><th>College</th>${stateCol}<th>Quota</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+// ── MH RENDER ────────────────────────────────────────────────────
+let mhGovt=[], mhPvt=[];
+
+function computeMH(){
+  const keys = catKeys(activeCategory());
+  const course = activeCourse();
+  mhGovt = getColleges('MH', course, keys, 'mh_govt');
+  mhPvt  = getColleges('MH', course, keys, 'mh_pvt');
+}
+
+function renderMHOverview(){
+  computeMH();
+  const govtReach = mhGovt.filter(c=>c.prob.key!=='reach').length;
+  const pvtReach  = mhPvt.filter(c=>c.prob.key!=='reach').length;
+  document.getElementById('mh-overview-stats').innerHTML = `
+    <div class="pd-stat"><span class="pd-stat-label">Govt Colleges in reach</span><span class="pd-stat-val">${govtReach}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Private Colleges in reach</span><span class="pd-stat-val">${pvtReach}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Category</span><span class="pd-stat-val" style="font-size:.9rem">${activeCategory()}</span></div>`;
+  document.getElementById('mh-slim-count').textContent = govtReach+pvtReach;
+}
+
+function renderMHExpanded(){
+  computeMH();
+  const course = activeCourse();
+  document.getElementById('mh-exp-sub').textContent =
+    `Score: ${activeScore()} · Category: ${activeCategory()} · Course: ${course}`;
+  setMHTabContent();
+}
+
+function setMHTab(tab, btn){
+  mhTab = tab;
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  setMHTabContent();
+}
+
+function setMHTabContent(){
+  const cols = mhTab==='govt' ? mhGovt : mhPvt;
+  document.getElementById('mh-table-wrap').innerHTML = renderTable(cols);
+}
+
+// ── MCC RENDER ───────────────────────────────────────────────────
+let aiimsOpen = false;
+
+function computeMCC(){
+  const keys   = catKeys(activeCategory());
+  const course = activeCourse();
+  const score  = activeScore();
+
+  // AIQ
+  const aiq = getColleges('AIQ',course,keys,'aiq');
+  const aiqR = aiq.filter(c=>c.prob.key!=='reach');
+
+  // AIIMS
+  const aiims = getColleges('AIIMS','MBBS',keys,'aiims');
+  const aiimsR = aiims.filter(c=>c.prob.key!=='reach');
+
+  // JIPMER
+  const jipmer = getColleges('JIPMER','MBBS',keys,'jipmer');
+  const jipmerR = jipmer.filter(c=>c.prob.key!=='reach');
+
+  // Central
+  const central = getColleges('CENTRAL',course,keys,'central');
+  const centralR = central.filter(c=>c.prob.key!=='reach');
+
+  // Deemed — top 10 by closest to score
+  const deemed = getColleges('DEEMED',course,['OPEN'],'deemed');
+  const deemedSorted = [...deemed]
+    .sort((a,b)=>Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)))
+    .slice(0,10);
+
+  return {aiq,aiqR,aiims,aiimsR,jipmer,jipmerR,central,centralR,deemed,deemedSorted};
+}
+
+function renderMCCOverview(){
+  const {aiqR,aiimsR,deemedSorted} = computeMCC();
+  const total = aiqR.length+aiimsR.length+deemedSorted.filter(c=>c.prob.key!=='reach').length;
+  document.getElementById('mcc-overview-stats').innerHTML = `
+    <div class="pd-stat"><span class="pd-stat-label">AIQ Govt in reach</span><span class="pd-stat-val">${aiqR.length}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">AIIMS in reach</span><span class="pd-stat-val">${aiimsR.length}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Deemed shown</span><span class="pd-stat-val">Top 10</span></div>`;
+  document.getElementById('mcc-slim-count').textContent = total;
+}
+
+function renderMCCExpanded(){
+  const {aiqR,aiimsR,jipmerR,centralR,deemedSorted,aiims} = computeMCC();
+  aiimsOpen = false;
+
+  // Count cards
+  document.getElementById('mcc-count-grid').innerHTML = `
+    <div class="mcc-count-card">
+      <div class="mcc-card-title">AIQ Govt</div>
+      <div class="mcc-card-num">${aiqR.length}</div>
+      <div class="mcc-card-sub">colleges in reach</div>
+    </div>
+    <div class="mcc-count-card clickable" id="aiims-card" onclick="toggleAIIMS()">
+      <div class="mcc-card-title">AIIMS</div>
+      <div class="mcc-card-num">${aiimsR.length}</div>
+      <div class="mcc-card-sub">${aiimsR.length>0?'colleges in reach — tap to view':'below your reach'}</div>
+    </div>
+    <div class="mcc-count-card">
+      <div class="mcc-card-title">JIPMER</div>
+      <div class="mcc-card-num">${jipmerR.length}</div>
+      <div class="mcc-card-sub">of 2 colleges reachable</div>
+    </div>
+    <div class="mcc-count-card">
+      <div class="mcc-card-title">Central Universities</div>
+      <div class="mcc-card-num">${centralR.length}</div>
+      <div class="mcc-card-sub">BHU · AMU</div>
+    </div>`;
+
+  // AIIMS expandable list
+  document.getElementById('aiims-list').innerHTML =
+    aiims.length ? renderTable(aiims) : '';
+  document.getElementById('aiims-list').classList.remove('open');
+
+  // Deemed table
+  document.getElementById('deemed-table-wrap').innerHTML =
+    deemedSorted.length ? renderTable(deemedSorted, true) : '<div class="no-data">No deemed colleges found.</div>';
+}
+
+function toggleAIIMS(){
+  aiimsOpen = !aiimsOpen;
+  document.getElementById('aiims-list').classList.toggle('open', aiimsOpen);
+  document.getElementById('aiims-card').classList.toggle('active-card', aiimsOpen);
+}
+
+// ── OPEN STATE RENDER ────────────────────────────────────────────
+let osResults = [];
+
+function computeOpenStates(){
+  const course = activeCourse();
+  const score  = activeScore();
+  osResults = [];
+
+  OPEN_STATES.forEach(stKey=>{
+    const pvt  = getColleges(stKey, course, ['OPEN'], 'open_pvt');
+    const mgmt = getColleges(stKey, course, ['OPEN'], 'mgmt_quota');
+    const all  = [...pvt,...mgmt].filter(c=>c.prob.key!=='reach');
+    // Deduplicate
+    const uniq = Array.from(new Map(all.map(c=>[c.n,c])).values());
+    if(uniq.length>0){
+      const sorted = uniq.sort((a,b)=>PROB_ORDER[a.prob.key]-PROB_ORDER[b.prob.key]||b.c-a.c);
+      osResults.push({stKey, label:STATE_LABELS[stKey]||stKey, colleges:sorted});
+    }
+  });
+}
+
+function renderOpenOverview(){
+  computeOpenStates();
+  const totalClg = osResults.reduce((s,r)=>s+r.colleges.length,0);
+  document.getElementById('open-overview-stats').innerHTML = `
+    <div class="pd-stat"><span class="pd-stat-label">States with options</span><span class="pd-stat-val">${osResults.length}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Total colleges reachable</span><span class="pd-stat-val">${totalClg}</span></div>
+    <div class="pd-stat"><span class="pd-stat-label">Quota type</span><span class="pd-stat-val" style="font-size:.82rem">Open / Mgmt</span></div>`;
+  document.getElementById('open-slim-count').textContent = osResults.length;
+}
+
+function renderOpenExpanded(){
+  computeOpenStates();
+  osExpanded = null;
+
+  // State grid cards
+  const grid = osResults.map(r=>`
+    <div class="os-card" id="os-card-${r.stKey}" onclick="expandOSState('${r.stKey}')">
+      <div class="os-state-name">${r.label}</div>
+      <div class="os-count">${r.colleges.length} college${r.colleges.length>1?'s':''} in reach</div>
+    </div>`).join('');
+  document.getElementById('os-state-grid').innerHTML = grid || '<div class="no-data">No open state colleges reachable at this score.</div>';
+
+  // Summary of non-reachable states
+  const allStates = OPEN_STATES.length;
+  const hiddenCount = allStates - osResults.length;
+  document.getElementById('os-summary').textContent =
+    hiddenCount>0 ? `+ ${hiddenCount} more state${hiddenCount>1?'s':''} available but below current score` : 'All states shown';
+
+  // Reset accordion
+  document.getElementById('os-no-sel').style.display='flex';
+  document.getElementById('os-college-list').style.display='none';
+  document.getElementById('os-acc-header').style.display='none';
+}
+
+function expandOSState(stKey){
+  // Deactivate all cards
+  document.querySelectorAll('.os-card').forEach(c=>c.classList.remove('active-os'));
+  document.getElementById('os-card-'+stKey)?.classList.add('active-os');
+
+  const found = osResults.find(r=>r.stKey===stKey);
+  if(!found) return;
+
+  osExpanded = stKey;
+  document.getElementById('os-acc-header').textContent = found.label + ' — Colleges in Reach';
+  document.getElementById('os-acc-header').style.display='block';
+  document.getElementById('os-no-sel').style.display='none';
+  document.getElementById('os-college-list').style.display='block';
+  document.getElementById('os-college-list').innerHTML = renderTable(found.colleges);
+}
+
+// ── PANE EXPAND / COLLAPSE ───────────────────────────────────────
+function handlePaneClick(paneId){
+  if(currentPane) return; // already expanded — ignore click on slim strips
+  expandPane(paneId);
+}
+
+function expandPane(paneId){
+  currentPane = paneId;
+  const container = document.getElementById('panesContainer');
+  container.classList.add('has-expanded');
+  document.getElementById('editBar').classList.add('visible');
+
+  ['mh','mcc','open'].forEach(id=>{
+    const el = document.getElementById('pane-'+id);
+    if(id===paneId){
+      el.classList.add('pane-active');
+      el.classList.remove('pane-collapsed');
+    } else {
+      el.classList.add('pane-collapsed');
+      el.classList.remove('pane-active');
+    }
+  });
+
+  // Populate edit bar with current values
+  document.getElementById('editScore').value    = activeScore();
+  document.getElementById('editCategory').value = activeCategory();
+  document.getElementById('editCourse').value   = activeCourse();
+
+  // Render expanded content
+  if(paneId==='mh')   renderMHExpanded();
+  if(paneId==='mcc')  renderMCCExpanded();
+  if(paneId==='open') renderOpenExpanded();
+
+  // Next button URL
+  const token = (getSess().token || new URLSearchParams(location.search).get('token') || '');
+  document.getElementById('nextBtn').href = 'slide4_summary.html?token='+encodeURIComponent(token);
+}
+
+function collapseAll(){
+  currentPane = null;
+  const container = document.getElementById('panesContainer');
+  container.classList.remove('has-expanded');
+  document.getElementById('editBar').classList.remove('visible');
+  ['mh','mcc','open'].forEach(id=>{
+    const el = document.getElementById('pane-'+id);
+    el.classList.remove('pane-active','pane-collapsed');
+  });
+  // Refresh overviews in case values changed
+  renderAllOverviews();
+}
+
+// ── APPLY EDITS ──────────────────────────────────────────────────
+function applyEdits(){
+  const score = parseInt(document.getElementById('editScore').value);
+  const cat   = document.getElementById('editCategory').value;
+  const course= document.getElementById('editCourse').value;
+  if(score>0)  setSess('score',    score);
+  if(cat)      setSess('category', cat);
+  if(course)   setSess('course',   course);
+
+  // Re-render current expanded pane
+  if(currentPane==='mh')   renderMHExpanded();
+  if(currentPane==='mcc')  renderMCCExpanded();
+  if(currentPane==='open') renderOpenExpanded();
+}
+
+// ── RENDER ALL OVERVIEWS ─────────────────────────────────────────
+function renderAllOverviews(){
+  renderMHOverview();
+  renderMCCOverview();
+  renderOpenOverview();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+function showError(msg){
+  document.getElementById('loadingOverlay').classList.add('hidden');
+  document.getElementById('errorOverlay').classList.remove('hidden');
+  document.getElementById('errMsg').textContent = msg;
+}
+
+async function init(){
+  const params = new URLSearchParams(location.search);
+  const token  = params.get('token')||'';
+
+  try {
+    // 1. Fetch all 3 in parallel
+    const [dbRes, feeRes, studentRes] = await Promise.all([
+      fetch(DB_URL).then(r=>r.json()),
+      fetch(FEE_URL).then(r=>r.json()),
+      token ? fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json())
+            : Promise.resolve({success:false, demo:true})
+    ]);
+
+    DB  = dbRes;
+    FEE = feeRes;
+
+    // 2. Student data
+    if(studentRes.success && studentRes.data){
+      STUDENT = studentRes.data;
+    } else if(studentRes.demo){
+      // Demo mode — use defaults or session values
+      STUDENT = {score:520, category:'OBC', courses:'MBBS', name:'Demo Student', token:'DEMO'};
+    } else {
+      STUDENT = {score:520, category:'General', courses:'MBBS', name:'Student', token:token};
+    }
+
+    // 3. Store token in session
+    setSess('token', STUDENT.token||token);
+
+    // 4. Seed session with student values (only if not already overridden)
+    const sess = getSess();
+    if(!sess.score)    setSess('score',    STUDENT.score);
+    if(!sess.category) setSess('category', STUDENT.category);
+    if(!sess.course)   setSess('course',   (STUDENT.courses||'MBBS').split(',')[0].trim());
+
+    // 5. Show UI
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    document.getElementById('panesContainer').classList.remove('hidden');
+    renderAllOverviews();
+
+  } catch(err){
+    showError('Failed to load data: '+err.message+'. Make sure ASMI_DB_Final.json and fee_map.json are in the same folder.');
+    console.error(err);
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>

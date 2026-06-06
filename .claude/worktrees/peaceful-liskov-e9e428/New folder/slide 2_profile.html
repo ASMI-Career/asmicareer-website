@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI — Student Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #FFD700;
+  --navy:   #1a0040;
+  --purple: #6a0dad;
+  --mid:    #2D0A5E;
+  --soft:   #4a0080;
+  --card:   rgba(255,255,255,0.58);
+  --card-border: rgba(106,13,173,0.20);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
+
+.bg-deco{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 92% 8%,  rgba(106,13,173,.16) 0%,transparent 42%),
+    radial-gradient(circle at 8%  90%, rgba(45,10,94,.10)   0%,transparent 36%);
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(26,0,64,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(26,0,64,.055) 1px,transparent 1px);
+  background-size:52px 52px;
+}
+
+.page{
+  position:relative;z-index:1;
+  width:100%;height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+/* ════ LEFT ════ */
+.left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:48px 44px 48px 62px;
+}
+
+.logo-wrap{margin-bottom:28px;animation:fadeUp .5s ease both;}
+.logo-wrap img{
+  height:120px;width:auto;object-fit:contain;
+  filter:drop-shadow(0 3px 10px rgba(26,0,64,.16));
+}
+
+.step-label{
+  font-family:'Montserrat';font-size:.68rem;font-weight:700;
+  letter-spacing:3.5px;text-transform:uppercase;color:var(--purple);
+  margin-bottom:12px;
+  animation:fadeUp .5s .06s ease both;
+}
+
+.main-heading{
+  font-family:'Montserrat';font-weight:900;
+  font-size:2.8rem;line-height:1.05;color:var(--navy);
+  margin-bottom:12px;
+  animation:fadeUp .5s .12s ease both;
+}
+
+.main-sub{
+  font-size:.86rem;color:var(--mid);line-height:1.65;
+  max-width:380px;margin-bottom:28px;
+  animation:fadeUp .5s .16s ease both;
+}
+
+/* Engine box */
+.engine-box{
+  background:linear-gradient(145deg,var(--navy),var(--mid));
+  border-radius:16px;padding:20px 24px;
+  box-shadow:0 12px 36px rgba(26,0,64,.28);
+  margin-bottom:22px;
+  animation:fadeUp .5s .22s ease both;
+}
+.eb-title{
+  font-family:'Montserrat';font-size:.7rem;font-weight:700;
+  color:rgba(255,215,0,.7);letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.eb-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:9px;
+}
+.eb-key{font-size:.78rem;color:rgba(255,255,255,.55);}
+.eb-val{
+  font-family:'Montserrat';font-size:.8rem;font-weight:700;
+  color:rgba(255,255,255,.88);
+}
+.eb-val.gold{color:#FFD700;}
+.eb-divider{height:1px;background:rgba(255,255,255,.10);margin:11px 0;}
+.eb-note{font-size:.7rem;color:rgba(255,255,255,.40);line-height:1.5;}
+
+/* CTA button */
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  color:#FFD700;font-family:'Montserrat';font-weight:800;font-size:.88rem;
+  padding:13px 32px;border:none;border-radius:50px;cursor:pointer;
+  letter-spacing:.4px;
+  box-shadow:0 8px 28px rgba(26,0,64,.30);
+  transition:.2s;text-decoration:none;
+  animation:fadeUp .5s .3s ease both;
+}
+.cta-btn:hover{transform:scale(1.04);box-shadow:0 12px 32px rgba(26,0,64,.40);}
+.cta-arrow{font-size:1rem;}
+
+/* ════ RIGHT ════ */
+.right{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:48px 62px 48px 32px;
+}
+
+/* Loading state */
+.loading-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:40px;
+}
+.spinner{
+  width:38px;height:38px;border:4px solid rgba(106,13,173,.15);
+  border-top:4px solid var(--purple);border-radius:50%;
+  animation:spin 0.9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{
+  font-family:'Montserrat';font-size:.78rem;font-weight:700;
+  color:var(--soft);letter-spacing:1px;
+}
+
+/* Error state */
+.error-state{
+  display:none;background:rgba(255,255,255,.60);
+  border:1px solid rgba(220,38,38,.25);border-radius:16px;
+  padding:28px 24px;text-align:center;
+}
+.error-icon{font-size:2rem;margin-bottom:10px;}
+.error-title{font-family:'Montserrat';font-weight:800;color:#b91c1c;margin-bottom:6px;}
+.error-sub{font-size:.78rem;color:var(--soft);line-height:1.5;}
+
+/* Profile card */
+.profile-card{
+  display:none;
+  background:rgba(255,255,255,0.72);
+  border:1px solid rgba(255,255,255,0.85);
+  border-radius:20px;
+  padding:26px 30px;
+  box-shadow:0 8px 40px rgba(26,0,64,.10);
+  animation:fadeUp .5s ease both;
+  flex-direction:column;gap:0;
+}
+.profile-card.visible{display:flex;}
+
+.pc-header{
+  font-family:'Montserrat';font-size:.63rem;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--purple);
+  margin-bottom:18px;
+}
+
+.pc-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 0;
+  border-bottom:1px solid rgba(106,13,173,.09);
+}
+.pc-row:last-child{border-bottom:none;}
+.pc-row.top-align{align-items:flex-start;padding-top:12px;}
+
+.pc-key{font-size:.78rem;color:var(--soft);font-weight:600;flex-shrink:0;}
+.pc-key.top{padding-top:3px;}
+
+.pc-val{
+  font-family:'Montserrat';font-weight:800;
+  font-size:.92rem;color:var(--navy);text-align:right;
+}
+.pc-val.big{font-size:1.55rem;color:var(--purple);line-height:1;}
+
+.cat-badge{
+  display:inline-block;
+  background:var(--navy);color:#FFD700;
+  font-family:'Montserrat';font-size:.72rem;font-weight:800;
+  padding:4px 14px;border-radius:50px;letter-spacing:.5px;
+}
+
+.pills-wrap{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;}
+.pill-course{
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  color:#FFD700;font-family:'Montserrat';font-size:.66rem;font-weight:800;
+  padding:3px 12px;border-radius:20px;
+}
+.pill-budget{
+  background:rgba(106,13,173,.10);border:1px solid rgba(106,13,173,.20);
+  color:var(--mid);font-family:'Montserrat';font-size:.64rem;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+}
+
+.slide-counter{
+  position:fixed;bottom:10px;left:50%;transform:translateX(-50%);
+  font-family:'Montserrat';font-size:.63rem;font-weight:700;
+  color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<div class="page">
+
+  <!-- ══ LEFT ══ -->
+  <div class="left">
+    <div class="logo-wrap">
+      <img src="ASMI Logo.png" alt="ASMI Career">
+    </div>
+
+    <div class="step-label">Step 2 of 6 — Your Profile</div>
+
+    <div class="main-heading">Your Medical<br>Admission Analysis<br>is ready.</div>
+
+    <p class="main-sub">
+      This analysis is generated from your inquiry form.
+      All projections use 2025–26 cutoff data with an
+      adjustment for this year's paper.
+    </p>
+
+    <div class="engine-box">
+      <div class="eb-title">📊 Cutoff Projection Engine</div>
+      <div class="eb-row">
+        <span class="eb-key">Base Data</span>
+        <span class="eb-val">2025–26 Actual Cutoffs</span>
+      </div>
+      <div class="eb-row">
+        <span class="eb-key">Paper Adjustment</span>
+        <span class="eb-val gold">+15 marks</span>
+      </div>
+      <div class="eb-row">
+        <span class="eb-key">Projected 2026 Cutoff</span>
+        <span class="eb-val gold">2025 cutoff + 15</span>
+      </div>
+      <div class="eb-divider"></div>
+      <div class="eb-note">
+        ReNEET situation factored in. Cutoffs projected to rise slightly.
+        All options below use projected figures.
+      </div>
+    </div>
+
+    <a class="cta-btn" id="optionsBtn" href="#">
+      View Your Options <span class="cta-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- ══ RIGHT ══ -->
+  <div class="right">
+
+    <!-- Loading -->
+    <div class="loading-state" id="loadingState">
+      <div class="spinner"></div>
+      <div class="loading-text">Fetching your profile...</div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-state" id="errorState">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title">Could not load profile</div>
+      <div class="error-sub" id="errorMsg">Token not found or network error.</div>
+    </div>
+
+    <!-- Profile card (shown after fetch) -->
+    <div class="profile-card" id="profileCard">
+      <div class="pc-header">Student Profile</div>
+
+      <div class="pc-row">
+        <span class="pc-key">Token Number</span>
+        <span class="pc-val" id="tokenVal">—</span>
+      </div>
+      <div class="pc-row">
+        <span class="pc-key">NEET Score</span>
+        <span class="pc-val big" id="scoreVal">—</span>
+      </div>
+      <div class="pc-row">
+        <span class="pc-key">Category</span>
+        <div><span class="cat-badge" id="categoryVal">—</span></div>
+      </div>
+      <div class="pc-row">
+        <span class="pc-key">Coaching</span>
+        <span class="pc-val" id="coachingVal">—</span>
+      </div>
+      <div class="pc-row">
+        <span class="pc-key">Max Budget</span>
+        <span class="pc-val" id="maxBudgetVal">—</span>
+      </div>
+      <div class="pc-row top-align">
+        <span class="pc-key top">Selected Courses</span>
+        <div class="pills-wrap" id="coursePills"></div>
+      </div>
+      <div class="pc-row top-align">
+        <span class="pc-key top">Budget Range</span>
+        <div class="pills-wrap" id="budgetPills"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-counter">SLIDE 2 OF 6</div>
+
+<script>
+// ── SET YOUR APPS SCRIPT URL HERE ──────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
+// ──────────────────────────────────────────────────────────────
+
+const BUDGET_MAX = {
+  'NRI / Management 40-50L': '₹60L / year',
+  'Deemed 18-35L':           '₹30L / year',
+  'Private 7-20L':           '₹20L / year',
+  'Govt 1-2L':               '₹2L / year',
+};
+const BUDGET_LABELS = {
+  'Govt 1-2L':               'Govt (₹1–2L)',
+  'Private 7-20L':           'Private (₹7–20L)',
+  'Deemed 18-35L':           'Deemed (₹10–35L)',
+  'NRI / Management 40-50L': 'NRI / Mgmt (₹40–60L)',
+};
+
+function showError(msg) {
+  document.getElementById('loadingState').style.display = 'none';
+  const err = document.getElementById('errorState');
+  err.style.display = 'block';
+  document.getElementById('errorMsg').textContent = msg;
+}
+
+function populate(data) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('profileCard').classList.add('visible');
+
+  document.getElementById('tokenVal').textContent    = data.token    || '—';
+  document.getElementById('scoreVal').textContent    = data.score    || '—';
+  document.getElementById('categoryVal').textContent = data.category || '—';
+  document.getElementById('coachingVal').textContent = data.coaching || '—';
+
+  // Max budget — highest bucket selected
+  const budgetList = (data.budget || '').split(',').map(b => b.trim()).filter(Boolean);
+  let maxLabel = '—';
+  for (const key of Object.keys(BUDGET_MAX)) {
+    if (budgetList.some(b => b.includes(key.split(' ')[0]))) {
+      maxLabel = BUDGET_MAX[key]; break;
+    }
+  }
+  document.getElementById('maxBudgetVal').textContent = maxLabel;
+
+  // Course pills
+  const cpWrap = document.getElementById('coursePills');
+  (data.courses || '').split(',').map(c => c.trim()).filter(Boolean).forEach(c => {
+    const el = document.createElement('span');
+    el.className = 'pill-course';
+    el.textContent = c;
+    cpWrap.appendChild(el);
+  });
+
+  // Budget pills
+  const bpWrap = document.getElementById('budgetPills');
+  if (budgetList.length) {
+    budgetList.forEach(b => {
+      const matched = Object.entries(BUDGET_LABELS).find(([k]) => b.includes(k.split(' ')[0]));
+      const el = document.createElement('span');
+      el.className = 'pill-budget';
+      el.textContent = matched ? matched[1] : b;
+      bpWrap.appendChild(el);
+    });
+  } else {
+    const el = document.createElement('span');
+    el.className = 'pill-budget';
+    el.textContent = 'Not specified';
+    bpWrap.appendChild(el);
+  }
+
+  // Wire up View Your Options button → slide3 with token
+  const token = data.token || '';
+  document.getElementById('optionsBtn').href =
+    'slide3_options.html?token=' + encodeURIComponent(token);
+}
+
+// ── MAIN: fetch by token ────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const token  = params.get('token') || '';
+
+if (!token) {
+  showError('No token in URL. Open this page from the dashboard link in the Google Sheet.');
+} else {
+  fetch(APPS_SCRIPT_URL + '?token=' + encodeURIComponent(token))
+    .then(r => r.json())
+    .then(res => {
+      if (res.error) { showError(res.error); return; }
+      populate(res.data);
+    })
+    .catch(err => {
+      showError('Network error. Check your connection and the Apps Script URL.');
+      console.error(err);
+    });
+}
+</script>
+
+</body>
+</html>

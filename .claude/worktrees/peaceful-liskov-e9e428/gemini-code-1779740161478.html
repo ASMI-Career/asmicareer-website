@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Career — Medical & Engineering Admissions</title>
+<style>
+
+/* ── SYSTEM RESET ── */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100vh;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+/* ── SPLIT CONTAINER ── */
+.split{
+  display:flex;width:100%;height:100vh;
+  position:relative;
+}
+
+/* ── SHARED SIDE STYLES ── */
+.medical,.engineering{
+  position:relative;overflow:hidden;cursor:pointer;
+}
+
+/* ── MEDICAL (LEFT PANEL) ── */
+.medical{
+  position:absolute;
+  top:0;
+  left:0;
+  width:52%;
+  height:100%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  background:#FFD700;
+  background-size:cover;
+  background-position:center;
+  z-index:2;
+  transition: width 0.75s cubic-bezier(0.77, 0, 0.18, 1), clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+/* ── ENGINEERING (RIGHT PANEL) ── */
+.engineering{
+  position:absolute;
+  top:0;
+  right:0; 
+  width:100%;
+  height:100%;
+  background:#0a1628;
+  background-size:cover;
+  background-position:center;
+  z-index:1;
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* ── DIAGONAL EDGE LINE ── */
+.seam-line {
+  position: absolute;
+  inset: 0;
+  width: 52%;
+  height: 100%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  z-index: 3;
+  pointer-events: none;
+  transition: width 0.75s cubic-bezier(0.77, 0, 0.18, 1), clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+}
+.seam-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
+}
+
+/* ── BACKGROUND WASH OVERLAYS ── */
+.bg-wash{position:absolute;inset:0;}
+.m-wash{background:#FFD700;opacity:0.82;}
+.e-wash{background:#0a1628;opacity:0.88;}
+.m-vignette{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,0,64,0.15) 0%,transparent 60%);
+}
+
+/* ── CIRCUIT SVG ── */
+.circuit-svg{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+
+/* ── CONTENT WRAPPERS ── */
+.m-content,.e-content{
+  position:relative;z-index:2;
+  height:100%;display:flex;flex-direction:column;
+  justify-content:center;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.m-content{ padding:56px 52px; width: 50vw; }
+.e-content{ padding:56px 52px 56px 72px; width: 48vw; }
+
+/* TYPOGRAPHY */
+.eyebrow{
+  font-size:13px;font-weight:600;letter-spacing:2px;
+  margin-bottom:12px;text-transform:uppercase;
+}
+.m-eyebrow{ color:rgba(26,0,64,0.55); }
+.e-eyebrow{ color:rgba(0,200,180,0.7); }
+
+.headline{
+  font-size:46px;font-weight:900;
+  line-height:1.15;
+  margin-bottom:16px;
+}
+.m-headline{ color:#1a0040; }
+.m-headline span{ color:#6a0dad; }
+.e-headline{ color:#ffffff; }
+.e-headline span{ color:#00C8B4; }
+
+.sub{
+  font-size:14px;line-height:1.6;
+  max-width:400px;margin-bottom:20px;
+}
+.m-sub{ color:rgba(26,0,64,0.65); }
+.e-sub{ color:rgba(255,255,255,0.5); }
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.tag{
+  font-size:9px;font-weight:700;letter-spacing:0.5px;
+  padding:4px 12px;border-radius:20px;
+  text-transform:uppercase;
+}
+.m-tag{
+  background:rgba(26,0,64,0.1);color:#1a0040;
+  border:1px solid rgba(26,0,64,0.18);
+}
+.e-tag{
+  background:rgba(0,200,180,0.1);color:rgba(0,200,180,0.85);
+  border:1px solid rgba(0,200,180,0.2);
+}
+
+/* STATS */
+.stats{display:flex;margin:0 0 28px;}
+.stat{ padding:0 24px; }
+.stat:first-child{ padding-left:0; }
+.m-stat{ border-right:1px solid rgba(26,0,64,0.15); }
+.e-stat{ border-right:1px solid rgba(255,255,255,0.1); }
+.stat:last-child{ border-right:none; }
+.stat-num{
+  display:block;font-size:32px;font-weight:900;
+  line-height:1.1;
+}
+.m-stat .stat-num{ color:#1a0040; }
+.e-stat .stat-num{ color:#ffffff; }
+.stat-lbl{
+  display:block;font-size:10px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.m-stat .stat-lbl{ color:rgba(26,0,64,0.5); }
+.e-stat .stat-lbl{ color:rgba(255,255,255,0.4); }
+
+/* BUTTONS */
+.cta{
+  display:inline-block;font-size:14px;font-weight:800;
+  padding:15px 36px;border-radius:50px;
+  text-decoration:none;letter-spacing:0.3px;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+  align-self:flex-start;
+  text-transform:uppercase;
+}
+.m-cta{ background:#1a0040; color:#FFD700; }
+.m-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(26,0,64,0.35); }
+.e-cta{ background:#00A896; color:#ffffff; }
+.e-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,168,150,0.45); }
+
+/* CENTER LOGO */
+.center-logo{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  z-index:20;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;
+  transition: opacity 0.3s ease;
+}
+.center-logo .logo-placeholder {
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.1);
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 10px; font-weight: 700;
+}
+
+/* ── MOTION GRAPHICS FX OVERLAYS ── */
+#globalCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 99;
+  pointer-events: none;
+  display: none;
+}
+#engCanvas {
+  position: absolute;
+  top: 0; right: 0;
+  width: 48%; height: 100%;
+  z-index: 5;
+  pointer-events: none;
+  display: none;
+}
+.flash-curtain {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
+}
+.eng-wipe-overlay {
+  position: absolute;
+  top: 0; right: 0;
+  width: 48%; height: 0%;
+  background: #0a1628;
+  z-index: 6;
+  transition: height 0.45s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+/* RESPONSIVE MOBILE VIEWPORT fallback */
+@media(max-width:768px){
+  .split{ flex-direction:column; }
+  .medical,.engineering{ width:100% !important; height:50vh; clip-path:none !important; }
+  .m-content,.e-content{ padding:32px 28px; width: 100%; height: 50vh; }
+  .headline{ font-size:28px !important; }
+  .center-logo{ display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="flash-curtain" id="flashCurtain"></div>
+<canvas id="globalCanvas"></canvas>
+
+<div class="split" id="split">
+  
+  <div class="medical" id="medical">
+    <div class="bg-wash m-wash"></div>
+    <div class="m-vignette"></div>
+
+    <div class="m-content" id="mContent">
+      <p class="eyebrow m-eyebrow">Medical</p>
+      <h1 class="headline m-headline">Every NEET Score<br>Deserves The<br><span>Best College.</span></h1>
+      <p class="sub m-sub">Guiding 25,000+ students to their dream medical seats through data-driven counselling.</p>
+      
+      <div class="tags">
+        <span class="tag m-tag">NEET UG</span>
+        <span class="tag m-tag">MBBS</span>
+        <span class="tag m-tag">BDS</span>
+        <span class="tag m-tag">AYUSH</span>
+        <span class="tag m-tag">BPTH</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat m-stat"><span class="stat-num">25K+</span><span class="stat-lbl">Admissions</span></div>
+        <div class="stat m-stat"><span class="stat-num">11+</span><span class="stat-lbl">Years Exp</span></div>
+        <div class="stat m-stat"><span class="stat-num">4.9★</span><span class="stat-lbl">Rating</span></div>
+      </div>
+      <a href="inquiry.html" class="cta m-cta" id="m-cta">Start NEET Journey →</a>
+    </div>
+  </div>
+
+  <div class="seam-line" id="seamLine"></div>
+
+  <div class="engineering" id="engineering">
+    <div class="bg-wash e-wash"></div>
+    <canvas id="engCanvas"></canvas>
+    <div class="eng-wipe-overlay" id="engWipe"></div>
+
+    <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
+      <path d="M 320 40 L 320 120 L 480 120 L 480 240" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
+      <path d="M 120 300 L 280 300 L 280 420 L 400 420" fill="none" stroke="rgba(0,200,180,0.08)" stroke-width="1"/>
+      <circle cx="80" cy="180" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="320" cy="120" r="3" fill="rgba(0,200,180,0.2)"/>
+    </svg>
+
+    <div class="e-content" id="eContent">
+      <p class="eyebrow e-eyebrow">Engineering</p>
+      <h1 class="headline e-headline">Engineering Counselling<br>Built Around <span>Your<br>Rank & Branch.</span></h1>
+      <p class="sub e-sub">Guiding students to their dream engineering colleges and branches through data-driven counselling.</p>
+      
+      <div class="tags">
+        <span class="tag e-tag">JEE</span>
+        <span class="tag e-tag">MHT-CET</span>
+        <span class="tag e-tag">BITS</span>
+        <span class="tag e-tag">Manipal</span>
+        <span class="tag e-tag">VIT</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat e-stat"><span class="stat-num">10K+</span><span class="stat-lbl">Admissions</span></div>
+        <div class="stat e-stat"><span class="stat-num">500+</span><span class="stat-lbl">Colleges</span></div>
+        <div class="stat e-stat"><span class="stat-num">All India</span><span class="stat-lbl">Reach</span></div>
+      </div>
+      <a href="engineering.html" class="cta e-cta" id="e-cta">Find My Branch →</a>
+    </div>
+  </div>
+
+  <div class="center-logo" id="centerLogo">
+    <div class="logo-placeholder">ASMI</div>
+  </div>
+
+</div>
+
+<script>
+const medical      = document.getElementById('medical');
+const engineering  = document.getElementById('engineering');
+const seamLine     = document.getElementById('seamLine');
+const centerLogo   = document.getElementById('centerLogo');
+const mContent     = document.getElementById('mContent'); 
+const engContent   = document.getElementById('eContent'); 
+const engWipe      = document.getElementById('engWipe');
+const flashCurtain = document.getElementById('flashCurtain');
+
+const mCanvas = document.getElementById('globalCanvas');
+const mCtx    = mCanvas.getContext('2d');
+
+const eCanvas = document.getElementById('engCanvas');
+const eCtx    = eCanvas.getContext('2d');
+
+let isTransitioning = false;
+
+// Core Event Insulation: Stop CTAs from triggering bubble clicks to parent selectors
+document.getElementById('m-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); medical.click(); });
+document.getElementById('e-cta').addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); engineering.click(); });
+
+// ── TRACK A: MEDICAL ACTION TIMELINE (ORGANIC DNA SHATTER) ──
+medical.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  
+  mCanvas.style.display = 'block';
+  mCanvas.width = w;
+  mCanvas.height = h;
+  
+  engContent.style.opacity = '0';
+  centerLogo.style.opacity = '0';
+  
+  const rect = mContent.getBoundingClientRect();
+  let particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: rect.left + Math.random() * rect.width,
+      y: rect.top + Math.random() * rect.height,
+      alpha: 1,
+      targetProgress: Math.random()
+    });
+  }
+
+  mContent.style.opacity = '0';
+
+  let animationStep = 0;
+  const totalNodes = 45; 
+  let growthProgress = 0; 
+  let timelineTicks = 0; 
+
+  // Compute precise trajectory calculations over the responsive sloped axis seam vector corridor
+  const startX = w * 0.35;  
+  const startY = h;
+  const endX = w * 0.35;   
+  const endY = 0;
+  
+  const deltaX = endX - startX;
+  const deltaY = endY - startY;
+  const angleOfLine = Math.atan2(deltaY, deltaX); 
+
+  function renderGlobalCinematicLoop() {
+    mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+    animationStep += 0.055; 
+    timelineTicks++;
+
+    particles.forEach(p => {
+      const destX = startX + deltaX * p.targetProgress;
+      const destY = startY + deltaY * p.targetProgress;
+      const dx = destX - p.x;
+      const dy = destY - p.y;
+      
+      p.x += dx * 0.06;
+      p.y += dy * 0.06;
+
+      if (Math.abs(dx) > 2) {
+        mCtx.beginPath();
+        mCtx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        mCtx.fillStyle = '#1a0040';
+        mCtx.fill();
+      } else {
+        p.alpha *= 0.85;
+        if (p.alpha > 0.02) {
+          mCtx.beginPath();
+          mCtx.arc(destX, destY, 2.5, 0, Math.PI * 2);
+          mCtx.fillStyle = `rgba(26, 0, 64, ${p.alpha})`;
+          mCtx.fill();
+        }
+      }
+    });
+
+    if (timelineTicks > 20) { 
+      if (growthProgress < 1) {
+        growthProgress += 0.018; 
+      } else {
+        clearInterval(dnaInterval);
+        flashCurtain.style.opacity = '1';
+        
+        setTimeout(() => {
+          medical.style.width = '100%';
+          seamLine.style.width = '100%';
+          medical.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          
+          setTimeout(() => {
+            flashCurtain.style.opacity = '0';
+            setTimeout(() => { window.location.href = 'inquiry.html'; }, 300);
+          }, 150);
+        }, 100);
+        return;
+      }
+    }
+    
+    for (let i = 0; i < totalNodes; i++) {
+      const nodeProgress = i / totalNodes;
+      if (nodeProgress > growthProgress) continue;
+
+      const centerX = startX + deltaX * nodeProgress;
+      const centerY = startY + deltaY * nodeProgress;
+      const angle1 = animationStep + (i * 0.28);
+      const angle2 = angle1 + Math.PI; 
+      
+      const radius = 35 + (nodeProgress * 20); 
+      const orbitOffset1 = Math.sin(angle1) * radius;
+      const orbitOffset2 = Math.sin(angle2) * radius;
+      const perpAngle = angleOfLine + Math.PI / 2;
+      
+      const nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
+      const nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
+      const nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
+      const nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
+      
+      mCtx.beginPath();
+      mCtx.moveTo(nodeX1, nodeY1);
+      mCtx.lineTo(nodeX2, nodeY2);
+      mCtx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
+      mCtx.lineWidth = 2.5;
+      mCtx.stroke();
+      
+      const z1 = Math.cos(angle1);
+      const z2 = Math.cos(angle2);
+      
+      mCtx.beginPath();
+      mCtx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      mCtx.fillStyle = z1 > 0 ? 'rgba(106, 13, 189, 1)' : 'rgba(148, 92, 212, 0.65)';
+      mCtx.fill();
+      
+      mCtx.beginPath();
+      mCtx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      mCtx.fillStyle = z2 > 0 ? 'rgba(26, 0, 64, 1)' : 'rgba(69, 43, 110, 0.65)';
+      mCtx.fill();
+    }
+  }
+  const dnaInterval = setInterval(renderGlobalCinematicLoop, 16);
+});
+
+// ── TRACK B: ENGINEERING ACTION TIMELINE (BINARY MATRIX DEFRAG) ──
+engineering.addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  mContent.style.opacity = '0';
+  engContent.style.opacity = '0';
+  centerLogo.style.opacity = '0';
+  
+  eCanvas.style.display = 'block';
+  eCanvas.width = window.innerWidth * 0.48;
+  eCanvas.height = window.innerHeight;
+  
+  const columns = Math.floor(eCanvas.width / 14);
+  const drops = Array(columns).fill(0);
+  
+  function drawMatrix() {
+    eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)'; 
+    eCtx.fillRect(0, 0, eCanvas.width, eCanvas.height);
+    eCtx.fillStyle = '#00C8B4'; 
+    eCtx.font = '900 12px monospace';
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = Math.random() > 0.5 ? "1" : "0";
+      const x = i * 14;
+      const y = drops[i] * 14;
+      eCtx.fillText(text, x, y);
+      
+      if (y > eCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  const matrixInterval = setInterval(drawMatrix, 18);
+  
+  setTimeout(() => {
+    engWipe.style.height = '100%';
+    setTimeout(() => {
+      medical.style.width = '0%';
+      seamLine.style.width = '0%';
+      medical.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      seamLine.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      
+      setTimeout(() => { 
+        clearInterval(matrixInterval);
+        window.location.href = 'engineering.html';
+      }, 500);
+    }, 350);
+  }, 500);
+});
+</script>
+</body>
+</html>

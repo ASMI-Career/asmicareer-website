@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Events & Seminars | ASMI Career</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="../assets/shared.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#705d00", "surface": "#f8f9fa", "on-surface": "#191c1d",
+                        "on-surface-variant": "#4d4732", "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff", "secondary": "#7b41b3",
+                        "on-secondary": "#ffffff", "primary-container": "#ffd700", "outline-variant": "#d0c6ab",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .event-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #ede9f7;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(123,65,179,0.07);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .event-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(123,65,179,0.14); }
+        .event-date-badge {
+            background: #7b41b3;
+            color: white;
+            text-align: center;
+            padding: 14px 18px;
+            min-width: 72px;
+        }
+        .event-date-badge .day { font-size: 1.75rem; font-weight: 800; line-height: 1; }
+        .event-date-badge .month { font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; opacity: 0.85; margin-top: 2px; }
+        .event-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 100px;
+            letter-spacing: 0.3px;
+        }
+        .tag-free { background: #dcfce7; color: #14532d; }
+        .tag-online { background: #dbeafe; color: #1e3a5f; }
+        .tag-inperson { background: #f3e8ff; color: #4a1772; }
+        .tag-upcoming { background: #fef3c7; color: #78350f; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<nav class="asmi-nav">
+    <div class="asmi-nav-inner">
+        <a href="../index.html" class="asmi-nav-logo"><img src="../asmi-logo.png" alt="ASMI Career"/></a>
+        <ul class="asmi-nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="../index.html#tools" class="active">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="events.html"><span>🎓</span> Events & Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="../index.html#about">About</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+            <li class="nav-cta"><a href="../inquiry.html">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="../index.html">🏠 Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="rank-predictor.html">📊 Rank Predictor</a>
+        <a href="college-search.html">🏥 College Search</a>
+        <a href="cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="documents-checklist.html">📋 Documents Checklist</a>
+        <a href="events.html">🎓 Events & Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="../index.html#about">About ASMI</a>
+        <a href="../index.html#contact">Contact & Branches</a>
+        <a href="../inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<!-- Hero -->
+<div class="tool-shell-hero">
+    <div class="tool-shell-badge">🎓 Free Events</div>
+    <h1>NEET Counselling<br/>Seminars & Events</h1>
+    <p>Join our free seminars across Maharashtra. Understand the counselling process, cutoffs, and your college options — before the rush begins.</p>
+    <a href="../inquiry.html" class="btn-gold">Register for Next Seminar</a>
+</div>
+
+<!-- Main content -->
+<div class="max-w-4xl mx-auto px-4 py-10">
+
+    <!-- Upcoming events placeholder -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-bold text-on-surface">Upcoming Events</h2>
+            <span class="event-tag tag-upcoming">2026 Season</span>
+        </div>
+
+        <!-- Coming Soon card -->
+        <div class="tool-coming-soon mb-6">
+            <div class="icon">🎓</div>
+            <h2>Event Schedule — Coming Soon</h2>
+            <p>Our 2026 seminar schedule will be published here as soon as NEET results are declared. Events are typically held across all 6 branches simultaneously.</p>
+            <p class="text-sm text-on-surface-variant mt-2">Register your interest now and we will notify you the moment dates are confirmed.</p>
+            <a href="../inquiry.html" class="btn-gold inline-flex items-center gap-2 mt-4">
+                Notify Me When Dates Are Out
+                <span class="material-symbols-outlined text-lg">notifications</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- What to expect section -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-on-surface mb-5">What happens at an ASMI seminar?</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl p-5 border border-outline-variant/50 flex items-start gap-4">
+                <span class="text-2xl mt-0.5">📊</span>
+                <div>
+                    <h3 class="font-bold text-on-surface text-sm mb-1">Cutoff Analysis Session</h3>
+                    <p class="text-xs text-on-surface-variant">We walk through real cutoffs from the previous year — state by state, course by course, category by category.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-outline-variant/50 flex items-start gap-4">
+                <span class="text-2xl mt-0.5">🗺️</span>
+                <div>
+                    <h3 class="font-bold text-on-surface text-sm mb-1">Process Explained Simply</h3>
+                    <p class="text-xs text-on-surface-variant">AIQ vs state quota, MCC vs DMER, rounds of counselling — explained in plain language for parents and students.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-outline-variant/50 flex items-start gap-4">
+                <span class="text-2xl mt-0.5">❓</span>
+                <div>
+                    <h3 class="font-bold text-on-surface text-sm mb-1">Live Q&A with Counsellors</h3>
+                    <p class="text-xs text-on-surface-variant">Ask your specific questions to our senior counsellors. No generic answers — we address your score and category directly.</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-5 border border-outline-variant/50 flex items-start gap-4">
+                <span class="text-2xl mt-0.5">📋</span>
+                <div>
+                    <h3 class="font-bold text-on-surface text-sm mb-1">Documents & Deadlines</h3>
+                    <p class="text-xs text-on-surface-variant">Get a clear checklist of what to prepare. Know which deadlines you must never miss and what happens if you do.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Branch locations -->
+    <div class="mb-10">
+        <h2 class="text-xl font-bold text-on-surface mb-5">Seminar locations across Maharashtra</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🏙️</div>
+                <div class="font-bold text-sm text-on-surface">Andheri, Mumbai</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Head Office · J.B. Nagar</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🌆</div>
+                <div class="font-bold text-sm text-on-surface">Thane</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Naupada · Gokhale Road</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🏛️</div>
+                <div class="font-bold text-sm text-on-surface">Pune</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Law College Road</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🌇</div>
+                <div class="font-bold text-sm text-on-surface">Kolhapur</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Rajarampuri</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🌃</div>
+                <div class="font-bold text-sm text-on-surface">Sangli</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Vishrambag Chowk</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 border border-outline-variant/50 text-center">
+                <div class="text-xl mb-1">🏘️</div>
+                <div class="font-bold text-sm text-on-surface">Ch. Sambhajinagar</div>
+                <div class="text-xs text-on-surface-variant mt-0.5">Kalda Corner</div>
+            </div>
+        </div>
+        <p class="text-xs text-on-surface-variant text-center mt-3">Online seminars also available via WhatsApp/Zoom for students outside Maharashtra.</p>
+    </div>
+
+    <!-- Final CTA -->
+    <div class="text-center py-8 px-4 rounded-2xl" style="background:linear-gradient(135deg,#7b41b3,#5a2d8a);">
+        <h3 class="text-xl font-bold text-white mb-2">Don't wait for the seminar</h3>
+        <p class="text-white/75 text-sm mb-4">Book a one-on-one free counselling session now. Same expert advice, private and focused on your profile.</p>
+        <a href="../inquiry.html" class="btn-gold inline-flex items-center gap-2">
+            Book Free Session
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </a>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="asmi-footer mt-8">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-bottom" style="border-top:none;padding-top:0;">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span><a href="../index.html">asmicareer.in</a> · <a href="tel:7410019074">7410019074</a></span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('hamburger').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+</script>
+</body>
+</html>

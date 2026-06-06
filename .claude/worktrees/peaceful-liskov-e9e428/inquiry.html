@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Book your free NEET counselling session with ASMI Career. Submit your details and a counsellor will reach out to you."/>
+    <title>Book Free Counselling | ASMI Career</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="assets/shared.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#705d00",
+                        "surface": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#4d4732",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#7b41b3",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#ffd700",
+                        "outline-variant": "#d0c6ab",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+        .loader-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px 0;
+            margin-top: 10px;
+        }
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #7b41b3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            color: #7b41b3;
+            font-weight: 600;
+            font-size: 16px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<!-- ── NAVBAR ──────────────────────────────────────────────── -->
+<nav class="asmi-nav">
+    <div class="asmi-nav-inner">
+        <a href="index.html" class="asmi-nav-logo">
+            <img src="asmi-logo.png" alt="ASMI Career"/>
+        </a>
+        <ul class="asmi-nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="index.html#tools">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="tools/rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="tools/college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="tools/cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="tools/events.html"><span>🎓</span> Events & Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li class="nav-cta"><a href="inquiry.html" class="active">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="tools/rank-predictor.html">📊 Rank Predictor</a>
+        <a href="tools/college-search.html">🏥 College Search</a>
+        <a href="tools/cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="tools/documents-checklist.html">📋 Documents Checklist</a>
+        <a href="tools/events.html">🎓 Events & Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="index.html#about">About ASMI</a>
+        <a href="index.html#contact">Contact & Branches</a>
+        <a href="inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<!-- ── PAGE HEADER ─────────────────────────────────────────── -->
+<div style="background:linear-gradient(135deg,#7b41b3,#5a2d8a);" class="px-4 py-10 text-center">
+    <p class="text-yellow-300 text-sm font-bold uppercase tracking-widest mb-2">Free · No Obligation · Any Score</p>
+    <h1 class="text-3xl md:text-4xl font-black text-white mb-2">Book Your Free Counselling Session</h1>
+    <p class="text-white/75 max-w-lg mx-auto">Fill in your details below. A counsellor from your nearest branch will reach out within 24 hours.</p>
+</div>
+
+<!-- ── FORM SECTION ────────────────────────────────────────── -->
+<main class="max-w-5xl mx-auto py-10 px-4 md:px-8">
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+
+        <!-- Left panel -->
+        <section class="md:w-2/5 p-8 md:p-10 text-on-secondary flex flex-col" style="background:#7b41b3;">
+            <div class="mb-8">
+                <img alt="ASMI Career Logo" class="h-16 w-auto object-contain mb-6" src="asmi-logo.png"/>
+                <h2 class="text-2xl font-bold text-white mb-5">Our Services</h2>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">verified_user</span>
+                        <span class="text-white/90 text-sm">Complete Admission Guidance</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">groups</span>
+                        <span class="text-white/90 text-sm">Personal One-on-One Counselling</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">format_list_bulleted</span>
+                        <span class="text-white/90 text-sm">Tailored Preference Lists</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">analytics</span>
+                        <span class="text-white/90 text-sm">Accurate Round Cutoffs</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">notifications_active</span>
+                        <span class="text-white/90 text-sm">Real-time Alerts & Updates</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">fact_check</span>
+                        <span class="text-white/90 text-sm">Document Verification Support</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">edit_document</span>
+                        <span class="text-white/90 text-sm">Form Filling Assistance</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary-container" style="font-variation-settings:'FILL' 1;">support_agent</span>
+                        <span class="text-white/90 text-sm">Dedicated Helpline Support</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mt-auto space-y-5 pt-8 border-t border-white/20">
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary-container">call</span>
+                    <div>
+                        <p class="text-xs text-white/60">Helpline</p>
+                        <p id="helplineDisplay" class="text-white font-bold">Loading...</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary-container">location_on</span>
+                    <div>
+                        <p class="text-xs text-white/60">Address</p>
+                        <p id="addressDisplay" class="text-white/90 text-sm leading-snug">Loading details...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right panel — form -->
+        <section class="md:w-3/5 p-8 md:p-10 bg-white flex flex-col">
+            <header class="mb-8">
+                <h2 class="text-2xl font-bold text-secondary mb-1">Admission Inquiry</h2>
+                <p class="text-on-surface-variant text-sm">Welcome to ASMI Career! Please provide your academic and contact details below.</p>
+            </header>
+
+            <form id="inquiryForm" class="space-y-7">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-secondary mb-2">Full Name</label>
+                        <input name="fullName" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Enter student's full name" type="text" required/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">NEET Score</label>
+                        <input name="neetScore" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Out of 720" type="number" required/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">Student Contact No.</label>
+                        <input name="studentContact" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="98765 43210" type="tel" required/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">Father Contact No.</label>
+                        <input name="fatherContact" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Parent's mobile number" type="tel"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">Mother Contact No.</label>
+                        <input name="motherContact" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Parent's mobile number" type="tel"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">Coaching Class</label>
+                        <input name="coachingClass" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Current coaching institute" type="text"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-secondary mb-2">City</label>
+                        <input name="city" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest" placeholder="Current city" type="text" required/>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-secondary mb-2">Category</label>
+                        <select name="category" class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-2 focus:ring-primary focus:border-secondary outline-none bg-surface-container-lowest">
+                            <option value="General">General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="EWS">EWS</option>
+                            <option value="SEBC">SEBC</option>
+                            <option value="Other">VJ/NTB/NTC/NTD/SBC</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-medium text-secondary mb-3">Desired Course</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">MBBS</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">BDS</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">BAMS</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">BPTH</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">BHMS</span></label>
+                        <label class="flex items-center gap-2 cursor-pointer group"><input type="checkbox" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span class="group-hover:text-secondary transition-colors text-sm">BVSC</span></label>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-medium text-secondary mb-3">Estimated Budget Range</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-colors text-sm"><input name="budget" type="checkbox" value="Govt 1-2L" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span>Govt 1–2L</span></label>
+                        <label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-colors text-sm"><input name="budget" type="checkbox" value="Private 7-15L" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span>Private 7–20L</span></label>
+                        <label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-colors text-sm"><input name="budget" type="checkbox" value="Deemed 18-30L" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span>Deemed 10–35L</span></label>
+                        <label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant hover:border-primary cursor-pointer transition-colors text-sm"><input name="budget" type="checkbox" value="NRI / Management 40-50L" class="w-5 h-5 rounded border-outline-variant text-secondary focus:ring-primary"/><span>NRI / Management 20–60L</span></label>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button id="submitBtn" type="submit" class="w-full flex items-center justify-center gap-2 bg-primary-container hover:bg-primary text-on-primary-container py-4 rounded-xl font-bold text-xl shadow-md transition-all duration-200 active:scale-95">
+                        Submit Details
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div id="loader" class="loader-container">
+                        <div class="spinner"></div>
+                        <div class="loader-text">Securing your token...</div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="asmi-footer" id="contact">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-grid">
+            <div class="asmi-footer-brand">
+                <img src="asmi-logo.png" alt="ASMI Career"/>
+                <p>ASMI Career is Maharashtra's leading NEET medical admissions counselling company. 11+ years of experience, 25,000+ admissions.</p>
+                <div class="mt-4 text-sm" style="color:rgba(255,255,255,0.45);">
+                    <div>📞 Central Helpline: <a href="tel:7410019074" style="color:rgba(255,255,255,0.65);">7410019074</a></div>
+                </div>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="tools/rank-predictor.html">Rank Predictor</a></li>
+                    <li><a href="tools/cutoff-explorer.html">Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html">Documents Checklist</a></li>
+                    <li><a href="tools/events.html">Events</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Branches</h4>
+                <ul>
+                    <li><a href="inquiry.html?source=andheri">Mumbai – Andheri</a></li>
+                    <li><a href="inquiry.html?source=thane">Thane</a></li>
+                    <li><a href="inquiry.html?source=pune">Pune</a></li>
+                    <li><a href="inquiry.html?source=kolhapur">Kolhapur</a></li>
+                    <li><a href="inquiry.html?source=sangli">Sangli</a></li>
+                    <li><a href="inquiry.html?source=sambhajinagar">Ch. Sambhajinagar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <div class="asmi-footer-contact-item">
+                    <strong>Andheri (Head Office)</strong>
+                    42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East
+                    <br/><a href="tel:7410019077" style="color:rgba(255,255,255,0.65);">7410019077</a>
+                </div>
+                <div class="asmi-footer-contact-item">
+                    <strong>Thane</strong>
+                    Shah Avenue, Gokhale Road, Naupada
+                    <br/><a href="tel:7410019075" style="color:rgba(255,255,255,0.65);">7410019075</a>
+                </div>
+            </div>
+        </div>
+        <div class="asmi-footer-bottom">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span>asmicareer.in</span>
+        </div>
+    </div>
+</footer>
+
+<!-- ── SUCCESS MODAL ───────────────────────────────────────── -->
+<div id="successModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-xl text-center max-w-sm w-full mx-4 shadow-2xl">
+        <span class="material-symbols-outlined text-6xl text-primary-container mb-4">check_circle</span>
+        <h2 class="text-3xl font-bold text-secondary mb-2">Thank You!</h2>
+        <p class="text-on-surface-variant mb-4">Welcome to ASMI. Your details are registered.</p>
+        <div class="bg-surface py-4 rounded-lg mb-4 border border-outline-variant/30">
+            <p class="text-xs font-semibold uppercase tracking-wider text-secondary mb-1">Your Token Number</p>
+            <p id="tokenDisplay" class="text-4xl font-bold text-on-primary-container">---</p>
+        </div>
+        <!-- Dashboard link section — for counsellor -->
+        <div id="dashLinkBox" style="background:#EDF3FB;border:1px solid #4A90D9;border-radius:12px;padding:12px 14px;margin-bottom:16px;text-align:left">
+            <p style="font-size:11px;font-weight:700;letter-spacing:1px;color:#0A2472;text-transform:uppercase;margin-bottom:6px">📊 Counsellor Dashboard Link</p>
+            <p id="dashLinkText" style="font-size:11px;color:#3A5080;word-break:break-all;margin-bottom:8px;font-family:monospace">—</p>
+            <div style="display:flex;gap:8px">
+                <a id="dashLinkOpen" href="#" target="_blank" style="flex:1;background:#0A2472;color:#fff;border:none;border-radius:8px;padding:8px 0;font-size:12px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer">Open Dashboard →</a>
+                <button id="dashLinkCopy" onclick="copyDashLink()" style="flex:1;background:#F5A623;color:#0A2472;border:none;border-radius:8px;padding:8px 0;font-size:12px;font-weight:700;cursor:pointer">Copy Link</button>
+            </div>
+        </div>
+        <p class="text-sm opacity-80">Please take a seat. A counsellor will call your token shortly.</p>
+        <button onclick="document.getElementById('successModal').classList.add('hidden')" style="margin-top:14px;background:none;border:1px solid #ddd;border-radius:8px;padding:8px 20px;font-size:13px;color:#666;cursor:pointer;width:100%">Close</button>
+    </div>
+</div>
+
+<script>
+    // ── BRANCH DATA ──
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashSource = window.location.hash.replace('#', '').trim();
+const source = hashSource || urlParams.get('source') || 'Online';
+
+    const branchDetails = {
+        'andheri':       { phone: '7410019077', address: '42, 4th Floor, A Wing, Silver Astra, J. B. Nagar, Andheri East.' },
+        'thane':         { phone: '7410019075', address: '411, 4th floor, Shah Avenue, Gokhale Road, Besides Mango Stationary, Naupada, Thane West - 400602' },
+        'pune':          { phone: '7410013458', address: 'Business Guild Complex, Office No. 302, 3rd floor, In front of hotel new Wadeshwar, Law college road.' },
+        'kolhapur':      { phone: '7057575833', address: 'B-203, Muktashram Appt., Opp. Planet Fashion, 7th Lane, Rajarampuri.' },
+        'sangli':        { phone: '7410019706', address: 'Flat No. 6, Satya Apartment, Above Picock Photo Studio, Vishrambag Chowk.' },
+        'sambhajinagar': { phone: '8484980032', address: 'Shrinidhi Building, Plot No. 95, Shrey Nagar, near HDFC Bank, Kalda Corner.' },
+        'online':        { phone: '7410019074 (Central Helpline)', address: '<strong>Head Office:</strong> 42, 4th Floor, A Wing, Silver Astra, J. B. Nagar, Andheri East.<br><br><strong>Regional Offices:</strong> Pune | Thane | Kolhapur | Sangli | Ch. Sambhajinagar' }
+    };
+
+    const currentBranch = branchDetails[source.toLowerCase()] || branchDetails['online'];
+    document.getElementById('helplineDisplay').innerHTML = currentBranch.phone;
+    document.getElementById('addressDisplay').innerHTML = currentBranch.address;
+
+    // ── FORM SUBMISSION ──
+    const form = document.getElementById('inquiryForm');
+    const successModal = document.getElementById('successModal');
+    const tokenDisplay = document.getElementById('tokenDisplay');
+    const submitBtn = document.getElementById('submitBtn');
+    const loader = document.getElementById('loader');
+
+    // ACTIVE GOOGLE APP SCRIPT URL — DO NOT CHANGE
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        submitBtn.style.display = 'none';
+        loader.style.display = 'flex';
+
+        const data = new URLSearchParams();
+        const formData = new FormData(form);
+
+        data.append('source', source);
+
+        for (const pair of formData) {
+            if (pair[0] !== 'budget' && pair[0] !== 'courses') {
+                data.append(pair[0], pair[1]);
+            }
+        }
+
+        const selectedCourses = Array.from(document.querySelectorAll('input[type="checkbox"]:not([name="budget"]):checked'))
+                                     .map(cb => cb.nextElementSibling.innerText.trim());
+        data.append('courses', selectedCourses.join(', '));
+
+        const selectedBudgets = Array.from(document.querySelectorAll('input[name="budget"]:checked'))
+                                     .map(cb => cb.value.trim());
+        data.append('budget', selectedBudgets.join(', '));
+
+        fetch(scriptURL, { method: 'POST', body: data })
+        .then(response => response.text())
+        .then(tokenText => {
+            const token = tokenText.trim();
+            tokenDisplay.innerText = token;
+
+            // Build dashboard URL
+            const dashBase = 'dashboard.html';
+            const dashURL = `${dashBase}?token=${encodeURIComponent(token)}&source=${encodeURIComponent(source)}`;
+            document.getElementById('dashLinkText').textContent = dashURL;
+            document.getElementById('dashLinkOpen').href = dashURL;
+
+            successModal.classList.remove('hidden');
+            form.reset();
+            loader.style.display = 'none';
+            submitBtn.style.display = 'flex';
+            // No auto-hide — counsellor needs time to open/copy the dashboard link
+        })
+        .catch(error => {
+            console.error('Network Error!', error);
+            loader.style.display = 'none';
+            submitBtn.style.display = 'flex';
+            submitBtn.innerHTML = 'Submission Failed. Try Again.';
+            submitBtn.classList.add('bg-red-500', 'text-white');
+            setTimeout(() => {
+                submitBtn.innerHTML = `Submit Details <span class="material-symbols-outlined">chevron_right</span>`;
+                submitBtn.classList.remove('bg-red-500', 'text-white');
+            }, 4000);
+        });
+    });
+
+    // Copy dashboard link
+    function copyDashLink() {
+        const link = document.getElementById('dashLinkText').textContent;
+        navigator.clipboard.writeText(link).then(() => {
+            const btn = document.getElementById('dashLinkCopy');
+            btn.textContent = 'Copied ✓';
+            btn.style.background = '#16A34A';
+            btn.style.color = '#fff';
+            setTimeout(() => {
+                btn.textContent = 'Copy Link';
+                btn.style.background = '#F5A623';
+                btn.style.color = '#0A2472';
+            }, 2000);
+        });
+    }
+
+    // Mobile nav
+    document.getElementById('hamburger').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+</script>
+</body>
+</html>

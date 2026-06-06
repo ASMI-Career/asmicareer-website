@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cutoff Explorer | ASMI Career</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="../assets/shared.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#705d00", "surface": "#f8f9fa", "on-surface": "#191c1d",
+                        "on-surface-variant": "#4d4732", "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff", "secondary": "#7b41b3",
+                        "on-secondary": "#ffffff", "primary-container": "#ffd700", "outline-variant": "#d0c6ab",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }</style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+
+<nav class="asmi-nav">
+    <div class="asmi-nav-inner">
+        <a href="../index.html" class="asmi-nav-logo"><img src="../asmi-logo.png" alt="ASMI Career"/></a>
+        <ul class="asmi-nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="../index.html#tools" class="active">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="events.html"><span>🎓</span> Events & Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="../index.html#about">About</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+            <li class="nav-cta"><a href="../inquiry.html">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="../index.html">🏠 Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="rank-predictor.html">📊 Rank Predictor</a>
+        <a href="college-search.html">🏥 College Search</a>
+        <a href="cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="documents-checklist.html">📋 Documents Checklist</a>
+        <a href="events.html">🎓 Events & Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="../index.html#about">About ASMI</a>
+        <a href="../index.html#contact">Contact & Branches</a>
+        <a href="../inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<div class="tool-shell-hero">
+    <div class="tool-shell-badge">📈 Free Tool</div>
+    <h1>Cutoff Explorer</h1>
+    <p>Browse 2025–26 NEET cutoffs by state, course, and category. See exactly where your score stands before counselling begins.</p>
+    <a href="../inquiry.html" class="btn-gold">Get Personalised Cutoff Analysis</a>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="tool-coming-soon">
+        <div class="icon">📈</div>
+        <h2>Cutoff Explorer — Coming Soon</h2>
+        <p>We are building an interactive cutoff browser using verified 2025–26 data covering all states, courses, and categories including Open, OBC, SC, ST, EWS, and SEBC.</p>
+        <p class="text-sm text-on-surface-variant mt-2">Our counsellors already have complete cutoff data and can walk you through it during a free session.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mt-4">
+            <a href="../inquiry.html" class="btn-gold">Book Free Session</a>
+            <a href="../index.html#tools" class="btn-outline">Back to Tools</a>
+        </div>
+    </div>
+
+    <div class="mt-10">
+        <h3 class="text-lg font-bold text-on-surface mb-4">Explore Other Tools</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="rank-predictor.html" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-outline-variant/50 hover:border-secondary transition-colors no-underline">
+                <span class="text-2xl">📊</span>
+                <div><div class="font-semibold text-on-surface text-sm">Rank Predictor</div><div class="text-xs text-on-surface-variant">Estimate your All India Rank</div></div>
+            </a>
+            <a href="documents-checklist.html" class="flex items-center gap-4 bg-white rounded-xl p-4 border border-outline-variant/50 hover:border-secondary transition-colors no-underline">
+                <span class="text-2xl">📋</span>
+                <div><div class="font-semibold text-on-surface text-sm">Documents Checklist</div><div class="text-xs text-on-surface-variant">Know what you need before the deadline</div></div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<footer class="asmi-footer mt-8">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-bottom" style="border-top:none;padding-top:0;">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span><a href="../index.html">asmicareer.in</a> · <a href="tel:7410019074">7410019074</a></span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('hamburger').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+</script>
+</body>
+</html>

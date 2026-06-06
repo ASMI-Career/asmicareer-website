@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="ASMI Career — Maharashtra's most trusted NEET medical admissions counsellors. 11+ years, 25,000+ admissions. Expert guidance for MBBS, BDS, BAMS, BHMS."/>
+    <title>ASMI Career — NEET Medical Admissions Counselling</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="assets/shared.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#705d00",
+                        "surface": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "on-surface-variant": "#4d4732",
+                        "on-primary-container": "#705e00",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#7b41b3",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#ffd700",
+                        "outline-variant": "#d0c6ab",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+        /* Hero */
+        .hero-section {
+            background: linear-gradient(135deg, #7b41b3 0%, #5a2d8a 60%, #3d1c6e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255,215,0,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        .hero-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            background: #ffd700;
+        }
+
+        /* Service card hover */
+        .service-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(123,65,179,0.15); }
+
+        /* Step connector */
+        .step-connector {
+            width: 2px;
+            background: linear-gradient(to bottom, #ffd700, rgba(255,215,0,0.1));
+            height: 40px;
+            margin: 0 auto;
+        }
+
+        /* Tool card */
+        .tool-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(123,65,179,0.18); }
+
+        /* Testimonial card */
+        .testimonial-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            border: 1px solid #ede9f7;
+        }
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #7b41b3;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* Scroll reveal */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.6s ease both; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+
+<!-- ── NAVBAR ──────────────────────────────────────────────── -->
+<nav class="asmi-nav">
+    <div class="asmi-nav-inner">
+        <a href="index.html" class="asmi-nav-logo">
+            <img src="asmi-logo.png" alt="ASMI Career"/>
+        </a>
+        <ul class="asmi-nav-links">
+            <li><a href="index.html" class="active">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="#tools">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="tools/rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="tools/college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="tools/cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="tools/events.html"><span>🎓</span> Events & Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="nav-cta"><a href="inquiry.html">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="tools/rank-predictor.html">📊 Rank Predictor</a>
+        <a href="tools/college-search.html">🏥 College Search</a>
+        <a href="tools/cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="tools/documents-checklist.html">📋 Documents Checklist</a>
+        <a href="tools/events.html">🎓 Events & Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="#about">About ASMI</a>
+        <a href="#contact">Contact & Branches</a>
+        <a href="inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="hero-section py-16 md:py-24 px-4">
+    <div class="hero-pattern"></div>
+    <div class="hero-dots"></div>
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-6">
+            <span class="w-2 h-2 rounded-full bg-yellow-300 animate-pulse"></span>
+            <span class="text-white/90 text-sm font-medium">Maharashtra's Most Trusted NEET Counsellors</span>
+        </div>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
+            Your NEET Score Deserves<br class="hidden md:block"/>
+            <span style="color:#ffd700;">the Right College</span>
+        </h1>
+        <p class="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed">
+            Expert, honest guidance through every round of NEET counselling —
+            from choice filling to confirmed admission. No confusion, no missed deadlines.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="inquiry.html" class="btn-gold text-base px-7 py-4 rounded-xl shadow-lg">
+                Book Free Counselling
+                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+            </a>
+            <a href="#tools" class="btn-outline text-base px-7 py-4 rounded-xl" style="color:#fff;border-color:rgba(255,255,255,0.40);">
+                Explore Free Tools
+                <span class="material-symbols-outlined text-xl">construction</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── STATS BAR ───────────────────────────────────────────── -->
+<div class="stats-bar">
+    <div class="max-w-5xl mx-auto px-4 py-5 grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-yellow-400/40">
+        <div class="text-center px-4">
+            <div class="text-2xl md:text-3xl font-black text-on-primary-container">25,000+</div>
+            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Admissions Secured</div>
+        </div>
+        <div class="text-center px-4">
+            <div class="text-2xl md:text-3xl font-black text-on-primary-container">11+</div>
+            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Years of Experience</div>
+        </div>
+        <div class="text-center px-4">
+            <div class="text-2xl md:text-3xl font-black text-on-primary-container">6</div>
+            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Branches in Maharashtra</div>
+        </div>
+        <div class="text-center px-4">
+            <div class="text-2xl md:text-3xl font-black text-on-primary-container">All India</div>
+            <div class="text-xs font-semibold text-on-surface-variant mt-0.5">Coverage — Every State</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── WHY ASMI ────────────────────────────────────────────── -->
+<section id="about" class="py-16 px-4 bg-white">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Why Families Trust Us</p>
+            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">Everything you need,<br/>in one counselling team</h2>
+            <p class="text-on-surface-variant max-w-xl mx-auto">NEET counselling has dozens of moving parts. We handle every one of them so you don't have to figure it out alone.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Card 1 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">verified_user</span>
+                <h3 class="font-bold text-on-surface mb-1">Complete Admission Guidance</h3>
+                <p class="text-sm text-on-surface-variant">From AIQ to state quota — every process covered, round by round.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">groups</span>
+                <h3 class="font-bold text-on-surface mb-1">One-on-One Counselling</h3>
+                <p class="text-sm text-on-surface-variant">A dedicated counsellor who knows your profile, score, and goals personally.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">format_list_bulleted</span>
+                <h3 class="font-bold text-on-surface mb-1">Tailored Preference Lists</h3>
+                <p class="text-sm text-on-surface-variant">Strategically built college lists that maximise your upgradation chances.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">analytics</span>
+                <h3 class="font-bold text-on-surface mb-1">Accurate Round Cutoffs</h3>
+                <p class="text-sm text-on-surface-variant">Real data — not guesswork. Know exactly where your score stands.</p>
+            </div>
+            <!-- Card 5 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">notifications_active</span>
+                <h3 class="font-bold text-on-surface mb-1">Real-time Alerts</h3>
+                <p class="text-sm text-on-surface-variant">WhatsApp updates on every deadline, schedule change, and allotment result.</p>
+            </div>
+            <!-- Card 6 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">fact_check</span>
+                <h3 class="font-bold text-on-surface mb-1">Document Verification</h3>
+                <p class="text-sm text-on-surface-variant">We check every certificate before submission. No surprises at reporting.</p>
+            </div>
+            <!-- Card 7 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">edit_document</span>
+                <h3 class="font-bold text-on-surface mb-1">Form Filling Assistance</h3>
+                <p class="text-sm text-on-surface-variant">We sit with you and fill every form, so no field is missed or wrong.</p>
+            </div>
+            <!-- Card 8 -->
+            <div class="service-card bg-surface rounded-2xl p-5 border border-outline-variant/50">
+                <span class="material-symbols-outlined text-3xl text-secondary mb-3 block" style="font-variation-settings:'FILL' 1;">support_agent</span>
+                <h3 class="font-bold text-on-surface mb-1">Dedicated Helpline</h3>
+                <p class="text-sm text-on-surface-variant">Direct access to your counsellor during the entire admission season.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── HOW IT WORKS ────────────────────────────────────────── -->
+<section class="py-16 px-4 bg-surface">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Simple Process</p>
+            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">From NEET score to<br/>confirmed admission</h2>
+            <p class="text-on-surface-variant max-w-md mx-auto">Three clear steps. We guide you through every detail at each stage.</p>
+        </div>
+        <div class="max-w-xl mx-auto">
+            <!-- Step 1 -->
+            <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#ffd700;color:#705d00;">1</div>
+                    <div class="step-connector mt-1"></div>
+                </div>
+                <div class="pb-8">
+                    <h3 class="text-xl font-bold text-on-surface mb-1">Share Your Details</h3>
+                    <p class="text-on-surface-variant">Fill the inquiry form with your NEET score, category, and preferred courses. It takes 2 minutes and is completely free.</p>
+                    <a href="inquiry.html" class="inline-flex items-center gap-1 text-secondary font-semibold text-sm mt-2 hover:underline">
+                        Go to inquiry form <span class="material-symbols-outlined text-base">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#7b41b3;color:#fff;">2</div>
+                    <div class="step-connector mt-1"></div>
+                </div>
+                <div class="pb-8">
+                    <h3 class="text-xl font-bold text-on-surface mb-1">Meet Your Counsellor</h3>
+                    <p class="text-on-surface-variant">Your dedicated counsellor analyses your score, category, and budget. You get a clear, honest picture of every college you can get — with no false promises.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="flex items-start gap-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center font-black text-lg flex-shrink-0" style="background:#ffd700;color:#705d00;">3</div>
+                </div>
+                <div class="pb-0">
+                    <h3 class="text-xl font-bold text-on-surface mb-1">Get Your Seat Confirmed</h3>
+                    <p class="text-on-surface-variant">We guide you through every counselling round — choice filling, allotments, upgrades, documents, and final reporting. Until you walk into your college.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── TOOLS PREVIEW ───────────────────────────────────────── -->
+<section id="tools" class="py-16 px-4 bg-white">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-secondary text-sm font-bold uppercase tracking-widest mb-2">Free Student Tools</p>
+            <h2 class="text-3xl md:text-4xl font-black text-on-surface mb-3">Research smarter,<br/>decide with confidence</h2>
+            <p class="text-on-surface-variant max-w-xl mx-auto">Use our free tools to understand your options before your counselling session.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <a href="tools/rank-predictor.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
+                <div class="text-4xl mb-3">📊</div>
+                <h3 class="font-bold text-lg text-on-surface mb-1">Rank Predictor</h3>
+                <p class="text-sm text-on-surface-variant">Estimate your All India Rank from your NEET score and see where you stand nationally.</p>
+                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
+                    Try tool <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+            <a href="tools/college-search.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
+                <div class="text-4xl mb-3">🏥</div>
+                <h3 class="font-bold text-lg text-on-surface mb-1">College Search</h3>
+                <p class="text-sm text-on-surface-variant">Search and compare medical colleges across India by state, course, fees, and seats.</p>
+                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
+                    Search colleges <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+            <a href="tools/cutoff-explorer.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
+                <div class="text-4xl mb-3">📈</div>
+                <h3 class="font-bold text-lg text-on-surface mb-1">Cutoff Explorer</h3>
+                <p class="text-sm text-on-surface-variant">Browse 2025–26 cutoffs by state, course, and category. Know if your score qualifies.</p>
+                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
+                    Explore cutoffs <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+            <a href="tools/documents-checklist.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
+                <div class="text-4xl mb-3">📋</div>
+                <h3 class="font-bold text-lg text-on-surface mb-1">Documents Checklist</h3>
+                <p class="text-sm text-on-surface-variant">Know exactly which documents you need for each counselling process — before it's urgent.</p>
+                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
+                    View checklist <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+            <a href="tools/events.html" class="tool-card block bg-surface rounded-2xl p-6 border border-outline-variant/50">
+                <div class="text-4xl mb-3">🎓</div>
+                <h3 class="font-bold text-lg text-on-surface mb-1">Events & Seminars</h3>
+                <p class="text-sm text-on-surface-variant">Join our free NEET counselling seminars across Maharashtra. In-person and online.</p>
+                <div class="mt-3 text-secondary text-sm font-semibold flex items-center gap-1">
+                    See events <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+            <!-- Book CTA card -->
+            <a href="inquiry.html" class="tool-card block rounded-2xl p-6" style="background:linear-gradient(135deg,#7b41b3,#5a2d8a);">
+                <div class="text-4xl mb-3">🤝</div>
+                <h3 class="font-bold text-lg text-white mb-1">Talk to a Counsellor</h3>
+                <p class="text-sm text-white/75">Still confused? Book a free one-on-one session. We'll explain everything in your language.</p>
+                <div class="mt-3 font-bold text-sm flex items-center gap-1" style="color:#ffd700;">
+                    Book free session <span class="material-symbols-outlined text-base">arrow_forward</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ── TESTIMONIALS ────────────────────────────────────────── -->
+<section class="py-16 px-4" style="background:linear-gradient(135deg,#ffd700 0%,#ffe866 100%);">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <p class="text-on-primary-container text-sm font-bold uppercase tracking-widest mb-2">Student Stories</p>
+            <h2 class="text-3xl md:text-4xl font-black text-secondary mb-3">Voices of Success</h2>
+            <p class="text-on-surface-variant max-w-md mx-auto">Real students. Real colleges. Real results.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
+                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle. His timely direction kept me stress-free throughout the process and helped me make confident decisions that eventually led me to KEM Mumbai."</p>
+                <div class="flex items-center gap-3">
+                    <div class="testimonial-avatar">HP</div>
+                    <div>
+                        <div class="font-bold text-on-surface text-sm">Hazel Punmiya</div>
+                        <div class="text-secondary text-xs font-semibold">KEM, Mumbai</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
+                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused. His guidance made the entire journey feel manageable and helped me reach AIIMS Delhi with complete confidence."</p>
+                <div class="flex items-center gap-3">
+                    <div class="testimonial-avatar">SG</div>
+                    <div>
+                        <div class="font-bold text-on-surface text-sm">Shrihaan Ghare</div>
+                        <div class="text-secondary text-xs font-semibold">AIIMS Delhi</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
+                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"Comparing top colleges was challenging, but ASMI Career helped me understand the bigger picture. Anish Sir's insights on reputation, exposure, and opportunities showed why KMC Manipal stands out nationally. That clarity made my final decision smooth, helping me choose what was right."</p>
+                <div class="flex items-center gap-3">
+                    <div class="testimonial-avatar">DM</div>
+                    <div>
+                        <div class="font-bold text-on-surface text-sm">Dhruv Mundra</div>
+                        <div class="text-secondary text-xs font-semibold">KMC Manipal</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Testimonial 4 -->
+            <div class="testimonial-card">
+                <p class="text-on-surface-variant text-sm leading-relaxed mb-4">"With a strong score and several options, what I needed most was clarity. Anish Sir helped me evaluate every college carefully and explained why KJ Somaiya offered better long-term stability than the newer GMCs. That direction shaped my decision and gave me confidence in choosing KJ Somaiya."</p>
+                <div class="flex items-center gap-3">
+                    <div class="testimonial-avatar">IT</div>
+                    <div>
+                        <div class="font-bold text-on-surface text-sm">Isha Tilak</div>
+                        <div class="text-secondary text-xs font-semibold">KJ Somaiya, Mumbai</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="text-center text-on-primary-container/60 text-xs mt-6">...and 25,000+ more families across Maharashtra</p>
+    </div>
+</section>
+
+<!-- ── FINAL CTA ───────────────────────────────────────────── -->
+<section class="py-16 px-4" style="background:#7b41b3;">
+    <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-black text-white mb-3">Ready to secure your<br/>medical seat?</h2>
+        <p class="text-white/75 mb-8 text-lg">Book your free counselling session today. No pressure, no cost — just honest advice from people who know NEET inside out.</p>
+        <a href="inquiry.html" class="btn-gold text-lg px-8 py-4 rounded-xl inline-flex items-center gap-2 shadow-xl">
+            Book Free Counselling
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+        <div class="mt-6 flex flex-wrap justify-center gap-4 text-white/60 text-sm">
+            <span>✓ Free, no obligation</span>
+            <span>✓ In-person or phone</span>
+            <span>✓ Any NEET score welcome</span>
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<footer class="asmi-footer" id="contact">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-grid">
+            <div class="asmi-footer-brand">
+                <img src="asmi-logo.png" alt="ASMI Career"/>
+                <p>ASMI Career is Maharashtra's leading NEET medical admissions counselling company. 11+ years of experience, 25,000+ admissions, and a team that genuinely cares about your future.</p>
+                <div class="mt-4 text-sm" style="color:rgba(255,255,255,0.45);">
+                    <div>📞 Central Helpline: <a href="tel:7410019074" style="color:rgba(255,255,255,0.65);">7410019074</a></div>
+                    <div class="mt-1">🌐 asmicareer.in</div>
+                </div>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="inquiry.html">Book Counselling</a></li>
+                    <li><a href="tools/rank-predictor.html">Rank Predictor</a></li>
+                    <li><a href="tools/cutoff-explorer.html">Cutoff Explorer</a></li>
+                    <li><a href="tools/documents-checklist.html">Documents Checklist</a></li>
+                    <li><a href="tools/events.html">Events</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Branches</h4>
+                <ul>
+                    <li><a href="inquiry.html?source=andheri">Mumbai – Andheri</a></li>
+                    <li><a href="inquiry.html?source=thane">Thane</a></li>
+                    <li><a href="inquiry.html?source=pune">Pune</a></li>
+                    <li><a href="inquiry.html?source=kolhapur">Kolhapur</a></li>
+                    <li><a href="inquiry.html?source=sangli">Sangli</a></li>
+                    <li><a href="inquiry.html?source=sambhajinagar">Ch. Sambhajinagar</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <div class="asmi-footer-contact-item">
+                    <strong>Andheri (Head Office)</strong>
+                    42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East
+                    <br/><a href="tel:7410019077" style="color:rgba(255,255,255,0.65);">7410019077</a>
+                </div>
+                <div class="asmi-footer-contact-item">
+                    <strong>Thane</strong>
+                    Shah Avenue, Gokhale Road, Naupada
+                    <br/><a href="tel:7410019075" style="color:rgba(255,255,255,0.65);">7410019075</a>
+                </div>
+                <div class="asmi-footer-contact-item">
+                    <strong>Pune</strong>
+                    Business Guild Complex, Law College Road
+                    <br/><a href="tel:7410013458" style="color:rgba(255,255,255,0.65);">7410013458</a>
+                </div>
+            </div>
+        </div>
+        <div class="asmi-footer-bottom">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span>ASMI Career · asmicareer.in</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile hamburger toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                mobileMenu.classList.remove('open');
+            }
+        });
+    });
+</script>
+</body>
+</html>

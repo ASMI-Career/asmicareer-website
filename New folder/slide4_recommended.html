@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI — Your Recommended Path</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFD700;--navy:#1a0040;--purple:#6a0dad;--mid:#2D0A5E;--soft:#4a0080;
+  --card:rgba(255,255,255,.58);--cb:rgba(106,13,173,.18);
+  --safe:#15803d;--safe-bg:rgba(21,128,61,.10);--safe-border:rgba(21,128,61,.25);
+  --likely:#0369a1;--likely-bg:rgba(56,189,248,.11);--likely-border:rgba(56,189,248,.24);
+  --border-col:rgba(106,13,173,.10);--borderline:#b45309;--borderline-bg:rgba(251,146,60,.10);--borderline-border:rgba(251,146,60,.24);
+  --reach:#b91c1c;--reach-bg:rgba(185,28,28,.08);--reach-border:rgba(185,28,28,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
+
+.bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 92% 8%,rgba(106,13,173,.14) 0%,transparent 40%),
+             radial-gradient(circle at 8% 90%,rgba(45,10,94,.09) 0%,transparent 35%);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(26,0,64,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,0,64,.05) 1px,transparent 1px);
+  background-size:52px 52px;}
+
+/* ── LAYOUT ── */
+.page{position:relative;z-index:1;width:100%;height:100%;display:grid;grid-template-columns:300px 1fr;}
+
+/* ════ LEFT PANEL ════ */
+.left{
+  display:flex;flex-direction:column;
+  padding:28px 24px 28px 32px;
+  border-right:1px solid rgba(26,0,64,.10);
+  background:rgba(255,255,255,.12);
+}
+
+.logo-wrap{margin-bottom:24px;animation:fadeUp .5s ease both;}
+.logo-wrap img{height:48px;width:auto;object-fit:contain;filter:drop-shadow(0 3px 10px rgba(26,0,64,.14));}
+
+.step-label{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;animation:fadeUp .5s .05s ease both;}
+
+.rec-heading{font-family:'Montserrat';font-weight:900;font-size:1.55rem;line-height:1.1;color:var(--navy);margin-bottom:6px;animation:fadeUp .5s .1s ease both;}
+.rec-heading em{color:var(--purple);font-style:normal;}
+
+.rec-sub{font-size:.78rem;color:var(--mid);line-height:1.6;margin-bottom:20px;animation:fadeUp .5s .14s ease both;}
+
+/* Profile summary card */
+.profile-card{
+  background:linear-gradient(145deg,var(--navy),var(--mid));
+  border-radius:14px;padding:16px 18px;margin-bottom:16px;
+  animation:fadeUp .5s .18s ease both;
+}
+.pc-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,215,0,.6);margin-bottom:10px;}
+.pc-rows{}
+.pc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+.pc-row:last-child{border-bottom:none;}
+.pc-key{font-size:.72rem;color:rgba(255,255,255,.5);}
+.pc-val{font-family:'Montserrat';font-weight:800;font-size:.82rem;color:#fff;}
+.pc-val.score{color:#FFD700;font-size:1.1rem;}
+
+/* Counsellor note */
+.counsellor-note{
+  background:var(--card);border:1px solid var(--cb);border-radius:12px;
+  padding:13px 15px;flex:1;margin-bottom:16px;
+  animation:fadeUp .5s .22s ease both;
+}
+.cn-icon{font-size:1.2rem;margin-bottom:7px;}
+.cn-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.cn-text{font-size:.76rem;color:var(--mid);line-height:1.6;font-style:italic;}
+
+/* Legend */
+.legend{display:flex;flex-direction:column;gap:5px;animation:fadeUp .5s .26s ease both;}
+.legend-label{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--soft);margin-bottom:4px;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--mid);}
+.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* Tier badges on left */
+.tier-badge{
+  display:inline-block;font-family:'Montserrat';font-size:.6rem;font-weight:800;
+  padding:2px 9px;border-radius:6px;letter-spacing:.5px;
+}
+.tb-bestbet{background:linear-gradient(135deg,#FFD700,#f59e0b);color:var(--navy);}
+.tb-strong{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
+.tb-consider{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
+.tb-backup{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
+
+/* ════ RIGHT PANEL ════ */
+.right{display:flex;flex-direction:column;padding:28px 32px 24px 28px;overflow:hidden;}
+
+.right-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;animation:fadeUp .5s .06s ease both;}
+.rh-title{font-family:'Montserrat';font-weight:900;font-size:1.05rem;color:var(--navy);}
+.rh-sub{font-size:.72rem;color:var(--soft);margin-top:2px;}
+.rh-badge{background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;font-family:'Montserrat';font-size:.65rem;font-weight:800;padding:5px 14px;border-radius:20px;letter-spacing:.5px;white-space:nowrap;}
+
+/* Tier sections */
+.tiers-wrap{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+.tiers-wrap::-webkit-scrollbar{width:4px;}
+.tiers-wrap::-webkit-scrollbar-thumb{background:rgba(106,13,173,.25);border-radius:10px;}
+
+.tier-section{flex-shrink:0;}
+.tier-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.tier-icon{font-size:1rem;}
+.tier-title{font-family:'Montserrat';font-weight:800;font-size:.75rem;color:var(--navy);}
+.tier-count{font-size:.67rem;color:var(--soft);margin-left:auto;}
+
+/* College recommendation card */
+.rec-cards{display:flex;flex-direction:column;gap:6px;}
+.rec-card{
+  background:rgba(255,255,255,.62);border:1px solid var(--cb);
+  border-radius:11px;padding:10px 14px;
+  display:grid;grid-template-columns:1fr auto;gap:8px;
+  align-items:center;
+  opacity:0;transform:translateX(20px);
+  transition:background .2s,border-color .2s;
+}
+.rec-card:hover{background:rgba(255,255,255,.88);border-color:rgba(106,13,173,.3);}
+.rec-card.visible{opacity:1;transform:translateX(0);}
+
+.rc-left{}
+.rc-top{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.rc-name{font-family:'Montserrat';font-weight:800;font-size:.8rem;color:var(--navy);line-height:1.2;}
+.rc-pool{display:inline-block;font-family:'Montserrat';font-size:.57rem;font-weight:800;padding:2px 7px;border-radius:5px;background:rgba(106,13,173,.10);color:var(--purple);border:1px solid rgba(106,13,173,.18);white-space:nowrap;}
+.rc-note{font-size:.68rem;color:var(--soft);line-height:1.4;}
+
+.rc-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.rc-fee{font-family:'Montserrat';font-size:.72rem;font-weight:700;color:var(--mid);white-space:nowrap;}
+.prob{display:inline-block;font-family:'Montserrat';font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:7px;}
+.prob-safe{background:var(--safe-bg);color:var(--safe);border:1px solid var(--safe-border);}
+.prob-likely{background:var(--likely-bg);color:var(--likely);border:1px solid var(--likely-border);}
+.prob-borderline{background:var(--borderline-bg);color:var(--borderline);border:1px solid var(--borderline-border);}
+
+/* Best bet highlight */
+.tier-section.bestbet .rec-card{background:rgba(255,215,0,.22);border-color:rgba(245,158,11,.35);}
+.tier-section.bestbet .rec-card:hover{background:rgba(255,215,0,.38);}
+
+/* Empty state */
+.no-recs{padding:24px;text-align:center;font-size:.82rem;color:var(--soft);}
+
+/* Bottom nav */
+.bottom-nav{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;margin-top:12px;animation:fadeUp .5s .3s ease both;}
+.bn-note{font-size:.72rem;color:var(--soft);font-style:italic;}
+.bn-btn{
+  background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+  font-family:'Montserrat';font-weight:800;font-size:.82rem;
+  padding:10px 24px;border-radius:50px;border:none;cursor:pointer;
+  letter-spacing:.5px;box-shadow:0 6px 20px rgba(26,0,64,.25);transition:.2s;
+  text-decoration:none;
+}
+.bn-btn:hover{transform:scale(1.04);}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:var(--bg);}
+.loading-overlay.hidden{display:none;}
+.spinner{width:38px;height:38px;border:4px solid rgba(106,13,173,.15);border-top:4px solid var(--purple);border-radius:50%;animation:spin .9s linear infinite;}
+.ov-text{font-family:'Montserrat';font-size:.78rem;font-weight:700;color:var(--soft);letter-spacing:1px;}
+
+.slide-counter{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="ov-text">Building your recommendation...</div>
+</div>
+
+<div class="page hidden" id="mainPage">
+
+  <!-- ════ LEFT ════ -->
+  <div class="left">
+
+    <div class="logo-wrap"><img src="ASMI Logo.png" alt="ASMI"></div>
+
+    <div class="step-label">Step 4 of 6 — Your Path</div>
+
+    <div class="rec-heading">Your Best<br><em>Options.</em><br>Curated.</div>
+
+    <p class="rec-sub">Based on your score, category, and budget — here is ASMI's shortlist of what you should be targeting this counselling season.</p>
+
+    <!-- Profile summary -->
+    <div class="profile-card">
+      <div class="pc-label">Your Profile</div>
+      <div class="pc-rows">
+        <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
+        <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
+        <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
+        <div class="pc-row"><span class="pc-key">Data basis</span><span class="pc-val" style="font-size:.7rem;color:rgba(255,255,255,.6)">2025–26 + 15 adj.</span></div>
+      </div>
+    </div>
+
+    <!-- Counsellor note -->
+    <div class="counsellor-note">
+      <div class="cn-icon">👨‍⚕️</div>
+      <div class="cn-label">ASMI Counsellor's View</div>
+      <div class="cn-text" id="counsellorNote">Loading analysis...</div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-label">What the tags mean</div>
+      <div class="legend-item"><span class="ld" style="background:#f59e0b"></span>Best Bet — Target first</div>
+      <div class="legend-item"><span class="ld" style="background:var(--safe)"></span>Strong Option — High confidence</div>
+      <div class="legend-item"><span class="ld" style="background:var(--likely)"></span>Consider — Good backup</div>
+      <div class="legend-item"><span class="ld" style="background:var(--borderline)"></span>Borderline — Worth a try</div>
+    </div>
+
+  </div>
+
+  <!-- ════ RIGHT ════ -->
+  <div class="right">
+
+    <div class="right-header">
+      <div>
+        <div class="rh-title">Recommended Colleges — ASMI Shortlist</div>
+        <div class="rh-sub" id="rhSub">Across all pools · prioritised by your best chance</div>
+      </div>
+      <div class="rh-badge" id="totalBadge">— options</div>
+    </div>
+
+    <div class="tiers-wrap" id="tiersWrap">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="bottom-nav">
+      <div class="bn-note">These recommendations are based on 2025–26 cutoffs with +15 projection.</div>
+      <a class="bn-btn" id="nextBtn" href="slide5_problems.html">See Why ASMI →</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="slide-counter">SLIDE 4 OF 6</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+const DB_URL  = 'ASMI_DB_Final.json';
+const FEE_URL = 'fee_map.json';
+
+let DB={}, FEE={}, STUDENT={};
+
+// ── SESSION ──────────────────────────────────────────────────────
+function getSess(){ try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};} }
+
+function activeScore(){    return parseInt(getSess().score    || STUDENT.score    || 0); }
+function activeCategory(){ return getSess().category || STUDENT.category || 'General'; }
+function activeCourse(){   return getSess().course   || (STUDENT.courses||'MBBS').split(',')[0].trim(); }
+
+// ── CATEGORY KEYS ────────────────────────────────────────────────
+function catKeys(cat){
+  const map={General:['OPEN'],OBC:['OBC','OPEN'],SC:['SC','OPEN'],ST:['ST','OPEN'],
+    EWS:['EWS','OPEN'],SEBC:['SEBC','OPEN'],VJ:['VJ','OPEN'],NT1:['NT1','OPEN'],NT2:['NT2','OPEN'],NT3:['NT3','OPEN']};
+  return map[cat]||['OPEN'];
+}
+
+// ── PROBABILITY ──────────────────────────────────────────────────
+function prob(score,cutoff){
+  const gap = score-(cutoff+15);
+  if(gap>=15)   return {key:'safe',       label:'Safe',       cls:'prob-safe'};
+  if(gap>=0)    return {key:'likely',     label:'Likely',     cls:'prob-likely'};
+  if(gap>=-10)  return {key:'borderline', label:'Borderline', cls:'prob-borderline'};
+  return              {key:'reach',       label:'Reach',      cls:'prob-reach'};
+}
+const PROB_ORDER={safe:0,likely:1,borderline:2,reach:3};
+
+// ── GET COLLEGES ─────────────────────────────────────────────────
+function getColleges(stateKey,courseKey,keys,listType){
+  if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
+  const seen=new Map();
+  const score=activeScore();
+  keys.forEach(catKey=>{
+    const catData=DB[stateKey][courseKey][catKey];
+    if(!catData||!catData[listType]) return;
+    catData[listType].forEach(col=>{
+      const p=prob(score,col.c);
+      const entry={...col,quota:catKey,prob:p};
+      if(!seen.has(col.n)){seen.set(col.n,entry);}
+      else if(col.c<seen.get(col.n).c){seen.set(col.n,entry);}
+    });
+  });
+  return Array.from(seen.values()).filter(c=>c.prob.key!=='reach');
+}
+
+// ── FEE ──────────────────────────────────────────────────────────
+function feeStr(name){const f=FEE[name];return f?`₹${f}L/yr`:'—';}
+
+// ── COUNSELLOR NOTE ──────────────────────────────────────────────
+function buildNote(score,cat,totalRecs){
+  if(score>=580) return `With a score of ${score}, you are in an elite bracket. Government seats at top MH and AIQ colleges are very much within reach. Your priority should be locking a govt seat first — then using private/deemed as backup only.`;
+  if(score>=540) return `At ${score}, you have solid options across MH Govt, AIQ, and select open states. The key is building the right preference list — a few positions can make the difference between a govt and a private seat.`;
+  if(score>=500) return `Score of ${score} opens up private MH colleges, Karnataka, and deemed options. Category-wise, you have more reach than you think. Focus on budget-fit colleges and don't overlook the Stray rounds.`;
+  if(score>=450) return `At ${score}, deemed universities and select open state private colleges are your best path. Don't write off govt seats in reserved categories — the cutoffs may still work in your favour.`;
+  return `Every option counts at this score. Focus on deemed universities with no strict cutoff floors, and reserved category quotas. ASMI will identify every seat you qualify for.`;
+}
+
+// ── POOL LABEL ───────────────────────────────────────────────────
+const POOL_LABELS={
+  'mh_govt':'MH Govt','mh_pvt':'MH Private',
+  'aiq':'AIQ Govt','aiims':'AIIMS','jipmer':'JIPMER','central':'Central Univ.',
+  'deemed':'Deemed','deemed_nri':'Deemed NRI',
+  'open_pvt':'Open State','mgmt_quota':'Open State MQ'
+};
+
+// ── POOL NOTE ────────────────────────────────────────────────────
+const POOL_NOTES={
+  mh_govt:'Govt seat · lowest fee · domicile advantage',
+  mh_pvt:'MH private · 85% state quota seats',
+  aiq:'15% All India quota · open to all states',
+  aiims:'Premier institution · most competitive',
+  jipmer:'Central govt · only 2 institutes',
+  central:'BHU / AMU · central university quota',
+  deemed:'No domicile required · check budget',
+  open_pvt:'Out-of-state quota · check eligibility',
+  mgmt_quota:'Management quota · flexible admission',
+};
+
+// ── BUILD RECOMMENDATIONS ────────────────────────────────────────
+function buildRecs(){
+  const score  = activeScore();
+  const cat    = activeCategory();
+  const course = activeCourse();
+  const keys   = catKeys(cat);
+
+  const pools = [
+    {key:'mh_govt',  fn:()=>getColleges('MH',    course, keys,   'mh_govt'),  limit:4, tier:'bestbet'},
+    {key:'aiq',      fn:()=>getColleges('AIQ',   course, keys,   'aiq'),      limit:3, tier:'strong'},
+    {key:'aiims',    fn:()=>getColleges('AIIMS', 'MBBS', keys,   'aiims'),    limit:2, tier:'bestbet'},
+    {key:'mh_pvt',   fn:()=>getColleges('MH',    course, keys,   'mh_pvt'),   limit:3, tier:'consider'},
+    {key:'central',  fn:()=>getColleges('CENTRAL',course,keys,   'central'),  limit:2, tier:'strong'},
+    {key:'jipmer',   fn:()=>getColleges('JIPMER','MBBS', keys,   'jipmer'),   limit:2, tier:'bestbet'},
+    {key:'deemed',   fn:()=>getColleges('DEEMED', course,['OPEN'],'deemed')
+                            .sort((a,b)=>Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15))),
+                                                                               limit:4, tier:'consider'},
+  ];
+
+  // Open states — pick 1 best college per top 3 states
+  const OPEN_STATES=['KA','KL','TS','HR','UK','AP','WB'];
+  OPEN_STATES.forEach(st=>{
+    const cols=getColleges(st,course,['OPEN'],'open_pvt')
+      .sort((a,b)=>PROB_ORDER[a.prob.key]-PROB_ORDER[b.prob.key]);
+    if(cols.length) pools.push({key:'open_pvt',poolState:st,fn:()=>cols,limit:1,tier:'consider'});
+  });
+
+  // Collect and classify
+  const bestbet=[], strong=[], consider=[], borderline=[];
+
+  pools.forEach(pool=>{
+    const cols = pool.fn().slice(0, pool.limit);
+    cols.forEach(col=>{
+      const entry = {...col, poolKey:pool.key};
+      const pk = col.prob.key;
+      if(pool.tier==='bestbet' && (pk==='safe'||pk==='likely')) bestbet.push(entry);
+      else if(pool.tier==='strong'  && (pk==='safe'||pk==='likely')) strong.push(entry);
+      else if(pool.tier==='consider'&& (pk==='safe'||pk==='likely')) consider.push(entry);
+      else if(pk==='borderline') borderline.push(entry);
+    });
+  });
+
+  // Deduplicate across tiers
+  const seen=new Set();
+  function dedup(arr){ return arr.filter(c=>{if(seen.has(c.n)){return false;}seen.add(c.n);return true;}); }
+
+  return {
+    bestbet:  dedup(bestbet).slice(0,4),
+    strong:   dedup(strong).slice(0,4),
+    consider: dedup(consider).slice(0,5),
+    borderline:dedup(borderline).slice(0,3),
+  };
+}
+
+// ── RENDER TIER ──────────────────────────────────────────────────
+function renderTier(title,icon,tagClass,cols,tierClass){
+  if(!cols.length) return '';
+  const cards = cols.map((c,i)=>`
+    <div class="rec-card" style="transition-delay:${i*80}ms">
+      <div class="rc-left">
+        <div class="rc-top">
+          <span class="rc-name">${c.n}</span>
+          <span class="rc-pool">${POOL_LABELS[c.poolKey]||c.poolKey}</span>
+          <span class="tier-badge ${tagClass}">${title}</span>
+        </div>
+        <div class="rc-note">${POOL_NOTES[c.poolKey]||''} · Quota: ${c.quota}</div>
+      </div>
+      <div class="rc-right">
+        <span class="rc-fee">${feeStr(c.n)}</span>
+        <span class="prob ${c.prob.cls}">${c.prob.label}</span>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="tier-section ${tierClass}">
+      <div class="tier-header">
+        <span class="tier-icon">${icon}</span>
+        <span class="tier-title">${title}</span>
+        <span class="tier-count">${cols.length} option${cols.length>1?'s':''}</span>
+      </div>
+      <div class="rec-cards">${cards}</div>
+    </div>`;
+}
+
+// ── ANIMATE CARDS IN ─────────────────────────────────────────────
+function animateCards(){
+  const cards = document.querySelectorAll('.rec-card');
+  cards.forEach((card,i)=>{
+    setTimeout(()=>card.classList.add('visible'), 80+i*60);
+  });
+}
+
+// ── RENDER ALL ───────────────────────────────────────────────────
+function render(){
+  const recs  = buildRecs();
+  const score = activeScore();
+  const cat   = activeCategory();
+  const course= activeCourse();
+
+  // Left panel
+  document.getElementById('lScore').textContent  = score||'—';
+  document.getElementById('lCat').textContent    = cat;
+  document.getElementById('lCourse').textContent = course;
+  const total = recs.bestbet.length+recs.strong.length+recs.consider.length+recs.borderline.length;
+  document.getElementById('counsellorNote').textContent = buildNote(score,cat,total);
+
+  // Right header
+  document.getElementById('totalBadge').textContent = total+' options';
+  document.getElementById('rhSub').textContent =
+    `Score: ${score} · Category: ${cat} · Course: ${course} · 2025–26 cutoffs + 15 adj.`;
+
+  // Tiers
+  const html =
+    renderTier('Best Bet',   '🏆','tb-bestbet', recs.bestbet,  'bestbet') +
+    renderTier('Strong Option','✅','tb-strong', recs.strong,   'strong') +
+    renderTier('Consider',   '🎯','tb-consider',recs.consider, 'consider') +
+    renderTier('Borderline', '⚡','tb-backup',  recs.borderline,'backup');
+
+  document.getElementById('tiersWrap').innerHTML = html || '<div class="no-recs">No recommendations found. Try adjusting score or category in Slide 3.</div>';
+
+  setTimeout(animateCards, 150);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+async function init(){
+  const params = new URLSearchParams(location.search);
+  const token  = params.get('token')||'';
+
+  try{
+    const [dbRes, feeRes, studentRes] = await Promise.all([
+      fetch(DB_URL).then(r=>r.json()),
+      fetch(FEE_URL).then(r=>r.json()),
+      token ? fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json())
+            : Promise.resolve({demo:true})
+    ]);
+
+    DB  = dbRes;
+    FEE = feeRes;
+    STUDENT = studentRes.success ? studentRes.data : {score:520,category:'OBC',courses:'MBBS',name:'Student',token};
+
+    // Seed session if not set
+    const s=getSess();
+    if(!s.score)    { try{const ss=getSess();ss.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    if(!s.category) { try{const ss=getSess();ss.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+    if(!s.course)   { try{const ss=getSess();ss.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(ss));}catch{} }
+
+    // Next button
+    document.getElementById('nextBtn').href =
+      'slide5_problems.html?token='+encodeURIComponent(STUDENT.token||token);
+
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    document.getElementById('mainPage').classList.remove('hidden');
+    render();
+
+  }catch(err){
+    document.getElementById('loadingOverlay').innerHTML =
+      `<div style="text-align:center;padding:40px"><div style="font-size:2rem">⚠️</div><div style="font-family:Montserrat;font-weight:800;color:#b91c1c;margin:10px 0">Could not load data</div><div style="font-size:.8rem;color:#4a0080">${err.message}</div></div>`;
+    console.error(err);
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>

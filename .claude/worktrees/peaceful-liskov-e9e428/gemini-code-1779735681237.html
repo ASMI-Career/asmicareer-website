@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Motion Concept Trial</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:100%; height:100vh; overflow:hidden; font-family:'Montserrat',sans-serif; background:#000; }
+  
+  .split-container { display:flex; width:100%; height:100vh; position:relative; }
+  
+  /* ── MEDICAL PANEL ── */
+  .med-panel {
+    position:absolute; inset:0; width:52%; height:100%; background:#FFD700; z-index:2;
+    clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+    transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  
+  /* ── ENGINEERING PANEL ── */
+  .eng-panel {
+    position:absolute; inset:0; width:100%; height:100%; background:#0a1628; z-index:1;
+    display:flex; justify-content:flex-end; align-items:center;
+  }
+
+  /* ── SEAM LINE ── */
+  .seam {
+    position:absolute; inset:0; width:52%; height:100%; z-index:3; pointer-events:none;
+    clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+    transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  .seam::after {
+    content:''; position:absolute; top:0; right:0; width:4px; height:100%;
+    background:linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
+  }
+
+  /* ── TRANSITION CURTAIN WIPE ── */
+  .seam-slice {
+    position:absolute; top:0; left:0; width:100%; height:100%; background:#fff; z-index:4;
+    clip-path:polygon(52% 100%, 52% 100%, 52% 100%, 52% 100%);
+    transition: clip-path 0.4s ease-in-out;
+    pointer-events:none;
+  }
+
+  /* ── CONTENT WRAPPERS ── */
+  .content { padding:60px; display:flex; flex-direction:column; justify-content:center; height:100%; width:50vw; transition: opacity 0.2s ease; }
+  .med-title { color:#1a0040; font-size:42px; font-weight:900; line-height:1.1; margin-bottom:20px; }
+  .eng-title { color:#ffffff; font-size:42px; font-weight:900; line-height:1.1; margin-bottom:20px; }
+  .eng-title span { color:#00C8B4; }
+  
+  .btn {
+    display:inline-block; padding:14px 30px; border-radius:30px; font-weight:700;
+    text-transform:uppercase; font-size:12px; letter-spacing:1px; cursor:pointer; align-self:flex-start;
+  }
+  .med-btn { background:#1a0040; color:#FFD700; }
+  .eng-btn { background:#00C8B4; color:#0a1628; }
+
+  /* ── CANVAS FOR DATA DEFRAG ── */
+  #defragCanvas { position:absolute; top:0; left:52%; width:48%; height:100%; z-index:5; pointer-events:none; display:none; }
+
+  /* ── ENGINEERING SOLID OVERLAY WIPE ── */
+  .eng-wipe-overlay {
+    position:absolute; top:0; right:0; width:48%; height:0%; background:#0a1628; z-index:6;
+    transition: height 0.4s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+</style>
+</head>
+<body>
+
+<div class="split-container">
+  
+  <div class="med-panel" id="medPanel">
+    <div class="content" id="medContent">
+      <h1 class="med-title">Medical Stream<br>Incision Concept</h1>
+      <div class="btn med-btn" id="medBtn">Test Incision Wipe →</div>
+    </div>
+  </div>
+
+  <div class="seam" id="seamLine"></div>
+  <div class="seam-slice" id="seamSlice"></div>
+
+  <div class="eng-panel">
+    <canvas id="defragCanvas"></canvas>
+    <div class="eng-wipe-overlay" id="engWipe"></div>
+    
+    <div class="content" id="engContent">
+      <h1 class="eng-title">Engineering Stream<br><span>Data Defrag Concept</span></h1>
+      <div class="btn eng-btn" id="engBtn">Test Data Defrag →</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const medPanel   = document.getElementById('medPanel');
+const seamLine   = document.getElementById('seamLine');
+const seamSlice  = document.getElementById('seamSlice');
+const medContent = document.getElementById('medContent');
+const engContent = document.getElementById('engContent');
+const engWipe    = document.getElementById('engWipe');
+const canvas     = document.getElementById('defragCanvas');
+const ctx        = canvas.getContext('2d');
+
+let isRunning = false;
+
+// ── 1. MEDICAL TRANSITION: SURGICAL INCISION ──
+document.getElementById('medBtn').addEventListener('click', function() {
+  if (isRunning) return;
+  isRunning = true;
+  
+  engContent.style.opacity = '0';
+  
+  // Trace white laser split from down to up
+  seamSlice.style.clipPath = 'polygon(52% 100%, 52% 100%, 52% 100%, 52% 100%)';
+  setTimeout(() => {
+    seamSlice.style.clipPath = 'polygon(44% 0, 52% 0, 52% 100%, 52% 100%)';
+    
+    // Spread panel open over engineering floor
+    setTimeout(() => {
+      medPanel.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+      seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+      
+      setTimeout(() => { alert('Medical System Loaded! Resetting trial...'); location.reload(); }, 700);
+    }, 400);
+  }, 50);
+});
+
+// ── 2. ENGINEERING TRANSITION: DATA STREAM DEFRAGMENTATION ──
+document.getElementById('engBtn').addEventListener('click', function() {
+  if (isRunning) return;
+  isRunning = true;
+  
+  // Shatter / Hide text field
+  engContent.style.opacity = '0';
+  
+  // Initialize canvas grid size
+  canvas.style.display = 'block';
+  canvas.width = window.innerWidth * 0.48;
+  canvas.height = window.innerHeight;
+  
+  const columns = Math.floor(canvas.width / 14);
+  const drops = Array(columns).fill(0);
+  
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(10, 22, 40, 0.15)'; // Navy wash trail
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = '#00C8B4'; // Corporate Teal
+    ctx.font = '12px monospace';
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = Math.random() > 0.5 ? "1" : "0";
+      const x = i * 14;
+      const y = drops[i] * 14;
+      
+      ctx.fillText(text, x, y);
+      
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  
+  const matrixInterval = setInterval(drawMatrix, 20);
+  
+  // Rise solid color container up from bottom to clear layout screen
+  setTimeout(() => {
+    engWipe.style.height = '100%';
+    
+    // Slide left column away out of view completely
+    setTimeout(() => {
+      medPanel.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      seamLine.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      
+      setTimeout(() => { 
+        clearInterval(matrixInterval);
+        alert('Engineering System Loaded! Resetting trial...'); 
+        location.reload(); 
+      }, 500);
+    }, 350);
+  }, 400);
+});
+</script>
+</body>
+</html>

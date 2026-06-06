@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Career — Medical & Engineering Admissions</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100vh;overflow:hidden;font-family:'Montserrat',sans-serif;}
+
+/* ── SPLIT CONTAINER ── */
+.split{
+  width:100%;
+  height:100vh;
+  position:relative;
+  background-color: #0a1628;
+}
+
+/* ── MEDICAL (Left Layer - Clips over Engineering) ── */
+.medical{
+  position:absolute;
+  top:0;
+  left:0;
+  width:52%;
+  height:100%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  background-image:url('AIIMS_Delhi.jpg');
+  background-size:cover;
+  background-position:center;
+  transition:width 0.55s cubic-bezier(0.77,0,0.18,1),
+             clip-path 0.55s cubic-bezier(0.77,0,0.18,1);
+  z-index:2;
+}
+
+/* ── ENGINEERING (Right Layer - True Base Floor) ── */
+.engineering{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-image:url('IIT_Bombay.jpg');
+  background-size:cover;
+  background-position:center;
+  z-index:1;
+  display:flex;
+  justify-content:flex-end;
+}
+
+/* ── BULLETPROOF DIAGONAL SEAM LINE ── */
+.seam-line {
+  position: absolute;
+  inset: 0;
+  width: 52%;
+  height: 100%;
+  clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+  z-index: 3;
+  pointer-events: none;
+  transition: width 0.55s cubic-bezier(0.77,0,0.18,1),
+             clip-path 0.55s cubic-bezier(0.77,0,0.18,1);
+}
+.seam-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
+}
+
+/* ── JS DRIVEN HOVER INTERACTIONS ── */
+/* Medical Hover: Expands left panel, slides engineering text right to avoid cover-up */
+.split.hover-medical .medical,
+.split.hover-medical .seam-line {
+  width: 62%;
+  clip-path:polygon(0 0, 90% 0, 100% 100%, 0 100%);
+}
+.split.hover-medical .center-logo{ left:58%; }
+.split.hover-medical .e-content {
+  transform: translateX(60px); /* Smoothly nudges the engineering text right */
+}
+
+/* Engineering Hover: Contracts left panel, pulls engineering text back into full view */
+.split.hover-engineering .medical,
+.split.hover-engineering .seam-line {
+  width: 42%;
+  clip-path:polygon(0 0, 86% 0, 100% 100%, 0 100%);
+}
+.split.hover-engineering .center-logo{ left:42%; }
+.split.hover-engineering .e-content {
+  transform: translateX(-20px); /* Slightly pulls text left for a dynamic feel */
+}
+
+/* ── BACKGROUND WASH OVERLAYS ── */
+.bg-wash{position:absolute;inset:0;}
+.m-wash{background:#FFD700;opacity:0.82;}
+.e-wash{background:#0a1628;opacity:0.88;}
+.m-vignette{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,0,64,0.15) 0%,transparent 60%);
+}
+
+/* ── CIRCUIT SVG ── */
+.circuit-svg{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+
+/* ── CONTENT CONTAINER SYSTEM ── */
+.m-content, .e-content {
+  position:relative;
+  z-index:2;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  transition: transform 0.55s cubic-bezier(0.77,0,0.18,1); /* Adds smoothness to the text shift */
+}
+.m-content { 
+  padding:56px 52px; 
+  width: 50vw;
+}
+.e-content { 
+  padding:56px 52px 56px 120px; 
+  width: 50vw;
+}
+
+/* EYEBROW */
+.eyebrow{
+  font-size:13px;font-weight:600;letter-spacing:2px;
+  margin-bottom:12px;
+}
+.m-eyebrow{ color:rgba(26,0,64,0.55); }
+.e-eyebrow{ color:rgba(0,200,180,0.7); }
+
+/* HEADLINE */
+.headline{
+  font-size:52px;font-weight:900;
+  line-height:1.0;margin-bottom:16px;
+}
+.m-headline{ color:#1a0040; }
+.m-headline span{ color:#6a0dad; }
+.e-headline{ color:#ffffff;font-size:46px; }
+.e-headline span{ color:#00C8B4; }
+
+/* SUB */
+.sub{
+  font-size:14px;line-height:1.6;
+  max-width:400px;margin-bottom:20px;
+}
+.m-sub{ color:rgba(26,0,64,0.65); }
+.e-sub{ color:rgba(255,255,255,0.5); }
+
+/* TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.tag{
+  font-size:9px;font-weight:700;letter-spacing:0.5px;
+  padding:4px 12px;border-radius:20px;
+}
+.m-tag{
+  background:rgba(26,0,64,0.1);color:#1a0040;
+  border:1px solid rgba(26,0,64,0.18);
+}
+.e-tag{
+  background:rgba(0,200,180,0.1);color:rgba(0,200,180,0.85);
+  border:1px solid rgba(0,200,180,0.2);
+}
+
+/* STATS */
+.stats{display:flex;margin:0 0 28px;}
+.stat{ padding:0 24px; }
+.stat:first-child{ padding-left:0; }
+.m-stat{ border-right:1px solid rgba(26,0,64,0.15); }
+.e-stat{ border-right:1px solid rgba(255,255,255,0.1); }
+.stat:last-child{ border-right:none; }
+.stat-num{
+  display:block;font-size:32px;font-weight:900;
+  line-height:1.1;
+}
+.m-stat .stat-num{ color:#1a0040; }
+.e-stat .stat-num{ color:#ffffff; }
+.stat-lbl{
+  display:block;font-size:10px;font-weight:600;
+  letter-spacing:1px;text-transform:uppercase;
+}
+.m-stat .stat-lbl{ color:rgba(26,0,64,0.5); }
+.e-stat .stat-lbl{ color:rgba(255,255,255,0.4); }
+
+/* CTA */
+.cta{
+  display:inline-block;font-size:14px;font-weight:800;
+  padding:15px 36px;border-radius:50px;
+  text-decoration:none;letter-spacing:0.3px;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+  align-self:flex-start;
+}
+.m-cta{ background:#1a0040;color:#FFD700; }
+.m-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(26,0,64,0.35); }
+.e-cta{ background:#00A896;color:#ffffff; }
+.e-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,168,150,0.45); }
+
+/* ── CENTER LOGO ── */
+.center-logo{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:20;
+  pointer-events:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:10px 14px;
+  transition:left 0.55s cubic-bezier(0.77,0,0.18,1),
+             transform 0.55s cubic-bezier(0.77,0,0.18,1);
+}
+.center-logo img{
+  height:52px;
+  width:auto;
+  object-fit:contain;
+}
+.logo-tagline{
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.7);
+  white-space:nowrap;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ── TOP HINT ── */
+.top-hint{
+  position:absolute;top:20px;left:50%;
+  transform:translateX(-50%);z-index:30;
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.25);white-space:nowrap;
+  pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .split{ flex-direction:column; }
+  .medical{
+    position: relative;
+    width:100% !important;height:50vh;
+    clip-path:none !important;
+  }
+  .engineering {
+    position: relative;
+    width: 100% !important; height: 50vh;
+  }
+  .seam-line { display: none !important; }
+  .m-content,.e-content{ padding:32px 28px; width: 100% !important; transform: none !important; }
+  .headline{ font-size:32px !important; }
+  .e-headline{ font-size:30px !important; }
+  .stat-num{ font-size:22px !important; }
+  .center-logo{ top:50vh; left:50% !important; }
+  .top-hint{ display:none; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="split" id="split">
+
+  <div class="medical" id="medical">
+    <div class="bg-wash m-wash"></div>
+    <div class="m-vignette"></div>
+
+    <div class="m-content">
+      <p class="eyebrow m-eyebrow">Medical</p>
+      <h1 class="headline m-headline">
+        Every NEET Score<br>
+        Deserves The<br>
+        <span>Best College.</span>
+      </h1>
+      <p class="sub m-sub">
+        Guiding 25,000+ students to their dream medical
+        seats through data-driven counselling.
+      </p>
+      <div class="tags">
+        <span class="tag m-tag">NEET UG</span>
+        <span class="tag m-tag">MBBS</span>
+        <span class="tag m-tag">BDS</span>
+        <span class="tag m-tag">AYUSH</span>
+        <span class="tag m-tag">BPTH</span>
+      </div>
+      <div class="stats">
+        <div class="stat m-stat">
+          <span class="stat-num">25K+</span>
+          <span class="stat-lbl">Admissions</span>
+        </div>
+        <div class="stat m-stat">
+          <span class="stat-num">11+</span>
+          <span class="stat-lbl">Years Experience</span>
+        </div>
+        <div class="stat m-stat">
+          <span class="stat-num">4.9★</span>
+          <span class="stat-lbl">User Rating</span>
+        </div>
+      </div>
+      <a href="inquiry.html" class="cta m-cta" id="m-cta">
+        Start NEET Journey →
+      </a>
+    </div>
+  </div>
+
+  <div class="seam-line" id="seamLine"></div>
+
+  <div class="engineering" id="engineering">
+    <div class="bg-wash e-wash"></div>
+
+    <svg class="circuit-svg" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 80 60 L 80 180 L 240 180" fill="none" stroke="rgba(0,200,180,0.12)" stroke-width="1"/>
+      <path d="M 320 40 L 320 120 L 480 120 L 480 240" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
+      <path d="M 120 300 L 280 300 L 280 420 L 400 420" fill="none" stroke="rgba(0,200,180,0.08)" stroke-width="1"/>
+      <path d="M 60 450 L 60 560 L 200 560" fill="none" stroke="rgba(0,200,180,0.10)" stroke-width="1"/>
+      <path d="M 350 350 L 500 350 L 500 480 L 580 480" fill="none" stroke="rgba(0,200,180,0.08)" stroke-width="1"/>
+      <path d="M 100 600 L 260 600 L 260 700" fill="none" stroke="rgba(0,200,180,0.07)" stroke-width="1"/>
+      <path d="M 420 500 L 420 620 L 560 620" fill="none" stroke="rgba(0,200,180,0.09)" stroke-width="1"/>
+      <path d="M 180 720 L 360 720 L 360 800" fill="none" stroke="rgba(0,200,180,0.07)" stroke-width="1"/>
+      <circle cx="80" cy="180" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="320" cy="120" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="280" cy="300" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="480" cy="240" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="60" cy="560" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="500" cy="350" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="260" cy="600" r="3" fill="rgba(0,200,180,0.2)"/>
+      <circle cx="420" cy="620" r="3" fill="rgba(0,200,180,0.2)"/>
+    </svg>
+
+    <div class="e-content">
+      <p class="eyebrow e-eyebrow">Engineering</p>
+      <h1 class="headline e-headline">
+        Engineering Counselling<br>
+        Built Around <span>Your<br>
+        Rank & Branch.</span>
+      </h1>
+      <p class="sub e-sub">
+        Guiding students to their dream engineering colleges
+        and branches through data-driven counselling.
+      </p>
+      <div class="tags">
+        <span class="tag e-tag">JEE</span>
+        <span class="tag e-tag">MHT-CET</span>
+        <span class="tag e-tag">BITS</span>
+        <span class="tag e-tag">Manipal</span>
+        <span class="tag e-tag">VIT</span>
+      </div>
+      <div class="stats">
+        <div class="stat e-stat">
+          <span class="stat-num">10K+</span>
+          <span class="stat-lbl">Admissions</span>
+        </div>
+        <div class="stat e-stat">
+          <span class="stat-num">500+</span>
+          <span class="stat-lbl">Colleges</span>
+        </div>
+        <div class="stat e-stat">
+          <span class="stat-num">All India</span>
+          <span class="stat-lbl">Reach</span>
+        </div>
+      </div>
+      <a href="engineering.html" class="cta e-cta" id="e-cta">
+        Find My Branch & College →
+      </a>
+    </div>
+  </div>
+
+  <div class="center-logo" id="centerLogo">
+    <img src="asmi-logo.png" alt="">
+    <span class="logo-tagline">Choose Your Path</span>
+  </div>
+
+  <div class="top-hint" id="topHint">
+    Hover to explore · Click to begin
+  </div>
+
+</div>
+
+<script>
+const split       = document.getElementById('split');
+const medical     = document.getElementById('medical');
+const engineering = document.getElementById('engineering');
+const seamLine    = document.getElementById('seamLine');
+const centerLogo  = document.getElementById('centerLogo');
+const topHint     = document.getElementById('topHint');
+
+let isTransitioning = false;
+
+// Prevent CTA clicks from expanding the background
+document.getElementById('m-cta').addEventListener('click', function(e){

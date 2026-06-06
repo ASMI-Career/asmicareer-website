@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI — Register Now</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFD700;--navy:#1a0040;--purple:#6a0dad;--mid:#2D0A5E;--soft:#4a0080;
+  --card:rgba(255,255,255,.60);--cb:rgba(106,13,173,.18);
+  --green:#15803d;--green-bg:rgba(21,128,61,.10);--green-border:rgba(21,128,61,.25);
+  --red:#b91c1c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-family:'Open Sans',sans-serif;color:var(--navy);}
+
+.bg-deco{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(circle at 92% 8%,rgba(106,13,173,.14) 0%,transparent 40%),
+             radial-gradient(circle at 8% 90%,rgba(45,10,94,.09) 0%,transparent 35%);}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(26,0,64,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(26,0,64,.05) 1px,transparent 1px);
+  background-size:52px 52px;}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;width:100%;height:100%;display:grid;grid-template-columns:1fr 1fr 340px;gap:0;}
+
+/* ════ COL 1: PACKAGES ════ */
+.col-packages{
+  display:flex;flex-direction:column;
+  padding:22px 20px 20px 32px;
+  border-right:1px solid rgba(26,0,64,.08);
+}
+
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;animation:fadeUp .5s ease both;}
+.logo-wrap img{height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 3px 10px rgba(26,0,64,.14));}
+.step-label{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);}
+
+/* Urgency banner */
+.urgency-banner{
+  background:linear-gradient(135deg,var(--red),#dc2626);
+  border-radius:12px;padding:10px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+  animation:fadeUp .5s .06s ease both;
+}
+.ub-left{display:flex;align-items:center;gap:10px;}
+.ub-icon{font-size:1.2rem;}
+.ub-text{font-family:'Montserrat';font-weight:800;font-size:.8rem;color:#fff;}
+.ub-sub{font-size:.68rem;color:rgba(255,255,255,.7);margin-top:1px;}
+.ub-countdown{
+  font-family:'Montserrat';font-weight:900;font-size:1.3rem;color:#FFD700;
+  text-align:center;line-height:1;
+}
+.ub-countdown-lbl{font-size:.56rem;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+
+/* Package cards */
+.pkg-card{
+  border-radius:16px;padding:16px 18px;margin-bottom:12px;position:relative;
+  animation:fadeUp .5s ease both;
+  flex-shrink:0;
+}
+.pkg-card.merit{
+  background:linear-gradient(145deg,var(--navy),var(--purple));
+  box-shadow:0 10px 32px rgba(26,0,64,.25);
+}
+.pkg-card.nri{
+  background:var(--card);border:1px solid var(--cb);
+}
+
+/* Recommended badge */
+.rec-badge{
+  position:absolute;top:-8px;right:16px;
+  background:#FFD700;color:var(--navy);
+  font-family:'Montserrat';font-size:.6rem;font-weight:900;
+  padding:3px 12px;border-radius:20px;letter-spacing:.5px;
+}
+
+.pkg-eyebrow{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:6px;}
+.merit .pkg-eyebrow{color:rgba(255,215,0,.65);}
+.nri   .pkg-eyebrow{color:var(--purple);}
+
+.pkg-name{font-family:'Montserrat';font-weight:900;font-size:.95rem;margin-bottom:12px;line-height:1.3;}
+.merit .pkg-name{color:#fff;}
+.nri   .pkg-name{color:var(--navy);}
+
+.pkg-prices{display:flex;align-items:flex-end;gap:16px;margin-bottom:8px;}
+.price-now{display:flex;flex-direction:column;}
+.price-now-lbl{font-family:'Montserrat';font-size:.56rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.merit .price-now-lbl{color:rgba(255,215,0,.6);}
+.nri   .price-now-lbl{color:var(--purple);}
+.price-now-val{font-family:'Montserrat';font-weight:900;font-size:2rem;line-height:1;}
+.merit .price-now-val{color:#FFD700;}
+.nri   .price-now-val{color:var(--navy);}
+
+.price-later{display:flex;flex-direction:column;padding-bottom:4px;}
+.price-later-lbl{font-size:.58rem;font-weight:600;}
+.merit .price-later-lbl{color:rgba(255,255,255,.45);}
+.nri   .price-later-lbl{color:var(--soft);}
+.price-later-val{font-family:'Montserrat';font-weight:700;font-size:.88rem;text-decoration:line-through;}
+.merit .price-later-val{color:rgba(255,255,255,.35);}
+.nri   .price-later-val{color:rgba(106,13,173,.4);}
+
+.saving-pill{
+  display:inline-block;font-family:'Montserrat';font-size:.62rem;font-weight:800;
+  padding:3px 10px;border-radius:20px;
+  background:rgba(21,128,61,.2);color:#15803d;border:1px solid rgba(21,128,61,.3);
+}
+.merit .saving-pill{background:rgba(255,215,0,.2);color:#FFD700;border-color:rgba(255,215,0,.3);}
+
+.pkg-note{font-size:.68rem;margin-top:8px;line-height:1.4;}
+.merit .pkg-note{color:rgba(255,255,255,.5);}
+.nri   .pkg-note{color:var(--soft);}
+
+/* Extra state note */
+.extra-note{
+  background:rgba(255,255,255,.50);border:1px solid var(--cb);border-radius:10px;
+  padding:10px 14px;font-size:.72rem;color:var(--mid);line-height:1.55;
+  margin-top:auto;
+  animation:fadeUp .5s .22s ease both;
+}
+.extra-note strong{color:var(--navy);font-family:'Montserrat';font-weight:800;}
+
+/* ════ COL 2: SERVICES ════ */
+.col-services{
+  display:flex;flex-direction:column;
+  padding:22px 20px 20px 24px;
+  border-right:1px solid rgba(26,0,64,.08);
+}
+
+.col-title{font-family:'Montserrat';font-weight:900;font-size:.95rem;color:var(--navy);margin-bottom:4px;}
+.col-sub{font-size:.72rem;color:var(--soft);margin-bottom:14px;}
+
+.service-list{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;overflow-y:auto;}
+.service-list::-webkit-scrollbar{width:3px;}
+.service-list::-webkit-scrollbar-thumb{background:rgba(106,13,173,.2);border-radius:10px;}
+
+.svc{
+  background:var(--card);border:1px solid var(--cb);border-radius:12px;
+  padding:11px 14px;display:flex;gap:11px;align-items:flex-start;
+  opacity:0;transform:translateX(-16px);
+  transition:background .2s,border-color .2s;
+}
+.svc:hover{background:rgba(255,255,255,.85);border-color:rgba(106,13,173,.3);}
+.svc.visible{opacity:1;transform:translateX(0);}
+.svc-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+.svc-body{}
+.svc-name{font-family:'Montserrat';font-weight:800;font-size:.78rem;color:var(--navy);margin-bottom:3px;}
+.svc-desc{font-size:.68rem;color:var(--mid);line-height:1.45;}
+.inc-badge{display:inline-block;margin-top:4px;font-family:'Montserrat';font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+
+/* Non-refundable notice */
+.nr-notice{
+  background:rgba(185,28,28,.08);border:1px solid rgba(185,28,28,.2);border-radius:10px;
+  padding:9px 14px;font-size:.7rem;color:var(--red);font-weight:700;
+  margin-top:10px;flex-shrink:0;display:flex;align-items:center;gap:8px;
+}
+
+/* ════ COL 3: PAYMENT ════ */
+.col-payment{
+  display:flex;flex-direction:column;
+  padding:22px 32px 20px 20px;
+  background:rgba(255,255,255,.14);
+}
+
+/* Payment methods */
+.pay-section{margin-bottom:12px;flex-shrink:0;}
+.pay-title{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
+.pay-rows{display:flex;flex-direction:column;gap:6px;}
+.pay-row{
+  background:rgba(255,255,255,.55);border:1px solid var(--cb);border-radius:8px;
+  padding:8px 12px;display:flex;justify-content:space-between;align-items:center;
+}
+.pay-key{font-size:.7rem;color:var(--soft);font-weight:600;}
+.pay-val{font-family:'Montserrat';font-weight:800;font-size:.75rem;color:var(--navy);}
+.pay-val.upi{color:var(--purple);}
+
+/* QR codes */
+.qr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;flex-shrink:0;}
+.qr-box{
+  background:rgba(255,255,255,.7);border:1px solid var(--cb);border-radius:12px;
+  padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.qr-label{font-family:'Montserrat';font-size:.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--purple);text-align:center;}
+.qr-img{
+  width:80px;height:80px;border-radius:6px;overflow:hidden;
+  background:var(--navy);display:flex;align-items:center;justify-content:center;
+}
+.qr-img img{width:100%;height:100%;object-fit:contain;}
+.qr-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:rgba(255,255,255,.4);font-family:'Montserrat';font-weight:700;text-align:center;padding:4px;}
+
+/* Contact + address */
+.contact-box{
+  background:linear-gradient(135deg,var(--navy),var(--purple));
+  border-radius:12px;padding:12px 14px;margin-bottom:10px;flex-shrink:0;
+}
+.contact-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.contact-row:last-child{margin-bottom:0;}
+.contact-icon{font-size:.9rem;flex-shrink:0;}
+.contact-val{font-family:'Montserrat';font-size:.72rem;font-weight:700;color:#fff;}
+.contact-sub{font-size:.63rem;color:rgba(255,255,255,.5);}
+
+/* T&C */
+.tnc{
+  background:rgba(255,255,255,.45);border:1px solid var(--cb);border-radius:10px;
+  padding:10px 12px;flex:1;
+}
+.tnc-title{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:7px;}
+.tnc-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.tnc-list li{font-size:.67rem;color:var(--mid);line-height:1.4;display:flex;gap:6px;}
+.tnc-list li::before{content:"•";color:var(--purple);font-weight:700;flex-shrink:0;}
+
+/* GST note */
+.gst-note{font-size:.62rem;color:var(--soft);text-align:center;margin-top:8px;flex-shrink:0;}
+
+/* Slide counter */
+.slide-counter{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="bg-deco"></div>
+<div class="bg-grid"></div>
+
+<div class="page">
+
+  <!-- ════ COL 1: PACKAGES ════ -->
+  <div class="col-packages">
+
+    <div class="top-row">
+      <div class="logo-wrap"><img src="ASMI Logo.png" alt="ASMI Career"></div>
+      <div class="step-label">Step 6 of 6 — Register</div>
+    </div>
+
+    <!-- Urgency -->
+    <div class="urgency-banner">
+      <div class="ub-left">
+        <span class="ub-icon">⏰</span>
+        <div>
+          <div class="ub-text">Early Bird Price Ends 31st May</div>
+          <div class="ub-sub">Register now and save ₹5,000 on Merit package</div>
+        </div>
+      </div>
+      <div>
+        <div class="ub-countdown" id="daysLeft">10</div>
+        <div class="ub-countdown-lbl">Days Left</div>
+      </div>
+    </div>
+
+    <!-- Package 1: Merit -->
+    <div class="pkg-card merit" style="animation-delay:.1s">
+      <div class="rec-badge">⭐ Recommended</div>
+      <div class="pkg-eyebrow">Package 1</div>
+      <div class="pkg-name">Complete Medical Admission Counselling<br>Merit Based</div>
+      <div class="pkg-prices">
+        <div class="price-now">
+          <span class="price-now-lbl">Till 31st May</span>
+          <span class="price-now-val">₹30,000</span>
+        </div>
+        <div class="price-later">
+          <span class="price-later-lbl">After 31st May</span>
+          <span class="price-later-val">₹35,000</span>
+        </div>
+      </div>
+      <span class="saving-pill">Save ₹5,000 if registered before 31st May</span>
+      <div class="pkg-note">For students admitted via general merit / category cutoffs. Covers MH State + MCC counselling.</div>
+    </div>
+
+    <!-- Package 2: NRI -->
+    <div class="pkg-card nri" style="animation-delay:.18s">
+      <div class="pkg-eyebrow">Package 2</div>
+      <div class="pkg-name">Complete Medical Admission Counselling<br>NRI or Management Quota</div>
+      <div class="pkg-prices">
+        <div class="price-now">
+          <span class="price-now-lbl">Flat Fee</span>
+          <span class="price-now-val">₹60,000</span>
+        </div>
+      </div>
+      <span class="saving-pill">No deadline — same price anytime</span>
+      <div class="pkg-note">For students pursuing NRI quota or management quota seats in private / deemed colleges.</div>
+    </div>
+
+    <!-- Extra state note -->
+    <div class="extra-note">
+      <strong>Add-on:</strong> Additional state or process form filling — <strong>₹5,000 per state.</strong>
+      MH State &amp; MCC form filling is <strong>included</strong> in the above packages.
+      No extra charge for counselling or advisory services.
+    </div>
+
+  </div>
+
+  <!-- ════ COL 2: SERVICES ════ -->
+  <div class="col-services">
+
+    <div class="col-title">What's Included</div>
+    <div class="col-sub">Everything in your package — no hidden charges</div>
+
+    <div class="service-list" id="svcList">
+
+      <div class="svc">
+        <span class="svc-icon">🎓</span>
+        <div class="svc-body">
+          <div class="svc-name">Medical Admission Guidance</div>
+          <div class="svc-desc">Comprehensive guidance from start to finish. Additional sessions before every round to keep you prepared.</div>
+          <span class="inc-badge">✓ Included</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">👤</span>
+        <div class="svc-body">
+          <div class="svc-name">One-to-One Counselling</div>
+          <div class="svc-desc">Personal sessions covering college selection by quality, budget, patient flow, and city. Includes open state process guidance.</div>
+          <span class="inc-badge">✓ Included</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">📋</span>
+        <div class="svc-body">
+          <div class="svc-name">College Preference List</div>
+          <div class="svc-desc">Custom college preference list prepared for every round of the admission process — not just once.</div>
+          <span class="inc-badge">✓ Every Round</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">📊</span>
+        <div class="svc-body">
+          <div class="svc-name">Round-wise Cutoff Data</div>
+          <div class="svc-desc">Actual round-wise cutoffs shared in real time so you always know where you stand and which colleges to target.</div>
+          <span class="inc-badge">✓ Included</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">💬</span>
+        <div class="svc-body">
+          <div class="svc-name">WhatsApp Admission Alerts</div>
+          <div class="svc-desc">All admission timelines, seat matrices, and allotment results sent directly to you. You will never miss a deadline.</div>
+          <span class="inc-badge">✓ Included</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">📝</span>
+        <div class="svc-body">
+          <div class="svc-name">Admission Form Filling</div>
+          <div class="svc-desc">Registration, preference form filling, and document scanning support. MH State &amp; MCC included. Extra states at ₹5,000/state.</div>
+          <span class="inc-badge">✓ MH + MCC Included</span>
+        </div>
+      </div>
+
+      <div class="svc">
+        <span class="svc-icon">📞</span>
+        <div class="svc-body">
+          <div class="svc-name">Dedicated Helpline</div>
+          <div class="svc-desc">Three of your numbers saved with us — student, father, mother. No missed calls. All doubts answered on priority.</div>
+          <span class="inc-badge">✓ Included</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="nr-notice">
+      ⚠️ The registration amount is non-refundable and non-transferable.
+    </div>
+
+  </div>
+
+  <!-- ════ COL 3: PAYMENT ════ -->
+  <div class="col-payment">
+
+    <div class="pay-section">
+      <div class="pay-title">Payment Details</div>
+      <div class="pay-rows">
+        <div class="pay-row">
+          <span class="pay-key">Account Name</span>
+          <span class="pay-val">ASMI Youth Career Advisor LLP</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-key">Account Number</span>
+          <span class="pay-val">50200030649290</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-key">IFSC Code</span>
+          <span class="pay-val">HDFC0001274</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-key">UPI</span>
+          <span class="pay-val upi">asmicareer@ybl</span>
+        </div>
+        <div class="pay-row">
+          <span class="pay-key">Also Accepts</span>
+          <span class="pay-val">Cheque · Cash</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Codes -->
+    <div class="qr-row">
+      <div class="qr-box">
+        <div class="qr-label">Registration Form</div>
+        <div class="qr-img">
+          <!-- Replace src with actual registration QR image -->
+          <img src="qr_registration.png" alt="Registration QR"
+               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Registration QR</div>'">
+        </div>
+        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to fill form</div>
+      </div>
+      <div class="qr-box">
+        <div class="qr-label">Payment</div>
+        <div class="qr-img">
+          <!-- Replace src with actual payment QR image -->
+          <img src="qr_payment.png" alt="Payment QR"
+               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Payment QR</div>'">
+        </div>
+        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to pay</div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-box">
+      <div class="contact-row">
+        <span class="contact-icon">📍</span>
+        <div>
+          <div class="contact-val">42, A Wing, Silver Astra Building</div>
+          <div class="contact-sub">JB Nagar Circle, Andheri East, Mumbai</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <span class="contact-icon">📞</span>
+        <div>
+          <div class="contact-val">7410019077</div>
+          <div class="contact-sub">Central Helpline</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <span class="contact-icon">🌐</span>
+        <div>
+          <div class="contact-val">www.asmicareer.com</div>
+          <div class="contact-sub">ASMI Career on Instagram · Facebook</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T&C -->
+    <div class="tnc">
+      <div class="tnc-title">Terms &amp; Conditions</div>
+      <ul class="tnc-list">
+        <li>Registration amount is <strong>non-refundable</strong> and <strong>non-transferable</strong> under any circumstances.</li>
+        <li>MH State &amp; MCC form filling included. All other states at ₹5,000/state extra.</li>
+        <li>No additional charges for counselling, advisory, or helpline services.</li>
+        <li>All charges are <strong>inclusive of GST</strong>.</li>
+        <li>Early bird rate of ₹30,000 valid only till 31st May. ₹35,000 applies after.</li>
+        <li>NRI / Management package is a flat ₹60,000 with no date-based variation.</li>
+      </ul>
+    </div>
+
+    <div class="gst-note">All charges inclusive of GST · ASMI Youth Career Advisor LLP</div>
+
+  </div>
+
+</div><!-- /page -->
+
+<div class="slide-counter">SLIDE 6 OF 6</div>
+
+<script>
+// ── Days left counter ────────────────────────────────────────────
+function updateDaysLeft(){
+  const deadline = new Date('2026-05-31T23:59:59');
+  const now = new Date();
+  const diff = Math.ceil((deadline - now) / (1000*60*60*24));
+  const el = document.getElementById('daysLeft');
+  if(diff > 0){
+    el.textContent = diff;
+  } else {
+    el.textContent = '0';
+    document.querySelector('.urgency-banner').style.background = 'linear-gradient(135deg,#64748b,#475569)';
+    document.querySelector('.ub-text').textContent = 'Early Bird Price Expired';
+    document.querySelector('.ub-sub').textContent = 'Standard rate of ₹35,000 now applies';
+  }
+}
+
+// ── Animate service cards in ─────────────────────────────────────
+function animateServices(){
+  document.querySelectorAll('.svc').forEach((el,i)=>{
+    el.style.transition = `opacity .4s ${i*80}ms ease, transform .4s ${i*80}ms ease`;
+    setTimeout(()=>el.classList.add('visible'), 100+i*80);
+  });
+}
+
+updateDaysLeft();
+document.fonts.ready.then(animateServices);
+</script>
+
+</body>
+</html>

@@ -599,61 +599,100 @@
         transition: opacity 0.2s;
     }
     .events-view-all:hover { opacity: 0.75; }
-    .events-cards {
-        display: flex;
-        gap: 20px;
+    .events-track-wrapper {
+        overflow: hidden;
+        position: relative;
+        width: 100%;
     }
-    .event-card {
-        flex: 1;
-        background: #fafafa;
-        border: 1px solid rgba(26,0,64,0.10);
-        border-radius: 12px;
-        padding: 20px;
+
+    .events-track {
+        display: flex;
+        gap: 16px;
+        width: max-content;
+        animation: eventsScroll 35s linear infinite;
         cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    .events-track:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes eventsScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    .event-card {
+        flex-shrink: 0;
+        width: 280px;
+        background: rgba(255, 255, 255, 0.58);
+        border: 1px solid rgba(106, 13, 173, 0.15);
+        border-radius: 12px;
+        padding: 16px;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
     .event-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(26,0,64,0.08);
+        background: rgba(255, 255, 255, 0.85);
+        border-color: rgba(106, 13, 173, 0.4);
     }
-    .event-card-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+
+    .event-tag {
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
         margin-bottom: 10px;
     }
-    .event-tag {
+
+    .tag-deadline  { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+    .tag-exam      { background: #fefce8; color: #854d0e; border: 1px solid #fde68a; }
+    .tag-asmi      { background: rgba(106,13,173,0.1); color: #6a0dad; border: 1px solid rgba(106,13,173,0.25); }
+    .tag-general   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+    .event-date {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        font-size: 9px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        letter-spacing: 1px;
-    }
-    .tag-engineering { background: #e8f0ff; color: #6a0dad; }
-    .tag-urgent      { background: #fff0f0; color: #d32f2f; }
-    .tag-medical     { background: #f3e5ff; color: #6a0dad; }
-    .event-time {
         font-size: 11px;
-        color: #999;
-    }
-    .event-headline {
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        font-size: 14px;
-        color: #1a0040;
-        line-height: 1.4;
+        font-weight: 700;
+        color: #4a0080;
         margin-bottom: 6px;
     }
-    .event-& {
-        font-size: 12px;
-        color: rgba(26,0,64,0.6);
-        line-height: 1.6;
+
+    .event-headline {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
+        color: #1a0040;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+
+    .event-cta-btn {
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 5px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        background: #1a0040;
+        color: #FFD700;
+        transition: opacity 0.15s;
+    }
+
+    .event-cta-btn:hover { opacity: 0.85; }
+
+    .event-cta-btn.asmi-btn {
+        background: #FFD700;
+        color: #1a0040;
     }
 
     @media (max-width: 768px) {
         .events-section { padding: 40px; }
-        .events-cards { flex-direction: column; }
     }
     @media (max-width: 640px) {
         .events-section { padding: 32px 24px; }

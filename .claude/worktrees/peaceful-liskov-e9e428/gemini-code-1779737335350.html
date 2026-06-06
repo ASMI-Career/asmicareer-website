@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Cinematic Blueprint Trial — DNA vs. Binary Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  /* ── SYSTEM RESET ── */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:100%; height:100vh; overflow:hidden; font-family:'Montserrat',sans-serif; background:#050b14; position: relative; }
+  
+  /* ── GLOBAL SCREEN INTERACTIVE ANIMATION CANVAS ── */
+  /* This sits completely on top of everything, allowing the DNA to spin across both panels without getting clipped */
+  #globalCanvas { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh; 
+    z-index: 99; 
+    pointer-events: none; 
+    display: none; 
+  }
+
+  .split-container { display:flex; width:100%; height:100vh; position:relative; z-index: 1; }
+  
+  /* ── MEDICAL SIDE (LEFT PANEL) ── */
+  .med-panel {
+    position:absolute; inset:0; width:52%; height:100%; background:#FFD700; z-index:2;
+    clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+    transition: clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1), width 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  
+  /* ── ENGINEERING SIDE (RIGHT PANEL FLOOR) ── */
+  .eng-panel {
+    position:absolute; inset:0; width:100%; height:100%; background:#0a1628; z-index:1;
+    display:flex; justify-content:flex-end; align-items:center;
+  }
+
+  /* ── STATIC SEAM BOUNDARY LINE ── */
+  .seam {
+    position:absolute; inset:0; width:52%; height:100%; z-index:3; pointer-events:none;
+    clip-path:polygon(0 0, 88% 0, 100% 100%, 0 100%);
+    transition: clip-path 0.75s cubic-bezier(0.77, 0, 0.18, 1), width 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  .seam::after {
+    content:''; position:absolute; top:0; right:0; width:4px; height:100%;
+    background:linear-gradient(to bottom, #FFD700, #ffffff 50%, #00C8B4);
+  }
+
+  /* ── SYSTEM UI OVERLAYS ── */
+  .content { 
+    padding:60px; display:flex; flex-direction:column; justify-content:center; 
+    height:100%; width:50vw; z-index:4; position:relative;
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+  }
+  .med-title { color:#1a0040; font-size:42px; font-weight:900; line-height:1.1; margin-bottom:20px; }
+  .eng-title { color:#ffffff; font-size:42px; font-weight:900; line-height:1.1; margin-bottom:20px; }
+  .eng-title span { color:#00C8B4; }
+  
+  /* INTERACTIVE CTAs */
+  .btn {
+    display:inline-block; padding:15px 32px; border-radius:30px; font-weight:900;
+    text-transform:uppercase; font-size:12px; letter-spacing:1px; cursor:pointer; align-self:flex-start;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.2s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .med-btn { background:#1a0040; color:#FFD700; }
+  .eng-btn { background:#00C8B4; color:#0a1628; }
+
+  /* ENGINEERING MATRIX BACKGROUND CANVAS */
+  #engCanvas { position:absolute; top:0; left:52%; width:48%; height:100%; z-index:5; pointer-events:none; display:none; }
+
+  /* ── TRANSITION OVERLAY FLASHER ── */
+  .flash-curtain {
+    position:absolute; inset:0; width:100%; height:100%; background:#ffffff; z-index:100;
+    opacity:0; pointer-events:none; transition: opacity 0.15s ease-out;
+  }
+  .eng-wipe-overlay {
+    position:absolute; top:0; right:0; width:48%; height:0%; background:#0a1628; z-index:6;
+    transition: height 0.45s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+</style>
+</head>
+<body>
+
+<div class="flash-curtain" id="flashCurtain"></div>
+
+<canvas id="globalCanvas"></canvas>
+
+<div class="split-container">
+  
+  <div class="med-panel" id="medPanel">
+    <div class="content" id="medContent">
+      <h1 class="med-title">Medical Stream<br>DNA Helix Assembly</h1>
+      <div class="btn med-btn" id="medBtn">Assemble DNA Helix →</div>
+    </div>
+  </div>
+
+  <div class="seam" id="seamLine"></div>
+
+  <div class="eng-panel">
+    <canvas id="engCanvas"></canvas>
+    <div class="eng-wipe-overlay" id="engWipe"></div>
+    
+    <div class="content" id="engContent">
+      <h1 class="eng-title">Engineering Stream<br><span>Data Defrag Concept</span></h1>
+      <div class="btn eng-btn" id="engBtn">Run Binary Defrag →</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const medPanel     = document.getElementById('medPanel');
+const seamLine     = document.getElementById('seamLine');
+const medContentEl = document.getElementById('medContent');
+const engContent   = document.getElementById('engContent');
+const engWipe      = document.getElementById('engWipe');
+const flashCurtain = document.getElementById('flashCurtain');
+
+const canvas = document.getElementById('globalCanvas');
+const ctx    = canvas.getContext('2d');
+
+const eCanvas = document.getElementById('engCanvas');
+const eCtx    = eCanvas.getContext('2d');
+
+let isTransitioning = false;
+
+// ── FIXED CINEMATIC MEDICAL ACTION: GLOBAL AXIS TETHER ──
+document.getElementById('medBtn').addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  // Calculate window viewports explicitly at the moment of interaction
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  
+  canvas.style.display = 'block';
+  canvas.width = w;
+  canvas.height = h;
+  
+  // Fade out engineering layout text seamlessly
+  engContent.style.opacity = '0';
+  
+  // Read exact typography bounding box coordinates to spawn particles naturally
+  const rect = medContentEl.getBoundingClientRect();
+  let particles = [];
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: rect.left + Math.random() * rect.width,
+      y: rect.top + Math.random() * rect.height,
+      alpha: 1,
+      targetProgress: Math.random(), // Unique structural landing index on the line length
+      speed: 0.04 + Math.random() * 0.04
+    });
+  }
+
+  // Hide static layout heading to trigger organic shattering simulation
+  medContentEl.style.opacity = '0';
+
+  let animationStep = 0;
+  const totalNodes = 45; 
+  let growthProgress = 0; 
+  let timelineTicks = 0; 
+
+  // THE ULTIMATE COORDINATE MAP:
+  // In your responsive CSS layout, the visual seam travels from:
+  // Bottom: 100% of the screen width (Absolute right-hand side edge intersection)
+  // Top: 88% of the screen width
+  const startX = w * 1.0;  
+  const startY = h;
+  const endX = w * 0.88;   
+  const endY = 0;
+  
+  const deltaX = endX - startX;
+  const deltaY = endY - startY;
+  const angleOfLine = Math.atan2(deltaY, deltaX); 
+
+  function renderGlobalCinematicLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    animationStep += 0.055; // Fluid orbital twist speed
+    timelineTicks++;
+
+    // 1. PARTICLES MOVE FROM HEADING AND COALESCE SMOOTHLY INTO SEAM CODES
+    particles.forEach(p => {
+      // Direct destination points tracking along the slant axis line path length
+      const destX = startX + deltaX * p.targetProgress;
+      const destY = startY + deltaY * p.targetProgress;
+
+      // Distance check calculations
+      const dx = destX - p.x;
+      const dy = destY - p.y;
+      
+      p.x += dx * 0.06;
+      p.y += dy * 0.06;
+
+      // Render floating atomic fragment dots
+      if (Math.abs(dx) > 2) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#1a0040';
+        ctx.fill();
+      } else {
+        // Fade particles down as they lock into their core helix structural rungs
+        p.alpha *= 0.85;
+        if (p.alpha > 0.02) {
+          ctx.beginPath();
+          ctx.arc(destX, destY, 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(26, 0, 64, ${p.alpha})`;
+          ctx.fill();
+        }
+      }
+    });
+
+    // 2. TIMING TRIGGER: Initiate structural growth once text fragments converge
+    if (timelineTicks > 20) { 
+      if (growthProgress < 1) {
+        growthProgress += 0.018; // Elegant, slow-build climbing speed
+      } else {
+        // Complete takeover layout transition execution
+        clearInterval(dnaInterval);
+        flashCurtain.style.opacity = '1';
+        
+        setTimeout(() => {
+          medPanel.style.width = '100%';
+          seamLine.style.width = '100%';
+          medPanel.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          seamLine.style.clipPath = 'polygon(0 0, 100% 0, 100% 100%, 0 100%)';
+          
+          setTimeout(() => {
+            flashCurtain.style.opacity = '0';
+            setTimeout(() => { alert('Cinematic Medical Transmutation Complete!'); location.reload(); }, 400);
+          }, 150);
+        }, 100);
+        return;
+      }
+    }
+    
+    // 3. RENDER 3D TWISTING HELIX ALONG THE CORRECT CO-ORDINATE AXIS CORRIDOR
+    for (let i = 0; i < totalNodes; i++) {
+      const nodeProgress = i / totalNodes;
+      
+      // Keep nodes invisible until the upward growth index arrives
+      if (nodeProgress > growthProgress) continue;
+
+      // Track center axis trajectory straight up the sloped seam vector
+      const centerX = startX + deltaX * nodeProgress;
+      const centerY = startY + deltaY * nodeProgress;
+
+      // Rotation angles matrix generator per segment index point step
+      const angle1 = animationStep + (i * 0.28);
+      const angle2 = angle1 + Math.PI; 
+      
+      // Scaled radius width gives a dramatic 3D perspective depth effect near the lens top
+      const radius = 35 + (nodeProgress * 20); 
+      
+      const orbitOffset1 = Math.sin(angle1) * radius;
+      const orbitOffset2 = Math.sin(angle2) * radius;
+      
+      // Force rungs to rotate exactly 90 degrees square against the sloped vector angle line
+      const perpAngle = angleOfLine + Math.PI / 2;
+      
+      const nodeX1 = centerX + Math.cos(perpAngle) * orbitOffset1;
+      const nodeY1 = centerY + Math.sin(perpAngle) * orbitOffset1;
+      
+      const nodeX2 = centerX + Math.cos(perpAngle) * orbitOffset2;
+      const nodeY2 = centerY + Math.sin(perpAngle) * orbitOffset2;
+      
+      // Link base pairs
+      ctx.beginPath();
+      ctx.moveTo(nodeX1, nodeY1);
+      ctx.lineTo(nodeX2, nodeY2);
+      ctx.strokeStyle = 'rgba(26, 0, 64, 0.22)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      
+      // Calculate depth metrics via Cosine calculations
+      const z1 = Math.cos(angle1);
+      const z2 = Math.cos(angle2);
+      
+      // Strand 1 Primary Chain Link Nodes
+      ctx.beginPath();
+      ctx.arc(nodeX1, nodeY1, z1 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = z1 > 0 ? 'rgba(106, 13, 189, 1)' : 'rgba(148, 92, 212, 0.65)';
+      ctx.fill();
+      
+      // Strand 2 Secondary Counter Link Nodes
+      ctx.beginPath();
+      ctx.arc(nodeX2, nodeY2, z2 > 0 ? 7 : 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = z2 > 0 ? 'rgba(26, 0, 64, 1)' : 'rgba(69, 43, 110, 0.65)';
+      ctx.fill();
+    }
+  }
+  
+  const dnaInterval = setInterval(renderGlobalCinematicLoop, 16);
+});
+
+// ── 2. CINEMATIC ENGINEERING ACTION: DATA STREAM DEFRAG ──
+document.getElementById('engBtn').addEventListener('click', function() {
+  if (isTransitioning) return;
+  isTransitioning = true;
+  
+  medContentEl.style.opacity = '0';
+  engContent.style.opacity = '0';
+  engContent.style.transform = 'translateY(20px)';
+  
+  eCanvas.style.display = 'block';
+  eCanvas.width = window.innerWidth * 0.48;
+  eCanvas.height = window.innerHeight;
+  
+  const columns = Math.floor(eCanvas.width / 14);
+  const drops = Array(columns).fill(0);
+  
+  function drawMatrix() {
+    eCtx.fillStyle = 'rgba(10, 22, 40, 0.15)'; 
+    eCtx.fillRect(0, 0, eCanvas.width, eCanvas.height);
+    
+    eCtx.fillStyle = '#00C8B4'; 
+    eCtx.font = '900 12px monospace';
+    
+    for (let i = 0; i < drops.length; i++) {
+      const text = Math.random() > 0.5 ? "1" : "0";
+      const x = i * 14;
+      const y = drops[i] * 14;
+      
+      eCtx.fillText(text, x, y);
+      
+      if (y > eCanvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+  
+  const matrixInterval = setInterval(drawMatrix, 18);
+  
+  setTimeout(() => {
+    engWipe.style.height = '100%';
+    
+    setTimeout(() => {
+      medPanel.style.width = '0%';
+      seamLine.style.width = '0%';
+      medPanel.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      seamLine.style.clipPath = 'polygon(0 0, 0 0, 0 100%, 0 100%)';
+      
+      setTimeout(() => { 
+        clearInterval(matrixInterval);
+        alert('Engineering Page Redirect Sequence Activated!'); 
+        location.reload(); 
+      }, 500);
+    }, 350);
+  }, 500);
+});
+</script>
+</body>
+</html>

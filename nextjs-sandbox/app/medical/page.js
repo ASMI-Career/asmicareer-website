@@ -8,7 +8,8 @@ export default function MedicalPortal() {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
-  
+  const [events, setEvents] = useState([]);
+
   const uniTrackRef = useRef(null);
 
   useEffect(() => {
@@ -17,6 +18,16 @@ export default function MedicalPortal() {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    fetch('/data/events.json')
+      .then(r => r.json())
+      .then(data => {
+        const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+        setEvents(sorted);
+      })
+      .catch(err => console.warn('Events feed unavailable:', err));
   }, []);
 
   // IntersectionObserver for reveal animation
@@ -287,40 +298,28 @@ export default function MedicalPortal() {
               <div className="events-header">
                   <div className="events-title" id="events-heading">
                       <span className="events-title-dot" aria-hidden="true">●</span>
-                      News and events
+                      News &amp; Events
                   </div>
-                  <a href="#" className="events-view-all">View all →</a>
+                  <a href="/tools/events" className="events-view-all">View all →</a>
               </div>
-      
-              <div className="events-cards">
-      
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-engineering">ENGINEERING</span>
-                          <span className="event-time">2 hours ago</span>
+              <div className="events-track-wrapper" aria-label="Upcoming events">
+                  {events.length > 0 && (
+                      <div className="events-track">
+                          {[...events, ...events].map((ev, i) => {
+                              const tagClass = { deadline: 'tag-deadline', exam: 'tag-exam', asmi: 'tag-asmi', general: 'tag-general' }[ev.type] || 'tag-general';
+                              return (
+                                  <div className="event-card" key={i}>
+                                      <span className={`event-tag ${tagClass}`}>{ev.tag}</span>
+                                      <div className="event-date">{ev.display_date}</div>
+                                      <div className="event-headline">{ev.title}</div>
+                                      {ev.link && ev.cta && (
+                                          <a href={ev.link} className={`event-cta-btn${ev.type === 'asmi' ? ' asmi-btn' : ''}`} target="_blank" rel="noopener noreferrer">{ev.cta} →</a>
+                                      )}
+                                  </div>
+                              );
+                          })}
                       </div>
-                      <div className="event-headline">JEE Advanced 2024 Registration Open</div>
-                      <p className="event-body">Last date to apply is May 7th, 2024. Don't miss the deadline.</p>
-                  </div>
-      
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-urgent">URGENT</span>
-                          <span className="event-time">5 hours ago</span>
-                      </div>
-                      <div className="event-headline">NEET UG Admit Card Released</div>
-                      <p className="event-body">Download your hall tickets now from the official website.</p>
-                  </div>
-      
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-medical">MEDICAL</span>
-                          <span className="event-time">Yesterday</span>
-                      </div>
-                      <div className="event-headline">NEET Results Announcement</div>
-                      <p className="event-body">Results scheduled for the second week of June. Stay tuned.</p>
-                  </div>
-      
+                  )}
               </div>
           </div>
       </section>
