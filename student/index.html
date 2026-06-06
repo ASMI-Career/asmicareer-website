@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | ASMI Career</title>
+    <meta name="description" content="Your personalised ASMI Career student portal — track admission progress, upcoming deadlines, shortlisted colleges, and counselling tools.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ══════════════════════════════════════════════
+           DESIGN SYSTEM — ASMI Student Dashboard
+           Matches the College Predictor brand tokens
+           ══════════════════════════════════════════════ */
+        :root {
+            --yellow: #FFD700;
+            --yellow-hover: #e6c200;
+            --yellow-glow: rgba(255, 215, 0, 0.15);
+            --navy: #1a0040;
+            --navy-light: #2d0d66;
+            --purple: #6a0dad;
+            --purple-light: #8b25cc;
+            --bg-dark: #070114;
+            --card-bg: rgba(45, 13, 102, 0.15);
+            --card-bg-hover: rgba(45, 13, 102, 0.28);
+            --card-border: rgba(139, 37, 204, 0.2);
+            --card-border-hover: rgba(139, 37, 204, 0.45);
+            --text-light: #f3f0ff;
+            --text-muted: #a78bfa;
+            --text-dim: rgba(255, 255, 255, 0.45);
+
+            /* Status colors */
+            --safe-color: #10b981;
+            --safe-bg: rgba(16, 185, 129, 0.12);
+            --safe-border: rgba(16, 185, 129, 0.25);
+            --likely-color: #3b82f6;
+            --likely-bg: rgba(59, 130, 246, 0.12);
+            --likely-border: rgba(59, 130, 246, 0.25);
+            --borderline-color: #f59e0b;
+            --borderline-bg: rgba(245, 158, 11, 0.12);
+            --borderline-border: rgba(245, 158, 11, 0.25);
+            --reach-color: #ef4444;
+            --reach-bg: rgba(239, 68, 68, 0.1);
+            --reach-border: rgba(239, 68, 68, 0.2);
+
+            /* Layout */
+            --sidebar-width: 192px;
+            --header-height: 64px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ── AMBIENT BACKGROUND GLOWS ── */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+        }
+        .glow-1 {
+            width: 500px; height: 500px;
+            top: -120px; left: -80px;
+            background: radial-gradient(circle, rgba(106, 13, 173, 0.25) 0%, transparent 70%);
+        }
+        .glow-2 {
+            width: 600px; height: 600px;
+            bottom: -150px; right: -100px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+        }
+        .glow-3 {
+            width: 350px; height: 350px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(106, 13, 173, 0.08) 0%, transparent 70%);
+        }
+
+        /* ══════════════════════════════════════
+           HEADER
+           ══════════════════════════════════════ */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--header-height);
+            background: rgba(7, 1, 20, 0.82);
+            border-bottom: 1px solid rgba(139, 37, 204, 0.18);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .header-inner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-img {
+            height: 38px;
+            width: auto;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-portal-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-greeting {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .user-greeting strong {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .enrolled-badge {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            background: var(--safe-bg);
+            color: var(--safe-color);
+            border: 1px solid var(--safe-border);
+        }
+
+        .btn-logout {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        /* Mobile hamburger */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* ══════════════════════════════════════
+           SIDEBAR
+           ══════════════════════════════════════ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: rgba(7, 1, 20, 0.6);
+            border-right: 1px solid rgba(139, 37, 204, 0.12);
+            padding: 20px 0;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 0 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 37, 204, 0.12);
+            color: var(--text-light);
+        }
+
+        .nav-link.active {
+            background: rgba(139, 37, 204, 0.2);
+            color: var(--yellow);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--yellow);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto;
+        }
+
+        .sidebar-footer-text {
+            font-size: 10px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* ══════════════════════════════════════
+           MAIN CONTENT AREA
+           ══════════════════════════════════════ */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 28px 32px 100px 32px;
+            position: relative;
+            z-index: 1;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content-max {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title .icon {
+            font-size: 18px;
+        }
+
+        .section-action-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--yellow);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .section-action-link:hover {
+            opacity: 0.8;
+        }
+
+        /* ══════════════════════════════════════
+           WELCOME HERO CARD
+           ══════════════════════════════════════ */
+        .welcome-card {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.7) 0%, rgba(45, 13, 102, 0.35) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out both;
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple), var(--yellow), var(--purple), transparent);
+        }
+
+        .welcome-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .welcome-heading {
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-heading .name-highlight {
+            color: var(--yellow);
+            -webkit-text-fill-color: var(--yellow);
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(7, 1, 20, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            padding: 6px 16px;
+        }
+
+        .rank-badge-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .rank-badge-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--yellow);
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: rgba(7, 1, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .stat-item:hover {
+            border-color: rgba(139, 37, 204, 0.3);
+            background: rgba(45, 13, 102, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .stat-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--yellow);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ══════════════════════════════════════
+           PROGRESS TRACKER (Registered Only)
+           ══════════════════════════════════════ */
+        .progress-section {
+            margin-bottom: 28px;
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .progress-tracker {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.5) 0%, rgba(45, 13, 102, 0.2) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* Connecting line behind steps */
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 40px;
+            right: 40px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 0;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .step-circle.completed {
+            background: var(--safe-color);
+            border-color: var(--safe-color);
+            color: #ffffff;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .step-circle.active {
+            background: var(--yellow);
+            border-color: var(--yellow);
+            color: var(--navy);
+            box-shadow: 0 0 20px var(--yellow-glow);
+            animation: stepPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes stepPulse {
+            0%, 100% { box-shadow: 0 0 16px var(--yellow-glow); }
+            50% { box-shadow: 0 0 28px rgba(255, 215, 0, 0.35); }
+        }
+
+        .step-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            text-align: center;
+            max-width: 90px;
+        }
+
+        .step-label.active-label {
+            color: var(--yellow);
+        }
+
+        .step-label.completed-label {
+            color: var(--safe-color);
+        }
+
+        /* ══════════════════════════════════════
+           TWO-COLUMN GRID (Deadlines + Shortlist)
+           ══════════════════════════════════════ */
+        .two-col-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        /* ── DEADLINES SECTION ── */
+        .deadlines-section {
+            animation: fadeInUp 0.5s ease-out 0.15s both;
+        }
+
+        .deadlines-panel {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .deadlines-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .deadlines-panel::-webkit-scrollbar-thumb {
+            background: var(--purple-light);
+            border-radius: 2px;
+        }
+
+        .deadline-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+        }
+
+        .deadline-item:last-child {
+            border-bottom: none;
+        }
+
+        .deadline-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .deadline-date-col {
+            flex-shrink: 0;
+            width: 54px;
+            text-align: center;
+        }
+
+        .deadline-month {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--yellow);
+        }
+
+        .deadline-day {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text-light);
+            line-height: 1.1;
+        }
+
+        .deadline-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .deadline-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .deadline-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .deadline-authority {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(139, 37, 204, 0.2);
+            color: var(--purple-light);
+            border: 1px solid rgba(139, 37, 204, 0.3);
+        }
+
+        .deadline-countdown {
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .deadline-countdown.upcoming {
+            color: var(--borderline-color);
+        }
+        .deadline-countdown.imminent {
+            color: var(--reach-color);
+        }
+        .deadline-countdown.past {
+            color: var(--text-dim);
+        }
+
+        .deadline-type-icon {
+            font-size: 11px;
+        }
+
+        /* ── SHORTLIST SECTION ── */
+        .shortlist-section {
+            animation: fadeInUp 0.5s ease-out 0.2s both;
+        }
+
+        .shortlist-panel {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .shortlist-panel::-webkit-scrollbar {
+            width: 4px;
+        }
+        .shortlist-panel::-webkit-scrollbar-thumb {
+            background: var(--purple-light);
+            border-radius: 2px;
+        }
+
+        .shortlist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s;
+        }
+
+        .shortlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .shortlist-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .shortlist-college-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .shortlist-college-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .shortlist-college-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shortlist-badge {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+        }
+
+        .btn-remove-shortlist {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-remove-shortlist:hover {
+            color: var(--reach-color);
+            background: var(--reach-bg);
+        }
+
+        .star-icon {
+            color: var(--yellow);
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        /* Empty states */
+        .empty-state {
+            text-align: center;
+            padding: 32px 16px;
+        }
+        .empty-icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+        .empty-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+        .empty-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .btn-action {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-action-yellow {
+            background: var(--yellow);
+            color: var(--navy);
+        }
+        .btn-action-yellow:hover {
+            background: var(--yellow-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--yellow-glow);
+        }
+
+        .btn-action-outline {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-action-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ══════════════════════════════════════
+           QUICK ACTIONS GRID
+           ══════════════════════════════════════ */
+        .actions-section {
+            margin-bottom: 28px;
+            animation: fadeInUp 0.5s ease-out 0.25s both;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 22px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--card-border-hover);
+            background: var(--card-bg-hover);
+            box-shadow: 0 12px 30px rgba(106, 13, 173, 0.15);
+        }
+
+        .action-card-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .action-card-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .action-card-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .action-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .action-card-arrow {
+            color: var(--text-dim);
+            font-size: 16px;
+            transition: all 0.2s;
+            align-self: center;
+        }
+
+        .action-card:hover .action-card-arrow {
+            color: var(--yellow);
+            transform: translateX(3px);
+        }
+
+        /* ══════════════════════════════════════
+           UPSELL BANNER (Login mode only)
+           ══════════════════════════════════════ */
+        .upsell-banner {
+            position: fixed;
+            bottom: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            z-index: 180;
+            background: rgba(26, 0, 64, 0.92);
+            border-top: 1px solid rgba(255, 215, 0, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .upsell-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .upsell-text strong {
+            color: var(--text-light);
+            font-weight: 700;
+        }
+
+        .btn-upsell {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 8px 22px;
+            border-radius: 30px;
+            border: none;
+            background: var(--yellow);
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .btn-upsell:hover {
+            background: var(--yellow-hover);
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px var(--yellow-glow);
+        }
+
+        /* ══════════════════════════════════════
+           LOCKED SECTION PLACEHOLDER
+           ══════════════════════════════════════ */
+        .locked-section {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.3) 0%, rgba(45, 13, 102, 0.1) 100%);
+            border: 1px dashed rgba(139, 37, 204, 0.25);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 28px;
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .locked-icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .locked-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        .locked-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* ══════════════════════════════════════
+           ANIMATIONS
+           ══════════════════════════════════════ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ══════════════════════════════════════
+           MOBILE BOTTOM NAV (< 768px)
+           ══════════════════════════════════════ */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(7, 1, 20, 0.95);
+            border-top: 1px solid rgba(139, 37, 204, 0.2);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 200;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+            border: none;
+            background: none;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--yellow);
+        }
+
+        .mobile-nav-item:hover {
+            color: var(--text-light);
+        }
+
+        .mobile-nav-icon {
+            font-size: 18px;
+        }
+
+        /* ══════════════════════════════════════
+           RESPONSIVE
+           ══════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 0px;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .mobile-bottom-nav {
+                display: flex;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px 16px 80px 16px;
+            }
+
+            .header-portal-label {
+                display: none;
+            }
+            .header-divider {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .welcome-heading {
+                font-size: 18px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-label {
+                font-size: 9px;
+            }
+
+            .two-col-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-steps {
+                gap: 4px;
+            }
+
+            .step-circle {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+
+            .step-label {
+                font-size: 9px;
+                max-width: 65px;
+            }
+
+            .upsell-banner {
+                left: 0;
+                bottom: 60px;
+            }
+
+            .rank-badge {
+                padding: 4px 12px;
+            }
+            .rank-badge-value {
+                font-size: 14px;
+            }
+
+            .user-greeting {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
+            }
+            .stat-item {
+                padding: 10px 8px;
+            }
+            .stat-value {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <!-- ══════════════════════════════
+         HEADER
+         ══════════════════════════════ -->
+    <header class="header" id="mainHeader">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="/">
+                    <img src="/asmi-logo.png" alt="ASMI Career" class="logo-img">
+                </a>
+                <div class="header-divider"></div>
+                <span class="header-portal-label">Student Portal</span>
+            </div>
+            <div class="header-right" id="headerRight">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════
+         SIDEBAR
+         ══════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <a href="/student/" class="nav-link active" id="navDashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/tools/college-predictor/" class="nav-link" id="navPredictor">
+                <span class="nav-icon">🔮</span>
+                <span>Predictor</span>
+            </a>
+            <a href="/tools/cutoff-explorer/" class="nav-link" id="navExplorer">
+                <span class="nav-icon">📊</span>
+                <span>Cutoff Explorer</span>
+            </a>
+            <a href="#shortlistSection" class="nav-link" id="navShortlist" onclick="scrollToSection('shortlistSection')">
+                <span class="nav-icon">⭐</span>
+                <span>My Shortlist</span>
+            </a>
+            <a href="#deadlinesSection" class="nav-link" id="navDeadlines" onclick="scrollToSection('deadlinesSection')">
+                <span class="nav-icon">📅</span>
+                <span>Deadlines</span>
+            </a>
+            <a href="/inquiry.html" class="nav-link" id="navContact">
+                <span class="nav-icon">📞</span>
+                <span>Contact ASMI</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-text">
+                © 2025 ASMI Career<br>
+                All rights reserved
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════════════════════════
+         MAIN CONTENT
+         ══════════════════════════════ -->
+    <main class="main-content" id="mainContent">
+        <div class="content-max" id="dashboardContent">
+            <!-- Populated by JS -->
+        </div>
+    </main>
+
+    <!-- ══════════════════════════════
+         MOBILE BOTTOM NAV
+         ══════════════════════════════ -->
+    <nav class="mobile-bottom-nav" id="mobileNav">
+        <a href="/student/" class="mobile-nav-item active">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="/tools/college-predictor/" class="mobile-nav-item">
+            <span class="mobile-nav-icon">🔮</span>
+            <span>Predictor</span>
+        </a>
+        <button class="mobile-nav-item" onclick="scrollToSection('shortlistSection')">
+            <span class="mobile-nav-icon">⭐</span>
+            <span>Shortlist</span>
+        </button>
+        <button class="mobile-nav-item" onclick="scrollToSection('deadlinesSection')">
+            <span class="mobile-nav-icon">📅</span>
+            <span>Deadlines</span>
+        </button>
+        <a href="/inquiry.html" class="mobile-nav-item">
+            <span class="mobile-nav-icon">📞</span>
+            <span>Contact</span>
+        </a>
+    </nav>
+
+
+    <!-- ══════════════════════════════════════════════════════════
+         JAVASCRIPT — State, Data, Rendering
+         ══════════════════════════════════════════════════════════ -->
+    <script>
+        /* ── APPLICATION STATE ── */
+        const appState = {
+            tier: 'login',    // 'login' or 'registered'
+            name: '',
+            rank: null,
+            shortlist: [],    // Array of college name strings
+            deadlines: [],    // Fetched from /data/deadlines.json
+            progress: {       // Simulated progress data
+                steps: [
+                    { id: 1, label: 'Profile', status: 'completed' },
+                    { id: 2, label: 'Counselling', status: 'active' },
+                    { id: 3, label: 'Shortlist', status: 'pending' },
+                    { id: 4, label: 'Admission', status: 'pending' }
+                ]
+            },
+            collegeData: []   // Full college DB for enriching shortlist
+        };
+
+        /* ── INITIALISE STATE FROM LOCALSTORAGE + URL ── */
+        function initState() {
+            // Check URL parameter for tier upgrade
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('tier') === 'registered') {
+                localStorage.setItem('tier', 'registered');
+                // Clean URL
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+
+            appState.tier = localStorage.getItem('tier') || 'login';
+            appState.name = localStorage.getItem('name') || 'Student';
+            const rankVal = localStorage.getItem('rank');
+            appState.rank = rankVal ? parseInt(rankVal, 10) : null;
+
+            // Load shortlist
+            try {
+                appState.shortlist = JSON.parse(localStorage.getItem('shortlist')) || [];
+            } catch (e) {
+                appState.shortlist = [];
+            }
+
+            // Load simulated progress (registered mode only)
+            try {
+                const saved = localStorage.getItem('asmi_progress');
+                if (saved) {
+                    appState.progress = JSON.parse(saved);
+                }
+            } catch (e) { /* use default */ }
+        }
+
+        /* ── FETCH DATA ── */
+        async function fetchDeadlines() {
+            try {
+                const res = await fetch('/data/deadlines.json');
+                if (!res.ok) throw new Error('Failed to fetch');
+                appState.deadlines = await res.json();
+                // Sort by date ascending (nearest first)
+                appState.deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } catch (e) {
+                console.warn('Could not load deadlines:', e);
+                appState.deadlines = [];
+            }
+        }
+
+        async function fetchCollegeData() {
+            try {
+                const res = await fetch('/data/rank_db.json');
+                if (!res.ok) throw new Error('Failed to fetch');
+                appState.collegeData = await res.json();
+            } catch (e) {
+                console.warn('Could not load college data:', e);
+                appState.collegeData = [];
+            }
+        }
+
+        /* ── UTILITY FUNCTIONS ── */
+        function formatFees(rawFees) {
+            const fees = parseInt(String(rawFees).replace(/[^0-9]/g, ''), 10);
+            if (isNaN(fees) || fees === 0) return '—';
+            if (fees < 100000) {
+                return '₹' + fees.toLocaleString('en-IN') + ' / yr';
+            }
+            return '₹' + (fees / 100000).toFixed(2) + ' L / yr';
+        }
+
+        function getDeadlineCountdown(dateStr) {
+            const target = new Date(dateStr + 'T23:59:59');
+            const now = new Date();
+            const diffMs = target - now;
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) return { text: 'Passed', class: 'past' };
+            if (diffDays === 0) return { text: 'Today!', class: 'imminent' };
+            if (diffDays === 1) return { text: 'Tomorrow', class: 'imminent' };
+            if (diffDays <= 7) return { text: diffDays + 'd left', class: 'imminent' };
+            return { text: diffDays + ' days', class: 'upcoming' };
+        }
+
+        function getDeadlineTypeIcon(type) {
+            switch (type) {
+                case 'registration': return '📝';
+                case 'deadline': return '⏰';
+                case 'result': return '📋';
+                default: return '📌';
+            }
+        }
+
+        function getMonthAbbr(dateStr) {
+            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            return months[new Date(dateStr).getMonth()] || '';
+        }
+
+        function getDayNum(dateStr) {
+            return new Date(dateStr).getDate();
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function enrichShortlistItem(collegeName) {
+            // Try to find the college in the full dataset for extra details
+            const match = appState.collegeData.find(c => c.name === collegeName);
+            if (match) return match;
+            return { name: collegeName, type: '—', state: '—', fees: '0', cutoff: 0 };
+        }
+
+        function removeFromShortlist(collegeName) {
+            appState.shortlist = appState.shortlist.filter(n => n !== collegeName);
+            localStorage.setItem('shortlist', JSON.stringify(appState.shortlist));
+            renderDashboard();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('tier');
+            localStorage.removeItem('name');
+            localStorage.removeItem('rank');
+            localStorage.removeItem('rankChanged');
+            window.location.href = '/';
+        }
+
+        /* ── RENDER HEADER ── */
+        function renderHeader() {
+            const isRegistered = appState.tier === 'registered';
+            const headerRight = document.getElementById('headerRight');
+
+            headerRight.innerHTML = `
+                <span class="user-greeting">Welcome, <strong>${escapeHtml(appState.name)}</strong></span>
+                ${isRegistered ? '<span class="enrolled-badge">✓ Enrolled</span>' : ''}
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+            `;
+        }
+
+        /* ── RENDER DASHBOARD CONTENT ── */
+        function renderDashboard() {
+            const isRegistered = appState.tier === 'registered';
+            const isLogin = appState.tier === 'login';
+            const content = document.getElementById('dashboardContent');
+            const shortlistedColleges = appState.shortlist.map(enrichShortlistItem);
+
+            // Calculate stats
+            const nextDeadline = appState.deadlines.find(d => new Date(d.date) >= new Date());
+            const daysToNext = nextDeadline ? getDeadlineCountdown(nextDeadline.date) : null;
+
+            let html = '';
+
+            /* ── 1. WELCOME HERO ── */
+            html += `
+                <div class="welcome-card">
+                    <div class="welcome-top">
+                        <h1 class="welcome-heading">
+                            Welcome back, <span class="name-highlight">${escapeHtml(appState.name)}</span>
+                            ${isRegistered ? ' 🎓' : ''}
+                        </h1>
+                        ${appState.rank ? `
+                            <div class="rank-badge">
+                                <span class="rank-badge-label">NEET AIR</span>
+                                <span class="rank-badge-value">#${appState.rank.toLocaleString()}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-value">${appState.shortlist.length}</span>
+                            <span class="stat-label">Shortlisted</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">${daysToNext ? daysToNext.text : '—'}</span>
+                            <span class="stat-label">Next Deadline</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">${isRegistered ? 'Active' : 'Free'}</span>
+                            <span class="stat-label">Account</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            /* ── 2. PROGRESS TRACKER (Registered only) ── */
+            if (isRegistered) {
+                html += `
+                    <div class="progress-section">
+                        <div class="section-header">
+                            <h2 class="section-title"><span class="icon">📈</span> Your Admission Progress</h2>
+                        </div>
+                        <div class="progress-tracker">
+                            <div class="progress-steps">
+                                ${appState.progress.steps.map((step, i) => `
+                                    <div class="progress-step">
+                                        <div class="step-circle ${step.status}">
+                                            ${step.status === 'completed' ? '✓' : (i + 1)}
+                                        </div>
+                                        <span class="step-label ${step.status === 'active' ? 'active-label' : ''} ${step.status === 'completed' ? 'completed-label' : ''}">${step.label}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                /* Login mode: locked progress */
+                html += `
+                    <div class="locked-section">
+                        <span class="locked-icon">🔒</span>
+                        <h3 class="locked-title">Admission Progress Tracking</h3>
+                        <p class="locked-desc">Enrol with ASMI to unlock personalised progress tracking.<br>Your counsellor will update each milestone as you advance.</p>
+                        <a href="/inquiry.html" class="btn-action btn-action-yellow">Enrol Now →</a>
+                    </div>
+                `;
+            }
+
+            /* ── 3. TWO-COLUMN: DEADLINES + SHORTLIST ── */
+            html += `<div class="two-col-grid">`;
+
+            /* ── 3a. DEADLINES ── */
+            html += `
+                <div class="deadlines-section" id="deadlinesSection">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">📅</span> Upcoming Deadlines</h2>
+                    </div>
+                    <div class="deadlines-panel">
+            `;
+
+            if (appState.deadlines.length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <span class="empty-icon">📅</span>
+                        <h4 class="empty-title">No deadlines loaded</h4>
+                        <p class="empty-desc">Deadline data could not be loaded. Please try refreshing the page.</p>
+                    </div>
+                `;
+            } else {
+                appState.deadlines.forEach(dl => {
+                    const countdown = getDeadlineCountdown(dl.date);
+                    html += `
+                        <div class="deadline-item">
+                            <div class="deadline-date-col">
+                                <div class="deadline-month">${getMonthAbbr(dl.date)}</div>
+                                <div class="deadline-day">${getDayNum(dl.date)}</div>
+                            </div>
+                            <div class="deadline-info">
+                                <div class="deadline-title">${escapeHtml(dl.title)}</div>
+                                <div class="deadline-meta">
+                                    <span class="deadline-type-icon">${getDeadlineTypeIcon(dl.type)}</span>
+                                    <span class="deadline-authority">${escapeHtml(dl.authority)}</span>
+                                    <span class="deadline-countdown ${countdown.class}">${countdown.text}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div></div>`;
+
+            /* ── 3b. SHORTLIST ── */
+            html += `
+                <div class="shortlist-section" id="shortlistSection">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">⭐</span> My Shortlist</h2>
+                        ${appState.shortlist.length > 0 ? `
+                            <a href="/tools/college-predictor/" class="section-action-link">Open Predictor →</a>
+                        ` : ''}
+                    </div>
+                    <div class="shortlist-panel">
+            `;
+
+            if (shortlistedColleges.length === 0) {
+                html += `
+                    <div class="empty-state">
+                        <span class="empty-icon">⭐</span>
+                        <h4 class="empty-title">No colleges shortlisted yet</h4>
+                        <p class="empty-desc">Use the College Predictor to discover colleges matching your rank and add them to your shortlist.</p>
+                        <a href="/tools/college-predictor/" class="btn-action btn-action-yellow">Open Predictor →</a>
+                    </div>
+                `;
+            } else {
+                shortlistedColleges.forEach(c => {
+                    html += `
+                        <div class="shortlist-item">
+                            <div class="shortlist-college-info">
+                                <div class="shortlist-college-name" title="${escapeHtml(c.name)}">
+                                    <span class="star-icon">★</span>${escapeHtml(c.name)}
+                                </div>
+                                <div class="shortlist-college-meta">
+                                    <span class="shortlist-badge">${escapeHtml(c.type)}</span>
+                                    <span>${escapeHtml(c.state)}</span>
+                                    ${c.fees && c.fees !== '0' ? `<span>· ${formatFees(c.fees)}</span>` : ''}
+                                </div>
+                            </div>
+                            ${isRegistered ? `
+                                <button class="btn-remove-shortlist" onclick="removeFromShortlist('${c.name.replace(/'/g, "\\'")}')" title="Remove">✕</button>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div></div>`;
+            html += `</div>`; // close two-col-grid
+
+            /* ── 4. QUICK ACTIONS ── */
+            html += `
+                <div class="actions-section">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">⚡</span> Quick Actions</h2>
+                    </div>
+                    <div class="actions-grid">
+                        <a href="/tools/college-predictor/" class="action-card" id="actionPredictor">
+                            <div class="action-card-icon">🔮</div>
+                            <div class="action-card-body">
+                                <div class="action-card-title">College Predictor</div>
+                                <div class="action-card-desc">Predict admission chances based on your NEET AIR rank</div>
+                            </div>
+                            <span class="action-card-arrow">→</span>
+                        </a>
+                        <a href="/tools/cutoff-explorer/" class="action-card" id="actionExplorer">
+                            <div class="action-card-icon">📊</div>
+                            <div class="action-card-body">
+                                <div class="action-card-title">Cutoff Explorer</div>
+                                <div class="action-card-desc">Browse historical NEET cutoffs by college and category</div>
+                            </div>
+                            <span class="action-card-arrow">→</span>
+                        </a>
+                        <a href="/inquiry.html" class="action-card" id="actionInquiry">
+                            <div class="action-card-icon">📝</div>
+                            <div class="action-card-body">
+                                <div class="action-card-title">Submit Inquiry</div>
+                                <div class="action-card-desc">Get personalised guidance from ASMI's counselling team</div>
+                            </div>
+                            <span class="action-card-arrow">→</span>
+                        </a>
+                        ${isRegistered ? `
+                            <a href="tel:+919876543210" class="action-card" id="actionCounsellor">
+                                <div class="action-card-icon">👤</div>
+                                <div class="action-card-body">
+                                    <div class="action-card-title">Contact Counsellor</div>
+                                    <div class="action-card-desc">Speak directly with your assigned ASMI counsellor</div>
+                                </div>
+                                <span class="action-card-arrow">→</span>
+                            </a>
+                        ` : `
+                            <a href="/medical.html" class="action-card" id="actionMedical">
+                                <div class="action-card-icon">🏥</div>
+                                <div class="action-card-body">
+                                    <div class="action-card-title">Medical Admissions</div>
+                                    <div class="action-card-desc">Explore MBBS/BDS admission resources and guides</div>
+                                </div>
+                                <span class="action-card-arrow">→</span>
+                            </a>
+                        `}
+                    </div>
+                </div>
+            `;
+
+            content.innerHTML = html;
+
+            /* ── UPSELL BANNER (Login mode only) ── */
+            const existingBanner = document.getElementById('upsellBanner');
+            if (existingBanner) existingBanner.remove();
+
+            if (isLogin) {
+                const banner = document.createElement('div');
+                banner.className = 'upsell-banner';
+                banner.id = 'upsellBanner';
+                banner.innerHTML = `
+                    <span class="upsell-text"><strong>Want personalised guidance?</strong> Enrol with ASMI Counselling for expert shortlisting.</span>
+                    <a href="/inquiry.html" class="btn-upsell">Enrol Now →</a>
+                `;
+                document.body.appendChild(banner);
+            }
+        }
+
+        /* ── HTML ESCAPING ── */
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /* ── BOOTSTRAP ── */
+        window.addEventListener('DOMContentLoaded', async () => {
+            initState();
+            renderHeader();
+
+            // Fetch data in parallel
+            await Promise.all([
+                fetchDeadlines(),
+                fetchCollegeData()
+            ]);
+
+            renderDashboard();
+        });
+    </script>
+</body>
+</html>
