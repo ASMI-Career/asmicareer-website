@@ -347,15 +347,34 @@ export default function MedicalPortal() {
                   {events.length > 0 && (
                       <div className="events-track">
                           {[...events, ...events].map((ev, i) => {
-                              const tagClass = { deadline: 'tag-deadline', exam: 'tag-exam', asmi: 'tag-asmi', general: 'tag-general' }[ev.type] || 'tag-general';
                               return (
                                   <div className="event-card" key={i}>
-                                      <span className={`event-tag ${tagClass}`}>{ev.tag}</span>
+                                      <span className={`event-tag tag-${ev.type}`}>{ev.tag}</span>
                                       <div className="event-date">{ev.display_date}</div>
                                       <div className="event-headline">{ev.title}</div>
-                                      {ev.link && ev.cta && (
-                                          <a href={ev.link} className={`event-cta-btn${ev.type === 'asmi' ? ' asmi-btn' : ''}`} target="_blank" rel="noopener noreferrer">{ev.cta} →</a>
-                                      )}
+                                      <div className="event-card-actions">
+                                          {ev.link && ev.cta && (
+                                              <a
+                                                  href={ev.link}
+                                                  className={`event-cta-btn${ev.type === 'asmi' ? ' asmi-btn' : ''}`}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                              >
+                                                  {ev.cta} →
+                                              </a>
+                                          )}
+                                          {ev.pdf && (
+                                              <a
+                                                  href={ev.pdf}
+                                                  className="event-notice-btn"
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  aria-label={`View official notice for ${ev.title}`}
+                                              >
+                                                  📄 View Notice
+                                              </a>
+                                          )}
+                                      </div>
                                   </div>
                               );
                           })}

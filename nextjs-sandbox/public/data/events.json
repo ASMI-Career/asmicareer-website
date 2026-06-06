@@ -1,21 +1,13 @@
 [
   {
-    "type": "deadline",
-    "tag": "URGENT",
-    "title": "BVDU CET (BPT) — Last Date to Apply (Revised)",
-    "date": "2026-06-21",
-    "display_date": "21st June 2026",
-    "link": "https://bvducet.bharatividyapeeth.edu/",
-    "cta": "Apply Now"
-  },
-  {
-    "type": "deadline",
-    "tag": "DEADLINE",
-    "title": "NEET 2026 — Refund Application Last Date",
-    "date": "2026-06-22",
-    "display_date": "22nd June 2026",
-    "link": "https://examinationservices.nic.in/neetc2026/root/CandidateLogin.aspx?enc=Ei4cajBkK1gZSfgr53ImFcFR+natXIEjJ1rCf6DMgOr0FO08ClwO9m4YYQvMGcVT",
-    "cta": "Apply Now"
+    "type": "general",
+    "tag": "NOTICE",
+    "title": "NEET UG 2026 — Exam Fee Refund",
+    "date": "2026-05-27",
+    "display_date": "27th May 2026",
+    "link": null,
+    "cta": null,
+    "pdf": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/05/202605271711404199.pdf"
   },
   {
     "type": "exam",
@@ -24,7 +16,8 @@
     "date": "2026-06-07",
     "display_date": "7th June 2026",
     "link": null,
-    "cta": null
+    "cta": null,
+    "pdf": "https://www.iiseradmission.in/#admission_important_dates"
   },
   {
     "type": "exam",
@@ -33,7 +26,8 @@
     "date": "2026-06-14",
     "display_date": "14th June 2026",
     "link": null,
-    "cta": "Download Soon"
+    "cta": "Download Soon",
+    "pdf": "https://x.com/nta_exams/status/2055300665594060939?s=48"
   },
   {
     "type": "exam",
@@ -42,16 +36,18 @@
     "date": "2026-06-21",
     "display_date": "21st June 2026",
     "link": null,
-    "cta": null
+    "cta": null,
+    "pdf": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/05/20260515960654684.pdf"
   },
   {
     "type": "deadline",
     "tag": "URGENT",
-    "title": "MGM CET (BPT) — Last Date to Apply",
-    "date": "2026-06-27",
-    "display_date": "27th June 2026",
-    "link": "https://admission.mgmuhsonline.in/MGMUGCET/",
-    "cta": "Apply Now"
+    "title": "BVDU CET (BPT) — Last Date to Apply (Revised)",
+    "date": "2026-06-21",
+    "display_date": "21st June 2026",
+    "link": "https://bvducet.bharatividyapeeth.edu/",
+    "cta": "Apply Now",
+    "pdf": "https://bvducet.bharatividyapeeth.edu/BVDU_CET_UG_SCHEDULE%202026-04-06-2026.pdf"
   },
   {
     "type": "exam",
@@ -60,7 +56,18 @@
     "date": "2026-06-27",
     "display_date": "27th June 2026",
     "link": null,
-    "cta": null
+    "cta": null,
+    "pdf": "https://bvducet.bharatividyapeeth.edu/BVDU_CET_UG_SCHEDULE%202026-04-06-2026.pdf"
+  },
+  {
+    "type": "deadline",
+    "tag": "URGENT",
+    "title": "MGM CET (BPT) — Last Date to Apply",
+    "date": "2026-06-27",
+    "display_date": "27th June 2026",
+    "link": "https://admission.mgmuhsonline.in/MGMUGCET/",
+    "cta": "Apply Now",
+    "pdf": "https://www.mgmuhs.com/MGM%20UG%20CET1%202026%20(BPT%20Programme).pdf"
   },
   {
     "type": "asmi",
@@ -69,7 +76,8 @@
     "date": "2026-07-05",
     "display_date": "5th July 2026",
     "link": "#",
-    "cta": "Register Now"
+    "cta": "Register Now",
+    "pdf": null
   },
   {
     "type": "exam",
@@ -78,7 +86,8 @@
     "date": "2026-07-12",
     "display_date": "12th July 2026",
     "link": null,
-    "cta": null
+    "cta": null,
+    "pdf": "https://www.mgmuhs.com/MGM%20UG%20CET1%202026%20(BPT%20Programme).pdf"
   },
   {
     "type": "deadline",
@@ -87,7 +96,8 @@
     "date": "2026-08-02",
     "display_date": "2nd August 2026",
     "link": "https://nmims.my.site.com/studentportal/s/login/?page=Bachelor%20of%20Physiotherapy%20%28BPT%29",
-    "cta": "Apply Now"
+    "cta": "Apply Now",
+    "pdf": "https://physiotherapy.nmims.edu/docs/2026/Imp-Dates-BPT_2026-f.pdf"
   },
   {
     "type": "exam",
@@ -96,6 +106,7 @@
     "date": "2026-08-10",
     "display_date": "10th August 2026",
     "link": null,
-    "cta": null
+    "cta": null,
+    "pdf": "https://physiotherapy.nmims.edu/docs/2026/Imp-Dates-BPT_2026-f.pdf"
   }
 ]

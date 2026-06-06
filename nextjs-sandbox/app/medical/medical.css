@@ -692,6 +692,33 @@
         color: #1a0040;
     }
 
+    .event-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .event-notice-btn {
+        display: inline-block;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        background: transparent;
+        color: #4a0080;
+        border: 1px solid rgba(106, 13, 173, 0.3);
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .event-notice-btn:hover {
+        background: rgba(106, 13, 173, 0.08);
+        color: #1a0040;
+    }
+
     @media (max-width: 768px) {
         .events-section { padding: 40px; }
     }
