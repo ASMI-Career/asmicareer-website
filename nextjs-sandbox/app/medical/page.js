@@ -185,8 +185,7 @@ export default function MedicalPortal() {
                       </h1>
           
                       <p className="hero-sub">
-                          NEET & JEE counselling by verified experts — a real counsellor
-                          who knows your file, from rank day to admission day. Zero guesswork.
+                          From your NEET rank to your MBBS seat — we handle college selection, preference filling, document verification and every round until you're admitted.
                       </p>
           
                       <div className="hero-stats" role="list" aria-label="Key statistics">
