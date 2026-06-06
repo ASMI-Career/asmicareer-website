@@ -4,30 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Engineering Branch Assessment 2026 | ASMI Career</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --maroon: #7B1A1A;
-    --maroon-dark: #5A1010;
-    --maroon-light: #9B2C2C;
-    --gold: #C9923A;
-    --gold-light: #E8B96A;
-    --gold-pale: #FBF3E8;
-    --cream: #FDFAF5;
-    --text: #1A1208;
-    --text-muted: #6B5B45;
-    --text-light: #9C8B78;
-    --border: rgba(123,26,26,0.15);
-    --border-gold: rgba(201,146,58,0.3);
-    --surface: #FFFFFF;
-    --surface-warm: #FBF7F2;
+    --navy: #0a1628;
+    --navy-dark: #070f1b;
+    --teal: #00C8B4;
+    --teal-light: #00e5cf;
+    --teal-dark: #00A896;
+    --teal-soft: rgba(0, 200, 180, 0.15);
+    --border: rgba(0, 200, 180, 0.15);
+    --border-gold: rgba(0, 200, 180, 0.3);
+    --surface: #0e1e35;
+    --surface-warm: #132742;
+    --text: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --text-light: rgba(255, 255, 255, 0.45);
+    --cream: #0a1628;
+    
+    /* Map old variables to keep the internal CSS working cleanly */
+    --maroon: #00C8B4;
+    --maroon-dark: #00A896;
+    --maroon-light: #00E5CF;
+    --gold: #00C8B4;
+    --gold-light: #00e5cf;
+    --gold-pale: rgba(0, 200, 180, 0.08);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Sora', sans-serif;
-    background: var(--cream);
+    font-family: 'Open Sans', sans-serif;
+    background: var(--navy);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -39,39 +47,61 @@
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background:
-      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(201,146,58,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at 10% 80%, rgba(123,26,26,0.05) 0%, transparent 60%);
+      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0, 200, 180, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 10% 80%, rgba(13, 31, 53, 0.4) 0%, transparent 60%);
     pointer-events: none;
     z-index: 0;
   }
 
-  /* Header */
-  .header {
-    background: var(--maroon);
-    padding: 20px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    z-index: 10;
+  /* Nav Header */
+  .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      z-index: 100;
+      background: #030912;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 200, 180, 0.15);
   }
 
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  .nav-inner {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
   }
 
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    color: #fff;
-    font-size: 22px;
-    letter-spacing: 0.5px;
+  .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      cursor: pointer;
   }
+  .nav-back:hover { color: #00C8B4; }
 
-  .logo span { color: var(--gold-light); }
+  .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      margin-left: 24px;
+      margin-right: auto;
+  }
+  .nav-logo img {
+      height: 40px;
+      width: auto;
+      mix-blend-mode: screen;
+      display: block;
+  }
 
   .header-tag {
     font-size: 11px;
@@ -83,7 +113,7 @@
   /* Hero */
   .hero {
     text-align: center;
-    padding: 60px 40px 40px;
+    padding: 124px 40px 40px;
     position: relative;
     z-index: 1;
   }
@@ -103,16 +133,17 @@
   }
 
   .hero h1 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: clamp(32px, 5vw, 52px);
-    color: var(--maroon);
+    color: var(--text);
     line-height: 1.1;
     margin-bottom: 16px;
+    font-weight: 800;
   }
 
   .hero h1 em {
     font-style: italic;
-    color: var(--gold);
+    color: var(--teal);
   }
 
   .hero p {
@@ -136,9 +167,10 @@
   }
 
   .stat-num {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 28px;
-    color: var(--maroon);
+    color: var(--teal);
+    font-weight: 800;
   }
 
   .stat-label {
@@ -247,7 +279,8 @@
   }
 
   .section-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
     font-size: 26px;
     color: var(--maroon);
     margin-bottom: 8px;
@@ -322,7 +355,7 @@
     padding: 10px 14px;
     border: 1px solid var(--border);
     border-radius: 10px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     color: var(--text);
     background: var(--surface-warm);
@@ -421,7 +454,7 @@
     border-radius: 8px;
     background: var(--surface-warm);
     cursor: pointer;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-muted);
@@ -451,7 +484,7 @@
   .btn {
     padding: 12px 28px;
     border-radius: 10px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -515,7 +548,8 @@
   }
 
   .results-hero h2 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
     font-size: clamp(28px, 4vw, 42px);
     color: var(--maroon);
     margin-bottom: 8px;
@@ -772,7 +806,8 @@
   }
 
   .cta-card h3 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
     font-size: 24px;
     color: #fff;
     margin-bottom: 8px;
@@ -794,10 +829,10 @@
 
   .btn-white {
     background: #fff;
-    color: var(--maroon);
+    color: var(--navy);
     padding: 12px 28px;
     border-radius: 10px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
@@ -815,7 +850,7 @@
     border: 1px solid rgba(255,255,255,0.3);
     padding: 12px 28px;
     border-radius: 10px;
-    font-family: 'Sora', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -844,8 +879,9 @@
   }
 
   @media (max-width: 600px) {
-    .header { padding: 16px 20px; }
-    .hero { padding: 40px 20px 28px; }
+    .nav-inner { padding: 0 16px; }
+    .nav-logo { margin-left: 12px; }
+    .hero { padding: 96px 20px 28px; }
     .form-container { margin: 24px auto 40px; padding: 0 16px; }
     .nav-row { flex-direction: column-reverse; }
     .btn { width: 100%; text-align: center; }
@@ -854,11 +890,23 @@
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-  <div class="logo">ASMI <span>Career</span></div>
-  <div class="header-tag">Engineering Assessment 2026</div>
-</div>
+<!-- Header/Navbar -->
+<nav class="nav" id="mainNav">
+    <div class="nav-inner">
+        <a href="../../engineering" class="nav-back" aria-label="Go back to engineering page">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to Tools
+        </a>
+        <a href="../../index.html" class="nav-logo" aria-label="ASMI Career">
+            <img src="../../asmi-logo.png" alt="ASMI Career"/>
+        </a>
+        <div class="header-tag" style="font-family:'Montserrat',sans-serif; font-size:11px; color:rgba(255,255,255,0.6); letter-spacing:2px; text-transform:uppercase; font-weight:700;">
+            Engineering Assessment
+        </div>
+    </div>
+</nav>
 
 <!-- Hero -->
 <div class="hero" id="heroSection">
