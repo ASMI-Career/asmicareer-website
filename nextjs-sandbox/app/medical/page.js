@@ -660,60 +660,96 @@ export default function MedicalPortal() {
       {/* ════════════════════════════════
            SECTION Why — WHY ASMI
       ════════════════════════════════ */}
-      <section className="why-section" id="about-us" aria-labelledby="why-heading">
+      <section className="why-section" aria-labelledby="why-heading" id="about-us">
           <div className="why-inner">
-      
+
               <div className="why-left">
                   <span className="why-eyebrow">WHY ASMI</span>
-                  <h2 className="why-headline" id="why-heading">India's Most Trusted Admission Platform</h2>
-                  <p className="why-sub">11 years. 25,000+ seats. 1,000+ seminars. Here's what makes the difference.</p>
-      
+                  <h2 className="why-headline" id="why-heading">
+                      Maharashtra's Most Trusted Name in NEET Counselling
+                  </h2>
+                  <p className="why-sub">
+                      11 years. 25,000+ admissions. Here's what makes the difference.
+                  </p>
+
                   <div className="why-features">
+
                       <div className="why-feature">
-                          <div className="why-icon" aria-hidden="true">👤</div>
+                          <div className="why-icon" aria-hidden="true">🗺️</div>
                           <div>
-                              <div className="why-feature-title">Verified Counsellors</div>
-                              <div className="why-feature-body">Credentialed, background-checked experts. No anonymous advisors.</div>
+                              <div className="why-feature-title">We've Lived This Journey</div>
+                              <div className="why-feature-body">
+                                  Founded by someone who faced admission struggles personally.
+                                  Not a corporate platform — a counsellor who knows what it feels like.
+                              </div>
                           </div>
                       </div>
+
                       <div className="why-feature">
-                          <div className="why-icon" aria-hidden="true">🗄️</div>
+                          <div className="why-icon" aria-hidden="true">✅</div>
                           <div>
                               <div className="why-feature-title">Official Data Only</div>
-                              <div className="why-feature-body">Cutoffs pulled directly from MCC, JoSAA, and state portals. No guesswork.</div>
+                              <div className="why-feature-body">
+                                  Every cutoff verified directly from MCC and state portals.
+                                  Every rule confirmed before we guide you. No estimates, no guesswork.
+                              </div>
                           </div>
                       </div>
+
                       <div className="why-feature">
-                          <div className="why-icon" aria-hidden="true">🔔</div>
+                          <div className="why-icon" aria-hidden="true">📍</div>
                           <div>
-                              <div className="why-feature-title">Real-Time Alerts</div>
-                              <div className="why-feature-body">WhatsApp updates to student and parent — every round, every deadline.</div>
+                              <div className="why-feature-title">Present in 6 Cities</div>
+                              <div className="why-feature-body">
+                                  Physical offices in Mumbai, Thane, Pune, Kolhapur, Sangli
+                                  and Chh. Sambhajinagar. Real people, real offices — not a website.
+                              </div>
                           </div>
                       </div>
+
                       <div className="why-feature">
-                          <div className="why-icon" aria-hidden="true">₹</div>
+                          <div className="why-icon" aria-hidden="true">💬</div>
                           <div>
-                              <div className="why-feature-title">Transparent Pricing</div>
-                              <div className="why-feature-body">Fixed packages, fully documented. No hidden fees, no commissions.</div>
+                              <div className="why-feature-title">Direct Counsellor Access</div>
+                              <div className="why-feature-body">
+                                  WhatsApp your counsellor directly — not a chatbot, not a
+                                  ticketing system. A real person who knows your file.
+                              </div>
                           </div>
                       </div>
+
                   </div>
               </div>
-      
-              <div className="why-right" role="img" aria-label="Why ASMI counselling platform">
+
+              <div className="why-right">
+                  <div className="why-video-wrap">
+                      <iframe
+                          className="why-video"
+                          src="https://www.youtube.com/embed/DM7i7CBk6dI"
+                          title="How ASMI helps students win"
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          loading="lazy"
+                      />
+                  </div>
                   <div className="why-overlay-card">
                       <div className="why-overlay-label">
-                          <span aria-hidden="true">●</span> CRACK THE NEXT STEP
+                          <span aria-hidden="true">●</span> FROM RANK TO ADMISSION
                       </div>
-                      <div className="why-overlay-headline">How ASMI helps students win</div>
-                      <p className="why-overlay-sub">See how we guide 25,000+ students through every step — from rank to reporting date.</p>
+                      <div className="why-overlay-headline">
+                          See how ASMI guides students step by step
+                      </div>
+                      <p className="why-overlay-sub">
+                          25,000+ students guided. Watch how we take you from
+                          NEET rank to your MBBS seat.
+                      </p>
                       <div className="why-overlay-btns">
                           <a href="/inquiry" className="why-btn-dark">Book a Free Call 📞</a>
-                          <a href="#" className="why-btn-purple">Watch Video</a>
                       </div>
                   </div>
               </div>
-      
+
           </div>
       </section>
       
