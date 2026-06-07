@@ -2098,7 +2098,7 @@ export default function MedicalPortal() {
                       <a href="#packages" className="footer-link">Packages</a>
                       <a href="/tools/cutoff-explorer" className="footer-link">Cutoff Explorer</a>
                       <a href="/tools/college-predictor" className="footer-link">College Predictor</a>
-                      <a href="#" className="footer-link">Resources</a>
+                      <a href="/resources" className="footer-link">Resources</a>
                   </div>
       
                   <div>
