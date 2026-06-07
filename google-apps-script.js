@@ -62,7 +62,11 @@ function handleRequest(e) {
 
   var action = params.action;
   if (!action) {
-    return jsonResponse({ success: false, error: "Missing action parameter" });
+    if (params.token) {
+      action = "getStudent";
+    } else {
+      return jsonResponse({ success: false, error: "Missing action parameter" });
+    }
   }
 
   try {
