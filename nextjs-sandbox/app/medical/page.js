@@ -1004,64 +1004,265 @@ export default function MedicalPortal() {
       {/* ════════════════════════════════
            SECTION Pricing
       ════════════════════════════════ */}
-      <section className="pricing-section" aria-labelledby="pricing-heading">
-          <div className="pricing-inner">
-      
-              <div className="pricing-header">
-                  <span className="pricing-eyebrow">SERVICES</span>
-                  <h2 className="pricing-headline" id="pricing-heading">Every Admission Path, Covered.</h2>
-                  <p className="pricing-sub1">From NEET to JEE to MBBS Abroad — expert support for every stream and every round.</p>
-                  <p className="pricing-sub2"><span className="ps2-purple">Big</span> On Data. <span className="ps2-muted">Light</span> On Your Pocket. Access all the data you need, without overpaying for it.</p>
-              </div>
-      
-              <div className="pricing-cards">
-      
-                  <div className="pricing-card">
-                      <div className="pricing-exam">NEET UG</div>
-                      <div className="pricing-course">NEET UG</div>
-                      <div className="pricing-type">UG Counselling</div>
-                      <div className="pricing-price">₹2,499</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-      
-                  <div className="pricing-card featured">
-                      <span className="pricing-popular">★ POPULAR</span>
-                      <div className="pricing-exam">NEET PG</div>
-                      <div className="pricing-course">NEET PG</div>
-                      <div className="pricing-type">PG Counselling</div>
-                      <div className="pricing-price">₹3,999</div>
-                      <button className="pricing-btn-featured">Learn More</button>
-                  </div>
-      
-                  <div className="pricing-card">
-                      <div className="pricing-exam">JEE</div>
-                      <div className="pricing-course">JEE</div>
-                      <div className="pricing-type">B.Tech Counselling</div>
-                      <div className="pricing-price">₹3,999</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-      
-                  <div className="pricing-card">
-                      <div className="pricing-exam">MBBS ABROAD</div>
-                      <div className="pricing-course">MBBS Abroad</div>
-                      <div className="pricing-type">Admission Guidance</div>
-                      <div className="pricing-price">₹3,999</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-      
-              </div>
-      
-              <div className="pricing-banner">
-                  <div className="pricing-banner-h">Take the first step.</div>
-                  <div className="pricing-banner-sub">Book a FREE 1-to-1 with an Asmi Counsellor.</div>
-                  <p className="pricing-banner-body">Talk to a real mentor in under 24 hours. No payment, no obligation — just clarity on what your future could look like.</p>
-                  <div className="pricing-banner-btns">
-                      <a href="/inquiry" className="banner-btn-white">Book My Free Session →</a>
-                      <a href="#" className="banner-btn-yellow">WhatsApp Us 💬</a>
-                  </div>
-              </div>
-      
+      <section className="pricing-section" aria-labelledby="pricing-heading" id="packages">
+        <div className="pricing-inner">
+
+          <div className="pricing-header">
+            <span className="pricing-eyebrow">PACKAGES</span>
+            <h2 className="pricing-headline" id="pricing-heading">
+              Everything You Need. Nothing You Don't.
+            </h2>
+            <p className="pricing-sub">
+              Two focused packages. Real counsellors. No hidden charges.
+            </p>
           </div>
+
+          <div className="pricing-cards">
+
+            {/* PACKAGE 1 */}
+            <div className="pricing-card pricing-card-featured">
+              <div className="pricing-recommended">★ RECOMMENDED</div>
+              <div className="pricing-pkg-label">PACKAGE 1</div>
+              <div className="pricing-pkg-title">
+                Complete Medical Admission Counselling
+              </div>
+              <div className="pricing-pkg-subtitle">Merit Based</div>
+              <div className="pricing-pkg-desc">
+                For students admitted via general merit or category cutoffs.
+                Covers MH State + MCC counselling.
+              </div>
+
+              <div className="pricing-price-block">
+                <div className="pricing-price">₹10,000 – ₹30,000</div>
+                <div className="pricing-price-note">
+                  Pricing confirmed at your nearest branch · No payment to enquire
+                </div>
+                <div className="pricing-branches">
+                  Mumbai / Thane &nbsp;·&nbsp; Pune &nbsp;·&nbsp;
+                  Kolhapur / Sangli &nbsp;·&nbsp; Chh. Sambhajinagar
+                </div>
+              </div>
+
+              <ul className="pricing-features">
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Medical Admission Guidance</div>
+                    <div className="pf-body">Comprehensive guidance from start to finish. Additional sessions before every round.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">One-to-One Counselling</div>
+                    <div className="pf-body">Personal sessions covering college selection, budget, patient flow and city preference.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">College Preference List</div>
+                    <div className="pf-body">Custom preference list prepared for every round — not just once.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Round-wise Cutoff Data</div>
+                    <div className="pf-body">Actual round-wise cutoffs shared in real time so you always know where you stand.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">WhatsApp Admission Alerts</div>
+                    <div className="pf-body">All timelines, seat matrices and allotment results sent directly. Never miss a deadline.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Admission Form Filling</div>
+                    <div className="pf-body">MH State + MCC form filling included. Other states at ₹5,000/state extra.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Document Verification</div>
+                    <div className="pf-body">Every certificate checked and provided as scanned PDF.</div>
+                  </div>
+                </li>
+              </ul>
+
+              <a href="/inquiry" className="pricing-btn-primary">
+                Book Free Counselling →
+              </a>
+            </div>
+
+            {/* PACKAGE 2 */}
+            <div className="pricing-card">
+              <div className="pricing-pkg-label">PACKAGE 2</div>
+              <div className="pricing-pkg-title">
+                Complete Medical Admission Counselling
+              </div>
+              <div className="pricing-pkg-subtitle">NRI or Management Quota</div>
+              <div className="pricing-pkg-desc">
+                For students pursuing NRI quota or management quota seats
+                in private and deemed colleges.
+              </div>
+
+              <div className="pricing-price-block">
+                <div className="pricing-price">₹60,000</div>
+                <div className="pricing-price-note">
+                  Flat fee · No deadline · Same price anytime
+                </div>
+              </div>
+
+              <ul className="pricing-features">
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">NRI / Management Quota Guidance</div>
+                    <div className="pf-body">Specialised counselling for private and deemed college seats via NRI or management quota.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">One-to-One Counselling</div>
+                    <div className="pf-body">Personal sessions covering all quota-specific options, budget and documentation.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">College Preference List</div>
+                    <div className="pf-body">Custom list across private and deemed colleges matching your rank and budget.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Round-wise Cutoff Data</div>
+                    <div className="pf-body">Real-time cutoffs for management and NRI quota seats across all rounds.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">WhatsApp Admission Alerts</div>
+                    <div className="pf-body">All timelines and updates sent directly. Never miss a management round deadline.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Form Filling Assistance</div>
+                    <div className="pf-body">Registration and preference form filling support for all applicable rounds.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check">✓</span>
+                  <div>
+                    <div className="pf-title">Document Verification</div>
+                    <div className="pf-body">Every certificate checked and provided as scanned PDF.</div>
+                  </div>
+                </li>
+              </ul>
+
+              <a href="/inquiry" className="pricing-btn-secondary">
+                Book Free Counselling →
+              </a>
+            </div>
+
+            {/* SOFTWARE TEASER */}
+            <div className="pricing-card pricing-card-teaser">
+              <div className="pricing-coming-soon">COMING SOON</div>
+              <div className="pricing-pkg-label">SOFTWARE</div>
+              <div className="pricing-pkg-title">
+                ASMI Digital Platform
+              </div>
+              <div className="pricing-pkg-subtitle">Self-Serve Access</div>
+              <div className="pricing-pkg-desc">
+                Access ASMI's college predictor, cutoff data, seat matrix
+                and document tools — independently, at your own pace.
+                No personalised counselling service included.
+              </div>
+
+              <div className="pricing-price-block">
+                <div className="pricing-price pricing-price-tbd">Pricing TBD</div>
+                <div className="pricing-price-note">
+                  Launching after counselling season 2026
+                </div>
+              </div>
+
+              <ul className="pricing-features pricing-features-muted">
+                <li>
+                  <span className="pf-check pf-check-muted">○</span>
+                  <div>
+                    <div className="pf-title">College Predictor Tool</div>
+                    <div className="pf-body">Rank-based college matching across 820+ colleges.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check pf-check-muted">○</span>
+                  <div>
+                    <div className="pf-title">Cutoff Explorer</div>
+                    <div className="pf-body">Category-wise closing ranks with multi-year comparison.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check pf-check-muted">○</span>
+                  <div>
+                    <div className="pf-title">Document Checklist</div>
+                    <div className="pf-body">Interactive category-aware document tracker.</div>
+                  </div>
+                </li>
+                <li>
+                  <span className="pf-check pf-check-muted">○</span>
+                  <div>
+                    <div className="pf-title">Deadline Feed</div>
+                    <div className="pf-body">Live counselling round dates and registration windows.</div>
+                  </div>
+                </li>
+              </ul>
+
+              <button className="pricing-btn-teaser" disabled>
+                Notify Me When Live
+              </button>
+            </div>
+
+          </div>
+
+          {/* BOTTOM BANNER */}
+          <div className="pricing-banner">
+            <div className="pricing-banner-h">
+              Not sure which package is right for you?
+            </div>
+            <div className="pricing-banner-sub">
+              Talk to an ASMI counsellor for free — no payment, no obligation.
+            </div>
+            <p className="pricing-banner-body">
+              Get clarity on your options in under 24 hours.
+              Walk in, call, or message us on WhatsApp.
+            </p>
+            <div className="pricing-banner-btns">
+              <a href="/inquiry" className="banner-btn-white">
+                Book My Free Session →
+              </a>
+              <a
+                href="https://wa.me/917410019074"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="banner-btn-yellow"
+              >
+                WhatsApp Us 💬
+              </a>
+            </div>
+          </div>
+
+        </div>
       </section>
       
       
