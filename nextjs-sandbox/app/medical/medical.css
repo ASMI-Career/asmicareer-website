@@ -1512,7 +1512,7 @@
 
     .highway-step-card {
       position: absolute;
-      width: 180px;
+      width: 200px;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px;
@@ -1544,12 +1544,12 @@
     }
 
     /* Card positions — tuned to road path */
-    .pos-top-left         { top: 0%;   left: 2%;  }
-    .pos-top-center-left  { top: 0%;   left: 22%; }
-    .pos-top-center-right { top: 12%;  left: 42%; }
-    .pos-bottom-center-left  { top: 55%; left: 42%; }
-    .pos-bottom-center-right { top: 68%; left: 62%; }
-    .pos-bottom-right        { top: 68%; left: 82%; }
+    .pos-top-left            { top: 2%;   left: 1%;   }
+    .pos-top-center-left     { top: 2%;   left: 24%;  }
+    .pos-top-center-right    { top: 8%;   left: 47%;  }
+    .pos-bottom-center-left  { top: 58%;  left: 32%;  }
+    .pos-bottom-center-right { top: 70%;  left: 54%;  }
+    .pos-bottom-right        { top: 70%;  left: 76%;  }
 
     .hsc-icon {
       font-size: 22px;
