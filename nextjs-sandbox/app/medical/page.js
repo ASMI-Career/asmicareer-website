@@ -303,7 +303,7 @@ export default function MedicalPortal() {
                   <li><a href="#tools">Services</a></li>
                   <li><a href="#events">News & Events</a></li>
                   <li><a href="#about-us">About Us</a></li>
-                  <li><a href="/inquiry">Contact Us</a></li>
+                  <li><a href="/contact">Contact Us</a></li>
               </ul>
       
               <div className="nav-cta">
@@ -333,7 +333,7 @@ export default function MedicalPortal() {
           <a href="#tools">Services</a>
           <a href="#events">News & Events</a>
           <a href="#about-us">About Us</a>
-          <a href="/inquiry">Contact Us</a>
+          <a href="/contact">Contact Us</a>
           <a href="/inquiry" className="drawer-cta">Book Free Session →</a>
       </div>
       
@@ -2117,10 +2117,10 @@ export default function MedicalPortal() {
       
                   <div>
                       <span className="footer-col-header">Company</span>
-                      <a href="#" className="footer-link">About Us</a>
-                      <a href="#" className="footer-link">Contact Us</a>
-                      <a href="#" className="footer-link">Privacy Policy</a>
-                      <a href="#" className="footer-link">Terms of Service</a>
+                      <a href="/about" className="footer-link">About Us</a>
+                      <a href="/contact" className="footer-link">Contact Us</a>
+                      <a href="/privacy-policy" className="footer-link">Privacy Policy</a>
+                      <a href="/terms" className="footer-link">Terms of Service</a>
                   </div>
       
               </div>
