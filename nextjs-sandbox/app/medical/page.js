@@ -51,6 +51,30 @@ export default function MedicalPortal() {
   const [journeyActive, setJourneyActive] = useState(false);
   const [activeStep, setActiveStep] = useState(-1);
 
+  const testiRef = useRef(null);
+  const [testiVisible, setTestiVisible] = useState(false);
+  const [boraCount, setBoraCount] = useState(0);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !testiVisible) {
+          setTestiVisible(true);
+          // Count up AIR 1 score
+          let count = 0;
+          const interval = setInterval(() => {
+            count += 12;
+            if (count >= 720) { count = 720; clearInterval(interval); }
+            setBoraCount(count);
+          }, 20);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (testiRef.current) observer.observe(testiRef.current);
+    return () => observer.disconnect();
+  }, [testiVisible]);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 8);
@@ -1267,144 +1291,138 @@ export default function MedicalPortal() {
       
       
       {/* ════════════════════════════════
-           SECTION Testimonials
+           SECTION — DREAMS & RESULTS
       ════════════════════════════════ */}
-      <section className="testi-section" aria-labelledby="testi-heading">
-          <div className="testi-inner">
-      
-              <div className="testi-header">
-                  <span className="testi-eyebrow">RESULTS</span>
-                  <h2 className="testi-headline" id="testi-heading">Real Students. Real Seats.</h2>
-                  <p className="testi-sub">Names, colleges — no vague praise.</p>
-                  <div className="testi-leaf" aria-hidden="true">🍃</div>
-              </div>
-      
-              <div className="testi-avatars" aria-label="Student testimonials">
-                  <div className="testi-avatar active" style={{ background: '#e8d5f5' }} aria-label="Aahan Chawla"></div>
-                  <div className="testi-avatar" style={{ background: '#d4c5f0' }} aria-label="Hiral Mahajan"></div>
-                  <div className="testi-avatar" style={{ background: '#c8b4e8' }} aria-label="Prathamesh Kulkarni"></div>
-                  <div className="testi-avatar" style={{ background: '#e8d5f5' }} aria-label="Shrihaan Ghare"></div>
-                  <div className="testi-avatar" style={{ background: '#d4c5f0' }} aria-label="Isha Tilak"></div>
-                  <div className="testi-avatar" style={{ background: '#c8b4e8' }} aria-label="Kabir Singh"></div>
-                  <div className="testi-avatar" style={{ background: '#e8d5f5' }} aria-label="Dhruv Mundra"></div>
-                  <div className="testi-avatar" style={{ background: '#d4c5f0' }} aria-label="Vanshika Shah"></div>
-                  <div className="testi-avatar" style={{ background: '#c8b4e8' }} aria-label="Arva Inamdar"></div>
-              </div>
-      
-              <div className="testi-cards">
-      
-                  <div className="testi-card">
-                      <div className="testi-stars" aria-label="5 stars">★★★★★</div>
-                      <div className="testi-student-row">
-                          <div className="testi-avatar-sm" aria-hidden="true"></div>
-                          <div>
-                              <div className="testi-name">Aahan Chawla</div>
-                              <div className="testi-tag">AIR 96 · Score 646</div>
-                              <div className="testi-tag" style={{ color: '#6a0dad', fontWeight: '700' }}>KEM Mumbai</div>
-                          </div>
-                      </div>
-                      <div className="testi-quote-mark" aria-hidden="true">❝</div>
-                      <p className="testi-body">"ASMI Career made my entire admission journey fully structured. With Anish Sir's clear guidance and constant support, every step felt easy to handle."</p>
-                  </div>
-      
-                  <div className="testi-card">
-                      <div className="testi-stars" aria-label="5 stars">★★★★★</div>
-                      <div className="testi-student-row">
-                          <div className="testi-avatar-sm" aria-hidden="true"></div>
-                          <div>
-                              <div className="testi-name">Shrihaan Ghare</div>
-                              <div className="testi-tag">OCI Candidate</div>
-                              <div className="testi-tag" style={{ color: '#6a0dad', fontWeight: '700' }}>AIIMS Delhi</div>
-                          </div>
-                      </div>
-                      <div className="testi-quote-mark" aria-hidden="true">❝</div>
-                      <p className="testi-body">"The OCI admission process felt confusing at first, but ASMI Career broke everything down step by step. Rohan Sir's clarity on choices, documents, and timelines kept me focused."</p>
-                  </div>
-      
-                  <div className="testi-card">
-                      <div className="testi-stars" aria-label="5 stars">★★★★★</div>
-                      <div className="testi-student-row">
-                          <div className="testi-avatar-sm" aria-hidden="true"></div>
-                          <div>
-                              <div className="testi-name">Kabir Singh</div>
-                              <div className="testi-tag">Karnataka Process</div>
-                              <div className="testi-tag" style={{ color: '#6a0dad', fontWeight: '700' }}>MS Ramaiah, Bangalore</div>
-                          </div>
-                      </div>
-                      <div className="testi-quote-mark" aria-hidden="true">❝</div>
-                      <p className="testi-body">"I wanted the best possible college, and ASMI Career guided me through every option with honesty. Anish Sir explained each step of the Karnataka process clearly."</p>
-                  </div>
-      
-              </div>
-      
-              <div className="testi-nav">
-                  <button className="testi-arrow" aria-label="Previous testimonials">‹</button>
-                  <button className="testi-arrow" aria-label="Next testimonials">›</button>
-              </div>
-      
+      <section
+        className="dreams-section"
+        ref={testiRef}
+        aria-labelledby="dreams-heading"
+      >
+        <div className="dreams-inner">
+
+          {/* Section header */}
+          <div className={`dreams-header${testiVisible ? ' dreams-header-visible' : ''}`}>
+            <span className="dreams-eyebrow">RESULTS</span>
+            <h2 className="dreams-headline" id="dreams-heading">
+              Turning Dreams Into Admissions.
+            </h2>
+            <p className="dreams-sub">Real students. Real ranks. Real colleges.</p>
           </div>
-      </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION — STUDENT OUTCOMES
-      ════════════════════════════════ */}
-      <section style={{ background: '#1a0040', padding: '56px 80px' }} aria-labelledby="outcomes-heading">
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-              <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                  <span style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', color: '#FFD700' }}>Results</span>
-                  <h2 id="outcomes-heading" style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: 'clamp(24px,4vw,36px)', fontWeight: '900', color: '#ffffff', marginTop: '8px' }}>Turning Dreams Into Admissions.</h2>
-                  <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', marginTop: '8px' }}>Real students. Real ranks. Real colleges.</p>
+
+          {/* HERO QUOTE — Bora AIR 1 */}
+          <div className={`bora-card${testiVisible ? ' bora-visible' : ''}`}>
+            <div className="bora-glow-ring" aria-hidden="true" />
+            <div className="bora-avatar">VB</div>
+            <div className="bora-content">
+              <div className="bora-air-badge">
+                <span className="bora-air-label">NEET 2023</span>
+                <span className="bora-air-num">AIR 1</span>
+                <span className="bora-score">
+                  Score: <span className="bora-score-num">{boraCount}</span>/720
+                </span>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '16px' }}>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 96</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Aahan Chawla</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>KEM Mumbai</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 119</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Hiral Mahajan</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>KEM Mumbai</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 176</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Prathamesh Kulkarni</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>JIPMER Puducherry</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 595</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Harshit Mukpalkar</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>KEM Mumbai</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 676</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Adarsh Singh</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>AIIMS Nagpur</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 903</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Atharva Swami</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>AIIMS Jodhpur</div>
-                  </div>
-      
-                  <div style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)', borderRadius: '12px', padding: '20px 16px', textAlign: 'center' }}>
-                      <div style={{ fontFamily: '\'Montserrat\',sans-serif', fontSize: '13px', fontWeight: '900', color: '#FFD700', marginBottom: '4px' }}>AIR 988</div>
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>Sparsh Lalwani</div>
-                      <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)' }}>BJMC Pune</div>
-                  </div>
-      
-              </div>
-              <div style={{ textAlign: 'center', marginTop: '32px' }}>
-                  <a href="/inquiry" style={{ display: 'inline-block', background: '#FFD700', color: '#1a0040', fontFamily: '\'Montserrat\',sans-serif', fontWeight: '800', fontSize: '14px', padding: '14px 28px', borderRadius: '8px', textDecoration: 'none' }}>Join Them — Book Free Counselling →</a>
-              </div>
+              <div className="bora-name">Varunchakravarti Bora</div>
+              <blockquote className="bora-quote">
+                "After scoring 720 in NEET, I mistakenly chose only the All India Quota.
+                I contacted Anish Sir, and with his excellent guidance, we reset the quota
+                and added AIIMS Delhi. I advise all NEET aspirants to undergo proper
+                counselling with ASMI Career when applying for Medical Admission."
+              </blockquote>
+            </div>
           </div>
+
+          {/* TOPPER STRIP — auto-scroll */}
+          <div className="toppers-wrap">
+            <div className={`toppers-track${testiVisible ? ' toppers-animate' : ''}`}>
+              {[
+                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM' },
+                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG' },
+                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP' },
+                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP' },
+                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ' },
+                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS' },
+                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH' },
+                // Duplicate for seamless loop
+                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM' },
+                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG' },
+                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP' },
+                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP' },
+                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ' },
+                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS' },
+                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH' },
+              ].map((t, i) => (
+                <div className="topper-card" key={i}>
+                  <div className="topper-avatar">{t.initials}</div>
+                  <div className="topper-air">AIR {t.air}</div>
+                  <div className="topper-name">{t.name}</div>
+                  <div className="topper-score">Score {t.score}</div>
+                  <div className="topper-college">{t.college}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* THREE TESTIMONIALS */}
+          <div className="testi-grid">
+            {[
+              {
+                name: 'Renuka Bhandari',
+                college: 'Armed Forces Medical College, Pune',
+                initials: 'RB',
+                quote: 'I owe my success in securing admission to AFMC, Pune, to the unwavering support of ASMI Career and Sharang Sir. Their tailored guidance during the interview and test preparation, along with connections to seniors, played a pivotal role.',
+                delay: 0
+              },
+              {
+                name: 'Aditi Sawant',
+                college: 'AIIMS Delhi',
+                initials: 'AS',
+                quote: 'Navigating the AIIMS admission process as an OCI student was daunting. However, ASMI Career and Sharang Sir\'s expertise in eligibility requirements and document verification ensured I overcame every hurdle to earn my spot at AIIMS Delhi.',
+                delay: 200
+              },
+              {
+                name: 'Shivansh Siingh',
+                college: 'Seth GS Medical College, Mumbai',
+                initials: 'SS',
+                quote: 'Achieving a NEET score of 691 was great, but figuring out the right college was another challenge. Thanks to Anish Sir\'s insightful advice and ASMI\'s meticulous handling of paperwork and updates, I secured Seth GS Medical College.',
+                delay: 400
+              }
+            ].map((t, i) => (
+              <div
+                key={i}
+                className={`testi-card-new${testiVisible ? ' testi-card-visible' : ''}`}
+                style={{ transitionDelay: `${t.delay}ms` }}
+              >
+                <div className="testi-quote-icon" aria-hidden="true">❝</div>
+                <div className="testi-stars" aria-label="5 stars">
+                  {[0,1,2,3,4].map(s => (
+                    <span
+                      key={s}
+                      className={`testi-star${testiVisible ? ' testi-star-fill' : ''}`}
+                      style={{ transitionDelay: `${t.delay + s * 100}ms` }}
+                      aria-hidden="true"
+                    >★</span>
+                  ))}
+                </div>
+                <p className="testi-body-new">{t.quote}</p>
+                <div className="testi-student">
+                  <div className="testi-avatar-new">{t.initials}</div>
+                  <div>
+                    <div className="testi-name-new">{t.name}</div>
+                    <div className="testi-college-new">{t.college}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className={`dreams-cta${testiVisible ? ' dreams-cta-visible' : ''}`}>
+            <a href="/inquiry" className="dreams-cta-btn">
+              Join Them — Book Free Counselling →
+            </a>
+          </div>
+
+        </div>
       </section>
       
       

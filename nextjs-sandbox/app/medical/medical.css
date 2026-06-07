@@ -3,6 +3,37 @@
     100% { transform: translateX(-50%); }
 }
 
+@keyframes shimmerBora {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulseRing {
+  0%, 100% { transform: scale(1);   opacity: 0.6; }
+  50%       { transform: scale(1.3); opacity: 0.2; }
+}
+
+@keyframes glowAvatar {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+  50%       { box-shadow: 0 0 40px rgba(255,215,0,0.8); }
+}
+
+@keyframes scrollToppers {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0px);  }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.2); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
 .medicalPortal {
 
     /*      RESET      */
@@ -2011,90 +2042,413 @@
       .pricing-banner { padding: 32px 20px; }
     }
 
-    /* " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " 
-       SECTION Testimonials
-    " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "  */
+    /* ── DREAMS SECTION ── */
+    .dreams-section {
+      background: #07001a;
+      padding: 80px 80px;
+      overflow: hidden;
+    }
 
-    .testi-section { background: rgba(106,13,173,0.06); padding: 72px 80px; }
-    .testi-inner { max-width: 1360px; margin: 0 auto; }
-    .testi-header { text-align: center; margin-bottom: 40px; }
-    .testi-eyebrow {
-        display: inline-block;
-        background: #f3e5ff;
-        color: #6a0dad;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        padding: 4px 16px;
-        border-radius: 20px;
-        margin-bottom: 16px;
+    .dreams-inner {
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .testi-headline { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 36px; color: #1a0040; }
-    .testi-sub { font-size: 14px; color: rgba(26,0,64,0.55); margin-top: 10px; }
-    .testi-leaf { font-size: 20px; margin-top: 8px; }
-    .testi-avatars {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-bottom: 40px;
-        flex-wrap: wrap;
-    }
-    .testi-avatar {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 3px solid transparent;
-        flex-shrink: 0;
-        transition: border-color 0.2s;
-    }
-    .testi-avatar.active { border-color: #6a0dad; }
-    .testi-cards { display: flex; gap: 20px; }
-    .testi-card {
-        flex: 1;
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 28px;
-        box-shadow: 0 4px 20px rgba(106,13,173,0.08);
-    }
-    .testi-stars { color: #FFD700; font-size: 16px; margin-bottom: 16px; }
-    .testi-student-row { display: flex; gap: 12px; align-items: center; }
-    .testi-avatar-sm {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: #e8d5f5;
-        flex-shrink: 0;
-    }
-    .testi-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; color: #1a0040; }
-    .testi-tag { font-size: 11px; color: #6a0dad; line-height: 1.5; }
-    .testi-quote-mark { color: #6a0dad; font-size: 28px; margin: 16px 0 8px; line-height: 1; }
-    .testi-& { font-size: 13px; color: rgba(26,0,64,0.7); line-height: 1.7; }
-    .testi-nav { display: flex; justify-content: center; gap: 12px; margin-top: 32px; }
-    .testi-arrow {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 1.5px solid rgba(106,13,173,0.2);
-        background: #ffffff;
-        color: #6a0dad;
-        font-size: 16px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s, color 0.2s;
-    }
-    .testi-arrow:hover { background: #6a0dad; color: #ffffff; }
 
-    @media (max-width: 900px) {
-        .testi-section { padding: 56px 40px; }
-        .testi-cards { flex-direction: column; }
+    /* Header */
+    .dreams-header {
+      text-align: center;
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    @media (max-width: 640px) {
-        .testi-section { padding: 40px 24px; }
-        .testi-headline { font-size: 28px; }
+
+    .dreams-header.dreams-header-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dreams-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #FFD700;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .dreams-headline {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .dreams-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* Bora hero card */
+    .bora-card {
+      background: linear-gradient(135deg,
+        rgba(255,215,0,0.06),
+        rgba(106,13,173,0.08));
+      border: 1px solid rgba(255,215,0,0.25);
+      border-radius: 20px;
+      padding: 36px 40px;
+      margin-bottom: 48px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+    }
+
+    .bora-card.bora-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .bora-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,215,0,0.04) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmerBora 3s infinite linear;
+    }
+
+    .bora-glow-ring {
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        rgba(255,215,0,0.12) 0%,
+        transparent 70%);
+      animation: pulseRing 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .bora-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FFD700, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #1a0040;
+      flex-shrink: 0;
+      box-shadow: 0 0 30px rgba(255,215,0,0.4);
+      animation: glowAvatar 2.5s ease-in-out infinite;
+    }
+
+    .bora-content { flex: 1; }
+
+    .bora-air-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .bora-air-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,215,0,0.6);
+    }
+
+    .bora-air-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    }
+
+    .bora-score {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .bora-score-num {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      color: #FFD700;
+    }
+
+    .bora-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .bora-quote {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      font-style: italic;
+      border-left: 3px solid rgba(255,215,0,0.4);
+      padding-left: 16px;
+      margin: 0;
+    }
+
+    /* Topper strip */
+    .toppers-wrap {
+      overflow: hidden;
+      margin-bottom: 56px;
+    }
+
+    .toppers-track {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+    }
+
+    .toppers-track.toppers-animate {
+      animation: scrollToppers 28s linear infinite;
+    }
+
+    .toppers-track.toppers-animate:hover {
+      animation-play-state: paused;
+    }
+
+    .topper-card {
+      flex-shrink: 0;
+      width: 160px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,215,0,0.12);
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: background 0.25s, border-color 0.25s,
+                  transform 0.25s, box-shadow 0.25s;
+      cursor: default;
+    }
+
+    .topper-card:hover {
+      background: rgba(255,215,0,0.08);
+      border-color: rgba(255,215,0,0.5);
+      transform: translateY(-6px) rotate(1deg);
+      box-shadow: 0 12px 32px rgba(255,215,0,0.15);
+    }
+
+    .topper-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a0040, #6a0dad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: #FFD700;
+      margin: 0 auto 12px;
+      border: 2px solid rgba(255,215,0,0.2);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .topper-card:hover .topper-avatar {
+      border-color: #FFD700;
+      box-shadow: 0 0 16px rgba(255,215,0,0.4);
+    }
+
+    .topper-air {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 4px;
+      text-shadow: 0 0 12px rgba(255,215,0,0.3);
+    }
+
+    .topper-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .topper-score {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 6px;
+    }
+
+    .topper-college {
+      font-size: 10px;
+      color: rgba(255,215,0,0.55);
+      font-weight: 600;
+    }
+
+    /* Testimonial cards */
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 48px;
+    }
+
+    .testi-card-new {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(106,13,173,0.2);
+      border-radius: 16px;
+      padding: 24px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease,
+                  background 0.25s, border-color 0.25s, box-shadow 0.25s;
+      animation: floatCard 4s ease-in-out infinite;
+    }
+
+    .testi-card-new:nth-child(2) { animation-delay: 1.3s; }
+    .testi-card-new:nth-child(3) { animation-delay: 2.6s; }
+
+    .testi-card-new.testi-card-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .testi-card-new:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(106,13,173,0.5);
+      box-shadow: 0 8px 32px rgba(106,13,173,0.2);
+      animation-play-state: paused;
+    }
+
+    .testi-quote-icon {
+      font-size: 36px;
+      color: rgba(255,215,0,0.3);
+      line-height: 1;
+      margin-bottom: 8px;
+      display: block;
+      animation: popIn 0.4s ease;
+    }
+
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 14px;
+    }
+
+    .testi-star {
+      font-size: 16px;
+      color: rgba(255,215,0,0.15);
+      transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .testi-star.testi-star-fill {
+      color: #FFD700;
+      text-shadow: 0 0 8px rgba(255,215,0,0.6);
+    }
+
+    .testi-body-new {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .testi-student {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testi-avatar-new {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a0dad, #1a0040);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFD700;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(255,215,0,0.2);
+    }
+
+    .testi-name-new {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .testi-college-new {
+      font-size: 11px;
+      color: rgba(255,215,0,0.55);
+    }
+
+    /* CTA */
+    .dreams-cta {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease 0.6s, transform 0.6s ease 0.6s;
+    }
+
+    .dreams-cta.dreams-cta-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dreams-cta-btn {
+      display: inline-block;
+      background: #FFD700;
+      color: #1a0040;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 16px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(255,215,0,0.3);
+      transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .dreams-cta-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255,215,0,0.5);
+    }
+
+    @media (max-width: 768px) {
+      .dreams-section { padding: 48px 20px; }
+      .bora-card { flex-direction: column; padding: 24px; }
+      .testi-grid { grid-template-columns: 1fr; }
     }
 
     /* " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " 
@@ -2272,23 +2626,8 @@
         .faq-answer { padding: 12px 20px 16px; }
     }
 
-    /*        Featured testimonial (middle card breaks identical grid)        */
-    .testi-cards .testi-card:nth-child(2) {
-        background: #1a0040;
-        box-shadow: 0 12px 40px rgba(26,0,64,0.25);
-        transform: translateY(-6px);
-        border: none;
-    }
-    .testi-cards .testi-card:nth-child(2) .testi-stars { color: #FFD700; }
-    .testi-cards .testi-card:nth-child(2) .testi-name  { color: #ffffff; }
-    .testi-cards .testi-card:nth-child(2) .testi-tag   { color: rgba(255,215,0,0.85); }
-    .testi-cards .testi-card:nth-child(2) .testi-quote-mark { color: #FFD700; }
-    .testi-cards .testi-card:nth-child(2) .testi-& { color: rgba(255,255,255,0.8); }
-    .testi-cards .testi-card:nth-child(2) .testi-avatar-sm { background: rgba(255,215,0,0.15); }
-    .testi-cards .testi-card:nth-child(2):hover { transform: translateY(-10px); }
-
     /* " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " 
-       SECTION 3    TRUST STRIP
+       SECTION 3     TRUST STRIP
     " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "  */
 
     .trust-strip {
