@@ -265,9 +265,6 @@ export default function Home() {
               <span className={styles.mTag}>BDS</span>
               <span className={styles.mTag}>AYUSH</span>
               <span className={styles.mTag}>BPTH</span>
-              <span className={styles.mTag} style={{ background: '#FFD700', borderColor: '#FFD700', fontWeight: '800' }}>
-                <span style={{ cursor: 'pointer', color: '#1a0040' }}>🔮 College Predictor</span>
-              </span>
             </div>
             <div className={styles.stats}>
               <div className={styles.mStat}>
