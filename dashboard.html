@@ -159,12 +159,13 @@
   function updateSaveButtonVisibility() {
     try {
       const currentUrl = frame.contentWindow.location.href;
-      if (currentUrl.includes('slide3_options.html') || currentUrl.includes('slide4_recommended.html')) {
+      if (currentUrl.includes('slide3_options') || currentUrl.includes('slide4_recommended')) {
         saveBtn.style.display = 'flex';
       } else {
         saveBtn.style.display = 'none';
       }
     } catch (e) {
+      console.error('Save button visibility check failed:', e);
       saveBtn.style.display = 'none';
     }
   }
