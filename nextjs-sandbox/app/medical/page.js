@@ -47,6 +47,9 @@ export default function MedicalPortal() {
   const uniTrackRef = useRef(null);
   const statRefs = useRef([]);
   const statsAnimated = useRef(false);
+  const journeyRef = useRef(null);
+  const [journeyActive, setJourneyActive] = useState(false);
+  const [activeStep, setActiveStep] = useState(-1);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,6 +58,23 @@ export default function MedicalPortal() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !journeyActive) {
+          setJourneyActive(true);
+          // Activate each step sequentially
+          [0,1,2,3,4,5].forEach(i => {
+            setTimeout(() => setActiveStep(i), 600 + i * 700);
+          });
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (journeyRef.current) observer.observe(journeyRef.current);
+    return () => observer.disconnect();
+  }, [journeyActive]);
 
   useEffect(() => {
     fetch('/data/events.json')
@@ -757,49 +777,187 @@ export default function MedicalPortal() {
       {/* ════════════════════════════════
            SECTION Journey — ADMISSION JOURNEY
       ════════════════════════════════ */}
-      <section className="journey-section" aria-labelledby="journey-heading">
-          <div className="journey-inner">
-      
-              <div className="journey-header">
-                  <div className="journey-icon" aria-hidden="true">🌱</div>
-                  <h2 className="journey-headline" id="journey-heading">The ASMI Admission Journey</h2>
-                  <p className="journey-sub">4 phases from your rank to your admission letter.</p>
-              </div>
-      
-              <div className="journey-steps-wrap">
-                  <div className="journey-line-left" aria-hidden="true"></div>
-                  <div className="journey-line-right" aria-hidden="true"></div>
-                  <div className="journey-runner" aria-hidden="true">🏃</div>
-                  <div className="journey-steps" role="list">
-      
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle gold">1</div>
-                          <div className="journey-label gold">Cutoff Seminar</div>
-                          <p className="journey-body">Understand real trends before you fill any preference.</p>
-                      </div>
-      
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle gold">2</div>
-                          <div className="journey-label gold">1-on-1 Strategy</div>
-                          <p className="journey-body">Dedicated counsellor builds your personalised plan.</p>
-                      </div>
-      
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle purple">3</div>
-                          <div className="journey-label purple">Smart Pref List</div>
-                          <p className="journey-body">Algorithm-optimised preference list. Zero guesswork.</p>
-                      </div>
-      
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle purple">4</div>
-                          <div className="journey-label purple">Final Admission</div>
-                          <p className="journey-body">Support through to your reporting date.</p>
-                      </div>
-      
-                  </div>
-              </div>
-      
+      <section className="journey-section" ref={journeyRef} aria-labelledby="journey-heading">
+        <div className="journey-inner">
+
+          <div className="journey-header">
+            <div className="journey-sprout" aria-hidden="true">🌱</div>
+            <h2 className="journey-headline" id="journey-heading">
+              The ASMI Admission Journey
+            </h2>
+            <p className="journey-sub">
+              From your NEET score to your final admission letter — we walk every step with you.
+            </p>
           </div>
+
+          {/* DESKTOP WINDING PATH */}
+          <div className="journey-road-wrap">
+
+            {/* SVG Road */}
+            <svg
+              className={`journey-svg${journeyActive ? ' journey-svg-active' : ''}`}
+              viewBox="0 0 1100 320"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              {/* Dashed road path: top row L→R then curve down then bottom row R→L */}
+              <path
+                className="journey-road-path"
+                d="M 100 100 L 450 100 L 550 100 Q 600 100 600 160 Q 600 220 550 220 L 100 220"
+                fill="none"
+                stroke="#FFD700"
+                strokeWidth="3"
+                strokeDasharray="12 8"
+              />
+              {/* Animated traveling dot */}
+              {journeyActive && (
+                <circle className="journey-traveler" r="8" fill="#FFD700">
+                  <animateMotion
+                    dur="4.2s"
+                    fill="freeze"
+                    path="M 100 100 L 450 100 L 550 100 Q 600 100 600 160 Q 600 220 550 220 L 100 220"
+                  />
+                </circle>
+              )}
+            </svg>
+
+            {/* TOP ROW: Steps 1, 2, 3 */}
+            <div className="journey-row journey-row-top">
+
+              {/* STEP 1 — Seminar */}
+              <div className={`journey-step${activeStep >= 0 ? ' step-active' : ''}`}>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="10" width="50" height="34" rx="4" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <rect x="20" y="15" width="40" height="24" rx="2" fill="rgba(255,215,0,0.12)"/>
+                    <line x1="40" y1="44" x2="40" y2="52" stroke="#FFD700" strokeWidth="2"/>
+                    <rect x="28" y="52" width="24" height="4" rx="2" fill="#FFD700"/>
+                    <circle cx="22" cy="65" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
+                    <circle cx="40" cy="68" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
+                    <circle cx="58" cy="65" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
+                    <line x1="22" y1="62" x2="25" y2="55" stroke="#c084fc" strokeWidth="1.5"/>
+                    <line x1="40" y1="65" x2="40" y2="56" stroke="#c084fc" strokeWidth="1.5"/>
+                    <line x1="58" y1="62" x2="55" y2="55" stroke="#c084fc" strokeWidth="1.5"/>
+                  </svg>
+                </div>
+                <div className="journey-node gold">1</div>
+                <div className="journey-step-content">
+                  <div className="journey-step-title">Cutoff Seminar</div>
+                  <div className="journey-step-body">Understand real admission cutoffs and trends across India before you decide anything.</div>
+                </div>
+              </div>
+
+              {/* STEP 2 — Consultation */}
+              <div className={`journey-step${activeStep >= 1 ? ' step-active' : ''}`}>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="28" width="64" height="40" rx="6" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <rect x="14" y="34" width="30" height="20" rx="3" fill="rgba(255,215,0,0.12)" stroke="#FFD700" strokeWidth="1.5"/>
+                    <circle cx="24" cy="18" r="8" fill="none" stroke="#FFD700" strokeWidth="2"/>
+                    <line x1="24" y1="26" x2="24" y2="28" stroke="#FFD700" strokeWidth="2"/>
+                    <circle cx="56" cy="18" r="8" fill="none" stroke="#c084fc" strokeWidth="2"/>
+                    <line x1="56" y1="26" x2="56" y2="28" stroke="#c084fc" strokeWidth="2"/>
+                    <line x1="50" y1="44" x2="66" y2="44" stroke="#c084fc" strokeWidth="2" strokeLinecap="round"/>
+                    <line x1="50" y1="50" x2="62" y2="50" stroke="#c084fc" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <div className="journey-node gold">2</div>
+                <div className="journey-step-content">
+                  <div className="journey-step-title">Expert Consultation</div>
+                  <div className="journey-step-body">Get your chances assessed by an ASMI counsellor and enrol for personalised support.</div>
+                </div>
+              </div>
+
+              {/* STEP 3 — One-on-One */}
+              <div className={`journey-step${activeStep >= 2 ? ' step-active' : ''}`}>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="18" r="10" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <path d="M 20 50 Q 20 36 40 36 Q 60 36 60 50" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <rect x="26" y="54" width="28" height="18" rx="3" fill="none" stroke="#c084fc" strokeWidth="2"/>
+                    <line x1="30" y1="60" x2="50" y2="60" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="30" y1="65" x2="44" y2="65" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
+                    <polyline points="46,62 49,65 54,59" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <div className="journey-node gold">3</div>
+                <div className="journey-step-content">
+                  <div className="journey-step-title">One-on-One Guidance</div>
+                  <div className="journey-step-body">Your counsellor covers process, colleges, budget, documents and all your questions.</div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* BOTTOM ROW: Steps 6, 5, 4 (right to left visually = 4,5,6 journey order) */}
+            <div className="journey-row journey-row-bottom">
+
+              {/* STEP 4 — Documents */}
+              <div className={`journey-step${activeStep >= 3 ? ' step-active' : ''}`}>
+                <div className="journey-step-content bottom">
+                  <div className="journey-step-title">Document Verification</div>
+                  <div className="journey-step-body">Every certificate checked, scanned and organised into a PDF — nothing left to chance.</div>
+                </div>
+                <div className="journey-node purple">4</div>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="18" y="8" width="44" height="56" rx="4" fill="none" stroke="#c084fc" strokeWidth="2.5"/>
+                    <rect x="24" y="16" width="32" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
+                    <rect x="24" y="26" width="32" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
+                    <rect x="24" y="36" width="24" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
+                    <circle cx="56" cy="56" r="14" fill="#1a0040" stroke="#4ade80" strokeWidth="2"/>
+                    <polyline points="49,56 54,61 63,51" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              {/* STEP 5 — Preferences */}
+              <div className={`journey-step${activeStep >= 4 ? ' step-active' : ''}`}>
+                <div className="journey-step-content bottom">
+                  <div className="journey-step-title">Preference Finalisation</div>
+                  <div className="journey-step-body">Your final college list built on rank, budget, city and course — counsellor-verified.</div>
+                </div>
+                <div className="journey-node purple">5</div>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="14" y="8" width="52" height="64" rx="5" fill="none" stroke="#c084fc" strokeWidth="2.5"/>
+                    <rect x="20" y="18" width="40" height="8" rx="3" fill="rgba(255,215,0,0.25)" stroke="#FFD700" strokeWidth="1.5"/>
+                    <text x="24" y="25" fill="#FFD700" fontSize="8" fontFamily="sans-serif" fontWeight="bold">★ 1st</text>
+                    <rect x="20" y="32" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
+                    <rect x="20" y="44" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
+                    <rect x="20" y="56" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
+                    <line x1="24" y1="36" x2="52" y2="36" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="24" y1="48" x2="52" y2="48" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="24" y1="60" x2="44" y2="60" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              {/* STEP 6 — Final Admission */}
+              <div className={`journey-step${activeStep >= 5 ? ' step-active' : ''}`}>
+                <div className="journey-step-content bottom">
+                  <div className="journey-step-title">Final Admission</div>
+                  <div className="journey-step-body">Full support through every round until your seat is confirmed and docs are submitted.</div>
+                </div>
+                <div className="journey-node navy">6</div>
+                <div className="journey-illus">
+                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="20" r="11" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <path d="M 22 48 Q 22 34 40 34 Q 58 34 58 48" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
+                    <rect x="22" y="52" width="36" height="22" rx="4" fill="none" stroke="#FFD700" strokeWidth="2"/>
+                    <line x1="28" y1="60" x2="52" y2="60" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
+                    <line x1="28" y1="66" x2="44" y2="66" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
+                    {/* Star burst */}
+                    <circle cx="62" cy="14" r="10" fill="rgba(255,215,0,0.15)" stroke="#FFD700" strokeWidth="1.5"/>
+                    <text x="58" y="18" fill="#FFD700" fontSize="12">★</text>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
       </section>
       
       
