@@ -300,7 +300,7 @@ export default function MedicalPortal() {
                   <li><a href="/colleges">Colleges</a></li>
                   <li><a href="/counselling">Counselling</a></li>
                   <li><a href="#packages">Packages</a></li>
-                  <li><a href="#tools">Services</a></li>
+                  <li><a href="/services">Services</a></li>
                   <li><a href="#events">News & Events</a></li>
                   <li><a href="/about">About Us</a></li>
                   <li><a href="/contact">Contact Us</a></li>
@@ -330,7 +330,7 @@ export default function MedicalPortal() {
           <a href="/colleges">Colleges</a>
           <a href="/counselling">Counselling</a>
           <a href="#packages">Packages</a>
-          <a href="#tools">Services</a>
+          <a href="/services">Services</a>
           <a href="#events">News & Events</a>
           <a href="/about">About Us</a>
           <a href="/contact">Contact Us</a>
@@ -2094,7 +2094,7 @@ export default function MedicalPortal() {
                   <div>
                       <span className="footer-col-header">Get</span>
                       <a href="/counselling" className="footer-link">Counselling</a>
-                      <a href="#" className="footer-link">Services</a>
+                      <a href="/services" className="footer-link">Services</a>
                       <a href="#packages" className="footer-link">Packages</a>
                       <a href="/tools/cutoff-explorer" className="footer-link">Cutoff Explorer</a>
                       <a href="/tools/college-predictor" className="footer-link">College Predictor</a>
