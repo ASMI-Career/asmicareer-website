@@ -12,12 +12,37 @@ export default function MedicalPortal() {
     'symbiosis-medical-college-for-women-pune'
   ];
 
+  const PS_PAIRS = [
+    {
+      problem: 'Wrong Preference Order = Seat Lost Forever',
+      solution: 'Counsellor-built preference list — right colleges, right order, submitted on time.'
+    },
+    {
+      problem: 'Deadlines Close in 24–72 Hours. No Mercy.',
+      solution: 'WhatsApp alerts for every round deadline, sent the moment it opens.'
+    },
+    {
+      problem: 'Fake Agents Charging ₹5–10L for "Guaranteed" Seats',
+      solution: 'Only verified official portals. No middlemen. Fixed transparent pricing.'
+    },
+    {
+      problem: 'Deposit Cancellations Can Cost ₹1–5 Lakhs',
+      solution: 'Full guidance on bonds, deposits and refund eligibility — explained upfront.'
+    },
+    {
+      problem: 'Document Errors and Missing Certificates at Reporting',
+      solution: 'Document verification support with scanned PDF of every certificate — nothing left to chance.'
+    }
+  ];
+
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [events, setEvents] = useState([]);
   const [carouselColleges, setCarouselColleges] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [activePs, setActivePs] = useState(0);
+  const psTimerRef = useRef(null);
 
   const uniTrackRef = useRef(null);
   const statRefs = useRef([]);
@@ -53,6 +78,24 @@ export default function MedicalPortal() {
       })
       .catch(err => console.warn('Colleges fetch failed:', err));
   }, []);
+
+  useEffect(() => {
+    psTimerRef.current = setInterval(() => {
+      setActivePs(prev => (prev + 1) % PS_PAIRS.length);
+    }, 3500);
+    return () => clearInterval(psTimerRef.current);
+  }, []);
+
+  function handlePsHover(index) {
+    clearInterval(psTimerRef.current);
+    setActivePs(index);
+  }
+
+  function handlePsLeave() {
+    psTimerRef.current = setInterval(() => {
+      setActivePs(prev => (prev + 1) % PS_PAIRS.length);
+    }, 3500);
+  }
 
   useEffect(() => {
     const stats = [
@@ -516,79 +559,101 @@ export default function MedicalPortal() {
            SECTION Ps — PROBLEM / SOLUTION
       ════════════════════════════════ */}
       <section className="ps-section" aria-labelledby="ps-heading">
-          <div className="ps-inner">
-      
-              <div className="ps-header">
-                  <h2 className="ps-headline" id="ps-heading">Students Fail Counselling — Before It Even Starts.</h2>
-                  <p className="ps-sub">Here's what goes wrong — and exactly how ASMI fixes it.</p>
-              </div>
-      
-              <div className="ps-grid">
-      
-                  {/* LEFT: PROBLEM */}
-                  <div className="ps-left">
-                      <div className="ps-col-lbl">
-                          <span className="ps-dot-red" aria-hidden="true">●</span> THE PROBLEM
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">1</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar red" aria-hidden="true"></span>
-                              <span className="ps-text">Wrong Preference Order = Seat Lost Forever</span>
-                          </div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">2</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar red" aria-hidden="true"></span>
-                              <span className="ps-text">Deadlines Close in 24–72 Hours. No Mercy.</span>
-                          </div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">3</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar red" aria-hidden="true"></span>
-                              <span className="ps-text">Fake Agents Charging ₹5–10L for 'Guaranteed' Seats</span>
-                          </div>
-                      </div>
-                  </div>
-      
-                  {/* CENTER: IMAGE */}
-                  <div className="ps-img-col" role="img" aria-label="Problem vs Solution comparison">
-                      <div className="ps-vs" aria-label="VS">VS</div>
-                  </div>
-      
-                  {/* RIGHT: SOLUTION */}
-                  <div className="ps-right">
-                      <div className="ps-col-lbl">
-                          <span className="ps-dot-green" aria-hidden="true">●</span> THE SOLUTION
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">1</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar green" aria-hidden="true"></span>
-                              <span className="ps-text">Algorithm-optimised preference list, submitted before deadline.</span>
-                          </div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">2</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar green" aria-hidden="true"></span>
-                              <span className="ps-text">WhatsApp alerts for every round deadline instantly.</span>
-                          </div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">3</span>
-                          <div className="ps-item-body">
-                              <span className="ps-bar green" aria-hidden="true"></span>
-                              <span className="ps-text">Only verified portals. No middlemen. Fixed transparent pricing.</span>
-                          </div>
-                      </div>
-                  </div>
-      
-              </div>
-      
+        <div className="ps-inner">
+
+          <div className="ps-header">
+            <h2 className="ps-headline" id="ps-heading">
+              Students Fail Counselling — Before It Even Starts.
+            </h2>
+            <p className="ps-sub">
+              Here's what goes wrong — and exactly how ASMI fixes it.
+            </p>
           </div>
+
+          <div className="ps-grid">
+
+            {/* LEFT: PROBLEMS */}
+            <div className="ps-left">
+              <div className="ps-col-lbl">
+                <span className="ps-dot-red" aria-hidden="true">●</span> THE PROBLEM
+              </div>
+              {PS_PAIRS.map((pair, i) => (
+                <div
+                  key={i}
+                  className={`ps-item${activePs === i ? ' ps-item-active-red' : ''}`}
+                  onMouseEnter={() => handlePsHover(i)}
+                  onMouseLeave={handlePsLeave}
+                  onClick={() => setActivePs(i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={activePs === i}
+                  onKeyDown={e => e.key === 'Enter' && setActivePs(i)}
+                >
+                  <span className="ps-num" aria-hidden="true">{i + 1}</span>
+                  <div className="ps-item-body">
+                    <span className="ps-bar red" aria-hidden="true"></span>
+                    <span className="ps-text">{pair.problem}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* CENTER: IMAGE PLACEHOLDER */}
+            <div className="ps-img-col" role="img" aria-label="Problem vs Solution comparison">
+              <div className="ps-img-placeholder">
+                <div className="ps-pair-counter">
+                  {PS_PAIRS.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`ps-counter-dot${activePs === i ? ' active' : ''}`}
+                      onClick={() => setActivePs(i)}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+                <div className="ps-vs" aria-label="VS">VS</div>
+              </div>
+            </div>
+
+            {/* RIGHT: SOLUTIONS */}
+            <div className="ps-right">
+              <div className="ps-col-lbl">
+                <span className="ps-dot-green" aria-hidden="true">●</span> THE SOLUTION
+              </div>
+              {PS_PAIRS.map((pair, i) => (
+                <div
+                  key={i}
+                  className={`ps-item${activePs === i ? ' ps-item-active-green' : ''}`}
+                  onMouseEnter={() => handlePsHover(i)}
+                  onMouseLeave={handlePsLeave}
+                  onClick={() => setActivePs(i)}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={activePs === i}
+                  onKeyDown={e => e.key === 'Enter' && setActivePs(i)}
+                >
+                  <span className="ps-num solution" aria-hidden="true">{i + 1}</span>
+                  <div className="ps-item-body">
+                    <span className="ps-bar green" aria-hidden="true"></span>
+                    <span className="ps-text">{pair.solution}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {/* CTA STRIP */}
+          <div className="ps-cta-strip">
+            <p className="ps-cta-text">
+              Recognised any of these? Get free guidance from ASMI.
+            </p>
+            <a href="/inquiry" className="ps-cta-btn">
+              Book Free Counselling →
+            </a>
+          </div>
+
+        </div>
       </section>
       
       
