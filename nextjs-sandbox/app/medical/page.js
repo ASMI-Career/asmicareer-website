@@ -64,13 +64,16 @@ export default function MedicalPortal() {
       ([entry]) => {
         if (entry.isIntersecting && !journeyActive) {
           setJourneyActive(true);
-          // Activate each step sequentially
+          if (journeyRef.current) {
+            journeyRef.current.querySelector('.highway-scene')
+              ?.classList.add('scene-active');
+          }
           [0,1,2,3,4,5].forEach(i => {
-            setTimeout(() => setActiveStep(i), 600 + i * 700);
+            setTimeout(() => setActiveStep(i), 800 + i * 800);
           });
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.2 }
     );
     if (journeyRef.current) observer.observe(journeyRef.current);
     return () => observer.disconnect();
@@ -781,7 +784,7 @@ export default function MedicalPortal() {
         <div className="journey-inner">
 
           <div className="journey-header">
-            <div className="journey-sprout" aria-hidden="true">🌱</div>
+            <span className="journey-sprout" aria-hidden="true">🌱</span>
             <h2 className="journey-headline" id="journey-heading">
               The ASMI Admission Journey
             </h2>
@@ -790,171 +793,208 @@ export default function MedicalPortal() {
             </p>
           </div>
 
-          {/* DESKTOP WINDING PATH */}
-          <div className="journey-road-wrap">
+          {/* HIGHWAY SCENE */}
+          <div className="highway-scene">
 
             {/* SVG Road */}
             <svg
-              className={`journey-svg${journeyActive ? ' journey-svg-active' : ''}`}
-              viewBox="0 0 1100 320"
-              preserveAspectRatio="none"
+              className="highway-svg"
+              viewBox="0 0 1200 500"
+              xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
-              {/* Dashed road path: top row L→R then curve down then bottom row R→L */}
+              <defs>
+                {/* Glow filter for road edges */}
+                <filter id="glow-yellow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                {/* Strong glow for lamp */}
+                <filter id="glow-lamp" x="-100%" y="-100%" width="300%" height="300%">
+                  <feGaussianBlur stdDeviation="6" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                {/* Car headlight gradient */}
+                <radialGradient id="headlight" cx="50%" cy="0%" r="80%">
+                  <stop offset="0%" stopColor="rgba(255,255,200,0.6)"/>
+                  <stop offset="100%" stopColor="rgba(255,255,200,0)"/>
+                </radialGradient>
+              </defs>
+
+              {/* Road surface — wide S-curve */}
+              {/* Left edge of road */}
               <path
-                className="journey-road-path"
-                d="M 100 100 L 450 100 L 550 100 Q 600 100 600 160 Q 600 220 550 220 L 100 220"
+                className="road-edge-left"
+                d="M 60 80 C 60 80, 380 60, 500 200 C 620 340, 840 420, 1140 420"
                 fill="none"
                 stroke="#FFD700"
-                strokeWidth="3"
-                strokeDasharray="12 8"
+                strokeWidth="2"
+                filter="url(#glow-yellow)"
               />
-              {/* Animated traveling dot */}
-              {journeyActive && (
-                <circle className="journey-traveler" r="8" fill="#FFD700">
-                  <animateMotion
-                    dur="4.2s"
-                    fill="freeze"
-                    path="M 100 100 L 450 100 L 550 100 Q 600 100 600 160 Q 600 220 550 220 L 100 220"
+              {/* Right edge of road */}
+              <path
+                className="road-edge-right"
+                d="M 60 140 C 60 140, 380 120, 500 260 C 620 400, 840 480, 1140 480"
+                fill="none"
+                stroke="#FFD700"
+                strokeWidth="2"
+                filter="url(#glow-yellow)"
+              />
+              {/* Road surface fill */}
+              <path
+                className="road-surface"
+                d="M 60 80 C 60 80, 380 60, 500 200 C 620 340, 840 420, 1140 420
+                   L 1140 480 C 840 480, 620 400, 500 260 C 380 120, 60 140, 60 140 Z"
+                fill="#0d001f"
+                opacity="0.9"
+              />
+              {/* Center dashes */}
+              <path
+                className="road-center-dashes"
+                d="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                fill="none"
+                stroke="rgba(255,255,255,0.4)"
+                strokeWidth="2"
+                strokeDasharray="20 15"
+              />
+
+              {/* Animated road draw overlay */}
+              <path
+                className={`road-draw${journeyActive ? ' road-draw-active' : ''}`}
+                d="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                fill="none"
+                stroke="transparent"
+                strokeWidth="60"
+              />
+
+              {/* Street lamp poles — 6 positions along the road */}
+              {[
+                { x: 100, y: 90,  side: 'top' },
+                { x: 310, y: 76,  side: 'top' },
+                { x: 520, y: 195, side: 'top' },
+                { x: 700, y: 340, side: 'bottom' },
+                { x: 900, y: 415, side: 'bottom' },
+                { x: 1100, y: 430, side: 'bottom' },
+              ].map((lamp, i) => (
+                <g key={i}>
+                  {/* Pole */}
+                  <line
+                    x1={lamp.x}
+                    y1={lamp.side === 'top' ? lamp.y : lamp.y + 60}
+                    x2={lamp.x}
+                    y2={lamp.side === 'top' ? lamp.y - 50 : lamp.y + 10}
+                    stroke={activeStep >= i ? '#FFD700' : '#333'}
+                    strokeWidth="2"
                   />
-                </circle>
+                  {/* Lamp head */}
+                  <circle
+                    cx={lamp.x}
+                    cy={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                    r="8"
+                    fill={activeStep >= i ? '#FFD700' : '#222'}
+                    filter={activeStep >= i ? 'url(#glow-lamp)' : ''}
+                  />
+                  {/* Glow ring when active */}
+                  {activeStep >= i && (
+                    <circle
+                      cx={lamp.x}
+                      cy={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                      r="20"
+                      fill="rgba(255,215,0,0.08)"
+                    />
+                  )}
+                </g>
+              ))}
+
+              {/* Traveling car */}
+              {journeyActive && (
+                <g className="highway-car">
+                  <animateMotion
+                    dur="4.8s"
+                    fill="freeze"
+                    path="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                  />
+                  {/* Car body top-down */}
+                  <rect x="-10" y="-16" width="20" height="32" rx="4" fill="#FFD700"/>
+                  <rect x="-7" y="-14" width="14" height="10" rx="2" fill="#1a0040"/>
+                  <rect x="-7" y="4" width="14" height="10" rx="2" fill="#1a0040"/>
+                  {/* Wheels */}
+                  <rect x="-13" y="-12" width="5" height="8" rx="1" fill="#333"/>
+                  <rect x="8" y="-12" width="5" height="8" rx="1" fill="#333"/>
+                  <rect x="-13" y="4" width="5" height="8" rx="1" fill="#333"/>
+                  <rect x="8" y="4" width="5" height="8" rx="1" fill="#333"/>
+                  {/* Headlights */}
+                  <ellipse cx="0" cy="-28" rx="16" ry="24" fill="url(#headlight)" opacity="0.7"/>
+                </g>
               )}
             </svg>
 
-            {/* TOP ROW: Steps 1, 2, 3 */}
-            <div className="journey-row journey-row-top">
+            {/* STEP CARDS — positioned along the road */}
+            <div className="highway-steps">
 
-              {/* STEP 1 — Seminar */}
-              <div className={`journey-step${activeStep >= 0 ? ' step-active' : ''}`}>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="15" y="10" width="50" height="34" rx="4" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <rect x="20" y="15" width="40" height="24" rx="2" fill="rgba(255,215,0,0.12)"/>
-                    <line x1="40" y1="44" x2="40" y2="52" stroke="#FFD700" strokeWidth="2"/>
-                    <rect x="28" y="52" width="24" height="4" rx="2" fill="#FFD700"/>
-                    <circle cx="22" cy="65" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
-                    <circle cx="40" cy="68" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
-                    <circle cx="58" cy="65" r="5" fill="none" stroke="#c084fc" strokeWidth="2"/>
-                    <line x1="22" y1="62" x2="25" y2="55" stroke="#c084fc" strokeWidth="1.5"/>
-                    <line x1="40" y1="65" x2="40" y2="56" stroke="#c084fc" strokeWidth="1.5"/>
-                    <line x1="58" y1="62" x2="55" y2="55" stroke="#c084fc" strokeWidth="1.5"/>
-                  </svg>
+              {[
+                {
+                  pos: 'top-left',
+                  icon: '🎯',
+                  title: 'Cutoff Seminar',
+                  body: 'Understand real admission cutoffs and trends across India before you decide anything.',
+                  color: 'gold'
+                },
+                {
+                  pos: 'top-center-left',
+                  icon: '🤝',
+                  title: 'Expert Consultation',
+                  body: 'Get your chances assessed by an ASMI counsellor and enrol for personalised support.',
+                  color: 'gold'
+                },
+                {
+                  pos: 'top-center-right',
+                  icon: '🗂️',
+                  title: 'One-on-One Guidance',
+                  body: 'Your counsellor covers process, colleges, budget, documents and all your questions.',
+                  color: 'gold'
+                },
+                {
+                  pos: 'bottom-center-left',
+                  icon: '📋',
+                  title: 'Document Verification',
+                  body: 'Every certificate checked, scanned and organised into a PDF — nothing left to chance.',
+                  color: 'purple'
+                },
+                {
+                  pos: 'bottom-center-right',
+                  icon: '⭐',
+                  title: 'Preference Finalisation',
+                  body: 'Your final college list built on rank, budget, city and course — counsellor-verified.',
+                  color: 'purple'
+                },
+                {
+                  pos: 'bottom-right',
+                  icon: '🎓',
+                  title: 'Final Admission',
+                  body: 'Full support through every round until your seat is confirmed and docs are submitted.',
+                  color: 'navy'
+                },
+              ].map((step, i) => (
+                <div
+                  key={i}
+                  className={`highway-step-card pos-${step.pos} color-${step.color}${activeStep >= i ? ' card-active' : ''}`}
+                >
+                  <div className="hsc-icon">{step.icon}</div>
+                  <div className="hsc-num">{i + 1}</div>
+                  <div className="hsc-title">{step.title}</div>
+                  <div className="hsc-body">{step.body}</div>
                 </div>
-                <div className="journey-node gold">1</div>
-                <div className="journey-step-content">
-                  <div className="journey-step-title">Cutoff Seminar</div>
-                  <div className="journey-step-body">Understand real admission cutoffs and trends across India before you decide anything.</div>
-                </div>
-              </div>
-
-              {/* STEP 2 — Consultation */}
-              <div className={`journey-step${activeStep >= 1 ? ' step-active' : ''}`}>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="28" width="64" height="40" rx="6" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <rect x="14" y="34" width="30" height="20" rx="3" fill="rgba(255,215,0,0.12)" stroke="#FFD700" strokeWidth="1.5"/>
-                    <circle cx="24" cy="18" r="8" fill="none" stroke="#FFD700" strokeWidth="2"/>
-                    <line x1="24" y1="26" x2="24" y2="28" stroke="#FFD700" strokeWidth="2"/>
-                    <circle cx="56" cy="18" r="8" fill="none" stroke="#c084fc" strokeWidth="2"/>
-                    <line x1="56" y1="26" x2="56" y2="28" stroke="#c084fc" strokeWidth="2"/>
-                    <line x1="50" y1="44" x2="66" y2="44" stroke="#c084fc" strokeWidth="2" strokeLinecap="round"/>
-                    <line x1="50" y1="50" x2="62" y2="50" stroke="#c084fc" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <div className="journey-node gold">2</div>
-                <div className="journey-step-content">
-                  <div className="journey-step-title">Expert Consultation</div>
-                  <div className="journey-step-body">Get your chances assessed by an ASMI counsellor and enrol for personalised support.</div>
-                </div>
-              </div>
-
-              {/* STEP 3 — One-on-One */}
-              <div className={`journey-step${activeStep >= 2 ? ' step-active' : ''}`}>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="40" cy="18" r="10" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <path d="M 20 50 Q 20 36 40 36 Q 60 36 60 50" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <rect x="26" y="54" width="28" height="18" rx="3" fill="none" stroke="#c084fc" strokeWidth="2"/>
-                    <line x1="30" y1="60" x2="50" y2="60" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="30" y1="65" x2="44" y2="65" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
-                    <polyline points="46,62 49,65 54,59" fill="none" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div className="journey-node gold">3</div>
-                <div className="journey-step-content">
-                  <div className="journey-step-title">One-on-One Guidance</div>
-                  <div className="journey-step-body">Your counsellor covers process, colleges, budget, documents and all your questions.</div>
-                </div>
-              </div>
+              ))}
 
             </div>
 
-            {/* BOTTOM ROW: Steps 6, 5, 4 (right to left visually = 4,5,6 journey order) */}
-            <div className="journey-row journey-row-bottom">
-
-              {/* STEP 4 — Documents */}
-              <div className={`journey-step${activeStep >= 3 ? ' step-active' : ''}`}>
-                <div className="journey-step-content bottom">
-                  <div className="journey-step-title">Document Verification</div>
-                  <div className="journey-step-body">Every certificate checked, scanned and organised into a PDF — nothing left to chance.</div>
-                </div>
-                <div className="journey-node purple">4</div>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="18" y="8" width="44" height="56" rx="4" fill="none" stroke="#c084fc" strokeWidth="2.5"/>
-                    <rect x="24" y="16" width="32" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
-                    <rect x="24" y="26" width="32" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
-                    <rect x="24" y="36" width="24" height="4" rx="2" fill="rgba(192,132,252,0.3)"/>
-                    <circle cx="56" cy="56" r="14" fill="#1a0040" stroke="#4ade80" strokeWidth="2"/>
-                    <polyline points="49,56 54,61 63,51" fill="none" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-
-              {/* STEP 5 — Preferences */}
-              <div className={`journey-step${activeStep >= 4 ? ' step-active' : ''}`}>
-                <div className="journey-step-content bottom">
-                  <div className="journey-step-title">Preference Finalisation</div>
-                  <div className="journey-step-body">Your final college list built on rank, budget, city and course — counsellor-verified.</div>
-                </div>
-                <div className="journey-node purple">5</div>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="14" y="8" width="52" height="64" rx="5" fill="none" stroke="#c084fc" strokeWidth="2.5"/>
-                    <rect x="20" y="18" width="40" height="8" rx="3" fill="rgba(255,215,0,0.25)" stroke="#FFD700" strokeWidth="1.5"/>
-                    <text x="24" y="25" fill="#FFD700" fontSize="8" fontFamily="sans-serif" fontWeight="bold">★ 1st</text>
-                    <rect x="20" y="32" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
-                    <rect x="20" y="44" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
-                    <rect x="20" y="56" width="40" height="7" rx="3" fill="rgba(192,132,252,0.15)"/>
-                    <line x1="24" y1="36" x2="52" y2="36" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="24" y1="48" x2="52" y2="48" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="24" y1="60" x2="44" y2="60" stroke="#c084fc" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </div>
-              </div>
-
-              {/* STEP 6 — Final Admission */}
-              <div className={`journey-step${activeStep >= 5 ? ' step-active' : ''}`}>
-                <div className="journey-step-content bottom">
-                  <div className="journey-step-title">Final Admission</div>
-                  <div className="journey-step-body">Full support through every round until your seat is confirmed and docs are submitted.</div>
-                </div>
-                <div className="journey-node navy">6</div>
-                <div className="journey-illus">
-                  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="40" cy="20" r="11" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <path d="M 22 48 Q 22 34 40 34 Q 58 34 58 48" fill="none" stroke="#FFD700" strokeWidth="2.5"/>
-                    <rect x="22" y="52" width="36" height="22" rx="4" fill="none" stroke="#FFD700" strokeWidth="2"/>
-                    <line x1="28" y1="60" x2="52" y2="60" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
-                    <line x1="28" y1="66" x2="44" y2="66" stroke="#FFD700" strokeWidth="1.5" strokeLinecap="round"/>
-                    {/* Star burst */}
-                    <circle cx="62" cy="14" r="10" fill="rgba(255,215,0,0.15)" stroke="#FFD700" strokeWidth="1.5"/>
-                    <text x="58" y="18" fill="#FFD700" fontSize="12">★</text>
-                  </svg>
-                </div>
-              </div>
-
-            </div>
           </div>
 
         </div>
