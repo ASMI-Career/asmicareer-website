@@ -257,7 +257,7 @@ export default function MedicalPortal() {
               </a>
       
               <ul className="nav-links" role="list">
-                  <li><a href="/tools/college-predictor">Colleges</a></li>
+                  <li><a href="/colleges">Colleges</a></li>
                   <li><a href="/inquiry">Counselling</a></li>
                   <li><a href="#packages">Packages</a></li>
                   <li><a href="#tools">Services</a></li>
@@ -287,7 +287,7 @@ export default function MedicalPortal() {
       {/* Mobile navigation drawer */}
       <div className={`nav-drawer ${drawerOpen ? 'open' : ''}`} id="navDrawer" role="navigation" aria-label="Mobile navigation">
           <a href="/">← Home</a>
-          <a href="/tools/college-predictor">Colleges</a>
+          <a href="/colleges">Colleges</a>
           <a href="/inquiry">Counselling</a>
           <a href="#packages">Packages</a>
           <a href="#tools">Services</a>
