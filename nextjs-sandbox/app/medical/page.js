@@ -482,7 +482,7 @@ export default function MedicalPortal() {
               <h2 className="univ-title" id="univ-heading">Top Tier Universities</h2>
             </div>
             <div className="univ-header-right">
-              <a href="/tools/college-predictor" className="univ-view-all">View all →</a>
+              <a href="/colleges" className="univ-view-all">View all →</a>
               <button
                 className="univ-arrow"
                 onClick={() => setCarouselIndex(i => Math.max(0, i - 1))}
