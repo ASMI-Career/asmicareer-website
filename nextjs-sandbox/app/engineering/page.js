@@ -109,13 +109,19 @@ export default function EngineeringPortal() {
 
   return (
     <>
+      <Nav links={[
+        { label: 'Colleges', href: '/colleges' },
+        { label: 'Counselling', href: '/counselling' },
+        { label: 'Packages', href: '#packages' },
+        { label: 'Services', href: '/services' },
+        { label: 'News & Events', href: '#events' },
+        { label: 'About Us', href: '/about' },
+        { label: 'Contact Us', href: '/contact' },
+      ]} />
+      
       <div className="engineeringPortal">
-        <Nav />
       
-      
-      {/* ════════════════════════════════
-           SECTION 2 — HERO
-      ════════════════════════════════ */}
+      {/* 1. HERO */}
       <section className="hero" aria-labelledby="hero-heading">
           <div className="hero-inner">
       
@@ -227,10 +233,7 @@ export default function EngineeringPortal() {
           </div>
       </section>
       
-      
-      {/* ════════════════════════════════
-           SECTION 2b — IMPORTANT EVENTS
-      ════════════════════════════════ */}
+      {/* 2. EVENTS SECTION */}
       <section className="events-section" id="events" aria-labelledby="events-heading">
           <div className="events-inner">
               <div className="events-header">
@@ -269,10 +272,7 @@ export default function EngineeringPortal() {
           </div>
       </section>
       
-      
-      {/* ════════════════════════════════
-           SECTION 2c — TOP TIER UNIVERSITIES
-      ════════════════════════════════ */}
+      {/* 3. TOP TIER UNIVERSITIES */}
       <section className="unis-section" aria-labelledby="unis-heading">
           <div className="unis-inner">
               <div className="unis-header">
@@ -351,291 +351,8 @@ export default function EngineeringPortal() {
               </div>
           </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION Ps — PROBLEM / SOLUTION
-      ════════════════════════════════ */}
-      <section className="ps-section" aria-labelledby="ps-heading">
-          <div className="ps-inner">
-              <div className="ps-header">
-                  <h2 className="ps-headline" id="ps-heading">Engineering Students Lose Branches — Before Counselling Even Starts.</h2>
-                  <p className="ps-sub">Here's what goes wrong — and exactly how ASMI fixes it.</p>
-              </div>
-              <div className="ps-grid">
-                  <div className="ps-left">
-                      <div className="ps-col-lbl"><span className="ps-dot-red" aria-hidden="true">●</span> THE PROBLEM</div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">1</span>
-                          <div className="ps-item-body"><span className="ps-bar red" aria-hidden="true"></span><span className="ps-text">Wrong Branch-College Combo = Career Regret</span></div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">2</span>
-                          <div className="ps-item-body"><span className="ps-bar red" aria-hidden="true"></span><span className="ps-text">JoSAA Rounds Close in 24 Hours. No Extensions.</span></div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num" aria-hidden="true">3</span>
-                          <div className="ps-item-body"><span className="ps-bar red" aria-hidden="true"></span><span className="ps-text">Coaching Centres Pushing Wrong Colleges for Commission</span></div>
-                      </div>
-                  </div>
-                  <div className="ps-img-col" role="img" aria-label="Problem vs Solution comparison">
-                      <div className="ps-vs" aria-label="VS">VS</div>
-                  </div>
-                  <div className="ps-right">
-                      <div className="ps-col-lbl"><span className="ps-dot-green" aria-hidden="true">●</span> THE SOLUTION</div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">1</span>
-                          <div className="ps-item-body"><span className="ps-bar green" aria-hidden="true"></span><span className="ps-text">Branch-first strategy built around your rank and career goal.</span></div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">2</span>
-                          <div className="ps-item-body"><span className="ps-bar green" aria-hidden="true"></span><span className="ps-text">Real-time JoSAA and CSAB alerts on WhatsApp every round.</span></div>
-                      </div>
-                      <div className="ps-item">
-                          <span className="ps-num solution" aria-hidden="true">3</span>
-                          <div className="ps-item-body"><span className="ps-bar green" aria-hidden="true"></span><span className="ps-text">Only NIC-verified data. No coaching bias. No commissions.</span></div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-      
-      
 
-      
-      
-      {/* ════════════════════════════════
-           SECTION Journey — ENGINEERING JOURNEY
-      ════════════════════════════════ */}
-      <section className="journey-section" aria-labelledby="journey-heading">
-          <div className="journey-inner">
-              <div className="journey-header">
-                  <div className="journey-icon" aria-hidden="true">🌱</div>
-                  <h2 className="journey-headline" id="journey-heading">The ASMI Engineering Journey</h2>
-                  <p className="journey-sub">4 phases from your rank to your branch letter.</p>
-              </div>
-              <div className="journey-steps-wrap">
-                  <div className="journey-line-left" aria-hidden="true"></div>
-                  <div className="journey-line-right" aria-hidden="true"></div>
-                  <div className="journey-runner" aria-hidden="true">🏃</div>
-                  <div className="journey-steps" role="list">
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle gold">1</div>
-                          <div className="journey-label gold">Cutoff Analysis</div>
-                          <p className="journey-body">Understand branch-wise cutoff trends before filling any preference.</p>
-                      </div>
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle gold">2</div>
-                          <div className="journey-label gold">1-on-1 Strategy</div>
-                          <p className="journey-body">Dedicated counsellor maps your rank to your best branch options.</p>
-                      </div>
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle purple">3</div>
-                          <div className="journey-label purple">Smart Pref List</div>
-                          <p className="journey-body">JoSAA/CSAB preference list built for maximum upgrade potential.</p>
-                      </div>
-                      <div className="journey-step" role="listitem">
-                          <div className="journey-circle purple">4</div>
-                          <div className="journey-label purple">Final Admission</div>
-                          <p className="journey-body">Support through freeze deadline, document verification, reporting.</p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION Pricing
-      ════════════════════════════════ */}
-      <section className="pricing-section" aria-labelledby="pricing-heading">
-          <div className="pricing-inner">
-              <div className="pricing-header">
-                  <span className="pricing-eyebrow">SERVICES</span>
-                  <h2 className="pricing-headline" id="pricing-heading">Every Engineering Path, Covered.</h2>
-                  <p className="pricing-sub1">From JEE to MHT-CET to BITS — expert support for every rank and every round.</p>
-                  <p className="pricing-sub2"><span className="ps2-purple">Big</span> On Data. <span className="ps2-muted">Light</span> On Your Pocket. Access all the data you need, without overpaying for it.</p>
-              </div>
-              <div className="pricing-cards">
-                  <div className="pricing-card">
-                      <div className="pricing-exam">JEE MAIN</div>
-                      <div className="pricing-course">JEE Main</div>
-                      <div className="pricing-type">B.Tech Counselling</div>
-                      <div className="pricing-price">₹10,000 – ₹25,000</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-                  <div className="pricing-card featured">
-                      <span className="pricing-popular">★ POPULAR</span>
-                      <div className="pricing-exam">JEE ADVANCED</div>
-                      <div className="pricing-course">JEE Advanced</div>
-                      <div className="pricing-type">IIT Counselling</div>
-                      <div className="pricing-price">₹10,000 – ₹25,000</div>
-                      <button className="pricing-btn-featured">Learn More</button>
-                  </div>
-                  <div className="pricing-card">
-                      <div className="pricing-exam">MHT-CET</div>
-                      <div className="pricing-course">MHT-CET</div>
-                      <div className="pricing-type">CAP Counselling</div>
-                      <div className="pricing-price">₹10,000 – ₹25,000</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-                  <div className="pricing-card">
-                      <div className="pricing-exam">BITS/MANIPAL/VIT</div>
-                      <div className="pricing-course">BITS/Manipal/VIT</div>
-                      <div className="pricing-type">Private Univ Guidance</div>
-                      <div className="pricing-price">₹50,000</div>
-                      <button className="pricing-btn-default">Learn More</button>
-                  </div>
-              </div>
-              <div className="pricing-banner">
-                  <div className="pricing-banner-h">Take the first step.</div>
-                  <div className="pricing-banner-sub">Book a FREE 1-to-1 with an Asmi Counsellor.</div>
-                  <p className="pricing-banner-body">Talk to a real mentor in under 24 hours. No payment, no obligation — just clarity on what your future could look like.</p>
-                  <div className="pricing-banner-btns">
-                      <a href="/inquiry" className="banner-btn-white">Book My Free Session →</a>
-                      <a href="#" className="banner-btn-yellow">WhatsApp Us 💬</a>
-                  </div>
-              </div>
-          </div>
-      </section>
-      
-      
-
-      
-      
-      {/* ════════════════════════════════
-           SECTION Resources
-      ════════════════════════════════ */}
-      <section className="resources-section" aria-labelledby="resources-heading">
-          <div className="resources-inner">
-              <div className="resources-header">
-                  <div>
-                      <h2 className="resources-headline" id="resources-heading">Resources</h2>
-                      <p className="resources-sub">Access high-quality guides, research-backed articles, and downloadable templates curated for student success</p>
-                  </div>
-                  <a href="#" className="resources-view-all">View all →</a>
-              </div>
-              <div className="resources-cards">
-                  <div className="resource-card">
-                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)' }}>
-                          <span className="resource-img-emoji" aria-hidden="true">🧠</span>
-                          <span className="resource-tag" style={{ background: '#1565c0', color: '#ffffff' }}>ARTICLE</span>
-                      </div>
-                      <div className="resource-content">
-                          <div className="resource-title">JEE Rank vs Branch: The Real Tradeoffs</div>
-                          <p className="resource-body">Understand which branches are worth the rank drop — and which aren't.</p>
-                          <div className="resource-footer">
-                              <span className="resource-meta">2400 words</span>
-                              <a href="#" className="resource-cta-link">Read more →</a>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="resource-card">
-                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#0a1628 0%,#004d40 100%)' }}>
-                          <span className="resource-img-emoji" aria-hidden="true">📄</span>
-                          <span className="resource-tag" style={{ background: '#00C8B4', color: '#0a1628' }}>DOWNLOAD</span>
-                      </div>
-                      <div className="resource-content">
-                          <div className="resource-title">JoSAA Round-wise Cutoff PDF 2025</div>
-                          <p className="resource-body">All IIT, NIT, IIIT cutoffs from JoSAA 2025 — round by round.</p>
-                          <div className="resource-footer">
-                              <span className="resource-meta">PDF · 2.1 MB</span>
-                              <a href="#" className="resource-cta-btn">Get it Now ↓</a>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="resource-card">
-                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#1a3a5c 0%,#00695C 100%)' }}>
-                          <span className="resource-img-emoji" aria-hidden="true">▶️</span>
-                          <span className="resource-tag" style={{ background: '#00897b', color: '#ffffff' }}>VIDEO</span>
-                      </div>
-                      <div className="resource-content">
-                          <div className="resource-title">How to Build Your JoSAA Preference List</div>
-                          <p className="resource-body">Step-by-step walkthrough of building a winning preference list.</p>
-                          <div className="resource-footer">
-                              <span className="resource-meta">12 min 40 sec</span>
-                              <a href="#" className="resource-cta-link">Watch →</a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION FAQs
-      ════════════════════════════════ */}
-      <section className="faq-section" aria-labelledby="faq-heading">
-          <div className="faq-inner">
-              <div className="faq-header">
-                  <span className="faq-eyebrow">FAQs</span>
-                  <h2 className="faq-headline" id="faq-heading">Frequently Asked</h2>
-                  <p className="faq-sub">The questions every JEE student and parent asks us first.</p>
-              </div>
-              <div className="faq-accordion">
-                  <div className={`faq-item ${openFaq === 0 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(0)}>
-                          What is JEE counselling and how does ASMI help?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 0 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 0 ? 'block' : 'none' }}>JEE counselling is the process of filling preferences for engineering colleges through JoSAA after your JEE result. ASMI provides end-to-end support — from understanding your rank and category to filling the right preferences at the right time across JoSAA, CSAB and state CET rounds.</div>
-                  </div>
-                  <div className={`faq-item ${openFaq === 1 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(1)}>
-                          How is ASMI different from free YouTube JEE advice?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 1 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 1 ? 'block' : 'none' }}>YouTube gives general advice. ASMI gives personalised guidance based on your exact rank, branch preference, domicile and budget. Our counsellors track every JoSAA round for you and alert you in real time.</div>
-                  </div>
-                  <div className={`faq-item ${openFaq === 2 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(2)}>
-                          Does ASMI cover JEE Mains, Advanced and state CETs?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 2 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 2 ? 'block' : 'none' }}>Yes. We cover JoSAA for JEE Mains and Advanced, CSAB, MHT-CET, KCET, TSEAMCET and 10+ other state CETs — all in one package.</div>
-                  </div>
-                  <div className={`faq-item ${openFaq === 3 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(3)}>
-                          What are your engineering counselling package prices?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 3 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 3 ? 'block' : 'none' }}>Packages range from ₹10,000 – ₹25,000 for JEE Main, Advanced, and MHT-CET counselling packages, and are ₹50,000 for BITS/VIT/Manipal packages. All pricing is fixed — no hidden charges or institute commissions.</div>
-                  </div>
-                  <div className={`faq-item ${openFaq === 4 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(4)}>
-                          What if I don't get my preferred branch after paying?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 4 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 4 ? 'block' : 'none' }}>We guide you through every available round including CSAB and institutional rounds. We also help you evaluate upgrade options and alternative branches strategically.</div>
-                  </div>
-                  <div className={`faq-item ${openFaq === 5 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(5)}>
-                          Can parents track the JoSAA counselling process?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 5 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 5 ? 'block' : 'none' }}>Absolutely. We send WhatsApp updates to both the student and parents after every JoSAA round. You are never in the dark.</div>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      
-      
-      {/* ════════════════════════════════
-           SECTION 3 — TRUST STRIP
-      ════════════════════════════════ */}
-      <section className="trust-strip" aria-label="Colleges our students have been admitted to">
-          <div className="trust-track" aria-hidden="true">
-              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
-              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
-          </div>
-      </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 4 — PROBLEMS
-      ════════════════════════════════ */}
+      {/* 4. PROBLEMS (7-ROW TABLE) */}
       <section className="problems" aria-labelledby="prob-heading">
           <div className="problems-noise" aria-hidden="true"></div>
           <div className="problems-inner">
@@ -738,11 +455,8 @@ export default function EngineeringPortal() {
       
           </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 5 — COUNSELLING PROCESS
-      ════════════════════════════════ */}
+
+      {/* 5. PROCESS (JoSAA STEPS) */}
       <section className="process" aria-labelledby="process-heading">
           <div className="process-inner">
       
@@ -833,11 +547,8 @@ export default function EngineeringPortal() {
       
           </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 6 — WHY ASMI
-      ════════════════════════════════ */}
+
+      {/* 6. WHY ASMI */}
       <section className="why-asmi" aria-labelledby="why-heading">
           <div className="why-inner">
       
@@ -887,11 +598,8 @@ export default function EngineeringPortal() {
       
           </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 7 — TOOLS
-      ════════════════════════════════ */}
+
+      {/* 7. TOOLS */}
       <section className="tools" id="tools" aria-labelledby="tools-heading">
           <div className="tools-inner">
       
@@ -937,11 +645,8 @@ export default function EngineeringPortal() {
       
           </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 8 — PACKAGES
-      ════════════════════════════════ */}
+
+      {/* 8. PACKAGES */}
       <section className="packages" id="packages" aria-labelledby="packages-heading">
           <div className="packages-inner">
       
@@ -1021,18 +726,16 @@ export default function EngineeringPortal() {
           </div>
       </section>
 
-      {/* ════════════════════════════════
-           SECTION — TOPPERS / HALL OF FAME
-      ════════════════════════════════ */}
+      {/* 9. TOPPERS SECTION */}
       <section className="toppers-section" aria-labelledby="toppers-heading">
         <div className="toppers-inner">
-
+ 
           <div className="toppers-header">
             <span className="toppers-eyebrow">HALL OF FAME</span>
             <h2 className="toppers-headline" id="toppers-heading">ASMI Students. Top Colleges.</h2>
             <p className="toppers-sub">JEE Achievers 2025 and Maharashtra toppers guided by ASMI Career.</p>
           </div>
-
+ 
           <div className="toppers-block">
             <div className="toppers-block-label">JEE Achievers 2025</div>
             <div className="toppers-grid">
@@ -1073,7 +776,7 @@ export default function EngineeringPortal() {
               </div>
             </div>
           </div>
-
+ 
           <div className="toppers-block">
             <div className="toppers-block-label">Maharashtra Toppers 2025</div>
             <div className="toppers-strip">
@@ -1088,14 +791,11 @@ export default function EngineeringPortal() {
               <div className="topper-pill">Ruturaj Shinde <span>WCE Mech</span></div>
             </div>
           </div>
-
+ 
         </div>
       </section>
-      
-      
-      {/* ════════════════════════════════
-           SECTION 9 — TESTIMONIALS
-      ════════════════════════════════ */}
+
+      {/* 10. TESTIMONIALS */}
       <section className="testimonials" aria-labelledby="testi-heading">
           <div className="testi-inner">
       
@@ -1136,14 +836,153 @@ export default function EngineeringPortal() {
       
           </div>
       </section>
-      
-      
-      
-      
-      
-      {/* ════════════════════════════════
-           SECTION 11 — CTA BANNER
-      ════════════════════════════════ */}
+
+      {/* 11. RESOURCES SECTION */}
+      <section className="resources-section" aria-labelledby="resources-heading">
+          <div className="resources-inner">
+              <div className="resources-header">
+                  <div>
+                      <h2 className="resources-headline" id="resources-heading">Resources</h2>
+                      <p className="resources-sub">Access high-quality guides, research-backed articles, and downloadable templates curated for student success</p>
+                  </div>
+                  <a href="#" className="resources-view-all">View all →</a>
+              </div>
+              <div className="resources-cards">
+                  <div className="resource-card">
+                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%)' }}>
+                          <span className="resource-img-emoji" aria-hidden="true">🧠</span>
+                          <span className="resource-tag" style={{ background: '#1565c0', color: '#ffffff' }}>ARTICLE</span>
+                      </div>
+                      <div className="resource-content">
+                          <div className="resource-title">JEE Rank vs Branch: The Real Tradeoffs</div>
+                          <p className="resource-body">Understand which branches are worth the rank drop — and which aren't.</p>
+                          <div className="resource-footer">
+                              <span className="resource-meta">2400 words</span>
+                              <a href="#" className="resource-cta-link">Read more →</a>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="resource-card">
+                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#0a1628 0%,#004d40 100%)' }}>
+                          <span className="resource-img-emoji" aria-hidden="true">📄</span>
+                          <span className="resource-tag" style={{ background: '#00C8B4', color: '#0a1628' }}>DOWNLOAD</span>
+                      </div>
+                      <div className="resource-content">
+                          <div className="resource-title">JoSAA Round-wise Cutoff PDF 2025</div>
+                          <p className="resource-body">All IIT, NIT, IIIT cutoffs from JoSAA 2025 — round by round.</p>
+                          <div className="resource-footer">
+                              <span className="resource-meta">PDF · 2.1 MB</span>
+                              <a href="#" className="resource-cta-btn">Get it Now ↓</a>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="resource-card">
+                      <div className="resource-img" style={{ background: 'linear-gradient(135deg,#1a3a5c 0%,#00695C 100%)' }}>
+                          <span className="resource-img-emoji" aria-hidden="true">▶️</span>
+                          <span className="resource-tag" style={{ background: '#00897b', color: '#ffffff' }}>VIDEO</span>
+                      </div>
+                      <div className="resource-content">
+                          <div className="resource-title">How to Build Your JoSAA Preference List</div>
+                          <p className="resource-body">Step-by-step walkthrough of building a winning preference list.</p>
+                          <div className="resource-footer">
+                              <span className="resource-meta">12 min 40 sec</span>
+                              <a href="#" className="resource-cta-link">Watch →</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* 12. FAQ SECTION */}
+      <section className="faq-section" aria-labelledby="faq-heading">
+          <div className="faq-inner">
+              <div className="faq-header">
+                  <span className="faq-eyebrow">FAQs</span>
+                  <h2 className="faq-headline" id="faq-heading">Frequently Asked</h2>
+                  <p className="faq-sub">The questions every JEE student and parent asks us first.</p>
+              </div>
+              <div className="faq-accordion">
+                  <div className={`faq-item ${openFaq === 0 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(0)}>
+                          What is JEE counselling and how does ASMI help?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 0 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 0 ? 'block' : 'none' }}>JEE counselling is the process of filling preferences for engineering colleges through JoSAA after your JEE result. ASMI provides end-to-end support — from understanding your rank and category to filling the right preferences at the right time across JoSAA, CSAB and state CET rounds.</div>
+                  </div>
+                  <div className={`faq-item ${openFaq === 1 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(1)}>
+                          How is ASMI different from free YouTube JEE advice?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 1 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 1 ? 'block' : 'none' }}>YouTube gives general advice. ASMI gives personalised guidance based on your exact rank, branch preference, domicile and budget. Our counsellors track every JoSAA round for you and alert you in real time.</div>
+                  </div>
+                  <div className={`faq-item ${openFaq === 2 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(2)}>
+                          Does ASMI cover JEE Mains, Advanced and state CETs?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 2 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 2 ? 'block' : 'none' }}>Yes. We cover JoSAA for JEE Mains and Advanced, CSAB, MHT-CET, KCET, TSEAMCET and 10+ other state CETs — all in one package.</div>
+                  </div>
+                  <div className={`faq-item ${openFaq === 3 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(3)}>
+                          What are your engineering counselling package prices?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 3 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 3 ? 'block' : 'none' }}>Packages range from ₹10,000 – ₹25,000 for JEE Main, Advanced, and MHT-CET counselling packages, and are ₹50,000 for BITS/VIT/Manipal packages. All pricing is fixed — no hidden charges or institute commissions.</div>
+                  </div>
+                  <div className={`faq-item ${openFaq === 4 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(4)}>
+                          What if I don't get my preferred branch after paying?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 4 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 4 ? 'block' : 'none' }}>We guide you through every available round including CSAB and institutional rounds. We also help you evaluate upgrade options and alternative branches strategically.</div>
+                  </div>
+                  <div className={`faq-item ${openFaq === 5 ? 'open' : ''}`}>
+                      <div className="faq-question" onClick={() => toggleFaq(5)}>
+                          Can parents track the JoSAA counselling process?
+                          <span className="faq-icon" aria-hidden="true">{openFaq === 5 ? '−' : '+'}</span>
+                      </div>
+                      <div className="faq-answer" style={{ display: openFaq === 5 ? 'block' : 'none' }}>Absolutely. We send WhatsApp updates to both the student and parents after every JoSAA round. You are never in the dark.</div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* 13. STATS STRIP */}
+      <section className="stats-strip" style={{ padding: '60px 0', background: '#0a1628', display: 'flex', justifyContent: 'center' }} aria-label="Key statistics">
+          <div className="hero-stats" style={{ marginTop: 0 }} role="list">
+              <div className="hero-stat" role="listitem">
+                  <span className="stat-num">10K+</span>
+                  <span className="stat-lbl">Students Guided</span>
+              </div>
+              <div className="stat-divider" aria-hidden="true"></div>
+              <div className="hero-stat" role="listitem">
+                  <span className="stat-num">11+</span>
+                  <span className="stat-lbl">Years Experience</span>
+              </div>
+              <div className="stat-divider" aria-hidden="true"></div>
+              <div className="hero-stat" role="listitem">
+                  <span className="stat-num">500+</span>
+                  <span className="stat-lbl">Colleges</span>
+              </div>
+              <div className="stat-divider" aria-hidden="true"></div>
+              <div className="hero-stat" role="listitem">
+                  <span className="stat-num">4.9★</span>
+                  <span className="stat-lbl">Google Rating</span>
+              </div>
+          </div>
+      </section>
+
+      {/* 14. TRUST STRIP */}
+      <section className="trust-strip" aria-label="Colleges our students have been admitted to">
+          <div className="trust-track" aria-hidden="true">
+              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
+              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
+          </div>
+      </section>
+
+      {/* 15. CTA BANNER */}
       <section className="cta-banner" aria-labelledby="cta-heading">
           <div className="cta-deco cta-deco-1" aria-hidden="true"></div>
           <div className="cta-deco cta-deco-2" aria-hidden="true"></div>
@@ -1156,8 +995,10 @@ export default function EngineeringPortal() {
               </div>
           </div>
       </section>
+      
       </div>
-      <Footer />
+      
+      <Footer tagline="Guiding Futures, Building Engineers" />
     </>
   );
 }

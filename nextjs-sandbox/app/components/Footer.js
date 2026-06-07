@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import './footer.css';
 
-export default function Footer() {
+export default function Footer({ tagline = "Guiding Futures, Building Doctors" }) {
   return (
     <footer className="footer" role="contentinfo">
       <div className="footer-inner">
@@ -10,7 +10,7 @@ export default function Footer() {
   
           <div className="footer-col-brand">
             <img src="/asmi-logo.png" alt="ASMI Career" className="footer-logo-img" />
-            <p className="footer-tagline">Guiding Futures, Building Doctors</p>
+            <p className="footer-tagline">{tagline}</p>
             <div className="footer-socials" aria-label="Social media links">
               <a
                 href="https://www.facebook.com/asmicareer/"

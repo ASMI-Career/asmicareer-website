@@ -3,7 +3,17 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import './nav.css';
 
-export default function Nav() {
+const defaultLinks = [
+  { label: 'Colleges', href: '/colleges' },
+  { label: 'Counselling', href: '/counselling' },
+  { label: 'Packages', href: '/medical#packages' },
+  { label: 'Services', href: '/services' },
+  { label: 'News & Events', href: '/medical#events' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact Us', href: '/contact' },
+];
+
+export default function Nav({ links = defaultLinks }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -32,13 +42,9 @@ export default function Nav() {
               </Link>
       
               <ul className="nav-links" role="list">
-                  <li><Link href="/colleges">Colleges</Link></li>
-                  <li><Link href="/counselling">Counselling</Link></li>
-                  <li><Link href="/medical#packages">Packages</Link></li>
-                  <li><Link href="/services">Services</Link></li>
-                  <li><Link href="/medical#events">News & Events</Link></li>
-                  <li><Link href="/about">About Us</Link></li>
-                  <li><Link href="/contact">Contact Us</Link></li>
+                  {links.map((link, i) => (
+                      <li key={i}><Link href={link.href}>{link.label}</Link></li>
+                  ))}
               </ul>
       
               <div className="nav-cta">
@@ -59,16 +65,11 @@ export default function Nav() {
           </div>
       </nav>
       
-      {/* Mobile navigation drawer */}
       <div className={`nav-drawer ${menuOpen ? 'open' : ''}`} id="navDrawer" role="navigation" aria-label="Mobile navigation">
           <Link href="/" onClick={() => setMenuOpen(false)}>← Home</Link>
-          <Link href="/colleges" onClick={() => setMenuOpen(false)}>Colleges</Link>
-          <Link href="/counselling" onClick={() => setMenuOpen(false)}>Counselling</Link>
-          <Link href="/medical#packages" onClick={() => setMenuOpen(false)}>Packages</Link>
-          <Link href="/services" onClick={() => setMenuOpen(false)}>Services</Link>
-          <Link href="/medical#events" onClick={() => setMenuOpen(false)}>News & Events</Link>
-          <Link href="/about" onClick={() => setMenuOpen(false)}>About Us</Link>
-          <Link href="/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+          {links.map((link, i) => (
+              <Link key={i} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</Link>
+          ))}
           <Link href="/inquiry" className="drawer-cta" onClick={() => setMenuOpen(false)}>Book Free Session →</Link>
       </div>
     </>
