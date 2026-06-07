@@ -38,6 +38,8 @@ export default function MedicalPortal() {
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
+  const faqRef = useRef(null);
+  const [faqVisible, setFaqVisible] = useState(false);
   const [events, setEvents] = useState([]);
   const [carouselColleges, setCarouselColleges] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -259,8 +261,19 @@ export default function MedicalPortal() {
     }
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setFaqVisible(true);
+      },
+      { threshold: 0.1 }
+    );
+    if (faqRef.current) observer.observe(faqRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const toggleFaq = (index) => {
-    setOpenFaq(openFaq === index ? null : index);
+    setOpenFaq(prev => prev === index ? null : index);
   };
 
   return (
@@ -1496,80 +1509,104 @@ export default function MedicalPortal() {
       {/* ════════════════════════════════
            SECTION FAQs
       ════════════════════════════════ */}
-      <section className="faq-section" aria-labelledby="faq-heading">
-          <div className="faq-inner">
-      
-              <div className="faq-header">
-                  <span className="faq-eyebrow">FAQs</span>
-                  <h2 className="faq-headline" id="faq-heading">Frequently Asked</h2>
-                  <p className="faq-sub">The questions every student and parent asks us first.</p>
-              </div>
-      
-              <div className="faq-accordion">
-      
-                  <div className={`faq-item ${openFaq === 0 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(0)}>
-                          What is NEET counselling and how does ASMI help?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 0 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 0 ? 'block' : 'none' }}>
-                          NEET counselling is the process of selecting and filling college preferences after your NEET result. ASMI assigns you a dedicated counsellor who builds your preference list, tracks deadlines, and guides you through every round — MCC AIQ, state quota, and deemed.
-                      </div>
-                  </div>
-      
-                  <div className={`faq-item ${openFaq === 1 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(1)}>
-                          How is ASMI different from free YouTube advice?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 1 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 1 ? 'block' : 'none' }}>
-                          YouTube gives general information. ASMI gives you a personalised strategy based on your specific rank, category, state, and target colleges — with a real counsellor accountable to your outcome.
-                      </div>
-                  </div>
-      
-                  <div className={`faq-item ${openFaq === 2 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(2)}>
-                          Does ASMI cover both NEET UG and JEE?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 2 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 2 ? 'block' : 'none' }}>
-                          Yes. ASMI has dedicated teams for NEET UG, NEET PG, JEE Main, JEE Advanced, MHT-CET, and MBBS Abroad counselling.
-                      </div>
-                  </div>
-      
-                  <div className={`faq-item ${openFaq === 3 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(3)}>
-                          How much do your packages cost?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 3 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 3 ? 'block' : 'none' }}>
-                          Packages start at ₹2,499 for basic counselling and go up to ₹3,999 for full-service end-to-end support. All pricing is fixed — no hidden charges.
-                      </div>
-                  </div>
-      
-                  <div className={`faq-item ${openFaq === 4 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(4)}>
-                          What if I don't get a seat after paying?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 4 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 4 ? 'block' : 'none' }}>
-                          We don't guarantee seats — no honest counsellor can. But we guarantee a complete, optimised strategy built around your rank. Most students who follow our preference list secure a seat in round 1 or 2.
-                      </div>
-                  </div>
-      
-                  <div className={`faq-item ${openFaq === 5 ? 'open' : ''}`}>
-                      <div className="faq-question" onClick={() => toggleFaq(5)}>
-                          Can parents stay updated throughout?
-                          <span className="faq-icon" aria-hidden="true">{openFaq === 5 ? '−' : '+'}</span>
-                      </div>
-                      <div className="faq-answer" style={{ display: openFaq === 5 ? 'block' : 'none' }}>
-                          Yes. Parents receive WhatsApp updates at every stage — round results, deadline reminders, document checklists, and reporting date alerts.
-                      </div>
-                  </div>
-      
-              </div>
-      
+      <section
+        className="faq-section"
+        ref={faqRef}
+        aria-labelledby="faq-heading"
+        id="faqs"
+      >
+        <div className="faq-inner">
+
+          <div className={`faq-header${faqVisible ? ' faq-header-visible' : ''}`}>
+            <span className="faq-eyebrow">FAQs</span>
+            <h2 className="faq-headline" id="faq-heading">
+              Frequently Asked
+            </h2>
+            <p className="faq-sub">
+              The questions every student and parent asks us first.
+            </p>
           </div>
+
+          <div className="faq-list" role="list">
+            {[
+              {
+                q: 'What is NEET counselling and how does ASMI help?',
+                a: 'NEET counselling is the process of selecting and filling college preferences after your NEET result. ASMI assigns you a dedicated counsellor who builds your personalised preference list, tracks every deadline, and guides you through every round — MCC AIQ, MH State quota, and open states — until you are admitted.'
+              },
+              {
+                q: 'How is ASMI different from free YouTube advice?',
+                a: 'YouTube gives general information for a general student. ASMI gives you a personalised strategy built on your specific rank, category, state domicile, budget, and target colleges — with a real counsellor who is accountable to your outcome and available on WhatsApp throughout the process.'
+              },
+              {
+                q: 'Does ASMI cover both Maharashtra State quota and All India quota?',
+                a: 'Yes. ASMI covers MH State quota (85% seats), MCC All India quota (15% seats), Deemed university counselling, and open state counselling for Karnataka, Kerala, Telangana, Uttar Pradesh, Tamil Nadu and more — all under one package.'
+              },
+              {
+                q: 'How much do your packages cost?',
+                a: 'Package pricing varies by branch — starting from ₹10,000 in Kolhapur and Sangli, ₹20,000 in Pune, and ₹30,000 in Mumbai and Thane. NRI / Management quota counselling is ₹60,000 flat. All pricing is confirmed at your nearest branch — no payment required to enquire.'
+              },
+              {
+                q: 'What if I don\'t get a seat after paying?',
+                a: 'No counsellor can honestly guarantee a seat — your rank is the primary factor. What ASMI guarantees is a complete, counsellor-built strategy optimised for your rank, category, and preferences. The large majority of students who follow our preference list secure a seat in Round 1 or Round 2.'
+              },
+              {
+                q: 'Can parents stay updated throughout the process?',
+                a: 'Yes. Parents receive WhatsApp updates at every stage — round results, deadline reminders, document checklists, seat matrix releases, allotment results, and reporting date alerts. Nothing important happens without you knowing first.'
+              },
+              {
+                q: 'What is the difference between MH State quota and All India quota?',
+                a: '85% of seats in Maharashtra government colleges are reserved for Maharashtra domicile students under MH State quota, conducted by the State CET Cell. The remaining 15% are All India Quota (AIQ) seats filled by MCC (Medical Counselling Committee) and are open to students from any state. AIQ cutoffs are typically higher. ASMI helps you decide which quota to prioritise based on your rank and category.'
+              },
+              {
+                q: 'Does ASMI help with open state colleges outside Maharashtra?',
+                a: 'Yes. ASMI has detailed data and experience with open state counselling in Karnataka, Kerala, Telangana, Andhra Pradesh, Uttar Pradesh, Tamil Nadu, Haryana and more. If your Maharashtra options are limited at your rank, open state colleges can significantly expand your choices — and ASMI maps this out for you.'
+              },
+            ].map((faq, i) => (
+              <div
+                key={i}
+                className={`faq-item${faqVisible ? ' faq-item-visible' : ''}${openFaq === i ? ' faq-item-open' : ''}`}
+                style={{ transitionDelay: `${i * 60}ms` }}
+                role="listitem"
+              >
+                <button
+                  className="faq-question"
+                  onClick={() => toggleFaq(i)}
+                  aria-expanded={openFaq === i}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  <span className="faq-q-text">{faq.q}</span>
+                  <span className="faq-icon" aria-hidden="true">
+                    {openFaq === i ? '−' : '+'}
+                  </span>
+                </button>
+                <div
+                  className="faq-answer-wrap"
+                  id={`faq-answer-${i}`}
+                  role="region"
+                  style={{
+                    maxHeight: openFaq === i ? '400px' : '0px',
+                    opacity: openFaq === i ? 1 : 0,
+                  }}
+                >
+                  <p className="faq-answer">{faq.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className={`faq-cta${faqVisible ? ' faq-cta-visible' : ''}`}>
+            <p className="faq-cta-text">Still have questions?</p>
+            <a
+              href="https://wa.me/917410019074"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="faq-cta-btn"
+            >
+              WhatsApp Us →
+            </a>
+          </div>
+
+        </div>
       </section>
       
       
