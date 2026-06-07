@@ -298,7 +298,7 @@ export default function MedicalPortal() {
       
               <ul className="nav-links" role="list">
                   <li><a href="/colleges">Colleges</a></li>
-                  <li><a href="/inquiry">Counselling</a></li>
+                  <li><a href="/counselling">Counselling</a></li>
                   <li><a href="#packages">Packages</a></li>
                   <li><a href="#tools">Services</a></li>
                   <li><a href="#events">News & Events</a></li>
@@ -328,7 +328,7 @@ export default function MedicalPortal() {
       <div className={`nav-drawer ${drawerOpen ? 'open' : ''}`} id="navDrawer" role="navigation" aria-label="Mobile navigation">
           <a href="/">← Home</a>
           <a href="/colleges">Colleges</a>
-          <a href="/inquiry">Counselling</a>
+          <a href="/counselling">Counselling</a>
           <a href="#packages">Packages</a>
           <a href="#tools">Services</a>
           <a href="#events">News & Events</a>
@@ -2093,7 +2093,7 @@ export default function MedicalPortal() {
       
                   <div>
                       <span className="footer-col-header">Get</span>
-                      <a href="#" className="footer-link">Counselling</a>
+                      <a href="/counselling" className="footer-link">Counselling</a>
                       <a href="#" className="footer-link">Services</a>
                       <a href="#packages" className="footer-link">Packages</a>
                       <a href="/tools/cutoff-explorer" className="footer-link">Cutoff Explorer</a>
