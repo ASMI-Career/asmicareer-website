@@ -1,0 +1,914 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap');
+
+.college-page {
+  background: #f9f5ff;
+  min-height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+  color: #1a0040;
+}
+
+/* 1. HEADER BANNER */
+.detail-banner {
+  height: 240px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  background-color: #1a0040;
+}
+
+.detail-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(26, 0, 64, 0.1) 0%, rgba(26, 0, 64, 0.55) 100%);
+}
+
+.detail-container {
+  max-width: 1200px;
+  margin: -80px auto 0;
+  padding: 0 24px 60px;
+  position: relative;
+  z-index: 10;
+}
+
+/* 2. HEADER CARD */
+.detail-header-card {
+  background: #fff;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(106, 13, 173, 0.06);
+}
+
+.detail-logo {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.detail-header-content {
+  flex: 1;
+}
+
+.detail-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #1a0040;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.detail-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-pill {
+  background: #f0e6ff;
+  color: #4a0080;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.detail-pill.recommend {
+  background: #FFD700;
+  color: #1a0040;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+/* 3. STAT STRIP */
+.detail-stat-strip {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(106, 13, 173, 0.03);
+}
+
+.detail-stat-col {
+  text-align: center;
+  position: relative;
+}
+
+.detail-stat-col:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: rgba(106, 13, 173, 0.12);
+}
+
+.detail-stat-val {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #6a0dad;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.detail-stat-lbl {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(26, 0, 64, 0.5);
+}
+
+/* 4. CTA BAR */
+.detail-cta-bar {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  padding: 16px 24px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(106, 13, 173, 0.03);
+}
+
+.detail-cta-primary {
+  background: #FFD700;
+  color: #1a0040;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.detail-cta-primary:hover {
+  opacity: 0.88;
+}
+
+.detail-cta-secondary {
+  background: #fff;
+  border: 1px solid rgba(106, 13, 173, 0.3);
+  color: #1a0040;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+
+.detail-cta-secondary:hover:not(.disabled) {
+  background: rgba(106, 13, 173, 0.04);
+}
+
+.detail-cta-secondary.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* 5. STICKY TABS */
+.detail-tabs-wrapper {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  position: sticky;
+  top: 20px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(26, 0, 64, 0.04);
+  overflow: hidden;
+}
+
+.detail-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.detail-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.detail-tab {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(26, 0, 64, 0.6);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.detail-tab.active {
+  color: #1a0040;
+  border-bottom-color: #FFD700;
+}
+
+.detail-tab:hover:not(.active) {
+  color: #1a0040;
+  background: rgba(106, 13, 173, 0.02);
+}
+
+/* 6. TAB CONTENT PANELS */
+.detail-tab-content {
+  margin-top: 24px;
+}
+
+.detail-panel {
+  background: #fff;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(106, 13, 173, 0.02);
+}
+
+.section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1a0040;
+  border-left: 3px solid #FFD700;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+.panel-desc {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(26, 0, 64, 0.75);
+}
+
+/* Highlights Grid */
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.highlight-card {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 13, 173, 0.08);
+  background: #fcfaff;
+}
+
+.highlight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.highlight-lbl {
+  font-size: 11px;
+  color: rgba(26, 0, 64, 0.5);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.highlight-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a0040;
+}
+
+/* Location Card */
+.location-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 13, 173, 0.08);
+  padding: 20px;
+}
+
+.location-address {
+  font-size: 13.5px;
+  color: #1a0040;
+  margin-bottom: 16px;
+}
+
+.map-placeholder {
+  height: 150px;
+  background: #f0e6ff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #4a0080;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 20px;
+  text-align: center;
+}
+
+.map-icon {
+  font-size: 28px;
+}
+
+/* ASMI Pulse score card */
+.pulse-card {
+  background: #1a0040;
+  border-radius: 16px;
+  padding: 24px;
+  color: #fff;
+}
+
+.pulse-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #FFD700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.pulse-score-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+
+.pulse-score-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #FFD700;
+  line-height: 1;
+}
+
+.pulse-score-max {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 4px;
+}
+
+.pulse-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pulse-bar-item {
+  width: 100%;
+}
+
+.pulse-bar-lbl {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.pulse-progress-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.pulse-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: #FFD700;
+}
+
+.pulse-placeholder {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Counselling Widget */
+.helper-widget {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(106, 13, 173, 0.15);
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(106, 13, 173, 0.03);
+}
+
+.helper-widget h5 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1a0040;
+  margin-bottom: 8px;
+}
+
+.helper-widget p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(26, 0, 64, 0.65);
+  margin-bottom: 16px;
+}
+
+.helper-btn {
+  display: block;
+  text-align: center;
+  background: #6a0dad;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.helper-btn:hover {
+  opacity: 0.9;
+}
+
+/* 7. TABLES */
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.detail-table th,
+.detail-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(106, 13, 173, 0.08);
+}
+
+.detail-table th {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1a0040;
+  background: #fcfaff;
+}
+
+.detail-table td {
+  font-size: 13.5px;
+  color: #1a0040;
+  font-weight: 600;
+}
+
+/* Hostel Card */
+.hostel-card {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 13, 173, 0.08);
+  background: #fcfaff;
+}
+
+.hostel-icon {
+  font-size: 28px;
+}
+
+.hostel-title-txt {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a0040;
+  margin-bottom: 4px;
+}
+
+.hostel-status-desc {
+  font-size: 13px;
+  color: rgba(26, 0, 64, 0.65);
+}
+
+/* Admissions tab styling */
+.eligibility-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(26, 0, 64, 0.7);
+}
+
+.eligibility-content ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.eligibility-content li {
+  margin-bottom: 8px;
+}
+
+.admission-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admission-step-item {
+  display: flex;
+  gap: 16px;
+}
+
+.step-num-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFD700;
+  color: #1a0040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.step-body h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #1a0040;
+  margin-bottom: 4px;
+}
+
+.step-body p {
+  font-size: 12.5px;
+  color: rgba(26, 0, 64, 0.65);
+}
+
+.docs-list {
+  list-style: none;
+  padding: 0;
+}
+
+.docs-list li {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a0040;
+  margin-bottom: 8px;
+}
+
+/* Cutoff Tab styling */
+.cutoff-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(106, 13, 173, 0.08);
+}
+
+.cutoff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cutoff-table th,
+.cutoff-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.cutoff-table th {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1a0040;
+  background: #fcfaff;
+  border-bottom: 1.5px solid rgba(106, 13, 173, 0.12);
+}
+
+.cutoff-table td {
+  font-size: 13.5px;
+  color: #1a0040;
+  border-bottom: 1px solid rgba(106, 13, 173, 0.05);
+}
+
+.cutoff-row-blurred {
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.cutoff-lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 253, 231, 0.88);
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  backdrop-filter: blur(1.5px);
+}
+
+.lock-content {
+  max-width: 380px;
+}
+
+.lock-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.lock-content h5 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: #1a0040;
+  margin-bottom: 6px;
+}
+
+.lock-content p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(26, 0, 64, 0.7);
+  margin-bottom: 16px;
+}
+
+.lock-cta-btn {
+  display: inline-block;
+  background: #1a0040;
+  color: #FFD700;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.lock-cta-btn:hover {
+  opacity: 0.9;
+}
+
+.cutoff-empty {
+  padding: 40px;
+  text-align: center;
+  color: rgba(26, 0, 64, 0.5);
+  font-style: italic;
+}
+
+/* Clinical info styles */
+.clinical-notice {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 10px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.notice-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.notice-text p {
+  font-size: 12.5px;
+  color: #1a0040;
+}
+
+.contact-link {
+  color: #6a0dad;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+/* Gallery and Reviews empty states */
+.gallery-notice-txt {
+  font-size: 13.5px;
+  color: rgba(26, 0, 64, 0.55);
+  margin-bottom: 20px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.gallery-placeholder-card {
+  height: 120px;
+  background: #f3ebfa;
+  border: 1.5px dashed rgba(106, 13, 173, 0.15);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(106, 13, 173, 0.5);
+}
+
+.gallery-icon-pic {
+  font-size: 24px;
+}
+
+.reviews-empty-container {
+  padding: 60px 20px;
+  border: 1px dashed rgba(106, 13, 173, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  background: #fcfaff;
+}
+
+.reviews-bubble-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.reviews-empty-text {
+  font-size: 13.5px;
+  color: rgba(26, 0, 64, 0.5);
+}
+
+/* Shimmer Skeletal loaders */
+.skeleton-shimmer-bg {
+  background: linear-gradient(90deg, #f0e6ff 25%, #e8d5f5 50%, #f0e6ff 75%);
+  background-size: 200% 100%;
+  animation: detail-shimmer 1.5s infinite linear;
+}
+
+.skeleton-page .detail-container {
+  margin-top: -60px;
+}
+
+.skeleton-page .detail-logo-placeholder {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.skeleton-line-title {
+  height: 24px;
+  width: 400px;
+  background: #f0e6ff;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  animation: skeletal-blink 1.5s infinite alternate;
+}
+
+.skeleton-line-pills {
+  height: 14px;
+  width: 250px;
+  background: #f0e6ff;
+  border-radius: 4px;
+  animation: skeletal-blink 1.5s infinite alternate;
+}
+
+@keyframes detail-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes skeletal-blink {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Not Found Page */
+.not-found-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.not-found-container {
+  text-align: center;
+  background: #fff;
+  border: 1px solid rgba(106, 13, 173, 0.12);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(106, 13, 173, 0.05);
+}
+
+.not-found-container h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a0040;
+  margin-bottom: 10px;
+}
+
+.not-found-container p {
+  font-size: 14px;
+  color: rgba(26, 0, 64, 0.6);
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  display: inline-block;
+  background: #FFD700;
+  color: #1a0040;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  .panel-grid {
+    grid-template-columns: 1fr;
+  }
+  .pulse-card, .helper-widget {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-header-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+  .detail-logo {
+    margin: 0 auto;
+  }
+  .detail-pills {
+    justify-content: center;
+  }
+  .detail-stat-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .detail-stat-col:nth-child(2n)::after {
+    display: none;
+  }
+  .detail-cta-bar {
+    flex-direction: column;
+    width: 100%;
+  }
+  .detail-cta-primary,
+  .detail-cta-secondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .highlights-grid {
+    grid-template-columns: 1fr;
+  }
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
