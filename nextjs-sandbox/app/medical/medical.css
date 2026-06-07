@@ -727,159 +727,227 @@
     }
 
     /* " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " 
-       SECTION 2c    TOP TIER UNIVERSITIES
+       SECTION 2c     TOP TIER UNIVERSITIES
     " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "  */
 
-    .unis-section {
-        background: #ffffff;
-        padding: 60px 80px;
+    .univ-section {
+        background: #fff;
+        padding: 56px 80px;
     }
-    .unis-inner {
-        max-width: 1360px;
+
+    .univ-inner {
+        max-width: 1200px;
         margin: 0 auto;
     }
-    .unis-header {
+
+    .univ-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
     }
-    .unis-title {
+
+    .univ-title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .univ-dot {
+        color: #6a0dad;
+        font-size: 12px;
+    }
+
+    .univ-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: clamp(18px, 3vw, 24px);
+        font-weight: 900;
+        color: #1a0040;
+        margin: 0;
+    }
+
+    .univ-header-right {
         display: flex;
         align-items: center;
         gap: 10px;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
-        font-size: 22px;
-        color: #1a0040;
     }
-    .unis-title-dot { color: #6a0dad; }
-    .unis-header-right {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-    .unis-view-all {
-        color: #6a0dad;
+
+    .univ-view-all {
         font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
         font-weight: 700;
-        font-size: 14px;
+        color: #6a0dad;
         text-decoration: none;
-        transition: opacity 0.2s;
     }
-    .unis-view-all:hover { opacity: 0.75; }
-    .unis-arrow-btn {
-        width: 36px;
-        height: 36px;
+
+    .univ-view-all:hover {
+        text-decoration: underline;
+    }
+
+    .univ-arrow {
+        width: 34px;
+        height: 34px;
         border-radius: 50%;
-        border: 1.5px solid rgba(26,0,64,0.15);
-        background: #ffffff;
-        color: #1a0040;
-        font-size: 16px;
+        border: 1px solid rgba(106, 13, 173, 0.3);
+        background: #fff;
+        color: #6a0dad;
+        font-size: 18px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.2s ease, color 0.2s ease;
-        flex-shrink: 0;
-        line-height: 1;
+        transition: background 0.15s, color 0.15s;
     }
-    .unis-arrow-btn:hover { background: #1a0040; color: #ffffff; }
 
-    .unis-track {
+    .univ-arrow:hover:not(:disabled) {
+        background: #6a0dad;
+        color: #fff;
+    }
+
+    .univ-arrow:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .univ-track-wrapper {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .univ-track {
         display: flex;
         gap: 20px;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scrollbar-width: none;
+        transition: transform 0.4s ease;
+        width: 100%;
     }
-    .unis-track::-webkit-scrollbar { display: none; }
 
-    .uni-card {
+    .univ-card {
         flex: 0 0 calc(25% - 15px);
-        background: #ffffff;
-        border-radius: 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(106, 13, 173, 0.12);
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(26,0,64,0.08);
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .uni-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(26,0,64,0.15);
+        text-decoration: none;
+        background: #fff;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: block;
     }
 
-    .uni-img {
-        height: 180px;
+    .univ-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(106, 13, 173, 0.12);
+    }
+
+    .univ-card-img {
+        width: 100%;
+        aspect-ratio: 4/3;
+        background-size: cover;
+        background-position: center;
+        background-color: #e8d5f5;
         position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #e8e0f5 0%, #d4c5f0 100%);
     }
-    .uni-rating {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: rgba(255,255,255,0.92);
-        color: #1a0040;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 700;
-        font-size: 11px;
-        border-radius: 20px;
-        padding: 3px 10px;
-    }
-    .uni-heart {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        color: rgba(26,0,64,0.4);
-        font-size: 18px;
-        line-height: 1;
-    }
-    .uni-recommend-badge {
+
+    .univ-asmi-badge {
         position: absolute;
         bottom: 12px;
         left: 12px;
         background: #FFD700;
         color: #1a0040;
         font-family: 'Montserrat', sans-serif;
-        font-weight: 800;
         font-size: 9px;
-        letter-spacing: 0.5px;
+        font-weight: 800;
         padding: 4px 10px;
-        border-radius: 4px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
     }
 
-    .uni-content {
-        padding: 16px;
-    }
-    .uni-meta {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 8px;
-        font-size: 11px;
-        color: rgba(26,0,64,0.5);
-        font-weight: 600;
-    }
-    .uni-name {
+    .univ-rating {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(255, 255, 255, 0.92);
+        color: #1a0040;
         font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
         font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+    }
+
+    .univ-heart {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+        border: none;
+        cursor: pointer;
         font-size: 14px;
+        color: #6a0dad;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .univ-card-body {
+        padding: 12px 14px 14px;
+    }
+
+    .univ-card-meta {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 6px;
+    }
+
+    .univ-meta-item {
+        font-size: 11px;
+        color: #4a0080;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .univ-card-name {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        font-weight: 800;
         color: #1a0040;
         line-height: 1.4;
+        margin-bottom: 4px;
     }
 
-    @media (max-width: 900px) {
-        .unis-section { padding: 48px 40px; }
-        .uni-card { flex: 0 0 calc(50% - 10px); }
+    .univ-card-seats {
+        font-size: 11px;
+        color: rgba(26, 0, 64, 0.45);
     }
-    @media (max-width: 640px) {
-        .unis-section { padding: 32px 24px; }
-        .uni-card { flex: 0 0 calc(80% - 10px); }
-        .unis-title { font-size: 18px; }
+
+    .skeleton-card {
+        pointer-events: none;
+    }
+
+    .skeleton-img {
+        background: linear-gradient(90deg, #f0e6ff 25%, #e8d5f5 50%, #f0e6ff 75%);
+        background-size: 200% 100%;
+    }
+
+    .skeleton-line {
+        height: 10px;
+        border-radius: 4px;
+        background: #f0e6ff;
+        margin-bottom: 8px;
+    }
+
+    .skeleton-line.short { width: 60%; }
+    .skeleton-line.long  { width: 90%; }
+
+    @media (max-width: 768px) {
+        .univ-section { padding: 40px 20px; }
+        .univ-card { flex: 0 0 calc(80% - 10px); }
     }
 
     /* " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " 
-       SECTION Ps    PROBLEM / SOLUTION
+       SECTION Ps     PROBLEM / SOLUTION
     " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " " "  */
 
     .ps-section {

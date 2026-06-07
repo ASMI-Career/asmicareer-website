@@ -5,10 +5,19 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function MedicalPortal() {
+  const FEATURED_COLLEGE_SLUGS = [
+    'grant-medical-college-mumbai',
+    'maulana-azad-medical-college-new-delhi',
+    'kasturba-medical-college-manipal',
+    'symbiosis-medical-college-for-women-pune'
+  ];
+
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [events, setEvents] = useState([]);
+  const [carouselColleges, setCarouselColleges] = useState([]);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   const uniTrackRef = useRef(null);
   const statRefs = useRef([]);
@@ -30,6 +39,19 @@ export default function MedicalPortal() {
         setEvents(sorted);
       })
       .catch(err => console.warn('Events feed unavailable:', err));
+  }, []);
+
+  useEffect(() => {
+    fetch('/data/colleges.json')
+      .then(r => r.json())
+      .then(data => {
+        // Get featured colleges in exact order
+        const featured = FEATURED_COLLEGE_SLUGS
+          .map(slug => data.find(c => c.slug === slug))
+          .filter(Boolean);
+        setCarouselColleges(featured);
+      })
+      .catch(err => console.warn('Colleges fetch failed:', err));
   }, []);
 
   useEffect(() => {
@@ -388,87 +410,105 @@ export default function MedicalPortal() {
       {/* ════════════════════════════════
            SECTION 2c — TOP TIER UNIVERSITIES
       ════════════════════════════════ */}
-      <section className="unis-section" aria-labelledby="unis-heading">
-          <div className="unis-inner">
-      
-              <div className="unis-header">
-                  <div className="unis-title" id="unis-heading">
-                      <span className="unis-title-dot" aria-hidden="true">🔵</span>
-                      Top tier universities
-                  </div>
-                  <div className="unis-header-right">
-                      <a href="#" className="unis-view-all">View all →</a>
-                      <button className="unis-arrow-btn" id="uniPrev" onClick={() => scrollCarousel(-1)} aria-label="Previous universities">‹</button>
-                      <button className="unis-arrow-btn" id="uniNext" onClick={() => scrollCarousel(1)} aria-label="Next universities">›</button>
-                  </div>
-              </div>
-      
-              <div className="unis-track" ref={uniTrackRef} id="uniTrack" role="list">
-      
-                  {/* Card 1 */}
-                  <div className="uni-card" role="listitem">
-                      <div className="uni-img">
-                          <span className="uni-rating">★ 3.8/5</span>
-                          <span className="uni-heart" aria-hidden="true">♡</span>
-                      </div>
-                      <div className="uni-content">
-                          <div className="uni-meta">
-                              <span>📍 Pune</span>
-                              <span>🎓 Medical</span>
-                          </div>
-                          <div className="uni-name">Symbiosis Medical College for Women (SMCW)</div>
-                      </div>
-                  </div>
-      
-                  {/* Card 2 */}
-                  <div className="uni-card" role="listitem">
-                      <div className="uni-img">
-                          <span className="uni-rating">★ 4.8/5</span>
-                          <span className="uni-heart" aria-hidden="true">♡</span>
-                      </div>
-                      <div className="uni-content">
-                          <div className="uni-meta">
-                              <span>📍 Bangalore</span>
-                              <span>🎓 Medical</span>
-                          </div>
-                          <div className="uni-name">Kasturba Medical College, Manipal</div>
-                      </div>
-                  </div>
-      
-                  {/* Card 3 — ASMI RECOMMENDS */}
-                  <div className="uni-card" role="listitem">
-                      <div className="uni-img">
-                          <span className="uni-rating">★ 4.8/5</span>
-                          <span className="uni-heart" aria-hidden="true">♡</span>
-                          <span className="uni-recommend-badge">★ ASMI RECOMMENDS</span>
-                      </div>
-                      <div className="uni-content">
-                          <div className="uni-meta">
-                              <span>📍 Mumbai</span>
-                              <span>🎓 Medical</span>
-                          </div>
-                          <div className="uni-name">Grant Medical College & Sir J.J. Hospitals</div>
-                      </div>
-                  </div>
-      
-                  {/* Card 4 */}
-                  <div className="uni-card" role="listitem">
-                      <div className="uni-img">
-                          <span className="uni-rating">★ 4.8/5</span>
-                          <span className="uni-heart" aria-hidden="true">♡</span>
-                      </div>
-                      <div className="uni-content">
-                          <div className="uni-meta">
-                              <span>📍 Delhi</span>
-                              <span>🎓 Medical</span>
-                          </div>
-                          <div className="uni-name">Maulana Azad Medical College</div>
-                      </div>
-                  </div>
-      
-              </div>
-      
+      <section className="univ-section" aria-labelledby="univ-heading">
+        <div className="univ-inner">
+
+          <div className="univ-header">
+            <div className="univ-title-row">
+              <span className="univ-dot" aria-hidden="true">●</span>
+              <h2 className="univ-title" id="univ-heading">Top Tier Universities</h2>
+            </div>
+            <div className="univ-header-right">
+              <a href="/colleges" className="univ-view-all">View all →</a>
+              <button
+                className="univ-arrow"
+                onClick={() => setCarouselIndex(i => Math.max(0, i - 1))}
+                aria-label="Previous colleges"
+                disabled={carouselIndex === 0}
+              >‹</button>
+              <button
+                className="univ-arrow"
+                onClick={() => setCarouselIndex(i =>
+                  Math.min(carouselColleges.length - 4, i + 1)
+                )}
+                aria-label="Next colleges"
+                disabled={carouselIndex >= carouselColleges.length - 4}
+              >›</button>
+            </div>
           </div>
+
+          <div className="univ-track-wrapper">
+            <div
+              className="univ-track"
+              style={{ transform: `translateX(-${carouselIndex * 25}%)` }}
+            >
+              {carouselColleges.length === 0
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <div className="univ-card skeleton-card" key={i}>
+                      <div className="univ-card-img skeleton-img" />
+                      <div className="univ-card-body">
+                        <div className="skeleton-line short" />
+                        <div className="skeleton-line long" />
+                      </div>
+                    </div>
+                  ))
+                : carouselColleges.map((college, i) => {
+                    const imgPath = `/images/colleges/${college.slug}.jpg`;
+                    const hasPhoto = college.photo !== null ||
+                      FEATURED_COLLEGE_SLUGS.includes(college.slug);
+
+                    return (
+                      <a
+                        href={`/colleges/${college.slug}`}
+                        className="univ-card"
+                        key={college.slug}
+                        aria-label={college.name}
+                      >
+                        <div
+                          className="univ-card-img"
+                          style={hasPhoto
+                            ? { backgroundImage: `url(${imgPath})` }
+                            : { background: college.photo_placeholder_color || '#1a0040' }
+                          }
+                        >
+                          {college.asmi_recommended && (
+                            <span className="univ-asmi-badge">★ ASMI RECOMMENDS</span>
+                          )}
+                          {college.asmi_pulse_score && (
+                            <span className="univ-rating">★ {college.asmi_pulse_score}/5</span>
+                          )}
+                          <button
+                            className="univ-heart"
+                            aria-label={`Save ${college.name}`}
+                            onClick={e => e.preventDefault()}
+                          >♡</button>
+                        </div>
+                        <div className="univ-card-body">
+                          <div className="univ-card-meta">
+                            {college.city && (
+                              <span className="univ-meta-item">
+                                <span aria-hidden="true">📍</span> {college.city}
+                              </span>
+                            )}
+                            <span className="univ-meta-item">
+                              <span aria-hidden="true">🎓</span> {college.type}
+                            </span>
+                          </div>
+                          <div className="univ-card-name">{college.name}</div>
+                          {college.seats && (
+                            <div className="univ-card-seats">
+                              {college.seats} MBBS seats
+                            </div>
+                          )}
+                        </div>
+                      </a>
+                    );
+                  })
+              }
+            </div>
+          </div>
+
+        </div>
       </section>
       
       
