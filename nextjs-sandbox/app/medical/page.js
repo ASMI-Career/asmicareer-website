@@ -302,7 +302,7 @@ export default function MedicalPortal() {
                   <li><a href="#packages">Packages</a></li>
                   <li><a href="#tools">Services</a></li>
                   <li><a href="#events">News & Events</a></li>
-                  <li><a href="#about-us">About Us</a></li>
+                  <li><a href="/about">About Us</a></li>
                   <li><a href="/contact">Contact Us</a></li>
               </ul>
       
@@ -332,7 +332,7 @@ export default function MedicalPortal() {
           <a href="#packages">Packages</a>
           <a href="#tools">Services</a>
           <a href="#events">News & Events</a>
-          <a href="#about-us">About Us</a>
+          <a href="/about">About Us</a>
           <a href="/contact">Contact Us</a>
           <a href="/inquiry" className="drawer-cta">Book Free Session →</a>
       </div>
