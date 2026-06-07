@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Predict your NEET All India Rank from your score. ASMI Career's free rank predictor tool."/>
+    <title>Rank Predictor | ASMI Career</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="../assets/shared.css" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brand: '#7b41b3', gold: '#ffd700', 'gold-dark': '#5a4400', dark: '#09090f' }, fontFamily: { display: ['Syne','sans-serif'] } } }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f6f5f9; color: #0f0e17; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .hero-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size: 64px 64px; mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent); pointer-events: none; }
+        .other-tool { display: flex; align-items: center; gap: 0.875rem; background: #fff; border-radius: 14px; padding: 1rem 1.1rem; border: 1px solid rgba(0,0,0,0.07); text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; }
+        .other-tool:hover { border-color: rgba(123,65,179,0.25); box-shadow: 0 4px 16px rgba(123,65,179,0.08); }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<!-- NAVBAR -->
+<nav class="asmi-nav" id="mainNav">
+    <div class="asmi-nav-inner">
+        <a href="../index.html" class="asmi-nav-logo"><img src="../asmi-logo.png" alt="ASMI Career"/></a>
+        <ul class="asmi-nav-links">
+            <li><a href="../index.html">Home</a></li>
+            <li class="nav-dropdown">
+                <a href="../index.html#tools">Tools</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="rank-predictor.html"><span>📊</span> Rank Predictor</a></li>
+                    <li><a href="college-search.html"><span>🏥</span> College Search</a></li>
+                    <li><a href="cutoff-explorer.html"><span>📈</span> Cutoff Explorer</a></li>
+                    <li><a href="documents-checklist.html"><span>📋</span> Documents Checklist</a></li>
+                    <li><a href="events.html"><span>🎓</span> Events &amp; Seminars</a></li>
+                </ul>
+            </li>
+            <li><a href="../index.html#about">About</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+            <li class="nav-cta"><a href="../inquiry.html">Book Free Counselling</a></li>
+        </ul>
+        <button class="asmi-nav-hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+    <div class="asmi-mobile-menu" id="mobileMenu">
+        <a href="../index.html">Home</a>
+        <div class="mobile-section-label">Tools</div>
+        <a href="rank-predictor.html">📊 Rank Predictor</a>
+        <a href="college-search.html">🏥 College Search</a>
+        <a href="cutoff-explorer.html">📈 Cutoff Explorer</a>
+        <a href="documents-checklist.html">📋 Documents Checklist</a>
+        <a href="events.html">🎓 Events &amp; Seminars</a>
+        <div class="mobile-section-label">Company</div>
+        <a href="../index.html#about">About ASMI</a>
+        <a href="../index.html#contact">Contact &amp; Branches</a>
+        <a href="../inquiry.html" class="mobile-cta">Book Free Counselling →</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="tool-shell-hero">
+    <div class="hero-bg"></div>
+    <div class="tool-shell-hero-inner">
+        <a href="../index.html#tools" class="inline-flex items-center gap-1.5 text-xs font-semibold mb-5 reveal" style="color:rgba(255,255,255,0.45); text-decoration:none;">
+            <span class="material-symbols-outlined" style="font-size:14px;">arrow_back</span> All Tools
+        </a>
+        <div class="tool-shell-badge reveal">Free Tool</div>
+        <h1 class="reveal">Find Your All India Rank</h1>
+        <p class="reveal reveal-delay-1">Estimate your AIR from your NEET score. Know where you stand nationally before counselling opens.</p>
+        <div class="flex flex-wrap gap-3 reveal reveal-delay-2">
+            <a href="../inquiry.html" class="btn-gold inline-flex items-center gap-2">
+                Get Expert Guidance <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<div class="max-w-3xl mx-auto px-6 py-12">
+    <div class="tool-coming-soon reveal">
+        <div class="icon">📊</div>
+        <h2>Rank Predictor</h2>
+        <p>Enter your NEET score, category, and attempt year to instantly estimate your All India Rank and see which colleges you realistically qualify for.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="../inquiry.html" class="btn-gold inline-flex items-center gap-2">Book Free Counselling <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span></a>
+            <a href="../index.html#tools" class="btn-outline inline-flex items-center gap-2">All Tools</a>
+        </div>
+    </div>
+
+    <!-- Other tools -->
+    <div class="mt-10 reveal">
+        <div class="text-xs font-bold uppercase tracking-widest text-brand mb-4">Explore Other Tools</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a href="college-search.html" class="other-tool">
+                <span class="text-2xl">🏥</span>
+                <div><div class="font-semibold text-sm" style="color:#0f0e17;">College Search</div><div class="text-xs text-gray-400 mt-0.5">Browse 1,200+ medical colleges</div></div>
+            </a>
+            <a href="cutoff-explorer.html" class="other-tool">
+                <span class="text-2xl">📈</span>
+                <div><div class="font-semibold text-sm" style="color:#0f0e17;">Cutoff Explorer</div><div class="text-xs text-gray-400 mt-0.5">Round-wise cutoffs by state &amp; category</div></div>
+            </a>
+            <a href="documents-checklist.html" class="other-tool">
+                <span class="text-2xl">📋</span>
+                <div><div class="font-semibold text-sm" style="color:#0f0e17;">Documents Checklist</div><div class="text-xs text-gray-400 mt-0.5">Never miss a certificate</div></div>
+            </a>
+            <a href="events.html" class="other-tool">
+                <span class="text-2xl">🎓</span>
+                <div><div class="font-semibold text-sm" style="color:#0f0e17;">Events &amp; Seminars</div><div class="text-xs text-gray-400 mt-0.5">Free counselling seminars</div></div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="asmi-footer">
+    <div class="asmi-footer-inner">
+        <div class="asmi-footer-bottom">
+            <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
+            <span><a href="../index.html">asmicareer.in</a> · <a href="tel:7410019074">7410019074</a></span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 8); }, { passive: true });
+    document.getElementById('hamburger').addEventListener('click', () => { document.getElementById('mobileMenu').classList.toggle('open'); });
+    const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), { threshold: 0.06 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
