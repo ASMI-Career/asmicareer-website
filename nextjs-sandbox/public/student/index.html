@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal | ASMI Career</title>
+  <meta name="description" content="Personalised student portal for ASMI Career - view your scores, rank, shortlisted colleges, stage progress, and connect with your counsellor.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tabler Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+  <style>
+    /* ══════════════════════════════════════
+       BRAND TOKENS & DESIGN SYSTEM
+       ══════════════════════════════════════ */
+    :root {
+      --yellow: #FFD700;
+      --navy: #1a0040;
+      --purple: #6a0dad;
+      --mid-purple: #4a0080;
+      --green: #15803d;
+      --blue: #0369a1;
+      --orange: #c2410c;
+      --red: #b91c1c;
+      --card-bg: rgba(255, 255, 255, 0.58);
+      --card-border: 1px solid rgba(106, 13, 173, 0.15);
+      --card-radius: 12px;
+      
+      --sidebar-width: 192px;
+      --transition-speed: 0.25s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--yellow);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Subtle grid decoration overlaying the yellow background */
+    .bg-grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(26, 0, 64, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26, 0, 64, 0.04) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    /* Ambient background glows */
+    .ambient-glow {
+      position: fixed;
+      width: 45vw;
+      height: 45vw;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(120px);
+      opacity: 0.25;
+    }
+    .glow-1 {
+      top: -10%;
+      right: -5%;
+      background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
+    }
+    .glow-2 {
+      bottom: -10%;
+      left: 10%;
+      background: radial-gradient(circle, var(--mid-purple) 0%, transparent 70%);
+    }
+
+    /* ══════════════════════════════════════
+       LAYOUT: SIDEBAR
+       ══════════════════════════════════════ */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--navy);
+      color: rgba(255, 255, 255, 0.7);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      z-index: 100;
+      box-shadow: 4px 0 20px rgba(26, 0, 64, 0.15);
+      transition: left var(--transition-speed) ease;
+    }
+
+    .sidebar-header {
+      padding: 0 20px 16px 20px;
+    }
+
+    .sidebar-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--yellow);
+      letter-spacing: -0.5px;
+      margin-bottom: 2px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-subtitle {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .sidebar-menu {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 8px;
+    }
+
+    .sidebar-divider {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.25);
+      margin: 18px 0 6px 12px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-link:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+
+    .sidebar-link.active {
+      color: var(--yellow);
+      background: rgba(255, 215, 0, 0.09);
+      border-left-color: var(--yellow);
+      font-weight: 700;
+    }
+
+    .sidebar-link i {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+    
+    .sidebar-link:hover i {
+      transform: scale(1.1);
+    }
+
+    /* Sidebar profile card at the bottom */
+    .sidebar-profile {
+      padding: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: auto;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .profile-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .profile-badge {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--yellow);
+      margin-top: 1px;
+    }
+
+    /* Overlay drawer background for mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 0, 64, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 95;
+      animation: fadeIn var(--transition-speed) ease;
+    }
+
+    /* ══════════════════════════════════════
+       LAYOUT: MAIN AREA
+       ══════════════════════════════════════ */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      padding: 32px;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      width: calc(100% - var(--sidebar-width));
+    }
+
+    /* Mobile Header */
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--navy);
+      color: white;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 90;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-hamburger {
+      background: none;
+      border: none;
+      color: var(--yellow);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+      color: var(--yellow);
+      letter-spacing: -0.5px;
+    }
+
+    .mobile-badge {
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      color: var(--yellow);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    /* Topbar Navigation (Desktop) */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .topbar-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+    }
+
+    .topbar-badge {
+      background-color: var(--navy);
+      color: var(--yellow);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      box-shadow: 0 4px 12px rgba(26, 0, 64, 0.15);
+    }
+
+    /* ══════════════════════════════════════
+       COMPONENTS & SECTIONS
+       ══════════════════════════════════════ */
+    .view-section {
+      display: none;
+      flex-direction: column;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    /* Premium Frosted Glass Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(26, 0, 64, 0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(26, 0, 64, 0.09);
+    }
+
+    /* Welcome Strip */
+    .welcome-strip {
+      background: linear-gradient(135deg, var(--navy), var(--purple));
+      color: white;
+      border-radius: var(--card-radius);
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(26, 0, 64, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-strip::after {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 75%);
+    }
+
+    .welcome-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--yellow);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .welcome-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 5;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      outline: none;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .btn-yellow {
+      background-color: var(--yellow);
+      color: var(--navy);
+      box-shadow: 0 4px 14px rgba(255, 215, 0, 0.3);
+    }
+    
+    .btn-yellow:hover {
+      background-color: white;
+      transform: scale(1.03);
+    }
+
+    .btn-outline-white {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: white;
+      transform: scale(1.03);
+    }
+
+    .btn-green {
+      background-color: #25d366; /* WhatsApp Green */
+      color: white;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+      font-size: 14px;
+      padding: 12px 24px;
+    }
+
+    .btn-green:hover {
+      background-color: #20ba56;
+      transform: scale(1.03);
+    }
+
+    .btn-purple {
+      background-color: var(--purple);
+      color: white;
+      box-shadow: 0 4px 14px rgba(106, 13, 173, 0.3);
+      font-size: 14px;
+      padding: 12px 24px;
+    }
+
+    .btn-purple:hover {
+      background-color: var(--mid-purple);
+      transform: scale(1.03);
+    }
+
+    /* Stat Cards Row */
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      border-radius: var(--card-radius);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 6px 20px rgba(26, 0, 64, 0.05);
+      border: 1px solid rgba(106, 13, 173, 0.08);
+      position: relative;
+    }
+
+    .stat-card-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      opacity: 0.6;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-value {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    /* Colors for specific cards */
+    .stat-card.yellow-card {
+      background-color: var(--yellow);
+      color: var(--navy);
+      border-color: rgba(26, 0, 64, 0.15);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
+    }
+    
+    .stat-card.default-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--navy);
+    }
+
+    .stat-card.purple-card {
+      background-color: var(--purple);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 6px 20px rgba(106, 13, 173, 0.15);
+    }
+
+    .stat-card.green-card {
+      background-color: var(--green);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 6px 20px rgba(21, 128, 61, 0.15);
+    }
+
+    /* Stage Progress Pipeline */
+    .progress-section {
+      margin-bottom: 24px;
+    }
+
+    .progress-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: var(--card-border);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      overflow-x: auto;
+      gap: 16px;
+      box-shadow: 0 6px 20px rgba(26, 0, 64, 0.05);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(26, 0, 64, 0.2) transparent;
+    }
+
+    .progress-strip::-webkit-scrollbar {
+      height: 4px;
+    }
+    .progress-strip::-webkit-scrollbar-thumb {
+      background-color: rgba(26, 0, 64, 0.15);
+      border-radius: 4px;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      min-width: 90px;
+      position: relative;
+    }
+
+    /* Connecting lines between dots */
+    .progress-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: calc(50% + 15px);
+      right: calc(-50% + 15px);
+      height: 3px;
+      background: rgba(26, 0, 64, 0.1);
+      z-index: 1;
+      transition: background var(--transition-speed) ease;
+    }
+
+    .progress-step.completed:not(:last-child)::after {
+      background: var(--green);
+    }
+
+    .step-dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(26, 0, 64, 0.08);
+      color: rgba(26, 0, 64, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 2;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .progress-step.completed .step-dot {
+      background: var(--green);
+      color: white;
+      box-shadow: 0 3px 8px rgba(21, 128, 61, 0.25);
+    }
+
+    .progress-step.active .step-dot {
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 800;
+      border: 2px solid var(--navy);
+      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.4);
+      animation: stepPulse 2s infinite;
+    }
+
+    .step-text {
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      text-align: center;
+      color: rgba(26, 0, 64, 0.5);
+      line-height: 1.3;
+      max-width: 90px;
+    }
+
+    .progress-step.completed .step-text {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .progress-step.active .step-text {
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    @keyframes stepPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5); }
+      70% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    /* Two Column Layout for Shortlist Preview + Deadlines */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(106, 13, 173, 0.08);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-link {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--purple);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .panel-link:hover {
+      color: var(--mid-purple);
+      text-decoration: underline;
+    }
+
+    /* Shortlist Rows */
+    .shortlist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .shortlist-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(106, 13, 173, 0.05);
+      transition: background 0.2s;
+    }
+
+    .shortlist-row:hover {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .shortlist-college {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      margin-right: 12px;
+      min-width: 0;
+    }
+
+    .college-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .college-type {
+      font-size: 10px;
+      color: rgba(26, 0, 64, 0.5);
+      margin-top: 1px;
+    }
+
+    .shortlist-rank {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      text-align: right;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .prob-badge {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    .prob-safe {
+      background-color: rgba(21, 128, 61, 0.12);
+      border: 1px solid rgba(21, 128, 61, 0.25);
+      color: var(--green);
+    }
+
+    .prob-likely {
+      background-color: rgba(3, 105, 161, 0.12);
+      border: 1px solid rgba(3, 105, 161, 0.25);
+      color: var(--blue);
+    }
+
+    .prob-borderline {
+      background-color: rgba(194, 65, 12, 0.12);
+      border: 1px solid rgba(194, 65, 12, 0.25);
+      color: var(--orange);
+    }
+
+    .prob-reach {
+      background-color: rgba(185, 28, 28, 0.1);
+      border: 1px solid rgba(185, 28, 28, 0.2);
+      color: var(--red);
+    }
+
+    /* Deadlines List */
+    .deadline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .deadline-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(26, 0, 64, 0.04);
+    }
+
+    .deadline-row:last-child {
+      border-bottom: none;
+    }
+
+    .deadline-date-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      text-align: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .date-day {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.1;
+    }
+
+    .date-month {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      opacity: 0.8;
+      letter-spacing: 0.5px;
+    }
+
+    .deadline-details {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .deadline-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .deadline-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag-badge {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(26, 0, 64, 0.06);
+      color: rgba(26, 0, 64, 0.6);
+      letter-spacing: 0.5px;
+    }
+
+    .urgency-badge {
+      font-size: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .urgency-urgent {
+      background-color: rgba(185, 28, 28, 0.12);
+      color: var(--red);
+    }
+
+    .urgency-upcoming {
+      background-color: rgba(194, 65, 12, 0.12);
+      color: var(--orange);
+    }
+
+    .urgency-later {
+      background-color: rgba(21, 128, 61, 0.12);
+      color: var(--green);
+    }
+
+    .deadline-action-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background-color: var(--navy);
+      color: var(--yellow);
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .deadline-action-btn:hover {
+      background-color: var(--purple);
+      color: white;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .tool-card {
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(106, 13, 173, 0.1);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .tool-card:hover {
+      background: rgba(255, 255, 255, 0.85);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(26, 0, 64, 0.05);
+    }
+
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: var(--yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(26, 0, 64, 0.15);
+    }
+
+    .tool-info {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .tool-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .tool-desc {
+      font-size: 10px;
+      color: rgba(26, 0, 64, 0.6);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .tool-arrow {
+      color: rgba(26, 0, 64, 0.3);
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    .tool-card:hover .tool-arrow {
+      transform: translateX(3px);
+      color: var(--purple);
+    }
+
+    /* ══════════════════════════════════════
+       VIEW-SPECIFIC STYLE EXTENSIONS
+       ══════════════════════════════════════ */
+    /* View Title Container */
+    .view-title-wrap {
+      margin-bottom: 20px;
+    }
+    
+    .view-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+    }
+    
+    .view-description {
+      font-size: 12px;
+      color: rgba(26, 0, 64, 0.6);
+      margin-top: 4px;
+    }
+
+    /* Shortlist View */
+    .shortlist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .shortlist-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .sc-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.35;
+    }
+
+    .sc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .sc-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(26, 0, 64, 0.05);
+      margin-top: 4px;
+    }
+
+    .sc-info-label {
+      font-size: 11px;
+      color: rgba(26, 0, 64, 0.55);
+      font-weight: 600;
+    }
+
+    .sc-info-value {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    /* Deadlines View Groups */
+    .deadline-group {
+      margin-bottom: 28px;
+    }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid rgba(26, 0, 64, 0.08);
+    }
+
+    .group-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .group-count {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(26, 0, 64, 0.08);
+      color: var(--navy);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .deadline-group.urgent .group-header { border-bottom-color: var(--red); }
+    .deadline-group.urgent .group-title { color: var(--red); }
+    .deadline-group.upcoming .group-header { border-bottom-color: var(--orange); }
+    .deadline-group.upcoming .group-title { color: var(--orange); }
+    .deadline-group.later .group-header { border-bottom-color: var(--green); }
+    .deadline-group.later .group-title { color: var(--green); }
+
+    /* Counsellor Card styling */
+    .counsellor-profile-card {
+      max-width: 500px;
+      margin: 0 auto 24px auto;
+      text-align: center;
+      padding: 36px 24px;
+    }
+
+    .counsellor-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--yellow);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+      box-shadow: 0 4px 15px rgba(26, 0, 64, 0.25);
+      border: 3px solid rgba(255, 215, 0, 0.2);
+    }
+
+    .counsellor-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+    }
+
+    .counsellor-subtitle {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--purple);
+      margin-bottom: 8px;
+    }
+
+    .counsellor-branch {
+      font-size: 11px;
+      color: rgba(26, 0, 64, 0.55);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    .counsellor-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* Tools View larger cards */
+    .large-tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .large-tool-card {
+      padding: 24px;
+    }
+
+    .large-tool-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .large-tool-name {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .large-tool-desc {
+      font-size: 12px;
+      margin-top: 6px;
+      margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════════════
+       EMPTY & ERROR FALLBACK STATES
+       ══════════════════════════════════════ */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .empty-illustration {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+
+    .empty-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .empty-subtitle {
+      font-size: 11px;
+      color: rgba(26, 0, 64, 0.55);
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    /* Full Page Error State Overlay */
+    .error-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background-color: var(--yellow);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .error-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(220, 38, 38, 0.15);
+      border-radius: var(--card-radius);
+      padding: 40px 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(26, 0, 64, 0.12);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .error-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 24px;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+    }
+    
+    .error-logo span {
+      color: var(--purple);
+    }
+
+    .error-icon {
+      font-size: 44px;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+
+    .error-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .error-desc {
+      font-size: 13px;
+      color: rgba(26, 0, 64, 0.65);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* ══════════════════════════════════════
+       ANIMATED SKELETON LOADERS
+       ══════════════════════════════════════ */
+    .skeleton-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.35) 25%,
+        rgba(255, 255, 255, 0.65) 50%,
+        rgba(255, 255, 255, 0.35) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .sk-bar { height: 16px; width: 100%; margin-bottom: 8px; }
+    .sk-bar-short { height: 16px; width: 60%; margin-bottom: 8px; }
+    .sk-title { height: 28px; width: 40%; margin-bottom: 16px; }
+    .sk-strip { height: 160px; width: 100%; margin-bottom: 24px; border-radius: var(--card-radius); }
+    .sk-progress { height: 84px; width: 100%; margin-bottom: 24px; border-radius: var(--card-radius); }
+    .sk-card { height: 140px; width: 100%; border-radius: var(--card-radius); }
+
+    /* ══════════════════════════════════════
+       KEYFRAME ANIMATIONS
+       ══════════════════════════════════════ */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE breakPOINTS
+       ══════════════════════════════════════ */
+    @media (max-width: 992px) {
+      .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 56px; /* Space for mobile header */
+      }
+
+      .sidebar {
+        left: calc(-1 * var(--sidebar-width));
+        box-shadow: 10px 0 30px rgba(26, 0, 64, 0.25);
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px;
+      }
+
+      .topbar {
+        display: none; /* Handled by mobile-header */
+      }
+
+      .welcome-title {
+        font-size: 22px;
+      }
+
+      .shortlist-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .large-tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stat-cards-grid {
+        gap: 12px;
+      }
+      .stat-card {
+        padding: 14px 16px;
+      }
+      .stat-card-value {
+        font-size: 16px;
+      }
+      .welcome-strip {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background decorations -->
+  <div class="bg-grid-overlay"></div>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Sidebar Overlay (closes drawer on click) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Mobile Top Header -->
+  <header class="mobile-header">
+    <button class="mobile-hamburger" id="mobileHamburger" aria-label="Open Navigation Menu">
+      <i class="ti ti-menu-2"></i>
+    </button>
+    <div class="mobile-logo">ASMI CAREER</div>
+    <div class="mobile-badge" id="mobileHeaderBadge">—</div>
+  </header>
+
+  <!-- Left Sidebar (Desktop fixed, Mobile overlay drawer) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">ASMI CAREER</div>
+      <div class="sidebar-subtitle">Student Portal</div>
+    </div>
+    
+    <nav class="sidebar-menu">
+      <div class="sidebar-divider">Home</div>
+      <a class="sidebar-link active" id="nav-dashboard" onclick="navigate('dashboard', this)">
+        <i class="ti ti-layout-dashboard"></i> Dashboard
+      </a>
+
+      <div class="sidebar-divider">My Journey</div>
+      <a class="sidebar-link" id="nav-shortlist" onclick="navigate('shortlist', this)">
+        <i class="ti ti-star"></i> My Shortlist
+      </a>
+      <a class="sidebar-link" id="nav-deadlines" onclick="navigate('deadlines', this)">
+        <i class="ti ti-calendar"></i> Deadlines
+      </a>
+      <a class="sidebar-link" id="nav-counsellor" onclick="navigate('counsellor', this)">
+        <i class="ti ti-user-heart"></i> My Counsellor
+      </a>
+
+      <div class="sidebar-divider">Tools</div>
+      <a class="sidebar-link" id="nav-tools" onclick="navigate('tools', this)">
+        <i class="ti ti-school"></i> College Predictor
+      </a>
+      <a class="sidebar-link" id="nav-cutoff" onclick="navigate('tools', this)">
+        <i class="ti ti-chart-bar"></i> Cutoff Explorer
+      </a>
+    </nav>
+
+    <!-- Sidebar profile section at bottom -->
+    <div class="sidebar-profile">
+      <div class="profile-avatar" id="sidebarAvatar">AS</div>
+      <div class="profile-info">
+        <div class="profile-name" id="sidebarName">Student Portal</div>
+        <span class="profile-badge" id="sidebarStageBadge">Loading...</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Scrollable Content Area -->
+  <main class="main-content">
+    
+    <!-- Topbar (Desktop only) -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-badge" id="topbarBadge">Score: —</div>
+    </div>
+
+    <!-- SKELETON LOADING CONTENT -->
+    <div id="skeletonLoader" class="skeleton-container">
+      <div class="skeleton sk-strip"></div>
+      <div class="stat-cards-grid">
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+        <div class="skeleton sk-card"></div>
+      </div>
+      <div class="skeleton sk-progress"></div>
+      <div class="dashboard-grid">
+        <div class="skeleton sk-card" style="height: 300px;"></div>
+        <div class="skeleton sk-card" style="height: 300px;"></div>
+      </div>
+    </div>
+
+    <!-- MAIN VIEW SECTIONS (hidden initially during fetch) -->
+    <div id="mainContent" style="display: none; flex-direction: column;">
+      
+      <!-- ==========================================
+           VIEW 1: DASHBOARD
+           ========================================== -->
+      <section id="dashboard-view" class="view-section active">
+        <!-- Welcome Strip -->
+        <div class="welcome-strip">
+          <h1 class="welcome-title" id="welcomeTitle">Welcome back, Student!</h1>
+          <p class="welcome-subtitle" id="welcomeSubtitle">Your counsellor is guiding you through the admissions process.</p>
+          <div class="welcome-ctas">
+            <a href="#" id="welcomeWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-yellow">
+              Talk to Counsellor <i class="ti ti-arrow-right"></i>
+            </a>
+            <a href="#" id="welcomeGroupBtn" target="_blank" rel="noopener noreferrer" class="btn btn-outline-white" style="display: none;">
+              Join Support Group 💬
+            </a>
+          </div>
+        </div>
+
+        <!-- Stat Cards Grid -->
+        <div class="stat-cards-grid">
+          <!-- Card 1: Score or AIR (Yellow) -->
+          <div class="stat-card yellow-card">
+            <span class="stat-card-title" id="stat1Label">Score</span>
+            <span class="stat-card-value" id="stat1Value">—</span>
+          </div>
+          <!-- Card 2: Category (Default Glass) -->
+          <div class="stat-card default-card">
+            <span class="stat-card-title">Category</span>
+            <span class="stat-card-value" id="stat2Value">—</span>
+          </div>
+          <!-- Card 3: Stage (Purple) -->
+          <div class="stat-card purple-card">
+            <span class="stat-card-title">Stage</span>
+            <span class="stat-card-value" id="stat3Value">—</span>
+          </div>
+          <!-- Card 4: Counsellor (Green) -->
+          <div class="stat-card green-card">
+            <span class="stat-card-title">Counsellor</span>
+            <span class="stat-card-value" id="stat4Value">—</span>
+          </div>
+        </div>
+
+        <!-- Stage Progress Strip -->
+        <div class="progress-section">
+          <div class="progress-strip" id="stageProgressStrip">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Two Column Grid (Shortlist Preview + Deadlines) -->
+        <div class="dashboard-grid">
+          <!-- Left: Shortlist Preview -->
+          <div class="card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title"><i class="ti ti-star-filled" style="color: var(--yellow);"></i> My Shortlist</h2>
+              <span class="panel-link" onclick="navigate('shortlist', document.getElementById('nav-shortlist'))">View all →</span>
+            </div>
+            <div id="shortlistPreviewList" class="shortlist-list">
+              <!-- Dynamically populated or empty state -->
+            </div>
+          </div>
+
+          <!-- Right: Upcoming Deadlines -->
+          <div class="card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title"><i class="ti ti-alarm" style="color: var(--red);"></i> Upcoming Deadlines</h2>
+              <span class="panel-link" onclick="navigate('deadlines', document.getElementById('nav-deadlines'))">View all →</span>
+            </div>
+            <div id="deadlinesPreviewList" class="deadline-list">
+              <!-- Dynamically populated or empty state -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Tools Grid -->
+        <div class="card" style="margin-top: 24px; margin-bottom: 0;">
+          <div class="panel-header" style="border-bottom: none; margin-bottom: 12px; padding-bottom: 0;">
+            <h2 class="panel-title"><i class="ti ti-apps" style="color: var(--purple);"></i> Admission Tools</h2>
+          </div>
+          <div class="tools-grid">
+            <a href="/tools/college-predictor" class="tool-card">
+              <div class="tool-icon"><i class="ti ti-crystal-ball"></i></div>
+              <div class="tool-info">
+                <span class="tool-name">College Predictor</span>
+                <span class="tool-desc">Predict admission chances based on your NEET AIR</span>
+              </div>
+              <i class="ti ti-chevron-right tool-arrow"></i>
+            </a>
+            
+            <a href="/tools/cutoff-explorer" class="tool-card">
+              <div class="tool-icon"><i class="ti ti-chart-bar"></i></div>
+              <div class="tool-info">
+                <span class="tool-name">Cutoff Explorer</span>
+                <span class="tool-desc">Browse historical NEET cutoffs by college and category</span>
+              </div>
+              <i class="ti ti-chevron-right tool-arrow"></i>
+            </a>
+
+            <a href="/tools/documents-checklist" class="tool-card">
+              <div class="tool-icon"><i class="ti ti-checkbox"></i></div>
+              <div class="tool-info">
+                <span class="tool-name">Document Checklist</span>
+                <span class="tool-desc">Verify required documents for reporting & verification</span>
+              </div>
+              <i class="ti ti-chevron-right tool-arrow"></i>
+            </a>
+
+            <a href="/resources" class="tool-card">
+              <div class="tool-icon"><i class="ti ti-folder"></i></div>
+              <div class="tool-info">
+                <span class="tool-name">Resources</span>
+                <span class="tool-desc">Access guidelines, brochures, and seat matrices</span>
+              </div>
+              <i class="ti ti-chevron-right tool-arrow"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           VIEW 2: MY SHORTLIST
+           ========================================== -->
+      <section id="shortlist-view" class="view-section">
+        <div class="view-title-wrap">
+          <h1 class="view-title">My College Shortlist</h1>
+          <p class="view-description">Your personalised shortlist of recommended colleges prepared by your ASMI counsellor.</p>
+        </div>
+        <div id="fullShortlistContainer" class="shortlist-grid">
+          <!-- Dynamically populated or empty state -->
+        </div>
+      </section>
+
+      <!-- ==========================================
+           VIEW 3: DEADLINES
+           ========================================== -->
+      <section id="deadlines-view" class="view-section">
+        <div class="view-title-wrap">
+          <h1 class="view-title">Deadlines &amp; Important Dates</h1>
+          <p class="view-description">Stay updated with critical schedules, exam registrations, and choice filling deadlines.</p>
+        </div>
+        <div id="fullDeadlinesContainer">
+          <!-- Dynamically populated grouped lists or empty state -->
+        </div>
+      </section>
+
+      <!-- ==========================================
+           VIEW 4: MY COUNSELLOR
+           ========================================== -->
+      <section id="counsellor-view" class="view-section">
+        <div class="view-title-wrap">
+          <h1 class="view-title">My ASMI Counsellor</h1>
+          <p class="view-description">Get in touch directly with your assigned personal counsellor for all admissions guidance.</p>
+        </div>
+        
+        <div class="card counsellor-profile-card">
+          <div class="counsellor-avatar" id="counsellorAvatar">AK</div>
+          <h2 class="counsellor-name" id="counsellorName">Counsellor Name</h2>
+          <div class="counsellor-subtitle">Your ASMI Counsellor</div>
+          <div class="counsellor-branch" id="counsellorBranch">
+            <i class="ti ti-map-pin"></i> Mumbai Branch
+          </div>
+          
+          <div class="counsellor-actions">
+            <a href="#" id="counsellorWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-green">
+              <i class="ti ti-brand-whatsapp"></i> Message on WhatsApp
+            </a>
+            <a href="#" id="counsellorGroupBtn" target="_blank" rel="noopener noreferrer" class="btn btn-purple" style="display: none;">
+              <i class="ti ti-users"></i> Join Support Group
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==========================================
+           VIEW 5: TOOLS
+           ========================================== -->
+      <section id="tools-view" class="view-section">
+        <div class="view-title-wrap">
+          <h1 class="view-title">Admissions Toolkit</h1>
+          <p class="view-description">Access our smart planning and analysis tools to model and check your cutoffs.</p>
+        </div>
+        
+        <div class="large-tools-grid">
+          <a href="/tools/college-predictor" class="card tool-card large-tool-card">
+            <div class="tool-icon large-tool-icon"><i class="ti ti-crystal-ball"></i></div>
+            <div class="tool-info">
+              <h2 class="tool-name large-tool-name">College Predictor</h2>
+              <p class="tool-desc large-tool-desc">Enter your NEET All India Rank, category, quota, and budget to predict which medical colleges you can secure admission to.</p>
+              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Open Predictor <i class="ti ti-chevron-right"></i></span>
+            </div>
+          </a>
+
+          <a href="/tools/cutoff-explorer" class="card tool-card large-tool-card">
+            <div class="tool-icon large-tool-icon"><i class="ti ti-chart-bar"></i></div>
+            <div class="tool-info">
+              <h2 class="tool-name large-tool-name">Cutoff Explorer</h2>
+              <p class="tool-desc large-tool-desc">Search through comprehensive historical cutoff scores and ranks for thousands of medical colleges in India, filtered by round, category, and state.</p>
+              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Open Explorer <i class="ti ti-chevron-right"></i></span>
+            </div>
+          </a>
+
+          <a href="/tools/documents-checklist" class="card tool-card large-tool-card">
+            <div class="tool-icon large-tool-icon"><i class="ti ti-checkbox"></i></div>
+            <div class="tool-info">
+              <h2 class="tool-name large-tool-name">Document Checklist</h2>
+              <p class="tool-desc large-tool-desc">Ensure you have all the required original documents, certificates, bond forms, and photocopies ready for reporting to avoid losing your seat allotment.</p>
+              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">View Checklist <i class="ti ti-chevron-right"></i></span>
+            </div>
+          </a>
+
+          <a href="/resources" class="card tool-card large-tool-card">
+            <div class="tool-icon large-tool-icon"><i class="ti ti-folder"></i></div>
+            <div class="tool-info">
+              <h2 class="tool-name large-tool-name">Resources Library</h2>
+              <p class="tool-desc large-tool-desc">Download official MCC brochures, seat matrix documents, past year schedules, counselling notifications, and college fees structures.</p>
+              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Browse Library <i class="ti ti-chevron-right"></i></span>
+            </div>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ERROR STATES FULL PAGE OVERLAYS -->
+  <div class="error-overlay" id="errorOverlay">
+    <div class="error-card">
+      <div class="error-logo">ASMI <span>CAREER</span></div>
+      <div class="error-icon"><i class="ti ti-alert-triangle-filled"></i></div>
+      <h2 class="error-title" id="errorTitle">Invalid Link</h2>
+      <p class="error-desc" id="errorDescription">This link is invalid or has expired. Please contact your ASMI counsellor for your dashboard link.</p>
+      <a href="https://wa.me/917410019074" target="_blank" rel="noopener noreferrer" class="btn btn-green">
+        <i class="ti ti-brand-whatsapp"></i> Contact ASMI Support
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // ══════════════════════════════════════
+    // CONFIGURATION CONSTANTS
+    // ══════════════════════════════════════
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+    
+    const PIPELINE_STAGES = [
+      "Enrolled",
+      "Documents Verified",
+      "Counselled",
+      "Preferences Filed",
+      "Round 1",
+      "Allotted",
+      "Reported"
+    ];
+
+    const PROBABILITY_CLASSES = {
+      'safe': 'prob-safe',
+      'likely': 'prob-likely',
+      'borderline': 'prob-borderline',
+      'reach': 'prob-reach',
+      'out of reach': 'prob-reach'
+    };
+
+    // ══════════════════════════════════════
+    // GLOBAL STATE
+    // ══════════════════════════════════════
+    let studentData = null;
+    let eventsData = [];
+
+    // ══════════════════════════════════════
+    // INTERACTIVE SIDEBAR & MENU TOGGLE
+    // ══════════════════════════════════════
+    const mobileHamburger = document.getElementById('mobileHamburger');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar(open) {
+      if (open) {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+      } else {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+      }
+    }
+
+    mobileHamburger.addEventListener('click', () => toggleSidebar(true));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    // ══════════════════════════════════════
+    // ROUTING & VIEW NAVIGATION
+    // ══════════════════════════════════════
+    function navigate(viewId, element) {
+      // Hide all view panels
+      document.querySelectorAll('.view-section').forEach(view => {
+        view.classList.remove('active');
+      });
+      
+      // Show the selected view
+      const targetView = document.getElementById(viewId + '-view');
+      if (targetView) {
+        targetView.classList.add('active');
+      }
+
+      // Update active nav links
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      if (element) {
+        element.classList.add('active');
+      }
+
+      // Sync active state if navigate was called externally and we need to highlight sidebar
+      if (!element) {
+        const correspondingNav = document.getElementById('nav-' + viewId);
+        if (correspondingNav) {
+          correspondingNav.classList.add('active');
+        }
+      }
+
+      // Close sidebar drawer on mobile
+      toggleSidebar(false);
+
+      // Scroll view back to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Update Desktop Topbar Title text
+      const topbarTitle = document.getElementById('topbarTitle');
+      if (topbarTitle) {
+        if (viewId === 'dashboard') topbarTitle.textContent = 'Dashboard';
+        else if (viewId === 'shortlist') topbarTitle.textContent = 'My Shortlist';
+        else if (viewId === 'deadlines') topbarTitle.textContent = 'Deadlines';
+        else if (viewId === 'counsellor') topbarTitle.textContent = 'My Counsellor';
+        else if (viewId === 'tools') topbarTitle.textContent = 'ASMI Tools';
+      }
+    }
+
+    // ══════════════════════════════════════
+    // HELPERS & STRING CONVERTERS
+    // ══════════════════════════════════════
+    function getInitials(name) {
+      if (!name) return 'AS';
+      return name.split(' ')
+        .map(part => part.charAt(0))
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+
+    function formatWhatsAppLink(number) {
+      if (!number) return 'https://wa.me/917410019074';
+      const cleanNum = String(number).replace(/\D/g, '');
+      return 'https://wa.me/' + (cleanNum.startsWith('91') ? cleanNum : '91' + cleanNum);
+    }
+
+    function getBranchFromToken(token) {
+      if (!token) return 'ASMI Career Network';
+      const tok = String(token).toUpperCase();
+      if (tok.includes('MUM')) return 'Mumbai Branch';
+      if (tok.includes('PUN') || tok.includes('PNE')) return 'Pune Branch';
+      if (tok.includes('NGP') || tok.includes('NAG')) return 'Nagpur Branch';
+      if (tok.includes('KOL')) return 'Kolhapur Branch';
+      if (tok.includes('SAN')) return 'Sangli Branch';
+      if (tok.includes('CSN') || tok.includes('SAM')) return 'Chh. Sambhajinagar Branch';
+      if (tok.includes('THN') || tok.includes('THA')) return 'Thane Branch';
+      if (tok.includes('NSK') || tok.includes('NAS')) return 'Nashik Branch';
+      return 'ASMI Regional Branch';
+    }
+
+    function getLocalTodayDateString() {
+      const t = new Date();
+      const yyyy = t.getFullYear();
+      const mm = String(t.getMonth() + 1).padStart(2, '0');
+      const dd = String(t.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function getDaysDifference(targetDateStr, baseDateStr) {
+      const target = new Date(targetDateStr + 'T00:00:00');
+      const base = new Date(baseDateStr + 'T00:00:00');
+      const diffTime = target - base;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    function getMonthAbbreviation(dateStr) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const d = new Date(dateStr + 'T00:00:00');
+      return isNaN(d.getTime()) ? 'DATE' : months[d.getMonth()].toUpperCase();
+    }
+
+    function getDayNumber(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return isNaN(d.getTime()) ? '—' : d.getDate();
+    }
+
+    function getProbabilityCssClass(prob) {
+      if (!prob) return 'prob-likely';
+      const lower = prob.toLowerCase().trim();
+      return PROBABILITY_CLASSES[lower] || 'prob-likely';
+    }
+
+    // ══════════════════════════════════════
+    // RENDER FUNCTIONALITY
+    // ══════════════════════════════════════
+    function renderDashboard() {
+      const student = studentData;
+      const hasRank = student.rank && String(student.rank).trim() !== '';
+
+      // 1. Sync header / badges
+      const scoreOrRankText = hasRank 
+        ? `AIR ${Number(student.rank).toLocaleString('en-IN')}` 
+        : `Score: ${student.score}`;
+      
+      document.getElementById('topbarBadge').textContent = scoreOrRankText;
+      document.getElementById('mobileHeaderBadge').textContent = scoreOrRankText;
+
+      // 2. Welcome Section
+      document.getElementById('welcomeTitle').textContent = `Welcome back, ${student.name}!`;
+      document.getElementById('welcomeSubtitle').textContent = `Your counsellor ${student.counsellor_name} is guiding you · ${student.stage || 'Enrolled'}`;
+      
+      const whatsappUrl = formatWhatsAppLink(student.counsellor_whatsapp);
+      document.getElementById('welcomeWhatsappBtn').href = whatsappUrl;
+
+      const groupBtn = document.getElementById('welcomeGroupBtn');
+      if (student.whatsapp_group_link && student.whatsapp_group_link.trim() !== '') {
+        groupBtn.href = student.whatsapp_group_link;
+        groupBtn.style.display = 'inline-flex';
+      } else {
+        groupBtn.style.display = 'none';
+      }
+
+      // 3. Stat Cards
+      // Card 1: Score/Rank
+      const stat1Label = document.getElementById('stat1Label');
+      const stat1Value = document.getElementById('stat1Value');
+      if (hasRank) {
+        stat1Label.textContent = 'AIR Rank';
+        stat1Value.textContent = Number(student.rank).toLocaleString('en-IN');
+      } else {
+        stat1Label.textContent = 'NEET Score';
+        stat1Value.textContent = student.score;
+      }
+      
+      // Card 2: Category
+      document.getElementById('stat2Value').textContent = student.category || 'Open';
+      
+      // Card 3: Stage
+      document.getElementById('stat3Value').textContent = student.stage || 'Enrolled';
+      
+      // Card 4: Counsellor
+      document.getElementById('stat4Value').textContent = student.counsellor_name || 'ASMI Team';
+
+      // 4. Sidebar footer profile sync
+      document.getElementById('sidebarAvatar').textContent = getInitials(student.name);
+      document.getElementById('sidebarName').textContent = student.name;
+      document.getElementById('sidebarStageBadge').textContent = student.stage || 'Enrolled';
+
+      // 5. Progress strip pipeline
+      renderPipeline(student.stage);
+
+      // 6. Shortlist previews
+      renderShortlist(student.colleges || student.shortlist);
+
+      // 7. Deadlines previews
+      renderDeadlinesPreview();
+    }
+
+    function renderPipeline(currentStage) {
+      const strip = document.getElementById('stageProgressStrip');
+      strip.innerHTML = '';
+
+      let currentIndex = PIPELINE_STAGES.findIndex(s => s.toLowerCase() === String(currentStage).toLowerCase().trim());
+      if (currentIndex === -1) {
+        // Fallback contains-check
+        currentIndex = PIPELINE_STAGES.findIndex(s => String(currentStage).toLowerCase().includes(s.toLowerCase()));
+      }
+
+      PIPELINE_STAGES.forEach((stageName, idx) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'progress-step';
+
+        let statusClass = 'future';
+        if (idx < currentIndex) {
+          stepDiv.classList.add('completed');
+          statusClass = 'completed';
+        } else if (idx === currentIndex) {
+          stepDiv.classList.add('active');
+          statusClass = 'active';
+        }
+
+        const dot = document.createElement('div');
+        dot.className = 'step-dot';
+        dot.innerHTML = statusClass === 'completed' ? '<i class="ti ti-check"></i>' : (idx + 1);
+
+        const text = document.createElement('span');
+        text.className = 'step-text';
+        text.textContent = stageName;
+
+        stepDiv.appendChild(dot);
+        stepDiv.appendChild(text);
+        strip.appendChild(stepDiv);
+      });
+    }
+
+    function renderShortlist(collegesList) {
+      const previewList = document.getElementById('shortlistPreviewList');
+      const fullGrid = document.getElementById('fullShortlistContainer');
+      
+      previewList.innerHTML = '';
+      fullGrid.innerHTML = '';
+
+      // Standardize colleges list format
+      const colleges = collegesList && Array.isArray(collegesList) ? collegesList : [];
+
+      if (colleges.length === 0) {
+        // Empty state
+        const emptyHtml = `
+          <div class="empty-state">
+            <svg class="empty-illustration" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 8V12" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 16H12.01" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h4 class="empty-title">No colleges shortlisted yet</h4>
+            <p class="empty-subtitle">Your counsellor will add your shortlist after your counselling session.</p>
+          </div>
+        `;
+        previewList.innerHTML = emptyHtml;
+        fullGrid.innerHTML = emptyHtml;
+        return;
+      }
+
+      // 1. Render Preview (Up to 5 colleges)
+      colleges.slice(0, 5).forEach(c => {
+        const name = c.college_name || c.name || 'Unknown College';
+        const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
+        const rankVal = c.closing_rank || c.cutoff || c.rank || '—';
+        const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
+        
+        const row = document.createElement('div');
+        row.className = 'shortlist-row';
+        row.innerHTML = `
+          <div class="shortlist-college">
+            <span class="college-name" title="${name}">${name}</span>
+            <span class="college-type">${c.type || 'Medical College'}</span>
+          </div>
+          <div class="shortlist-rank">${rankFormatted !== '—' ? 'AIR ' + rankFormatted : '—'}</div>
+          <span class="prob-badge ${getProbabilityCssClass(prob)}">${prob}</span>
+        `;
+        previewList.appendChild(row);
+      });
+
+      // 2. Render Full Shortlist page
+      colleges.forEach(c => {
+        const name = c.college_name || c.name || 'Unknown College';
+        const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
+        const rankVal = c.closing_rank || c.cutoff || c.rank || '—';
+        const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
+
+        const card = document.createElement('div');
+        card.className = 'card shortlist-card';
+        card.innerHTML = `
+          <div class="sc-header">
+            <h3 class="sc-title">${name}</h3>
+            <span class="prob-badge ${getProbabilityCssClass(prob)}">${prob}</span>
+          </div>
+          <div class="sc-meta">
+            <span class="tag-badge"><i class="ti ti-school"></i> ${c.type || 'MBBS'}</span>
+            <span class="tag-badge"><i class="ti ti-map-pin"></i> ${c.state || 'Maharashtra'}</span>
+          </div>
+          <div class="sc-info-row">
+            <span class="sc-info-label">Closing Cutoff Rank</span>
+            <span class="sc-info-value">${rankFormatted !== '—' ? 'AIR ' + rankFormatted : '—'}</span>
+          </div>
+        `;
+        fullGrid.appendChild(card);
+      });
+    }
+
+    function renderDeadlinesPreview() {
+      const previewList = document.getElementById('deadlinesPreviewList');
+      const fullContainer = document.getElementById('fullDeadlinesContainer');
+      
+      previewList.innerHTML = '';
+      fullContainer.innerHTML = '';
+
+      const todayStr = getLocalTodayDateString();
+      
+      // Filter upcoming events
+      const upcomingEvents = eventsData
+        .filter(ev => ev.date >= todayStr)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (upcomingEvents.length === 0) {
+        const emptyHtml = `
+          <div class="empty-state">
+            <svg class="empty-illustration" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2V5" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 2V5" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 10H21" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 8V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V8C3 6.89543 3.89543 6 5 6H19C20.1046 6 21 6.89543 21 8Z" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2"/>
+            </svg>
+            <h4 class="empty-title">No upcoming deadlines</h4>
+            <p class="empty-subtitle">No upcoming deadlines. Check back after results.</p>
+          </div>
+        `;
+        previewList.innerHTML = emptyHtml;
+        fullContainer.innerHTML = emptyHtml;
+        return;
+      }
+
+      // 1. Dashboard Preview (Top 3 upcoming events)
+      upcomingEvents.slice(0, 3).forEach(ev => {
+        const daysDiff = getDaysDifference(ev.date, todayStr);
+        let urgency = 'later';
+        let urgencyClass = 'urgency-later';
+        if (daysDiff <= 7) {
+          urgency = 'urgent';
+          urgencyClass = 'urgency-urgent';
+        } else if (daysDiff <= 30) {
+          urgency = 'upcoming';
+          urgencyClass = 'urgency-upcoming';
+        }
+
+        const pillBg = urgency === 'urgent' ? 'var(--red)' : (urgency === 'upcoming' ? 'var(--orange)' : 'var(--green)');
+
+        const row = document.createElement('div');
+        row.className = 'deadline-row';
+        
+        let ctaBtnHtml = '';
+        if (ev.link && ev.cta) {
+          ctaBtnHtml = `<a href="${ev.link}" target="_blank" rel="noopener noreferrer" class="deadline-action-btn">${ev.cta}</a>`;
+        }
+
+        row.innerHTML = `
+          <div class="deadline-date-pill" style="background-color: ${pillBg}; color: white;">
+            <span class="date-day">${getDayNumber(ev.date)}</span>
+            <span class="date-month">${getMonthAbbreviation(ev.date)}</span>
+          </div>
+          <div class="deadline-details">
+            <span class="deadline-title" title="${ev.title}">${ev.title}</span>
+            <div class="deadline-tags">
+              <span class="tag-badge">${ev.tag || ev.type}</span>
+              <span class="urgency-badge ${urgencyClass}">${daysDiff === 0 ? 'Today' : (daysDiff === 1 ? 'Tomorrow' : daysDiff + ' days left')}</span>
+            </div>
+          </div>
+          ${ctaBtnHtml}
+        `;
+        previewList.appendChild(row);
+      });
+
+      // 2. Deadlines View (Group by Urgent / Upcoming / Later)
+      const urgentGroup = [];
+      const upcomingGroup = [];
+      const laterGroup = [];
+
+      upcomingEvents.forEach(ev => {
+        const daysDiff = getDaysDifference(ev.date, todayStr);
+        if (daysDiff <= 7) {
+          urgentGroup.push(ev);
+        } else if (daysDiff <= 30) {
+          upcomingGroup.push(ev);
+        } else {
+          laterGroup.push(ev);
+        }
+      });
+
+      function buildGroupHtml(title, eventsList, cssClass) {
+        if (eventsList.length === 0) return '';
+        
+        const listHtml = eventsList.map(ev => {
+          const daysDiff = getDaysDifference(ev.date, todayStr);
+          let ctaBtnHtml = '';
+          if (ev.link && ev.cta) {
+            ctaBtnHtml = `<a href="${ev.link}" target="_blank" rel="noopener noreferrer" class="btn btn-yellow" style="padding: 6px 14px; font-size: 10px; border-radius: 6px;">${ev.cta} <i class="ti ti-arrow-up-right"></i></a>`;
+          }
+
+          return `
+            <div class="card" style="margin-bottom: 12px; padding: 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div class="deadline-date-pill" style="background-color: var(--navy); color: var(--yellow);">
+                    <span class="date-day">${getDayNumber(ev.date)}</span>
+                    <span class="date-month">${getMonthAbbreviation(ev.date)}</span>
+                  </div>
+                  <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: var(--navy);">${ev.title}</h3>
+                    <div class="deadline-tags">
+                      <span class="tag-badge">${ev.tag || ev.type}</span>
+                      <span class="tag-badge" style="background: rgba(26,0,64,0.03)"><i class="ti ti-hourglass"></i> ${daysDiff === 0 ? 'Today' : (daysDiff === 1 ? 'Tomorrow' : daysDiff + ' days left')}</span>
+                    </div>
+                  </div>
+                </div>
+                ${ctaBtnHtml}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        return `
+          <div class="deadline-group ${cssClass}">
+            <div class="group-header">
+              <span class="group-title">${title}</span>
+              <span class="group-count">${eventsList.length}</span>
+            </div>
+            ${listHtml}
+          </div>
+        `;
+      }
+
+      let fullDeadlinesHtml = '';
+      fullDeadlinesHtml += buildGroupHtml('Urgent', urgentGroup, 'urgent');
+      fullDeadlinesHtml += buildGroupHtml('Upcoming', upcomingGroup, 'upcoming');
+      fullDeadlinesHtml += buildGroupHtml('Later', laterGroup, 'later');
+
+      fullContainer.innerHTML = fullDeadlinesHtml;
+    }
+
+    function renderCounsellor() {
+      const student = studentData;
+      document.getElementById('counsellorAvatar').textContent = getInitials(student.counsellor_name);
+      document.getElementById('counsellorName').textContent = student.counsellor_name || 'ASMI Counsellor';
+      document.getElementById('counsellorBranch').innerHTML = `<i class="ti ti-map-pin"></i> ${getBranchFromToken(student.token)}`;
+      
+      const whatsappUrl = formatWhatsAppLink(student.counsellor_whatsapp);
+      document.getElementById('counsellorWhatsappBtn').href = whatsappUrl;
+
+      const groupBtn = document.getElementById('counsellorGroupBtn');
+      if (student.whatsapp_group_link && student.whatsapp_group_link.trim() !== '') {
+        groupBtn.href = student.whatsapp_group_link;
+        groupBtn.style.display = 'inline-flex';
+      } else {
+        groupBtn.style.display = 'none';
+      }
+    }
+
+    // ══════════════════════════════════════
+    // DATA LAYER & ERROR MANAGEMENT
+    // ══════════════════════════════════════
+    function showAppError(title, desc) {
+      document.getElementById('skeletonLoader').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'none';
+      
+      const overlay = document.getElementById('errorOverlay');
+      document.getElementById('errorTitle').textContent = title;
+      document.getElementById('errorDescription').textContent = desc;
+      overlay.style.display = 'flex';
+    }
+
+    async function loadEventsData() {
+      try {
+        const res = await fetch('/data/events.json');
+        if (res.ok) {
+          eventsData = await res.json();
+        } else {
+          console.warn('Events payload returned non-200 state');
+        }
+      } catch (err) {
+        console.warn('Events loading failed:', err);
+      }
+    }
+
+    async function bootstrap() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token') || '';
+
+      if (!token || token.trim() === '') {
+        showAppError('Invalid Link', 'This link is invalid or has expired. Please contact your ASMI counsellor for your dashboard link.');
+        return;
+      }
+
+      // Fetch Events Feed
+      await loadEventsData();
+
+      // Fetch Student Profile from Apps Script
+      try {
+        const response = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
+        
+        if (!response.ok) {
+          throw new Error('Network query was unsuccessful');
+        }
+        
+        const result = await response.json();
+        
+        if (result.error === 'not_found' || !result.success) {
+          showAppError('Dashboard Not Found', "We couldn't find your dashboard. Please contact your ASMI counsellor.");
+          return;
+        }
+
+        // Save resolved record
+        studentData = result.data;
+        
+        // Hide loader & display content
+        document.getElementById('skeletonLoader').style.display = 'none';
+        const mainContentEl = document.getElementById('mainContent');
+        mainContentEl.style.display = 'flex';
+
+        // Render sections
+        renderDashboard();
+        renderCounsellor();
+
+      } catch (err) {
+        console.error('Fetch execution error:', err);
+        showAppError('Network Error', 'We encountered an error loading your data. Please check your internet connection and reload the page.');
+      }
+    }
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', bootstrap);
+  </script>
+</body>
+</html>
