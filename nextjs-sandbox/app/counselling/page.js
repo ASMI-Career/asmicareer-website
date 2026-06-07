@@ -1,6 +1,8 @@
 'use client';
 import './counselling.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 const PROCESS_STEPS = [
   { num: 1, title: 'Attend a Seminar', body: 'Start with our free cutoff seminar to understand the admission landscape — college options, cutoffs, quotas, and what to expect this year.' },
@@ -26,10 +28,7 @@ export default function CounsellingPage() {
   return (
     <div className="coun-page">
 
-      <nav className="coun-nav">
-        <Link href="/"><img src="/asmi-logo.png" alt="ASMI Career" height="36" /></Link>
-        <Link href="/inquiry" className="coun-nav-cta">Book Free Session →</Link>
-      </nav>
+      <Nav />
 
       {/* HERO */}
       <section className="coun-hero">
@@ -125,10 +124,7 @@ export default function CounsellingPage() {
         </div>
       </section>
 
-      <div className="coun-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <span>asmicareer.com · asmicareer.in</span>
-      </div>
+      <Footer />
 
     </div>
   );

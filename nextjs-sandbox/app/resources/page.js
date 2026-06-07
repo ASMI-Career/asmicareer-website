@@ -1,6 +1,8 @@
 'use client';
 import './resources.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 const TOOLS = [
   {
@@ -87,10 +89,7 @@ export default function ResourcesPage() {
   return (
     <div className="res-page">
 
-      <nav className="res-nav">
-        <Link href="/"><img src="/asmi-logo.png" alt="ASMI Career" height="36" /></Link>
-        <Link href="/inquiry" className="res-nav-cta">Book Free Session →</Link>
-      </nav>
+      <Nav />
 
       <section className="res-hero">
         <div className="res-hero-inner">
@@ -174,10 +173,7 @@ export default function ResourcesPage() {
         </div>
       </section>
 
-      <div className="res-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <span>asmicareer.com · asmicareer.in</span>
-      </div>
+      <Footer />
 
     </div>
   );

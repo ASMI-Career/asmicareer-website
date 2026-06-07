@@ -1,6 +1,8 @@
 'use client';
 import './services.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 const SERVICES = [
   {
@@ -118,10 +120,7 @@ export default function ServicesPage() {
   return (
     <div className="svc-page">
 
-      <nav className="svc-nav">
-        <Link href="/"><img src="/asmi-logo.png" alt="ASMI Career" height="36" /></Link>
-        <Link href="/inquiry" className="svc-nav-cta">Book Free Session →</Link>
-      </nav>
+      <Nav />
 
       <section className="svc-hero">
         <div className="svc-hero-inner">
@@ -171,10 +170,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <div className="svc-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <span>asmicareer.com · asmicareer.in</span>
-      </div>
+      <Footer />
 
     </div>
   );

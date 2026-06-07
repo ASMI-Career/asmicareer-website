@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 export default function InquiryPage() {
   const [formData, setFormData] = useState({
@@ -23,7 +25,7 @@ export default function InquiryPage() {
   const [showModal, setShowModal] = useState(false);
   const [token, setToken] = useState('---');
   const [errorMsg, setErrorMsg] = useState(null);
-  const [hamburgerOpen, setHamburgerOpen] = useState(false);
+
 
   const branchDetails = {
     'andheri':       { phone: '7410019077', address: '42, 4th Floor, A Wing, Silver Astra, J. B. Nagar, Andheri East.' },
@@ -116,45 +118,7 @@ export default function InquiryPage() {
       <div className="bg-grid"></div>
       
       {/* ── NAVBAR ── */}
-      <nav className="asmi-nav">
-          <div className="asmi-nav-inner">
-              <Link href="/" className="asmi-nav-logo">
-                  <img src="/asmi-logo.png" alt="ASMI Career"/>
-              </Link>
-              <ul className="asmi-nav-links">
-                  <li><Link href="/">Home</Link></li>
-                  <li className="nav-dropdown">
-                      <Link href="#tools">Tools</Link>
-                      <ul className="nav-dropdown-menu">
-                          <li><Link href="/tools/rank-predictor"><span>📊</span> Rank Predictor</Link></li>
-                          <li><Link href="/tools/college-search"><span>🏥</span> College Search</Link></li>
-                          <li><Link href="/tools/cutoff-explorer"><span>📈</span> Cutoff Explorer</Link></li>
-                          <li><Link href="/tools/documents-checklist"><span>📋</span> Documents Checklist</Link></li>
-                          <li><Link href="/tools/events"><span>🎓</span> Events & Seminars</Link></li>
-                      </ul>
-                  </li>
-                  <li><Link href="/#about-us">About</Link></li>
-                  <li><Link href="/#contact">Contact</Link></li>
-                  <li className="nav-cta"><Link href="/inquiry" className="active">Book Free Counselling</Link></li>
-              </ul>
-              <button className="asmi-nav-hamburger" id="hamburger" aria-label="Open menu" onClick={() => setHamburgerOpen(!hamburgerOpen)}>
-                  <span></span><span></span><span></span>
-              </button>
-          </div>
-          <div className={'asmi-mobile-menu ' + (hamburgerOpen ? 'open' : '')} id="mobileMenu">
-              <Link href="/" onClick={() => setHamburgerOpen(false)}>🏠 Home</Link>
-              <div className="mobile-section-label">Tools</div>
-              <Link href="/tools/rank-predictor" onClick={() => setHamburgerOpen(false)}>📊 Rank Predictor</Link>
-              <Link href="/tools/college-search" onClick={() => setHamburgerOpen(false)}>🏥 College Search</Link>
-              <Link href="/tools/cutoff-explorer" onClick={() => setHamburgerOpen(false)}>📈 Cutoff Explorer</Link>
-              <Link href="/tools/documents-checklist" onClick={() => setHamburgerOpen(false)}>📋 Documents Checklist</Link>
-              <Link href="/tools/events" onClick={() => setHamburgerOpen(false)}>🎓 Events & Seminars</Link>
-              <div className="mobile-section-label">Company</div>
-              <Link href="/#about-us" onClick={() => setHamburgerOpen(false)}>About ASMI</Link>
-              <Link href="/#contact" onClick={() => setHamburgerOpen(false)}>Contact & Branches</Link>
-              <Link href="/inquiry" className="mobile-cta" onClick={() => setHamburgerOpen(false)}>Book Free Counselling →</Link>
-          </div>
-      </nav>
+      <Nav />
       
       {/* ── PAGE HEADER ── */}
       <div className="page-header">
@@ -327,57 +291,7 @@ export default function InquiryPage() {
       </main>
       
       {/* ── FOOTER ── */}
-      <footer className="asmi-footer" id="contact">
-          <div className="asmi-footer-inner">
-              <div className="asmi-footer-grid">
-                  <div className="asmi-footer-brand">
-                      <img src="/asmi-logo.png" alt="ASMI Career"/>
-                      <p>ASMI Career is Maharashtra's leading NEET medical admissions counselling company. 11+ years of experience, 25,000+ admissions.</p>
-                      <div style={{ marginTop: '16px', fontSize: '.875rem', color: 'rgba(255,255,255,.45)' }}>
-                          <div>📞 Central Helpline: <a href="tel:7410019074" style={{ color: 'rgba(255,255,255,.65)' }}>7410019074</a></div>
-                      </div>
-                  </div>
-                  <div>
-                      <h4>Quick Links</h4>
-                      <ul>
-                          <li><Link href="/">Home</Link></li>
-                          <li><Link href="/tools/rank-predictor">Rank Predictor</Link></li>
-                          <li><Link href="/tools/cutoff-explorer">Cutoff Explorer</Link></li>
-                          <li><Link href="/tools/documents-checklist">Documents Checklist</Link></li>
-                          <li><Link href="/tools/events">Events</Link></li>
-                      </ul>
-                  </div>
-                  <div>
-                      <h4>Branches</h4>
-                      <ul>
-                          <li><Link href="/inquiry?source=andheri">Mumbai – Andheri</Link></li>
-                          <li><Link href="/inquiry?source=thane">Thane</Link></li>
-                          <li><Link href="/inquiry?source=pune">Pune</Link></li>
-                          <li><Link href="/inquiry?source=kolhapur">Kolhapur</Link></li>
-                          <li><Link href="/inquiry?source=sangli">Sangli</Link></li>
-                          <li><Link href="/inquiry?source=sambhajinagar">Ch. Sambhajinagar</Link></li>
-                      </ul>
-                  </div>
-                  <div>
-                      <h4>Contact</h4>
-                      <div className="asmi-footer-contact-item">
-                          <strong>Andheri (Head Office)</strong>
-                          42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East
-                          <br/><a href="tel:7410019077" style={{ color: 'rgba(255,255,255,.65)' }}>7410019077</a>
-                      </div>
-                      <div className="asmi-footer-contact-item">
-                          <strong>Thane</strong>
-                          Shah Avenue, Gokhale Road, Naupada
-                          <br/><a href="tel:7410019075" style={{ color: 'rgba(255,255,255,.65)' }}>7410019075</a>
-                      </div>
-                  </div>
-              </div>
-              <div className="asmi-footer-bottom">
-                  <span>© 2026 ASMI Youth Career Advisor LLP. All rights reserved.</span>
-                  <span>asmicareer.in</span>
-              </div>
-          </div>
-      </footer>
+      <Footer />
       
       {/* ── SUCCESS MODAL ── */}
       {showModal && (

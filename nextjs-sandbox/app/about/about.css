@@ -8,26 +8,7 @@
   color: #1a0040;
 }
 
-.about-nav {
-  background: #1a0040;
-  padding: 14px 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.about-nav a img { height: 36px; }
-
-.about-nav-cta {
-  background: #FFD700;
-  color: #1a0040;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  padding: 10px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-}
 
 .about-hero {
   background: #FFD700;
@@ -326,15 +307,6 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.about-footer-strip {
-  background: #0d0022;
-  padding: 20px 80px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.3);
-}
-
 @media (max-width: 1024px) {
   .about-founder-grid { grid-template-columns: 1fr; }
   .about-vm-inner { grid-template-columns: 1fr; }
@@ -342,10 +314,8 @@
 }
 
 @media (max-width: 768px) {
-  .about-nav { padding: 14px 20px; }
   .about-hero { padding: 48px 20px 40px; }
   .about-stats { padding: 24px 20px; flex-wrap: wrap; }
   .about-stat { flex: 0 0 50%; border-right: none; }
   .about-founders, .about-vm, .about-story, .about-branches, .about-cta { padding: 48px 20px; }
-  .about-footer-strip { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
 }

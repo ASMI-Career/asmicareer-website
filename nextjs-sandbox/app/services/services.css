@@ -3,9 +3,7 @@
 
 .svc-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #1a0040; }
 
-.svc-nav { background: #1a0040; padding: 14px 80px; display: flex; align-items: center; justify-content: space-between; }
-.svc-nav a img { height: 36px; }
-.svc-nav-cta { background: #FFD700; color: #1a0040; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; padding: 10px 20px; border-radius: 8px; text-decoration: none; }
+
 
 .svc-hero { background: #1a0040; padding: 72px 80px 64px; }
 .svc-hero-inner { max-width: 760px; }
@@ -37,11 +35,10 @@
 .svc-cta-btn-primary { background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 900; padding: 14px 28px; border-radius: 50px; text-decoration: none; }
 .svc-cta-btn-secondary { background: rgba(255,255,255,0.6); color: #1a0040; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; padding: 14px 28px; border-radius: 50px; text-decoration: none; border: 1px solid rgba(26,0,64,0.2); }
 
-.svc-footer-strip { background: #0d0022; padding: 20px 80px; display: flex; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.3); }
+
 
 @media (max-width: 768px) {
-  .svc-nav, .svc-hero, .svc-list, .svc-cta { padding-left: 20px; padding-right: 20px; }
+  .svc-hero, .svc-list, .svc-cta { padding-left: 20px; padding-right: 20px; }
   .svc-card { grid-template-columns: 1fr; }
   .svc-card-left { flex-direction: row; justify-content: flex-start; }
-  .svc-footer-strip { padding: 20px; flex-direction: column; gap: 8px; text-align: center; }
 }

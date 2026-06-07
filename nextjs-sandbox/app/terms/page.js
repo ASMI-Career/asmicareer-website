@@ -1,14 +1,13 @@
 'use client';
 import './terms.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 export default function TermsPage() {
   return (
     <div className="legal-page">
-      <nav className="legal-nav">
-        <Link href="/"><img src="/asmi-logo.png" alt="ASMI Career" height="36" /></Link>
-        <Link href="/contact" className="legal-nav-link">Contact Us</Link>
-      </nav>
+      <Nav />
 
       <div className="legal-inner">
         <div className="legal-header">
@@ -84,13 +83,7 @@ export default function TermsPage() {
         </div>
       </div>
 
-      <div className="legal-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <div className="legal-footer-links">
-          <Link href="/privacy-policy">Privacy Policy</Link>
-          <Link href="/contact">Contact</Link>
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }

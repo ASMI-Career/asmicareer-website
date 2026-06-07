@@ -1,6 +1,8 @@
 'use client';
 import './contact.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 const BRANCHES = [
   {
@@ -70,14 +72,7 @@ export default function ContactPage() {
     <div className="contact-page">
 
       {/* NAV */}
-      <nav className="contact-nav">
-        <Link href="/" className="contact-nav-logo">
-          <img src="/asmi-logo.png" alt="ASMI Career" height="36" />
-        </Link>
-        <Link href="/inquiry" className="contact-nav-cta">
-          Book Free Session →
-        </Link>
-      </nav>
+      <Nav />
 
       {/* HEADER */}
       <div className="contact-header">
@@ -169,10 +164,7 @@ export default function ContactPage() {
       </div>
 
       {/* FOOTER STRIP */}
-      <div className="contact-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <span>asmicareer.com · asmicareer.in</span>
-      </div>
+      <Footer />
 
     </div>
   );

@@ -3,9 +3,7 @@
 
 .legal-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #1a0040; min-height: 100vh; }
 
-.legal-nav { background: #1a0040; padding: 14px 80px; display: flex; align-items: center; justify-content: space-between; }
-.legal-nav a img { height: 36px; }
-.legal-nav-link { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.7); text-decoration: none; }
+
 
 .legal-inner { max-width: 780px; margin: 0 auto; padding: 56px 24px 72px; }
 
@@ -23,13 +21,8 @@
 .legal-section a { color: #6a0dad; text-decoration: none; font-weight: 600; }
 .legal-section a:hover { text-decoration: underline; }
 
-.legal-footer-strip { background: #0d0022; padding: 20px 80px; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: rgba(255,255,255,0.3); }
-.legal-footer-links { display: flex; gap: 20px; }
-.legal-footer-links a { color: rgba(255,255,255,0.3); text-decoration: none; font-size: 12px; }
-.legal-footer-links a:hover { color: rgba(255,255,255,0.6); }
+
 
 @media (max-width: 768px) {
-  .legal-nav { padding: 14px 20px; }
   .legal-inner { padding: 40px 20px 56px; }
-  .legal-footer-strip { padding: 20px; flex-direction: column; gap: 12px; text-align: center; }
 }

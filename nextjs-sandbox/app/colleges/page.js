@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import './colleges.css';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 export default function CollegesDirectory() {
   const [allColleges, setAllColleges] = useState([]);
@@ -128,6 +130,7 @@ export default function CollegesDirectory() {
 
   return (
     <div className="colleges-page">
+      <Nav />
       <div className="colleges-layout">
         
         {/* Left Filter Sidebar */}
@@ -356,6 +359,7 @@ export default function CollegesDirectory() {
         </main>
 
       </div>
+      <Footer />
     </div>
   );
 }

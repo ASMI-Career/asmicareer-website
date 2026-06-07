@@ -1,18 +1,15 @@
 'use client';
 import './about.css';
 import Link from 'next/link';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
 
 export default function AboutPage() {
   return (
     <div className="about-page">
 
       {/* NAV */}
-      <nav className="about-nav">
-        <Link href="/">
-          <img src="/asmi-logo.png" alt="ASMI Career" height="36" />
-        </Link>
-        <Link href="/inquiry" className="about-nav-cta">Book Free Session →</Link>
-      </nav>
+      <Nav />
 
       {/* HERO */}
       <section className="about-hero">
@@ -209,10 +206,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="about-footer-strip">
-        <span>© 2026 ASMI Youth Career Advisor LLP</span>
-        <span>asmicareer.com · asmicareer.in</span>
-      </div>
+      <Footer />
 
     </div>
   );
