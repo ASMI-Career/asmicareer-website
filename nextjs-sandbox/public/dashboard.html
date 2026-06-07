@@ -29,14 +29,15 @@
 
   /* Bouncing logo mark */
   .loader-mark{
-    width:140px;height:auto;
-    animation:bounce 1s ease-in-out infinite alternate;
-    filter:drop-shadow(0 12px 24px rgba(255,215,0,.25));
-  }
+  width:140px;height:120px;
+  animation:bounce 1s ease-in-out infinite alternate;
+  filter:drop-shadow(0 12px 24px rgba(255,215,0,.25));
+  mix-blend-mode: screen;  /* ADD THIS */
+}
   @keyframes bounce{
-    from{transform:scale(1);box-shadow:0 12px 40px rgba(255,215,0,.30);}
-    to  {transform:scale(1.08);box-shadow:0 18px 50px rgba(255,215,0,.50);}
-  }
+  from{transform:scale(1);   filter:drop-shadow(0 12px 24px rgba(255,215,0,.25));}
+  to  {transform:scale(1.08);filter:drop-shadow(0 18px 40px rgba(255,215,0,.55));}
+}
 
   /* Pulsing dots */
   .loader-dots{display:flex;gap:8px;margin-top:4px;}
@@ -61,14 +62,17 @@
     color:rgba(255,255,255,.30);letter-spacing:1px;
     margin-top:-8px;
   }
+@media (max-width: 768px) {
+  .loader-mark { width: 100px; }
+  .loader-text { font-size: .75rem; }
+}
 </style>
 </head>
 <body>
 
 <!-- ── LOADING SCREEN ── -->
 <div id="loadingOverlay">
-  <img class="loader-mark" src="ASMI Logo.png" alt="ASMI Career">
-  <div class="loader-text">ASMI Career</div>
+  <img class="loader-mark" src="asmi-logo.png" alt="ASMI Career">
   <div class="loader-dots">
     <span></span><span></span><span></span>
   </div>
@@ -79,12 +83,24 @@
 <iframe id="slideFrame" src="" allowfullscreen></iframe>
 
 <script>
-  const token = new URLSearchParams(location.search).get('token') || '';
-  const frame = document.getElementById('slideFrame');
-  const overlay = document.getElementById('loadingOverlay');
+  const token  = new URLSearchParams(location.search).get('token') || '';
+  const mode   = new URLSearchParams(location.search).get('mode') || '';
+  const frame  = document.getElementById('slideFrame');
+  const overlay= document.getElementById('loadingOverlay');
 
-  // Load slide 1 with token
-  frame.src = 'slide1_welcome.html?token=' + encodeURIComponent(token);
+  // Store mode in sessionStorage so all slides can read it
+  try {
+    const s = JSON.parse(sessionStorage.getItem('asmi') || '{}');
+    s.mode = mode;
+    sessionStorage.setItem('asmi', JSON.stringify(s));
+  } catch(e){}
+
+  // Counsel mode starts at Slide 2, sales mode starts at Slide 1
+  const startSlide = mode === 'counsel'
+    ? 'slide2_profile.html?token=' + encodeURIComponent(token) + '&mode=counsel'
+    : 'slide1_welcome.html?token='  + encodeURIComponent(token);
+
+  frame.src = startSlide;
 
   // When iframe is ready — fade out loader, fade in iframe
   frame.addEventListener('load', function() {

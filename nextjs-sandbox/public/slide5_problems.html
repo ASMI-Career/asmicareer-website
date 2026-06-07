@@ -24,7 +24,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   background-size:52px 52px;}
 
 /* ── PAGE ── */
-.page{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;padding:20px 40px 16px;}
+.page{position:relative;z-index:1;width:100%;height:calc(100vh - 44px);display:flex;flex-direction:column;padding:10px 40px 8px;gap:6px;overflow:hidden;}
 
 /* ── TOP BAR ── */
 .top-bar{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;margin-bottom:14px;}
@@ -35,29 +35,29 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .headline-strip{
   flex-shrink:0;
   background:linear-gradient(135deg,var(--navy),var(--mid));
-  border-radius:16px;padding:16px 28px;
+  border-radius:16px;padding:10px 20px;
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:14px;
   animation:fadeDown .5s ease both;
 }
 .hs-left{}
 .hs-eyebrow{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,215,0,.6);margin-bottom:5px;}
-.hs-headline{font-family:'Montserrat';font-weight:900;font-size:1.55rem;color:#fff;line-height:1.15;}
+.hs-headline{font-family:'Montserrat';font-weight:900;font-size:1.1rem;color:#fff;line-height:1.15;}
 .hs-headline em{color:#FFD700;font-style:normal;}
 .hs-stats{display:flex;gap:24px;}
 .hs-stat{text-align:center;}
-.hs-stat-num{font-family:'Montserrat';font-weight:900;font-size:1.6rem;color:#FFD700;line-height:1;}
+.hs-stat-num{font-family:'Montserrat';font-weight:900;font-size:1.2rem;color:#FFD700;line-height:1;}
 .hs-stat-lbl{font-size:.62rem;color:rgba(255,255,255,.5);font-weight:600;margin-top:2px;letter-spacing:.5px;}
 .hs-divider{width:1px;height:36px;background:rgba(255,255,255,.12);align-self:center;}
 
 /* ── COLUMN HEADERS ── */
 .col-headers{
   display:grid;grid-template-columns:1fr 40px 1fr;gap:0;
-  flex-shrink:0;margin-bottom:8px;
+  flex-shrink:0;margin-bottom:4px;
   animation:fadeDown .5s .1s ease both;
 }
-.ch-left{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(185,28,28,.12);border:1px solid var(--red-border);border-radius:10px 0 0 10px;}
-.ch-right{display:flex;align-items:center;gap:8px;padding:7px 14px;background:rgba(21,128,61,.12);border:1px solid var(--green-border);border-radius:0 10px 10px 0;justify-content:flex-end;}
+.ch-left{display:flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(185,28,28,.12);border:1px solid var(--red-border);border-radius:10px 0 0 10px;}
+.ch-right{display:flex;align-items:center;gap:8px;padding:5px 12px;background:rgba(21,128,61,.12);border:1px solid var(--green-border);border-radius:0 10px 10px 0;justify-content:flex-end;}
 .ch-mid{display:flex;align-items:center;justify-content:center;background:rgba(26,0,64,.06);border-top:1px solid rgba(26,0,64,.08);border-bottom:1px solid rgba(26,0,64,.08);}
 .ch-label{font-family:'Montserrat';font-size:.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
 .ch-label.red{color:var(--red);}
@@ -65,7 +65,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .ch-icon{font-size:1.1rem;}
 
 /* ── ROWS CONTAINER ── */
-.rows{display:flex;flex-direction:column;gap:7px;flex:1;min-height:0;}
+.rows{flex:1;min-height:0;display:flex;flex-direction:column;gap:4px;overflow:hidden;}
 
 /* ── SINGLE ROW (problem + solution) ── */
 .row{
@@ -75,40 +75,41 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* Problem side */
 .prob-card{
   background:var(--red-bg);border:1px solid var(--red-border);
-  border-radius:12px 0 0 12px;padding:10px 14px;
+  border-radius:12px 0 0 12px;padding:7px 12px;
   display:flex;align-items:flex-start;gap:10px;
   transform:translateX(-30px);
 }
 /* VS divider */
 .vs{
+  width:36px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.4);border-top:1px solid rgba(26,0,64,.06);border-bottom:1px solid rgba(26,0,64,.06);
 }
 .vs-inner{
-  width:24px;height:24px;border-radius:50%;
+  width:22px;height:22px;border-radius:50%;
   background:var(--navy);color:#FFD700;
-  font-family:'Montserrat';font-size:.52rem;font-weight:900;
+  font-family:'Montserrat';font-size:.48rem;font-weight:900;
   display:flex;align-items:center;justify-content:center;
   letter-spacing:.5px;
 }
 /* Solution side */
 .sol-card{
   background:var(--green-bg);border:1px solid var(--green-border);
-  border-radius:0 12px 12px 0;padding:10px 14px;
+  border-radius:0 12px 12px 0;padding:7px 12px;
   display:flex;align-items:flex-start;gap:10px;
   transform:translateX(30px);
 }
 
-.card-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px;}
+.card-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
 .card-content{}
-.card-title{font-family:'Montserrat';font-weight:800;font-size:.8rem;margin-bottom:3px;}
+.card-title{font-family:'Montserrat';font-weight:800;font-size:.74rem;margin-bottom:2px;}
 .prob-card .card-title{color:var(--red);}
 .sol-card  .card-title{color:var(--green);}
-.card-body{font-size:.72rem;color:var(--mid);line-height:1.45;}
+.card-body{font-size:.66rem;color:var(--mid);line-height:1.35;}
 .cost-pill{
-  display:inline-block;margin-top:5px;
-  font-family:'Montserrat';font-size:.6rem;font-weight:800;
-  padding:2px 10px;border-radius:20px;letter-spacing:.3px;
+  display:inline-block;margin-top:3px;
+  font-family:'Montserrat';font-size:.56rem;font-weight:800;
+  padding:1px 8px;border-radius:20px;letter-spacing:.3px;
 }
 .cost-pill.red{background:rgba(185,28,28,.15);color:var(--red);border:1px solid var(--red-border);}
 .cost-pill.green{background:rgba(21,128,61,.15);color:var(--green);border:1px solid var(--green-border);}
@@ -138,19 +139,20 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* ── CTA STRIP ── */
 .cta-strip{
   flex-shrink:0;
+  margin-top:4px;
   background:linear-gradient(135deg,var(--purple),var(--navy));
-  border-radius:16px;padding:14px 28px;
+  border-radius:16px;padding:10px 22px;
   display:flex;align-items:center;justify-content:space-between;
   margin-top:10px;
   opacity:0;
   animation:ctaPop .6s 1.3s cubic-bezier(.34,1.56,.64,1) forwards;
 }
 .cs-text{}
-.cs-title{font-family:'Montserrat';font-weight:900;font-size:1.05rem;color:#fff;margin-bottom:3px;}
+.cs-title{font-family:'Montserrat';font-weight:900;font-size:.9rem;color:#fff;margin-bottom:3px;}
 .cs-sub{font-size:.75rem;color:rgba(255,255,255,.55);}
 .cs-btn{
   background:#FFD700;color:var(--navy);font-family:'Montserrat';font-weight:900;
-  font-size:.85rem;padding:11px 28px;border-radius:50px;border:none;cursor:pointer;
+  font-size:.78rem;padding:9px 22px;border-radius:50px;border:none;cursor:pointer;
   letter-spacing:.5px;white-space:nowrap;
   box-shadow:0 6px 24px rgba(255,215,0,.35);
   animation:pulse 2s 2s ease-in-out infinite;
@@ -166,6 +168,87 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 @keyframes ctaPop{from{opacity:0;transform:scale(.94);}to{opacity:1;transform:scale(1);}}
 @keyframes pulse{0%,100%{box-shadow:0 6px 24px rgba(255,215,0,.35);}50%{box-shadow:0 8px 32px rgba(255,215,0,.65);}}
 @keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-4px);}40%,80%{transform:translateX(4px);}}
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .page {
+    height: auto !important;
+    min-height: 100vh;
+    padding: 12px 16px 8px;
+    gap: 6px;
+    overflow-y: auto;
+  }
+  .headline-strip {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .hs-headline { font-size: .9rem; }
+  .hs-stats { justify-content: space-around; width: 100%; }
+  .hs-stat-num { font-size: 1rem; }
+  .hs-divider { display: none; }
+  .col-headers { display: none; }
+  .rows { gap: 8px; overflow: visible; flex: none; }
+  .row {
+    grid-template-columns: 1fr !important;
+    gap: 4px;
+  }
+  .vs { display: none; }
+  .prob-card {
+    border-radius: 10px !important;
+    transform: none !important;
+    margin-bottom: 0;
+  }
+  .sol-card {
+    border-radius: 10px !important;
+    transform: none !important;
+    border-left: 3px solid var(--green-border);
+  }
+  .card-title { font-size: .76rem; }
+  .card-body { font-size: .68rem; }
+  .cta-strip {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
+    margin-top: 8px;
+  }
+  .cs-btn { width: 100%; }
+}
 </style>
 </head>
 <body>
@@ -177,7 +260,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
   <!-- ── TOP BAR ── -->
   <div class="top-bar">
-    <div class="logo-wrap"><img src="ASMI Logo.png" alt="ASMI Career"></div>
+    <div class="logo-wrap"><img src="asmi-logo.png" alt="ASMI Career"></div>
     <div class="step-label">Step 4 of 6 — Why This Matters</div>
   </div>
 
@@ -257,7 +340,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <span class="card-icon">🔔</span>
         <div class="card-content">
           <div class="card-title">Real-time alerts — every single round</div>
-          <div class="card-body">WhatsApp alerts for every counselling round, reporting date, and last-chance window. You will never miss a deadline on our watch.</div>
+          <div class="card-body">ASMI's All India Round Tracking system monitors MCC, every state counselling round, and all deemed processes nationwide in real time. Every deadline, every allotment result, every schedule change — delivered directly to you on WhatsApp before you even think to check.</div>
           <span class="cost-pill green">✓ Zero missed deadlines</span>
         </div>
       </div>
@@ -326,6 +409,27 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       </div>
     </div>
 
+    <!-- Row 6 -->
+    <div class="row" data-index="5">
+      <div class="prob-card">
+        <span class="card-icon">🚨</span>
+        <div class="card-content">
+          <div class="card-title">Agents make fake commitments</div>
+          <div class="card-body">Agents are paid commission by colleges — not by you. They will promise you a specific seat to close the deal. By the time you find out it was false, your deadline is gone, your deposit is lost, and your year is wasted.</div>
+          <span class="cost-pill red">❌ Paid by the college, not by you</span>
+        </div>
+      </div>
+      <div class="vs"><div class="vs-inner">VS</div></div>
+      <div class="sol-card">
+        <span class="card-icon">✅</span>
+        <div class="card-content">
+          <div class="card-title">ASMI works only for the student</div>
+          <div class="card-body">No college pays us a single rupee. Our only job is to get you the best seat your score deserves — using real data, not sales pressure. Every recommendation is data-driven and conflict-free.</div>
+          <span class="cost-pill green">✓ Zero conflict of interest · 100% student-first</span>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /rows -->
 
   <!-- ── CTA STRIP ── -->
@@ -339,9 +443,21 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 </div><!-- /page -->
 
-<div class="slide-counter">SLIDE 4 OF 6</div>
+<nav class="slide-nav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <span class="snav-label">SLIDE 5 OF 6</span>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
+// ── Nav wiring ──────────────────────────────────────────────────
+(function(){
+  const sess = (() => { try { return JSON.parse(sessionStorage.getItem('asmi') || '{}'); } catch(e) { return {}; } })();
+  const token = sess.token || new URLSearchParams(location.search).get('token') || '';
+  document.getElementById('navPrev').href = 'slide4_recommended.html?token=' + encodeURIComponent(token);
+  document.getElementById('navNext').href = 'slide6_register.html?token=' + encodeURIComponent(token);
+})();
+
 // ── Animate rows in on load ─────────────────────────────────────
 function animateRows(){
   const rows = document.querySelectorAll('.row');
@@ -375,6 +491,23 @@ function goNext(){
 
 // Start animations after fonts load
 document.fonts.ready.then(animateRows);
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e){
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  const prev = document.getElementById('navPrev');
+  const next = document.getElementById('navNext');
+  if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){
+    if(next && next.href && next.href !== '#' && next.style.pointerEvents !== 'none'){
+      e.preventDefault(); next.click();
+    }
+  }
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){
+    if(prev && prev.href && prev.href !== '#' && prev.style.pointerEvents !== 'none'){
+      e.preventDefault(); prev.click();
+    }
+  }
+});
 </script>
 
 </body>

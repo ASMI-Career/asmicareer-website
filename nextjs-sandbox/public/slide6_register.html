@@ -28,20 +28,20 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* ════ COL 1: PACKAGES ════ */
 .col-packages{
   display:flex;flex-direction:column;
-  padding:22px 20px 20px 32px;
+  padding:14px 16px 12px 24px;
   border-right:1px solid rgba(26,0,64,.08);
 }
 
-.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;animation:fadeUp .5s ease both;}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;animation:fadeUp .5s ease both;}
 .logo-wrap img{height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 3px 10px rgba(26,0,64,.14));}
 .step-label{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);}
 
 /* Urgency banner */
 .urgency-banner{
   background:linear-gradient(135deg,var(--red),#dc2626);
-  border-radius:12px;padding:10px 16px;
+  border-radius:10px;padding:7px 12px;
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
+  margin-bottom:8px;
   animation:fadeUp .5s .06s ease both;
 }
 .ub-left{display:flex;align-items:center;gap:10px;}
@@ -56,7 +56,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 /* Package cards */
 .pkg-card{
-  border-radius:16px;padding:16px 18px;margin-bottom:12px;position:relative;
+  border-radius:14px;padding:12px 16px;margin-bottom:8px;position:relative;
   animation:fadeUp .5s ease both;
   flex-shrink:0;
 }
@@ -80,11 +80,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .merit .pkg-eyebrow{color:rgba(255,215,0,.65);}
 .nri   .pkg-eyebrow{color:var(--purple);}
 
-.pkg-name{font-family:'Montserrat';font-weight:900;font-size:.95rem;margin-bottom:12px;line-height:1.3;}
+.pkg-name{font-family:'Montserrat';font-weight:900;font-size:.88rem;margin-bottom:6px;line-height:1.25;}
 .merit .pkg-name{color:#fff;}
 .nri   .pkg-name{color:var(--navy);}
 
-.pkg-prices{display:flex;align-items:flex-end;gap:16px;margin-bottom:8px;}
+.pkg-prices{display:flex;align-items:flex-end;gap:12px;margin-bottom:4px;}
 .price-now{display:flex;flex-direction:column;}
 .price-now-lbl{font-family:'Montserrat';font-size:.56rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
 .merit .price-now-lbl{color:rgba(255,215,0,.6);}
@@ -108,7 +108,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 }
 .merit .saving-pill{background:rgba(255,215,0,.2);color:#FFD700;border-color:rgba(255,215,0,.3);}
 
-.pkg-note{font-size:.68rem;margin-top:8px;line-height:1.4;}
+.pkg-note{font-size:.64rem;margin-top:4px;line-height:1.35;}
 .merit .pkg-note{color:rgba(255,255,255,.5);}
 .nri   .pkg-note{color:var(--soft);}
 
@@ -124,29 +124,29 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* ════ COL 2: SERVICES ════ */
 .col-services{
   display:flex;flex-direction:column;
-  padding:22px 20px 20px 24px;
+  padding:14px 16px 12px 18px;
   border-right:1px solid rgba(26,0,64,.08);
 }
 
 .col-title{font-family:'Montserrat';font-weight:900;font-size:.95rem;color:var(--navy);margin-bottom:4px;}
-.col-sub{font-size:.72rem;color:var(--soft);margin-bottom:14px;}
+.col-sub{font-size:.72rem;color:var(--soft);margin-bottom:8px;}
 
-.service-list{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0;overflow-y:auto;}
+.service-list{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;overflow:hidden;}
 .service-list::-webkit-scrollbar{width:3px;}
 .service-list::-webkit-scrollbar-thumb{background:rgba(106,13,173,.2);border-radius:10px;}
 
 .svc{
-  background:var(--card);border:1px solid var(--cb);border-radius:12px;
-  padding:11px 14px;display:flex;gap:11px;align-items:flex-start;
+  background:var(--card);border:1px solid var(--cb);border-radius:10px;
+  padding:8px 12px;display:flex;gap:6px;align-items:flex-start;
   opacity:0;transform:translateX(-16px);
   transition:background .2s,border-color .2s;
 }
 .svc:hover{background:rgba(255,255,255,.85);border-color:rgba(106,13,173,.3);}
 .svc.visible{opacity:1;transform:translateX(0);}
-.svc-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+.svc-icon{font-size:.95rem;flex-shrink:0;margin-top:1px;}
 .svc-body{}
-.svc-name{font-family:'Montserrat';font-weight:800;font-size:.78rem;color:var(--navy);margin-bottom:3px;}
-.svc-desc{font-size:.68rem;color:var(--mid);line-height:1.45;}
+.svc-name{font-family:'Montserrat';font-weight:800;font-size:.72rem;color:var(--navy);margin-bottom:1px;}
+.svc-desc{font-size:.62rem;color:var(--mid);line-height:1.4;}
 .inc-badge{display:inline-block;margin-top:4px;font-family:'Montserrat';font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
 
 /* Non-refundable notice */
@@ -159,14 +159,17 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* ════ COL 3: PAYMENT ════ */
 .col-payment{
   display:flex;flex-direction:column;
-  padding:22px 32px 20px 20px;
+  gap:8px;
+  padding:14px 20px 8px 14px;
   background:rgba(255,255,255,.14);
+  overflow:hidden;
+  height:100%;
 }
 
 /* Payment methods */
-.pay-section{margin-bottom:12px;flex-shrink:0;}
+.pay-section{flex-shrink:0;}
 .pay-title{font-family:'Montserrat';font-size:.62rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;}
-.pay-rows{display:flex;flex-direction:column;gap:6px;}
+.pay-rows{display:flex;flex-direction:column;gap:4px;}
 .pay-row{
   background:rgba(255,255,255,.55);border:1px solid var(--cb);border-radius:8px;
   padding:8px 12px;display:flex;justify-content:space-between;align-items:center;
@@ -176,25 +179,39 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .pay-val.upi{color:var(--purple);}
 
 /* QR codes */
-.qr-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;flex-shrink:0;}
+.qr-row{
+  display:flex;flex-direction:row;align-items:stretch;
+  gap:8px;width:100%;flex-shrink:0;
+}
 .qr-box{
-  background:rgba(255,255,255,.7);border:1px solid var(--cb);border-radius:12px;
-  padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  flex:1;padding:8px;
+  background:rgba(255,255,255,.6);border:1px solid rgba(26,0,64,.12);border-radius:10px;
+  margin-top:0;
 }
-.qr-label{font-family:'Montserrat';font-size:.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--purple);text-align:center;}
+.qr-label{
+  font-family:'Montserrat',sans-serif;font-size:.7rem;font-weight:800;
+  color:#6a0dad;letter-spacing:1px;text-transform:uppercase;
+  text-align:center;margin-bottom:8px;
+  min-height:36px;display:flex;align-items:center;justify-content:center;
+}
 .qr-img{
-  width:80px;height:80px;border-radius:6px;overflow:hidden;
-  background:var(--navy);display:flex;align-items:center;justify-content:center;
+  width:100%;max-width:90px;
+  border-radius:6px;overflow:hidden;
+  margin:0 auto;
 }
-.qr-img img{width:100%;height:100%;object-fit:contain;}
-.qr-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:rgba(255,255,255,.4);font-family:'Montserrat';font-weight:700;text-align:center;padding:4px;}
+.qr-img img{width:100%;height:auto;display:block;object-fit:contain;}
+.qr-scan{
+  font-size:.72rem;font-weight:600;
+  color:rgba(26,0,64,.6);text-align:center;margin-top:8px;
+}
 
 /* Contact + address */
 .contact-box{
   background:linear-gradient(135deg,var(--navy),var(--purple));
-  border-radius:12px;padding:12px 14px;margin-bottom:10px;flex-shrink:0;
+  border-radius:10px;padding:8px 12px;flex-shrink:0;
 }
-.contact-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.contact-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
 .contact-row:last-child{margin-bottom:0;}
 .contact-icon{font-size:.9rem;flex-shrink:0;}
 .contact-val{font-family:'Montserrat';font-size:.72rem;font-weight:700;color:#fff;}
@@ -203,11 +220,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 /* T&C */
 .tnc{
   background:rgba(255,255,255,.45);border:1px solid var(--cb);border-radius:10px;
-  padding:10px 12px;flex:1;
+  padding:8px 10px;flex:1;margin-bottom:20px;
 }
-.tnc-title{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:7px;}
-.tnc-list{list-style:none;display:flex;flex-direction:column;gap:5px;}
-.tnc-list li{font-size:.67rem;color:var(--mid);line-height:1.4;display:flex;gap:6px;}
+.tnc-title{font-family:'Montserrat';font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:5px;}
+.tnc-list{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.tnc-list li{font-size:.64rem;color:var(--mid);line-height:1.4;display:flex;gap:6px;}
 .tnc-list li::before{content:"•";color:var(--purple);font-weight:700;flex-shrink:0;}
 
 /* GST note */
@@ -217,6 +234,75 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .slide-counter{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Montserrat';font-size:.63rem;font-weight:700;color:rgba(26,0,64,.28);letter-spacing:1.5px;z-index:10;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .page {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+  }
+  .col-packages {
+    padding: 24px 20px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(26,0,64,.10);
+    order: 1;
+  }
+  .col-services {
+    padding: 16px 20px;
+    order: 2;
+    border-right: none;
+    border-bottom: 1px solid rgba(26,0,64,.10);
+  }
+  .col-payment {
+    padding: 16px 20px 24px;
+    order: 3;
+  }
+  .urgency-banner { flex-direction: column; gap: 8px; text-align: center; }
+  .ub-left { flex-direction: column; align-items: center; }
+  .pkg-card { padding: 16px; }
+  .price-now-val { font-size: 1.6rem; }
+  .qr-row { grid-template-columns: 1fr 1fr; }
+  .qr-img { width: 90px; height: 90px; }
+  .pay-rows { gap: 4px; }
+  .service-list { max-height: none; overflow: visible; }
+  .tnc-list li { font-size: .65rem; }
+  .gst-note { margin-bottom: 60px; }
+}
 </style>
 </head>
 <body>
@@ -230,7 +316,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   <div class="col-packages">
 
     <div class="top-row">
-      <div class="logo-wrap"><img src="ASMI Logo.png" alt="ASMI Career"></div>
+      <div class="logo-wrap"><img src="asmi-logo.png" alt="ASMI Career"></div>
       <div class="step-label">Step 6 of 6 — Register</div>
     </div>
 
@@ -257,14 +343,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-prices">
         <div class="price-now">
           <span class="price-now-lbl">Till 31st May</span>
-          <span class="price-now-val">₹30,000</span>
+          <span class="price-now-val" id="meritPriceNow">₹30,000</span>
         </div>
         <div class="price-later">
           <span class="price-later-lbl">After 31st May</span>
-          <span class="price-later-val">₹35,000</span>
+          <span class="price-later-val" id="meritPriceLater">₹35,000</span>
         </div>
       </div>
-      <span class="saving-pill">Save ₹5,000 if registered before 31st May</span>
+      <span class="saving-pill" id="meritSaving">Save ₹5,000 if registered before 31st May</span>
       <div class="pkg-note">For students admitted via general merit / category cutoffs. Covers MH State + MCC counselling.</div>
     </div>
 
@@ -274,20 +360,18 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-name">Complete Medical Admission Counselling<br>NRI or Management Quota</div>
       <div class="pkg-prices">
         <div class="price-now">
-          <span class="price-now-lbl">Flat Fee</span>
-          <span class="price-now-val">₹60,000</span>
+          <span class="price-now-lbl">Till 31st May</span>
+          <span class="price-now-val" id="nriPriceNow">₹60,000</span>
+        </div>
+        <div class="price-later">
+          <span class="price-later-lbl">After 31st May</span>
+          <span class="price-later-val" id="nriPriceLater" style="text-decoration:line-through;">₹70,000</span>
         </div>
       </div>
-      <span class="saving-pill">No deadline — same price anytime</span>
+      <span class="saving-pill" id="nriSaving">Save ₹10,000 if registered before 31st May</span>
       <div class="pkg-note">For students pursuing NRI quota or management quota seats in private / deemed colleges.</div>
     </div>
 
-    <!-- Extra state note -->
-    <div class="extra-note">
-      <strong>Add-on:</strong> Additional state or process form filling — <strong>₹5,000 per state.</strong>
-      MH State &amp; MCC form filling is <strong>included</strong> in the above packages.
-      No extra charge for counselling or advisory services.
-    </div>
 
   </div>
 
@@ -364,10 +448,6 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
     </div>
 
-    <div class="nr-notice">
-      ⚠️ The registration amount is non-refundable and non-transferable.
-    </div>
-
   </div>
 
   <!-- ════ COL 3: PAYMENT ════ -->
@@ -378,19 +458,19 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pay-rows">
         <div class="pay-row">
           <span class="pay-key">Account Name</span>
-          <span class="pay-val">ASMI Youth Career Advisor LLP</span>
+          <span class="pay-val" id="payAccountName">ASMI Youth Career Advisor LLP</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">Account Number</span>
-          <span class="pay-val">50200030649290</span>
+          <span class="pay-val" id="payAccountNo">50200030649290</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">IFSC Code</span>
-          <span class="pay-val">HDFC0001274</span>
+          <span class="pay-val" id="payIfsc">HDFC0001274</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">UPI</span>
-          <span class="pay-val upi">asmicareer@ybl</span>
+          <span class="pay-val upi" id="payUpi">asmicareer@ybl</span>
         </div>
         <div class="pay-row">
           <span class="pay-key">Also Accepts</span>
@@ -405,19 +485,17 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="qr-label">Registration Form</div>
         <div class="qr-img">
           <!-- Replace src with actual registration QR image -->
-          <img src="qr_registration.png" alt="Registration QR"
-               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Registration QR</div>'">
+          <img id="qrRegImg" src="qr_registration.png" alt="Registration QR">
         </div>
-        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to fill form</div>
+        <div class="qr-scan">Scan to fill form</div>
       </div>
       <div class="qr-box">
         <div class="qr-label">Payment</div>
         <div class="qr-img">
           <!-- Replace src with actual payment QR image -->
-          <img src="qr_payment.png" alt="Payment QR"
-               onerror="this.parentNode.innerHTML='<div class=\'qr-placeholder\'>Payment QR</div>'">
+          <img id="qrPayImg" src="qr_payment.png" alt="Payment QR">
         </div>
-        <div style="font-size:.6rem;color:var(--soft);text-align:center;font-family:Montserrat;font-weight:700;">Scan to pay</div>
+        <div class="qr-scan">Scan to pay</div>
       </div>
     </div>
 
@@ -426,14 +504,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="contact-row">
         <span class="contact-icon">📍</span>
         <div>
-          <div class="contact-val">42, A Wing, Silver Astra Building</div>
+          <div class="contact-val" id="branchAddress">42, A Wing, Silver Astra Building</div>
           <div class="contact-sub">JB Nagar Circle, Andheri East, Mumbai</div>
         </div>
       </div>
       <div class="contact-row">
         <span class="contact-icon">📞</span>
         <div>
-          <div class="contact-val">7410019077</div>
+          <div class="contact-val" id="branchContact">7410019077</div>
           <div class="contact-sub">Central Helpline</div>
         </div>
       </div>
@@ -450,12 +528,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
     <div class="tnc">
       <div class="tnc-title">Terms &amp; Conditions</div>
       <ul class="tnc-list">
-        <li>Registration amount is <strong>non-refundable</strong> and <strong>non-transferable</strong> under any circumstances.</li>
-        <li>MH State &amp; MCC form filling included. All other states at ₹5,000/state extra.</li>
-        <li>No additional charges for counselling, advisory, or helpline services.</li>
-        <li>All charges are <strong>inclusive of GST</strong>.</li>
-        <li>Early bird rate of ₹30,000 valid only till 31st May. ₹35,000 applies after.</li>
-        <li>NRI / Management package is a flat ₹60,000 with no date-based variation.</li>
+        <li>Registration amount is non-refundable and non-transferable under any circumstances</li>
+        <li>All charges are inclusive of GST</li>
+        <li>Early bird rates valid till 31st May only — standard rates apply from 1st June</li>
+        <li>Additional state or process form filling charged at ₹5,000 per state (not included in package)</li>
+        <li>ASMI reserves the right to assign counsellors based on branch availability</li>
       </ul>
     </div>
 
@@ -465,9 +542,123 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 
 </div><!-- /page -->
 
-<div class="slide-counter">SLIDE 6 OF 6</div>
+<nav class="slide-nav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <span class="snav-label">SLIDE 6 OF 6</span>
+  <span class="snav-btn dim">→</span>
+</nav>
 
 <script>
+// ── Session helper ───────────────────────────────────────────────
+function getSess(){ try{ return JSON.parse(sessionStorage.getItem('asmi')||'{}'); }catch(e){ return {}; } }
+
+// ── BRANCH CONFIG ──────────────────────────────────────────────
+// Replace all PLACEHOLDER values with real data per branch
+const BRANCH_CONFIG = {
+  // Group A: Mumbai (Andheri), Thane, Online
+  'Online':  buildBranchConfig('A'),
+  'Andheri': buildBranchConfig('A'),
+  'Thane':   buildBranchConfig('A'),
+  // Group B: Pune
+  'Pune':    buildBranchConfig('B'),
+  // Group C: Kolhapur
+  'Kolhapur':buildBranchConfig('C'),
+  // Group D: Sangli
+  'Sangli':  buildBranchConfig('D'),
+  // Group E: Sambhajinagar
+  'Sambhajinagar': buildBranchConfig('E'),
+};
+
+function buildBranchConfig(group){
+  const configs = {
+    A: {
+      meritBefore:  30000,
+      meritAfter:   35000,
+      nriBefore:    60000,
+      nriAfter:     70000,
+      accountName:  'ASMI Youth Career Advisor LLP',
+      accountNo:    '50200030649290',
+      ifsc:         'HDFC0001274',
+      upi:          'asmicareer@ybl',
+      address:      '42, A Wing, Silver Astra Building, JB Nagar Circle, Andheri East, Mumbai',
+      contact:      '7410019077',
+      qrReg:        'qr_registration.png',
+      qrPay:        'qr_payment.png',
+    },
+    B: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Pune Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_pune.png',
+      qrPay:        'qr_pay_pune.png',
+    },
+    C: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Kolhapur Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_kolhapur.png',
+      qrPay:        'qr_pay_kolhapur.png',
+    },
+    D: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Sangli Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_sangli.png',
+      qrPay:        'qr_pay_sangli.png',
+    },
+    E: {
+      meritBefore:  'PLACEHOLDER',
+      meritAfter:   'PLACEHOLDER',
+      nriBefore:    'PLACEHOLDER',
+      nriAfter:     'PLACEHOLDER',
+      accountName:  'PLACEHOLDER',
+      accountNo:    'PLACEHOLDER',
+      ifsc:         'PLACEHOLDER',
+      upi:          'PLACEHOLDER',
+      address:      'PLACEHOLDER — Sambhajinagar Branch Address',
+      contact:      'PLACEHOLDER',
+      qrReg:        'qr_reg_sambhajinagar.png',
+      qrPay:        'qr_pay_sambhajinagar.png',
+    },
+  };
+  return configs[group];
+}
+
+// Get active branch config — falls back to Group A if branch unknown
+function getBranchConfig(){
+  const sess = getSess();
+  const branch = sess.branch || 'Online';
+  return BRANCH_CONFIG[branch] || BRANCH_CONFIG['Online'];
+}
+
+// ── Nav wiring ──────────────────────────────────────────────────
+(function(){
+  const sess = (() => { try { return JSON.parse(sessionStorage.getItem('asmi') || '{}'); } catch(e) { return {}; } })();
+  const token = sess.token || new URLSearchParams(location.search).get('token') || '';
+  document.getElementById('navPrev').href = 'slide5_problems.html?token=' + encodeURIComponent(token);
+})();
+
 // ── Days left counter ────────────────────────────────────────────
 function updateDaysLeft(){
   const deadline = new Date('2026-05-31T23:59:59');
@@ -478,10 +669,71 @@ function updateDaysLeft(){
     el.textContent = diff;
   } else {
     el.textContent = '0';
+    // Urgency banner
     document.querySelector('.urgency-banner').style.background = 'linear-gradient(135deg,#64748b,#475569)';
     document.querySelector('.ub-text').textContent = 'Early Bird Price Expired';
     document.querySelector('.ub-sub').textContent = 'Standard rate of ₹35,000 now applies';
+    // NRI card — promote ₹70,000 to current price, grey out early bird messaging
+    const nriCard = document.querySelector('.pkg-card.nri');
+    if(nriCard){
+      const nowLbl  = nriCard.querySelector('.price-now-lbl');
+      const nowVal  = nriCard.querySelector('.price-now-val');
+      const laterEl = nriCard.querySelector('.price-later');
+      const pill    = nriCard.querySelector('.saving-pill');
+      if(nowLbl)  nowLbl.textContent = 'Current Price';
+      if(nowVal)  nowVal.textContent = '₹70,000';
+      if(laterEl) laterEl.style.display = 'none';
+      if(pill){
+        pill.textContent = 'Early bird period has ended';
+        pill.style.background = 'rgba(100,116,139,.15)';
+        pill.style.color = '#64748b';
+        pill.style.borderColor = 'rgba(100,116,139,.3)';
+      }
+    }
   }
+}
+
+// ── Apply branch-specific pricing and payment details ────────────
+function applyBranchConfig(){
+  const cfg = getBranchConfig();
+
+  // ── MERIT PACKAGE ──
+  document.getElementById('meritPriceNow').textContent =
+    cfg.meritBefore !== 'PLACEHOLDER' ? `₹${cfg.meritBefore.toLocaleString('en-IN')}` : '₹ TBD';
+  document.getElementById('meritPriceLater').textContent =
+    cfg.meritAfter  !== 'PLACEHOLDER' ? `₹${cfg.meritAfter.toLocaleString('en-IN')}` : '₹ TBD';
+
+  if(cfg.meritBefore !== 'PLACEHOLDER' && cfg.meritAfter !== 'PLACEHOLDER'){
+    const saving = cfg.meritAfter - cfg.meritBefore;
+    document.getElementById('meritSaving').textContent = `Save ₹${saving.toLocaleString('en-IN')} if registered before 31st May`;
+  }
+
+  // ── NRI PACKAGE ──
+  document.getElementById('nriPriceNow').textContent =
+    cfg.nriBefore !== 'PLACEHOLDER' ? `₹${cfg.nriBefore.toLocaleString('en-IN')}` : '₹ TBD';
+  document.getElementById('nriPriceLater').textContent =
+    cfg.nriAfter  !== 'PLACEHOLDER' ? `₹${cfg.nriAfter.toLocaleString('en-IN')}` : '₹ TBD';
+
+  if(cfg.nriBefore !== 'PLACEHOLDER' && cfg.nriAfter !== 'PLACEHOLDER'){
+    const nriSaving = cfg.nriAfter - cfg.nriBefore;
+    document.getElementById('nriSaving').textContent = `Save ₹${nriSaving.toLocaleString('en-IN')} if registered before 31st May`;
+  }
+
+  // ── PAYMENT DETAILS ──
+  document.getElementById('payAccountName').textContent = cfg.accountName;
+  document.getElementById('payAccountNo').textContent   = cfg.accountNo;
+  document.getElementById('payIfsc').textContent        = cfg.ifsc;
+  document.getElementById('payUpi').textContent         = cfg.upi;
+
+  // ── CONTACT & ADDRESS ──
+  document.getElementById('branchAddress').textContent = cfg.address;
+  document.getElementById('branchContact').textContent = cfg.contact;
+
+  // ── QR CODES ──
+  const qrReg = document.getElementById('qrRegImg');
+  const qrPay = document.getElementById('qrPayImg');
+  if(qrReg) qrReg.src = cfg.qrReg;
+  if(qrPay) qrPay.src = cfg.qrPay;
 }
 
 // ── Animate service cards in ─────────────────────────────────────
@@ -492,8 +744,30 @@ function animateServices(){
   });
 }
 
+// Store branch in session (populated by init() once Apps Script response is wired)
+if(typeof STUDENT !== 'undefined' && STUDENT.branch){
+  const s = getSess(); s.branch = STUDENT.branch; sessionStorage.setItem('asmi', JSON.stringify(s));
+}
+applyBranchConfig();
 updateDaysLeft();
 document.fonts.ready.then(animateServices);
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e){
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  const prev = document.getElementById('navPrev');
+  const next = document.getElementById('navNext');
+  if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){
+    if(next && next.href && next.href !== '#' && next.style.pointerEvents !== 'none'){
+      e.preventDefault(); next.click();
+    }
+  }
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){
+    if(prev && prev.href && prev.href !== '#' && prev.style.pointerEvents !== 'none'){
+      e.preventDefault(); prev.click();
+    }
+  }
+});
 </script>
 
 </body>

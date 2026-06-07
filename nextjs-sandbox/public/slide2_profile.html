@@ -208,6 +208,63 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   from{opacity:0;transform:translateY(18px);}
   to{opacity:1;transform:translateY(0);}
 }
+
+/* ── SLIDE NAV ── */
+.slide-nav{position:fixed;bottom:0;left:0;right:0;z-index:500;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:rgba(26,0,64,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.07);}
+.snav-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;transition:background .18s,color .18s;}
+.snav-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
+.snav-btn.dim{opacity:.22;pointer-events:none;}
+.snav-label{font-family:'Montserrat',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);}
+.snav-center{display:flex;align-items:center;gap:12px;}
+.snav-pdf{background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.25);color:#FFD700;font-family:'Montserrat',sans-serif;font-size:.62rem;font-weight:800;padding:5px 12px;border-radius:20px;cursor:pointer;letter-spacing:.5px;transition:background .18s;}
+.snav-pdf:hover{background:rgba(255,215,0,0.22);}
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  .page {
+    height: auto;
+    min-height: 100vh;
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .slide-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    z-index: 999;
+    height: 52px;
+  }
+  .snav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  body {
+    padding-bottom: 60px;
+  }
+  .left {
+    padding: 28px 24px 16px;
+    order: 1;
+  }
+  .right {
+    padding: 16px 24px 28px;
+    order: 2;
+    justify-content: flex-start;
+  }
+  .logo-wrap img { height: 64px; }
+  .main-heading { font-size: 1.9rem; }
+  .engine-box { padding: 14px 16px; }
+  .cta-btn { width: 100%; justify-content: center; }
+  .profile-card {
+    padding: 18px 20px;
+  }
+  .pc-val.big { font-size: 1.3rem; }
+  .loading-state { padding: 40px 20px; }
+}
 </style>
 </head>
 <body>
@@ -220,9 +277,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   <!-- ══ LEFT ══ -->
   <div class="left">
     <div class="logo-wrap">
-      <img src="ASMI Logo.png" alt="ASMI Career">
+      <img src="asmi-logo.png" alt="ASMI Career">
     </div>
 
+    <div id="welcomeName" style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.6rem;color:#1a0040;margin-bottom:8px;animation:fadeUp .5s ease both;">Welcome</div>
     <div class="step-label">Step 2 of 6 — Your Profile</div>
 
     <div class="main-heading">Your Medical<br>Admission Analysis<br>is ready.</div>
@@ -291,14 +349,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <span class="pc-key">Category</span>
         <div><span class="cat-badge" id="categoryVal">—</span></div>
       </div>
-      <div class="pc-row">
-        <span class="pc-key">Coaching</span>
-        <span class="pc-val" id="coachingVal">—</span>
-      </div>
-      <div class="pc-row">
-        <span class="pc-key">Max Budget</span>
-        <span class="pc-val" id="maxBudgetVal">—</span>
-      </div>
+
       <div class="pc-row top-align">
         <span class="pc-key top">Selected Courses</span>
         <div class="pills-wrap" id="coursePills"></div>
@@ -312,11 +363,15 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
   </div>
 </div>
 
-<div class="slide-counter">SLIDE 2 OF 6</div>
+<nav class="slide-nav">
+  <a class="snav-btn" id="navPrev" href="#">←</a>
+  <span class="snav-label" id="snavLabel">SLIDE 2 OF 6</span>
+  <a class="snav-btn" id="navNext" href="#">→</a>
+</nav>
 
 <script>
 // ── SET YOUR APPS SCRIPT URL HERE ──────────────────────────────
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvzYp6YrqL0Wzqzv6b2n6RTyByQxJNMEGWsdZdop1d9IsMlq0mboJmPdISUfalUkkxlg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
 // ──────────────────────────────────────────────────────────────
 
 const BUDGET_MAX = {
@@ -332,6 +387,8 @@ const BUDGET_LABELS = {
   'NRI / Management 40-50L': 'NRI / Mgmt (₹40–60L)',
 };
 
+function getSess(){try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};}}
+
 function showError(msg) {
   document.getElementById('loadingState').style.display = 'none';
   const err = document.getElementById('errorState');
@@ -344,19 +401,11 @@ function populate(data) {
   document.getElementById('profileCard').classList.add('visible');
 
   document.getElementById('tokenVal').textContent    = data.token    || '—';
+  document.getElementById('welcomeName').textContent = data.name ? 'Welcome, ' + data.name : 'Welcome';
   document.getElementById('scoreVal').textContent    = data.score    || '—';
   document.getElementById('categoryVal').textContent = data.category || '—';
-  document.getElementById('coachingVal').textContent = data.coaching || '—';
-
-  // Max budget — highest bucket selected
+  // Budget pills (for pills section below)
   const budgetList = (data.budget || '').split(',').map(b => b.trim()).filter(Boolean);
-  let maxLabel = '—';
-  for (const key of Object.keys(BUDGET_MAX)) {
-    if (budgetList.some(b => b.includes(key.split(' ')[0]))) {
-      maxLabel = BUDGET_MAX[key]; break;
-    }
-  }
-  document.getElementById('maxBudgetVal').textContent = maxLabel;
 
   // Course pills
   const cpWrap = document.getElementById('coursePills');
@@ -394,6 +443,18 @@ function populate(data) {
 const params = new URLSearchParams(window.location.search);
 const token  = params.get('token') || '';
 
+const isCounsel = getSess().mode === 'counsel';
+document.getElementById('navPrev').href = isCounsel
+  ? '#'
+  : 'slide1_welcome.html?token=' + encodeURIComponent(token);
+document.getElementById('navNext').href =
+  'slide3_options.html?token=' + encodeURIComponent(token) + (isCounsel ? '&mode=counsel' : '');
+if(isCounsel){
+  document.getElementById('navPrev').style.opacity='0.2';
+  document.getElementById('navPrev').style.pointerEvents='none';
+  document.getElementById('snavLabel').textContent='SLIDE 1 OF 3 — COUNSEL';
+}
+
 if (!token) {
   showError('No token in URL. Open this page from the dashboard link in the Google Sheet.');
 } else {
@@ -408,6 +469,23 @@ if (!token) {
       console.error(err);
     });
 }
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e){
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+  const prev = document.getElementById('navPrev');
+  const next = document.getElementById('navNext');
+  if(e.key === 'ArrowRight' || e.key === 'ArrowUp'){
+    if(next && next.href && next.href !== '#' && next.style.pointerEvents !== 'none'){
+      e.preventDefault(); next.click();
+    }
+  }
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowDown'){
+    if(prev && prev.href && prev.href !== '#' && prev.style.pointerEvents !== 'none'){
+      e.preventDefault(); prev.click();
+    }
+  }
+});
 </script>
 
 </body>
