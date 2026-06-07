@@ -301,7 +301,7 @@ export default function MedicalPortal() {
                   <li><a href="/inquiry">Counselling</a></li>
                   <li><a href="#packages">Packages</a></li>
                   <li><a href="#tools">Services</a></li>
-                  <li><a href="/tools/events">News & Events</a></li>
+                  <li><a href="#events">News & Events</a></li>
                   <li><a href="#about-us">About Us</a></li>
                   <li><a href="/inquiry">Contact Us</a></li>
               </ul>
@@ -331,7 +331,7 @@ export default function MedicalPortal() {
           <a href="/inquiry">Counselling</a>
           <a href="#packages">Packages</a>
           <a href="#tools">Services</a>
-          <a href="/tools/events">News & Events</a>
+          <a href="#events">News & Events</a>
           <a href="#about-us">About Us</a>
           <a href="/inquiry">Contact Us</a>
           <a href="/inquiry" className="drawer-cta">Book Free Session →</a>
@@ -2102,12 +2102,17 @@ export default function MedicalPortal() {
                   </div>
       
                   <div>
-                      <span className="footer-col-header">Explore</span>
-                      <a href="#" className="footer-link">Universities</a>
-                      <a href="#" className="footer-link">Updates & Events</a>
-                      <a href="#" className="footer-link">Success Stories</a>
-                      <a href="#" className="footer-link">FAQs</a>
-                      <a href="#" className="footer-link">Webinars & Video Guides</a>
+                    <span className="footer-col-header">Explore</span>
+                    <a href="/colleges" className="footer-link">Universities</a>
+                    <a href="#events" className="footer-link">Updates &amp; Events</a>
+                    <a href="#dreams-heading" className="footer-link">Success Stories</a>
+                    <a href="#faqs" className="footer-link">FAQs</a>
+                    <a
+                      href="https://www.youtube.com/@ASMICareervideo"
+                      className="footer-link"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >Webinars &amp; Video Guides</a>
                   </div>
       
                   <div>
