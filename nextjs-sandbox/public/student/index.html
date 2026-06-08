@@ -2032,7 +2032,7 @@
       colleges.slice(0, 5).forEach(c => {
         const name = c.college_name || c.name || 'Unknown College';
         const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
-        const rankVal = c.closing_rank || c.cutoff || c.rank || '—';
+        const rankVal = c.closing_rank || c.cutoff || c.rank || c.cr || '—';
         const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
         
         const row = document.createElement('div');
@@ -2052,7 +2052,7 @@
       colleges.forEach(c => {
         const name = c.college_name || c.name || 'Unknown College';
         const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
-        const rankVal = c.closing_rank || c.cutoff || c.rank || '—';
+        const rankVal = c.closing_rank || c.cutoff || c.rank || c.cr || '—';
         const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
 
         const card = document.createElement('div');
