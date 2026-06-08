@@ -6,6 +6,16 @@ import { motion } from 'framer-motion';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
+const engineeringNavLinks = [
+  { label: 'Colleges', href: '/engineering/colleges' },
+  { label: 'Counselling', href: '/engineering/counselling' },
+  { label: 'Packages', href: '/engineering#packages' },
+  { label: 'Services', href: '/engineering/services' },
+  { label: 'News & Events', href: '/engineering#events' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Contact Us', href: '/contact' },
+];
+
 export default function EngineeringPortal() {
   const [openFaq, setOpenFaq] = useState(null);
   const [events, setEvents] = useState([]);
@@ -120,15 +130,7 @@ export default function EngineeringPortal() {
 
   return (
     <>
-      <Nav links={[
-        { label: 'Colleges', href: '/colleges' },
-        { label: 'Counselling', href: '/counselling' },
-        { label: 'Packages', href: '#packages' },
-        { label: 'Services', href: '/services' },
-        { label: 'News & Events', href: '#events' },
-        { label: 'About Us', href: '/about' },
-        { label: 'Contact Us', href: '/contact' },
-      ]} />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
       
       <div className="engineeringPortal">
       
@@ -907,7 +909,7 @@ export default function EngineeringPortal() {
       
       </div>
       
-      <Footer tagline="Guiding Futures, Building Engineers" />
+      <Footer tagline="Guiding Futures, Building Engineers" isEngineering={true} />
     </>
   );
 }

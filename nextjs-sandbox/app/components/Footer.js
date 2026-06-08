@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import './footer.css';
 
-export default function Footer({ tagline = "Guiding Futures, Building Doctors" }) {
+export default function Footer({ tagline = "Guiding Futures, Building Doctors", isEngineering = false }) {
   return (
     <footer className="footer" role="contentinfo">
       <div className="footer-inner">
@@ -64,20 +64,20 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors" }
   
           <div>
             <span className="footer-col-header">Get</span>
-            <Link href="/counselling" className="footer-link">Counselling</Link>
-            <Link href="/services" className="footer-link">Services</Link>
-            <Link href="/medical#packages" className="footer-link">Packages</Link>
-            <Link href="/tools/cutoff-explorer" className="footer-link">Cutoff Explorer</Link>
-            <Link href="/tools/college-predictor" className="footer-link">College Predictor</Link>
-            <Link href="/resources" className="footer-link">Resources</Link>
+            <Link href={isEngineering ? "/engineering/counselling" : "/counselling"} className="footer-link">Counselling</Link>
+            <Link href={isEngineering ? "/engineering/services" : "/services"} className="footer-link">Services</Link>
+            <Link href={isEngineering ? "/engineering#packages" : "/medical#packages"} className="footer-link">Packages</Link>
+            <Link href={isEngineering ? "/tools/engineering-cutoff-explorer" : "/tools/cutoff-explorer"} className="footer-link">Cutoff Explorer</Link>
+            <Link href={isEngineering ? "/tools/engineering-college-predictor" : "/tools/college-predictor"} className="footer-link">College Predictor</Link>
+            <Link href={isEngineering ? "/engineering/resources" : "/resources"} className="footer-link">Resources</Link>
           </div>
   
           <div>
             <span className="footer-col-header">Explore</span>
-            <Link href="/colleges" className="footer-link">Universities</Link>
-            <Link href="/medical#events" className="footer-link">Updates &amp; Events</Link>
-            <Link href="/medical#dreams-heading" className="footer-link">Success Stories</Link>
-            <Link href="/medical#faqs" className="footer-link">FAQs</Link>
+            <Link href={isEngineering ? "/engineering/colleges" : "/colleges"} className="footer-link">Universities</Link>
+            <Link href={isEngineering ? "/engineering#events" : "/medical#events"} className="footer-link">Updates &amp; Events</Link>
+            <Link href={isEngineering ? "/engineering#dreams-heading" : "/medical#dreams-heading"} className="footer-link">Success Stories</Link>
+            <Link href={isEngineering ? "/engineering#faqs" : "/medical#faqs"} className="footer-link">FAQs</Link>
             <a
               href="https://www.youtube.com/@ASMICareervideo"
               className="footer-link"

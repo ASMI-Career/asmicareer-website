@@ -13,7 +13,7 @@ const defaultLinks = [
   { label: 'Contact Us', href: '/contact' },
 ];
 
-export default function Nav({ links = defaultLinks }) {
+export default function Nav({ links = defaultLinks, ctaHref = "/inquiry" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -48,7 +48,7 @@ export default function Nav({ links = defaultLinks }) {
               </ul>
       
               <div className="nav-cta">
-                  <Link href="/inquiry" aria-label="Book a free counselling session">
+                  <Link href={ctaHref} aria-label="Book a free counselling session">
                       Book Free Session
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
                           <path d="M2 6.5H11M7.5 3L11 6.5L7.5 10" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"/>
@@ -70,7 +70,7 @@ export default function Nav({ links = defaultLinks }) {
           {links.map((link, i) => (
               <Link key={i} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</Link>
           ))}
-          <Link href="/inquiry" className="drawer-cta" onClick={() => setMenuOpen(false)}>Book Free Session →</Link>
+          <Link href={ctaHref} className="drawer-cta" onClick={() => setMenuOpen(false)}>Book Free Session →</Link>
       </div>
     </>
   );
