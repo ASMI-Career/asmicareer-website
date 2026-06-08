@@ -220,6 +220,11 @@
         throw new Error('One of the networks responses was not ok');
       }
 
+      const jsonStudent = await resStudent.json();
+      if (jsonStudent.error) {
+         throw new Error('Student Dashboard Error: ' + jsonStudent.error);
+      }
+
       saveBtn.innerHTML = '✓ Saved!';
       saveBtn.style.background = '#15803d'; // Success green
       saveBtn.style.borderColor = '#22c55e';
