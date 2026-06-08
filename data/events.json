@@ -1,14 +1,5 @@
 [
   {
-    "type": "deadline",
-    "tag": "URGENT",
-    "title": "BVDU CET (BPT) — Last Date to Apply (Revised)",
-    "date": "2026-06-21",
-    "display_date": "21st June 2026",
-    "link": "https://bvducet.bharatividyapeeth.edu/",
-    "cta": "Apply Now"
-  },
-  {
     "type": "exam",
     "tag": "EXAM DATE",
     "title": "IAT Exam Date",
@@ -16,6 +7,66 @@
     "display_date": "7th June 2026",
     "link": null,
     "cta": null
+  },
+  {
+    "type": "general",
+    "tag": "NOTICE",
+    "title": "RE-NEET 2026 City Intimation Slip Live",
+    "date": "2026-06-07",
+    "display_date": "7th June 2026",
+    "link": "https://examinationservices.nic.in/AdmitCard/AuthForCity/Login?enc=DJ8reokIYhe/x0Hlb6GKa5XSzGUPsZIi2LhCU/OXDNg=",
+    "cta": "Download",
+    "pdf": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/06/202606071045836990.pdf"
+  },
+  {
+    "type": "exam",
+    "tag": "NOTICE",
+    "title": "IISER 2026 — Answer Key Display",
+    "date": "2026-06-07",
+    "display_date": "7th June 2026",
+    "link": "https://iiseradmission.in/",
+    "cta": "View",
+    "pdf": null
+  },
+  {
+    "type": "general",
+    "tag": "RESULT",
+    "title": "MHT CET PCB Session Result Available",
+    "date": "2026-06-08",
+    "display_date": "Available Now",
+    "link": "https://auth-2026.maharashtracet.org/realms/mh-cet/protocol/openid-connect/auth?client_id=central-launchpad&redirect_uri=https%3A%2F%2Fportal-2026.maharashtracet.org%2F&state=a5e7335f-46fa-474e-8537-9490778df53a&response_mode=fragment&response_type=code&scope=openid&nonce=27d57509-3bd6-4095-be21-86e2a6b70514",
+    "cta": "Check Result",
+    "pdf": null
+  },
+  {
+    "type": "exam",
+    "tag": "NOTICE",
+    "title": "IISER 2026 — Portal opens for filing Objections",
+    "date": "2026-06-09",
+    "display_date": "9th June 2026",
+    "link": "https://iiseradmission.in/",
+    "cta": "Go to Portal",
+    "pdf": null
+  },
+  {
+    "type": "deadline",
+    "tag": "URGENT",
+    "title": "IISER 2026 — Portal closes for filing Objections",
+    "date": "2026-06-13",
+    "display_date": "13th June 2026",
+    "link": "https://iiseradmission.in/",
+    "cta": null,
+    "pdf": null
+  },
+  {
+    "type": "general",
+    "tag": "NOTICE",
+    "title": "IISER 2026 — Window for Selective Information Upload",
+    "date": "2026-06-13",
+    "display_date": "13th June - 21st June 2026",
+    "link": "https://iiseradmission.in/",
+    "cta": null,
+    "pdf": null
   },
   {
     "type": "exam",
@@ -27,6 +78,15 @@
     "cta": "Download Soon"
   },
   {
+    "type": "deadline",
+    "tag": "URGENT",
+    "title": "BVDU CET (BPT) — Last Date to Apply (Revised)",
+    "date": "2026-06-21",
+    "display_date": "21st June 2026",
+    "link": "https://bvducet.bharatividyapeeth.edu/",
+    "cta": "Apply Now"
+  },
+  {
     "type": "exam",
     "tag": "EXAM DATE",
     "title": "Re-NEET UG 2026 — Exam Date",
@@ -34,6 +94,16 @@
     "display_date": "21st June 2026",
     "link": null,
     "cta": null
+  },
+  {
+    "type": "deadline",
+    "tag": "URGENT",
+    "title": "IISER 2026 — Last date for Selective Document Upload",
+    "date": "2026-06-21",
+    "display_date": "21st June 2026",
+    "link": "https://iiseradmission.in/",
+    "cta": null,
+    "pdf": null
   },
   {
     "type": "deadline",
