@@ -33,8 +33,7 @@ export default function EngineeringCollegesDirectory() {
 
   // Fetch data
   useEffect(() => {
-    // Ideally this would be an engineering-specific colleges json
-    fetch('/data/colleges.json')
+    fetch('/data/engineering-colleges.json')
       .then((r) => r.json())
       .then((data) => {
         setAllColleges(data);
