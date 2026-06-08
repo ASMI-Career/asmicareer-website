@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.contact-page {
+  background: #00C8B4;
+  min-height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+
+/* Header */
+.contact-header {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 64px 24px 48px;
+  text-align: center;
+}
+
+.contact-eyebrow {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00A896;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.contact-headline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 900;
+  color: #0a1628;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.contact-sub {
+  font-size: 15px;
+  color: rgba(10, 22, 40, 0.6);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.contact-helpline {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 200, 180, 0.2);
+  border-radius: 50px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.contact-helpline-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #00A896;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact-helpline-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: #0a1628;
+  text-decoration: none;
+}
+
+.contact-helpline-wa {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #00C8B4;
+  text-decoration: none;
+  border-left: 1px solid rgba(0, 200, 180, 0.2);
+  padding-left: 12px;
+}
+
+/* Branch grid */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+}
+
+/* Branch card */
+.branch-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 200, 180, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.branch-card:hover {
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8px 32px rgba(0, 200, 180, 0.12);
+  transform: translateY(-3px);
+}
+
+.branch-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.branch-city {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0a1628;
+  margin-bottom: 2px;
+}
+
+.branch-area {
+  font-size: 12px;
+  color: #00A896;
+  font-weight: 600;
+}
+
+.branch-num-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: rgba(0, 200, 180, 0.12);
+  line-height: 1;
+}
+
+.branch-address {
+  font-size: 12.5px;
+  color: rgba(10, 22, 40, 0.6);
+  line-height: 1.6;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(0, 200, 180, 0.08);
+}
+
+.branch-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.branch-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  transition: opacity 0.15s;
+}
+
+.branch-btn-call {
+  background: #0a1628;
+  color: #00C8B4;
+}
+
+.branch-btn-wa {
+  background: rgba(0, 200, 180, 0.1);
+  color: #00C8B4;
+  border: 1px solid rgba(0, 200, 180, 0.2);
+}
+
+.branch-btn:hover { opacity: 0.85; }
+
+.branch-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.branch-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(10, 22, 40, 0.5);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.branch-link:hover { color: #00C8B4; }
+
+.branch-link-primary {
+  color: #00C8B4;
+  font-size: 12px;
+}
+
+/* Central CTA */
+.contact-cta-strip {
+  background: linear-gradient(135deg, #0a1628, #00C8B4);
+  padding: 48px 24px;
+}
+
+.contact-cta-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.contact-cta-headline {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: #00C8B4;
+  margin-bottom: 6px;
+}
+
+.contact-cta-sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.contact-cta-btn {
+  background: #00C8B4;
+  color: #0a1628;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  padding: 14px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: 0 4px 20px rgba(0, 200, 180, 0.3);
+}
+
+.contact-cta-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contact-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .contact-grid { grid-template-columns: 1fr; padding: 0 20px 48px; }
+}
