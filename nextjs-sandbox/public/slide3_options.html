@@ -1349,6 +1349,15 @@ async function init(){
     if(!sess.score)    setSess('score',STUDENT.score);
     if(!sess.category) setSess('category',STUDENT.category);
     if(!sess.course)   setSess('course',(STUDENT.courses||'MBBS').split(',')[0].trim());
+    
+    // Load saved shortlist from backend if available and not already in session
+    if (STUDENT.shortlist || STUDENT.colleges) {
+      const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
+      if (!sess.shortlist || sess.shortlist.length === 0) {
+        setSess('shortlist', backendShortlist);
+        shortlist = backendShortlist;
+      }
+    }
     // Set MH course to student's first MH-compatible course
     const stuC=(STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
     mhCourse=stuC.find(c=>['MBBS','BDS','BPTH','BAMS','BHMS'].includes(c))||'MBBS';

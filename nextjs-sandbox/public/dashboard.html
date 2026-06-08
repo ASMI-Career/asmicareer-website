@@ -181,17 +181,44 @@
       const sess = JSON.parse(sessionStorage.getItem('asmi') || '{}');
       const shortlist = sess.shortlist || [];
 
-      const payload = new URLSearchParams();
-      payload.append('action', 'saveShortlist');
-      payload.append('token', token);
-      payload.append('shortlist', JSON.stringify(shortlist));
+      // 1. Save to Sales Pitch Sheet (Registered Students)
+      const payloadSales = new URLSearchParams();
+      payloadSales.append('action', 'saveShortlist');
+      payloadSales.append('token', token);
+      payloadSales.append('shortlist', JSON.stringify(shortlist));
 
-      const response = await fetch(APPS_SCRIPT_URL, {
+      const reqSales = fetch(APPS_SCRIPT_URL, {
         method: 'POST',
-        body: payload
+        body: payloadSales
       });
 
-      if (!response.ok) throw new Error('Network response was not ok');
+      // 2. Save to Student Dashboard Sheet
+      const collegesList = shortlist.map(c => ({
+        name: c.n,
+        probability: c.probKey || c.prob || 'Likely',
+        cr: c.c || ''
+      }));
+
+      const STUDENT_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+      
+      const reqStudent = fetch(STUDENT_APPS_SCRIPT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'saveShortlist',
+          inquiry_token: token,
+          colleges: collegesList
+        })
+      });
+
+      // Wait for both to finish
+      const [resSales, resStudent] = await Promise.all([reqSales, reqStudent]);
+
+      if (!resSales.ok || !resStudent.ok) {
+        throw new Error('One of the networks responses was not ok');
+      }
 
       saveBtn.innerHTML = '✓ Saved!';
       saveBtn.style.background = '#15803d'; // Success green

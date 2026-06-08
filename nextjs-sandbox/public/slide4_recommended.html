@@ -1389,6 +1389,16 @@ async function init(){
     if(!sess.course)   {const s=getSess();s.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(s));}
     const s2=getSess();s2.token=STUDENT.token||token;sessionStorage.setItem('asmi',JSON.stringify(s2));
 
+    // Load saved shortlist from backend if available and not already in session
+    if (STUDENT.shortlist || STUDENT.colleges) {
+      const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
+      const currentSess = getSess();
+      if (!currentSess.shortlist || currentSess.shortlist.length === 0) {
+        currentSess.shortlist = backendShortlist;
+        sessionStorage.setItem('asmi', JSON.stringify(currentSess));
+      }
+    }
+
     // Populate left panel
     document.getElementById('lScore').textContent=activeScore()||'—';
     document.getElementById('lCat').textContent=activeCategory();
