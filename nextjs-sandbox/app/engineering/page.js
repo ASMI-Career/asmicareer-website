@@ -663,7 +663,7 @@ export default function EngineeringPortal() {
                       <span className="tool-icon" aria-hidden="true">📊</span>
                       <div className="tool-title">Rank Predictor</div>
                       <p className="tool-body">Enter your JEE rank and category. Instantly see every eligible college and branch across JoSAA, CSAB and state CETs.</p>
-                      <a href="/inquiry" className="tool-cta paid-cta">Get Access →</a>
+                      <a href="/engineering/inquiry" className="tool-cta paid-cta">Get Access →</a>
                   </div>
       
               </div>
@@ -695,7 +695,7 @@ export default function EngineeringPortal() {
                           <li>Document verification</li>
                           <li>Round-wise WhatsApp alerts</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/engineering/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card" data-pkg-animate>
@@ -711,7 +711,7 @@ export default function EngineeringPortal() {
                           <li>College fee & placement check</li>
                           <li>Complete document support</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/engineering/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card" data-pkg-animate>
@@ -901,7 +901,7 @@ export default function EngineeringPortal() {
               <h2 className="cta-headline animate" id="cta-heading">Take The First Step.</h2>
               <p className="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
               <div className="cta-buttons animate">
-                  <a href="/inquiry" className="cta-btn-primary">Book My Free Session →</a>
+                  <a href="/engineering/inquiry" className="cta-btn-primary">Book My Free Session →</a>
                   <a href="#" className="cta-btn-secondary">WhatsApp Us →</a>
               </div>
           </div>

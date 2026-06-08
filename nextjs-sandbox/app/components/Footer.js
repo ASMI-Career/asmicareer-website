@@ -88,8 +88,8 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors", 
   
           <div>
             <span className="footer-col-header">Company</span>
-            <Link href="/about" className="footer-link">About Us</Link>
-            <Link href="/contact" className="footer-link">Contact Us</Link>
+            <Link href={isEngineering ? "/engineering/about" : "/about"} className="footer-link">About Us</Link>
+            <Link href={isEngineering ? "/engineering/contact" : "/contact"} className="footer-link">Contact Us</Link>
             <Link href="/privacy-policy" className="footer-link">Privacy Policy</Link>
             <Link href="/terms" className="footer-link">Terms of Service</Link>
           </div>
