@@ -2315,7 +2315,7 @@
         margin-bottom: 8px;
         line-height: 1.4;
     }
-    .resource-& { font-size: 12px; color: rgba(26,0,64,0.55); line-height: 1.6; margin-bottom: 16px; }
+    .resource-body { font-size: 12px; color: rgba(26,0,64,0.55); line-height: 1.6; margin-bottom: 16px; }
     .resource-footer {
         display: flex;
         align-items: center;
@@ -2969,7 +2969,7 @@
         color: #1a0040;
         margin-bottom: 8px;
     }
-    .why-& {
+    .why-body {
         font-family: 'Open Sans', sans-serif;
         font-size: 14px;
         color: rgba(26,0,64,0.62);
@@ -3079,7 +3079,7 @@
         color: #FFD700;
         line-height: 1.2;
     }
-    .tool-& {
+    .tool-body {
         font-family: 'Open Sans', sans-serif;
         font-size: 14px;
         color: rgba(255,215,0,0.6);

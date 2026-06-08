@@ -8,6 +8,17 @@ import Footer from '../components/Footer';
 
 export default function EngineeringPortal() {
   const [openFaq, setOpenFaq] = useState(null);
+  const [events, setEvents] = useState([]);
+  
+  useEffect(() => {
+    fetch('/data/engineeringEvents.json')
+      .then(r => r.json())
+      .then(data => {
+        const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+        setEvents(sorted);
+      })
+      .catch(err => console.warn('Events feed unavailable:', err));
+  }, []);
   
   const uniTrackRef = useRef(null);
 
@@ -132,13 +143,13 @@ export default function EngineeringPortal() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   >
-                      <div className="hero-eyebrow" aria-label="India's smartest engineering admission platform">
+                      <div className="hero-eyebrow" aria-label="Maharashtra's smartest engineering admission platform">
                           <span className="eyebrow-dot" aria-hidden="true"></span>
-                          INDIA'S SMARTEST ENGINEERING ADMISSION PLATFORM
+                          MAHARASHTRA'S SMARTEST ENGINEERING ADMISSION PLATFORM
                       </div>
           
                       <h1 className="hero-h1" id="hero-heading">
-                          Asmi gets you the<br />
+                          ASMI gets you the<br />
                           branch you <span className="accent">deserve.</span>
                       </h1>
           
@@ -157,7 +168,7 @@ export default function EngineeringPortal() {
                               <span className="stat-lbl">Admissions done!</span>
                           </div>
                           <div className="hero-stat" role="listitem">
-                              <span className="stat-num">4.9 rating ★</span>
+                              <span className="stat-num" style={{ whiteSpace: 'nowrap' }}>4.9 rating ★</span>
                               <span className="stat-lbl">on google reviews</span>
                           </div>
                       </div>
@@ -239,35 +250,47 @@ export default function EngineeringPortal() {
               <div className="events-header">
                   <div className="events-title" id="events-heading">
                       <span className="events-title-dot" aria-hidden="true">●</span>
-                      News and events
+                      News &amp; Events
                   </div>
                   <a href="#" className="events-view-all">View all →</a>
               </div>
-              <div className="events-cards">
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-jee">JEE</span>
-                          <span className="event-time">2 hours ago</span>
+              <div className="events-track-wrapper" aria-label="Upcoming events">
+                  {events.length > 0 && (
+                      <div className="events-track">
+                          {[...events, ...events].map((ev, i) => {
+                              return (
+                                  <div className="event-card" key={i}>
+                                      <span className={`event-tag tag-${ev.type}`}>{ev.tag}</span>
+                                      <div className="event-date">{ev.display_date}</div>
+                                      <div className="event-headline">{ev.title}</div>
+                                      <div className="event-card-actions">
+                                          {ev.link && ev.cta && (
+                                              <a
+                                                  href={ev.link}
+                                                  className={`event-cta-btn${ev.type === 'asmi' ? ' asmi-btn' : ''}`}
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                              >
+                                                  {ev.cta} →
+                                              </a>
+                                          )}
+                                          {ev.pdf && (
+                                              <a
+                                                  href={ev.pdf}
+                                                  className="event-notice-btn"
+                                                  target="_blank"
+                                                  rel="noopener noreferrer"
+                                                  aria-label={`View official notice for ${ev.title}`}
+                                              >
+                                                  📄 View Notice
+                                              </a>
+                                          )}
+                                      </div>
+                                  </div>
+                              );
+                          })}
                       </div>
-                      <div className="event-headline">JEE Advanced 2026 Registration Open</div>
-                      <p className="event-body">Last date to apply is June 2nd, 2026. Don't miss the deadline.</p>
-                  </div>
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-urgent">URGENT</span>
-                          <span className="event-time">5 hours ago</span>
-                      </div>
-                      <div className="event-headline">JEE Main Session 2 Results Out</div>
-                      <p className="event-body">Check your scorecard now on the official NTA portal.</p>
-                  </div>
-                  <div className="event-card">
-                      <div className="event-card-top">
-                          <span className="event-tag tag-mhtcet">MHT-CET</span>
-                          <span className="event-time">Yesterday</span>
-                      </div>
-                      <div className="event-headline">MHT-CET 2026 Merit List Released</div>
-                      <p className="event-body">Download your merit list and prepare for CAP rounds.</p>
-                  </div>
+                  )}
               </div>
           </div>
       </section>
@@ -288,7 +311,7 @@ export default function EngineeringPortal() {
               </div>
               <div className="unis-track" ref={uniTrackRef} id="uniTrack" role="list">
                   <div className="uni-card" role="listitem">
-                      <div className="uni-img">
+                      <div className="uni-img" style={{ backgroundImage: 'url("/IIT Bombay.jpg")' }}>
                           <span className="uni-rating">★ 4.9/5</span>
                           <span className="uni-heart" aria-hidden="true">♡</span>
                       </div>
@@ -298,7 +321,7 @@ export default function EngineeringPortal() {
                       </div>
                   </div>
                   <div className="uni-card" role="listitem">
-                      <div className="uni-img">
+                      <div className="uni-img" style={{ backgroundImage: 'url("/BITS Pilani.jpg")' }}>
                           <span className="uni-rating">★ 4.8/5</span>
                           <span className="uni-heart" aria-hidden="true">♡</span>
                           <span className="uni-recommend-badge">★ ASMI RECOMMENDS</span>
@@ -309,7 +332,7 @@ export default function EngineeringPortal() {
                       </div>
                   </div>
                   <div className="uni-card" role="listitem">
-                      <div className="uni-img">
+                      <div className="uni-img" style={{ backgroundImage: 'url("/COEP Pune.jpg")' }}>
                           <span className="uni-rating">★ 4.6/5</span>
                           <span className="uni-heart" aria-hidden="true">♡</span>
                       </div>
@@ -319,7 +342,7 @@ export default function EngineeringPortal() {
                       </div>
                   </div>
                   <div className="uni-card" role="listitem">
-                      <div className="uni-img">
+                      <div className="uni-img" style={{ backgroundImage: 'url("/NIT Trichy.jpg")' }}>
                           <span className="uni-rating">★ 4.7/5</span>
                           <span className="uni-heart" aria-hidden="true">♡</span>
                       </div>
@@ -652,147 +675,67 @@ export default function EngineeringPortal() {
       
               <span className="packages-badge">Packages</span>
               <h2 className="packages-headline" id="packages-heading">Every Admission Path, Covered.</h2>
-              <p className="packages-sub">From JEE Mains to BITS Pilani — expert support for every exam and every round.</p>
+              <p className="packages-sub">Transparent pricing, no hidden charges. Fees vary by branch — starting from ₹10,000.</p>
       
               <div className="packages-grid">
       
-                  <div className="pkg-card" data-pkg-animate>
+                  <div className="pkg-card popular" data-pkg-animate>
                       <div>
-                          <span className="pkg-stream-badge">JEE MAINS</span>
+                          <span className="pkg-stream-badge">JEE / MHT-CET</span>
+                          <span className="pkg-popular-label">POPULAR</span>
                       </div>
-                      <div className="pkg-course">B.Tech Counselling</div>
-                      <div className="pkg-price">₹10,000 – ₹25,000</div>
+                      <div className="pkg-course">JoSAA + CET + Deemed</div>
+                      <div className="pkg-price">From ₹10,000</div>
                       <ul className="pkg-features" aria-label="Package features">
-                          <li>JoSAA counselling</li>
+                          <li>Complete JoSAA counselling</li>
                           <li>State CET strategy</li>
-                          <li>Branch analysis</li>
+                          <li>Deemed university counselling</li>
                           <li>Document verification</li>
                           <li>Round-wise WhatsApp alerts</li>
                       </ul>
                       <a href="/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
-                  <div className="pkg-card popular" data-pkg-animate>
+                  <div className="pkg-card" data-pkg-animate>
                       <div>
-                          <span className="pkg-stream-badge">JEE</span>
-                          <span className="pkg-popular-label">POPULAR</span>
+                          <span className="pkg-stream-badge">MANAGEMENT</span>
                       </div>
-                      <div className="pkg-course">B.Tech Premium</div>
-                      <div className="pkg-price">₹10,000 – ₹25,000</div>
+                      <div className="pkg-course">NRI / Management Quota</div>
+                      <div className="pkg-price">Contact Us</div>
                       <ul className="pkg-features" aria-label="Package features">
-                          <li>All of above</li>
-                          <li>CSAB rounds</li>
-                          <li>Institutional rounds</li>
-                          <li>BITS/Manipal/VIT guidance</li>
-                          <li>Priority support</li>
+                          <li>Institutional round strategy</li>
+                          <li>NRI quota guidance</li>
+                          <li>Management quota admission</li>
+                          <li>College fee & placement check</li>
+                          <li>Complete document support</li>
                       </ul>
                       <a href="/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card" data-pkg-animate>
                       <div>
-                          <span className="pkg-stream-badge">MHT-CET</span>
+                          <span className="pkg-stream-badge">ASMI DIGITAL</span>
                       </div>
-                      <div className="pkg-course">Maharashtra B.Tech</div>
-                      <div className="pkg-price">₹10,000 – ₹25,000</div>
+                      <div className="pkg-course">ASMI Digital</div>
+                      <div className="pkg-price">Coming Soon</div>
                       <ul className="pkg-features" aria-label="Package features">
-                          <li>CAP rounds guidance</li>
-                          <li>College preference strategy</li>
-                          <li>Home state quota analysis</li>
-                          <li>Document support</li>
-                          <li>Round tracking</li>
+                          <li>AI-driven college predictor</li>
+                          <li>Custom branch preference</li>
+                          <li>Automated choice filling</li>
+                          <li>Cutoff analysis tool</li>
+                          <li>Round-wise notifications</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
-                  </div>
-      
-                  <div className="pkg-card" data-pkg-animate>
-                      <div>
-                          <span className="pkg-stream-badge">BITS/VIT/MANIPAL</span>
-                      </div>
-                      <div className="pkg-course">Private Universities</div>
-                      <div className="pkg-price">₹50,000</div>
-                      <ul className="pkg-features" aria-label="Package features">
-                          <li>BITSAT strategy</li>
-                          <li>Campus & branch guidance</li>
-                          <li>VITEEE & MET counselling</li>
-                          <li>Fee & placement analysis</li>
-                          <li>Application support</li>
-                      </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="#" className="pkg-cta" style={{ opacity: 0.5, pointerEvents: 'none' }}>Coming Soon</a>
                   </div>
       
               </div>
       
+              <p style={{ textAlign: 'center', marginTop: '24px', fontSize: '13px', color: 'rgba(255,255,255,0.55)', fontFamily: '\'Open Sans\',sans-serif' }}>
+                  Mumbai & Thane — ₹30,000  ·  Pune — ₹20,000  ·  Kolhapur & Sangli — ₹10,000–12,000<br />
+                  <span style={{ fontSize: '12px' }}>Pricing confirmed at your free counselling session. No payment required to enquire.</span>
+              </p>
+      
           </div>
-      </section>
-
-      {/* 9. TOPPERS SECTION */}
-      <section className="toppers-section" aria-labelledby="toppers-heading">
-        <div className="toppers-inner">
- 
-          <div className="toppers-header">
-            <span className="toppers-eyebrow">HALL OF FAME</span>
-            <h2 className="toppers-headline" id="toppers-heading">ASMI Students. Top Colleges.</h2>
-            <p className="toppers-sub">JEE Achievers 2025 and Maharashtra toppers guided by ASMI Career.</p>
-          </div>
- 
-          <div className="toppers-block">
-            <div className="toppers-block-label">JEE Achievers 2025</div>
-            <div className="toppers-grid">
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">1</span>
-                <div className="topper-name">Aditya Annasaheb Sawant</div>
-                <div className="topper-college">IIT Varanasi · Mechanical</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">2</span>
-                <div className="topper-name">Aryan Anil Patil</div>
-                <div className="topper-college">IIT Varanasi · CS</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">3</span>
-                <div className="topper-name">Arnav Rajmane</div>
-                <div className="topper-college">IIT Dharwad · CS</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">4</span>
-                <div className="topper-name">Pawan Bhoir</div>
-                <div className="topper-college">IIT Bombay · BS Chemistry</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">5</span>
-                <div className="topper-name">Aadya Palshetkar</div>
-                <div className="topper-college">IIT Dhanbad · Mechanical</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">6</span>
-                <div className="topper-name">Harshwardhan Kothare</div>
-                <div className="topper-college">IIIT Gwalior · CS</div>
-              </div>
-              <div className="topper-card" data-why-animate>
-                <span className="topper-rank">7</span>
-                <div className="topper-name">Atharv Sahasrabudhe</div>
-                <div className="topper-college">IIT Dhanbad · Mechanical</div>
-              </div>
-            </div>
-          </div>
- 
-          <div className="toppers-block">
-            <div className="toppers-block-label">Maharashtra Toppers 2025</div>
-            <div className="toppers-strip">
-              <div className="topper-pill">Jayant Tatyaso Patil <span>COEP CS</span></div>
-              <div className="topper-pill">Sai Jangam Swami <span>COEP Mech</span></div>
-              <div className="topper-pill">Harshwardhan Patil <span>WCE CS</span></div>
-              <div className="topper-pill">Aaryan Shelke <span>WCE CS</span></div>
-              <div className="topper-pill">Ranveer Pawar <span>ICT Chemical</span></div>
-              <div className="topper-pill">Jaydeep Patil <span>PICT E&TC</span></div>
-              <div className="topper-pill">Atharva Suryawanshi <span>PICT IT</span></div>
-              <div className="topper-pill">Pranand Desai <span>SPIT CS</span></div>
-              <div className="topper-pill">Ruturaj Shinde <span>WCE Mech</span></div>
-            </div>
-          </div>
- 
-        </div>
       </section>
 
       {/* 10. TESTIMONIALS */}
@@ -948,40 +891,6 @@ export default function EngineeringPortal() {
               </div>
           </div>
       </section>
-
-      {/* 13. STATS STRIP */}
-      <section className="stats-strip" style={{ padding: '60px 0', background: '#0a1628', display: 'flex', justifyContent: 'center' }} aria-label="Key statistics">
-          <div className="hero-stats" style={{ marginTop: 0 }} role="list">
-              <div className="hero-stat" role="listitem">
-                  <span className="stat-num">10K+</span>
-                  <span className="stat-lbl">Students Guided</span>
-              </div>
-              <div className="stat-divider" aria-hidden="true"></div>
-              <div className="hero-stat" role="listitem">
-                  <span className="stat-num">11+</span>
-                  <span className="stat-lbl">Years Experience</span>
-              </div>
-              <div className="stat-divider" aria-hidden="true"></div>
-              <div className="hero-stat" role="listitem">
-                  <span className="stat-num">500+</span>
-                  <span className="stat-lbl">Colleges</span>
-              </div>
-              <div className="stat-divider" aria-hidden="true"></div>
-              <div className="hero-stat" role="listitem">
-                  <span className="stat-num">4.9★</span>
-                  <span className="stat-lbl">Google Rating</span>
-              </div>
-          </div>
-      </section>
-
-      {/* 14. TRUST STRIP */}
-      <section className="trust-strip" aria-label="Colleges our students have been admitted to">
-          <div className="trust-track" aria-hidden="true">
-              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
-              <span className="trust-item">IIT Bombay · IIT Delhi · IIT Madras · IIT Kharagpur · IIT Kanpur · IIT Roorkee · BITS Pilani · NIT Trichy · NIT Warangal · NIT Surathkal · COEP Pune · VJTI Mumbai · PICT Pune · SPIT Mumbai · VIT Vellore · Manipal MIT · IIIT Hyderabad · IIIT Bangalore ·</span>
-          </div>
-      </section>
-
       {/* 15. CTA BANNER */}
       <section className="cta-banner" aria-labelledby="cta-heading">
           <div className="cta-deco cta-deco-1" aria-hidden="true"></div>

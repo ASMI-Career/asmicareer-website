@@ -706,7 +706,7 @@
         color: rgba(255,255,255,0.95);
         margin-bottom: 8px;
     }
-    .why-& {
+    .why-body {
         font-family: 'Open Sans', sans-serif;
         font-size: 14px;
         color: rgba(255,255,255,0.55);
@@ -816,7 +816,7 @@
         color: #00C8B4;
         line-height: 1.2;
     }
-    .tool-& {
+    .tool-body {
         font-family: 'Open Sans', sans-serif;
         font-size: 14px;
         color: rgba(0,200,180,0.6);
@@ -914,7 +914,7 @@
     }
     .packages-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 16px;
         margin-top: 56px;
     }
@@ -1425,7 +1425,7 @@
     .tag-mhtcet { background: rgba(0,200,180,0.1);   color: #00C8B4; }
     .event-time { font-size: 11px; color: rgba(255,255,255,0.4); }
     .event-headline { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; color: #ffffff; line-height: 1.4; margin-bottom: 6px; }
-    .event-& { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .event-body { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
     @media (max-width: 768px) { .events-section { padding: 40px; } .events-cards { flex-direction: column; } }
     @media (max-width: 640px) { .events-section { padding: 32px 24px; } }
 
@@ -1469,7 +1469,7 @@
     .ps-item { display: flex; gap: 16px; margin-bottom: 28px; align-items: flex-start; }
     .ps-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 14px; color: #ffffff; }
     .ps-num.solution { border-color: rgba(0,200,180,0.3); }
-    .ps-item-& { display: flex; gap: 10px; align-items: flex-start; flex: 1; }
+    .ps-item-body { display: flex; gap: 10px; align-items: flex-start; flex: 1; }
     .ps-bar { flex-shrink: 0; width: 3px; align-self: stretch; border-radius: 2px; min-height: 20px; }
     .ps-bar.red { background: #ef5350; } .ps-bar.green { background: #00C8B4; }
     .ps-text { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; color: #ffffff; line-height: 1.5; }
@@ -1498,7 +1498,7 @@
     .journey-label { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; margin-top: 16px; }
     .journey-label.gold   { color: #00C8B4; }
     .journey-label.purple { color: rgba(255,255,255,0.7); }
-    .journey-& { font-size: 13px; color: rgba(255,255,255,0.72); margin-top: 8px; line-height: 1.5; }
+    .journey-body { font-size: 13px; color: rgba(255,255,255,0.72); margin-top: 8px; line-height: 1.5; }
     @media (max-width: 900px) { .journey-section { padding: 56px 40px; } .journey-headline { font-size: 28px; } .journey-steps { flex-wrap: wrap; gap: 40px; justify-content: center; } .journey-step { width: 44%; } .journey-line-left, .journey-line-right, .journey-runner { display: none; } }
     @media (max-width: 640px) { .journey-section { padding: 40px 24px; } .journey-step { width: 100%; } .journey-headline { font-size: 24px; } }
 
@@ -1529,7 +1529,7 @@
     .pricing-banner::after { content: ''; position: absolute; bottom: -60px; left: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(0,200,180,0.04); pointer-events: none; }
     .pricing-banner-h { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 48px; color: #00C8B4; position: relative; }
     .pricing-banner-sub { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; color: rgba(255,255,255,0.8); margin-top: 10px; position: relative; }
-    .pricing-banner-& { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 16px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .pricing-banner-body { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 16px; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
     .pricing-banner-btns { display: flex; justify-content: center; gap: 16px; margin-top: 28px; flex-wrap: wrap; }
     .banner-btn-white { background: #00C8B4; color: #0a1628; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 14px; padding: 14px 32px; border-radius: 50px; text-decoration: none; white-space: nowrap; transition: transform 0.2s ease, box-shadow 0.2s ease; position: relative; }
     .banner-btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,200,180,0.35); }
@@ -1556,7 +1556,7 @@
     .resource-tag { position: absolute; top: 12px; left: 12px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 9px; letter-spacing: 1px; padding: 4px 10px; border-radius: 20px; }
     .resource-content { padding: 20px; }
     .resource-title { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; color: #ffffff; margin-bottom: 8px; line-height: 1.4; }
-    .resource-& { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 16px; }
+    .resource-body { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 16px; }
     .resource-footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(0,200,180,0.1); padding-top: 14px; }
     .resource-meta { font-size: 11px; color: rgba(255,255,255,0.35); }
     .resource-cta-link { color: #00C8B4; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; text-decoration: none; }
@@ -1588,7 +1588,7 @@
     .testi-cards .testi-card:nth-child(2) .testi-name  { color: #0a1628; }
     .testi-cards .testi-card:nth-child(2) .testi-tag   { color: rgba(10,22,40,0.75); }
     .testi-cards .testi-card:nth-child(2) .testi-quote-mark { color: #0a1628; }
-    .testi-cards .testi-card:nth-child(2) .testi-& { color: rgba(10,22,40,0.85); }
+    .testi-cards .testi-card:nth-child(2) .testi-body { color: rgba(10,22,40,0.85); }
     .testi-cards .testi-card:nth-child(2) .testi-avatar-sm { background: rgba(10,22,40,0.12); }
     .testi-cards .testi-card:nth-child(2):hover { transform: translateY(-10px); }
 
