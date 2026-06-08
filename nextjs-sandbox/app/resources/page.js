@@ -25,9 +25,9 @@ const TOOLS = [
     icon: '📋',
     title: 'Document Checklist',
     description: 'Interactive category-aware checklist — select your category and quota to see exactly which documents you need.',
-    status: 'coming',
-    link: null,
-    cta: 'Coming Soon',
+    status: 'live',
+    link: '/tools/documents-checklist',
+    cta: 'View Checklist →',
   },
   {
     icon: '📅',
