@@ -1,57 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-.coun-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #1a0040; }
+.coun-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #0a1628; }
 
 
 
-.coun-hero { background: #FFD700; padding: 80px 80px 64px; }
+.coun-hero { background: #00C8B4; padding: 80px 80px 64px; }
 .coun-hero-inner { max-width: 760px; }
-.coun-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4a0080; display: block; margin-bottom: 16px; }
-.coun-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(28px, 4vw, 46px); font-weight: 900; color: #1a0040; line-height: 1.15; margin-bottom: 18px; }
-.coun-sub { font-size: 15px; color: rgba(26,0,64,0.65); line-height: 1.7; max-width: 640px; margin-bottom: 28px; }
+.coun-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #00A896; display: block; margin-bottom: 16px; }
+.coun-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(28px, 4vw, 46px); font-weight: 900; color: #0a1628; line-height: 1.15; margin-bottom: 18px; }
+.coun-sub { font-size: 15px; color: rgba(10, 22, 40,0.65); line-height: 1.7; max-width: 640px; margin-bottom: 28px; }
 .coun-hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-.coun-btn-primary { background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; padding: 14px 28px; border-radius: 50px; text-decoration: none; }
-.coun-btn-secondary { background: rgba(255,255,255,0.6); color: #1a0040; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; padding: 14px 28px; border-radius: 50px; text-decoration: none; border: 1px solid rgba(26,0,64,0.2); }
+.coun-btn-primary { background: #0a1628; color: #00C8B4; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; padding: 14px 28px; border-radius: 50px; text-decoration: none; }
+.coun-btn-secondary { background: rgba(255,255,255,0.6); color: #0a1628; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; padding: 14px 28px; border-radius: 50px; text-decoration: none; border: 1px solid rgba(10, 22, 40,0.2); }
 
-.coun-covers { padding: 72px 80px; background: #f9f5ff; }
+.coun-covers { padding: 72px 80px; background: #f2fbfc; }
 .coun-covers-inner { max-width: 1100px; margin: 0 auto; }
-.coun-section-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #6a0dad; margin-bottom: 10px; }
-.coun-section-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(20px, 3vw, 30px); font-weight: 900; color: #1a0040; margin-bottom: 36px; }
+.coun-section-label { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #00C8B4; margin-bottom: 10px; }
+.coun-section-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(20px, 3vw, 30px); font-weight: 900; color: #0a1628; margin-bottom: 36px; }
 .coun-covers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.coun-cover-card { background: #fff; border: 1px solid rgba(106,13,173,0.1); border-radius: 14px; padding: 24px; transition: box-shadow 0.2s, transform 0.2s; }
-.coun-cover-card:hover { box-shadow: 0 8px 24px rgba(106,13,173,0.1); transform: translateY(-3px); }
+.coun-cover-card { background: #fff; border: 1px solid rgba(0, 200, 180,0.1); border-radius: 14px; padding: 24px; transition: box-shadow 0.2s, transform 0.2s; }
+.coun-cover-card:hover { box-shadow: 0 8px 24px rgba(0, 200, 180,0.1); transform: translateY(-3px); }
 .coun-cover-icon { font-size: 28px; margin-bottom: 12px; }
-.coun-cover-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #1a0040; margin-bottom: 8px; }
-.coun-cover-body { font-size: 13px; color: rgba(26,0,64,0.6); line-height: 1.6; }
+.coun-cover-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #0a1628; margin-bottom: 8px; }
+.coun-cover-body { font-size: 13px; color: rgba(10, 22, 40,0.6); line-height: 1.6; }
 
 .coun-process { padding: 72px 80px; background: #fff; }
 .coun-process-inner { max-width: 800px; margin: 0 auto; }
 .coun-steps { display: flex; flex-direction: column; gap: 0; }
-.coun-step { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid rgba(106,13,173,0.08); }
+.coun-step { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid rgba(0, 200, 180,0.08); }
 .coun-step:last-child { border-bottom: none; }
-.coun-step-num { width: 40px; height: 40px; border-radius: 50%; background: #FFD700; color: #1a0040; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.coun-step-title { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: #1a0040; margin-bottom: 6px; }
-.coun-step-body { font-size: 13.5px; color: rgba(26,0,64,0.65); line-height: 1.65; }
+.coun-step-num { width: 40px; height: 40px; border-radius: 50%; background: #00C8B4; color: #0a1628; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.coun-step-title { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: #0a1628; margin-bottom: 6px; }
+.coun-step-body { font-size: 13.5px; color: rgba(10, 22, 40,0.65); line-height: 1.65; }
 
-.coun-diff { padding: 72px 80px; background: #1a0040; }
+.coun-diff { padding: 72px 80px; background: #0a1628; }
 .coun-diff-inner { max-width: 900px; margin: 0 auto; }
-.coun-diff-inner .coun-section-label { color: rgba(255,215,0,0.6); }
+.coun-diff-inner .coun-section-label { color: rgba(0, 200, 180,0.6); }
 .coun-diff-inner .coun-section-headline { color: #fff; }
 .coun-diff-header { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-bottom: 8px; padding: 0 16px; }
 .coun-diff-col-head { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; text-align: center; padding: 8px; border-radius: 8px 8px 0 0; }
-.asmi-head { background: #FFD700; color: #1a0040; }
+.asmi-head { background: #00C8B4; color: #0a1628; }
 .others-head { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
 .coun-diff-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .coun-diff-label { font-size: 13px; color: rgba(255,255,255,0.7); padding: 14px 16px; font-weight: 600; }
 .coun-diff-asmi { font-size: 12.5px; color: #4ade80; padding: 14px 16px; text-align: center; font-weight: 600; }
 .coun-diff-others { font-size: 12.5px; color: rgba(255,255,255,0.3); padding: 14px 16px; text-align: center; }
 
-.coun-cta { background: #FFD700; padding: 72px 80px; text-align: center; }
+.coun-cta { background: #00C8B4; padding: 72px 80px; text-align: center; }
 .coun-cta-inner { max-width: 600px; margin: 0 auto; }
-.coun-cta-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(22px, 3vw, 34px); font-weight: 900; color: #1a0040; margin-bottom: 10px; }
-.coun-cta-sub { font-size: 14px; color: rgba(26,0,64,0.6); margin-bottom: 28px; }
-.coun-cta-btn { display: inline-block; background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 900; padding: 16px 36px; border-radius: 50px; text-decoration: none; }
+.coun-cta-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(22px, 3vw, 34px); font-weight: 900; color: #0a1628; margin-bottom: 10px; }
+.coun-cta-sub { font-size: 14px; color: rgba(10, 22, 40,0.6); margin-bottom: 28px; }
+.coun-cta-btn { display: inline-block; background: #0a1628; color: #00C8B4; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 900; padding: 16px 36px; border-radius: 50px; text-decoration: none; }
 
 
 
