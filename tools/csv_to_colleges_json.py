@@ -95,7 +95,12 @@ def convert_csv_to_json():
                 "hostel_available": clean_val(row.get("hostel_available")),
                 "asmi_pulse_score": to_float(row.get("asmi_pulse_score")),
                 "asmi_verdict": clean_val(row.get("asmi_verdict")),
-                "description": clean_val(row.get("description"))
+                "description": clean_val(row.get("description")),
+                "attached_hospital": clean_val(row.get("attached_hospital")),
+                "nearby_airport": clean_val(row.get("nearby_airport")),
+                "nearby_railway_station": clean_val(row.get("nearby_railway_station")),
+                "google_location": clean_val(row.get("google_location")),
+                "pg_courses_availability": clean_val(row.get("pg_courses_availability"))
             }
             colleges.append(college)
 

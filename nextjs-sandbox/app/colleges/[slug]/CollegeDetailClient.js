@@ -205,8 +205,31 @@ export default function CollegeDetailClient({ college, slug }) {
                   <div className="location-card">
                     <p className="location-address">
                       <strong>Address:</strong> {college.address || 'Address information coming soon'}
+                      {college.google_location && (
+                        <span style={{ marginLeft: '10px', display: 'inline-block' }}>
+                          <a href={college.google_location} target="_blank" rel="noopener noreferrer" style={{ color: '#6a0dad', textDecoration: 'underline', fontWeight: 'bold' }}>
+                            View on Google Maps ↗
+                          </a>
+                        </span>
+                      )}
                     </p>
-                    <div className="map-placeholder">
+                    
+                    {(college.nearby_airport || college.nearby_railway_station) && (
+                      <div className="travel-info" style={{ marginTop: '15px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                        {college.nearby_airport && (
+                          <div style={{ background: '#f3f4f6', padding: '10px 15px', borderRadius: '8px', fontSize: '14px', border: '1px solid #e5e7eb' }}>
+                            ✈️ <strong>Nearby Airport:</strong> {college.nearby_airport}
+                          </div>
+                        )}
+                        {college.nearby_railway_station && (
+                          <div style={{ background: '#f3f4f6', padding: '10px 15px', borderRadius: '8px', fontSize: '14px', border: '1px solid #e5e7eb' }}>
+                            🚆 <strong>Nearby Railway Station:</strong> {college.nearby_railway_station}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="map-placeholder" style={{ marginTop: '20px' }}>
                       <div className="map-icon">🗺️</div>
                       <span>Map visualization coming soon. Our counsellors can help plan your travel route.</span>
                     </div>
@@ -339,6 +362,12 @@ export default function CollegeDetailClient({ college, slug }) {
                 </ul>
               </div>
 
+              {college.pg_courses_availability && (
+                <div style={{ marginTop: '20px', padding: '15px', background: 'rgba(106, 13, 173, 0.08)', borderLeft: '4px solid #1a0040', borderRadius: '4px', fontSize: '15px' }}>
+                  <strong>🎓 Postgraduate (PG) Courses:</strong> {college.pg_courses_availability}
+                </div>
+              )}
+
               <h3 className="section-title" style={{ marginTop: '30px' }}>Admission Procedure</h3>
               <div className="admission-steps">
                 {[
@@ -440,6 +469,12 @@ export default function CollegeDetailClient({ college, slug }) {
               <h3 className="section-title">Clinical Exposure &amp; Hospital Infrastructure</h3>
               <table className="detail-table">
                 <tbody>
+                  {college.attached_hospital && (
+                    <tr>
+                      <td>Attached Hospital</td>
+                      <td>{college.attached_hospital}</td>
+                    </tr>
+                  )}
                   <tr>
                     <td>Hospital Bed Capacity</td>
                     <td>{college.hospital_beds ? `${college.hospital_beds}+ Beds` : '—'}</td>
