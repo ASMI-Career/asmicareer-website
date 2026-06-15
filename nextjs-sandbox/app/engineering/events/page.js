@@ -158,7 +158,7 @@ export default function EngineeringEventsPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer isEngineering={true} />
     </div>
   );
 }

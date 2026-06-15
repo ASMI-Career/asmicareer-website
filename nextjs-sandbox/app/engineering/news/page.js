@@ -263,7 +263,7 @@ export default function EngineeringNewsPage() {
           </div>
         </section>
 
-        <Footer />
+        <Footer isEngineering={true} />
       </div>
 
 
