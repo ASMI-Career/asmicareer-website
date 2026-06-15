@@ -265,7 +265,7 @@ export default function EventsPage() {
                 Book Your Free Seat →
               </button>
               <a
-                href="https://wa.me/917410019074"
+                href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
                 target="_blank" rel="noopener noreferrer"
                 className="ev-btn-wa"
               >

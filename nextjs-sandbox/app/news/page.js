@@ -105,7 +105,7 @@ export default function NewsPage() {
             <div className="np-hero-actions">
               <a href="#np-events" className="np-btn-primary">View All Deadlines ↓</a>
               <a
-                href="https://wa.me/917410019074"
+                href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
                 target="_blank" rel="noopener noreferrer"
                 className="np-btn-wa"
               >
@@ -262,7 +262,7 @@ export default function NewsPage() {
               <p className="np-wa-sub">Never miss a deadline — ASMI sends you alerts the moment new notices drop.</p>
             </div>
             <a
-              href="https://wa.me/917410019074"
+              href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
               target="_blank" rel="noopener noreferrer"
               className="np-wa-btn"
             >
