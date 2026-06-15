@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.news-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #1a0040; }
+
+.news-hero { background: #FFD700; padding: 64px 80px 48px; }
+.news-hero-inner { max-width: 700px; }
+.news-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4a0080; display: block; margin-bottom: 14px; }
+.news-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(26px, 4vw, 42px); font-weight: 900; color: #1a0040; line-height: 1.15; margin-bottom: 14px; }
+.news-sub { font-size: 15px; color: rgba(26,0,64,0.65); line-height: 1.7; }
+
+.news-content { padding: 48px 80px 72px; background: #f9f5ff; }
+.news-content-inner { max-width: 900px; margin: 0 auto; }
+
+.news-filters { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
+.news-filter-btn {
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
+  padding: 10px 22px; border-radius: 50px; border: 1.5px solid rgba(26,0,64,0.15);
+  background: #fff; color: #1a0040; cursor: pointer; transition: 0.2s;
+}
+.news-filter-btn:hover { border-color: #6a0dad; }
+.news-filter-btn.active { background: #1a0040; color: #FFD700; border-color: #1a0040; }
+
+.news-loading, .news-empty {
+  text-align: center; padding: 48px 20px; color: rgba(26,0,64,0.5); font-size: 14px;
+}
+
+.news-month-group { margin-bottom: 36px; }
+.news-month-header {
+  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase; color: #6a0dad;
+  margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(106,13,173,0.15);
+}
+
+.news-list { display: flex; flex-direction: column; gap: 12px; }
+
+.news-card {
+  background: #fff; border: 1px solid rgba(106,13,173,0.1); border-radius: 14px;
+  padding: 18px 22px; display: flex; gap: 18px; align-items: flex-start;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.news-card:hover { box-shadow: 0 8px 24px rgba(106,13,173,0.1); transform: translateY(-2px); }
+
+.news-card-date {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #1a0040; border-radius: 10px; padding: 10px 14px; flex-shrink: 0; min-width: 56px;
+}
+.news-date-day { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: #FFD700; line-height: 1; }
+.news-date-month { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+.news-card-body { flex: 1; }
+
+.news-tag {
+  display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 9px;
+  font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
+}
+.news-tag-urgent { background: rgba(220,38,38,0.1); color: #dc2626; }
+.news-tag-exam { background: rgba(3,105,161,0.1); color: #0369a1; }
+.news-tag-seminar { background: rgba(255,215,0,0.15); color: #b45309; }
+.news-tag-default { background: rgba(106,13,173,0.1); color: #6a0dad; }
+
+.news-card-title {
+  font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800;
+  color: #1a0040; line-height: 1.4; margin-bottom: 10px;
+}
+
+.news-card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.news-action-primary {
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800;
+  color: #1a0040; background: #FFD700; padding: 7px 16px; border-radius: 8px;
+  text-decoration: none;
+}
+.news-action-secondary {
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+  color: #6a0dad; background: rgba(106,13,173,0.08); padding: 7px 16px;
+  border-radius: 8px; text-decoration: none; border: 1px solid rgba(106,13,173,0.15);
+}
+
+@media (max-width: 768px) {
+  .news-hero, .news-content { padding-left: 20px; padding-right: 20px; }
+  .news-card { flex-direction: column; gap: 12px; }
+  .news-card-date { flex-direction: row; gap: 6px; align-self: flex-start; min-width: unset; padding: 6px 14px; }
+}
