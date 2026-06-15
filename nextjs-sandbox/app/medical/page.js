@@ -340,7 +340,7 @@ export default function MedicalPortal() {
                       </div>
           
                       <div className="hero-ctas">
-                          <a href="/inquiry" className="btn-primary">Book Free Counselling →</a>
+                          <a href="/medical/inquiry" className="btn-primary">Book Free Counselling →</a>
                           <a href="#tools" className="btn-secondary">Explore Tools ↓</a>
                       </div>
                   </motion.div>
@@ -477,7 +477,7 @@ export default function MedicalPortal() {
               <h2 className="univ-title" id="univ-heading">Top Tier Universities</h2>
             </div>
             <div className="univ-header-right">
-              <a href="/colleges" className="univ-view-all">View all →</a>
+              <a href="/medical/colleges" className="univ-view-all">View all →</a>
               <button
                 className="univ-arrow"
                 onClick={() => setCarouselIndex(i => Math.max(0, i - 1))}
@@ -517,7 +517,7 @@ export default function MedicalPortal() {
 
                     return (
                       <a
-                        href={`/colleges/${college.slug}`}
+                        href={`/medical/colleges/${college.slug}`}
                         className="univ-card"
                         key={college.slug}
                         aria-label={college.name}
@@ -663,7 +663,7 @@ export default function MedicalPortal() {
             <p className="ps-cta-text">
               Recognised any of these? Get free guidance from ASMI.
             </p>
-            <a href="/inquiry" className="ps-cta-btn">
+            <a href="/medical/inquiry" className="ps-cta-btn">
               Book Free Counselling →
             </a>
           </div>
@@ -760,7 +760,7 @@ export default function MedicalPortal() {
                           NEET rank to your MBBS seat.
                       </p>
                       <div className="why-overlay-btns">
-                          <a href="/inquiry" className="why-btn-dark">Book a Free Call 📞</a>
+                          <a href="/medical/inquiry" className="why-btn-dark">Book a Free Call 📞</a>
                       </div>
                   </div>
               </div>
@@ -1087,7 +1087,7 @@ export default function MedicalPortal() {
                 </li>
               </ul>
 
-              <a href="/inquiry" className="pricing-btn-primary">
+              <a href="/medical/inquiry" className="pricing-btn-primary">
                 Book Free Counselling →
               </a>
             </div>
@@ -1163,7 +1163,7 @@ export default function MedicalPortal() {
                 </li>
               </ul>
 
-              <a href="/inquiry" className="pricing-btn-secondary">
+              <a href="/medical/inquiry" className="pricing-btn-secondary">
                 Book Free Counselling →
               </a>
             </div>
@@ -1240,7 +1240,7 @@ export default function MedicalPortal() {
               Walk in, call, or message us on WhatsApp.
             </p>
             <div className="pricing-banner-btns">
-              <a href="/inquiry" className="banner-btn-white">
+              <a href="/medical/inquiry" className="banner-btn-white">
                 Book My Free Session →
               </a>
               <a
@@ -1385,7 +1385,7 @@ export default function MedicalPortal() {
 
           {/* CTA */}
           <div className={`dreams-cta${testiVisible ? ' dreams-cta-visible' : ''}`}>
-            <a href="/inquiry" className="dreams-cta-btn">
+            <a href="/medical/inquiry" className="dreams-cta-btn">
               Join Them — Book Free Counselling →
             </a>
           </div>
@@ -1514,7 +1514,7 @@ export default function MedicalPortal() {
               },
               {
                 q: 'Does ASMI help with open state colleges outside Maharashtra?',
-                a: 'Yes. ASMI has detailed data and experience with open state counselling in Karnataka, Kerala, Telangana, Andhra Pradesh, Uttar Pradesh, Tamil Nadu, Haryana and more. If your Maharashtra options are limited at your rank, open state colleges can significantly expand your choices — and ASMI maps this out for you.'
+                a: 'Yes. ASMI has detailed data and experience with open state counselling in Karnataka, Kerala, Telangana, Andhra Pradesh, Uttar Pradesh, Tamil Nadu and more. If your Maharashtra options are limited at your rank, open state colleges can significantly expand your choices — and ASMI maps this out for you.'
               },
             ].map((faq, i) => (
               <div
@@ -1869,7 +1869,7 @@ export default function MedicalPortal() {
                       <span className="tool-icon" aria-hidden="true">📊</span>
                       <div className="tool-title">Rank Predictor</div>
                       <p className="tool-body">Enter your score and category. Instantly see your predicted rank range and every eligible college across India.</p>
-                      <a href="/inquiry" className="tool-cta paid-cta">Get Access →</a>
+                      <a href="/medical/inquiry" className="tool-cta paid-cta">Get Access →</a>
                   </div>
       
               </div>
@@ -1903,7 +1903,7 @@ export default function MedicalPortal() {
                           <li>Document verification</li>
                           <li>Round-wise WhatsApp alerts</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/medical/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card popular" data-pkg-animate>
@@ -1920,7 +1920,7 @@ export default function MedicalPortal() {
                           <li>All India rounds</li>
                           <li>Priority support</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/medical/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card" data-pkg-animate>
@@ -1936,7 +1936,7 @@ export default function MedicalPortal() {
                           <li>Document support</li>
                           <li>Round tracking</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/medical/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
                   <div className="pkg-card" data-pkg-animate>
@@ -1952,7 +1952,7 @@ export default function MedicalPortal() {
                           <li>Pre-departure support</li>
                           <li>Alumni network</li>
                       </ul>
-                      <a href="/inquiry" className="pkg-cta">Learn More →</a>
+                      <a href="/medical/inquiry" className="pkg-cta">Learn More →</a>
                   </div>
       
               </div>
@@ -1976,7 +1976,7 @@ export default function MedicalPortal() {
               <h2 className="cta-headline animate" id="cta-heading">Take The First Step.</h2>
               <p className="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
               <div className="cta-buttons animate">
-                  <a href="/inquiry" className="cta-btn-primary">Book My Free Session →</a>
+                  <a href="/medical/inquiry" className="cta-btn-primary">Book My Free Session →</a>
                   <a href="#" className="cta-btn-secondary">WhatsApp Us →</a>
               </div>
           </div>

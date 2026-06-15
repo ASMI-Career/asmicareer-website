@@ -12,8 +12,8 @@ const engineeringNavLinks = [
   { label: 'Services', href: '/engineering/services' },
   { label: 'Events', href: '/engineering/events' },
   { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/engineering/about' },
+  { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
 export default function EngineeringCollegesDirectory() {
@@ -141,7 +141,7 @@ export default function EngineeringCollegesDirectory() {
 
   return (
     <div className="colleges-page">
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
       <div className="colleges-layout">
         
         {/* Left Filter Sidebar */}

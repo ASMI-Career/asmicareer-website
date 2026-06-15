@@ -11,8 +11,8 @@ const engineeringNavLinks = [
   { label: 'Services', href: '/engineering/services' },
   { label: 'Events', href: '/engineering/events' },
   { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/engineering/about' },
+  { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
 const TOOLS = [
@@ -100,7 +100,7 @@ export default function EngineeringResourcesPage() {
   return (
     <div className="res-page">
 
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
 
       <section className="res-hero">
         <div className="res-hero-inner">

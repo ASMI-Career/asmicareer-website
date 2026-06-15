@@ -20,7 +20,7 @@ export default function EngineeringAboutPage() {
     <div className="about-page">
 
       {/* NAV */}
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
 
       {/* HERO */}
       <section className="about-hero">

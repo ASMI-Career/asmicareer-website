@@ -77,7 +77,7 @@ export default function TermsPage() {
 
           <div className="legal-section">
             <h2>10. Contact</h2>
-            <p>For terms-related queries: <a href="mailto:info@asmicareer.com">info@asmicareer.com</a> · 7410019074 · <Link href="/contact">Find your nearest branch</Link></p>
+            <p>For terms-related queries: <a href="mailto:contact@asmicareer.com">contact@asmicareer.com</a> · 7410019074 · <Link href="/contact">Find your nearest branch</Link></p>
           </div>
 
         </div>

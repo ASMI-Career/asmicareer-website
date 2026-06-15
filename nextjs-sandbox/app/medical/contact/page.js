@@ -1,8 +1,8 @@
 'use client';
 import './contact.css';
 import Link from 'next/link';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
 
 const BRANCHES = [
   {

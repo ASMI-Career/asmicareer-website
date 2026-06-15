@@ -10,8 +10,8 @@ const engineeringNavLinks = [
   { label: 'Services', href: '/engineering/services' },
   { label: 'Events', href: '/engineering/events' },
   { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/engineering/about' },
+  { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
 export default function EngineeringEventsPage() {
@@ -26,7 +26,7 @@ export default function EngineeringEventsPage() {
       flexDirection: 'column',
       justifyContent: 'space-between'
     }}>
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
 
       {/* Hero / Placeholder Content */}
       <section style={{

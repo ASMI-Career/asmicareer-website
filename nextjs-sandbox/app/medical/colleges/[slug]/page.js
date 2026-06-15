@@ -1,7 +1,7 @@
-import colleges from '../../../public/data/colleges.json';
+import colleges from '../../../../public/data/colleges.json';
 import CollegeDetailClient from './CollegeDetailClient';
-import Nav from '../../components/Nav';
-import Footer from '../../components/Footer';
+import Nav from '../../../components/Nav';
+import Footer from '../../../components/Footer';
 
 export async function generateStaticParams() {
   return colleges.map((c) => ({

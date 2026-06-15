@@ -4,17 +4,17 @@ import Link from 'next/link';
 import './nav.css';
 
 const defaultLinks = [
-  { label: 'Colleges', href: '/colleges' },
-  { label: 'Counselling', href: '/counselling' },
+  { label: 'Colleges', href: '/medical/colleges' },
+  { label: 'Counselling', href: '/medical/counselling' },
   { label: 'Packages', href: '/medical#packages' },
-  { label: 'Services', href: '/services' },
-  { label: 'Events',     href: '/events' },
+  { label: 'Services', href: '/medical/services' },
+  { label: 'Events',     href: '/medical/events' },
   { label: 'News',       href: '/medical/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/medical/about' },
+  { label: 'Contact Us', href: '/medical/contact' },
 ];
 
-export default function Nav({ links = defaultLinks, ctaHref = "/inquiry" }) {
+export default function Nav({ links = defaultLinks, ctaHref = "/inquiry", homeHref = "/medical" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,14 +31,14 @@ export default function Nav({ links = defaultLinks, ctaHref = "/inquiry" }) {
       <nav className={`nav ${scrolled ? 'scrolled' : ''}`} id="mainNav" aria-label="Main navigation">
           <div className="nav-inner">
       
-              <Link href="/" className="nav-back" aria-label="Back to home">
+              <Link href={homeHref} className="nav-back" aria-label="Back to home">
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                       <path d="M8 2L4 6L8 10" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                   Home
               </Link>
       
-              <Link href="/" className="nav-logo" aria-label="ASMI Career">
+              <Link href={homeHref} className="nav-logo" aria-label="ASMI Career">
                   <img src="/asmi-logo.png" alt="ASMI Career" />
               </Link>
       
@@ -67,7 +67,7 @@ export default function Nav({ links = defaultLinks, ctaHref = "/inquiry" }) {
       </nav>
       
       <div className={`nav-drawer ${menuOpen ? 'open' : ''}`} id="navDrawer" role="navigation" aria-label="Mobile navigation">
-          <Link href="/" onClick={() => setMenuOpen(false)}>← Home</Link>
+          <Link href={homeHref} onClick={() => setMenuOpen(false)}>← Home</Link>
           {links.map((link, i) => (
               <Link key={i} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</Link>
           ))}

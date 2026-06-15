@@ -13,8 +13,8 @@ const engineeringNavLinks = [
   { label: 'Services', href: '/engineering/services' },
   { label: 'Events', href: '/engineering/events' },
   { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/engineering/about' },
+  { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
 export default function EngineeringInquiryPage() {
@@ -131,7 +131,7 @@ export default function EngineeringInquiryPage() {
       <div className="bg-grid"></div>
       
       {/* ── NAVBAR ── */}
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
       
       {/* ── PAGE HEADER ── */}
       <div className="page-header">

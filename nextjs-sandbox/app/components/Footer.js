@@ -64,17 +64,17 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors", 
   
           <div>
             <span className="footer-col-header">Get</span>
-            <Link href={isEngineering ? "/engineering/counselling" : "/counselling"} className="footer-link">Counselling</Link>
-            <Link href={isEngineering ? "/engineering/services" : "/services"} className="footer-link">Services</Link>
+            <Link href={isEngineering ? "/engineering/counselling" : "/medical/counselling"} className="footer-link">Counselling</Link>
+            <Link href={isEngineering ? "/engineering/services" : "/medical/services"} className="footer-link">Services</Link>
             <Link href={isEngineering ? "/engineering#packages" : "/medical#packages"} className="footer-link">Packages</Link>
             <Link href={isEngineering ? "/tools/engineering-cutoff-explorer" : "/tools/cutoff-explorer"} className="footer-link">Cutoff Explorer</Link>
             <Link href={isEngineering ? "/tools/engineering-college-predictor" : "/tools/college-predictor"} className="footer-link">College Predictor</Link>
-            <Link href={isEngineering ? "/engineering/resources" : "/resources"} className="footer-link">Resources</Link>
+            <Link href={isEngineering ? "/engineering/resources" : "/medical/resources"} className="footer-link">Resources</Link>
           </div>
   
           <div>
             <span className="footer-col-header">Explore</span>
-            <Link href={isEngineering ? "/engineering/colleges" : "/colleges"} className="footer-link">Universities</Link>
+            <Link href={isEngineering ? "/engineering/colleges" : "/medical/colleges"} className="footer-link">Universities</Link>
             <Link href={isEngineering ? "/engineering#events" : "/medical#events"} className="footer-link">Updates &amp; Events</Link>
             <Link href={isEngineering ? "/engineering#dreams-heading" : "/medical#dreams-heading"} className="footer-link">Success Stories</Link>
             <Link href={isEngineering ? "/engineering#faqs" : "/medical#faqs"} className="footer-link">FAQs</Link>
@@ -88,8 +88,8 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors", 
   
           <div>
             <span className="footer-col-header">Company</span>
-            <Link href={isEngineering ? "/engineering/about" : "/about"} className="footer-link">About Us</Link>
-            <Link href={isEngineering ? "/engineering/contact" : "/contact"} className="footer-link">Contact Us</Link>
+            <Link href={isEngineering ? "/engineering/about" : "/medical/about"} className="footer-link">About Us</Link>
+            <Link href={isEngineering ? "/engineering/contact" : "/medical/contact"} className="footer-link">Contact Us</Link>
             <Link href="/privacy-policy" className="footer-link">Privacy Policy</Link>
             <Link href="/terms" className="footer-link">Terms of Service</Link>
           </div>

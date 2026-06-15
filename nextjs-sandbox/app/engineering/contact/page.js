@@ -77,7 +77,7 @@ export default function EngineeringContactPage() {
     <div className="contact-page">
 
       {/* NAV */}
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
 
       {/* HEADER */}
       <div className="contact-header">

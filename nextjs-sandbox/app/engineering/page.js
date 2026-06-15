@@ -13,8 +13,8 @@ const engineeringNavLinks = [
   { label: 'Services', href: '/engineering/services' },
   { label: 'Events', href: '/engineering/events' },
   { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
+  { label: 'About Us', href: '/engineering/about' },
+  { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
 function isExpired(event) {
@@ -144,7 +144,7 @@ export default function EngineeringPortal() {
 
   return (
     <>
-      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
       
       <div className="engineeringPortal">
       
@@ -320,7 +320,7 @@ export default function EngineeringPortal() {
                       Top tier universities
                   </div>
                   <div className="unis-header-right">
-                      <a href="#" className="unis-view-all">View all →</a>
+                      <a href="/engineering/colleges" className="unis-view-all">View all →</a>
                       <button className="unis-arrow-btn" id="uniPrev" onClick={() => scrollCarousel(-1)} aria-label="Previous universities">‹</button>
                       <button className="unis-arrow-btn" id="uniNext" onClick={() => scrollCarousel(1)} aria-label="Next universities">›</button>
                   </div>

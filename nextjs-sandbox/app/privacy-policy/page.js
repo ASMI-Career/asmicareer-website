@@ -83,7 +83,7 @@ export default function PrivacyPage() {
               <li>Request deletion of your data</li>
               <li>Opt out of WhatsApp communications</li>
             </ul>
-            <p>To exercise these rights, contact us at <a href="mailto:info@asmicareer.com">info@asmicareer.com</a> or call 7410019074.</p>
+            <p>To exercise these rights, contact us at <a href="mailto:contact@asmicareer.com">contact@asmicareer.com</a> or call 7410019074.</p>
           </div>
 
           <div className="legal-section">
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
 
           <div className="legal-section">
             <h2>11. Contact</h2>
-            <p>For privacy-related queries: <a href="mailto:info@asmicareer.com">info@asmicareer.com</a> · 7410019074 · <Link href="/contact">Find your nearest branch</Link></p>
+            <p>For privacy-related queries: <a href="mailto:contact@asmicareer.com">contact@asmicareer.com</a> · 7410019074 · <Link href="/contact">Find your nearest branch</Link></p>
           </div>
 
         </div>

@@ -2,7 +2,7 @@ import { Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
 import "./medical/medical.css";
 import "./engineering/engineering.css";
-import "./inquiry/inquiry.css";
+import "./medical/inquiry/inquiry.css";
 
 const montserrat = Montserrat({
   subsets: ["latin"],

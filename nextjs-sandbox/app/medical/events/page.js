@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import './events.css';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
 
 /* ─── CONFIG ────────────────────────────────────────────────
    Replace with your deployed Apps Script Web App URL.

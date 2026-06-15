@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import './colleges.css';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
 
 export default function CollegesDirectory() {
   const [allColleges, setAllColleges] = useState([]);

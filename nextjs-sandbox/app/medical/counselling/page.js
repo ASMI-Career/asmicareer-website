@@ -1,8 +1,8 @@
 'use client';
 import './counselling.css';
 import Link from 'next/link';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
 
 const PROCESS_STEPS = [
   { num: 1, title: 'Attend a Seminar', body: 'Start with our free cutoff seminar to understand the admission landscape — college options, cutoffs, quotas, and what to expect this year.' },
