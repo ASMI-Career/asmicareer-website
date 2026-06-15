@@ -293,8 +293,93 @@ export default function EventsPage() {
           </div>
         </section>
 
+        {/* ── NEW SECTION 2 — "Why Attend" Section ── */}
+        <section className="ev-why-section">
+          <div className="ev-why-inner">
+            <div className="ev-why-grid">
+              <div className="ev-why-left">
+                <div className="ev-why-img-wrapper">
+                  <img
+                    src="/images/events/audience-placeholder.jpg"
+                    alt="ASMI seminar audience"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentNode.classList.add('placeholder-fallback');
+                    }}
+                  />
+                  <div className="ev-img-fallback-text">ASMI Seminar Audience</div>
+                </div>
+              </div>
+              <div className="ev-why-right">
+                <span className="ev-section-eyebrow">WHY ATTEND?</span>
+                <h2 className="ev-section-title-dark">Give 2 Hours To Get The Right College</h2>
+                <p className="ev-section-sub-dark">
+                  The exam is over — but the next 60 days will decide where you spend the next 5 years.
+                  Most students leave this to chance. The smart ones prepare now.
+                </p>
+                <div className="ev-why-list">
+                  {[
+                    {
+                      t: 'Know Exactly Where You Stand',
+                      d: 'Your expected score matched to real colleges, real cutoffs, real chances.'
+                    },
+                    {
+                      t: 'Understand The System Before It Confuses You',
+                      d: 'Counselling rounds, quota types, deadlines — simplified in one session.'
+                    },
+                    {
+                      t: 'More Options Than You Walked In With',
+                      d: 'These options exist at every rank — the difference is knowing where to look.'
+                    },
+                    {
+                      t: 'Spend Smart, Not Just Big',
+                      d: 'Which colleges give you the career, not just the degree.'
+                    },
+                    {
+                      t: 'Your Question Is The Last Agenda Item',
+                      d: "We don't close until every doubt in the room is answered."
+                    }
+                  ].map((item, idx) => (
+                    <div className="ev-why-item" key={idx}>
+                      <span className="ev-why-checkmark">✓</span>
+                      <div className="ev-why-item-content">
+                        <h4 className="ev-why-item-title">{item.t}</h4>
+                        <p className="ev-why-item-desc">{item.d}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── NEW SECTION 3 — "Mistakes You Will Avoid" Section ── */}
+        <section className="ev-mistakes-section">
+          <div className="ev-mistakes-inner">
+            <div className="ev-sec-head-center">
+              <span className="ev-section-eyebrow">AVOID CRITICAL ERRORS</span>
+              <h2 className="ev-section-title-dark-center">Mistakes Students Make — That You Won't</h2>
+              <p className="ev-section-sub-dark-center">One simple mistake during counselling can cost you your dream seat or college. Learn to avoid them.</p>
+            </div>
+            <div className="ev-mistakes-grid">
+              {[
+                "Picking the wrong college at the right rank",
+                "Paying lakhs extra in fees unnecessarily",
+                "Missing better options you didn't know existed",
+                "Poor counselling decisions made under pressure"
+              ].map((mistake, idx) => (
+                <div className="ev-mistake-card" key={idx}>
+                  <span className="ev-mistake-icon">❌</span>
+                  <p className="ev-mistake-text">{mistake}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── SEMINAR CARDS ─────────────────────────────────── */}
-        <section className="ev-seminars-section" id="seminars">
+        <section className="ev-seminars-section" id="seminar-grid">
           <div className="ev-seminars-inner">
 
             <div className="ev-sec-head">
@@ -441,6 +526,105 @@ export default function EventsPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── NEW SECTION 4 — Counsellor / Speaker Section ── */}
+        <section className="ev-counsellors-section">
+          <div className="ev-counsellors-inner">
+            <div className="ev-sec-head-center">
+              <span className="ev-section-eyebrow">OUR EXPERTS</span>
+              <h2 className="ev-section-title-dark-center">Meet The Counsellors Guiding This Session</h2>
+              <p className="ev-section-sub-dark-center">Real experts. 12+ years of combined experience. No sales pitch — just clarity.</p>
+            </div>
+            <div className="ev-counsellors-grid">
+              {[
+                { n: '1', b: 'Mumbai East' },
+                { n: '2', b: 'Thane Central' },
+                { n: '3', b: 'Pune Campus' },
+                { n: '4', b: 'Kolhapur Division' },
+                { n: '5', b: 'Sangli District' },
+                { n: '6', b: 'Senior Advisory Board' }
+              ].map((c, idx) => (
+                <div className="ev-counsellor-card" key={idx}>
+                  <div className="ev-counsellor-avatar-wrapper">
+                    <img
+                      src={`/images/events/counsellor-${c.n}.jpg`}
+                      alt={`Counsellor Name ${c.n}`}
+                      className="ev-counsellor-avatar"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentNode.classList.add('avatar-fallback');
+                      }}
+                    />
+                    <div className="ev-avatar-fallback-icon">👤</div>
+                  </div>
+                  <h4 className="ev-counsellor-name">Counsellor Name {c.n}</h4>
+                  <p className="ev-counsellor-title">Senior Counsellor — {c.b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── NEW SECTION 5 — "Why Students Trust ASMI Career" Stats Strip ── */}
+        <section className="ev-trust-stats-section">
+          <div className="ev-trust-stats-inner">
+            <h3 className="ev-trust-heading">Why Students Trust ASMI Career</h3>
+            <div className="ev-trust-grid">
+              {[
+                { num: '25K+', lbl: 'Admissions Done' },
+                { num: '12+',  lbl: 'Years Of Expertise' },
+                { num: '4.9 ★', lbl: 'Google Rating' },
+                { num: '200+', lbl: 'Seminars Conducted' }
+              ].map((s, idx) => (
+                <div className="ev-trust-item" key={idx}>
+                  <div className="ev-trust-circle">
+                    <span className="ev-trust-num">{s.num}</span>
+                  </div>
+                  <span className="ev-trust-lbl">{s.lbl}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── NEW SECTION 6 — "Glimpses of Previous Seminars" Video Section ── */}
+        <section className="ev-video-section">
+          <div className="ev-video-inner">
+            <div className="ev-sec-head-center">
+              <span className="ev-section-eyebrow">SEMINAR GALLERY</span>
+              <h2 className="ev-section-title-dark-center">Glimpses of Our Previous Seminars</h2>
+              <p className="ev-section-sub-dark-center">See what happens in the room — real students, real questions, real answers.</p>
+            </div>
+            <div className="ev-video-wrapper">
+              <video
+                className="seminar-glimpse-video"
+                poster="/images/events/glimpses-poster.jpg"
+                controls
+                muted
+                loop
+                playsInline
+                preload="none"
+              >
+                <source src="/videos/events/seminar-glimpses.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </section>
+
+        {/* ── NEW SECTION 7 — Closing CTA Banner ── */}
+        <section className="ev-closing-cta-section">
+          <div className="ev-closing-cta-bg-overlay" />
+          <div className="ev-closing-cta-inner">
+            <h2 className="ev-closing-title">Ready To Take The Next Step In Your Medical Career?</h2>
+            <p className="ev-closing-sub">
+              Be a part of ASMI's Free Counselling Seminars — and build your medical future with the right guidance.
+            </p>
+            <a href="#seminar-grid" className="ev-closing-btn">
+              Reserve Your Slot Now →
+            </a>
           </div>
         </section>
 
@@ -740,6 +924,25 @@ export default function EventsPage() {
           </div>
         </div>
       )}
+
+      {/* ── STICKY BOTTOM BAR ── */}
+      <div className="ev-sticky-bar">
+        <div className="ev-sticky-inner">
+          <div className="ev-sticky-left">
+            <span className="ev-sticky-icon">🗓️</span>
+            <span className="ev-sticky-date">Next Seminar: Sunday, 5 July 2026</span>
+          </div>
+          <div className="ev-sticky-center">
+            <span className="ev-sticky-badge">100% FREE</span>
+            <span className="ev-sticky-text">Limited Seats — First Come, First Serve</span>
+          </div>
+          <div className="ev-sticky-right">
+            <a href="#seminar-grid" className="ev-sticky-btn">
+              Book Your Free Seat →
+            </a>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
