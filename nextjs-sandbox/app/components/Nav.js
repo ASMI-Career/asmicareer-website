@@ -8,7 +8,8 @@ const defaultLinks = [
   { label: 'Counselling', href: '/counselling' },
   { label: 'Packages', href: '/medical#packages' },
   { label: 'Services', href: '/services' },
-  { label: 'News & Events', href: '/medical#events' },
+  { label: 'Events',     href: '/events' },
+  { label: 'News',       href: '/news' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
 ];

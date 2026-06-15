@@ -1,84 +1,617 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800;900&family=Open+Sans:wght@400;600&display=swap');
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ============================================================
+   ASMI CAREER — /news page  (medical)
+   neetexpo-inspired: sticky countdown bar, spotlight strip,
+   event cards grid, warm cream aesthetic
+   Brand: Yellow #FFD700 · Navy #1a0040 · Purple #6a0dad
+   ============================================================ */
 
-.news-page { background: #fff; font-family: 'Open Sans', sans-serif; color: #1a0040; }
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap');
 
-.news-hero { background: #FFD700; padding: 64px 80px 48px; }
-.news-hero-inner { max-width: 700px; }
-.news-eyebrow { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #4a0080; display: block; margin-bottom: 14px; }
-.news-headline { font-family: 'Montserrat', sans-serif; font-size: clamp(26px, 4vw, 42px); font-weight: 900; color: #1a0040; line-height: 1.15; margin-bottom: 14px; }
-.news-sub { font-size: 15px; color: rgba(26,0,64,0.65); line-height: 1.7; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.news-content { padding: 48px 80px 72px; background: #f9f5ff; }
-.news-content-inner { max-width: 900px; margin: 0 auto; }
-
-.news-filters { display: flex; gap: 10px; margin-bottom: 32px; flex-wrap: wrap; }
-.news-filter-btn {
-  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
-  padding: 10px 22px; border-radius: 50px; border: 1.5px solid rgba(26,0,64,0.15);
-  background: #fff; color: #1a0040; cursor: pointer; transition: 0.2s;
-}
-.news-filter-btn:hover { border-color: #6a0dad; }
-.news-filter-btn.active { background: #1a0040; color: #FFD700; border-color: #1a0040; }
-
-.news-loading, .news-empty {
-  text-align: center; padding: 48px 20px; color: rgba(26,0,64,0.5); font-size: 14px;
+/* ── PAGE SHELL ─────────────────────────────────────────── */
+.np-page {
+  background: #fffef5;
+  font-family: 'Open Sans', sans-serif;
+  color: #1a0040;
+  /* push content below fixed nav */
+  padding-top: 64px;
+  /* push content above sticky bar */
+  padding-bottom: 72px;
 }
 
-.news-month-group { margin-bottom: 36px; }
-.news-month-header {
-  font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
-  letter-spacing: 2px; text-transform: uppercase; color: #6a0dad;
-  margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(106,13,173,0.15);
+/* ── HERO ────────────────────────────────────────────────── */
+.np-hero {
+  background: linear-gradient(135deg, #0d0020 0%, #1a0040 55%, #2e006a 100%);
+  padding: 72px 48px 64px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.np-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(106,13,173,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 40%, rgba(255,215,0,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.np-hero-inner {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.np-eyebrow {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #FFD700;
+  background: rgba(255,215,0,0.12);
+  border: 1px solid rgba(255,215,0,0.25);
+  padding: 5px 16px;
+  border-radius: 50px;
+  margin-bottom: 24px;
+}
+.np-hero-h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.12;
+  margin-bottom: 20px;
+}
+.np-h1-accent { color: #FFD700; }
+
+.np-hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.np-hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.np-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFD700;
+  color: #1a0040;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 13px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.np-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,215,0,0.4);
+}
+.np-btn-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 13px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.np-btn-wa:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.4); }
+
+/* ── SPOTLIGHT STRIP ─────────────────────────────────────── */
+.np-strip-section {
+  background: #fff;
+  border-bottom: 1px solid rgba(26,0,64,0.07);
+  padding: 28px 32px 24px;
+}
+.np-strip-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.np-strip-badge {
+  background: #fef2f2;
+  color: #c0131b;
+  border: 1px solid #fca5a5;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+.np-strip-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a0040;
 }
 
-.news-list { display: flex; flex-direction: column; gap: 12px; }
+.np-strip {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  max-width: 1280px;
+  margin: 0 auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(106,13,173,0.2) transparent;
+}
+.np-strip::-webkit-scrollbar { height: 4px; }
+.np-strip::-webkit-scrollbar-track { background: transparent; }
+.np-strip::-webkit-scrollbar-thumb { background: rgba(106,13,173,0.2); border-radius: 4px; }
 
-.news-card {
-  background: #fff; border: 1px solid rgba(106,13,173,0.1); border-radius: 14px;
-  padding: 18px 22px; display: flex; gap: 18px; align-items: flex-start;
+.np-strip-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fffef5;
+  border: 1px solid rgba(26,0,64,0.1);
+  border-radius: 14px;
+  padding: 14px 16px;
+  min-width: 320px;
+  max-width: 380px;
+  flex-shrink: 0;
   transition: box-shadow 0.2s, transform 0.2s;
 }
-.news-card:hover { box-shadow: 0 8px 24px rgba(106,13,173,0.1); transform: translateY(-2px); }
+.np-strip-card:hover { box-shadow: 0 6px 18px rgba(106,13,173,0.1); transform: translateY(-2px); }
 
-.news-card-date {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: #1a0040; border-radius: 10px; padding: 10px 14px; flex-shrink: 0; min-width: 56px;
+.np-sc-datebox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1a0040;
+  border-radius: 10px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  min-width: 48px;
 }
-.news-date-day { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: #FFD700; line-height: 1; }
-.news-date-month { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.np-sc-day { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; color: #FFD700; line-height: 1; }
+.np-sc-mon { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.6); letter-spacing: 1px; margin-top: 2px; }
 
-.news-card-body { flex: 1; }
-
-.news-tag {
-  display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 9px;
-  font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
+.np-sc-body { flex: 1; min-width: 0; }
+.np-sc-tag {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 50px;
+  border: 1px solid;
+  margin-bottom: 5px;
 }
-.news-tag-urgent { background: rgba(220,38,38,0.1); color: #dc2626; }
-.news-tag-exam { background: rgba(3,105,161,0.1); color: #0369a1; }
-.news-tag-seminar { background: rgba(255,215,0,0.15); color: #b45309; }
-.news-tag-default { background: rgba(106,13,173,0.1); color: #6a0dad; }
-
-.news-card-title {
-  font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800;
-  color: #1a0040; line-height: 1.4; margin-bottom: 10px;
+.np-sc-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a0040;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
 }
+.np-sc-daylabel {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(26,0,64,0.45);
+}
+.np-sc-daylabel.np-today { color: #c0131b; }
+.np-sc-daylabel.np-hot   { color: #d97706; }
 
-.news-card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.news-action-primary {
-  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800;
-  color: #1a0040; background: #FFD700; padding: 7px 16px; border-radius: 8px;
+.np-sc-cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #1a0040;
+  background: #FFD700;
+  padding: 7px 12px;
+  border-radius: 8px;
   text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.15s;
 }
-.news-action-secondary {
-  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
-  color: #6a0dad; background: rgba(106,13,173,0.08); padding: 7px 16px;
-  border-radius: 8px; text-decoration: none; border: 1px solid rgba(106,13,173,0.15);
+.np-sc-cta:hover { transform: scale(1.04); }
+
+/* ── EVENTS SECTION ──────────────────────────────────────── */
+.np-events-section {
+  padding: 56px 32px 64px;
+  background: #fffef5;
+}
+.np-events-inner {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
+.np-events-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.np-events-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(22px, 3.5vw, 34px);
+  font-weight: 900;
+  color: #1a0040;
+  margin-bottom: 8px;
+}
+.np-events-title-accent { color: #6a0dad; }
+.np-events-sub {
+  font-size: 14px;
+  color: rgba(26,0,64,0.55);
+}
+
+/* FILTER TABS */
+.np-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.np-filter-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: 1.5px solid rgba(26,0,64,0.15);
+  background: #fff;
+  color: #1a0040;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.np-filter-pill:hover { border-color: #6a0dad; color: #6a0dad; }
+.np-filter-pill.active {
+  background: #1a0040;
+  color: #FFD700;
+  border-color: #1a0040;
+  box-shadow: 0 4px 12px rgba(26,0,64,0.25);
+}
+
+/* STATE */
+.np-loading {
+  text-align: center;
+  padding: 64px 20px;
+  color: rgba(26,0,64,0.4);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+.np-empty {
+  text-align: center;
+  padding: 64px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: rgba(26,0,64,0.45);
+  font-size: 14px;
+}
+
+/* GRID */
+.np-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.np-card {
+  background: #fff;
+  border: 1px solid rgba(26,0,64,0.09);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.np-card:hover {
+  box-shadow: 0 10px 32px rgba(106,13,173,0.12);
+  transform: translateY(-3px);
+}
+.np-card-urgent {
+  border-color: rgba(192,19,27,0.2);
+  border-left: 4px solid #c0131b;
+}
+
+/* card top strip */
+.np-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #0d0020, #1a0040);
+  padding: 14px 16px;
+}
+.np-card-datebox {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.np-cd-day {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: #FFD700;
+  line-height: 1;
+}
+.np-cd-mon {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.5px;
+}
+.np-cd-yr {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+}
+
+/* urgency badge */
+.np-card-urgency {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+}
+.np-card-urgency.today { background: #c0131b; color: #fff; }
+.np-card-urgency.hot   { background: #f59e0b; color: #1a0040; }
+.np-card-urgency.soon  { background: rgba(255,215,0,0.18); color: #FFD700; }
+
+/* card body */
+.np-card-body { padding: 16px 18px 12px; flex: 1; }
+.np-card-tag {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+}
+.np-card-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a0040;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+.np-card-date-display {
+  font-size: 12px;
+  color: rgba(26,0,64,0.45);
+  font-weight: 600;
+}
+
+/* card footer */
+.np-card-footer {
+  padding: 0 18px 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.np-card-btn-primary {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  background: #FFD700;
+  color: #1a0040;
+  padding: 9px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.np-card-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,215,0,0.4); }
+.np-card-btn-sec {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(106,13,173,0.08);
+  color: #6a0dad;
+  border: 1px solid rgba(106,13,173,0.15);
+  padding: 9px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.np-card-btn-sec:hover { background: rgba(106,13,173,0.14); }
+.np-card-nolink {
+  font-size: 11px;
+  color: rgba(26,0,64,0.35);
+  font-style: italic;
+  align-self: center;
+}
+
+/* ── WHATSAPP BANNER ─────────────────────────────────────── */
+.np-wa-section {
+  background: linear-gradient(135deg, #128c7e, #075e54);
+  padding: 36px 32px;
+}
+.np-wa-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.np-wa-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.np-wa-text { flex: 1; min-width: 200px; }
+.np-wa-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.np-wa-sub { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.np-wa-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  background: #fff;
+  color: #075e54;
+  padding: 12px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.np-wa-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+/* ── STICKY BOTTOM BAR (neetexpo style) ──────────────────── */
+.np-sticky-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 200;
+  background: #1a0040;
+  border-top: 2px solid #FFD700;
+  padding: 0 28px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+}
+
+.np-sticky-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.np-sticky-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFD700;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.np-sticky-event-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* countdown digits */
+.np-sticky-countdown {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.np-sticky-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 38px;
+}
+.np-su-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: #FFD700;
+  line-height: 1;
+}
+.np-su-lbl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: 1px;
+}
+.np-su-sep {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: rgba(255,215,0,0.5);
+  margin-bottom: 10px;
+}
+
+/* CTA button */
+.np-sticky-cta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  background: #FFD700;
+  color: #1a0040;
+  padding: 10px 22px;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.np-sticky-cta:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(255,215,0,0.4); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .news-hero, .news-content { padding-left: 20px; padding-right: 20px; }
-  .news-card { flex-direction: column; gap: 12px; }
-  .news-card-date { flex-direction: row; gap: 6px; align-self: flex-start; min-width: unset; padding: 6px 14px; }
+  .np-hero { padding: 48px 20px 48px; }
+  .np-strip-section { padding: 20px 16px 16px; }
+  .np-strip-card { min-width: 260px; }
+  .np-events-section { padding: 40px 16px 48px; }
+  .np-grid { grid-template-columns: 1fr; }
+  .np-wa-section { padding: 28px 20px; }
+  .np-wa-inner { flex-direction: column; text-align: center; }
+  .np-wa-icon { margin: 0 auto; }
+  .np-sticky-bar { padding: 0 14px; gap: 10px; }
+  .np-sticky-event-name { font-size: 10px; }
+  .np-su-num { font-size: 17px; }
+  .np-sticky-unit { min-width: 30px; }
+}
+
+@media (max-width: 480px) {
+  .np-sticky-left { display: none; }
+  .np-sticky-bar { justify-content: center; }
 }
