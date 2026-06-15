@@ -258,7 +258,7 @@ export default function EngineeringPortal() {
               </div>
               <div className="events-track-wrapper" aria-label="Upcoming events">
                   {events.length > 0 && (
-                      <div className="events-track">
+                      <div className="events-track" style={{ animationDuration: `${events.length * 8.75}s` }}>
                           {[...events, ...events].map((ev, i) => {
                               return (
                                   <div className="event-card" key={i}>
