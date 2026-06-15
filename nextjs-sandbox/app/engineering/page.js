@@ -262,7 +262,7 @@ export default function EngineeringPortal() {
                       <span className="events-title-dot" aria-hidden="true">●</span>
                       News &amp; Events
                   </div>
-                  <a href="#" className="events-view-all">View all →</a>
+                  <Link href="/news" className="events-view-all">View all →</Link>
               </div>
               <div className="events-track-wrapper" aria-label="Upcoming events">
                   {events.length > 0 && (
