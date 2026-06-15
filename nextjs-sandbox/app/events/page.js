@@ -172,7 +172,8 @@ export default function EventsPage() {
   /* ── print ticket ── */
   function handlePrint() {
     if (!booking) return;
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(booking.bookingId)}&color=1a0040&bgcolor=ffffff`;
+    const verifyUrl = `https://asmicareer.in/events/verify?id=${encodeURIComponent(booking.bookingId)}`;
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(verifyUrl)}&color=1a0040&bgcolor=ffffff`;
     const win = window.open('', '_blank');
     win.document.write(`<!DOCTYPE html><html><head><title>ASMI Ticket — ${booking.bookingId}</title>
 <style>
@@ -884,7 +885,7 @@ export default function EventsPage() {
                       <p className="ev-ticket-contact">{booking.phone} · {booking.email}</p>
                     </div>
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(booking.bookingId)}&color=1a0040`}
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`https://asmicareer.in/events/verify?id=${booking.bookingId}`)}&color=1a0040`}
                       alt="QR Code"
                       className="ev-ticket-qr"
                     />

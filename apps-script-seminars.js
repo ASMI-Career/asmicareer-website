@@ -556,6 +556,8 @@ function bookSeminar(params) {
     }
   }
 
+  ensureCheckInColumns();
+
   // Open the sheet (or create it on first booking)
   var ss    = SpreadsheetApp.openById(SEMINAR_SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SEMINAR_SHEET_NAME);
@@ -565,10 +567,11 @@ function bookSeminar(params) {
     sheet.appendRow([
       "BookingID", "SeminarID", "City", "Branch", "Venue",
       "Date", "Slot", "Name", "Phone", "Email",
-      "NEETYear", "AdditionalMembers", "TotalSeats", "BookingDate"
+      "NEETYear", "AdditionalMembers", "TotalSeats", "BookingDate",
+      "CheckedIn", "CheckInTime"
     ]);
     sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, 14)
+    sheet.getRange(1, 1, 1, 16)
       .setFontWeight("bold")
       .setBackground("#1a0040")
       .setFontColor("#FFD700");
@@ -589,7 +592,9 @@ function bookSeminar(params) {
     params.neetYear || "NEET 2026",
     members,
     totalSeats,
-    new Date()
+    new Date(),
+    "",   // CheckedIn — blank until scanned
+    ""    // CheckInTime — blank until scanned
   ]);
 
   // Send styled HTML email with QR code
@@ -604,6 +609,8 @@ function verifySeminarTicket(bookingId) {
 
   if (!bookingId) return { success: false, error: "No booking ID provided" };
 
+  ensureCheckInColumns();
+
   var ss    = SpreadsheetApp.openById(SEMINAR_SPREADSHEET_ID);
   var sheet = ss.getSheetByName(SEMINAR_SHEET_NAME);
   if (!sheet) return { success: false, error: "No bookings found" };
@@ -611,28 +618,79 @@ function verifySeminarTicket(bookingId) {
   var data    = sheet.getDataRange().getValues();
   var headers = data[0];
 
-  for (var r = 1; r < data.length; r++) {
-    var row = {};
-    headers.forEach(function(h, i) { row[h] = data[r][i]; });
+  var bookingIdCol  = headers.indexOf("BookingID");
+  var checkedInCol  = headers.indexOf("CheckedIn");
+  var checkInTimeCol = headers.indexOf("CheckInTime");
 
-    if (row["BookingID"] && row["BookingID"].toString().trim() === bookingId.trim()) {
+  for (var r = 1; r < data.length; r++) {
+    var row = data[r];
+
+    if (row[bookingIdCol] && row[bookingIdCol].toString().trim() === bookingId.trim()) {
+
+      var rowObj = {};
+      headers.forEach(function(h, i) { rowObj[h] = row[i]; });
+
+      var alreadyCheckedIn = rowObj["CheckedIn"] === true || rowObj["CheckedIn"] === "TRUE";
+
+      if (alreadyCheckedIn) {
+        return {
+          success:     true,
+          valid:       true,
+          status:      "already_checked_in",
+          bookingId:   rowObj["BookingID"],
+          name:        rowObj["Name"],
+          city:        rowObj["City"],
+          date:        rowObj["Date"],
+          slot:        rowObj["Slot"],
+          venue:       rowObj["Venue"],
+          seats:       rowObj["TotalSeats"],
+          neetYear:    rowObj["NEETYear"],
+          checkedInAt: rowObj["CheckInTime"]
+        };
+      }
+
+      // First scan — mark as checked in
+      var now = new Date();
+      sheet.getRange(r + 1, checkedInCol + 1).setValue(true);
+      sheet.getRange(r + 1, checkInTimeCol + 1).setValue(now);
+
       return {
-        success:   true,
-        valid:     true,
-        bookingId: row["BookingID"],
-        name:      row["Name"],
-        city:      row["City"],
-        date:      row["Date"],
-        slot:      row["Slot"],
-        venue:     row["Venue"],
-        seats:     row["TotalSeats"],
-        neetYear:  row["NEETYear"],
-        bookedOn:  row["BookingDate"]
+        success:     true,
+        valid:       true,
+        status:      "checked_in",
+        bookingId:   rowObj["BookingID"],
+        name:        rowObj["Name"],
+        city:        rowObj["City"],
+        date:        rowObj["Date"],
+        slot:        rowObj["Slot"],
+        venue:       rowObj["Venue"],
+        seats:       rowObj["TotalSeats"],
+        neetYear:    rowObj["NEETYear"],
+        checkedInAt: now
       };
     }
   }
 
-  return { success: true, valid: false, message: "Booking ID not found" };
+  return { success: true, valid: false, status: "not_found", message: "Booking ID not found" };
+}
+
+// ── Idempotent columns checker ────────────────────────────────────
+
+function ensureCheckInColumns() {
+  var ss    = SpreadsheetApp.openById(SEMINAR_SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SEMINAR_SHEET_NAME);
+  if (!sheet) return;
+
+  var lastCol = sheet.getLastColumn();
+  var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+
+  if (headers.indexOf("CheckedIn") === -1) {
+    var newCol = lastCol + 1;
+    sheet.getRange(1, newCol).setValue("CheckedIn")
+      .setFontWeight("bold").setBackground("#1a0040").setFontColor("#FFD700");
+    sheet.getRange(1, newCol + 1).setValue("CheckInTime")
+      .setFontWeight("bold").setBackground("#1a0040").setFontColor("#FFD700");
+  }
 }
 
 // ── Styled HTML confirmation email with QR code ──────────────────
@@ -644,8 +702,10 @@ function sendWebBookingEmail(p) {
   var totalSeats = members + 1;
   var mapsLink   = p.venueMaps || "#";
 
+  var verifyUrl = "https://asmicareer.in/events/verify?id=" + encodeURIComponent(p.bookingId);
+
   var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200"
-    + "&data="    + encodeURIComponent(p.bookingId)
+    + "&data="    + encodeURIComponent(verifyUrl)
     + "&color=1a0040&bgcolor=ffffff";
 
   var subject = "\u2705 Booking Confirmed | ASMI Seminar \u2014 "
