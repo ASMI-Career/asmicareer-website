@@ -33,8 +33,8 @@ const CONFIG = {
   CAPACITY_KOLHAPUR:   300,
 
   // ── Admin ───────────────────────────────────────────────────
-  ADMIN_EMAIL:     "YOUR_ADMIN_EMAIL@gmail.com",
-  ALERT_THRESHOLD: 100,
+  ADMIN_EMAIL:     "devang@asmicareer.com",
+  ALERT_THRESHOLD: 25,
 
   // ── Logo ────────────────────────────────────────────────────
   LOGO_URL: "https://drive.google.com/uc?export=view&id=1QjeUDWuX8W9iEungvT4cqaYrqndyUErJ",
@@ -43,9 +43,9 @@ const CONFIG = {
   VENUE_DETAILS: {
 
     MULUND: {
-      label:   "Mulund",
-      date:    "10 May 2026",
-      time:    "10:30 AM – 12:30 PM",
+      label:   "Thane",
+      date:    "28 June 2026",
+      time:    "TBD",
       address: "Balaji Banquets, Balaji Mandir, Dr. Ambedkar Road, Mulund West, Mumbai",
       maps:    "https://maps.app.goo.gl/SjD5JV4FUGY68Fyj7",
       phone:   "7410019075",
@@ -54,8 +54,8 @@ const CONFIG = {
 
     VILE_PARLE: {
       label:   "Vile Parle",
-      date:    "17 May 2026",
-      time:    "11:00 AM – 01:00 PM",
+      date:    "05 July 2026",
+      time:    "TBD",
       address: "P.L Deshpande Hall, Lokmanya Seva Sangh, Vile Parle East, Mumbai",
       maps:    "https://maps.app.goo.gl/hJzA2trDnim5roQs5",
       phone:   "7410019077",
@@ -64,8 +64,8 @@ const CONFIG = {
 
     PUNE: {
       label:   "Pune",
-      date:    "10 May 2026",
-      time:    "04:00 PM – 07:00 PM",
+      date:    "TBD",
+      time:    "TBD",
       address: "Bharatiya Vidya Bhuvan's Sulochana Natu Vidya Mandir, Near Senapati Bapat Road, Dhotre Path, Shivajinagar, Pune, Maharashtra 411016",
       maps:    "https://maps.app.goo.gl/o3sd8LfJaowGyUsJ8",
       phone:   "7410013458",
@@ -74,11 +74,20 @@ const CONFIG = {
 
     KOLHAPUR: {
       label:   "Kolhapur",
-      date:    "09 May 2026",
-      time:    "10:30 AM – 12:30 PM",
+      date:    "TBD",
+      time:    "TBD",
       address: "Deval Club & Sangeet Kendra and Govindrao Tembe Rangmandir, Kolhapur",
       maps:    "https://maps.app.goo.gl/3VZL8KHevSgwiDwh9?g_st=iw",
       phone:   "7057575833",
+      email:   "helpdesk@asmicareer.com"
+    },
+    SANGLI: {
+      label:   "Sangli",
+      date:    "TBD",
+      time:    "TBD",
+      address: "Deval Club & Sangeet Kendra and Govindrao Tembe Rangmandir, Kolhapur",
+      maps:    "https://maps.app.goo.gl/3VZL8KHevSgwiDwh9?g_st=iw",
+      phone:   "7410019076",
       email:   "support@asmicareer.com"
     }
   }
@@ -797,7 +806,7 @@ function sendWebBookingEmail(p) {
     + " style='display:inline-block;padding:10px 20px;background:#25D366;"
     + "color:#ffffff;text-decoration:none;border-radius:8px;"
     + "font-weight:700;font-size:13px;'>"
-    + "\ud83d\udcac WhatsApp</a>"
+    + "\ud83d\udacac WhatsApp</a>"
     + "<p style='color:#888;font-size:11px;margin:12px 0 0;'>"
     + "\ud83d\udce7 support@asmicareer.com &nbsp;&middot;&nbsp; \ud83c\udf10 asmicareer.in</p>"
     + "</div>"
