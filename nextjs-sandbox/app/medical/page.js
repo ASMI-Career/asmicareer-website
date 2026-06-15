@@ -416,7 +416,7 @@ export default function MedicalPortal() {
                       <span className="events-title-dot" aria-hidden="true">●</span>
                       News &amp; Events
                   </div>
-                  <Link href="/news" className="events-view-all">View all →</Link>
+                  <Link href="/medical/news" className="events-view-all">View all →</Link>
               </div>
               <div className="events-track-wrapper" aria-label="Upcoming events">
                   {events.length > 0 && (

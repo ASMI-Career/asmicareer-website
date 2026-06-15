@@ -9,7 +9,7 @@ const defaultLinks = [
   { label: 'Packages', href: '/medical#packages' },
   { label: 'Services', href: '/services' },
   { label: 'Events',     href: '/events' },
-  { label: 'News',       href: '/news' },
+  { label: 'News',       href: '/medical/news' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
 ];

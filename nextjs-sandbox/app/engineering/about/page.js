@@ -9,7 +9,8 @@ const engineeringNavLinks = [
   { label: 'Counselling', href: '/engineering/counselling' },
   { label: 'Packages', href: '/engineering#packages' },
   { label: 'Services', href: '/engineering/services' },
-  { label: 'News & Events', href: '/engineering#events' },
+  { label: 'Events', href: '/engineering/events' },
+  { label: 'News', href: '/engineering/news' },
   { label: 'About Us', href: '/engineering/about' },
   { label: 'Contact Us', href: '/engineering/contact' },
 ];

@@ -4,17 +4,6 @@ import './news.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 
-const engineeringNavLinks = [
-  { label: 'Colleges', href: '/engineering/colleges' },
-  { label: 'Counselling', href: '/engineering/counselling' },
-  { label: 'Packages', href: '/engineering#packages' },
-  { label: 'Services', href: '/engineering/services' },
-  { label: 'Events', href: '/engineering/events' },
-  { label: 'News', href: '/engineering/news' },
-  { label: 'About Us', href: '/about' },
-  { label: 'Contact Us', href: '/contact' },
-];
-
 /* ─── helpers ─────────────────────────────────────────────── */
 function isExpired(event) {
   const eventDate = new Date(event.date);
@@ -56,22 +45,23 @@ function useCountdown(dateStr) {
 const pad = n => String(n).padStart(2, '0');
 
 const TAG_CFG = {
-  'URGENT':      { bg: 'rgba(239, 68, 68, 0.15)', color: '#ef5350', border: 'rgba(239, 68, 68, 0.25)' },
-  'EXAM DATE':   { bg: 'rgba(0, 200, 180, 0.12)', color: '#00C8B4', border: 'rgba(0, 200, 180, 0.25)' },
-  'RESULT':      { bg: 'rgba(52, 211, 153, 0.12)', color: '#34d399', border: 'rgba(52, 211, 153, 0.25)' },
-  'ASMI SEMINAR':{ bg: 'rgba(255, 215, 0, 0.12)', color: '#ffd700', border: 'rgba(255, 215, 0, 0.25)' },
-  'NOTICE':      { bg: 'rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.75)', border: 'rgba(255, 255, 255, 0.12)' },
+  'URGENT':      { bg: '#fff0f0', color: '#c0131b', border: '#fca5a5' },
+  'EXAM DATE':   { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
+  'ADMIT CARD':  { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
+  'ASMI SEMINAR':{ bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
+  'RESULT':      { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
+  'NOTICE':      { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
 
 /* ─── main component ──────────────────────────────────────── */
-export default function EngineeringNewsPage() {
+export default function NewsPage() {
   const [events, setEvents] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/data/engineeringEvents.json')
+    fetch('/data/events.json')
       .then(r => r.json())
       .then(data => {
         const active = data.filter(e => !isExpired(e));
@@ -85,7 +75,7 @@ export default function EngineeringNewsPage() {
   const filterEvents = () => {
     if (filter === 'all')       return events;
     if (filter === 'deadlines') return events.filter(e => e.type === 'deadline' || e.tag === 'URGENT');
-    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || e.tag === 'EXAM DATE' || e.tag === 'RESULT');
+    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || e.tag === 'EXAM DATE' || e.tag === 'ADMIT CARD');
     if (filter === 'seminars')  return events.filter(e => e.type === 'asmi' || e.tag === 'ASMI SEMINAR');
     return events;
   };
@@ -98,28 +88,28 @@ export default function EngineeringNewsPage() {
   return (
     <>
       {/* ── PAGE ─────────────────────────────────────────── */}
-      <div className="en-page">
-        <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" />
+      <div className="np-page">
+        <Nav />
 
         {/* ── HERO ─────────────────────────────────────── */}
-        <section className="en-hero">
-          <div className="en-hero-inner">
-            <span className="en-eyebrow">ENGINEERING — LIVE UPDATES</span>
-            <h1 className="en-hero-h1">
-              Every JEE &amp; CET Deadline. <span className="en-h1-accent">One Place.</span>
+        <section className="np-hero">
+          <div className="np-hero-inner">
+            <span className="np-eyebrow">NEET &amp; MEDICAL — LIVE UPDATES</span>
+            <h1 className="np-hero-h1">
+              Every Deadline.<br />Every Date. <span className="np-h1-accent">One Place.</span>
             </h1>
-            <p className="en-hero-sub">
-              JoSAA, MHT-CET, CSAB, PERA CET and more — exam dates, counselling
-              rounds, and reporting deadlines, updated live.
+            <p className="np-hero-sub">
+              NEET UG, MHT CET, MCC Counselling, BPT Admissions — updated live
+              as official notices drop. Never miss a deadline again.
             </p>
-            <div className="en-hero-actions">
-              <a href="#en-events" className="en-btn-primary">View All Deadlines ↓</a>
+            <div className="np-hero-actions">
+              <a href="#np-events" className="np-btn-primary">View All Deadlines ↓</a>
               <a
-                href="https://chat.whatsapp.com/L7pxi8v0nrU54tApnBA99e"
+                href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
                 target="_blank" rel="noopener noreferrer"
-                className="en-btn-wa"
+                className="np-btn-wa"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 2C6.495 2 2 6.495 2 12.05c0 1.87.49 3.628 1.347 5.154L2 22l4.955-1.323A10.01 10.01 0 0 0 12.05 22C17.605 22 22 17.505 22 11.95 22 6.495 17.605 2 12.05 2zm0 18.214c-1.703 0-3.282-.455-4.637-1.248l-.333-.197-3.44.919.925-3.378-.217-.349a8.168 8.168 0 0 1-1.252-4.362c0-4.522 3.68-8.202 8.2-8.202 4.522 0 8.202 3.68 8.202 8.202 0 4.521-3.68 8.2-8.202 8.2-.001.001-.002 0-.003 0h.003z"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 2C6.495 2 2 6.495 2 12.05c0 1.87.49 3.628 1.347 5.154L2 22l4.955-1.323A10.01 10.01 0 0 0 12.05 22C17.605 22 22 17.505 22 11.95 22 6.495 17.605 2 12.05 2zm0 18.214c-1.703 0-3.282-.455-4.637-1.248l-.333-.197-3.44.919.925-3.378-.217-.349a8.168 8.168 0 0 1-1.252-4.362c0-4.522 3.88-8.202 8.2-8.202 4.522 0 8.202 3.68 8.202 8.202 0 4.521-3.68 8.2-8.202 8.2-.001.001-.002 0-.003 0h.003z"/></svg>
                 WhatsApp Alerts
               </a>
             </div>
@@ -128,32 +118,32 @@ export default function EngineeringNewsPage() {
 
         {/* ── SPOTLIGHT STRIP (≤14 days) ──────────────── */}
         {!loading && spotlight.length > 0 && (
-          <section className="en-strip-section">
-            <div className="en-strip-head">
-              <span className="en-strip-badge">⚡ Urgent</span>
-              <span className="en-strip-heading">Coming Up in the Next 14 Days</span>
+          <section className="np-strip-section">
+            <div className="np-strip-head">
+              <span className="np-strip-badge">⚡ Urgent</span>
+              <span className="np-strip-heading">Coming Up in the Next 14 Days</span>
             </div>
-            <div className="en-strip">
+            <div className="np-strip">
               {spotlight.map((e, i) => {
                 const d   = daysUntil(e.date);
                 const cfg = getCfg(e.tag);
                 return (
-                  <div className="en-strip-card" key={i}>
-                    <div className="en-sc-datebox">
-                      <span className="en-sc-day">{new Date(e.date).getDate()}</span>
-                      <span className="en-sc-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
+                  <div className="np-strip-card" key={i}>
+                    <div className="np-sc-datebox">
+                      <span className="np-sc-day">{new Date(e.date).getDate()}</span>
+                      <span className="np-sc-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
                     </div>
-                    <div className="en-sc-body">
-                      <span className="en-sc-tag" style={{ color: cfg.color, background: cfg.bg, borderColor: cfg.border }}>
+                    <div className="np-sc-body">
+                      <span className="np-sc-tag" style={{ color: cfg.color, background: cfg.bg, borderColor: cfg.border }}>
                         {e.tag}
                       </span>
-                      <p className="en-sc-title">{e.title}</p>
-                      <span className={`en-sc-daylabel ${d === 0 ? 'en-today' : d <= 3 ? 'en-hot' : ''}`}>
+                      <p className="np-sc-title">{e.title}</p>
+                      <span className={`np-sc-daylabel ${d === 0 ? 'np-today' : d <= 3 ? 'np-hot' : ''}`}>
                         {d === 0 ? '🔴 TODAY' : d === 1 ? '🟠 Tomorrow' : `${d} days left`}
                       </span>
                     </div>
                     {e.link && (
-                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="en-sc-cta">
+                      <a href={e.link} target="_blank" rel="noopener noreferrer" className="np-sc-cta">
                         {e.cta || 'View'} →
                       </a>
                     )}
@@ -165,27 +155,27 @@ export default function EngineeringNewsPage() {
         )}
 
         {/* ── MAIN EVENTS SECTION ──────────────────────── */}
-        <section className="en-events-section" id="en-events">
-          <div className="en-events-inner">
+        <section className="np-events-section" id="np-events">
+          <div className="np-events-inner">
 
-            <div className="en-events-header">
-              <h2 className="en-events-title">
-                Engineering Updates 2026 <span className="en-events-title-accent">— All Notices</span>
+            <div className="np-events-header">
+              <h2 className="np-events-title">
+                Medical Updates 2026 <span className="np-events-title-accent">— All Notices</span>
               </h2>
-              <p className="en-events-sub">Official dates from JoSAA, CSAB, MHT CET, and ASMI seminars</p>
+              <p className="np-events-sub">Official dates from NTA, MCC, MHT CET, and ASMI seminars</p>
             </div>
 
             {/* FILTER TABS */}
-            <div className="en-filters">
+            <div className="np-filters">
               {[
                 { id: 'all',       label: 'All' },
                 { id: 'deadlines', label: '🔴 Deadlines' },
-                { id: 'exams',     label: '📋 Exam Dates / Results' },
+                { id: 'exams',     label: '📋 Exam Dates' },
                 { id: 'seminars',  label: '🎓 ASMI Seminars' },
               ].map(f => (
                 <button
                   key={f.id}
-                  className={`en-filter-pill ${filter === f.id ? 'active' : ''}`}
+                  className={`np-filter-pill ${filter === f.id ? 'active' : ''}`}
                   onClick={() => setFilter(f.id)}
                 >
                   {f.label}
@@ -193,10 +183,10 @@ export default function EngineeringNewsPage() {
               ))}
             </div>
 
-            {loading && <div className="en-loading">Loading updates…</div>}
+            {loading && <div className="np-loading">Loading updates…</div>}
 
             {!loading && filtered.length === 0 && (
-              <div className="en-empty">
+              <div className="np-empty">
                 <span style={{ fontSize: 36 }}>🗓️</span>
                 <p>No updates in this category right now. Check back soon.</p>
               </div>
@@ -204,53 +194,53 @@ export default function EngineeringNewsPage() {
 
             {/* CARDS GRID */}
             {!loading && filtered.length > 0 && (
-              <div className="en-grid">
+              <div className="np-grid">
                 {filtered.map((e, i) => {
                   const cfg = getCfg(e.tag);
                   const d   = daysUntil(e.date);
                   const isUrgent = e.type === 'deadline' || e.tag === 'URGENT';
                   return (
-                    <div className={`en-card ${isUrgent ? 'en-card-urgent' : ''}`} key={i}>
+                    <div className={`np-card ${isUrgent ? 'np-card-urgent' : ''}`} key={i}>
                       {/* top date strip */}
-                      <div className="en-card-top">
-                        <div className="en-card-datebox">
-                          <span className="en-cd-day">{new Date(e.date).getDate()}</span>
-                          <span className="en-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
-                          <span className="en-cd-yr">{new Date(e.date).getFullYear()}</span>
+                      <div className="np-card-top">
+                        <div className="np-card-datebox">
+                          <span className="np-cd-day">{new Date(e.date).getDate()}</span>
+                          <span className="np-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
+                          <span className="np-cd-yr">{new Date(e.date).getFullYear()}</span>
                         </div>
                         {d >= 0 && d <= 7 && (
-                          <span className={`en-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
+                          <span className={`np-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
                             {d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : `${d}d left`}
                           </span>
                         )}
                       </div>
 
                       {/* body */}
-                      <div className="en-card-body">
+                      <div className="np-card-body">
                         <span
-                          className="en-card-tag"
+                          className="np-card-tag"
                           style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
                         >
                           {e.tag}
                         </span>
-                        <h3 className="en-card-title">{e.title}</h3>
-                        <p className="en-card-date-display">{e.display_date}</p>
+                        <h3 className="np-card-title">{e.title}</h3>
+                        <p className="np-card-date-display">{e.display_date}</p>
                       </div>
 
                       {/* footer */}
-                      <div className="en-card-footer">
+                      <div className="np-card-footer">
                         {e.link && (
-                          <a href={e.link} target="_blank" rel="noopener noreferrer" className="en-card-btn-primary">
+                          <a href={e.link} target="_blank" rel="noopener noreferrer" className="np-card-btn-primary">
                             {e.cta || 'Apply Now'}
                           </a>
                         )}
                         {e.pdf && (
-                          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="en-card-btn-sec">
+                          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="np-card-btn-sec">
                             📄 View Notice
                           </a>
                         )}
                         {!e.link && !e.pdf && (
-                          <span className="en-card-nolink">Date noted — no action needed</span>
+                          <span className="np-card-nolink">Date noted — no action needed</span>
                         )}
                       </div>
                     </div>
@@ -262,19 +252,19 @@ export default function EngineeringNewsPage() {
         </section>
 
         {/* ── WHATSAPP CTA BANNER ──────────────────────── */}
-        <section className="en-wa-section">
-          <div className="en-wa-inner">
-            <div className="en-wa-icon">
+        <section className="np-wa-section">
+          <div className="np-wa-inner">
+            <div className="np-wa-icon">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.05 2C6.495 2 2 6.495 2 12.05c0 1.87.49 3.628 1.347 5.154L2 22l4.955-1.323A10.01 10.01 0 0 0 12.05 22C17.605 22 22 17.505 22 11.95 22 6.495 17.605 2 12.05 2zm0 18.214c-1.703 0-3.282-.455-4.637-1.248l-.333-.197-3.44.919.925-3.378-.217-.349a8.168 8.168 0 0 1-1.252-4.362c0-4.522 3.68-8.202 8.2-8.202 4.522 0 8.202 3.68 8.202 8.202 0 4.521-3.68 8.2-8.202 8.2-.001.001-.002 0-.003 0h.003z"/></svg>
             </div>
-            <div className="en-wa-text">
-              <h3 className="en-wa-title">Get Instant Alerts on WhatsApp</h3>
-              <p className="en-wa-sub">Never miss a deadline — ASMI sends you alerts the moment new notices drop.</p>
+            <div className="np-wa-text">
+              <h3 className="np-wa-title">Get Instant Alerts on WhatsApp</h3>
+              <p className="np-wa-sub">Never miss a deadline — ASMI sends you alerts the moment new notices drop.</p>
             </div>
             <a
-              href="https://chat.whatsapp.com/L7pxi8v0nrU54tApnBA99e"
+              href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
               target="_blank" rel="noopener noreferrer"
-              className="en-wa-btn"
+              className="np-wa-btn"
             >
               Join on WhatsApp →
             </a>
@@ -286,44 +276,44 @@ export default function EngineeringNewsPage() {
 
       {/* ── STICKY BOTTOM COUNTDOWN BAR (neetexpo style) ── */}
       {!loading && urgent && (
-        <div className="en-sticky-bar">
-          <div className="en-sticky-left">
-            <span className="en-sticky-label">⚡ Next Deadline</span>
-            <span className="en-sticky-event-name">
+        <div className="np-sticky-bar">
+          <div className="np-sticky-left">
+            <span className="np-sticky-label">⚡ Next Deadline</span>
+            <span className="np-sticky-event-name">
               {urgent.title.length > 52 ? urgent.title.slice(0, 52) + '…' : urgent.title}
             </span>
           </div>
-          <div className="en-sticky-countdown">
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.d)}</span>
-              <span className="en-su-lbl">days</span>
+          <div className="np-sticky-countdown">
+            <div className="np-sticky-unit">
+              <span className="np-su-num">{pad(countdown.d)}</span>
+              <span className="np-su-lbl">days</span>
             </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.h)}</span>
-              <span className="en-su-lbl">hrs</span>
+            <span className="np-su-sep">:</span>
+            <div className="np-sticky-unit">
+              <span className="np-su-num">{pad(countdown.h)}</span>
+              <span className="np-su-lbl">hrs</span>
             </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.m)}</span>
-              <span className="en-su-lbl">min</span>
+            <span className="np-su-sep">:</span>
+            <div className="np-sticky-unit">
+              <span className="np-su-num">{pad(countdown.m)}</span>
+              <span className="np-su-lbl">min</span>
             </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.s)}</span>
-              <span className="en-su-lbl">sec</span>
+            <span className="np-su-sep">:</span>
+            <div className="np-sticky-unit">
+              <span className="np-su-num">{pad(countdown.s)}</span>
+              <span className="np-su-lbl">sec</span>
             </div>
           </div>
           {urgent.link ? (
             <a
               href={urgent.link}
               target="_blank" rel="noopener noreferrer"
-              className="en-sticky-cta"
+              className="np-sticky-cta"
             >
               {urgent.cta || 'Act Now'}
             </a>
           ) : (
-            <a href="#en-events" className="en-sticky-cta">View All</a>
+            <a href="#np-events" className="np-sticky-cta">View All</a>
           )}
         </div>
       )}
