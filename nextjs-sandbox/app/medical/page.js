@@ -6,6 +6,13 @@ import { motion } from 'framer-motion';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
+function isExpired(event) {
+  const eventDate = new Date(event.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return eventDate < today;
+}
+
 export default function MedicalPortal() {
   const FEATURED_COLLEGE_SLUGS = [
     'grant-medical-college-mumbai',
@@ -104,7 +111,8 @@ export default function MedicalPortal() {
     fetch('/data/events.json')
       .then(r => r.json())
       .then(data => {
-        const sorted = [...data].sort((a, b) => new Date(a.date) - new Date(b.date));
+        const active = data.filter(e => !isExpired(e));
+        const sorted = [...active].sort((a, b) => new Date(a.date) - new Date(b.date));
         setEvents(sorted);
       })
       .catch(err => console.warn('Events feed unavailable:', err));
