@@ -6,6 +6,11 @@ import Footer from '../../components/Footer';
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function isExpired(event) {
+  // Result entries never expire — stay visible until manually removed
+  if (event.title && event.title.toLowerCase().includes('result')) {
+    return false;
+  }
+
   const eventDate = new Date(event.date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -19,30 +24,6 @@ function daysUntil(dateStr) {
   event.setHours(0, 0, 0, 0);
   return Math.round((event - today) / (1000 * 60 * 60 * 24));
 }
-
-function useCountdown(dateStr) {
-  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const target = new Date(dateStr);
-    target.setHours(23, 59, 59, 0);
-    const tick = () => {
-      const diff = target - new Date();
-      if (diff <= 0) { setTime({ d: 0, h: 0, m: 0, s: 0 }); return; }
-      setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [dateStr]);
-  return time;
-}
-
-const pad = n => String(n).padStart(2, '0');
 
 const TAG_CFG = {
   'URGENT':      { bg: '#fff0f0', color: '#c0131b', border: '#fca5a5' },
@@ -81,9 +62,10 @@ export default function NewsPage() {
   };
 
   const filtered   = filterEvents();
-  const urgent     = events[0]; // soonest upcoming
-  const spotlight  = events.filter(e => daysUntil(e.date) <= 14);
-  const countdown  = useCountdown(urgent?.date || '2099-12-31');
+  const spotlight  = events.filter(e => {
+    const d = daysUntil(e.date);
+    return d >= 0 && d <= 14;
+  });
 
   return (
     <>
@@ -274,49 +256,7 @@ export default function NewsPage() {
         <Footer />
       </div>
 
-      {/* ── STICKY BOTTOM COUNTDOWN BAR (neetexpo style) ── */}
-      {!loading && urgent && (
-        <div className="np-sticky-bar">
-          <div className="np-sticky-left">
-            <span className="np-sticky-label">⚡ Next Deadline</span>
-            <span className="np-sticky-event-name">
-              {urgent.title.length > 52 ? urgent.title.slice(0, 52) + '…' : urgent.title}
-            </span>
-          </div>
-          <div className="np-sticky-countdown">
-            <div className="np-sticky-unit">
-              <span className="np-su-num">{pad(countdown.d)}</span>
-              <span className="np-su-lbl">days</span>
-            </div>
-            <span className="np-su-sep">:</span>
-            <div className="np-sticky-unit">
-              <span className="np-su-num">{pad(countdown.h)}</span>
-              <span className="np-su-lbl">hrs</span>
-            </div>
-            <span className="np-su-sep">:</span>
-            <div className="np-sticky-unit">
-              <span className="np-su-num">{pad(countdown.m)}</span>
-              <span className="np-su-lbl">min</span>
-            </div>
-            <span className="np-su-sep">:</span>
-            <div className="np-sticky-unit">
-              <span className="np-su-num">{pad(countdown.s)}</span>
-              <span className="np-su-lbl">sec</span>
-            </div>
-          </div>
-          {urgent.link ? (
-            <a
-              href={urgent.link}
-              target="_blank" rel="noopener noreferrer"
-              className="np-sticky-cta"
-            >
-              {urgent.cta || 'Act Now'}
-            </a>
-          ) : (
-            <a href="#np-events" className="np-sticky-cta">View All</a>
-          )}
-        </div>
-      )}
+
     </>
   );
 }

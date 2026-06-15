@@ -17,6 +17,11 @@ const engineeringNavLinks = [
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function isExpired(event) {
+  // Result entries never expire — stay visible until manually removed
+  if (event.title && event.title.toLowerCase().includes('result')) {
+    return false;
+  }
+
   const eventDate = new Date(event.date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -30,30 +35,6 @@ function daysUntil(dateStr) {
   event.setHours(0, 0, 0, 0);
   return Math.round((event - today) / (1000 * 60 * 60 * 24));
 }
-
-function useCountdown(dateStr) {
-  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
-  useEffect(() => {
-    const target = new Date(dateStr);
-    target.setHours(23, 59, 59, 0);
-    const tick = () => {
-      const diff = target - new Date();
-      if (diff <= 0) { setTime({ d: 0, h: 0, m: 0, s: 0 }); return; }
-      setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [dateStr]);
-  return time;
-}
-
-const pad = n => String(n).padStart(2, '0');
 
 const TAG_CFG = {
   'URGENT':      { bg: 'rgba(239, 68, 68, 0.15)', color: '#ef5350', border: 'rgba(239, 68, 68, 0.25)' },
@@ -91,9 +72,10 @@ export default function EngineeringNewsPage() {
   };
 
   const filtered   = filterEvents();
-  const urgent     = events[0]; // soonest upcoming
-  const spotlight  = events.filter(e => daysUntil(e.date) <= 14);
-  const countdown  = useCountdown(urgent?.date || '2099-12-31');
+  const spotlight  = events.filter(e => {
+    const d = daysUntil(e.date);
+    return d >= 0 && d <= 14;
+  });
 
   return (
     <>
@@ -284,49 +266,7 @@ export default function EngineeringNewsPage() {
         <Footer />
       </div>
 
-      {/* ── STICKY BOTTOM COUNTDOWN BAR (neetexpo style) ── */}
-      {!loading && urgent && (
-        <div className="en-sticky-bar">
-          <div className="en-sticky-left">
-            <span className="en-sticky-label">⚡ Next Deadline</span>
-            <span className="en-sticky-event-name">
-              {urgent.title.length > 52 ? urgent.title.slice(0, 52) + '…' : urgent.title}
-            </span>
-          </div>
-          <div className="en-sticky-countdown">
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.d)}</span>
-              <span className="en-su-lbl">days</span>
-            </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.h)}</span>
-              <span className="en-su-lbl">hrs</span>
-            </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.m)}</span>
-              <span className="en-su-lbl">min</span>
-            </div>
-            <span className="en-su-sep">:</span>
-            <div className="en-sticky-unit">
-              <span className="en-su-num">{pad(countdown.s)}</span>
-              <span className="en-su-lbl">sec</span>
-            </div>
-          </div>
-          {urgent.link ? (
-            <a
-              href={urgent.link}
-              target="_blank" rel="noopener noreferrer"
-              className="en-sticky-cta"
-            >
-              {urgent.cta || 'Act Now'}
-            </a>
-          ) : (
-            <a href="#en-events" className="en-sticky-cta">View All</a>
-          )}
-        </div>
-      )}
+
     </>
   );
 }

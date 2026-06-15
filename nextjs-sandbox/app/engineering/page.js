@@ -18,6 +18,11 @@ const engineeringNavLinks = [
 ];
 
 function isExpired(event) {
+  // Result entries never expire — stay visible until manually removed
+  if (event.title && event.title.toLowerCase().includes('result')) {
+    return false;
+  }
+
   const eventDate = new Date(event.date);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
