@@ -41,6 +41,13 @@ const TOOLS = [
 
 const GUIDES = [
   {
+    icon: '📘',
+    title: 'ASMI Career Cutoff Booklet',
+    description: 'Comprehensive cutoff compilation for medical colleges — closing ranks and cutoff scores.',
+    tag: 'PDF',
+    link: '/ASMI_Career_Cutoff_Booklet.pdf',
+  },
+  {
     icon: '📖',
     title: 'MH State MBBS Admission Guide',
     description: 'Complete guide to Maharashtra State CET Cell process — CAP rounds, registration, preference filling, reporting.',
@@ -169,7 +176,7 @@ export default function ResourcesPage() {
         <div className="res-cta-inner">
           <h2 className="res-cta-headline">Need personalised guidance?</h2>
           <p className="res-cta-sub">Tools give you data. Counsellors give you a strategy.</p>
-          <Link href="/inquiry" className="res-cta-btn">Book Free Counselling →</Link>
+          <Link href="/medical/inquiry" className="res-cta-btn">Book Free Counselling →</Link>
         </div>
       </section>
 

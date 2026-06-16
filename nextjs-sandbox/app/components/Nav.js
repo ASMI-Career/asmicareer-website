@@ -14,7 +14,7 @@ const defaultLinks = [
   { label: 'Contact Us', href: '/medical/contact' },
 ];
 
-export default function Nav({ links = defaultLinks, ctaHref = "/inquiry", homeHref = "/medical" }) {
+export default function Nav({ links = defaultLinks, ctaHref = "/medical/inquiry", homeHref = "/medical" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 

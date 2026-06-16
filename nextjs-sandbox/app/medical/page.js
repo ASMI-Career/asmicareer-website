@@ -92,6 +92,8 @@ export default function MedicalPortal() {
 
 
 
+  const carAnimRef = useRef(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -104,6 +106,12 @@ export default function MedicalPortal() {
           [0,1,2,3,4,5].forEach(i => {
             setTimeout(() => setActiveStep(i), 800 + i * 800);
           });
+          // Programmatically start SVG animateMotion
+          setTimeout(() => {
+            if (carAnimRef.current && typeof carAnimRef.current.beginElement === 'function') {
+              carAnimRef.current.beginElement();
+            }
+          }, 400);
         }
       },
       { threshold: 0.2 }
@@ -341,7 +349,7 @@ export default function MedicalPortal() {
           
                       <div className="hero-ctas">
                           <a href="/medical/inquiry" className="btn-primary">Book Free Counselling →</a>
-                          <a href="#tools" className="btn-secondary">Explore Tools ↓</a>
+                          <Link href="/medical/resources" className="btn-secondary">Explore Tools ↓</Link>
                       </div>
                   </motion.div>
               </div>
@@ -760,7 +768,7 @@ export default function MedicalPortal() {
                           NEET rank to your MBBS seat.
                       </p>
                       <div className="why-overlay-btns">
-                          <a href="/medical/inquiry" className="why-btn-dark">Book a Free Call 📞</a>
+                          <a href="tel:7410019074" className="why-btn-dark">Book a Free Call 📞</a>
                       </div>
                   </div>
               </div>
@@ -908,9 +916,12 @@ export default function MedicalPortal() {
               {journeyActive && (
                 <g className="highway-car">
                   <animateMotion
+                    ref={carAnimRef}
+                    begin="indefinite"
                     dur="4.8s"
                     fill="freeze"
                     path="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                    rotate="auto"
                   />
                   {/* Car body top-down */}
                   <rect x="-10" y="-16" width="20" height="32" rx="4" fill="#FFD700"/>
@@ -1035,58 +1046,6 @@ export default function MedicalPortal() {
                 </div>
               </div>
 
-              <ul className="pricing-features">
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Medical Admission Guidance</div>
-                    <div className="pf-body">Comprehensive guidance from start to finish. Additional sessions before every round.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">One-to-One Counselling</div>
-                    <div className="pf-body">Personal sessions covering college selection, budget, patient flow and city preference.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">College Preference List</div>
-                    <div className="pf-body">Custom preference list prepared for every round — not just once.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Round-wise Cutoff Data</div>
-                    <div className="pf-body">Actual round-wise cutoffs shared in real time so you always know where you stand.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">WhatsApp Admission Alerts</div>
-                    <div className="pf-body">All timelines, seat matrices and allotment results sent directly. Never miss a deadline.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Admission Form Filling</div>
-                    <div className="pf-body">MH State + MCC form filling included. Other states at ₹5,000/state extra.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Document Verification</div>
-                    <div className="pf-body">Every certificate checked and provided as scanned PDF.</div>
-                  </div>
-                </li>
-              </ul>
-
               <a href="/medical/inquiry" className="pricing-btn-primary">
                 Book Free Counselling →
               </a>
@@ -1110,58 +1069,6 @@ export default function MedicalPortal() {
                   Flat fee · No deadline · Same price anytime
                 </div>
               </div>
-
-              <ul className="pricing-features">
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">NRI / Management Quota Guidance</div>
-                    <div className="pf-body">Specialised counselling for private and deemed college seats via NRI or management quota.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">One-to-One Counselling</div>
-                    <div className="pf-body">Personal sessions covering all quota-specific options, budget and documentation.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">College Preference List</div>
-                    <div className="pf-body">Custom list across private and deemed colleges matching your rank and budget.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Round-wise Cutoff Data</div>
-                    <div className="pf-body">Real-time cutoffs for management and NRI quota seats across all rounds.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">WhatsApp Admission Alerts</div>
-                    <div className="pf-body">All timelines and updates sent directly. Never miss a management round deadline.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Form Filling Assistance</div>
-                    <div className="pf-body">Registration and preference form filling support for all applicable rounds.</div>
-                  </div>
-                </li>
-                <li>
-                  <span className="pf-check">✓</span>
-                  <div>
-                    <div className="pf-title">Document Verification</div>
-                    <div className="pf-body">Every certificate checked and provided as scanned PDF.</div>
-                  </div>
-                </li>
-              </ul>
 
               <a href="/medical/inquiry" className="pricing-btn-secondary">
                 Book Free Counselling →
@@ -1225,6 +1132,22 @@ export default function MedicalPortal() {
               </button>
             </div>
 
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <Link href="/medical/services" className="pricing-services-link" style={{
+              display: 'inline-block',
+              color: '#FFD700',
+              fontFamily: 'Montserrat, sans-serif',
+              fontWeight: '700',
+              fontSize: '15px',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+              borderBottom: '1px solid currentColor',
+              paddingBottom: '2px'
+            }}>
+              See All Packages & Detailed Features →
+            </Link>
           </div>
 
           {/* BOTTOM BANNER */}
@@ -1405,7 +1328,7 @@ export default function MedicalPortal() {
                       <h2 className="resources-headline" id="resources-heading">Free Resources</h2>
                       <p className="resources-sub">Tools, checklists and data — built for NEET 2026 students. No login required.</p>
                   </div>
-                  <a href="#" className="resources-view-all">View all →</a>
+                  <Link href="/medical/resources" className="resources-view-all">View all →</Link>
               </div>
       
               <div className="resources-cards">
