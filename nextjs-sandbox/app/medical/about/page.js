@@ -191,11 +191,11 @@ export default function AboutPage() {
             Book a free counselling session. No payment. No obligation.
           </p>
           <div className="about-cta-btns">
-            <Link href="/inquiry" className="about-cta-btn-primary">
+            <Link href="/medical/inquiry" className="about-cta-btn-primary">
               Book Free Counselling →
             </Link>
             <a
-              href="https://wa.me/917410019074"
+              href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance"
               className="about-cta-btn-secondary"
               target="_blank"
               rel="noopener noreferrer"

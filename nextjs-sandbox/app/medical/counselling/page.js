@@ -43,8 +43,8 @@ export default function CounsellingPage() {
             college. With a real counsellor assigned to your file.
           </p>
           <div className="coun-hero-btns">
-            <Link href="/inquiry" className="coun-btn-primary">Book Free Counselling →</Link>
-            <a href="https://wa.me/917410019074" className="coun-btn-secondary"
+            <Link href="/medical/inquiry" className="coun-btn-primary">Book Free Counselling →</Link>
+            <a href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance" className="coun-btn-secondary"
               target="_blank" rel="noopener noreferrer">WhatsApp Us 💬</a>
           </div>
         </div>

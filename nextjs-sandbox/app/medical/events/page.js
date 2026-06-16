@@ -637,7 +637,7 @@ export default function EventsPage() {
               <p className="ev-wa-sub">Get personalised guidance on WhatsApp. Our counsellors respond within hours.</p>
             </div>
             <a
-              href="https://wa.me/917410019074"
+              href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance"
               target="_blank" rel="noopener noreferrer"
               className="ev-wa-cta"
             >

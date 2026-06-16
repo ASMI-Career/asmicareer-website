@@ -1167,7 +1167,7 @@ export default function MedicalPortal() {
                 Book My Free Session →
               </a>
               <a
-                href="https://wa.me/917410019074"
+                href="https://wa.me/917410019074?text=I%20want%20to%20know%20more%20about%20the%20packages."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="banner-btn-yellow"
@@ -1475,7 +1475,7 @@ export default function MedicalPortal() {
           <div className={`faq-cta${faqVisible ? ' faq-cta-visible' : ''}`}>
             <p className="faq-cta-text">Still have questions?</p>
             <a
-              href="https://wa.me/917410019074"
+              href="https://wa.me/917410019074?text=I%20want%20to%20know%20more%20about%20ASMI%20and%20its%20services."
               target="_blank"
               rel="noopener noreferrer"
               className="faq-cta-btn"
@@ -1900,7 +1900,7 @@ export default function MedicalPortal() {
               <p className="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
               <div className="cta-buttons animate">
                   <a href="/medical/inquiry" className="cta-btn-primary">Book My Free Session →</a>
-                  <a href="#" className="cta-btn-secondary">WhatsApp Us →</a>
+                  <a href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance" target="_blank" rel="noopener noreferrer" className="cta-btn-secondary">WhatsApp Us →</a>
               </div>
           </div>
       </section>
@@ -1914,7 +1914,7 @@ export default function MedicalPortal() {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/917410019074"
+        href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance"
         className="whatsapp-float"
         target="_blank"
         rel="noopener noreferrer"

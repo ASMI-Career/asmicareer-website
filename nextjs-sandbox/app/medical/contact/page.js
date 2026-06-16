@@ -12,7 +12,7 @@ const BRANCHES = [
     phone: '7410019077',
     whatsapp: '917410019077',
     maps: 'https://maps.app.goo.gl/1UQpxoTs4msmVXiH8',
-    inquiry: '/inquiry?source=andheri',
+    inquiry: '/medical/inquiry?source=andheri',
     color: '#1a0040',
   },
   {
@@ -22,7 +22,7 @@ const BRANCHES = [
     phone: '7410019075',
     whatsapp: '917410019075',
     maps: 'https://maps.app.goo.gl/9va5LoADHXwLUwBq9',
-    inquiry: '/inquiry?source=thane',
+    inquiry: '/medical/inquiry?source=thane',
     color: '#1a0040',
   },
   {
@@ -32,7 +32,7 @@ const BRANCHES = [
     phone: '7410013458',
     whatsapp: '917410013458',
     maps: 'https://maps.app.goo.gl/F47RuGGUSPM7GdFC6',
-    inquiry: '/inquiry?source=pune',
+    inquiry: '/medical/inquiry?source=pune',
     color: '#1a0040',
   },
   {
@@ -42,7 +42,7 @@ const BRANCHES = [
     phone: '7057575833',
     whatsapp: '917057575833',
     maps: 'https://maps.app.goo.gl/jSrHArpXM68qnW8',
-    inquiry: '/inquiry?source=kolhapur',
+    inquiry: '/medical/inquiry?source=kolhapur',
     color: '#1a0040',
   },
   {
@@ -52,7 +52,7 @@ const BRANCHES = [
     phone: '7410019076',
     whatsapp: '917410019076',
     maps: 'https://maps.app.goo.gl/Qp7eRwXWpkiqRSSq5',
-    inquiry: '/inquiry?source=sangli',
+    inquiry: '/medical/inquiry?source=sangli',
     color: '#1a0040',
   },
   {
@@ -62,7 +62,7 @@ const BRANCHES = [
     phone: '8484980032',
     whatsapp: '918484980032',
     maps: 'https://maps.app.goo.gl/CWfPiaVhi7tL7cSx9',
-    inquiry: '/inquiry?source=sambhajinagar',
+    inquiry: '/medical/inquiry?source=sambhajinagar',
     color: '#1a0040',
   },
 ];
@@ -88,7 +88,7 @@ export default function ContactPage() {
             📞 7410019074
           </a>
           <a
-            href="https://wa.me/917410019074"
+            href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance"
             className="contact-helpline-wa"
             target="_blank"
             rel="noopener noreferrer"
@@ -121,7 +121,7 @@ export default function ContactPage() {
                 📞 {b.phone}
               </a>
               <a
-                href={`https://wa.me/${b.whatsapp}`}
+                href={`https://wa.me/${b.whatsapp}?text=${encodeURIComponent(`Hi, I want to connect to ${b.city}`)}`}
                 className="branch-btn branch-btn-wa"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -157,7 +157,7 @@ export default function ContactPage() {
               Use our central inquiry form — we'll route you to the right counsellor.
             </p>
           </div>
-          <a href="/inquiry" className="contact-cta-btn">
+          <a href="/medical/inquiry" className="contact-cta-btn">
             Book via Central Form →
           </a>
         </div>

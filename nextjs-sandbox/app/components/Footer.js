@@ -49,7 +49,7 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors", 
                 </svg>
               </a>
               <a
-                href="https://wa.me/917410019074"
+                href="https://wa.me/917410019074?text=Hi,%20I%20need%20assistance"
                 className="footer-social"
                 target="_blank"
                 rel="noopener noreferrer"
