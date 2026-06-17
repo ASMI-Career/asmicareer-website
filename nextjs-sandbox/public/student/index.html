@@ -14,36 +14,36 @@
         /* ══════════════════════════════════════════════
            DESIGN SYSTEM — ASMI Student Dashboard
            ══════════════════════════════════════════════ */
-        :root {
+         :root {
             --yellow: #FFD700;
             --yellow-hover: #e6c200;
-            --yellow-glow: rgba(255, 215, 0, 0.15);
-            --navy: #1a0040;
-            --navy-light: #2d0d66;
-            --purple: #6a0dad;
-            --purple-light: #8b25cc;
-            --bg-dark: #070114;
-            --card-bg: rgba(45, 13, 102, 0.15);
-            --card-bg-hover: rgba(45, 13, 102, 0.28);
-            --card-border: rgba(139, 37, 204, 0.2);
-            --card-border-hover: rgba(139, 37, 204, 0.45);
-            --text-light: #f3f0ff;
-            --text-muted: #a78bfa;
-            --text-dim: rgba(255, 255, 255, 0.45);
+            --yellow-glow: rgba(255, 215, 0, 0.18);
+            --navy: #080112; /* Deep Cosmos */
+            --navy-light: #140a24; /* Nebula Surface */
+            --purple: #5b1e9e; /* Royal Amethyst */
+            --purple-light: #7a32cc;
+            --bg-dark: #080112;
+            --card-bg: rgba(20, 10, 36, 0.65);
+            --card-bg-hover: rgba(20, 10, 36, 0.85);
+            --card-border: rgba(91, 30, 158, 0.28);
+            --card-border-hover: rgba(255, 215, 0, 0.4);
+            --text-light: #f3eefd; /* Starry Sky */
+            --text-muted: #9a8da9; /* Muted Star */
+            --text-dim: rgba(243, 238, 253, 0.4);
 
             /* Status colors */
             --safe-color: #10b981;
-            --safe-bg: rgba(16, 185, 129, 0.12);
-            --safe-border: rgba(16, 185, 129, 0.25);
+            --safe-bg: rgba(16, 185, 129, 0.15);
+            --safe-border: rgba(16, 185, 129, 0.3);
             --likely-color: #3b82f6;
-            --likely-bg: rgba(59, 130, 246, 0.12);
-            --likely-border: rgba(59, 130, 246, 0.25);
+            --likely-bg: rgba(59, 130, 246, 0.15);
+            --likely-border: rgba(59, 130, 246, 0.3);
             --borderline-color: #f59e0b;
-            --borderline-bg: rgba(245, 158, 11, 0.12);
-            --borderline-border: rgba(245, 158, 11, 0.25);
+            --borderline-bg: rgba(245, 158, 11, 0.15);
+            --borderline-border: rgba(245, 158, 11, 0.3);
             --reach-color: #ef4444;
-            --reach-bg: rgba(239, 68, 68, 0.1);
-            --reach-border: rgba(239, 68, 68, 0.2);
+            --reach-bg: rgba(239, 68, 68, 0.12);
+            --reach-border: rgba(239, 68, 68, 0.25);
 
             /* Layout */
             --sidebar-width: 220px;
@@ -186,8 +186,10 @@
             left: 0;
             bottom: 0;
             width: var(--sidebar-width);
-            background: rgba(7, 1, 20, 0.75);
-            border-right: 1px solid rgba(139, 37, 204, 0.12);
+            background: rgba(8, 1, 18, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--card-border);
             padding: 20px 0;
             z-index: 150;
             display: flex;
@@ -218,21 +220,22 @@
         }
 
         .nav-link:hover {
-            background: rgba(139, 37, 204, 0.12);
+            background: rgba(91, 30, 158, 0.22);
             color: var(--text-light);
         }
 
         .nav-link.active {
-            background: rgba(139, 37, 204, 0.25);
+            background: rgba(91, 30, 158, 0.45);
             color: var(--yellow);
+            border: 1px solid rgba(255, 215, 0, 0.25);
         }
 
         .nav-link.active::before {
             content: '';
             position: absolute;
             left: -8px;
-            top: 6px;
-            bottom: 6px;
+            top: 8px;
+            bottom: 8px;
             width: 3px;
             border-radius: 0 3px 3px 0;
             background: var(--yellow);
@@ -286,13 +289,21 @@
 
         /* ── UTILITY CARDS ── */
         .tool-card {
-            background: linear-gradient(135deg, rgba(26, 0, 64, 0.7) 0%, rgba(45, 13, 102, 0.35) 100%);
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 28px 32px;
             margin-bottom: 28px;
             position: relative;
             overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tool-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.04);
         }
 
         .tool-card::before {
@@ -341,8 +352,8 @@
         }
         .form-input {
             width: 100%;
-            background: rgba(7, 1, 20, 0.6);
-            border: 1px solid rgba(139, 37, 204, 0.4);
+            background: rgba(8, 1, 18, 0.75);
+            border: 1px solid var(--card-border);
             border-radius: 10px;
             padding: 12px 16px;
             color: #ffffff;
@@ -388,24 +399,25 @@
         .chip {
             padding: 8px 16px;
             border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            background: rgba(91, 30, 158, 0.08);
             font-size: 12px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--text-light);
             cursor: pointer;
             transition: all 0.2s;
         }
         .chip:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(91, 30, 158, 0.2);
+            border-color: var(--purple-light);
             color: var(--text-light);
         }
         .chip.active {
-            background: var(--purple);
-            border-color: var(--purple-light);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(106, 13, 173, 0.3);
+            background: var(--yellow);
+            border-color: var(--yellow);
+            color: var(--navy);
+            box-shadow: 0 4px 12px var(--yellow-glow);
+            font-weight: 700;
         }
 
         /* ── TABLES ── */
@@ -414,7 +426,7 @@
             overflow-x: auto;
             border-radius: 12px;
             border: 1px solid var(--card-border);
-            background: rgba(7, 1, 20, 0.3);
+            background: var(--navy-light);
             margin-top: 16px;
         }
         .custom-table {
@@ -424,7 +436,7 @@
             font-size: 13px;
         }
         .custom-table th {
-            background: rgba(106, 13, 173, 0.2);
+            background: rgba(8, 1, 18, 0.9);
             padding: 12px 16px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -433,12 +445,15 @@
         }
         .custom-table td {
             padding: 12px 16px;
-            border-bottom: 1px solid rgba(139, 37, 204, 0.1);
-            color: var(--text-muted);
+            border-bottom: 1px solid rgba(91, 30, 158, 0.15);
+            color: var(--text-light);
+        }
+        .custom-table tr {
+            transition: background-color 0.2s ease;
         }
         .custom-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--text-light);
+            background: rgba(91, 30, 158, 0.15);
+            color: #ffffff;
         }
 
         /* ── RESPONSIVE MOBILE NAV ── */
@@ -489,6 +504,33 @@
         .badge-likely { background: var(--likely-bg); color: var(--likely-color); border-color: var(--likely-border); }
         .badge-borderline { background: var(--borderline-bg); color: var(--borderline-color); border-color: var(--borderline-border); }
         .badge-reach { background: var(--reach-bg); color: var(--reach-color); border-color: var(--reach-border); }
+
+        /* ── STEP PROGRESS BAR ── */
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-dark);
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        .step-circle.active {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            box-shadow: 0 0 12px var(--yellow-glow);
+            background: rgba(255, 215, 0, 0.05);
+        }
+        .step-circle.completed {
+            border-color: var(--safe-color);
+            color: var(--safe-color);
+            background: var(--safe-bg);
+        }
 
         @media (max-width: 768px) {
             .sidebar { display: none; }
@@ -1369,25 +1411,45 @@
             const daysToNext = nextDead ? getDeadlineCountdown(nextDead.date) : null;
 
             const html = `
-                  <div class="tool-card" style="display:grid; grid-template-columns:1fr; gap:20px;">
+                  <div class="tool-card" style="display:grid; grid-template-columns:1fr; gap:20px; position:relative; overflow:hidden;">
+                    <!-- Advisor Constellation Background -->
+                    <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="const-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--purple)" stop-opacity="0.4" />
+                                <stop offset="50%" stop-color="var(--yellow)" stop-opacity="0.6" />
+                                <stop offset="100%" stop-color="var(--purple)" stop-opacity="0.2" />
+                            </linearGradient>
+                            <filter id="glow-filter" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <path d="M 80,40 L 300,110 L 520,70 L 780,130" fill="none" stroke="url(#const-grad)" stroke-width="1.5" stroke-dasharray="4,8" />
+                        <circle cx="80" cy="40" r="3" fill="var(--purple)" opacity="0.7" />
+                        <circle cx="300" cy="110" r="4" fill="var(--yellow)" filter="url(#glow-filter)" />
+                        <circle cx="520" cy="70" r="3" fill="var(--purple)" opacity="0.7" />
+                        <circle cx="780" cy="130" r="5" fill="var(--yellow)" filter="url(#glow-filter)" />
+                    </svg>
+
                     <!-- Responsive 2-column grid -->
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; position:relative; z-index:1;">
                         <div>
-                            <h1 style="font-size:22px; font-weight:900; margin-bottom:12px;">
+                            <h1 style="font-size:22px; font-weight:900; margin-bottom:12px; color:#fff;">
                                 Welcome back, <span style="color:var(--yellow);">${escapeHtml(appState.name)}</span> 🎓
                             </h1>
                             ${appState.rank ? `
-                                <div style="background:rgba(7, 1, 20, 0.5); border:1px solid rgba(255, 215, 0, 0.2); border-radius:30px; padding:6px 16px; display:inline-flex; align-items:center; gap:8px; margin-bottom:16px;">
+                                <div style="background:var(--navy); border:1px solid var(--card-border); border-radius:30px; padding:6px 16px; display:inline-flex; align-items:center; gap:8px; margin-bottom:16px;">
                                     <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">NEET AIR</span>
                                     <span style="font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:var(--yellow);">#${appState.rank.toLocaleString()}</span>
                                 </div>
                             ` : ''}
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                                <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:10px; text-align:center;">
+                                <div style="background:rgba(8, 1, 18, 0.5); border:1px solid var(--card-border); border-radius:12px; padding:10px; text-align:center;">
                                     <span style="font-size:18px; font-weight:900; color:var(--yellow); display:block; margin-bottom:2px;">${appState.shortlist.length}</span>
                                     <span style="font-size:9px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Shortlisted</span>
                                 </div>
-                                <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:10px; text-align:center;">
+                                <div style="background:rgba(8, 1, 18, 0.5); border:1px solid var(--card-border); border-radius:12px; padding:10px; text-align:center;">
                                     <span style="font-size:18px; font-weight:900; color:var(--yellow); display:block; margin-bottom:2px;">${daysToNext ? daysToNext.text : '—'}</span>
                                     <span style="font-size:9px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Next Deadline</span>
                                 </div>
@@ -1395,9 +1457,9 @@
                         </div>
                         
                         <!-- Column 2: Counsellor & Support Team -->
-                        <div style="background:rgba(26, 0, 64, 0.25); border:1px solid rgba(139, 37, 204, 0.15); border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                        <div style="background:var(--navy-light); border:1px solid var(--card-border); border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
                             <div style="display:flex; align-items:center; gap:12px;">
-                                <div style="width:44px; height:44px; border-radius:50%; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Montserrat',sans-serif; font-size:16px;">
+                                <div style="width:44px; height:44px; border-radius:50%; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Montserrat',sans-serif; font-size:16px; border:1px solid rgba(255,215,0,0.3);">
                                     ${getInitials(appState.counsellorName)}
                                 </div>
                                 <div>
@@ -1418,23 +1480,24 @@
                                 ` : ''}
                             </div>
                         </div>
-
-                <!-- Milestones / Progress -->
-                <div style="margin-bottom:28px;">
-                    <div class="section-header">
-                        <h2 class="section-title"><span class="icon">📈</span> Your Admission Progress</h2>
                     </div>
-                    <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.5) 0%, rgba(45, 13, 102, 0.2) 100%); border:1px solid var(--card-border); border-radius:16px; padding:24px;">
-                        <div style="display:flex; justify-content:space-between; position:relative;">
-                            ${appState.progress.steps.map((step, i) => `
-                                <div style="display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; position:relative; z-index:1;">
-                                    <div class="step-circle ${step.status === 'completed' ? 'completed' : (step.status === 'active' ? 'active' : '')}" 
-                                         style="width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; border:2px solid rgba(255,255,255,0.1); background:var(--bg-dark); color:var(--text-muted);">
-                                        ${step.status === 'completed' ? '✓' : (i + 1)}
+
+                    <!-- Milestones / Progress -->
+                    <div style="margin-top:12px; position:relative; z-index:1;">
+                        <div class="section-header" style="margin-bottom:12px;">
+                            <h2 class="section-title" style="font-size:14px;"><span class="icon">📈</span> Your Admission Progress</h2>
+                        </div>
+                        <div style="background:var(--navy); border:1px solid var(--card-border); border-radius:12px; padding:16px;">
+                            <div style="display:flex; justify-content:space-between; position:relative;">
+                                ${appState.progress.steps.map((step, i) => `
+                                    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; flex:1; position:relative; z-index:1;">
+                                        <div class="step-circle ${step.status === 'completed' ? 'completed' : (step.status === 'active' ? 'active' : '')}">
+                                            ${step.status === 'completed' ? '✓' : (i + 1)}
+                                        </div>
+                                        <span style="font-size:10px; font-weight:700; text-transform:uppercase; color: ${step.status === 'active' ? 'var(--yellow)' : (step.status === 'completed' ? 'var(--safe-color)' : 'var(--text-muted)')}; text-align:center;">${step.label}</span>
                                     </div>
-                                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color: ${step.status === 'active' ? 'var(--yellow)' : (step.status === 'completed' ? 'var(--safe-color)' : 'var(--text-muted)')}; text-align:center;">${step.label}</span>
-                                </div>
-                            `).join('')}
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1446,9 +1509,9 @@
                         <div class="section-header">
                             <h2 class="section-title"><span class="icon">📅</span> Upcoming Deadlines</h2>
                         </div>
-                        <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto;">
+                        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto; backdrop-filter:blur(12px);">
                             ${appState.deadlines.length === 0 ? `
-                                <div style="text-align:center; padding:32px;">No deadlines loaded.</div>
+                                <div style="text-align:center; padding:32px; color:var(--text-muted);">No deadlines loaded.</div>
                             ` : appState.deadlines.map(dl => {
                                 const countdown = getDeadlineCountdown(dl.date);
                                 return `
@@ -1460,7 +1523,7 @@
                                         <div style="flex:1;">
                                             <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">${escapeHtml(dl.title)}</div>
                                             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:10px;">
-                                                <span style="background:rgba(139, 37, 204, 0.2); color:var(--text-muted); border:1px solid var(--card-border); padding:2px 8px; border-radius:20px;">${escapeHtml(dl.authority)}</span>
+                                                <span style="background:rgba(91, 30, 158, 0.25); color:var(--text-light); border:1px solid var(--card-border); padding:2px 8px; border-radius:20px;">${escapeHtml(dl.authority)}</span>
                                                 <span class="${countdown.class}">${countdown.text}</span>
                                             </div>
                                         </div>
@@ -1475,7 +1538,7 @@
                         <div class="section-header">
                             <h2 class="section-title"><span class="icon">⭐</span> My Shortlist</h2>
                         </div>
-                        <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto;">
+                        <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto; backdrop-filter:blur(12px);">
                             ${shortlistedColleges.length === 0 ? `
                                 <div style="text-align:center; padding:32px; color: var(--text-muted);">
                                     <div style="font-size:36px; margin-bottom:12px;">⭐</div>
