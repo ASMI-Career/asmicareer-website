@@ -1403,7 +1403,7 @@
         }
 
         function renderDashboard() {
-            const content = document.getElementById('dashboard-home-content');
+            const content = document.getElementById('dashboard-container-js');
             if (!content) return;
             const shortlistedColleges = appState.shortlist.map(name => enrichShortlistItem(name));
             const upcoming = appState.deadlines.filter(dl => new Date(dl.date + 'T23:59:59') >= new Date());
