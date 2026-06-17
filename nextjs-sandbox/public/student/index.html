@@ -1,2310 +1,1940 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Portal | ASMI Career</title>
-  <meta name="description" content="Personalised student portal for ASMI Career - view your scores, rank, shortlisted colleges, stage progress, and connect with your counsellor.">
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Tabler Icons CDN -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-
-  <style>
-    /* ══════════════════════════════════════
-       BRAND TOKENS & DESIGN SYSTEM
-       ══════════════════════════════════════ */
-    :root {
-      --yellow: #FFD700;
-      --navy: #1a0040;
-      --purple: #6a0dad;
-      --mid-purple: #4a0080;
-      --green: #15803d;
-      --blue: #0369a1;
-      --orange: #c2410c;
-      --red: #b91c1c;
-      --card-bg: rgba(255, 255, 255, 0.58);
-      --card-border: 1px solid rgba(106, 13, 173, 0.15);
-      --card-radius: 12px;
-      
-      --sidebar-width: 192px;
-      --transition-speed: 0.25s;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Open Sans', sans-serif;
-      background-color: var(--yellow);
-      color: var(--navy);
-      min-height: 100vh;
-      display: flex;
-      overflow-x: hidden;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* Subtle grid decoration overlaying the yellow background */
-    .bg-grid-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image: 
-        linear-gradient(rgba(26, 0, 64, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26, 0, 64, 0.04) 1px, transparent 1px);
-      background-size: 44px 44px;
-    }
-
-    /* Ambient background glows */
-    .ambient-glow {
-      position: fixed;
-      width: 45vw;
-      height: 45vw;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(120px);
-      opacity: 0.25;
-    }
-    .glow-1 {
-      top: -10%;
-      right: -5%;
-      background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
-    }
-    .glow-2 {
-      bottom: -10%;
-      left: 10%;
-      background: radial-gradient(circle, var(--mid-purple) 0%, transparent 70%);
-    }
-
-    /* ══════════════════════════════════════
-       LAYOUT: SIDEBAR
-       ══════════════════════════════════════ */
-    .sidebar {
-      width: var(--sidebar-width);
-      background-color: var(--navy);
-      color: rgba(255, 255, 255, 0.7);
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 0;
-      z-index: 100;
-      box-shadow: 4px 0 20px rgba(26, 0, 64, 0.15);
-      transition: left var(--transition-speed) ease;
-    }
-
-    .sidebar-header {
-      padding: 0 20px 16px 20px;
-    }
-
-    .sidebar-logo {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 18px;
-      color: var(--yellow);
-      letter-spacing: -0.5px;
-      margin-bottom: 2px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar-subtitle {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
-    }
-
-    .sidebar-menu {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px 8px;
-    }
-
-    .sidebar-divider {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: rgba(255, 255, 255, 0.25);
-      margin: 18px 0 6px 12px;
-      text-transform: uppercase;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.65);
-      margin-bottom: 2px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border-left: 3px solid transparent;
-    }
-
-    .sidebar-link:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: white;
-    }
-
-    .sidebar-link.active {
-      color: var(--yellow);
-      background: rgba(255, 215, 0, 0.09);
-      border-left-color: var(--yellow);
-      font-weight: 700;
-    }
-
-    .sidebar-link i {
-      font-size: 16px;
-      transition: transform 0.2s ease;
-    }
-    
-    .sidebar-link:hover i {
-      transform: scale(1.1);
-    }
-
-    /* Sidebar profile card at the bottom */
-    .sidebar-profile {
-      padding: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: auto;
-      background: rgba(0, 0, 0, 0.15);
-    }
-
-    .profile-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--yellow);
-      color: var(--navy);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-      flex-shrink: 0;
-    }
-
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .profile-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: white;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .profile-badge {
-      font-size: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--yellow);
-      margin-top: 1px;
-    }
-
-    /* Overlay drawer background for mobile */
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 0, 64, 0.5);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 95;
-      animation: fadeIn var(--transition-speed) ease;
-    }
-
-    /* ══════════════════════════════════════
-       LAYOUT: MAIN AREA
-       ══════════════════════════════════════ */
-    .main-content {
-      margin-left: var(--sidebar-width);
-      flex-grow: 1;
-      padding: 32px;
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      width: calc(100% - var(--sidebar-width));
-    }
-
-    /* Mobile Header */
-    .mobile-header {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      background: var(--navy);
-      color: white;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      z-index: 90;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-    }
-
-    .mobile-hamburger {
-      background: none;
-      border: none;
-      color: var(--yellow);
-      font-size: 24px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .mobile-logo {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 16px;
-      color: var(--yellow);
-      letter-spacing: -0.5px;
-    }
-
-    .mobile-badge {
-      background: rgba(255, 215, 0, 0.12);
-      border: 1px solid rgba(255, 215, 0, 0.25);
-      color: var(--yellow);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 20px;
-    }
-
-    /* Topbar Navigation (Desktop) */
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .topbar-title {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--navy);
-      letter-spacing: -0.5px;
-    }
-
-    .topbar-badge {
-      background-color: var(--navy);
-      color: var(--yellow);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      font-size: 14px;
-      padding: 8px 16px;
-      border-radius: 30px;
-      box-shadow: 0 4px 12px rgba(26, 0, 64, 0.15);
-    }
-
-    /* ══════════════════════════════════════
-       COMPONENTS & SECTIONS
-       ══════════════════════════════════════ */
-    .view-section {
-      display: none;
-      flex-direction: column;
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .view-section.active {
-      display: flex;
-    }
-
-    /* Premium Frosted Glass Cards */
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: var(--card-border);
-      border-radius: var(--card-radius);
-      padding: 24px;
-      box-shadow: 0 8px 32px rgba(26, 0, 64, 0.06);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 24px;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 36px rgba(26, 0, 64, 0.09);
-    }
-
-    /* Welcome Strip */
-    .welcome-strip {
-      background: linear-gradient(135deg, var(--navy), var(--purple));
-      color: white;
-      border-radius: var(--card-radius);
-      padding: 28px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 30px rgba(26, 0, 64, 0.18);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .welcome-strip::after {
-      content: '';
-      position: absolute;
-      top: -30%;
-      right: -10%;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 75%);
-    }
-
-    .welcome-title {
-      font-size: 28px;
-      font-weight: 900;
-      color: var(--yellow);
-      margin-bottom: 6px;
-      letter-spacing: -0.5px;
-    }
-
-    .welcome-subtitle {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.85);
-      margin-bottom: 20px;
-      font-weight: 400;
-    }
-
-    .welcome-ctas {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 5;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: none;
-      outline: none;
-      text-align: center;
-      justify-content: center;
-    }
-
-    .btn-yellow {
-      background-color: var(--yellow);
-      color: var(--navy);
-      box-shadow: 0 4px 14px rgba(255, 215, 0, 0.3);
-    }
-    
-    .btn-yellow:hover {
-      background-color: white;
-      transform: scale(1.03);
-    }
-
-    .btn-outline-white {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      color: white;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .btn-outline-white:hover {
-      background: rgba(255, 255, 255, 0.18);
-      border-color: white;
-      transform: scale(1.03);
-    }
-
-    .btn-green {
-      background-color: #25d366; /* WhatsApp Green */
-      color: white;
-      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
-      font-size: 14px;
-      padding: 12px 24px;
-    }
-
-    .btn-green:hover {
-      background-color: #20ba56;
-      transform: scale(1.03);
-    }
-
-    .btn-purple {
-      background-color: var(--purple);
-      color: white;
-      box-shadow: 0 4px 14px rgba(106, 13, 173, 0.3);
-      font-size: 14px;
-      padding: 12px 24px;
-    }
-
-    .btn-purple:hover {
-      background-color: var(--mid-purple);
-      transform: scale(1.03);
-    }
-
-    /* Stat Cards Row */
-    .stat-cards-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      border-radius: var(--card-radius);
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 6px 20px rgba(26, 0, 64, 0.05);
-      border: 1px solid rgba(106, 13, 173, 0.08);
-      position: relative;
-    }
-
-    .stat-card-title {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      opacity: 0.6;
-      margin-bottom: 4px;
-    }
-
-    .stat-card-value {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 20px;
-      line-height: 1.2;
-    }
-
-    /* Colors for specific cards */
-    .stat-card.yellow-card {
-      background-color: var(--yellow);
-      color: var(--navy);
-      border-color: rgba(26, 0, 64, 0.15);
-      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
-    }
-    
-    .stat-card.default-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: var(--navy);
-    }
-
-    .stat-card.purple-card {
-      background-color: var(--purple);
-      color: white;
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 6px 20px rgba(106, 13, 173, 0.15);
-    }
-
-    .stat-card.green-card {
-      background-color: var(--green);
-      color: white;
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 6px 20px rgba(21, 128, 61, 0.15);
-    }
-
-    /* Stage Progress Pipeline */
-    .progress-section {
-      margin-bottom: 24px;
-    }
-
-    .progress-strip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: var(--card-border);
-      border-radius: var(--card-radius);
-      padding: 24px;
-      overflow-x: auto;
-      gap: 16px;
-      box-shadow: 0 6px 20px rgba(26, 0, 64, 0.05);
-      scrollbar-width: thin;
-      scrollbar-color: rgba(26, 0, 64, 0.2) transparent;
-    }
-
-    .progress-strip::-webkit-scrollbar {
-      height: 4px;
-    }
-    .progress-strip::-webkit-scrollbar-thumb {
-      background-color: rgba(26, 0, 64, 0.15);
-      border-radius: 4px;
-    }
-
-    .progress-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      min-width: 90px;
-      position: relative;
-    }
-
-    /* Connecting lines between dots */
-    .progress-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 15px;
-      left: calc(50% + 15px);
-      right: calc(-50% + 15px);
-      height: 3px;
-      background: rgba(26, 0, 64, 0.1);
-      z-index: 1;
-      transition: background var(--transition-speed) ease;
-    }
-
-    .progress-step.completed:not(:last-child)::after {
-      background: var(--green);
-    }
-
-    .step-dot {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: rgba(26, 0, 64, 0.08);
-      color: rgba(26, 0, 64, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      z-index: 2;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .progress-step.completed .step-dot {
-      background: var(--green);
-      color: white;
-      box-shadow: 0 3px 8px rgba(21, 128, 61, 0.25);
-    }
-
-    .progress-step.active .step-dot {
-      background: var(--yellow);
-      color: var(--navy);
-      font-weight: 800;
-      border: 2px solid var(--navy);
-      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.4);
-      animation: stepPulse 2s infinite;
-    }
-
-    .step-text {
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 600;
-      text-align: center;
-      color: rgba(26, 0, 64, 0.5);
-      line-height: 1.3;
-      max-width: 90px;
-    }
-
-    .progress-step.completed .step-text {
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    .progress-step.active .step-text {
-      color: var(--navy);
-      font-weight: 800;
-    }
-
-    @keyframes stepPulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5); }
-      70% { box-shadow: 0 0 0 6px rgba(255, 215, 0, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
-    }
-
-    /* Two Column Layout for Shortlist Preview + Deadlines */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 24px;
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(106, 13, 173, 0.08);
-    }
-
-    .panel-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--navy);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .panel-link {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--purple);
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .panel-link:hover {
-      color: var(--mid-purple);
-      text-decoration: underline;
-    }
-
-    /* Shortlist Rows */
-    .shortlist-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .shortlist-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.4);
-      border: 1px solid rgba(106, 13, 173, 0.05);
-      transition: background 0.2s;
-    }
-
-    .shortlist-row:hover {
-      background: rgba(255, 255, 255, 0.75);
-    }
-
-    .shortlist-college {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      margin-right: 12px;
-      min-width: 0;
-    }
-
-    .college-name {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--navy);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .college-type {
-      font-size: 10px;
-      color: rgba(26, 0, 64, 0.5);
-      margin-top: 1px;
-    }
-
-    .shortlist-rank {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--navy);
-      text-align: right;
-      flex-shrink: 0;
-      margin-right: 12px;
-    }
-
-    .prob-badge {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 20px;
-      text-align: center;
-      width: 90px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-    }
-
-    .prob-safe {
-      background-color: rgba(21, 128, 61, 0.12);
-      border: 1px solid rgba(21, 128, 61, 0.25);
-      color: var(--green);
-    }
-
-    .prob-likely {
-      background-color: rgba(3, 105, 161, 0.12);
-      border: 1px solid rgba(3, 105, 161, 0.25);
-      color: var(--blue);
-    }
-
-    .prob-borderline {
-      background-color: rgba(194, 65, 12, 0.12);
-      border: 1px solid rgba(194, 65, 12, 0.25);
-      color: var(--orange);
-    }
-
-    .prob-reach {
-      background-color: rgba(185, 28, 28, 0.1);
-      border: 1px solid rgba(185, 28, 28, 0.2);
-      color: var(--red);
-    }
-
-    /* Deadlines List */
-    .deadline-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .deadline-row {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(26, 0, 64, 0.04);
-    }
-
-    .deadline-row:last-child {
-      border-bottom: none;
-    }
-
-    .deadline-date-pill {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      text-align: center;
-      flex-shrink: 0;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .date-day {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      line-height: 1.1;
-    }
-
-    .date-month {
-      font-size: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      opacity: 0.8;
-      letter-spacing: 0.5px;
-    }
-
-    .deadline-details {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      min-width: 0;
-    }
-
-    .deadline-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--navy);
-      line-height: 1.35;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .deadline-tags {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .tag-badge {
-      font-size: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 1px 6px;
-      border-radius: 4px;
-      background: rgba(26, 0, 64, 0.06);
-      color: rgba(26, 0, 64, 0.6);
-      letter-spacing: 0.5px;
-    }
-
-    .urgency-badge {
-      font-size: 8px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 1px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-    }
-
-    .urgency-urgent {
-      background-color: rgba(185, 28, 28, 0.12);
-      color: var(--red);
-    }
-
-    .urgency-upcoming {
-      background-color: rgba(194, 65, 12, 0.12);
-      color: var(--orange);
-    }
-
-    .urgency-later {
-      background-color: rgba(21, 128, 61, 0.12);
-      color: var(--green);
-    }
-
-    .deadline-action-btn {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background-color: var(--navy);
-      color: var(--yellow);
-      flex-shrink: 0;
-      transition: all 0.2s;
-    }
-
-    .deadline-action-btn:hover {
-      background-color: var(--purple);
-      color: white;
-    }
-
-    /* Tools Grid */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .tool-card {
-      background: rgba(255, 255, 255, 0.45);
-      border: 1px solid rgba(106, 13, 173, 0.1);
-      border-radius: 10px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: all 0.25s ease;
-      cursor: pointer;
-    }
-
-    .tool-card:hover {
-      background: rgba(255, 255, 255, 0.85);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 15px rgba(26, 0, 64, 0.05);
-    }
-
-    .tool-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: var(--navy);
-      color: var(--yellow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(26, 0, 64, 0.15);
-    }
-
-    .tool-info {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .tool-name {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--navy);
-    }
-
-    .tool-desc {
-      font-size: 10px;
-      color: rgba(26, 0, 64, 0.6);
-      margin-top: 2px;
-      line-height: 1.3;
-    }
-
-    .tool-arrow {
-      color: rgba(26, 0, 64, 0.3);
-      font-weight: bold;
-      transition: transform 0.2s;
-    }
-
-    .tool-card:hover .tool-arrow {
-      transform: translateX(3px);
-      color: var(--purple);
-    }
-
-    /* ══════════════════════════════════════
-       VIEW-SPECIFIC STYLE EXTENSIONS
-       ══════════════════════════════════════ */
-    /* View Title Container */
-    .view-title-wrap {
-      margin-bottom: 20px;
-    }
-    
-    .view-title {
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--navy);
-      letter-spacing: -0.5px;
-    }
-    
-    .view-description {
-      font-size: 12px;
-      color: rgba(26, 0, 64, 0.6);
-      margin-top: 4px;
-    }
-
-    /* Shortlist View */
-    .shortlist-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    .shortlist-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .sc-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .sc-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      color: var(--navy);
-      line-height: 1.35;
-    }
-
-    .sc-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .sc-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 10px;
-      border-top: 1px solid rgba(26, 0, 64, 0.05);
-      margin-top: 4px;
-    }
-
-    .sc-info-label {
-      font-size: 11px;
-      color: rgba(26, 0, 64, 0.55);
-      font-weight: 600;
-    }
-
-    .sc-info-value {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--navy);
-    }
-
-    /* Deadlines View Groups */
-    .deadline-group {
-      margin-bottom: 28px;
-    }
-
-    .group-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      padding-bottom: 6px;
-      border-bottom: 2px solid rgba(26, 0, 64, 0.08);
-    }
-
-    .group-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    .group-count {
-      font-size: 10px;
-      font-weight: 700;
-      background: rgba(26, 0, 64, 0.08);
-      color: var(--navy);
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-
-    .deadline-group.urgent .group-header { border-bottom-color: var(--red); }
-    .deadline-group.urgent .group-title { color: var(--red); }
-    .deadline-group.upcoming .group-header { border-bottom-color: var(--orange); }
-    .deadline-group.upcoming .group-title { color: var(--orange); }
-    .deadline-group.later .group-header { border-bottom-color: var(--green); }
-    .deadline-group.later .group-title { color: var(--green); }
-
-    /* Counsellor Card styling */
-    .counsellor-profile-card {
-      max-width: 500px;
-      margin: 0 auto 24px auto;
-      text-align: center;
-      padding: 36px 24px;
-    }
-
-    .counsellor-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--navy);
-      color: var(--yellow);
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px auto;
-      box-shadow: 0 4px 15px rgba(26, 0, 64, 0.25);
-      border: 3px solid rgba(255, 215, 0, 0.2);
-    }
-
-    .counsellor-name {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--navy);
-      margin-bottom: 2px;
-      letter-spacing: -0.5px;
-    }
-
-    .counsellor-subtitle {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--purple);
-      margin-bottom: 8px;
-    }
-
-    .counsellor-branch {
-      font-size: 11px;
-      color: rgba(26, 0, 64, 0.55);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-weight: 600;
-    }
-
-    .counsellor-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 280px;
-      margin: 0 auto;
-    }
-
-    /* Tools View larger cards */
-    .large-tools-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .large-tool-card {
-      padding: 24px;
-    }
-
-    .large-tool-icon {
-      width: 48px;
-      height: 48px;
-      font-size: 24px;
-      margin-bottom: 16px;
-    }
-
-    .large-tool-name {
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-    .large-tool-desc {
-      font-size: 12px;
-      margin-top: 6px;
-      margin-bottom: 20px;
-    }
-
-    /* ══════════════════════════════════════
-       EMPTY & ERROR FALLBACK STATES
-       ══════════════════════════════════════ */
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .empty-illustration {
-      width: 140px;
-      height: 140px;
-      margin-bottom: 16px;
-      opacity: 0.85;
-    }
-
-    .empty-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 4px;
-    }
-
-    .empty-subtitle {
-      font-size: 11px;
-      color: rgba(26, 0, 64, 0.55);
-      max-width: 320px;
-      line-height: 1.5;
-    }
-
-    /* Full Page Error State Overlay */
-    .error-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background-color: var(--yellow);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .error-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(220, 38, 38, 0.15);
-      border-radius: var(--card-radius);
-      padding: 40px 24px;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(26, 0, 64, 0.12);
-      animation: fadeUp 0.5s ease both;
-    }
-
-    .error-logo {
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-size: 24px;
-      color: var(--navy);
-      letter-spacing: -0.5px;
-      margin-bottom: 24px;
-    }
-    
-    .error-logo span {
-      color: var(--purple);
-    }
-
-    .error-icon {
-      font-size: 44px;
-      color: var(--red);
-      margin-bottom: 16px;
-    }
-
-    .error-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
-
-    .error-desc {
-      font-size: 13px;
-      color: rgba(26, 0, 64, 0.65);
-      line-height: 1.6;
-      margin-bottom: 28px;
-    }
-
-    /* ══════════════════════════════════════
-       ANIMATED SKELETON LOADERS
-       ══════════════════════════════════════ */
-    .skeleton-container {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .skeleton {
-      background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0.35) 25%,
-        rgba(255, 255, 255, 0.65) 50%,
-        rgba(255, 255, 255, 0.35) 75%
-      );
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 6px;
-      display: inline-block;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    .sk-bar { height: 16px; width: 100%; margin-bottom: 8px; }
-    .sk-bar-short { height: 16px; width: 60%; margin-bottom: 8px; }
-    .sk-title { height: 28px; width: 40%; margin-bottom: 16px; }
-    .sk-strip { height: 160px; width: 100%; margin-bottom: 24px; border-radius: var(--card-radius); }
-    .sk-progress { height: 84px; width: 100%; margin-bottom: 24px; border-radius: var(--card-radius); }
-    .sk-card { height: 140px; width: 100%; border-radius: var(--card-radius); }
-
-    /* ══════════════════════════════════════
-       KEYFRAME ANIMATIONS
-       ══════════════════════════════════════ */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* ══════════════════════════════════════
-       RESPONSIVE breakPOINTS
-       ══════════════════════════════════════ */
-    @media (max-width: 992px) {
-      .stat-cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding-top: 56px; /* Space for mobile header */
-      }
-
-      .sidebar {
-        left: calc(-1 * var(--sidebar-width));
-        box-shadow: 10px 0 30px rgba(26, 0, 64, 0.25);
-      }
-
-      .sidebar.open {
-        left: 0;
-      }
-
-      .main-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 16px;
-      }
-
-      .topbar {
-        display: none; /* Handled by mobile-header */
-      }
-
-      .welcome-title {
-        font-size: 22px;
-      }
-
-      .shortlist-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .tools-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .large-tools-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .stat-cards-grid {
-        gap: 12px;
-      }
-      .stat-card {
-        padding: 14px 16px;
-      }
-      .stat-card-value {
-        font-size: 16px;
-      }
-      .welcome-strip {
-        padding: 20px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard | ASMI Career</title>
+    <meta name="description" content="Your personalised ASMI Career student portal — track admission progress, upcoming deadlines, shortlisted colleges, and counselling tools.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ══════════════════════════════════════════════
+           DESIGN SYSTEM — ASMI Student Dashboard
+           ══════════════════════════════════════════════ */
+        :root {
+            --yellow: #FFD700;
+            --yellow-hover: #e6c200;
+            --yellow-glow: rgba(255, 215, 0, 0.15);
+            --navy: #1a0040;
+            --navy-light: #2d0d66;
+            --purple: #6a0dad;
+            --purple-light: #8b25cc;
+            --bg-dark: #070114;
+            --card-bg: rgba(45, 13, 102, 0.15);
+            --card-bg-hover: rgba(45, 13, 102, 0.28);
+            --card-border: rgba(139, 37, 204, 0.2);
+            --card-border-hover: rgba(139, 37, 204, 0.45);
+            --text-light: #f3f0ff;
+            --text-muted: #a78bfa;
+            --text-dim: rgba(255, 255, 255, 0.45);
+
+            /* Status colors */
+            --safe-color: #10b981;
+            --safe-bg: rgba(16, 185, 129, 0.12);
+            --safe-border: rgba(16, 185, 129, 0.25);
+            --likely-color: #3b82f6;
+            --likely-bg: rgba(59, 130, 246, 0.12);
+            --likely-border: rgba(59, 130, 246, 0.25);
+            --borderline-color: #f59e0b;
+            --borderline-bg: rgba(245, 158, 11, 0.12);
+            --borderline-border: rgba(245, 158, 11, 0.25);
+            --reach-color: #ef4444;
+            --reach-bg: rgba(239, 68, 68, 0.1);
+            --reach-border: rgba(239, 68, 68, 0.2);
+
+            /* Layout */
+            --sidebar-width: 220px;
+            --header-height: 64px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        /* ── AMBIENT BACKGROUND GLOWS ── */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(80px);
+        }
+        .glow-1 {
+            width: 500px; height: 500px;
+            top: -120px; left: -80px;
+            background: radial-gradient(circle, rgba(106, 13, 173, 0.25) 0%, transparent 70%);
+        }
+        .glow-2 {
+            width: 600px; height: 600px;
+            bottom: -150px; right: -100px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.06) 0%, transparent 70%);
+        }
+        .glow-3 {
+            width: 350px; height: 350px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(106, 13, 173, 0.08) 0%, transparent 70%);
+        }
+
+        /* ══════════════════════════════════════
+           HEADER
+           ══════════════════════════════════════ */
+        .header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: var(--header-height);
+            background: rgba(7, 1, 20, 0.82);
+            border-bottom: 1px solid rgba(139, 37, 204, 0.18);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+        }
+
+        .header-inner {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-img {
+            height: 38px;
+            width: auto;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-portal-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-greeting {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .user-greeting strong {
+            color: var(--yellow);
+            font-weight: 700;
+        }
+
+        .btn-logout {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.06);
+        }
+
+        /* ══════════════════════════════════════
+           SIDEBAR
+           ══════════════════════════════════════ */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: rgba(7, 1, 20, 0.75);
+            border-right: 1px solid rgba(139, 37, 204, 0.12);
+            padding: 20px 0;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 0 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: rgba(139, 37, 204, 0.12);
+            color: var(--text-light);
+        }
+
+        .nav-link.active {
+            background: rgba(139, 37, 204, 0.25);
+            color: var(--yellow);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 6px;
+            bottom: 6px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--yellow);
+        }
+
+        .nav-icon {
+            font-size: 16px;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: auto;
+        }
+
+        .sidebar-footer-text {
+            font-size: 10px;
+            color: var(--text-dim);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* ══════════════════════════════════════
+           MAIN CONTENT AREA
+           ══════════════════════════════════════ */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 28px 32px 100px 32px;
+            position: relative;
+            z-index: 1;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .content-max {
+            max-width: 1060px;
+            margin: 0 auto;
+        }
+
+        /* Views management */
+        .dashboard-view {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .dashboard-view.active-view {
+            display: block;
+        }
+
+        /* ── UTILITY CARDS ── */
+        .tool-card {
+            background: linear-gradient(135deg, rgba(26, 0, 64, 0.7) 0%, rgba(45, 13, 102, 0.35) 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple), var(--yellow), var(--purple), transparent);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .icon {
+            font-size: 20px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .form-input {
+            width: 100%;
+            background: rgba(7, 1, 20, 0.6);
+            border: 1px solid rgba(139, 37, 204, 0.4);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            border-color: var(--yellow);
+            box-shadow: 0 0 10px var(--yellow-glow);
+        }
+
+        .btn-gold {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            background: var(--yellow);
+            color: var(--navy);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-gold:hover {
+            background: var(--yellow-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px var(--yellow-glow);
+        }
+
+        /* ── CHIPS ── */
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .chip {
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: var(--text-light);
+        }
+        .chip.active {
+            background: var(--purple);
+            border-color: var(--purple-light);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(106, 13, 173, 0.3);
+        }
+
+        /* ── TABLES ── */
+        .custom-table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: rgba(7, 1, 20, 0.3);
+            margin-top: 16px;
+        }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+        .custom-table th {
+            background: rgba(106, 13, 173, 0.2);
+            padding: 12px 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--card-border);
+        }
+        .custom-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(139, 37, 204, 0.1);
+            color: var(--text-muted);
+        }
+        .custom-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-light);
+        }
+
+        /* ── RESPONSIVE MOBILE NAV ── */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(7, 1, 20, 0.95);
+            border-top: 1px solid rgba(139, 37, 204, 0.25);
+            backdrop-filter: blur(16px);
+            z-index: 200;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 4px;
+        }
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            background: none;
+        }
+        .mobile-nav-item.active {
+            color: var(--yellow);
+        }
+        .mobile-nav-icon {
+            font-size: 16px;
+        }
+
+        /* Results class tags */
+        .prob-badge {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 30px;
+            border: 1px solid transparent;
+            display: inline-block;
+        }
+        .badge-safe { background: var(--safe-bg); color: var(--safe-color); border-color: var(--safe-border); }
+        .badge-likely { background: var(--likely-bg); color: var(--likely-color); border-color: var(--likely-border); }
+        .badge-borderline { background: var(--borderline-bg); color: var(--borderline-color); border-color: var(--borderline-border); }
+        .badge-reach { background: var(--reach-bg); color: var(--reach-color); border-color: var(--reach-border); }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .mobile-bottom-nav { display: flex; }
+            .main-content { margin-left: 0; padding: 20px 16px 80px 16px; }
+            .header-portal-label { display: none; }
+            .header-divider { display: none; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Background decorations -->
-  <div class="bg-grid-overlay"></div>
-  <div class="ambient-glow glow-1"></div>
-  <div class="ambient-glow glow-2"></div>
-
-  <!-- Sidebar Overlay (closes drawer on click) -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-  <!-- Mobile Top Header -->
-  <header class="mobile-header">
-    <button class="mobile-hamburger" id="mobileHamburger" aria-label="Open Navigation Menu">
-      <i class="ti ti-menu-2"></i>
-    </button>
-    <div class="mobile-logo">ASMI CAREER</div>
-    <div class="mobile-badge" id="mobileHeaderBadge">—</div>
-  </header>
-
-  <!-- Left Sidebar (Desktop fixed, Mobile overlay drawer) -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">ASMI CAREER</div>
-      <div class="sidebar-subtitle">Student Portal</div>
+    <!-- App Loader Overlay -->
+    <div id="appLoader" style="position: fixed; inset: 0; background: #070114; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; font-family: 'Montserrat', sans-serif;">
+        <div style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: 2px;">ASMI <span style="color: #FFD700;">CAREER</span></div>
+        <div style="width: 40px; height: 40px; border: 4px solid rgba(255, 215, 0, 0.1); border-top-color: #FFD700; border-radius: 50%; animation: spin-loader 1s linear infinite;"></div>
+        <div style="color: rgba(255,255,255,0.6); font-size: 14px;">Loading your dashboard...</div>
     </div>
-    
-    <nav class="sidebar-menu">
-      <div class="sidebar-divider">Home</div>
-      <a class="sidebar-link active" id="nav-dashboard" onclick="navigate('dashboard', this)">
-        <i class="ti ti-layout-dashboard"></i> Dashboard
-      </a>
+    <style>
+        @keyframes spin-loader { to { transform: rotate(360deg); } }
+    </style>
 
-      <div class="sidebar-divider">My Journey</div>
-      <a class="sidebar-link" id="nav-shortlist" onclick="navigate('shortlist', this)">
-        <i class="ti ti-star"></i> My Shortlist
-      </a>
-      <a class="sidebar-link" id="nav-deadlines" onclick="navigate('deadlines', this)">
-        <i class="ti ti-calendar"></i> Deadlines
-      </a>
-      <a class="sidebar-link" id="nav-counsellor" onclick="navigate('counsellor', this)">
-        <i class="ti ti-user-heart"></i> My Counsellor
-      </a>
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
-      <div class="sidebar-divider">Tools</div>
-      <a class="sidebar-link" id="nav-tools" onclick="navigate('tools', this)">
-        <i class="ti ti-school"></i> College Predictor
-      </a>
-      <a class="sidebar-link" id="nav-cutoff" onclick="navigate('tools', this)">
-        <i class="ti ti-chart-bar"></i> Cutoff Explorer
-      </a>
+    <!-- ══════════════════════════════
+         HEADER
+         ══════════════════════════════ -->
+    <header class="header" id="mainHeader">
+        <div class="header-inner">
+            <div class="header-left">
+                <a href="/">
+                    <img src="/asmi-logo.png" alt="ASMI Career" class="logo-img">
+                </a>
+                <div class="header-divider"></div>
+                <span class="header-portal-label">Student Portal</span>
+            </div>
+            <div class="header-right" id="headerRight">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════
+         SIDEBAR
+         ══════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <a onclick="switchView('dashboard')" class="nav-link active" id="nav-dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+            <a onclick="switchView('rank-predictor')" class="nav-link" id="nav-rank-predictor">
+                <span class="nav-icon">📊</span>
+                <span>Rank Predictor</span>
+            </a>
+            <a onclick="switchView('college-predictor')" class="nav-link" id="nav-college-predictor">
+                <span class="nav-icon">🔮</span>
+                <span>College Predictor</span>
+            </a>
+            <a onclick="switchView('cutoff-explorer')" class="nav-link" id="nav-cutoff-explorer">
+                <span class="nav-icon">📈</span>
+                <span>Cutoff Explorer</span>
+            </a>
+            <a onclick="switchView('rank-scan')" class="nav-link" id="nav-rank-scan">
+                <span class="nav-icon">🔍</span>
+                <span>Rank Scan</span>
+            </a>
+            <a onclick="switchView('closing-ranks')" class="nav-link" id="nav-closing-ranks">
+                <span class="nav-icon">🏆</span>
+                <span>Closing Ranks</span>
+            </a>
+            <a onclick="switchView('allotment-mapping')" class="nav-link" id="nav-allotment-mapping">
+                <span class="nav-icon">🗺️</span>
+                <span>Allotment Mapping</span>
+            </a>
+            <a onclick="switchView('document-checklist')" class="nav-link" id="nav-document-checklist">
+                <span class="nav-icon">📋</span>
+                <span>Document Checklist</span>
+            </a>
+            <a onclick="switchView('institutes')" class="nav-link" id="nav-institutes">
+                <span class="nav-icon">🏥</span>
+                <span>Institutes</span>
+            </a>
+            <a onclick="switchView('videos')" class="nav-link" id="nav-videos">
+                <span class="nav-icon">🎥</span>
+                <span>Videos</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-text">
+                © 2026 ASMI Career<br>
+                All rights reserved
+            </div>
+        </div>
+    </aside>
+
+    <!-- ══════════════════════════════
+         MAIN CONTENT (SPA VIEWS)
+         ══════════════════════════════ -->
+    <main class="main-content" id="mainContent">
+        <div class="content-max">
+
+            <!-- ── VIEW: DASHBOARD ── -->
+            <div id="view-dashboard" class="dashboard-view active-view">
+                <div id="dashboard-container-js">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </div>
+
+            <!-- ── VIEW: RANK PREDICTOR ── -->
+            <div id="view-rank-predictor" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">📊</span> NEET Rank Predictor</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Enter your tentative NEET score out of 720 to calculate your predicted All India Rank (AIR).</p>
+                    
+                    <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+                        <div class="form-group">
+                            <label class="form-label">Tentative NEET Score</label>
+                            <input type="number" id="predictor-score" class="form-input" min="200" max="720" placeholder="Enter Score (200 - 720)">
+                        </div>
+                        <button onclick="calculatePredictedRank()" class="btn-gold" style="width: 100%; justify-content: center;">Predict AIR</button>
+                        
+                        <div id="predictor-result" style="margin-top: 30px; display: none;">
+                            <div style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px;">Estimated AIR</div>
+                            <div id="predicted-air-display" style="font-size: 36px; font-weight: 900; color: var(--yellow); margin: 10px 0;">#0</div>
+                            <p id="predictor-result-note" style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Based on standard historical score-to-rank trends.</p>
+                            <button onclick="handoffToCollegePredictor()" class="btn-gold" style="width: 100%; justify-content: center; background: transparent; border: 1.5px solid var(--yellow); color: var(--yellow);">See Eligible Colleges →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: COLLEGE PREDICTOR ── -->
+            <div id="view-college-predictor" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🔮</span> NEET College Predictor</h2>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                        <button id="cp-toggle-rank" class="chip active" onclick="setCollegePredictorInputMode('rank')">Use NEET AIR</button>
+                        <button id="cp-toggle-score" class="chip" onclick="setCollegePredictorInputMode('score')">Use NEET Score</button>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px;">
+                        <div id="cp-input-rank-group" class="form-group" style="margin-bottom:0;">
+                            <label class="form-label">All India Rank (AIR)</label>
+                            <input type="number" id="cp-input-rank" class="form-input" placeholder="e.g. 15000" oninput="runCollegePrediction()">
+                        </div>
+                        <div id="cp-input-score-group" class="form-group" style="display:none; margin-bottom:0;">
+                            <label class="form-label">NEET Score</label>
+                            <input type="number" id="cp-input-score" class="form-input" placeholder="e.g. 620" oninput="runCollegePrediction()">
+                        </div>
+                    </div>
+
+                    <!-- Filters Section -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 10px;">
+                        <div class="form-group">
+                            <label class="form-label">Institution Type</label>
+                            <select id="cp-filter-type" class="form-input" onchange="runCollegePrediction()">
+                                <option value="All">All Types</option>
+                                <option value="Government">Government Only</option>
+                                <option value="Private">Private Only</option>
+                                <option value="Deemed">Deemed Only</option>
+                                <option value="AIIMS">AIIMS Only</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <select id="cp-filter-state" class="form-input" onchange="runCollegePrediction()">
+                                <option value="All">All States</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sort By</label>
+                            <select id="cp-sort" class="form-input" onchange="runCollegePrediction()">
+                                <option value="rank_asc">Best Rank (Ascending)</option>
+                                <option value="fees_asc">Lowest Fees</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>College Name</th>
+                                    <th>Type</th>
+                                    <th>State</th>
+                                    <th>Counselling Quota</th>
+                                    <th>Closing Rank</th>
+                                    <th>Annual Fee</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cp-results-body">
+                                <tr><td colspan="7" style="text-align:center;">Enter your Rank or Score to fetch matching college opportunities.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: CUTOFF EXPLORER ── -->
+            <div id="view-cutoff-explorer" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">📈</span> Cutoff Explorer</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Search and view closing cutoffs across colleges.</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Search College</label>
+                            <input type="text" id="cutoff-search-college" class="form-input" placeholder="Type college name..." oninput="runCutoffExplorerQuery()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <select id="cutoff-filter-state" class="form-input" onchange="runCutoffExplorerQuery()">
+                                <option value="All">All States</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Institution Type</label>
+                            <select id="cutoff-filter-type" class="form-input" onchange="runCutoffExplorerQuery()">
+                                <option value="All">All Types</option>
+                                <option value="Government">Government</option>
+                                <option value="Private">Private</option>
+                                <option value="Deemed">Deemed</option>
+                                <option value="AIIMS">AIIMS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>College Name</th>
+                                    <th>Type</th>
+                                    <th>State</th>
+                                    <th>Quota</th>
+                                    <th>Final Closing Rank</th>
+                                    <th>Annual Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cutoff-explorer-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: RANK SCAN ── -->
+            <div id="view-rank-scan" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🔍</span> Rank Scan</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Enter a single rank to see everywhere that specific rank was allotted across counsellings.</p>
+                    
+                    <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 12px; margin-bottom: 30px;">
+                        <input type="number" id="scan-rank-input" class="form-input" placeholder="Enter AIR (e.g. 12500)">
+                        <button onclick="runRankScan()" class="btn-gold">Scan Rank</button>
+                    </div>
+
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Allotted College Name</th>
+                                    <th>Counselling / Quota</th>
+                                    <th>State</th>
+                                    <th>Institution Type</th>
+                                    <th>Closing Cutoff</th>
+                                    <th>Annual Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rank-scan-body">
+                                <tr><td colspan="6" style="text-align:center;">Enter a rank above to scan for allotments.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: CLOSING RANKS ── -->
+            <div id="view-closing-ranks" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🏆</span> Closing Ranks</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Look up a specific medical college to check its official historical closing rank.</p>
+
+                    <div class="form-group" style="max-width: 600px; margin: 0 auto 30px auto;">
+                        <label class="form-label">Select Medical College</label>
+                        <select id="closing-ranks-college-select" class="form-input" onchange="showClosingRankForSelectedCollege()">
+                            <option value="">-- Choose a College --</option>
+                        </select>
+                    </div>
+
+                    <div id="closing-ranks-details-card" style="display:none; max-width: 600px; margin: 0 auto; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; background: rgba(7, 1, 20, 0.45);">
+                        <h3 id="cr-card-name" style="color: var(--yellow); margin-bottom: 12px; font-size: 18px;">College Name</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Closing AIR</div>
+                                <div id="cr-card-rank" style="font-size: 24px; font-weight: 800; color: #fff;">#0</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Annual Fee</div>
+                                <div id="cr-card-fee" style="font-size: 24px; font-weight: 800; color: #fff;">₹ —</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">State</div>
+                                <div id="cr-card-state" style="font-size: 14px; font-weight: 600;">State Name</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Category / Quota</div>
+                                <div id="cr-card-quota" style="font-size: 14px; font-weight: 600;">Quota</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: ALLOTMENT MAPPING ── -->
+            <div id="view-allotment-mapping" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🗺️</span> Allotment Mapping</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Select a counselling process first to view its allotted colleges.</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label class="form-label">Counselling Process</label>
+                            <select id="am-counselling" class="form-input" onchange="runAllotmentMapping()">
+                                <option value="All">All Counsellings</option>
+                                <option value="AIQ">All India Quota (AIQ)</option>
+                                <option value="AIIMS">AIIMS Counselling</option>
+                                <option value="State">State Quota Processes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State Location</label>
+                            <select id="am-state" class="form-input" onchange="runAllotmentMapping()">
+                                <option value="All">All States</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Allotted College Name</th>
+                                    <th>Counselling / Quota</th>
+                                    <th>Location</th>
+                                    <th>State</th>
+                                    <th>Closing Rank Limit</th>
+                                    <th>Annual Fee</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allotment-mapping-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: DOCUMENT CHECKLIST ── -->
+            <div id="view-document-checklist" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">📋</span> Documents Checklist</h2>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div class="form-label">Your Category</div>
+                        <div class="chip-row" id="doc-category-chips">
+                            <button class="chip active" onclick="setDocCategory('General')">General / UR</button>
+                            <button class="chip" onclick="setDocCategory('OBC')">OBC (Non-Creamy Layer)</button>
+                            <button class="chip" onclick="setDocCategory('SC')">SC</button>
+                            <button class="chip" onclick="setDocCategory('ST')">ST</button>
+                            <button class="chip" onclick="setDocCategory('EWS')">EWS</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <div class="form-label">Quota Type</div>
+                        <div class="chip-row" id="doc-quota-chips">
+                            <button class="chip active" onclick="setDocQuota('State')">State Quota (Maharashtra)</button>
+                            <button class="chip" onclick="setDocQuota('AIQ')">All India Quota (AIQ)</button>
+                            <button class="chip" onclick="setDocQuota('Management')">Management / NRI</button>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                        <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                            <div id="doc-progress-fill" style="width: 0%; height: 100%; background: var(--yellow); transition: width 0.3s;"></div>
+                        </div>
+                        <span id="doc-progress-label" style="font-size: 13px; font-weight: 700; color: var(--yellow);">0 of 0 ready</span>
+                    </div>
+
+                    <!-- Checklist Sections -->
+                    <div id="checklist-render-container"></div>
+
+                    <!-- Actions -->
+                    <div style="display:flex; gap: 12px; margin-top: 24px;">
+                        <button onclick="window.print()" class="btn-gold" style="background: transparent; border: 1.5px solid var(--text-light); color: var(--text-light);">Print Checklist</button>
+                        <button onclick="resetDocChecklist()" class="btn-gold" style="background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);">Reset List</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: INSTITUTES ── -->
+            <div id="view-institutes" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🏥</span> Institutes Directory</h2>
+                    </div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Explore details, fees, and service credentials for medical colleges.</p>
+
+                    <div style="max-width: 500px; margin-bottom: 24px;">
+                        <input type="text" id="institute-search-query" class="form-input" placeholder="Search by college name..." oninput="runInstituteSearch()">
+                    </div>
+
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>College Name</th>
+                                    <th>State</th>
+                                    <th>Annual Fee</th>
+                                    <th>Stipend / Month</th>
+                                    <th>Bond Duration &amp; Penalty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="institutes-list-body">
+                                <!-- Loaded dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── VIEW: VIDEOS ── -->
+            <div id="view-videos" class="dashboard-view">
+                <div class="tool-card">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">🎥</span> Counselling Seminars &amp; Videos</h2>
+                    </div>
+                    <p style="margin-bottom: 24px; color: var(--text-muted);">Watch ASMI Career's official counselling guidance webinars and seminars.</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <a href="https://www.youtube.com/@asmicareer" target="_blank" style="display:block; text-decoration:none;">
+                            <div style="border: 1px solid var(--card-border); border-radius: 12px; overflow:hidden; background: rgba(7, 1, 20, 0.5); transition: transform 0.2s;">
+                                <div style="height: 160px; background: radial-gradient(circle, #ff0000 0%, #1a0040 100%); display:flex; align-items:center; justify-content:center; font-size:40px;">▶</div>
+                                <div style="padding: 16px;">
+                                    <h4 style="color:#fff; margin-bottom: 8px;">Official YouTube Channel</h4>
+                                    <p style="font-size:12px; color: var(--text-muted);">Access our library of NEET counselling walkthroughs and tutorials.</p>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="https://www.youtube.com/@asmicareer" target="_blank" style="display:block; text-decoration:none;">
+                            <div style="border: 1px solid var(--card-border); border-radius: 12px; overflow:hidden; background: rgba(7, 1, 20, 0.5); transition: transform 0.2s;">
+                                <div style="height: 160px; background: radial-gradient(circle, #6a0dad 0%, #070114 100%); display:flex; align-items:center; justify-content:center; font-size:40px;">🎓</div>
+                                <div style="padding: 16px;">
+                                    <h4 style="color:#fff; margin-bottom: 8px;">NEET Choice Filling Guide</h4>
+                                    <p style="font-size:12px; color: var(--text-muted);">Step-by-step masterclass on optimizing college preferences.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ══════════════════════════════
+         MOBILE BOTTOM NAV
+         ══════════════════════════════ -->
+    <nav class="mobile-bottom-nav" id="mobileNav">
+        <a onclick="switchView('dashboard')" class="mobile-nav-item active" id="m-nav-dashboard">
+            <span class="mobile-nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a onclick="switchView('rank-predictor')" class="mobile-nav-item" id="m-nav-rank-predictor">
+            <span class="mobile-nav-icon">📊</span>
+            <span>Predictor</span>
+        </a>
+        <a onclick="switchView('college-predictor')" class="mobile-nav-item" id="m-nav-college-predictor">
+            <span class="mobile-nav-icon">🔮</span>
+            <span>Colleges</span>
+        </a>
+        <a onclick="switchView('document-checklist')" class="mobile-nav-item" id="m-nav-document-checklist">
+            <span class="mobile-nav-icon">📋</span>
+            <span>Checklist</span>
+        </a>
     </nav>
 
-    <!-- Sidebar profile section at bottom -->
-    <div class="sidebar-profile">
-      <div class="profile-avatar" id="sidebarAvatar">AS</div>
-      <div class="profile-info">
-        <div class="profile-name" id="sidebarName">Student Portal</div>
-        <span class="profile-badge" id="sidebarStageBadge">Loading...</span>
-      </div>
-    </div>
-  </aside>
 
-  <!-- Main Scrollable Content Area -->
-  <main class="main-content">
-    
-    <!-- Topbar (Desktop only) -->
-    <div class="topbar">
-      <div class="topbar-title" id="topbarTitle">Dashboard</div>
-      <div class="topbar-badge" id="topbarBadge">Score: —</div>
-    </div>
+    <!-- ══════════════════════════════════════════════════════════
+         JAVASCRIPT — State, Data, Rendering
+         ══════════════════════════════════════════════════════════ -->
+    <script>
+        /* ── APPLICATION STATE ── */
+        const appState = {
+            tier: 'registered', // Fully open/functional by default in this pass
+            name: '',
+            rank: null,
+            shortlist: [],
+            deadlines: [],
+            progress: {
+                steps: [
+                    { id: 1, label: 'Profile', status: 'completed' },
+                    { id: 2, label: 'Counselling', status: 'active' },
+                    { id: 3, label: 'Shortlist', status: 'pending' },
+                    { id: 4, label: 'Admission', status: 'pending' }
+                ]
+            },
+            collegeData: [],
+            predictedRank: null,
+            cpInputMode: 'rank', // 'rank' or 'score'
+            docCategory: 'General',
+            docQuota: 'State',
+            checkedDocs: new Set()
+        };
 
-    <!-- SKELETON LOADING CONTENT -->
-    <div id="skeletonLoader" class="skeleton-container">
-      <div class="skeleton sk-strip"></div>
-      <div class="stat-cards-grid">
-        <div class="skeleton sk-card"></div>
-        <div class="skeleton sk-card"></div>
-        <div class="skeleton sk-card"></div>
-        <div class="skeleton sk-card"></div>
-      </div>
-      <div class="skeleton sk-progress"></div>
-      <div class="dashboard-grid">
-        <div class="skeleton sk-card" style="height: 300px;"></div>
-        <div class="skeleton sk-card" style="height: 300px;"></div>
-      </div>
-    </div>
+        const DOCS_DATA = {
+            sections: [
+                {
+                    title: 'Academic Documents',
+                    docs: [
+                        { id: 'neet-admit',   label: 'NEET Admit Card',                             copies: 'Original + 2 self-attested photocopies' },
+                        { id: 'neet-score',   label: 'NEET Scorecard / Rank Letter',                copies: 'Original + 2 self-attested photocopies' },
+                        { id: 'cls10-mark',   label: 'Class 10 Marksheet',                               copies: 'Original + 3 attested photocopies',      note: 'Required as date of birth proof' },
+                        { id: 'cls10-cert',   label: 'Class 10 Passing Certificate',                     copies: 'Original + 3 attested photocopies' },
+                        { id: 'cls12-mark',   label: 'Class 12 Marksheet',                               copies: 'Original + 3 attested photocopies' },
+                        { id: 'cls12-cert',   label: 'Class 12 Passing Certificate / School Leaving',    copies: 'Original + 3 attested photocopies' },
+                    ]
+                },
+                {
+                    title: 'Identity & Address Proof',
+                    docs: [
+                        { id: 'aadhar-self',   label: 'Aadhaar Card — Student', copies: 'Original + 3 self-attested photocopies' },
+                        { id: 'aadhar-father', label: 'Aadhaar Card — Father',  copies: 'Original + 2 self-attested photocopies' },
+                        { id: 'aadhar-mother', label: 'Aadhaar Card — Mother',  copies: 'Original + 2 self-attested photocopies' },
+                        { id: 'photos',        label: 'Passport-size Photographs', copies: '10–15 recent, white background', note: 'Same set as used in NEET application form' },
+                    ]
+                },
+                {
+                    title: 'School / College Certificates',
+                    docs: [
+                        { id: 'tc',        label: 'Transfer Certificate (TC)',  copies: 'Original + 2 attested photocopies' },
+                        { id: 'migration', label: 'Migration Certificate',      copies: 'Original + 1 photocopy', note: 'Required if schooling was outside Maharashtra' },
+                        { id: 'character', label: 'Character Certificate',      copies: 'Original (from last institution)' },
+                    ]
+                },
+                {
+                    title: 'Medical Certificate',
+                    docs: [
+                        { id: 'medical-fit', label: 'Medical Fitness Certificate', copies: 'Original on doctor\'s letterhead', note: 'From a registered MBBS doctor; some colleges issue their own format at reporting' },
+                    ]
+                },
+            ],
+            category: {
+                OBC: {
+                    title: 'OBC Category Documents',
+                    docs: [
+                        { id: 'obc-cert', label: 'OBC Certificate',                    copies: 'Original + 2 attested photocopies', note: 'Central format for AIQ; state government format for State Quota' },
+                        { id: 'ncl-cert', label: 'Non-Creamy Layer (NCL) Certificate', copies: 'Original + 2 attested photocopies', note: 'Must be issued within the last 1 year; annual family income below ₹8 lakh' },
+                    ]
+                },
+                SC: {
+                    title: 'SC Category Documents',
+                    docs: [
+                        { id: 'caste-sc',    label: 'Caste Certificate (SC)',   copies: 'Original + 2 attested photocopies' },
+                        { id: 'validity-sc', label: 'Caste Validity Certificate', copies: 'Original + 1 photocopy', note: 'Maharashtra: issued by District Caste Scrutiny Committee' },
+                    ]
+                },
+                ST: {
+                    title: 'ST Category Documents',
+                    docs: [
+                        { id: 'tribe-st',    label: 'Tribe Certificate (ST)',    copies: 'Original + 2 attested photocopies' },
+                        { id: 'validity-st', label: 'Tribe Validity Certificate', copies: 'Original + 1 photocopy', note: 'Maharashtra: issued by District Caste Scrutiny Committee' },
+                    ]
+                },
+                EWS: {
+                    title: 'EWS Category Documents',
+                    docs: [
+                        { id: 'ews-cert',    label: 'EWS Certificate',   copies: 'Original + 2 attested photocopies', note: 'Current financial year; issued by Tehsildar or Sub-Divisional Officer' },
+                        { id: 'income-cert', label: 'Income Certificate', copies: 'Original + 1 photocopy',            note: 'Annual family income below ₹8 lakh' },
+                    ]
+                },
+            },
+            quota: {
+                AIQ: {
+                    title: 'All India Quota (AIQ) Documents',
+                    docs: [
+                        { id: 'mcc-reg',       label: 'MCC Registration Printout',   copies: '2 photocopies',              note: 'Print from the MCC NEET UG counselling portal' },
+                        { id: 'mcc-allotment', label: 'AIQ Seat Allotment Letter',   copies: 'Original + 2 photocopies',   note: 'Download from MCC portal after seat allotment round' },
+                    ]
+                },
+                State: {
+                    title: 'State Quota (Maharashtra) Documents',
+                    docs: [
+                        { id: 'domicile', label: 'Maharashtra Domicile / Nativity Certificate', copies: 'Original + 2 attested photocopies', note: 'Issued by Tehsildar or SDO; family requires 15+ years Maharashtra residence' },
+                    ]
+                },
+                Management: {
+                    title: 'Management / NRI Quota Documents',
+                    docs: [
+                        { id: 'mgmt-allotment', label: 'Management / NRI Seat Allotment Letter', copies: 'Original + 2 photocopies', note: 'From college trust or state management quota authority' },
+                        { id: 'fee-receipt',    label: 'Fee Payment Receipt',                    copies: '2 photocopies',             note: 'If partial fee was collected at time of allotment' },
+                    ]
+                },
+            }
+        };
 
-    <!-- MAIN VIEW SECTIONS (hidden initially during fetch) -->
-    <div id="mainContent" style="display: none; flex-direction: column;">
-      
-      <!-- ==========================================
-           VIEW 1: DASHBOARD
-           ========================================== -->
-      <section id="dashboard-view" class="view-section active">
-        <!-- Welcome Strip -->
-        <div class="welcome-strip">
-          <h1 class="welcome-title" id="welcomeTitle">Welcome back, Student!</h1>
-          <p class="welcome-subtitle" id="welcomeSubtitle">Your counsellor is guiding you through the admissions process.</p>
-          <div class="welcome-ctas">
-            <a href="#" id="welcomeWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-yellow">
-              Talk to Counsellor <i class="ti ti-arrow-right"></i>
-            </a>
-            <a href="#" id="welcomeGroupBtn" target="_blank" rel="noopener noreferrer" class="btn btn-outline-white" style="display: none;">
-              Join Support Group 💬
-            </a>
-          </div>
-        </div>
+        /* ── INITIALISE STATE FROM LOCALSTORAGE ── */
+        function initState() {
+            appState.name = localStorage.getItem('name') || 'Student';
+            const rankVal = localStorage.getItem('rank');
+            appState.rank = rankVal ? parseInt(rankVal, 10) : null;
 
-        <!-- Stat Cards Grid -->
-        <div class="stat-cards-grid">
-          <!-- Card 1: Score or AIR (Yellow) -->
-          <div class="stat-card yellow-card">
-            <span class="stat-card-title" id="stat1Label">Score</span>
-            <span class="stat-card-value" id="stat1Value">—</span>
-          </div>
-          <!-- Card 2: Category (Default Glass) -->
-          <div class="stat-card default-card">
-            <span class="stat-card-title">Category</span>
-            <span class="stat-card-value" id="stat2Value">—</span>
-          </div>
-          <!-- Card 3: Stage (Purple) -->
-          <div class="stat-card purple-card">
-            <span class="stat-card-title">Stage</span>
-            <span class="stat-card-value" id="stat3Value">—</span>
-          </div>
-          <!-- Card 4: Counsellor (Green) -->
-          <div class="stat-card green-card">
-            <span class="stat-card-title">Counsellor</span>
-            <span class="stat-card-value" id="stat4Value">—</span>
-          </div>
-        </div>
+            // Load shortlist
+            try {
+                appState.shortlist = JSON.parse(localStorage.getItem('shortlist')) || [];
+            } catch (e) {
+                appState.shortlist = [];
+            }
 
-        <!-- Stage Progress Strip -->
-        <div class="progress-section">
-          <div class="progress-strip" id="stageProgressStrip">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- Two Column Grid (Shortlist Preview + Deadlines) -->
-        <div class="dashboard-grid">
-          <!-- Left: Shortlist Preview -->
-          <div class="card" style="margin-bottom: 0;">
-            <div class="panel-header">
-              <h2 class="panel-title"><i class="ti ti-star-filled" style="color: var(--yellow);"></i> My Shortlist</h2>
-              <span class="panel-link" onclick="navigate('shortlist', document.getElementById('nav-shortlist'))">View all →</span>
-            </div>
-            <div id="shortlistPreviewList" class="shortlist-list">
-              <!-- Dynamically populated or empty state -->
-            </div>
-          </div>
-
-          <!-- Right: Upcoming Deadlines -->
-          <div class="card" style="margin-bottom: 0;">
-            <div class="panel-header">
-              <h2 class="panel-title"><i class="ti ti-alarm" style="color: var(--red);"></i> Upcoming Deadlines</h2>
-              <span class="panel-link" onclick="navigate('deadlines', document.getElementById('nav-deadlines'))">View all →</span>
-            </div>
-            <div id="deadlinesPreviewList" class="deadline-list">
-              <!-- Dynamically populated or empty state -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Tools Grid -->
-        <div class="card" style="margin-top: 24px; margin-bottom: 0;">
-          <div class="panel-header" style="border-bottom: none; margin-bottom: 12px; padding-bottom: 0;">
-            <h2 class="panel-title"><i class="ti ti-apps" style="color: var(--purple);"></i> Admission Tools</h2>
-          </div>
-          <div class="tools-grid">
-            <a href="/tools/college-predictor" class="tool-card">
-              <div class="tool-icon"><i class="ti ti-crystal-ball"></i></div>
-              <div class="tool-info">
-                <span class="tool-name">College Predictor</span>
-                <span class="tool-desc">Predict admission chances based on your NEET AIR</span>
-              </div>
-              <i class="ti ti-chevron-right tool-arrow"></i>
-            </a>
-            
-            <a href="/tools/cutoff-explorer" class="tool-card">
-              <div class="tool-icon"><i class="ti ti-chart-bar"></i></div>
-              <div class="tool-info">
-                <span class="tool-name">Cutoff Explorer</span>
-                <span class="tool-desc">Browse historical NEET cutoffs by college and category</span>
-              </div>
-              <i class="ti ti-chevron-right tool-arrow"></i>
-            </a>
-
-            <a href="/tools/documents-checklist" class="tool-card">
-              <div class="tool-icon"><i class="ti ti-checkbox"></i></div>
-              <div class="tool-info">
-                <span class="tool-name">Document Checklist</span>
-                <span class="tool-desc">Verify required documents for reporting & verification</span>
-              </div>
-              <i class="ti ti-chevron-right tool-arrow"></i>
-            </a>
-
-            <a href="/resources" class="tool-card">
-              <div class="tool-icon"><i class="ti ti-folder"></i></div>
-              <div class="tool-info">
-                <span class="tool-name">Resources</span>
-                <span class="tool-desc">Access guidelines, brochures, and seat matrices</span>
-              </div>
-              <i class="ti ti-chevron-right tool-arrow"></i>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           VIEW 2: MY SHORTLIST
-           ========================================== -->
-      <section id="shortlist-view" class="view-section">
-        <div class="view-title-wrap">
-          <h1 class="view-title">My College Shortlist</h1>
-          <p class="view-description">Your personalised shortlist of recommended colleges prepared by your ASMI counsellor.</p>
-        </div>
-        <div id="fullShortlistContainer" class="shortlist-grid">
-          <!-- Dynamically populated or empty state -->
-        </div>
-      </section>
-
-      <!-- ==========================================
-           VIEW 3: DEADLINES
-           ========================================== -->
-      <section id="deadlines-view" class="view-section">
-        <div class="view-title-wrap">
-          <h1 class="view-title">Deadlines &amp; Important Dates</h1>
-          <p class="view-description">Stay updated with critical schedules, exam registrations, and choice filling deadlines.</p>
-        </div>
-        <div id="fullDeadlinesContainer">
-          <!-- Dynamically populated grouped lists or empty state -->
-        </div>
-      </section>
-
-      <!-- ==========================================
-           VIEW 4: MY COUNSELLOR
-           ========================================== -->
-      <section id="counsellor-view" class="view-section">
-        <div class="view-title-wrap">
-          <h1 class="view-title">My ASMI Counsellor</h1>
-          <p class="view-description">Get in touch directly with your assigned personal counsellor for all admissions guidance.</p>
-        </div>
-        
-        <div class="card counsellor-profile-card">
-          <div class="counsellor-avatar" id="counsellorAvatar">AK</div>
-          <h2 class="counsellor-name" id="counsellorName">Counsellor Name</h2>
-          <div class="counsellor-subtitle">Your ASMI Counsellor</div>
-          <div class="counsellor-branch" id="counsellorBranch">
-            <i class="ti ti-map-pin"></i> Mumbai Branch
-          </div>
-          
-          <div class="counsellor-actions">
-            <a href="#" id="counsellorWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-green">
-              <i class="ti ti-brand-whatsapp"></i> Message on WhatsApp
-            </a>
-            <a href="#" id="counsellorGroupBtn" target="_blank" rel="noopener noreferrer" class="btn btn-purple" style="display: none;">
-              <i class="ti ti-users"></i> Join Support Group
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ==========================================
-           VIEW 5: TOOLS
-           ========================================== -->
-      <section id="tools-view" class="view-section">
-        <div class="view-title-wrap">
-          <h1 class="view-title">Admissions Toolkit</h1>
-          <p class="view-description">Access our smart planning and analysis tools to model and check your cutoffs.</p>
-        </div>
-        
-        <div class="large-tools-grid">
-          <a href="/tools/college-predictor" class="card tool-card large-tool-card">
-            <div class="tool-icon large-tool-icon"><i class="ti ti-crystal-ball"></i></div>
-            <div class="tool-info">
-              <h2 class="tool-name large-tool-name">College Predictor</h2>
-              <p class="tool-desc large-tool-desc">Enter your NEET All India Rank, category, quota, and budget to predict which medical colleges you can secure admission to.</p>
-              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Open Predictor <i class="ti ti-chevron-right"></i></span>
-            </div>
-          </a>
-
-          <a href="/tools/cutoff-explorer" class="card tool-card large-tool-card">
-            <div class="tool-icon large-tool-icon"><i class="ti ti-chart-bar"></i></div>
-            <div class="tool-info">
-              <h2 class="tool-name large-tool-name">Cutoff Explorer</h2>
-              <p class="tool-desc large-tool-desc">Search through comprehensive historical cutoff scores and ranks for thousands of medical colleges in India, filtered by round, category, and state.</p>
-              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Open Explorer <i class="ti ti-chevron-right"></i></span>
-            </div>
-          </a>
-
-          <a href="/tools/documents-checklist" class="card tool-card large-tool-card">
-            <div class="tool-icon large-tool-icon"><i class="ti ti-checkbox"></i></div>
-            <div class="tool-info">
-              <h2 class="tool-name large-tool-name">Document Checklist</h2>
-              <p class="tool-desc large-tool-desc">Ensure you have all the required original documents, certificates, bond forms, and photocopies ready for reporting to avoid losing your seat allotment.</p>
-              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">View Checklist <i class="ti ti-chevron-right"></i></span>
-            </div>
-          </a>
-
-          <a href="/resources" class="card tool-card large-tool-card">
-            <div class="tool-icon large-tool-icon"><i class="ti ti-folder"></i></div>
-            <div class="tool-info">
-              <h2 class="tool-name large-tool-name">Resources Library</h2>
-              <p class="tool-desc large-tool-desc">Download official MCC brochures, seat matrix documents, past year schedules, counselling notifications, and college fees structures.</p>
-              <span class="btn btn-yellow" style="align-self: flex-start; padding: 8px 16px;">Browse Library <i class="ti ti-chevron-right"></i></span>
-            </div>
-          </a>
-        </div>
-      </section>
-
-    </div>
-
-  </main>
-
-  <!-- ERROR STATES FULL PAGE OVERLAYS -->
-  <div class="error-overlay" id="errorOverlay">
-    <div class="error-card">
-      <div class="error-logo">ASMI <span>CAREER</span></div>
-      <div class="error-icon"><i class="ti ti-alert-triangle-filled"></i></div>
-      <h2 class="error-title" id="errorTitle">Invalid Link</h2>
-      <p class="error-desc" id="errorDescription">This link is invalid or has expired. Please contact your ASMI counsellor for your dashboard link.</p>
-      <a href="https://wa.me/917410019074" target="_blank" rel="noopener noreferrer" class="btn btn-green">
-        <i class="ti ti-brand-whatsapp"></i> Contact ASMI Support
-      </a>
-    </div>
-  </div>
-
-  <script>
-    // ══════════════════════════════════════
-    // CONFIGURATION CONSTANTS
-    // ══════════════════════════════════════
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
-    
-    const PIPELINE_STAGES = [
-      "Enrolled",
-      "Documents Verified",
-      "Counselled",
-      "Preferences Filed",
-      "Round 1",
-      "Allotted",
-      "Reported"
-    ];
-
-    const PROBABILITY_CLASSES = {
-      'safe': 'prob-safe',
-      'likely': 'prob-likely',
-      'borderline': 'prob-borderline',
-      'reach': 'prob-reach',
-      'out of reach': 'prob-reach'
-    };
-
-    // ══════════════════════════════════════
-    // GLOBAL STATE
-    // ══════════════════════════════════════
-    let studentData = null;
-    let eventsData = [];
-
-    // ══════════════════════════════════════
-    // INTERACTIVE SIDEBAR & MENU TOGGLE
-    // ══════════════════════════════════════
-    const mobileHamburger = document.getElementById('mobileHamburger');
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    function toggleSidebar(open) {
-      if (open) {
-        sidebar.classList.add('open');
-        sidebarOverlay.classList.add('active');
-      } else {
-        sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('active');
-      }
-    }
-
-    mobileHamburger.addEventListener('click', () => toggleSidebar(true));
-    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
-
-    // ══════════════════════════════════════
-    // ROUTING & VIEW NAVIGATION
-    // ══════════════════════════════════════
-    function navigate(viewId, element) {
-      // Hide all view panels
-      document.querySelectorAll('.view-section').forEach(view => {
-        view.classList.remove('active');
-      });
-      
-      // Show the selected view
-      const targetView = document.getElementById(viewId + '-view');
-      if (targetView) {
-        targetView.classList.add('active');
-      }
-
-      // Update active nav links
-      document.querySelectorAll('.sidebar-link').forEach(link => {
-        link.classList.remove('active');
-      });
-      if (element) {
-        element.classList.add('active');
-      }
-
-      // Sync active state if navigate was called externally and we need to highlight sidebar
-      if (!element) {
-        const correspondingNav = document.getElementById('nav-' + viewId);
-        if (correspondingNav) {
-          correspondingNav.classList.add('active');
-        }
-      }
-
-      // Close sidebar drawer on mobile
-      toggleSidebar(false);
-
-      // Scroll view back to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Update Desktop Topbar Title text
-      const topbarTitle = document.getElementById('topbarTitle');
-      if (topbarTitle) {
-        if (viewId === 'dashboard') topbarTitle.textContent = 'Dashboard';
-        else if (viewId === 'shortlist') topbarTitle.textContent = 'My Shortlist';
-        else if (viewId === 'deadlines') topbarTitle.textContent = 'Deadlines';
-        else if (viewId === 'counsellor') topbarTitle.textContent = 'My Counsellor';
-        else if (viewId === 'tools') topbarTitle.textContent = 'ASMI Tools';
-      }
-    }
-
-    // ══════════════════════════════════════
-    // HELPERS & STRING CONVERTERS
-    // ══════════════════════════════════════
-    function getInitials(name) {
-      if (!name) return 'AS';
-      return name.split(' ')
-        .map(part => part.charAt(0))
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
-    }
-
-    function formatWhatsAppLink(number) {
-      if (!number) return 'https://wa.me/917410019074';
-      const cleanNum = String(number).replace(/\D/g, '');
-      return 'https://wa.me/' + (cleanNum.startsWith('91') ? cleanNum : '91' + cleanNum);
-    }
-
-    function getBranchFromToken(token) {
-      if (!token) return 'ASMI Career Network';
-      const tok = String(token).toUpperCase();
-      if (tok.includes('MUM')) return 'Mumbai Branch';
-      if (tok.includes('PUN') || tok.includes('PNE')) return 'Pune Branch';
-      if (tok.includes('NGP') || tok.includes('NAG')) return 'Nagpur Branch';
-      if (tok.includes('KOL')) return 'Kolhapur Branch';
-      if (tok.includes('SAN')) return 'Sangli Branch';
-      if (tok.includes('CSN') || tok.includes('SAM')) return 'Chh. Sambhajinagar Branch';
-      if (tok.includes('THN') || tok.includes('THA')) return 'Thane Branch';
-      if (tok.includes('NSK') || tok.includes('NAS')) return 'Nashik Branch';
-      return 'ASMI Regional Branch';
-    }
-
-    function getLocalTodayDateString() {
-      const t = new Date();
-      const yyyy = t.getFullYear();
-      const mm = String(t.getMonth() + 1).padStart(2, '0');
-      const dd = String(t.getDate()).padStart(2, '0');
-      return `${yyyy}-${mm}-${dd}`;
-    }
-
-    function getDaysDifference(targetDateStr, baseDateStr) {
-      const target = new Date(targetDateStr + 'T00:00:00');
-      const base = new Date(baseDateStr + 'T00:00:00');
-      const diffTime = target - base;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    function getMonthAbbreviation(dateStr) {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const d = new Date(dateStr + 'T00:00:00');
-      return isNaN(d.getTime()) ? 'DATE' : months[d.getMonth()].toUpperCase();
-    }
-
-    function getDayNumber(dateStr) {
-      const d = new Date(dateStr + 'T00:00:00');
-      return isNaN(d.getTime()) ? '—' : d.getDate();
-    }
-
-    function getProbabilityCssClass(prob) {
-      if (!prob) return 'prob-likely';
-      const lower = prob.toLowerCase().trim();
-      return PROBABILITY_CLASSES[lower] || 'prob-likely';
-    }
-
-    // ══════════════════════════════════════
-    // RENDER FUNCTIONALITY
-    // ══════════════════════════════════════
-    function renderDashboard() {
-      const student = studentData;
-      const hasRank = student.rank && String(student.rank).trim() !== '';
-
-      // 1. Sync header / badges
-      const scoreOrRankText = hasRank 
-        ? `AIR ${Number(student.rank).toLocaleString('en-IN')}` 
-        : `Score: ${student.score}`;
-      
-      document.getElementById('topbarBadge').textContent = scoreOrRankText;
-      document.getElementById('mobileHeaderBadge').textContent = scoreOrRankText;
-
-      // 2. Welcome Section
-      document.getElementById('welcomeTitle').textContent = `Welcome back, ${student.name}!`;
-      document.getElementById('welcomeSubtitle').textContent = `Your counsellor ${student.counsellor_name} is guiding you · ${student.stage || 'Enrolled'}`;
-      
-      const whatsappUrl = formatWhatsAppLink(student.counsellor_whatsapp);
-      document.getElementById('welcomeWhatsappBtn').href = whatsappUrl;
-
-      const groupBtn = document.getElementById('welcomeGroupBtn');
-      if (student.whatsapp_group_link && student.whatsapp_group_link.trim() !== '') {
-        groupBtn.href = student.whatsapp_group_link;
-        groupBtn.style.display = 'inline-flex';
-      } else {
-        groupBtn.style.display = 'none';
-      }
-
-      // 3. Stat Cards
-      // Card 1: Score/Rank
-      const stat1Label = document.getElementById('stat1Label');
-      const stat1Value = document.getElementById('stat1Value');
-      if (hasRank) {
-        stat1Label.textContent = 'AIR Rank';
-        stat1Value.textContent = Number(student.rank).toLocaleString('en-IN');
-      } else {
-        stat1Label.textContent = 'NEET Score';
-        stat1Value.textContent = student.score;
-      }
-      
-      // Card 2: Category
-      document.getElementById('stat2Value').textContent = student.category || 'Open';
-      
-      // Card 3: Stage
-      document.getElementById('stat3Value').textContent = student.stage || 'Enrolled';
-      
-      // Card 4: Counsellor
-      document.getElementById('stat4Value').textContent = student.counsellor_name || 'ASMI Team';
-
-      // 4. Sidebar footer profile sync
-      document.getElementById('sidebarAvatar').textContent = getInitials(student.name);
-      document.getElementById('sidebarName').textContent = student.name;
-      document.getElementById('sidebarStageBadge').textContent = student.stage || 'Enrolled';
-
-      // 5. Progress strip pipeline
-      renderPipeline(student.stage);
-
-      // 6. Shortlist previews
-      renderShortlist(student.colleges || student.shortlist);
-
-      // 7. Deadlines previews
-      renderDeadlinesPreview();
-    }
-
-    function renderPipeline(currentStage) {
-      const strip = document.getElementById('stageProgressStrip');
-      strip.innerHTML = '';
-
-      let currentIndex = PIPELINE_STAGES.findIndex(s => s.toLowerCase() === String(currentStage).toLowerCase().trim());
-      if (currentIndex === -1) {
-        // Fallback contains-check
-        currentIndex = PIPELINE_STAGES.findIndex(s => String(currentStage).toLowerCase().includes(s.toLowerCase()));
-      }
-
-      PIPELINE_STAGES.forEach((stageName, idx) => {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'progress-step';
-
-        let statusClass = 'future';
-        if (idx < currentIndex) {
-          stepDiv.classList.add('completed');
-          statusClass = 'completed';
-        } else if (idx === currentIndex) {
-          stepDiv.classList.add('active');
-          statusClass = 'active';
+            // Load checklist status
+            try {
+                const saved = JSON.parse(localStorage.getItem('asmi-checklist') || '{}');
+                appState.checkedDocs = new Set(saved.checked || []);
+                appState.docCategory = saved.category || 'General';
+                appState.docQuota = saved.quota || 'State';
+            } catch(e) {}
         }
 
-        const dot = document.createElement('div');
-        dot.className = 'step-dot';
-        dot.innerHTML = statusClass === 'completed' ? '<i class="ti ti-check"></i>' : (idx + 1);
+        /* ── SPA VIEW SWITCHER ── */
+        function switchView(viewId) {
+            document.querySelectorAll('.dashboard-view').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav-item').forEach(m => m.classList.remove('active'));
 
-        const text = document.createElement('span');
-        text.className = 'step-text';
-        text.textContent = stageName;
+            const targetView = document.getElementById('view-' + viewId);
+            if (targetView) targetView.classList.add('active-view');
 
-        stepDiv.appendChild(dot);
-        stepDiv.appendChild(text);
-        strip.appendChild(stepDiv);
-      });
-    }
+            const navLink = document.getElementById('nav-' + viewId);
+            if (navLink) navLink.classList.add('active');
 
-    function renderShortlist(collegesList) {
-      const previewList = document.getElementById('shortlistPreviewList');
-      const fullGrid = document.getElementById('fullShortlistContainer');
-      
-      previewList.innerHTML = '';
-      fullGrid.innerHTML = '';
+            const mobileNav = document.getElementById('m-nav-' + viewId);
+            if (mobileNav) mobileNav.classList.add('active');
 
-      // Standardize colleges list format
-      const colleges = collegesList && Array.isArray(collegesList) ? collegesList : [];
-
-      if (colleges.length === 0) {
-        // Empty state
-        const emptyHtml = `
-          <div class="empty-state">
-            <svg class="empty-illustration" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 8V12" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M12 16H12.01" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <h4 class="empty-title">No colleges shortlisted yet</h4>
-            <p class="empty-subtitle">Your counsellor will add your shortlist after your counselling session.</p>
-          </div>
-        `;
-        previewList.innerHTML = emptyHtml;
-        fullGrid.innerHTML = emptyHtml;
-        return;
-      }
-
-      // 1. Render Preview (Up to 5 colleges)
-      colleges.slice(0, 5).forEach(c => {
-        const name = c.college_name || c.name || 'Unknown College';
-        const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
-        const rankVal = c.closing_rank || c.cutoff || c.rank || c.cr || '—';
-        const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
-        
-        const row = document.createElement('div');
-        row.className = 'shortlist-row';
-        row.innerHTML = `
-          <div class="shortlist-college">
-            <span class="college-name" title="${name}">${name}</span>
-            <span class="college-type">${c.type || 'Medical College'}</span>
-          </div>
-          <div class="shortlist-rank">${rankFormatted !== '—' ? 'AIR ' + rankFormatted : '—'}</div>
-          <span class="prob-badge ${getProbabilityCssClass(prob)}">${prob}</span>
-        `;
-        previewList.appendChild(row);
-      });
-
-      // 2. Render Full Shortlist page
-      colleges.forEach(c => {
-        const name = c.college_name || c.name || 'Unknown College';
-        const prob = c.probability || c.prob || c.chance || c.likelihood || 'Likely';
-        const rankVal = c.closing_rank || c.cutoff || c.rank || c.cr || '—';
-        const rankFormatted = isNaN(rankVal) ? rankVal : Number(rankVal).toLocaleString('en-IN');
-
-        const card = document.createElement('div');
-        card.className = 'card shortlist-card';
-        card.innerHTML = `
-          <div class="sc-header">
-            <h3 class="sc-title">${name}</h3>
-            <span class="prob-badge ${getProbabilityCssClass(prob)}">${prob}</span>
-          </div>
-          <div class="sc-meta">
-            <span class="tag-badge"><i class="ti ti-school"></i> ${c.type || 'MBBS'}</span>
-            <span class="tag-badge"><i class="ti ti-map-pin"></i> ${c.state || 'Maharashtra'}</span>
-          </div>
-          <div class="sc-info-row">
-            <span class="sc-info-label">Closing Cutoff Rank</span>
-            <span class="sc-info-value">${rankFormatted !== '—' ? 'AIR ' + rankFormatted : '—'}</span>
-          </div>
-        `;
-        fullGrid.appendChild(card);
-      });
-    }
-
-    function renderDeadlinesPreview() {
-      const previewList = document.getElementById('deadlinesPreviewList');
-      const fullContainer = document.getElementById('fullDeadlinesContainer');
-      
-      previewList.innerHTML = '';
-      fullContainer.innerHTML = '';
-
-      const todayStr = getLocalTodayDateString();
-      
-      // Filter upcoming events
-      const upcomingEvents = eventsData
-        .filter(ev => ev.date >= todayStr)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-      if (upcomingEvents.length === 0) {
-        const emptyHtml = `
-          <div class="empty-state">
-            <svg class="empty-illustration" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 2V5" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M16 2V5" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3 10H21" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 8V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V8C3 6.89543 3.89543 6 5 6H19C20.1046 6 21 6.89543 21 8Z" stroke="var(--purple)" stroke-opacity="0.15" stroke-width="2"/>
-            </svg>
-            <h4 class="empty-title">No upcoming deadlines</h4>
-            <p class="empty-subtitle">No upcoming deadlines. Check back after results.</p>
-          </div>
-        `;
-        previewList.innerHTML = emptyHtml;
-        fullContainer.innerHTML = emptyHtml;
-        return;
-      }
-
-      // 1. Dashboard Preview (Top 3 upcoming events)
-      upcomingEvents.slice(0, 3).forEach(ev => {
-        const daysDiff = getDaysDifference(ev.date, todayStr);
-        let urgency = 'later';
-        let urgencyClass = 'urgency-later';
-        if (daysDiff <= 7) {
-          urgency = 'urgent';
-          urgencyClass = 'urgency-urgent';
-        } else if (daysDiff <= 30) {
-          urgency = 'upcoming';
-          urgencyClass = 'urgency-upcoming';
+            // Hook for views loading actions
+            if (viewId === 'closing-ranks') {
+                populateClosingRanksDropdown();
+            }
+            if (viewId === 'allotment-mapping') {
+                runAllotmentMapping();
+            }
+            if (viewId === 'cutoff-explorer') {
+                runCutoffExplorerQuery();
+            }
+            if (viewId === 'institutes') {
+                runInstituteSearch();
+            }
         }
 
-        const pillBg = urgency === 'urgent' ? 'var(--red)' : (urgency === 'upcoming' ? 'var(--orange)' : 'var(--green)');
-
-        const row = document.createElement('div');
-        row.className = 'deadline-row';
-        
-        let ctaBtnHtml = '';
-        if (ev.link && ev.cta) {
-          ctaBtnHtml = `<a href="${ev.link}" target="_blank" rel="noopener noreferrer" class="deadline-action-btn">${ev.cta}</a>`;
+        /* ── FETCH DATA ── */
+        async function fetchDeadlines() {
+            try {
+                const res = await fetch('/data/deadlines.json');
+                if (!res.ok) throw new Error('Failed to fetch');
+                appState.deadlines = await res.json();
+                appState.deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } catch (e) {
+                console.warn('Could not load deadlines:', e);
+                appState.deadlines = [];
+            }
         }
 
-        row.innerHTML = `
-          <div class="deadline-date-pill" style="background-color: ${pillBg}; color: white;">
-            <span class="date-day">${getDayNumber(ev.date)}</span>
-            <span class="date-month">${getMonthAbbreviation(ev.date)}</span>
-          </div>
-          <div class="deadline-details">
-            <span class="deadline-title" title="${ev.title}">${ev.title}</span>
-            <div class="deadline-tags">
-              <span class="tag-badge">${ev.tag || ev.type}</span>
-              <span class="urgency-badge ${urgencyClass}">${daysDiff === 0 ? 'Today' : (daysDiff === 1 ? 'Tomorrow' : daysDiff + ' days left')}</span>
-            </div>
-          </div>
-          ${ctaBtnHtml}
-        `;
-        previewList.appendChild(row);
-      });
-
-      // 2. Deadlines View (Group by Urgent / Upcoming / Later)
-      const urgentGroup = [];
-      const upcomingGroup = [];
-      const laterGroup = [];
-
-      upcomingEvents.forEach(ev => {
-        const daysDiff = getDaysDifference(ev.date, todayStr);
-        if (daysDiff <= 7) {
-          urgentGroup.push(ev);
-        } else if (daysDiff <= 30) {
-          upcomingGroup.push(ev);
-        } else {
-          laterGroup.push(ev);
+        async function fetchCollegeData() {
+            try {
+                const res = await fetch('/data/rank_db.json');
+                if (!res.ok) throw new Error('Failed to fetch');
+                appState.collegeData = await res.json();
+                
+                // Populate unique states in select inputs
+                const states = [...new Set(appState.collegeData.map(c => c.state))].sort();
+                const cpStateSelect = document.getElementById('cp-filter-state');
+                const cutoffStateSelect = document.getElementById('cutoff-filter-state');
+                const amStateSelect = document.getElementById('am-state');
+                
+                states.forEach(st => {
+                    const opt1 = document.createElement('option'); opt1.value = st; opt1.textContent = st;
+                    cpStateSelect.appendChild(opt1);
+                    const opt2 = document.createElement('option'); opt2.value = st; opt2.textContent = st;
+                    cutoffStateSelect.appendChild(opt2);
+                    const opt3 = document.createElement('option'); opt3.value = st; opt3.textContent = st;
+                    amStateSelect.appendChild(opt3);
+                });
+            } catch (e) {
+                console.warn('Could not load college data:', e);
+                appState.collegeData = [];
+            }
         }
-      });
 
-      function buildGroupHtml(title, eventsList, cssClass) {
-        if (eventsList.length === 0) return '';
-        
-        const listHtml = eventsList.map(ev => {
-          const daysDiff = getDaysDifference(ev.date, todayStr);
-          let ctaBtnHtml = '';
-          if (ev.link && ev.cta) {
-            ctaBtnHtml = `<a href="${ev.link}" target="_blank" rel="noopener noreferrer" class="btn btn-yellow" style="padding: 6px 14px; font-size: 10px; border-radius: 6px;">${ev.cta} <i class="ti ti-arrow-up-right"></i></a>`;
-          }
+        /* ── UTILITY FUNCTIONS ── */
+        function formatFees(rawFees) {
+            const fees = parseInt(String(rawFees).replace(/[^0-9]/g, ''), 10);
+            if (isNaN(fees) || fees === 0) return '—';
+            if (fees < 100000) {
+                return '₹' + fees.toLocaleString('en-IN') + ' / yr';
+            }
+            return '₹' + (fees / 100000).toFixed(2) + ' L / yr';
+        }
 
-          return `
-            <div class="card" style="margin-bottom: 12px; padding: 16px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
-                <div style="display: flex; align-items: center; gap: 14px;">
-                  <div class="deadline-date-pill" style="background-color: var(--navy); color: var(--yellow);">
-                    <span class="date-day">${getDayNumber(ev.date)}</span>
-                    <span class="date-month">${getMonthAbbreviation(ev.date)}</span>
-                  </div>
-                  <div>
-                    <h3 style="font-size: 13px; font-weight: 700; color: var(--navy);">${ev.title}</h3>
-                    <div class="deadline-tags">
-                      <span class="tag-badge">${ev.tag || ev.type}</span>
-                      <span class="tag-badge" style="background: rgba(26,0,64,0.03)"><i class="ti ti-hourglass"></i> ${daysDiff === 0 ? 'Today' : (daysDiff === 1 ? 'Tomorrow' : daysDiff + ' days left')}</span>
+        function getDeadlineCountdown(dateStr) {
+            const target = new Date(dateStr + 'T23:59:59');
+            const now = new Date();
+            const diffMs = target - now;
+            const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) return { text: 'Passed', class: 'past' };
+            if (diffDays === 0) return { text: 'Today!', class: 'imminent' };
+            if (diffDays === 1) return { text: 'Tomorrow', class: 'imminent' };
+            if (diffDays <= 7) return { text: diffDays + 'd left', class: 'imminent' };
+            return { text: diffDays + ' days', class: 'upcoming' };
+        }
+
+        function getDeadlineTypeIcon(type) {
+            switch (type) {
+                case 'registration': return '📝';
+                case 'deadline': return '⏰';
+                case 'result': return '📋';
+                default: return '📌';
+            }
+        }
+
+        function getMonthAbbr(dateStr) {
+            const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+            return months[new Date(dateStr).getMonth()] || '';
+        }
+
+        function getDayNum(dateStr) {
+            return new Date(dateStr).getDate();
+        }
+
+        function enrichShortlistItem(collegeName) {
+            const match = appState.collegeData.find(c => c.name === collegeName);
+            if (match) return match;
+            return { name: collegeName, type: '—', state: '—', fees: '0', cutoff: 0 };
+        }
+
+        function toggleShortlist(collegeName) {
+            if (appState.shortlist.includes(collegeName)) {
+                appState.shortlist = appState.shortlist.filter(n => n !== collegeName);
+            } else {
+                appState.shortlist.push(collegeName);
+            }
+            localStorage.setItem('shortlist', JSON.stringify(appState.shortlist));
+            renderDashboard();
+            runCollegePrediction();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('tier');
+            localStorage.removeItem('name');
+            localStorage.removeItem('rank');
+            localStorage.removeItem('rankChanged');
+            window.location.href = '/';
+        }
+
+        /* ── RENDER HEADER ── */
+        function renderHeader() {
+            const headerRight = document.getElementById('headerRight');
+            headerRight.innerHTML = `
+                <span class="user-greeting">Welcome, <strong>${escapeHtml(appState.name)}</strong></span>
+                <span class="enrolled-badge" style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 30px; background: var(--safe-bg); color: var(--safe-color); border: 1px solid var(--safe-border);">✓ Enrolled</span>
+                <button class="btn-logout" onclick="handleLogout()">Logout</button>
+            `;
+        }
+
+        /* ── RENDER DASHBOARD CONTENT ── */
+        function renderDashboard() {
+            const content = document.getElementById('dashboard-container-js');
+            const shortlistedColleges = appState.shortlist.map(enrichShortlistItem);
+            const nextDeadline = appState.deadlines.find(d => new Date(d.date) >= new Date());
+            const daysToNext = nextDeadline ? getDeadlineCountdown(nextDeadline.date) : null;
+
+            let html = `
+                <div class="tool-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                        <h1 style="font-size:22px; font-weight:900;">
+                            Welcome back, <span style="color:var(--yellow);">${escapeHtml(appState.name)}</span> 🎓
+                        </h1>
+                        ${appState.rank ? `
+                            <div style="background:rgba(7, 1, 20, 0.5); border:1px solid rgba(255, 215, 0, 0.2); border-radius:30px; padding:6px 16px; display:inline-flex; align-items:center; gap:8px;">
+                                <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">NEET AIR</span>
+                                <span style="font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:var(--yellow);">#${appState.rank.toLocaleString()}</span>
+                            </div>
+                        ` : ''}
                     </div>
-                  </div>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
+                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">${appState.shortlist.length}</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Shortlisted</span>
+                        </div>
+                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
+                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">${daysToNext ? daysToNext.text : '—'}</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Next Deadline</span>
+                        </div>
+                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
+                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">Active</span>
+                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Account</span>
+                        </div>
+                    </div>
                 </div>
-                ${ctaBtnHtml}
-              </div>
-            </div>
-          `;
-        }).join('');
 
-        return `
-          <div class="deadline-group ${cssClass}">
-            <div class="group-header">
-              <span class="group-title">${title}</span>
-              <span class="group-count">${eventsList.length}</span>
-            </div>
-            ${listHtml}
-          </div>
-        `;
-      }
+                <!-- Milestones / Progress -->
+                <div style="margin-bottom:28px;">
+                    <div class="section-header">
+                        <h2 class="section-title"><span class="icon">📈</span> Your Admission Progress</h2>
+                    </div>
+                    <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.5) 0%, rgba(45, 13, 102, 0.2) 100%); border:1px solid var(--card-border); border-radius:16px; padding:24px;">
+                        <div style="display:flex; justify-content:space-between; position:relative;">
+                            ${appState.progress.steps.map((step, i) => `
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; position:relative; z-index:1;">
+                                    <div class="step-circle ${step.status === 'completed' ? 'completed' : (step.status === 'active' ? 'active' : '')}" 
+                                         style="width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:800; border:2px solid rgba(255,255,255,0.1); background:var(--bg-dark); color:var(--text-muted);">
+                                        ${step.status === 'completed' ? '✓' : (i + 1)}
+                                    </div>
+                                    <span style="font-size:11px; font-weight:700; text-transform:uppercase; color: ${step.status === 'active' ? 'var(--yellow)' : (step.status === 'completed' ? 'var(--safe-color)' : 'var(--text-muted)')}; text-align:center;">${step.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
 
-      let fullDeadlinesHtml = '';
-      fullDeadlinesHtml += buildGroupHtml('Urgent', urgentGroup, 'urgent');
-      fullDeadlinesHtml += buildGroupHtml('Upcoming', upcomingGroup, 'upcoming');
-      fullDeadlinesHtml += buildGroupHtml('Later', laterGroup, 'later');
+                <!-- Two-Column Grid -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px; margin-bottom:28px;">
+                    <!-- Deadlines -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title"><span class="icon">📅</span> Upcoming Deadlines</h2>
+                        </div>
+                        <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto;">
+                            ${appState.deadlines.length === 0 ? `
+                                <div style="text-align:center; padding:32px;">No deadlines loaded.</div>
+                            ` : appState.deadlines.map(dl => {
+                                const countdown = getDeadlineCountdown(dl.date);
+                                return `
+                                    <div style="display:flex; gap:14px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                                        <div style="flex-shrink:0; width:54px; text-align:center;">
+                                            <div style="font-size:10px; font-weight:800; color:var(--yellow); text-transform:uppercase;">${getMonthAbbr(dl.date)}</div>
+                                            <div style="font-size:22px; font-weight:900; color:#fff;">${getDayNum(dl.date)}</div>
+                                        </div>
+                                        <div style="flex:1;">
+                                            <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:4px;">${escapeHtml(dl.title)}</div>
+                                            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:10px;">
+                                                <span style="background:rgba(139, 37, 204, 0.2); color:var(--text-muted); border:1px solid var(--card-border); padding:2px 8px; border-radius:20px;">${escapeHtml(dl.authority)}</span>
+                                                <span class="${countdown.class}">${countdown.text}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
 
-      fullContainer.innerHTML = fullDeadlinesHtml;
-    }
-
-    function renderCounsellor() {
-      const student = studentData;
-      document.getElementById('counsellorAvatar').textContent = getInitials(student.counsellor_name);
-      document.getElementById('counsellorName').textContent = student.counsellor_name || 'ASMI Counsellor';
-      document.getElementById('counsellorBranch').innerHTML = `<i class="ti ti-map-pin"></i> ${getBranchFromToken(student.token)}`;
-      
-      const whatsappUrl = formatWhatsAppLink(student.counsellor_whatsapp);
-      document.getElementById('counsellorWhatsappBtn').href = whatsappUrl;
-
-      const groupBtn = document.getElementById('counsellorGroupBtn');
-      if (student.whatsapp_group_link && student.whatsapp_group_link.trim() !== '') {
-        groupBtn.href = student.whatsapp_group_link;
-        groupBtn.style.display = 'inline-flex';
-      } else {
-        groupBtn.style.display = 'none';
-      }
-    }
-
-    // ══════════════════════════════════════
-    // DATA LAYER & ERROR MANAGEMENT
-    // ══════════════════════════════════════
-    function showAppError(title, desc) {
-      document.getElementById('skeletonLoader').style.display = 'none';
-      document.getElementById('mainContent').style.display = 'none';
-      
-      const overlay = document.getElementById('errorOverlay');
-      document.getElementById('errorTitle').textContent = title;
-      document.getElementById('errorDescription').textContent = desc;
-      overlay.style.display = 'flex';
-    }
-
-    async function loadEventsData() {
-      try {
-        const res = await fetch('/data/events.json');
-        if (res.ok) {
-          eventsData = await res.json();
-        } else {
-          console.warn('Events payload returned non-200 state');
-        }
-      } catch (err) {
-        console.warn('Events loading failed:', err);
-      }
-    }
-
-    async function bootstrap() {
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('token') || '';
-
-      if (!token || token.trim() === '') {
-        showAppError('Invalid Link', 'This link is invalid or has expired. Please contact your ASMI counsellor for your dashboard link.');
-        return;
-      }
-
-      // Fetch Events Feed
-      await loadEventsData();
-
-      // Fetch Student Profile from Apps Script
-      try {
-        const response = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
-        
-        if (!response.ok) {
-          throw new Error('Network query was unsuccessful');
-        }
-        
-        const result = await response.json();
-        
-        if (result.error === 'not_found' || !result.success) {
-          showAppError('Dashboard Not Found', "We couldn't find your dashboard. Please contact your ASMI counsellor.");
-          return;
+                    <!-- Shortlist -->
+                    <div>
+                        <div class="section-header">
+                            <h2 class="section-title"><span class="icon">⭐</span> My Shortlist</h2>
+                        </div>
+                        <div style="background:linear-gradient(135deg, rgba(26, 0, 64, 0.45) 0%, rgba(45, 13, 102, 0.15) 100%); border:1px solid var(--card-border); border-radius:16px; padding:20px; max-height:380px; overflow-y:auto;">
+                            ${shortlistedColleges.length === 0 ? `
+                                <div style="text-align:center; padding:32px; color: var(--text-muted);">
+                                    <div style="font-size:36px; margin-bottom:12px;">⭐</div>
+                                    <p style="font-size:13px; margin-bottom:12px;">No colleges shortlisted yet.</p>
+                                    <button onclick="switchView('college-predictor')" class="btn-gold" style="padding: 8px 16px; font-size: 11px;">Open Predictor</button>
+                                </div>
+                            ` : shortlistedColleges.map(c => `
+                                <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                                    <div style="min-width:0; flex:1;">
+                                        <div style="font-size:13px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(c.name)}">
+                                            <span style="color:var(--yellow); margin-right:4px;">★</span>${escapeHtml(c.name)}
+                                        </div>
+                                        <div style="font-size:11px; color:var(--text-muted); display:flex; gap:8px; margin-top:2px;">
+                                            <span style="background:rgba(255,255,255,0.05); padding:1px 6px; border-radius:4px; font-size:9px; text-transform:uppercase;">${escapeHtml(c.type)}</span>
+                                            <span>${escapeHtml(c.state)}</span>
+                                            ${c.fees && c.fees !== '0' ? `<span>· ${formatFees(c.fees)}</span>` : ''}
+                                        </div>
+                                    </div>
+                                    <button onclick="toggleShortlist('${c.name.replace(/'/g, "\\'")}')" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:16px; padding:4px;">✕</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            content.innerHTML = html;
         }
 
-        // Save resolved record
-        studentData = result.data;
-        
-        // Hide loader & display content
-        document.getElementById('skeletonLoader').style.display = 'none';
-        const mainContentEl = document.getElementById('mainContent');
-        mainContentEl.style.display = 'flex';
+        /* ── 1. RANK PREDICTOR LOGIC ── */
+        function calculatePredictedRank() {
+            const scoreInput = document.getElementById('predictor-score');
+            const score = parseInt(scoreInput.value, 10);
+            if (isNaN(score) || score < 200 || score > 720) {
+                alert('Please enter a valid NEET score between 200 and 720.');
+                return;
+            }
 
-        // Render sections
-        renderDashboard();
-        renderCounsellor();
+            // Score mapping dataset placeholder
+            const mapping = [
+                { s: 720, r: 1 },
+                { s: 700, r: 80 },
+                { s: 680, r: 950 },
+                { s: 650, r: 5200 },
+                { s: 600, r: 21000 },
+                { s: 550, r: 51000 },
+                { s: 500, r: 98000 },
+                { s: 450, r: 160000 },
+                { s: 400, r: 265000 },
+                { s: 300, r: 520000 },
+                { s: 200, r: 850000 }
+            ];
 
-      } catch (err) {
-        console.error('Fetch execution error:', err);
-        showAppError('Network Error', 'We encountered an error loading your data. Please check your internet connection and reload the page.');
-      }
-    }
+            let predictedRank = 0;
+            // Interpolate rank based on lookup tables
+            for (let i = 0; i < mapping.length - 1; i++) {
+                const high = mapping[i];
+                const low = mapping[i+1];
+                if (score <= high.s && score >= low.s) {
+                    const ratio = (score - low.s) / (high.s - low.s);
+                    predictedRank = Math.round(low.r + (high.r - low.r) * (1 - ratio));
+                    break;
+                }
+            }
 
-    // Initialize application
-    window.addEventListener('DOMContentLoaded', bootstrap);
-  </script>
+            appState.predictedRank = predictedRank;
+
+            const display = document.getElementById('predicted-air-display');
+            display.textContent = `#${predictedRank.toLocaleString()}`;
+            document.getElementById('predictor-result').style.display = 'block';
+        }
+
+        function handoffToCollegePredictor() {
+            if (!appState.predictedRank) return;
+            
+            // Set values in CP input fields
+            const inputRank = document.getElementById('cp-input-rank');
+            inputRank.value = appState.predictedRank;
+            
+            setCollegePredictorInputMode('rank');
+            switchView('college-predictor');
+            runCollegePrediction();
+        }
+
+        /* ── 2. COLLEGE PREDICTOR LOGIC ── */
+        function setCollegePredictorInputMode(mode) {
+            appState.cpInputMode = mode;
+            document.getElementById('cp-toggle-rank').classList.toggle('active', mode === 'rank');
+            document.getElementById('cp-toggle-score').classList.toggle('active', mode === 'score');
+            
+            document.getElementById('cp-input-rank-group').style.display = mode === 'rank' ? 'block' : 'none';
+            document.getElementById('cp-input-score-group').style.display = mode === 'score' ? 'block' : 'none';
+            
+            runCollegePrediction();
+        }
+
+        function calculateChance(cutoff, userRank) {
+            const diff = cutoff - userRank;
+            if (diff >= 500) {
+                return { key: 'safe', label: 'Safe', class: 'badge-safe' };
+            } else if (diff >= 0) {
+                return { key: 'likely', label: 'Likely', class: 'badge-likely' };
+            } else if (diff >= -1000) {
+                return { key: 'borderline', label: 'Borderline', class: 'badge-borderline' };
+            } else {
+                return { key: 'reach', label: 'Out of Reach', class: 'badge-reach' };
+            }
+        }
+
+        function runCollegePrediction() {
+            let userRank = 0;
+            if (appState.cpInputMode === 'rank') {
+                userRank = parseInt(document.getElementById('cp-input-rank').value, 10);
+            } else {
+                const score = parseInt(document.getElementById('cp-input-score').value, 10);
+                if (!isNaN(score) && score >= 200 && score <= 720) {
+                    // Simple score to rank proxy mapping
+                    const mapping = [
+                        { s: 720, r: 1 }, { s: 700, r: 80 }, { s: 680, r: 950 }, { s: 650, r: 5200 },
+                        { s: 600, r: 21000 }, { s: 550, r: 51000 }, { s: 500, r: 98000 }, { s: 450, r: 160000 },
+                        { s: 400, r: 265000 }, { s: 300, r: 520000 }, { s: 200, r: 850000 }
+                    ];
+                    for (let i = 0; i < mapping.length - 1; i++) {
+                        const high = mapping[i]; const low = mapping[i+1];
+                        if (score <= high.s && score >= low.s) {
+                            const ratio = (score - low.s) / (high.s - low.s);
+                            userRank = Math.round(low.r + (high.r - low.r) * (1 - ratio));
+                            break;
+                        }
+                    }
+                }
+            }
+
+            const tbody = document.getElementById('cp-results-body');
+            if (isNaN(userRank) || userRank <= 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Enter your Rank or Score to fetch matching college opportunities.</td></tr>`;
+                return;
+            }
+
+            const filterType = document.getElementById('cp-filter-type').value;
+            const filterState = document.getElementById('cp-filter-state').value;
+            const sortBy = document.getElementById('cp-sort').value;
+
+            // Filter college data based on rank thresholds (show up to 2000 ranks above cutoff for out of reach checks)
+            let matches = appState.collegeData.filter(c => {
+                if (filterType !== 'All' && c.type !== filterType) return false;
+                if (filterState !== 'All' && c.state !== filterState) return false;
+                return true;
+            });
+
+            // Calculate chances
+            matches = matches.map(c => {
+                const prob = calculateChance(c.cutoff, userRank);
+                return { ...c, prob };
+            });
+
+            // Sort matches
+            if (sortBy === 'rank_asc') {
+                matches.sort((a, b) => a.cutoff - b.cutoff);
+            } else if (sortBy === 'fees_asc') {
+                matches.sort((a, b) => {
+                    const fa = parseInt(a.fees) || 99999999;
+                    const fb = parseInt(b.fees) || 99999999;
+                    return fa - fb;
+                });
+            }
+
+            if (matches.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No colleges match the selected criteria.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = matches.slice(0, 100).map(c => {
+                const inShortlist = appState.shortlist.includes(c.name);
+                return `
+                    <tr>
+                        <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
+                        <td>${escapeHtml(c.type)}</td>
+                        <td>${escapeHtml(c.state)}</td>
+                        <td>${escapeHtml(c.quota)}</td>
+                        <td style="font-weight:700;">#${c.cutoff.toLocaleString()}</td>
+                        <td>${formatFees(c.fees)}</td>
+                        <td>
+                            <button onclick="toggleShortlist('${c.name.replace(/'/g, "\\'")}')" class="chip ${inShortlist ? 'active' : ''}">
+                                ${inShortlist ? 'Saved' : 'Save'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        /* ── 3. CUTOFF EXPLORER LOGIC ── */
+        function runCutoffExplorerQuery() {
+            const query = document.getElementById('cutoff-search-college').value.toLowerCase();
+            const stateVal = document.getElementById('cutoff-filter-state').value;
+            const typeVal = document.getElementById('cutoff-filter-type').value;
+
+            let filtered = appState.collegeData.filter(c => {
+                if (stateVal !== 'All' && c.state !== stateVal) return false;
+                if (typeVal !== 'All' && c.type !== typeVal) return false;
+                if (query && !c.name.toLowerCase().includes(query)) return false;
+                return true;
+            });
+
+            const tbody = document.getElementById('cutoff-explorer-body');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No cutoffs match your search criteria.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.slice(0, 80).map(c => `
+                <tr>
+                    <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
+                    <td>${escapeHtml(c.type)}</td>
+                    <td>${escapeHtml(c.state)}</td>
+                    <td>${escapeHtml(c.quota)}</td>
+                    <td style="color:var(--yellow); font-weight:700;">#${c.cutoff.toLocaleString()}</td>
+                    <td>${formatFees(c.fees)}</td>
+                </tr>
+            `).join('');
+        }
+
+        /* ── 4. RANK SCAN LOGIC ── */
+        function runRankScan() {
+            const rank = parseInt(document.getElementById('scan-rank-input').value, 10);
+            const tbody = document.getElementById('rank-scan-body');
+            
+            if (isNaN(rank) || rank <= 0) {
+                alert('Please enter a valid rank number.');
+                return;
+            }
+
+            // Find all colleges where closing rank >= entered rank
+            const matches = appState.collegeData.filter(c => c.cutoff >= rank);
+            matches.sort((a, b) => a.cutoff - b.cutoff);
+
+            if (matches.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No allotments found where rank #${rank.toLocaleString()} was successful. Try a lower rank number.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = matches.slice(0, 100).map(c => `
+                <tr>
+                    <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
+                    <td>${escapeHtml(c.quota)}</td>
+                    <td>${escapeHtml(c.state)}</td>
+                    <td>${escapeHtml(c.type)}</td>
+                    <td style="color:var(--safe-color); font-weight:700;">#${c.cutoff.toLocaleString()}</td>
+                    <td>${formatFees(c.fees)}</td>
+                </tr>
+            `).join('');
+        }
+
+        /* ── 5. CLOSING RANKS LOGIC ── */
+        function populateClosingRanksDropdown() {
+            const select = document.getElementById('closing-ranks-college-select');
+            if (select.children.length > 1) return; // Already populated
+
+            // Sort unique college names
+            const names = [...new Set(appState.collegeData.map(c => c.name))].sort();
+            names.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            });
+        }
+
+        function showClosingRankForSelectedCollege() {
+            const name = document.getElementById('closing-ranks-college-select').value;
+            const card = document.getElementById('closing-ranks-details-card');
+            
+            if (!name) {
+                card.style.display = 'none';
+                return;
+            }
+
+            const matches = appState.collegeData.filter(c => c.name === name);
+            if (matches.length > 0) {
+                const c = matches[0];
+                document.getElementById('cr-card-name').textContent = c.name;
+                document.getElementById('cr-card-rank').textContent = '#' + c.cutoff.toLocaleString();
+                document.getElementById('cr-card-fee').textContent = formatFees(c.fees);
+                document.getElementById('cr-card-state').textContent = c.state + ' (' + c.location + ')';
+                document.getElementById('cr-card-quota').textContent = c.quota + ' (' + c.type + ')';
+                card.style.display = 'block';
+            }
+        }
+
+        /* ── 6. ALLOTMENT MAPPING LOGIC ── */
+        function runAllotmentMapping() {
+            const amCounselling = document.getElementById('am-counselling').value;
+            const amState = document.getElementById('am-state').value;
+            
+            let filtered = appState.collegeData.filter(c => {
+                if (amState !== 'All' && c.state !== amState) return false;
+                if (amCounselling !== 'All') {
+                    if (amCounselling === 'AIQ' && c.quota !== 'AIQ') return false;
+                    if (amCounselling === 'AIIMS' && c.type !== 'AIIMS') return false;
+                    if (amCounselling === 'State' && (c.quota === 'AIQ' || c.type === 'AIIMS')) return false;
+                }
+                return true;
+            });
+
+            filtered.sort((a, b) => a.cutoff - b.cutoff);
+            const tbody = document.getElementById('allotment-mapping-body');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No allotments match selection.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.slice(0, 100).map(c => `
+                <tr>
+                    <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
+                    <td>${escapeHtml(c.quota)}</td>
+                    <td>${escapeHtml(c.location)}</td>
+                    <td>${escapeHtml(c.state)}</td>
+                    <td style="font-weight:700;">#${c.cutoff.toLocaleString()}</td>
+                    <td>${formatFees(c.fees)}</td>
+                </tr>
+            `).join('');
+        }
+
+        /* ── 7. DOCUMENT CHECKLIST LOGIC ── */
+        function setDocCategory(cat) {
+            appState.docCategory = cat;
+            document.querySelectorAll('#doc-category-chips .chip').forEach(c => {
+                c.classList.toggle('active', c.textContent.includes(cat) || (cat === 'General' && c.textContent.includes('General')));
+            });
+            renderDocChecklist();
+            saveDocChecklistState();
+        }
+
+        function setDocQuota(quota) {
+            appState.docQuota = quota;
+            document.querySelectorAll('#doc-quota-chips .chip').forEach(c => {
+                c.classList.toggle('active', c.textContent.includes(quota) || (quota === 'State' && c.textContent.includes('State')));
+            });
+            renderDocChecklist();
+            saveDocChecklistState();
+        }
+
+        function saveDocChecklistState() {
+            localStorage.setItem('asmi-checklist', JSON.stringify({
+                checked: [...appState.checkedDocs],
+                category: appState.docCategory,
+                quota: appState.docQuota
+            }));
+        }
+
+        function getAllDocIds() {
+            const ids = [];
+            DOCS_DATA.sections.forEach(s => s.docs.forEach(d => ids.push(d.id)));
+            if (appState.docCategory !== 'General' && DOCS_DATA.category[appState.docCategory]) {
+                DOCS_DATA.category[appState.docCategory].docs.forEach(d => ids.push(d.id));
+            }
+            if (DOCS_DATA.quota[appState.docQuota]) {
+                DOCS_DATA.quota[appState.docQuota].docs.forEach(d => ids.push(d.id));
+            }
+            return ids;
+        }
+
+        function updateDocProgress() {
+            const all = getAllDocIds();
+            const done = all.filter(id => appState.checkedDocs.has(id)).length;
+            const pct = all.length ? Math.round((done / all.length) * 100) : 0;
+            document.getElementById('doc-progress-fill').style.width = pct + '%';
+            document.getElementById('doc-progress-label').textContent = done + ' of ' + all.length + ' ready';
+        }
+
+        function toggleDocChecked(id) {
+            if (appState.checkedDocs.has(id)) {
+                appState.checkedDocs.delete(id);
+            } else {
+                appState.checkedDocs.add(id);
+            }
+            const el = document.getElementById('doc-check-' + id);
+            if (el) {
+                el.textContent = appState.checkedDocs.has(id) ? '✓' : '';
+                el.closest('.doc-row-style').style.background = appState.checkedDocs.has(id) ? 'rgba(106, 13, 173, 0.12)' : 'transparent';
+            }
+            updateDocProgress();
+            saveDocChecklistState();
+        }
+
+        function renderDocChecklist() {
+            const container = document.getElementById('checklist-render-container');
+            const sections = [
+                ...DOCS_DATA.sections,
+                ...(appState.docCategory !== 'General' && DOCS_DATA.category[appState.docCategory] ? [DOCS_DATA.category[appState.docCategory]] : []),
+                ...(DOCS_DATA.quota[appState.docQuota] ? [DOCS_DATA.quota[appState.docQuota]] : [])
+            ];
+
+            container.innerHTML = sections.map(s => `
+                <div style="margin-bottom:20px;">
+                    <div style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:10px; border-left: 3px solid var(--purple); padding-left: 8px;">
+                        ${s.title}
+                    </div>
+                    <div style="background: rgba(7, 1, 20, 0.4); border: 1px solid var(--card-border); border-radius:10px; overflow:hidden;">
+                        ${s.docs.map(doc => {
+                            const isChecked = appState.checkedDocs.has(doc.id);
+                            return `
+                                <div class="doc-row-style" onclick="toggleDocChecked('${doc.id}')" style="display:flex; align-items:flex-start; gap:12px; padding:12px 16px; border-bottom:1px solid rgba(139, 37, 204, 0.1); cursor:pointer; background: ${isChecked ? 'rgba(106, 13, 173, 0.12)' : 'transparent'};">
+                                    <div id="doc-check-${doc.id}" style="width:20px; height:20px; border:1.5px solid rgba(255,255,255,0.2); border-radius:4px; display:flex; align-items:center; justify-content:center; color:var(--yellow); font-weight:800; font-size:12px; flex-shrink:0;">
+                                        ${isChecked ? '✓' : ''}
+                                    </div>
+                                    <div>
+                                        <div style="font-size:13px; font-weight:700; color:#fff;">${escapeHtml(doc.label)}</div>
+                                        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${escapeHtml(doc.copies)}</div>
+                                        ${doc.note ? `<div style="font-size:10px; color:var(--yellow); margin-top:2px; font-style:italic;">Note: ${escapeHtml(doc.note)}</div>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            updateDocProgress();
+        }
+
+        function resetDocChecklist() {
+            if (confirm('Are you sure you want to clear your checklist checkmarks?')) {
+                appState.checkedDocs.clear();
+                renderDocChecklist();
+                saveDocChecklistState();
+            }
+        }
+
+        /* ── 8. INSTITUTES DIRECTORY LOGIC ── */
+        function runInstituteSearch() {
+            const query = document.getElementById('institute-search-query').value.toLowerCase();
+            const tbody = document.getElementById('institutes-list-body');
+
+            // Unique list of colleges grouped from rank database
+            const uniqueColleges = [];
+            const seen = new Set();
+            
+            appState.collegeData.forEach(c => {
+                if (!seen.has(c.name)) {
+                    seen.add(c.name);
+                    uniqueColleges.push(c);
+                }
+            });
+
+            let filtered = uniqueColleges;
+            if (query) {
+                filtered = uniqueColleges.filter(c => c.name.toLowerCase().includes(query));
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No colleges match search query.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.slice(0, 80).map(c => {
+                // Mock Stipend and Bond configurations
+                const mockStipend = '₹55,000 / month';
+                const mockBond = '1 Year (₹10 L Penalty)';
+                
+                return `
+                    <tr>
+                        <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
+                        <td>${escapeHtml(c.state)}</td>
+                        <td>${formatFees(c.fees)}</td>
+                        <td>${mockStipend}</td>
+                        <td>${mockBond}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        /* ── HTML ESCAPING ── */
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        /* ── BOOTSTRAP ── */
+        window.addEventListener('DOMContentLoaded', async () => {
+            // 1. Initialize local states/defaults first
+            initState();
+
+            // 2. Read query params for token
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token') || '';
+
+            if (token && token.trim() !== '') {
+                try {
+                    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+                    const response = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success && result.data) {
+                            const student = result.data;
+                            if (student.name) {
+                                appState.name = student.name;
+                                localStorage.setItem('name', student.name);
+                            }
+                            if (student.rank && String(student.rank).trim() !== '') {
+                                appState.rank = parseInt(student.rank, 10);
+                                localStorage.setItem('rank', appState.rank);
+                            }
+                            if (student.colleges || student.shortlist) {
+                                appState.shortlist = student.colleges || student.shortlist || [];
+                                localStorage.setItem('shortlist', JSON.stringify(appState.shortlist));
+                            }
+                            if (student.category) {
+                                appState.docCategory = student.category;
+                            }
+                            if (student.stage) {
+                                const stages = ["Enrolled", "Documents Verified", "Counselled", "Preferences Filed", "Round 1", "Allotted"];
+                                let currentIndex = stages.findIndex(s => s.toLowerCase() === String(student.stage).toLowerCase().trim());
+                                if (currentIndex === -1) {
+                                    currentIndex = stages.findIndex(s => String(student.stage).toLowerCase().includes(s.toLowerCase()));
+                                }
+                                if (currentIndex !== -1) {
+                                    appState.progress.steps = stages.map((stageName, idx) => {
+                                        let status = 'pending';
+                                        if (idx < currentIndex) status = 'completed';
+                                        else if (idx === currentIndex) status = 'active';
+                                        return { id: idx + 1, label: stageName, status: status };
+                                    });
+                                }
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Failed to load profile from Apps Script. Using fallback state.', err);
+                }
+            }
+
+            renderHeader();
+
+            await Promise.all([
+                fetchDeadlines(),
+                fetchCollegeData()
+            ]);
+
+            renderDashboard();
+            renderDocChecklist();
+
+            // Hide the app loader overlay
+            const appLoader = document.getElementById('appLoader');
+            if (appLoader) {
+                appLoader.style.transition = 'opacity 0.4s';
+                appLoader.style.opacity = '0';
+                setTimeout(() => appLoader.remove(), 400);
+            }
+        });
+    </script>
 </body>
 </html>
