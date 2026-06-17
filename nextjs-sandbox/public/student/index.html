@@ -506,16 +506,6 @@
 </head>
 <body>
 
-    <!-- App Loader Overlay -->
-    <div id="appLoader" style="position: fixed; inset: 0; background: #070114; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; font-family: 'Montserrat', sans-serif;">
-        <div style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: 2px;">ASMI <span style="color: #FFD700;">CAREER</span></div>
-        <div style="width: 40px; height: 40px; border: 4px solid rgba(255, 215, 0, 0.1); border-top-color: #FFD700; border-radius: 50%; animation: spin-loader 1s linear infinite;"></div>
-        <div style="color: rgba(255,255,255,0.6); font-size: 14px;">Loading your dashboard...</div>
-    </div>
-    <style>
-        @keyframes spin-loader { to { transform: rotate(360deg); } }
-    </style>
-
     <!-- Ambient Background Glows -->
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
@@ -563,10 +553,6 @@
             <a onclick="switchView('rank-scan')" class="nav-link" id="nav-rank-scan">
                 <span class="nav-icon">🔍</span>
                 <span>Rank Scan</span>
-            </a>
-            <a onclick="switchView('closing-ranks')" class="nav-link" id="nav-closing-ranks">
-                <span class="nav-icon">🏆</span>
-                <span>Closing Ranks</span>
             </a>
             <a onclick="switchView('allotment-mapping')" class="nav-link" id="nav-allotment-mapping">
                 <span class="nav-icon">🗺️</span>
@@ -654,7 +640,7 @@
                     </div>
 
                     <!-- Filters Section -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-top: 10px;">
                         <div class="form-group">
                             <label class="form-label">Institution Type</label>
                             <select id="cp-filter-type" class="form-input" onchange="runCollegePrediction()">
@@ -666,6 +652,22 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select id="cp-filter-category" class="form-input" onchange="runCollegePrediction()">
+                                <option value="General">General (Open)</option>
+                                <option value="OBC">OBC</option>
+                                <option value="SC">SC</option>
+                                <option value="ST">ST</option>
+                                <option value="EWS">EWS</option>
+                                <option value="SEBC">SEBC</option>
+                                <option value="VJ">VJ</option>
+                                <option value="NT1">NT-1 (NT-B)</option>
+                                <option value="NT2">NT-2 (NT-C)</option>
+                                <option value="NT3">NT-3 (NT-D)</option>
+                                <option value="IQ">Institutional Quota (IQ)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">State</label>
                             <select id="cp-filter-state" class="form-input" onchange="runCollegePrediction()">
                                 <option value="All">All States</option>
@@ -674,7 +676,7 @@
                         <div class="form-group">
                             <label class="form-label">Sort By</label>
                             <select id="cp-sort" class="form-input" onchange="runCollegePrediction()">
-                                <option value="rank_asc">Best Rank (Ascending)</option>
+                                <option value="rank_asc">Best Match (Ascending)</option>
                                 <option value="fees_asc">Lowest Fees</option>
                             </select>
                         </div>
@@ -707,48 +709,90 @@
                     <div class="section-header">
                         <h2 class="section-title"><span class="icon">📈</span> Cutoff Explorer</h2>
                     </div>
-                    <p style="margin-bottom: 20px; color: var(--text-muted);">Search and view closing cutoffs across colleges.</p>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Explore final closing cutoffs across colleges.</p>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
-                        <div class="form-group">
-                            <label class="form-label">Search College</label>
-                            <input type="text" id="cutoff-search-college" class="form-input" placeholder="Type college name..." oninput="runCutoffExplorerQuery()">
+                    <!-- View Mode Toggle -->
+                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                        <button id="cutoff-mode-browse" class="chip active" onclick="setCutoffExplorerMode('browse')">Browse All Colleges</button>
+                        <button id="cutoff-mode-single" class="chip" onclick="setCutoffExplorerMode('single')">Single College Lookup</button>
+                    </div>
+
+                    <!-- Mode 1: Browse All Colleges -->
+                    <div id="cutoff-browse-container">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label class="form-label">Search College</label>
+                                <input type="text" id="cutoff-search-college" class="form-input" placeholder="Type college name..." oninput="runCutoffExplorerQuery()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">State</label>
+                                <select id="cutoff-filter-state" class="form-input" onchange="runCutoffExplorerQuery()">
+                                    <option value="All">All States</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Institution Type</label>
+                                <select id="cutoff-filter-type" class="form-input" onchange="runCutoffExplorerQuery()">
+                                    <option value="All">All Types</option>
+                                    <option value="Government">Government</option>
+                                    <option value="Private">Private</option>
+                                    <option value="Deemed">Deemed</option>
+                                    <option value="AIIMS">AIIMS</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">State</label>
-                            <select id="cutoff-filter-state" class="form-input" onchange="runCutoffExplorerQuery()">
-                                <option value="All">All States</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Institution Type</label>
-                            <select id="cutoff-filter-type" class="form-input" onchange="runCutoffExplorerQuery()">
-                                <option value="All">All Types</option>
-                                <option value="Government">Government</option>
-                                <option value="Private">Private</option>
-                                <option value="Deemed">Deemed</option>
-                                <option value="AIIMS">AIIMS</option>
-                            </select>
+
+                        <div class="custom-table-container">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>College Name</th>
+                                        <th>Type</th>
+                                        <th>State</th>
+                                        <th>Quota</th>
+                                        <th>Final Closing Rank</th>
+                                        <th>Annual Fee</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cutoff-explorer-body">
+                                    <!-- Loaded dynamically -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <div class="custom-table-container">
-                        <table class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>College Name</th>
-                                    <th>Type</th>
-                                    <th>State</th>
-                                    <th>Quota</th>
-                                    <th>Final Closing Rank</th>
-                                    <th>Annual Fee</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cutoff-explorer-body">
-                                <!-- Loaded dynamically -->
-                            </tbody>
-                        </table>
+                    <!-- Mode 2: Single College Lookup -->
+                    <div id="cutoff-single-container" style="display:none;">
+                        <div class="form-group" style="max-width: 600px; margin: 0 auto 30px auto;">
+                            <label class="form-label">Select Medical College</label>
+                            <select id="closing-ranks-college-select" class="form-input" onchange="showClosingRankForSelectedCollege()">
+                                <option value="">-- Choose a College --</option>
+                            </select>
+                        </div>
+
+                        <div id="closing-ranks-details-card" style="display:none; max-width: 600px; margin: 0 auto; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; background: rgba(7, 1, 20, 0.45);">
+                            <h3 id="cr-card-name" style="color: var(--yellow); margin-bottom: 12px; font-size: 18px;">College Name</h3>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Closing AIR</div>
+                                    <div id="cr-card-rank" style="font-size: 24px; font-weight: 800; color: #fff;">#0</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Annual Fee</div>
+                                    <div id="cr-card-fee" style="font-size: 24px; font-weight: 800; color: #fff;">₹ —</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">State</div>
+                                    <div id="cr-card-state" style="font-size: 14px; font-weight: 600;">State Name</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Category / Quota</div>
+                                    <div id="cr-card-quota" style="font-size: 14px; font-weight: 600;">Quota</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
@@ -758,68 +802,33 @@
                     <div class="section-header">
                         <h2 class="section-title"><span class="icon">🔍</span> Rank Scan</h2>
                     </div>
-                    <p style="margin-bottom: 20px; color: var(--text-muted);">Enter a single rank to see everywhere that specific rank was allotted across counsellings.</p>
-                    
-                    <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 12px; margin-bottom: 30px;">
-                        <input type="number" id="scan-rank-input" class="form-input" placeholder="Enter AIR (e.g. 12500)">
-                        <button onclick="runRankScan()" class="btn-gold">Scan Rank</button>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Find all colleges where your NEET All India Rank would be successful based on closing ranks.</p>
+
+                    <div style="max-width: 400px; margin-bottom: 24px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label" for="scan-rank-input">Enter NEET AIR</label>
+                            <input type="number" id="scan-rank-input" class="form-input" placeholder="e.g. 15000" oninput="runRankScan()">
+                        </div>
                     </div>
 
                     <div class="custom-table-container">
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th>Allotted College Name</th>
-                                    <th>Counselling / Quota</th>
+                                    <th>College Name</th>
+                                    <th>Quota</th>
                                     <th>State</th>
-                                    <th>Institution Type</th>
-                                    <th>Closing Cutoff</th>
+                                    <th>Type</th>
+                                    <th>Closing Rank</th>
                                     <th>Annual Fee</th>
                                 </tr>
                             </thead>
                             <tbody id="rank-scan-body">
-                                <tr><td colspan="6" style="text-align:center;">Enter a rank above to scan for allotments.</td></tr>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--text-muted);">Enter a rank above to start scanning.</td>
+                                </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ── VIEW: CLOSING RANKS ── -->
-            <div id="view-closing-ranks" class="dashboard-view">
-                <div class="tool-card">
-                    <div class="section-header">
-                        <h2 class="section-title"><span class="icon">🏆</span> Closing Ranks</h2>
-                    </div>
-                    <p style="margin-bottom: 20px; color: var(--text-muted);">Look up a specific medical college to check its official historical closing rank.</p>
-
-                    <div class="form-group" style="max-width: 600px; margin: 0 auto 30px auto;">
-                        <label class="form-label">Select Medical College</label>
-                        <select id="closing-ranks-college-select" class="form-input" onchange="showClosingRankForSelectedCollege()">
-                            <option value="">-- Choose a College --</option>
-                        </select>
-                    </div>
-
-                    <div id="closing-ranks-details-card" style="display:none; max-width: 600px; margin: 0 auto; border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; background: rgba(7, 1, 20, 0.45);">
-                        <h3 id="cr-card-name" style="color: var(--yellow); margin-bottom: 12px; font-size: 18px;">College Name</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div>
-                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Closing AIR</div>
-                                <div id="cr-card-rank" style="font-size: 24px; font-weight: 800; color: #fff;">#0</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Annual Fee</div>
-                                <div id="cr-card-fee" style="font-size: 24px; font-weight: 800; color: #fff;">₹ —</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">State</div>
-                                <div id="cr-card-state" style="font-size: 14px; font-weight: 600;">State Name</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Category / Quota</div>
-                                <div id="cr-card-quota" style="font-size: 14px; font-weight: 600;">Quota</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -922,27 +931,64 @@
                     <div class="section-header">
                         <h2 class="section-title"><span class="icon">🏥</span> Institutes Directory</h2>
                     </div>
-                    <p style="margin-bottom: 20px; color: var(--text-muted);">Explore details, fees, and service credentials for medical colleges.</p>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Explore details, fees, and seats for medical colleges across India.</p>
 
-                    <div style="max-width: 500px; margin-bottom: 24px;">
-                        <input type="text" id="institute-search-query" class="form-input" placeholder="Search by college name..." oninput="runInstituteSearch()">
-                    </div>
+                    <div class="colleges-embedded-layout" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:24px; margin-top:20px;">
+                        <!-- Filter Sidebar -->
+                        <aside style="background: rgba(7, 1, 20, 0.35); border: 1px solid var(--card-border); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:16px; height:fit-content;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(139,37,204,0.15); padding-bottom:10px;">
+                                <span style="font-family:'Montserrat',sans-serif; font-size:13px; font-weight:800; text-transform:uppercase;">Filters</span>
+                                <button onclick="resetInstituteFilters()" style="background:none; border:none; color:var(--yellow); font-size:10px; font-weight:700; cursor:pointer;">Reset</button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" style="font-size:11px;">Search State</label>
+                                <select id="inst-filter-state" class="form-input" onchange="runInstituteSearch()" style="padding:6px 10px; font-size:12px;">
+                                    <option value="All">All States</option>
+                                </select>
+                            </div>
 
-                    <div class="custom-table-container">
-                        <table class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>College Name</th>
-                                    <th>State</th>
-                                    <th>Annual Fee</th>
-                                    <th>Stipend / Month</th>
-                                    <th>Bond Duration &amp; Penalty</th>
-                                </tr>
-                            </thead>
-                            <tbody id="institutes-list-body">
-                                <!-- Loaded dynamically -->
-                            </tbody>
-                        </table>
+                            <div class="form-group">
+                                <label class="form-label" style="font-size:11px;">University Type</label>
+                                <select id="inst-filter-type" class="form-input" onchange="runInstituteSearch()" style="padding:6px 10px; font-size:12px;">
+                                    <option value="All">All Types</option>
+                                    <option value="AIIMS">AIIMS</option>
+                                    <option value="Government">Government</option>
+                                    <option value="Private">Private</option>
+                                    <option value="Deemed">Deemed</option>
+                                    <option value="JIPMER">JIPMER</option>
+                                    <option value="Central">Central</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="font-size:11px;">Course</label>
+                                <select id="inst-filter-course" class="form-input" onchange="runInstituteSearch()" style="padding:6px 10px; font-size:12px;">
+                                    <option value="All">All Courses</option>
+                                    <option value="MBBS">MBBS</option>
+                                    <option value="BDS">BDS</option>
+                                    <option value="BPTH">BPTH</option>
+                                    <option value="BAMS">BAMS</option>
+                                    <option value="BHMS">BHMS</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="font-size:11px;">Max Annual Fee</label>
+                                <input type="range" id="inst-filter-fee" min="0" max="3000000" step="100000" value="3000000" oninput="updateInstFeeLabel(); runInstituteSearch();" style="width:100%; cursor:pointer; accent-color:var(--yellow);">
+                                <div id="inst-fee-label" style="font-size:10px; color:var(--text-muted); margin-top:4px; text-align:right;">No Limit</div>
+                            </div>
+                        </aside>
+
+                        <!-- Main Cards Area -->
+                        <div style="flex:1;">
+                            <div style="margin-bottom: 16px;">
+                                <input type="text" id="institute-search-query" class="form-input" placeholder="Search by college name..." oninput="runInstituteSearch()">
+                            </div>
+                            <div id="inst-cards-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:16px; max-height: 520px; overflow-y:auto; padding-right:6px;">
+                                <!-- Cards loaded dynamically -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1028,7 +1074,14 @@
             cpInputMode: 'rank', // 'rank' or 'score'
             docCategory: 'General',
             docQuota: 'State',
-            checkedDocs: new Set()
+            checkedDocs: new Set(),
+            counsellorName: 'ASMI Counsellor',
+            counsellorWhatsapp: '917410019074',
+            whatsappGroupLink: '',
+            counsellorBranch: 'ASMI Career Network',
+            scoreDB: null,
+            feesDB: null,
+            collegesList: null
         };
 
         const DOCS_DATA = {
@@ -1144,8 +1197,8 @@
             } catch(e) {}
         }
 
-        /* ── SPA VIEW SWITCHER ── */
-        function switchView(viewId) {
+         /* ── SPA VIEW SWITCHER ── */
+        async function switchView(viewId) {
             document.querySelectorAll('.dashboard-view').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
             document.querySelectorAll('.mobile-nav-item').forEach(m => m.classList.remove('active'));
@@ -1161,7 +1214,7 @@
 
             // Hook for views loading actions
             if (viewId === 'closing-ranks') {
-                populateClosingRanksDropdown();
+                populateCutoffSingleDropdown();
             }
             if (viewId === 'allotment-mapping') {
                 runAllotmentMapping();
@@ -1170,6 +1223,19 @@
                 runCutoffExplorerQuery();
             }
             if (viewId === 'institutes') {
+                if (!appState.collegesList) {
+                    const grid = document.getElementById('inst-cards-grid');
+                    if (grid) grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">Loading colleges directory...</div>';
+                    try {
+                        const res = await fetch('/data/colleges.json');
+                        if (res.ok) {
+                            appState.collegesList = await res.json();
+                            populateInstituteStates();
+                        }
+                    } catch(err) {
+                        console.warn(err);
+                    }
+                }
                 runInstituteSearch();
             }
         }
@@ -1177,12 +1243,18 @@
         /* ── FETCH DATA ── */
         async function fetchDeadlines() {
             try {
-                const res = await fetch('/data/deadlines.json');
+                const res = await fetch('/data/events.json');
                 if (!res.ok) throw new Error('Failed to fetch');
-                appState.deadlines = await res.json();
+                const rawEvents = await res.json();
+                const todayStr = new Date().toISOString().split('T')[0];
+                appState.deadlines = rawEvents.filter(ev => ev.date >= todayStr).map(ev => ({
+                    title: ev.title,
+                    date: ev.date,
+                    authority: ev.tag || 'NOTICE'
+                }));
                 appState.deadlines.sort((a, b) => new Date(a.date) - new Date(b.date));
             } catch (e) {
-                console.warn('Could not load deadlines:', e);
+                console.warn('Could not load deadlines from events.json:', e);
                 appState.deadlines = [];
             }
         }
@@ -1267,63 +1339,85 @@
                 appState.shortlist.push(collegeName);
             }
             localStorage.setItem('shortlist', JSON.stringify(appState.shortlist));
-            renderDashboard();
-            runCollegePrediction();
+            
+            const activeView = document.querySelector('.dashboard-view.active-view');
+            if (activeView && activeView.id === 'view-dashboard') {
+                renderDashboard();
+            }
+            if (activeView && activeView.id === 'view-college-predictor') {
+                runCollegePrediction();
+            }
         }
 
-        function handleLogout() {
-            localStorage.removeItem('tier');
-            localStorage.removeItem('name');
-            localStorage.removeItem('rank');
-            localStorage.removeItem('rankChanged');
-            window.location.href = '/';
+        function getInitials(name) {
+            if (!name) return 'SR';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
 
-        /* ── RENDER HEADER ── */
-        function renderHeader() {
-            const headerRight = document.getElementById('headerRight');
-            headerRight.innerHTML = `
-                <span class="user-greeting">Welcome, <strong>${escapeHtml(appState.name)}</strong></span>
-                <span class="enrolled-badge" style="font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 30px; background: var(--safe-bg); color: var(--safe-color); border: 1px solid var(--safe-border);">✓ Enrolled</span>
-                <button class="btn-logout" onclick="handleLogout()">Logout</button>
-            `;
+        function formatWhatsAppLink(phone) {
+            if (!phone) return '#';
+            const cleanPhone = phone.replace(/[^0-9]/g, '');
+            return `https://wa.me/${cleanPhone}`;
         }
 
-        /* ── RENDER DASHBOARD CONTENT ── */
         function renderDashboard() {
-            const content = document.getElementById('dashboard-container-js');
-            const shortlistedColleges = appState.shortlist.map(enrichShortlistItem);
-            const nextDeadline = appState.deadlines.find(d => new Date(d.date) >= new Date());
-            const daysToNext = nextDeadline ? getDeadlineCountdown(nextDeadline.date) : null;
+            const content = document.getElementById('dashboard-home-content');
+            if (!content) return;
+            const shortlistedColleges = appState.shortlist.map(name => enrichShortlistItem(name));
+            const upcoming = appState.deadlines.filter(dl => new Date(dl.date + 'T23:59:59') >= new Date());
+            const nextDead = upcoming[0];
+            const daysToNext = nextDead ? getDeadlineCountdown(nextDead.date) : null;
 
-            let html = `
-                <div class="tool-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
-                        <h1 style="font-size:22px; font-weight:900;">
-                            Welcome back, <span style="color:var(--yellow);">${escapeHtml(appState.name)}</span> 🎓
-                        </h1>
-                        ${appState.rank ? `
-                            <div style="background:rgba(7, 1, 20, 0.5); border:1px solid rgba(255, 215, 0, 0.2); border-radius:30px; padding:6px 16px; display:inline-flex; align-items:center; gap:8px;">
-                                <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">NEET AIR</span>
-                                <span style="font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:var(--yellow);">#${appState.rank.toLocaleString()}</span>
+            const html = `
+                  <div class="tool-card" style="display:grid; grid-template-columns:1fr; gap:20px;">
+                    <!-- Responsive 2-column grid -->
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+                        <div>
+                            <h1 style="font-size:22px; font-weight:900; margin-bottom:12px;">
+                                Welcome back, <span style="color:var(--yellow);">${escapeHtml(appState.name)}</span> 🎓
+                            </h1>
+                            ${appState.rank ? `
+                                <div style="background:rgba(7, 1, 20, 0.5); border:1px solid rgba(255, 215, 0, 0.2); border-radius:30px; padding:6px 16px; display:inline-flex; align-items:center; gap:8px; margin-bottom:16px;">
+                                    <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">NEET AIR</span>
+                                    <span style="font-family:'Montserrat',sans-serif; font-size:16px; font-weight:900; color:var(--yellow);">#${appState.rank.toLocaleString()}</span>
+                                </div>
+                            ` : ''}
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:10px; text-align:center;">
+                                    <span style="font-size:18px; font-weight:900; color:var(--yellow); display:block; margin-bottom:2px;">${appState.shortlist.length}</span>
+                                    <span style="font-size:9px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Shortlisted</span>
+                                </div>
+                                <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:10px; text-align:center;">
+                                    <span style="font-size:18px; font-weight:900; color:var(--yellow); display:block; margin-bottom:2px;">${daysToNext ? daysToNext.text : '—'}</span>
+                                    <span style="font-size:9px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Next Deadline</span>
+                                </div>
                             </div>
-                        ` : ''}
-                    </div>
-                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
-                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">${appState.shortlist.length}</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Shortlisted</span>
                         </div>
-                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
-                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">${daysToNext ? daysToNext.text : '—'}</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Next Deadline</span>
+                        
+                        <!-- Column 2: Counsellor & Support Team -->
+                        <div style="background:rgba(26, 0, 64, 0.25); border:1px solid rgba(139, 37, 204, 0.15); border-radius:12px; padding:16px; display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="width:44px; height:44px; border-radius:50%; background:var(--purple); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-family:'Montserrat',sans-serif; font-size:16px;">
+                                    ${getInitials(appState.counsellorName)}
+                                </div>
+                                <div>
+                                    <div style="font-size:14px; font-weight:700; color:#fff;">${escapeHtml(appState.counsellorName)}</div>
+                                    <div style="font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:4px; margin-top:2px;">
+                                        <span>📍 ${escapeHtml(appState.counsellorBranch)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                <a href="${formatWhatsAppLink(appState.counsellorWhatsapp)}" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:120px; background:#25d366; color:#fff; border-radius:8px; padding:8px 12px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; transition:opacity 0.2s;" onmouseover="this.style.opacity=0.9" onmouseout="this.style.opacity=1">
+                                    💬 Chat with Advisor
+                                </a>
+                                ${appState.whatsappGroupLink ? `
+                                    <a href="${appState.whatsappGroupLink}" target="_blank" rel="noopener noreferrer" style="flex:1; min-width:120px; background:transparent; border:1px solid var(--yellow); color:var(--yellow); border-radius:8px; padding:8px 12px; font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='rgba(255, 215, 0, 0.1)'" onmouseout="this.style.background='transparent'">
+                                        👥 Join Support Group
+                                    </a>
+                                ` : ''}
+                            </div>
                         </div>
-                        <div style="background:rgba(7, 1, 20, 0.4); border:1px solid rgba(255, 255, 255, 0.06); border-radius:12px; padding:14px; text-align:center;">
-                            <span style="font-size:22px; font-weight:900; color:var(--yellow); display:block; margin-bottom:4px;">Active</span>
-                            <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Account</span>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Milestones / Progress -->
                 <div style="margin-bottom:28px;">
@@ -1419,7 +1513,6 @@
                 return;
             }
 
-            // Score mapping dataset placeholder
             const mapping = [
                 { s: 720, r: 1 },
                 { s: 700, r: 80 },
@@ -1435,7 +1528,6 @@
             ];
 
             let predictedRank = 0;
-            // Interpolate rank based on lookup tables
             for (let i = 0; i < mapping.length - 1; i++) {
                 const high = mapping[i];
                 const low = mapping[i+1];
@@ -1456,7 +1548,6 @@
         function handoffToCollegePredictor() {
             if (!appState.predictedRank) return;
             
-            // Set values in CP input fields
             const inputRank = document.getElementById('cp-input-rank');
             inputRank.value = appState.predictedRank;
             
@@ -1490,62 +1581,181 @@
             }
         }
 
+        const SCORE_STATE_MAP = {
+            "Maharashtra": "MH",
+            "Karnataka": "KA",
+            "Telangana": "TS",
+            "Tamil Nadu": "TN",
+            "Uttar Pradesh": "UP",
+            "Uttarakhand": "UK",
+            "Puducherry": "PY",
+            "West Bengal": "WB",
+            "Manipur": "MN",
+            "Meghalaya": "ML",
+            "Andhra Pradesh": "AP",
+            "Bihar": "BR",
+            "Haryana": "HR",
+            "Jharkhand": "JH",
+            "Chhattisgarh": "CG",
+            "Kerala": "KL",
+            "Himachal Pradesh": "HP",
+            "Tripura": "TR",
+            "Sikkim": "SK"
+        };
+
+        function getCategoriesForUser(cat) {
+            const m = {
+                General: ['OPEN'], OBC: ['OBC','OPEN'], SC: ['SC','OPEN'], ST: ['ST','OPEN'],
+                EWS: ['EWS','OPEN'], SEBC: ['SEBC','OPEN'], VJ: ['VJ','OPEN'], NT1: ['NT1','OPEN'],
+                NT2: ['NT2','OPEN'], NT3: ['NT3','OPEN'], IQ: ['IQ','OPEN']
+            };
+            return m[cat] || ['OPEN'];
+        }
+
         function runCollegePrediction() {
-            let userRank = 0;
-            if (appState.cpInputMode === 'rank') {
-                userRank = parseInt(document.getElementById('cp-input-rank').value, 10);
-            } else {
-                const score = parseInt(document.getElementById('cp-input-score').value, 10);
-                if (!isNaN(score) && score >= 200 && score <= 720) {
-                    // Simple score to rank proxy mapping
-                    const mapping = [
-                        { s: 720, r: 1 }, { s: 700, r: 80 }, { s: 680, r: 950 }, { s: 650, r: 5200 },
-                        { s: 600, r: 21000 }, { s: 550, r: 51000 }, { s: 500, r: 98000 }, { s: 450, r: 160000 },
-                        { s: 400, r: 265000 }, { s: 300, r: 520000 }, { s: 200, r: 850000 }
-                    ];
-                    for (let i = 0; i < mapping.length - 1; i++) {
-                        const high = mapping[i]; const low = mapping[i+1];
-                        if (score <= high.s && score >= low.s) {
-                            const ratio = (score - low.s) / (high.s - low.s);
-                            userRank = Math.round(low.r + (high.r - low.r) * (1 - ratio));
-                            break;
-                        }
-                    }
-                }
-            }
-
             const tbody = document.getElementById('cp-results-body');
-            if (isNaN(userRank) || userRank <= 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Enter your Rank or Score to fetch matching college opportunities.</td></tr>`;
-                return;
-            }
-
             const filterType = document.getElementById('cp-filter-type').value;
             const filterState = document.getElementById('cp-filter-state').value;
+            const filterCategory = document.getElementById('cp-filter-category').value;
             const sortBy = document.getElementById('cp-sort').value;
 
-            // Filter college data based on rank thresholds (show up to 2000 ranks above cutoff for out of reach checks)
-            let matches = appState.collegeData.filter(c => {
-                if (filterType !== 'All' && c.type !== filterType) return false;
-                if (filterState !== 'All' && c.state !== filterState) return false;
-                return true;
-            });
+            let matches = [];
 
-            // Calculate chances
-            matches = matches.map(c => {
-                const prob = calculateChance(c.cutoff, userRank);
-                return { ...c, prob };
-            });
+            if (appState.cpInputMode === 'rank') {
+                const userRank = parseInt(document.getElementById('cp-input-rank').value, 10);
+                if (isNaN(userRank) || userRank <= 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Enter your Rank or Score to fetch matching college opportunities.</td></tr>`;
+                    return;
+                }
 
-            // Sort matches
-            if (sortBy === 'rank_asc') {
-                matches.sort((a, b) => a.cutoff - b.cutoff);
-            } else if (sortBy === 'fees_asc') {
-                matches.sort((a, b) => {
-                    const fa = parseInt(a.fees) || 99999999;
-                    const fb = parseInt(b.fees) || 99999999;
-                    return fa - fb;
+                let tempMatches = appState.collegeData.filter(c => {
+                    if (filterType !== 'All') {
+                        if (filterType === 'Government' && c.type !== 'Government' && c.type !== 'AIIMS') return false;
+                        if (filterType === 'Private' && c.type !== 'Private') return false;
+                        if (filterType === 'Deemed' && c.type !== 'Deemed') return false;
+                        if (filterType === 'AIIMS' && c.type !== 'AIIMS') return false;
+                    }
+                    if (filterState !== 'All' && c.state !== filterState) return false;
+                    return true;
                 });
+
+                matches = tempMatches.map(c => {
+                    const prob = calculateChance(c.cutoff, userRank);
+                    return {
+                        name: c.name,
+                        type: c.type,
+                        state: c.state,
+                        quota: c.quota,
+                        cutoff: c.cutoff,
+                        fees: c.fees,
+                        prob: prob
+                    };
+                });
+
+                if (sortBy === 'rank_asc') {
+                    matches.sort((a, b) => a.cutoff - b.cutoff);
+                } else if (sortBy === 'fees_asc') {
+                    matches.sort((a, b) => (parseInt(a.fees) || 99999999) - (parseInt(b.fees) || 99999999));
+                }
+
+            } else {
+                const score = parseInt(document.getElementById('cp-input-score').value, 10);
+                if (isNaN(score) || score < 200 || score > 720) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Enter a valid score (200 - 720) to calculate prediction.</td></tr>`;
+                    return;
+                }
+
+                if (!appState.scoreDB) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Database loading... Please try again in a moment.</td></tr>`;
+                    return;
+                }
+
+                const mappedCats = getCategoriesForUser(filterCategory);
+                const seen = new Set();
+
+                let statesToScan = [];
+                if (filterState === 'All') {
+                    statesToScan = Object.keys(appState.scoreDB);
+                } else {
+                    const mappedKey = SCORE_STATE_MAP[filterState];
+                    if (mappedKey && appState.scoreDB[mappedKey]) {
+                        statesToScan = [mappedKey];
+                    } else {
+                        const exactKey = Object.keys(appState.scoreDB).find(k => k.toLowerCase() === filterState.toLowerCase());
+                        if (exactKey) statesToScan = [exactKey];
+                    }
+                }
+
+                statesToScan.forEach(stateKey => {
+                    const stateData = appState.scoreDB[stateKey];
+                    if (!stateData) return;
+
+                    const courseData = stateData['MBBS'];
+                    if (!courseData) return;
+
+                    mappedCats.forEach(catKey => {
+                        const catData = courseData[catKey];
+                        if (!catData) return;
+
+                        Object.keys(catData).forEach(listType => {
+                            if (filterType === 'Government' && !['mh_govt', 'aiq', 'central', 'jipmer', 'aiims'].includes(listType)) return;
+                            if (filterType === 'Private' && !['mh_pvt', 'open_pvt'].includes(listType)) return;
+                            if (filterType === 'Deemed' && listType !== 'deemed') return;
+                            if (filterType === 'AIIMS' && listType !== 'aiims') return;
+
+                            const collegesList = catData[listType];
+                            if (!collegesList) return;
+
+                            collegesList.forEach(col => {
+                                const collegeName = col.n;
+                                const cutoffScore = col.c;
+
+                                const gap = score - (cutoffScore + 15);
+                                let probKey = 'reach';
+                                let probLabel = 'Out of Reach';
+                                let probClass = 'badge-reach';
+
+                                if (gap >= 15) {
+                                    probKey = 'safe'; probLabel = 'Safe'; probClass = 'badge-safe';
+                                } else if (gap >= 0) {
+                                    probKey = 'likely'; probLabel = 'Likely'; probClass = 'badge-likely';
+                                } else if (gap >= -10) {
+                                    probKey = 'borderline'; probLabel = 'Borderline'; probClass = 'badge-borderline';
+                                }
+
+                                const feeVal = appState.feesDB[collegeName] || 0;
+                                const feeStr = feeVal ? (feeVal * 100000).toString() : '0';
+
+                                const entry = {
+                                    name: collegeName,
+                                    type: ['mh_govt', 'aiq', 'central', 'jipmer', 'aiims'].includes(listType) ? 'Government' : (listType === 'deemed' ? 'Deemed' : 'Private'),
+                                    state: filterState !== 'All' ? filterState : (stateKey === 'MH' ? 'Maharashtra' : stateKey),
+                                    quota: catKey,
+                                    cutoff: cutoffScore,
+                                    fees: feeStr,
+                                    isScoreMode: true,
+                                    prob: { key: probKey, label: probLabel, class: probClass }
+                                };
+
+                                if (!seen.has(collegeName)) {
+                                    seen.add(collegeName);
+                                    matches.push(entry);
+                                } else {
+                                    const existingIdx = matches.findIndex(m => m.name === collegeName);
+                                    if (existingIdx !== -1 && cutoffScore < matches[existingIdx].cutoff) {
+                                        matches[existingIdx] = entry;
+                                    }
+                                }
+                            });
+                        });
+                    });
+                });
+
+                if (sortBy === 'rank_asc') {
+                    matches.sort((a, b) => b.cutoff - a.cutoff);
+                } else if (sortBy === 'fees_asc') {
+                    matches.sort((a, b) => (parseInt(a.fees) || 99999999) - (parseInt(b.fees) || 99999999));
+                }
             }
 
             if (matches.length === 0) {
@@ -1555,13 +1765,14 @@
 
             tbody.innerHTML = matches.slice(0, 100).map(c => {
                 const inShortlist = appState.shortlist.includes(c.name);
+                const cutoffFormatted = c.isScoreMode ? `${c.cutoff} Marks` : `#${c.cutoff.toLocaleString()}`;
                 return `
                     <tr>
                         <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
                         <td>${escapeHtml(c.type)}</td>
                         <td>${escapeHtml(c.state)}</td>
                         <td>${escapeHtml(c.quota)}</td>
-                        <td style="font-weight:700;">#${c.cutoff.toLocaleString()}</td>
+                        <td style="font-weight:700;">${cutoffFormatted}</td>
                         <td>${formatFees(c.fees)}</td>
                         <td>
                             <button onclick="toggleShortlist('${c.name.replace(/'/g, "\\'")}')" class="chip ${inShortlist ? 'active' : ''}">
@@ -1574,6 +1785,16 @@
         }
 
         /* ── 3. CUTOFF EXPLORER LOGIC ── */
+        function setCutoffExplorerMode(mode) {
+            document.getElementById('cutoff-mode-browse').classList.toggle('active', mode === 'browse');
+            document.getElementById('cutoff-mode-single').classList.toggle('active', mode === 'single');
+            document.getElementById('cutoff-browse-container').style.display = mode === 'browse' ? 'block' : 'none';
+            document.getElementById('cutoff-single-container').style.display = mode === 'single' ? 'block' : 'none';
+            if (mode === 'single') {
+                populateCutoffSingleDropdown();
+            }
+        }
+
         function runCutoffExplorerQuery() {
             const query = document.getElementById('cutoff-search-college').value.toLowerCase();
             const stateVal = document.getElementById('cutoff-filter-state').value;
@@ -1603,12 +1824,11 @@
                 </tr>
             `).join('');
         }
-
         /* ── 4. RANK SCAN LOGIC ── */
         function runRankScan() {
             const rank = parseInt(document.getElementById('scan-rank-input').value, 10);
             const tbody = document.getElementById('rank-scan-body');
-            
+
             if (isNaN(rank) || rank <= 0) {
                 alert('Please enter a valid rank number.');
                 return;
@@ -1813,44 +2033,126 @@
         }
 
         /* ── 8. INSTITUTES DIRECTORY LOGIC ── */
-        function runInstituteSearch() {
-            const query = document.getElementById('institute-search-query').value.toLowerCase();
-            const tbody = document.getElementById('institutes-list-body');
-
-            // Unique list of colleges grouped from rank database
-            const uniqueColleges = [];
-            const seen = new Set();
-            
-            appState.collegeData.forEach(c => {
-                if (!seen.has(c.name)) {
-                    seen.add(c.name);
-                    uniqueColleges.push(c);
-                }
+        function populateInstituteStates() {
+            const select = document.getElementById('inst-filter-state');
+            if (!select || !appState.collegesList) return;
+            select.innerHTML = '<option value="All">All States</option>';
+            const states = [...new Set(appState.collegesList.map(c => c.state).filter(Boolean))].sort();
+            states.forEach(st => {
+                const opt = document.createElement('option');
+                opt.value = st;
+                opt.textContent = st;
+                select.appendChild(opt);
             });
+        }
 
-            let filtered = uniqueColleges;
-            if (query) {
-                filtered = uniqueColleges.filter(c => c.name.toLowerCase().includes(query));
+        function updateInstFeeLabel() {
+            const feeVal = parseInt(document.getElementById('inst-filter-fee').value, 10);
+            const label = document.getElementById('inst-fee-label');
+            if (!label) return;
+            if (feeVal >= 3000000) {
+                label.textContent = 'No Limit';
+            } else {
+                label.textContent = 'Up to ₹' + (feeVal / 100000).toFixed(2) + ' L / yr';
             }
+        }
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No colleges match search query.</td></tr>`;
+        function resetInstituteFilters() {
+            document.getElementById('inst-filter-state').value = 'All';
+            document.getElementById('inst-filter-type').value = 'All';
+            document.getElementById('inst-filter-course').value = 'All';
+            document.getElementById('inst-filter-fee').value = 3000000;
+            document.getElementById('institute-search-query').value = '';
+            updateInstFeeLabel();
+            runInstituteSearch();
+        }
+
+        function populateCutoffSingleDropdown() {
+            const select = document.getElementById('closing-ranks-college-select');
+            if (!select || select.children.length > 1) return; // Already populated
+            const names = [...new Set(appState.collegeData.map(c => c.name))].sort();
+            names.forEach(name => {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                select.appendChild(opt);
+            });
+        }
+
+        function runInstituteSearch() {
+            const grid = document.getElementById('inst-cards-grid');
+            if (!grid) return;
+
+            if (!appState.collegesList) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">Loading colleges...</div>';
                 return;
             }
 
-            tbody.innerHTML = filtered.slice(0, 80).map(c => {
-                // Mock Stipend and Bond configurations
-                const mockStipend = '₹55,000 / month';
-                const mockBond = '1 Year (₹10 L Penalty)';
+            const query = document.getElementById('institute-search-query').value.toLowerCase();
+            const stateVal = document.getElementById('inst-filter-state').value;
+            const typeVal = document.getElementById('inst-filter-type').value;
+            const courseVal = document.getElementById('inst-filter-course').value;
+            const maxFee = parseInt(document.getElementById('inst-filter-fee').value, 10);
+
+            let filtered = appState.collegesList.filter(c => {
+                if (stateVal !== 'All' && c.state !== stateVal) return false;
+                if (typeVal !== 'All' && c.type !== typeVal) return false;
+                if (courseVal !== 'All' && c.course !== courseVal) return false;
+                if (maxFee < 3000000) {
+                    if (c.annual_fees !== null && c.annual_fees !== undefined && c.annual_fees > maxFee) return false;
+                }
+                if (query && !c.name.toLowerCase().includes(query)) return false;
+                return true;
+            });
+
+            filtered.sort((a, b) => {
+                const aRec = a.asmi_recommended ? 1 : 0;
+                const bRec = b.asmi_recommended ? 1 : 0;
+                return bRec - aRec;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:32px; color:var(--text-muted);">No colleges match selection.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.slice(0, 100).map(c => {
+                const feeStr = c.annual_fees ? formatFees(c.annual_fees) : '—';
+                const seatStr = c.seats ? `${c.seats} seats` : '—';
+                const recBadge = c.asmi_recommended ? `<span style="background:var(--yellow); color:#000; font-size:9px; font-weight:800; padding:2px 6px; border-radius:10px; position:absolute; top:10px; left:10px; z-index:2; text-transform:uppercase;">ASMI Recommended</span>` : '';
+                const placeholderColor = c.photo_placeholder_color || '#6a0dad';
                 
                 return `
-                    <tr>
-                        <td style="color:#fff; font-weight:600;">${escapeHtml(c.name)}</td>
-                        <td>${escapeHtml(c.state)}</td>
-                        <td>${formatFees(c.fees)}</td>
-                        <td>${mockStipend}</td>
-                        <td>${mockBond}</td>
-                    </tr>
+                    <div style="background:rgba(26,0,64,0.3); border:1px solid var(--card-border); border-radius:12px; overflow:hidden; position:relative; display:flex; flex-direction:column; justify-content:space-between; height:100%; transition: transform 0.2s;">
+                        <div style="position:relative;">
+                            ${recBadge}
+                            <div style="height:100px; background: linear-gradient(135deg, ${placeholderColor}55 0%, #070114 100%); display:flex; align-items:center; justify-content:center; font-size:32px;">
+                                🏥
+                            </div>
+                        </div>
+                        <div style="padding:14px; flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;">
+                            <div>
+                                <div style="font-size:12px; color:var(--yellow); font-weight:700; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">${escapeHtml(c.type)} · ${escapeHtml(c.course)}</div>
+                                <h4 style="color:#fff; font-size:13px; font-weight:700; line-height:1.4; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; min-height:54px;" title="${escapeHtml(c.name)}">
+                                    ${escapeHtml(c.name)}
+                                </h4>
+                            </div>
+                            <div style="border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; margin-top:10px; display:flex; flex-direction:column; gap:4px;">
+                                <div style="font-size:11px; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                    <span>State:</span>
+                                    <span style="color:#fff; font-weight:600;">${escapeHtml(c.state)}</span>
+                                </div>
+                                <div style="font-size:11px; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                    <span>Fees:</span>
+                                    <span style="color:#fff; font-weight:600;">${feeStr}</span>
+                                </div>
+                                <div style="font-size:11px; color:var(--text-muted); display:flex; justify-content:space-between;">
+                                    <span>Seats:</span>
+                                    <span style="color:#fff; font-weight:600;">${seatStr}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 `;
             }).join('');
         }
@@ -1910,6 +2212,20 @@
                                     });
                                 }
                             }
+                            
+                            // Map counsellor and group parameters
+                            if (student.counsellorName || student.counsellor_name || student.counselor_name || student.counselorName) {
+                                appState.counsellorName = student.counsellorName || student.counsellor_name || student.counselor_name || student.counselorName;
+                            }
+                            if (student.counsellorWhatsapp || student.counsellor_whatsapp || student.counselor_whatsapp || student.counselorWhatsapp) {
+                                appState.counsellorWhatsapp = student.counsellorWhatsapp || student.counsellor_whatsapp || student.counselor_whatsapp || student.counselorWhatsapp;
+                            }
+                            if (student.whatsappGroupLink || student.whatsapp_group_link || student.whatsapp_group) {
+                                appState.whatsappGroupLink = student.whatsappGroupLink || student.whatsapp_group_link || student.whatsapp_group;
+                            }
+                            if (student.counsellorBranch || student.counsellor_branch || student.counselor_branch || student.counselorBranch) {
+                                appState.counsellorBranch = student.counsellorBranch || student.counsellor_branch || student.counselor_branch || student.counselorBranch;
+                            }
                         }
                     }
                 } catch (err) {
@@ -1926,14 +2242,6 @@
 
             renderDashboard();
             renderDocChecklist();
-
-            // Hide the app loader overlay
-            const appLoader = document.getElementById('appLoader');
-            if (appLoader) {
-                appLoader.style.transition = 'opacity 0.4s';
-                appLoader.style.opacity = '0';
-                setTimeout(() => appLoader.remove(), 400);
-            }
         });
     </script>
 </body>
