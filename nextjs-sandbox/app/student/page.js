@@ -112,7 +112,8 @@ export default function StudentDashboard() {
       if (savedRank) setStudentRank(parseInt(savedRank, 10));
       
       try {
-        setShortlist(JSON.parse(localStorage.getItem('shortlist')) || []);
+        const sList = JSON.parse(localStorage.getItem('shortlist')) || [];
+        setShortlist(sList.map(c => typeof c === 'object' ? c.name : c));
       } catch(e) {}
 
       try {
@@ -143,8 +144,9 @@ export default function StudentDashboard() {
               }
               if (student.colleges || student.shortlist) {
                 const sList = student.colleges || student.shortlist || [];
-                setShortlist(sList);
-                localStorage.setItem('shortlist', JSON.stringify(sList));
+                const stringList = sList.map(c => typeof c === 'object' ? c.name : c);
+                setShortlist(stringList);
+                localStorage.setItem('shortlist', JSON.stringify(stringList));
               }
               if (student.category) setDocCategory(student.category);
               if (student.stage) {
@@ -158,10 +160,17 @@ export default function StudentDashboard() {
                   })));
                 }
               }
-              if (student.counsellorName) setCounsellorName(student.counsellorName);
-              if (student.counsellorWhatsapp) setCounsellorWhatsapp(student.counsellorWhatsapp);
-              if (student.whatsappGroupLink) setWhatsappGroupLink(student.whatsappGroupLink);
-              if (student.counsellorBranch) setCounsellorBranch(student.counsellorBranch);
+              const cName = student.counsellorName || student.counsellor_name || student.counselorName || student.counselor_name;
+              if (cName) setCounsellorName(cName);
+              
+              const cWhatsapp = student.counsellorWhatsapp || student.counsellor_whatsapp || student.counselorWhatsapp || student.counselor_whatsapp;
+              if (cWhatsapp) setCounsellorWhatsapp(String(cWhatsapp));
+              
+              const wGroup = student.whatsappGroupLink || student.whatsapp_group_link || student.whatsapp_group;
+              if (wGroup) setWhatsappGroupLink(wGroup);
+              
+              const cBranch = student.counsellorBranch || student.counsellor_branch || student.counselorBranch || student.counselor_branch;
+              if (cBranch) setCounsellorBranch(cBranch);
             }
           }).catch(err => console.warn('Could not load profile details:', err));
       }
@@ -395,7 +404,7 @@ export default function StudentDashboard() {
                         </div>
                       </div>
                       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                        <a href={`https://wa.me/${counsellorWhatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '120px', background: '#25d366', color: '#fff', borderRadius: '8px', padding: '8px 12px', fontSize: '11px', fontWeight: '700', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                        <a href={`https://wa.me/${String(counsellorWhatsapp).replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" style={{ flex: 1, minWidth: '120px', background: '#25d366', color: '#fff', borderRadius: '8px', padding: '8px 12px', fontSize: '11px', fontWeight: '700', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           💬 Chat with Advisor
                         </a>
                         {whatsappGroupLink && (
