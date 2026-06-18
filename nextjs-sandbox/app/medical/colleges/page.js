@@ -313,7 +313,7 @@ export default function CollegesDirectory() {
               filteredColleges.map((college) => {
                 const isSaved = savedColleges.includes(college.slug);
                 return (
-                  <a href={`/colleges/${college.slug}`} className="col-card" key={college.slug}>
+                  <a href={`/medical/colleges/${college.slug}`} className="col-card" key={college.slug}>
                     <div
                       className="col-card-img"
                       style={
