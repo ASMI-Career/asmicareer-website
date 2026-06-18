@@ -1136,7 +1136,7 @@ export default function MedicalPortal() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
-            <Link href="/medical/services" className="pricing-services-link" style={{
+            <Link href="/medical/packages" className="pricing-services-link" style={{
               display: 'inline-block',
               color: '#FFD700',
               fontFamily: 'Montserrat, sans-serif',

@@ -6,7 +6,7 @@ import './nav.css';
 const defaultLinks = [
   { label: 'Colleges', href: '/medical/colleges' },
   { label: 'Counselling', href: '/medical/counselling' },
-  { label: 'Packages', href: '/medical#packages' },
+  { label: 'Packages', href: '/medical/packages' },
   { label: 'Services', href: '/medical/services' },
   { label: 'Events',     href: '/medical/events' },
   { label: 'News',       href: '/medical/news' },
