@@ -277,7 +277,7 @@ export default function StudentDashboard() {
       .then(data => {
         const today = new Date().toISOString().split('T')[0];
         setDeadlines(
-          data.filter(ev => ev.date >= today)
+          data.filter(ev => (ev.expiry_date ? ev.expiry_date.split('T')[0] : ev.date) >= today)
             .map(ev => ({ title: ev.title, date: ev.date, tag: ev.tag || 'NOTICE' }))
             .sort((a, b) => new Date(a.date) - new Date(b.date))
         );

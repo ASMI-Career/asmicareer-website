@@ -11,7 +11,8 @@ function isExpired(event) {
     return false;
   }
 
-  const eventDate = new Date(event.date);
+  const targetDate = event.expiry_date ? event.expiry_date : event.date;
+  const eventDate = new Date(targetDate);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate < today;
