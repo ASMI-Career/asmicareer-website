@@ -167,13 +167,23 @@ export default function StudentDashboard() {
   const [predictorScore, setPredictorScore] = useState('');
   const [predictedRank, setPredictedRank] = useState(null);
 
-  // College Predictor
+  // College Predictor — shared
   const [cpInputMode, setCpInputMode] = useState('rank');
+
+  // College Predictor — rank tab (full Cutoff Explorer logic)
   const [cpRankInput, setCpRankInput] = useState('');
-  const [cpScoreInput, setCpScoreInput] = useState('');
-  const [cpState, setCpState] = useState('All');
-  const [cpCategory, setCpCategory] = useState('Open');
+  const [cpSelectedStates, setCpSelectedStates] = useState([]);  // multi-select
+  const [cpStateSearch, setCpStateSearch] = useState('');
+  const [cpSelectedTypes, setCpSelectedTypes] = useState([]);    // multi-select
   const [cpQuota, setCpQuota] = useState('All');
+  const [cpMaxBudget, setCpMaxBudget] = useState(3000000);
+  const [cpSortBy, setCpSortBy] = useState('chance');            // chance | fees_asc | fees_desc | name
+  const [cpSearchFilter, setCpSearchFilter] = useState('');
+
+  // College Predictor — score tab
+  const [cpScoreInput, setCpScoreInput] = useState('');
+  const [cpState, setCpState] = useState('All');                 // kept for score tab
+  const [cpCategory, setCpCategory] = useState('Open');
   const [cpScoreCourse, setCpScoreCourse] = useState('MBBS');
 
   // Cutoff Explorer
@@ -307,24 +317,58 @@ export default function StudentDashboard() {
     setPredictedRank(getRankFromScore(score));
   };
 
+  // ── Chance label (mirrors the live Cutoff Explorer tool) ──────────────────
+  // High  = closing rank ≥ your rank * 1.10  (comfortable buffer)
+  // Med   = closing rank ≥ your rank          (within range)
+  // Low   = closing rank ≥ your rank * 0.92  (slight stretch, within 8%)
+  // (records outside Low range are excluded from results)
+  const getChance = (cutoff, rank) => {
+    if (cutoff >= rank * 1.10) return { label: 'High',   cls: 'badge-safe',       sort: 0 };
+    if (cutoff >= rank)        return { label: 'Med',    cls: 'badge-likely',     sort: 1 };
+    if (cutoff >= rank * 0.92) return { label: 'Low',    cls: 'badge-borderline', sort: 2 };
+    return null; // excluded
+  };
+
   const getRankPredictedColleges = () => {
     const rank = parseInt(cpRankInput, 10);
-    if (isNaN(rank)) return [];
-    return collegeData
-      .filter(c => (cpState === 'All' || c.state === cpState) && (cpQuota === 'All' || c.quota === cpQuota))
-      .reduce((acc, c) => {
-        const cutoff = parseInt(c.cutoff, 10);
-        if (isNaN(cutoff)) return acc;
-        const diff = cutoff - rank;
-        if (diff < -1000) return acc;
-        acc.push({
-          ...c, closingRank: cutoff,
-          chance: diff >= 500 ? 'Safe' : diff >= 0 ? 'Likely' : 'Borderline',
-          chanceClass: diff >= 500 ? 'badge-safe' : diff >= 0 ? 'badge-likely' : 'badge-borderline'
-        });
-        return acc;
-      }, [])
-      .sort((a, b) => a.closingRank - b.closingRank);
+    if (isNaN(rank) || rank < 1) return [];
+
+    let results = [];
+    for (const c of collegeData) {
+      const cutoff = parseInt(c.cutoff, 10);
+      if (isNaN(cutoff)) continue;
+
+      // Budget filter
+      const fee = parseInt(c.fees, 10) || 0;
+      if (fee > 0 && fee > cpMaxBudget) continue;
+
+      // Quota filter
+      if (cpQuota !== 'All' && c.quota !== cpQuota) continue;
+
+      // Multi-state filter
+      if (cpSelectedStates.length > 0 && !cpSelectedStates.includes(c.state)) continue;
+
+      // Multi-type filter
+      if (cpSelectedTypes.length > 0 && !cpSelectedTypes.includes(c.type)) continue;
+
+      // Name search filter
+      if (cpSearchFilter && !c.name.toLowerCase().includes(cpSearchFilter.toLowerCase())) continue;
+
+      // Chance calc (excludes records beyond Low)
+      const chance = getChance(cutoff, rank);
+      if (!chance) continue;
+
+      results.push({ ...c, closingRank: cutoff, chance: chance.label, chanceClass: chance.cls, chanceSort: chance.sort });
+    }
+
+    // Sort
+    if (cpSortBy === 'chance')     results.sort((a, b) => a.chanceSort - b.chanceSort || a.closingRank - b.closingRank);
+    else if (cpSortBy === 'rank')  results.sort((a, b) => a.closingRank - b.closingRank);
+    else if (cpSortBy === 'fees_asc')  results.sort((a, b) => (parseInt(a.fees,10)||0) - (parseInt(b.fees,10)||0));
+    else if (cpSortBy === 'fees_desc') results.sort((a, b) => (parseInt(b.fees,10)||0) - (parseInt(a.fees,10)||0));
+    else if (cpSortBy === 'name')  results.sort((a, b) => a.name.localeCompare(b.name));
+
+    return results;
   };
 
   const getScorePredictedColleges = () => {
@@ -734,14 +778,212 @@ export default function StudentDashboard() {
                       onClick={() => { setCpInputMode('score'); setCpQuota('All'); }}>Use NEET Score</button>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 20 }}>
-                    {cpInputMode === 'rank' ? (
-                      <div className="form-group">
-                        <label className="form-label">All India Rank</label>
-                        <input type="number" placeholder="e.g. 15000" className="form-input" value={cpRankInput} onChange={e => setCpRankInput(e.target.value)} />
+                  {/* ── RANK TAB: full Cutoff Explorer layout ── */}
+                  {cpInputMode === 'rank' && (() => {
+                    const allStates = Array.from(new Set(collegeData.map(c => c.state))).sort();
+                    const allTypes  = Array.from(new Set(collegeData.map(c => c.type).filter(Boolean))).sort();
+                    const filteredCpStates = allStates.filter(s => s.toLowerCase().includes(cpStateSearch.toLowerCase()));
+                    const results = getRankPredictedColleges();
+                    const highCount  = results.filter(r => r.chance === 'High').length;
+                    const medCount   = results.filter(r => r.chance === 'Med').length;
+                    const lowCount   = results.filter(r => r.chance === 'Low').length;
+                    return (
+                      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+
+                        {/* Filters panel */}
+                        <div className="filters-panel" style={{ flex: '0 0 240px', minWidth: 200 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                            <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--text-900)' }}>Filters</span>
+                            <button className="card-action" onClick={() => {
+                              setCpSelectedStates([]); setCpSelectedTypes([]); setCpQuota('All');
+                              setCpMaxBudget(3000000); setCpSortBy('chance'); setCpSearchFilter(''); setCpRankInput('');
+                            }}>Reset All</button>
+                          </div>
+
+                          {/* Rank input */}
+                          <div className="filter-section">
+                            <div className="form-label">Your All India Rank (AIR)</div>
+                            <input type="number" placeholder="e.g. 15000" className="form-input"
+                              value={cpRankInput} onChange={e => setCpRankInput(e.target.value)}
+                              style={{ padding: '9px 12px', fontSize: 14, fontWeight: 700 }} />
+                          </div>
+
+                          {/* College name search */}
+                          <div className="filter-section">
+                            <div className="form-label">Search College</div>
+                            <input type="text" placeholder="Search college name..." className="form-input"
+                              value={cpSearchFilter} onChange={e => setCpSearchFilter(e.target.value)}
+                              style={{ padding: '7px 10px', fontSize: 12 }} />
+                          </div>
+
+                          {/* Quota */}
+                          <div className="filter-section">
+                            <div className="form-label">Quota</div>
+                            <select className="form-select" value={cpQuota} onChange={e => setCpQuota(e.target.value)} style={{ fontSize: 12 }}>
+                              <option value="All">All Quotas</option>
+                              <option value="AIQ">All India Quota (AIQ)</option>
+                              <option value="State">State Quota</option>
+                              <option value="Open State">Open State Quota</option>
+                              <option value="IP">Institutional / Private</option>
+                            </select>
+                          </div>
+
+                          {/* State multi-select */}
+                          <div className="filter-section">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                              <div className="form-label" style={{ margin: 0 }}>State / Region</div>
+                              {cpSelectedStates.length > 0 && (
+                                <button className="card-action" onClick={() => setCpSelectedStates([])}>
+                                  Clear ({cpSelectedStates.length})
+                                </button>
+                              )}
+                            </div>
+                            <input type="text" placeholder="Search state..." className="form-input"
+                              value={cpStateSearch} onChange={e => setCpStateSearch(e.target.value)}
+                              style={{ padding: '6px 10px', fontSize: 11, marginBottom: 8 }} />
+                            <div style={{ maxHeight: 130, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 5 }}>
+                              {filteredCpStates.map(state => (
+                                <label key={state} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, cursor: 'pointer', color: 'var(--text-700)' }}>
+                                  <input type="checkbox" checked={cpSelectedStates.includes(state)}
+                                    onChange={() => setCpSelectedStates(prev =>
+                                      prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state])}
+                                    style={{ accentColor: 'var(--primary)' }} />
+                                  {state}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Institution type multi-select */}
+                          <div className="filter-section">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                              <div className="form-label" style={{ margin: 0 }}>Institution Type</div>
+                              {cpSelectedTypes.length > 0 && (
+                                <button className="card-action" onClick={() => setCpSelectedTypes([])}>
+                                  Clear
+                                </button>
+                              )}
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                              {allTypes.map(type => (
+                                <label key={type} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, cursor: 'pointer', color: 'var(--text-700)' }}>
+                                  <input type="checkbox" checked={cpSelectedTypes.includes(type)}
+                                    onChange={() => setCpSelectedTypes(prev =>
+                                      prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type])}
+                                    style={{ accentColor: 'var(--primary)' }} />
+                                  {type}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Max Budget slider */}
+                          <div className="filter-section">
+                            <div className="form-label">Max Annual Fees</div>
+                            <input type="range" min="0" max="3000000" step="50000"
+                              value={cpMaxBudget} onChange={e => setCpMaxBudget(Number(e.target.value))}
+                              style={{ width: '100%', accentColor: 'var(--primary)', cursor: 'pointer', marginBottom: 6 }} />
+                            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--navy)' }}>
+                              {cpMaxBudget >= 3000000 ? 'No Limit' : `Up to ₹${(cpMaxBudget/100000).toFixed(1)}L/yr`}
+                            </div>
+                          </div>
+
+                          {/* Sort */}
+                          <div>
+                            <div className="form-label">Sort By</div>
+                            <select className="form-select" value={cpSortBy} onChange={e => setCpSortBy(e.target.value)} style={{ fontSize: 12 }}>
+                              <option value="chance">Chance (High first)</option>
+                              <option value="rank">Closing Rank</option>
+                              <option value="fees_asc">Fees: Low → High</option>
+                              <option value="fees_desc">Fees: High → Low</option>
+                              <option value="name">Name A–Z</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Results area */}
+                        <div style={{ flex: '1 1 400px', minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+                            <div style={{ fontSize: 13, color: 'var(--text-500)' }}>
+                              {!cpRankInput ? (
+                                'Enter your AIR in the filter panel to see colleges'
+                              ) : (
+                                <><strong style={{ color: 'var(--text-900)' }}>{results.length}</strong> college{results.length !== 1 ? 's' : ''} matched</>
+                              )}
+                            </div>
+                            {results.length > 0 && (
+                              <div style={{ display: 'flex', gap: 8 }}>
+                                {highCount > 0 && <span className="badge-safe">{highCount} High</span>}
+                                {medCount  > 0 && <span className="badge-likely">{medCount} Med</span>}
+                                {lowCount  > 0 && <span className="badge-borderline">{lowCount} Low</span>}
+                              </div>
+                            )}
+                          </div>
+
+                          {!cpRankInput ? (
+                            <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
+                              <div style={{ fontSize: 36, marginBottom: 12 }}>🎯</div>
+                              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>Enter Your AIR to Start</div>
+                              <div style={{ fontSize: 13, color: 'var(--text-400)', maxWidth: 280, margin: '0 auto' }}>
+                                Type your All India Rank in the filter panel. Colleges are shown with High / Med / Low admission chance.
+                              </div>
+                            </div>
+                          ) : results.length === 0 ? (
+                            <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
+                              <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
+                              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>No Matches Found</div>
+                              <div style={{ fontSize: 13, color: 'var(--text-400)', maxWidth: 300, margin: '0 auto' }}>
+                                No colleges match your current filters. Try expanding your state selection, increasing budget, or clearing institution type filters.
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="table-container">
+                              <table className="dense-table">
+                                <thead><tr>
+                                  <th>College Name</th>
+                                  <th>State</th>
+                                  <th>Type</th>
+                                  <th>Quota</th>
+                                  <th>Closing Rank</th>
+                                  <th>Annual Fees</th>
+                                  <th>Chance</th>
+                                  <th>Shortlist</th>
+                                </tr></thead>
+                                <tbody>
+                                  {results.map((c, i) => (
+                                    <tr key={i}>
+                                      <td style={{ fontWeight: 700, minWidth: 180 }}>{c.name}</td>
+                                      <td style={{ whiteSpace: 'nowrap' }}>{c.state}</td>
+                                      <td><span className="tag tag-gold" style={{ whiteSpace: 'nowrap' }}>{c.type}</span></td>
+                                      <td style={{ fontSize: 11 }}>{c.quota}</td>
+                                      <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.closingRank?.toLocaleString() || '—'}</td>
+                                      <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                                        {c.fees && parseInt(c.fees, 10) > 0
+                                          ? `₹${(parseInt(c.fees, 10) / 100000).toFixed(1)}L`
+                                          : '—'}
+                                      </td>
+                                      <td><span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>{c.chance}</span></td>
+                                      <td>
+                                        <button onClick={() => handleToggleShortlist(c.name)} className="chip" style={{ fontSize: 11 }}>
+                                          {shortlist.includes(c.name) ? '★ Saved' : '☆ Save'}
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <>
+                    );
+                  })()}
+
+                  {/* ── SCORE TAB: unchanged ── */}
+                  {cpInputMode === 'score' && (
+                    <>
+                      {/* Score tab filters */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
                         <div className="form-group">
                           <label className="form-label">NEET Score</label>
                           <input type="number" placeholder="e.g. 620" className="form-input" value={cpScoreInput} onChange={e => setCpScoreInput(e.target.value)} />
@@ -753,44 +995,22 @@ export default function StudentDashboard() {
                             <option value="BDS">BDS</option>
                           </select>
                         </div>
-                      </>
-                    )}
-                    <div className="form-group">
-                      <label className="form-label">State</label>
-                      <select className="form-select" value={cpState} onChange={e => setCpState(e.target.value)}>
-                        <option value="All">All States</option>
-                        {ceStates.map((st, i) => <option key={i} value={st}>{st}</option>)}
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Quota</label>
-                      <select className="form-select" value={cpQuota} onChange={e => setCpQuota(e.target.value)}>
-                        {cpInputMode === 'rank' ? (
-                          <>
-                            <option value="All">All Quotas</option>
-                            <option value="State">State Quota</option>
-                            <option value="AIQ">All India Quota (AIQ)</option>
-                            <option value="Open State">Open State Quota</option>
-                          </>
-                        ) : (
-                          <>
+                        <div className="form-group">
+                          <label className="form-label">Quota</label>
+                          <select className="form-select" value={cpQuota} onChange={e => setCpQuota(e.target.value)}>
                             <option value="All">All Quotas</option>
                             <option value="mh_govt">Government</option>
                             <option value="mh_pvt">Private</option>
                             <option value="mh_iq">Institutional / NRI</option>
-                          </>
-                        )}
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Category</label>
-                      <select className="form-select" value={cpCategory} onChange={e => setCpCategory(e.target.value)}>
-                        <option value="Open">Open / General</option>
-                        <option value="OBC">OBC</option>
-                        <option value="SC">SC</option>
-                        <option value="ST">ST</option>
-                        {cpInputMode === 'score' && (
-                          <>
+                          </select>
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Category</label>
+                          <select className="form-select" value={cpCategory} onChange={e => setCpCategory(e.target.value)}>
+                            <option value="Open">Open / General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
                             <option value="EWS">EWS</option>
                             <option value="VJ">VJ (DT-A)</option>
                             <option value="NT1">NT-B (NT-1)</option>
@@ -798,46 +1018,12 @@ export default function StudentDashboard() {
                             <option value="NT3">NT-D (NT-3)</option>
                             <option value="SEBC">SEBC</option>
                             <option value="IQ">Inst. / NRI</option>
-                          </>
-                        )}
-                      </select>
-                    </div>
-                  </div>
+                          </select>
+                        </div>
+                      </div>
 
-                  {cpInputMode === 'score' && cpState !== 'All' && cpState !== 'Maharashtra' && (
-                    <div className="tip-callout" style={{ marginBottom: 16 }}>
-                      ⚠️ Score-based matching is calibrated for Maharashtra state colleges only.
-                    </div>
-                  )}
-
-                  <div className="table-container">
-                    <table className="dense-table">
-                      {cpInputMode === 'rank' ? (
-                        <>
-                          <thead><tr>
-                            <th>College Name</th><th>State</th><th>Type</th><th>Quota</th>
-                            <th>Closing Cutoff (AIR)</th><th>Chance</th><th>Shortlist</th>
-                          </tr></thead>
-                          <tbody>
-                            {getRankPredictedColleges().length === 0 ? (
-                              <tr><td colSpan="7" className="empty-state">Enter your rank to view matching colleges.</td></tr>
-                            ) : getRankPredictedColleges().map((c, i) => (
-                              <tr key={i}>
-                                <td style={{ fontWeight: 700 }}>{c.name}</td>
-                                <td>{c.state}</td><td>{c.type}</td><td>{c.quota}</td>
-                                <td style={{ fontWeight: 700 }}>{c.closingRank?.toLocaleString() || '—'}</td>
-                                <td><span className={c.chanceClass}>{c.chance}</span></td>
-                                <td>
-                                  <button onClick={() => handleToggleShortlist(c.name)} className="chip" style={{ fontSize: 11 }}>
-                                    {shortlist.includes(c.name) ? '★ Saved' : '☆ Save'}
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </>
-                      ) : (
-                        <>
+                      <div className="table-container">
+                        <table className="dense-table">
                           <thead><tr>
                             <th>College Name</th><th>Course</th><th>Type</th><th>2025 Cutoff</th>
                             <th>Adj. (+10)</th><th>Your Score</th><th>Gap</th><th>Status</th><th>Shortlist</th>
@@ -862,10 +1048,10 @@ export default function StudentDashboard() {
                               </tr>
                             ))}
                           </tbody>
-                        </>
-                      )}
-                    </table>
-                  </div>
+                        </table>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}
