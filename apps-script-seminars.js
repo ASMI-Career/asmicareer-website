@@ -46,7 +46,7 @@ const CONFIG = {
       label:   "Thane",
       date:    "28 June 2026",
       time:    "TBD",
-      address: "Vasantrao Naik Sabhagruh",
+      address: "Vasantrao Naik Sabhagruh, Above Vaman Hari Pethe Jewellers, Naupada, Thane",
       maps:    "https://maps.app.goo.gl/ybGGaCq6Z7ZuYzua6",
       phone:   "7410019075",
       email:   "thane@asmicareer.com"
