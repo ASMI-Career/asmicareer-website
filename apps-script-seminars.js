@@ -46,8 +46,8 @@ const CONFIG = {
       label:   "Thane",
       date:    "28 June 2026",
       time:    "TBD",
-      address: "Balaji Banquets, Balaji Mandir, Dr. Ambedkar Road, Mulund West, Mumbai",
-      maps:    "https://maps.app.goo.gl/SjD5JV4FUGY68Fyj7",
+      address: "Vasantrao Naik Sabhagruh",
+      maps:    "https://maps.app.goo.gl/ybGGaCq6Z7ZuYzua6",
       phone:   "7410019075",
       email:   "thane@asmicareer.com"
     },
@@ -121,7 +121,7 @@ function getSeatCount(text) {
 function getVenueKey(text) {
   if (!text) return null;
   text = text.toLowerCase();
-  if (text.includes("mulund"))   return "MULUND";
+  if (text.includes("mulund") || text.includes("vasantrao") || text.includes("naik") || text.includes("sabhagruh") || text.includes("thane"))   return "MULUND";
   if (text.includes("vile"))     return "VILE_PARLE";
   if (text.includes("pune"))     return "PUNE";
   if (text.includes("kolhapur")) return "KOLHAPUR";
