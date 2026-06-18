@@ -204,6 +204,9 @@ export default function StudentDashboard() {
 
   // Score DB
   const [asmiDb, setAsmiDb] = useState(null);
+  const [feeMap, setFeeMap] = useState({});
+  const [cpPoolFilter, setCpPoolFilter] = useState('All');
+  const [cpTypeFilter, setCpTypeFilter] = useState('All');
 
   const scoreToRankMap = [
     { s: 720, r: 1 }, { s: 700, r: 80 }, { s: 680, r: 950 },
@@ -296,6 +299,7 @@ export default function StudentDashboard() {
     fetch('/data/rank_db.json').then(r => r.json()).then(setCollegeData).catch(() => {});
     fetch('/data/colleges.json').then(r => r.json()).then(setCollegesList).catch(() => {});
     fetch('/data/asmi_db.json').then(r => r.json()).then(setAsmiDb).catch(() => {});
+    fetch('/fee_map.json').then(r => r.json()).then(setFeeMap).catch(() => {});
   }, []);
 
   // Checklist helpers
@@ -371,29 +375,198 @@ export default function StudentDashboard() {
     return results;
   };
 
+  const prob = (score, cutoff) => {
+    const gap = score - (cutoff + 15);
+    if (gap >= 15)  return { key: 'safe',       label: 'Safe',        cls: 'badge-safe' };
+    if (gap >= 0)   return { key: 'likely',     label: 'Likely',      cls: 'badge-likely' };
+    if (gap >= -10) return { key: 'borderline', label: 'Borderline',  cls: 'badge-borderline' };
+    return                 { key: 'reach',      label: 'Out of Reach', cls: 'badge-reach' };
+  };
+
+  const getCategoryKeys = (category) => {
+    const cat = category.toUpperCase();
+    const m = {
+      'OPEN': ['OPEN'],
+      'GENERAL': ['OPEN'],
+      'OBC': ['OBC', 'OPEN'],
+      'SC': ['SC', 'OPEN'],
+      'ST': ['ST', 'OPEN'],
+      'EWS': ['EWS', 'OPEN'],
+      'SEBC': ['SEBC', 'OPEN'],
+      'VJ': ['VJ', 'OPEN'],
+      'NT1': ['NT1', 'OPEN'],
+      'NT2': ['NT2', 'OPEN'],
+      'NT3': ['NT3', 'OPEN'],
+      'IQ': ['IQ', 'OPEN']
+    };
+    return m[cat] || ['OPEN'];
+  };
+
+  const getMHCollegesList = (course, listType, userCat, score) => {
+    if (!asmiDb || !asmiDb.MH || !asmiDb.MH[course]) return [];
+    
+    const openList = asmiDb.MH[course]?.OPEN?.[listType] || [];
+    const catList = (userCat !== 'Open' && userCat !== 'General' && userCat !== 'IQ')
+      ? (asmiDb.MH[course]?.[userCat.toUpperCase()]?.[listType] || [])
+      : (userCat === 'IQ' && listType === 'mh_iq')
+        ? (asmiDb.MH[course]?.IQ?.mh_iq || [])
+        : [];
+        
+    const openMap = new Map(openList.map(c => [c.n, c.c]));
+    const catMap = new Map(catList.map(c => [c.n, c.c]));
+    const allNames = new Set([...openMap.keys(), ...catMap.keys()]);
+    const cols = [];
+    allNames.forEach(name => {
+      const openC = openMap.has(name) ? openMap.get(name) : null;
+      const catC = catMap.has(name) ? catMap.get(name) : null;
+      const bestC = Math.min(openC ?? Infinity, catC ?? Infinity);
+      if (bestC === Infinity) return;
+      
+      const p = prob(score, bestC);
+      cols.push({
+        name,
+        cutoff: bestC,
+        projected: bestC + 15,
+        chance: p.label,
+        chanceKey: p.key,
+        chanceClass: p.cls,
+        state: 'Maharashtra',
+        pool: 'MH State',
+        type: listType === 'mh_govt' ? 'Government' : 'Private'
+      });
+    });
+    return cols;
+  };
+
+  const getMCCCollegesList = (course, userCat, score) => {
+    const keys = getCategoryKeys(userCat);
+    const results = [];
+    
+    const addColleges = (stateKey, courseKey, catKeysList, listType, type) => {
+      if (!asmiDb || !asmiDb[stateKey] || !asmiDb[stateKey][courseKey]) return;
+      const seen = new Map();
+      catKeysList.forEach(catKey => {
+        const d = asmiDb[stateKey][courseKey][catKey];
+        if (!d || !d[listType]) return;
+        d[listType].forEach(col => {
+          const p = prob(score, col.c);
+          const entry = {
+            name: col.n,
+            state: col.s || 'India',
+            cutoff: col.c,
+            projected: col.c + 15,
+            chance: p.label,
+            chanceKey: p.key,
+            chanceClass: p.cls,
+            pool: 'MCC AIQ',
+            type
+          };
+          if (!seen.has(col.n)) {
+            seen.set(col.n, entry);
+          } else if (col.c < seen.get(col.n).cutoff) {
+            seen.set(col.n, entry);
+          }
+        });
+      });
+      results.push(...seen.values());
+    };
+
+    addColleges('AIQ', course, keys, 'aiq', 'Government');
+    if (course === 'MBBS') {
+      addColleges('AIIMS', 'MBBS', keys, 'aiims', 'Government');
+      addColleges('JIPMER', 'MBBS', keys, 'jipmer', 'Government');
+    }
+    addColleges('CENTRAL', course, keys, 'central', 'Government');
+    addColleges('DEEMED', course, ['OPEN'], 'deemed', 'Deemed');
+
+    return results;
+  };
+
+  const getOpenStateCollegesList = (course, score) => {
+    if (course !== 'MBBS') return [];
+    const results = [];
+    const OPEN_STATES = ['KA', 'TS', 'TN', 'UP', 'KL', 'AP', 'HR', 'WB', 'BR', 'UK', 'CG', 'JH', 'HP', 'PY', 'TR', 'MN', 'ML', 'SK'];
+    const STATE_LABELS = {
+      KA:'Karnataka', TS:'Telangana', TN:'Tamil Nadu', UP:'Uttar Pradesh',
+      UK:'Uttarakhand', PY:'Pondicherry', WB:'West Bengal', MN:'Manipur', ML:'Meghalaya',
+      AP:'Andhra Pradesh', BR:'Bihar', HR:'Haryana', JH:'Jharkhand', CG:'Chhattisgarh',
+      KL:'Kerala', HP:'Himachal Pradesh', TR:'Tripura', SK:'Sikkim'
+    };
+
+    OPEN_STATES.forEach(stKey => {
+      if (!asmiDb || !asmiDb[stKey] || !asmiDb[stKey]['MBBS']) return;
+      const seen = new Map();
+      
+      ['open_pvt', 'mgmt_quota'].forEach(listType => {
+        const d = asmiDb[stKey]['MBBS']['OPEN'];
+        if (!d || !d[listType]) return;
+        d[listType].forEach(col => {
+          const p = prob(score, col.c);
+          const entry = {
+            name: col.n,
+            state: STATE_LABELS[stKey] || stKey,
+            cutoff: col.c,
+            projected: col.c + 15,
+            chance: p.label,
+            chanceKey: p.key,
+            chanceClass: p.cls,
+            pool: 'Open State',
+            type: 'Private'
+          };
+          if (!seen.has(col.n)) {
+            seen.set(col.n, entry);
+          } else if (col.c < seen.get(col.n).cutoff) {
+            seen.set(col.n, entry);
+          }
+        });
+      });
+      results.push(...seen.values());
+    });
+    return results;
+  };
+
   const getScorePredictedColleges = () => {
     const score = parseInt(cpScoreInput, 10);
     if (isNaN(score) || score < 200 || score > 720 || !asmiDb) return [];
-    const courseData = asmiDb['MH']?.[cpScoreCourse] || {};
-    const catData = courseData[cpCategory.toUpperCase()] || {};
+    
+    const course = cpScoreCourse;
+    const userCat = cpCategory;
+    
     const results = [];
-    ['mh_govt', 'mh_pvt', 'mh_iq'].forEach(t => {
-      if (cpQuota !== 'All' && t !== cpQuota) return;
-      (catData[t] || []).forEach(item => {
-        const cutoff = parseInt(item.c, 10);
-        if (isNaN(cutoff)) return;
-        const gap = score - (cutoff + 10);
-        if (gap < -55) return;
-        results.push({
-          name: item.n, cutoff, adjCutoff: cutoff + 10, gap,
-          status: gap >= 0 ? '✅ Safe' : gap >= -30 ? '🟡 Poss' : '🟠 Str',
-          statusClass: gap >= 0 ? 'badge-safe' : gap >= -30 ? 'badge-likely' : 'badge-borderline',
-          type: t === 'mh_govt' ? 'Government' : t === 'mh_pvt' ? 'Private' : 'Inst./NRI',
-          course: cpScoreCourse
-        });
-      });
-    });
-    return results.sort((a, b) => b.cutoff - a.cutoff);
+    
+    // 1. MH State Pool
+    if (asmiDb.MH && asmiDb.MH[course]) {
+      const mhGovt = getMHCollegesList(course, 'mh_govt', userCat, score);
+      const mhPvt = getMHCollegesList(course, 'mh_pvt', userCat, score);
+      const mhIq = (userCat === 'IQ') ? getMHCollegesList(course, 'mh_iq', userCat, score) : [];
+      results.push(...mhGovt, ...mhPvt, ...mhIq);
+    }
+    
+    // 2. MCC AIQ Pool
+    const mccColleges = getMCCCollegesList(course, userCat, score);
+    results.push(...mccColleges);
+    
+    // 3. Open State Pool
+    if (course === 'MBBS') {
+      const openStateColleges = getOpenStateCollegesList(course, score);
+      results.push(...openStateColleges);
+    }
+    
+    // Filter
+    let filtered = [...results];
+    
+    if (cpPoolFilter !== 'All') {
+      filtered = filtered.filter(c => c.pool === cpPoolFilter);
+    }
+    
+    if (cpTypeFilter !== 'All') {
+      filtered = filtered.filter(c => c.type === cpTypeFilter);
+    }
+    
+    // Sort
+    filtered.sort((a, b) => b.cutoff - a.cutoff);
+    
+    return filtered;
   };
 
   const handleToggleShortlist = (name) => {
@@ -979,79 +1152,182 @@ export default function StudentDashboard() {
                     );
                   })()}
 
-                  {/* ── SCORE TAB: unchanged ── */}
-                  {cpInputMode === 'score' && (
-                    <>
-                      {/* Score tab filters */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
-                        <div className="form-group">
-                          <label className="form-label">NEET Score</label>
-                          <input type="number" placeholder="e.g. 620" className="form-input" value={cpScoreInput} onChange={e => setCpScoreInput(e.target.value)} />
+                  {/* ── SCORE TAB ── */}
+                  {cpInputMode === 'score' && (() => {
+                    const results = getScorePredictedColleges();
+                    return (
+                      <>
+                        {/* Score tab filters */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
+                          <div className="form-group">
+                            <label className="form-label">NEET Score</label>
+                            <input type="number" placeholder="e.g. 620" className="form-input" value={cpScoreInput} onChange={e => setCpScoreInput(e.target.value)} />
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Course</label>
+                            <select className="form-select" value={cpScoreCourse} onChange={e => setCpScoreCourse(e.target.value)}>
+                              <option value="MBBS">MBBS</option>
+                              <option value="BDS">BDS</option>
+                            </select>
+                          </div>
+                          <div className="form-group">
+                            <label className="form-label">Category</label>
+                            <select className="form-select" value={cpCategory} onChange={e => setCpCategory(e.target.value)}>
+                              <option value="Open">Open / General</option>
+                              <option value="OBC">OBC</option>
+                              <option value="SC">SC</option>
+                              <option value="ST">ST</option>
+                              <option value="EWS">EWS</option>
+                              <option value="VJ">VJ (DT-A)</option>
+                              <option value="NT1">NT-B (NT-1)</option>
+                              <option value="NT2">NT-C (NT-2)</option>
+                              <option value="NT3">NT-D (NT-3)</option>
+                              <option value="SEBC">SEBC</option>
+                              <option value="IQ">Inst. / NRI</option>
+                            </select>
+                          </div>
                         </div>
-                        <div className="form-group">
-                          <label className="form-label">Course</label>
-                          <select className="form-select" value={cpScoreCourse} onChange={e => setCpScoreCourse(e.target.value)}>
-                            <option value="MBBS">MBBS</option>
-                            <option value="BDS">BDS</option>
-                          </select>
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Quota</label>
-                          <select className="form-select" value={cpQuota} onChange={e => setCpQuota(e.target.value)}>
-                            <option value="All">All Quotas</option>
-                            <option value="mh_govt">Government</option>
-                            <option value="mh_pvt">Private</option>
-                            <option value="mh_iq">Institutional / NRI</option>
-                          </select>
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Category</label>
-                          <select className="form-select" value={cpCategory} onChange={e => setCpCategory(e.target.value)}>
-                            <option value="Open">Open / General</option>
-                            <option value="OBC">OBC</option>
-                            <option value="SC">SC</option>
-                            <option value="ST">ST</option>
-                            <option value="EWS">EWS</option>
-                            <option value="VJ">VJ (DT-A)</option>
-                            <option value="NT1">NT-B (NT-1)</option>
-                            <option value="NT2">NT-C (NT-2)</option>
-                            <option value="NT3">NT-D (NT-3)</option>
-                            <option value="SEBC">SEBC</option>
-                            <option value="IQ">Inst. / NRI</option>
-                          </select>
-                        </div>
-                      </div>
 
-                      <div className="table-container">
-                        <table className="dense-table">
-                          <thead><tr>
-                            <th>College Name</th><th>Course</th><th>Type</th><th>2025 Cutoff</th>
-                            <th>Adj. (+10)</th><th>Your Score</th><th>Gap</th><th>Status</th><th>Shortlist</th>
-                          </tr></thead>
-                          <tbody>
-                            {getScorePredictedColleges().length === 0 ? (
-                              <tr><td colSpan="9" className="empty-state">Enter your score to view matching colleges.</td></tr>
-                            ) : getScorePredictedColleges().map((c, i) => (
-                              <tr key={i}>
-                                <td style={{ fontWeight: 700 }}>{c.name}</td>
-                                <td>{c.course}</td><td>{c.type}</td>
-                                <td>{c.cutoff}</td><td>{c.adjCutoff}</td><td>{cpScoreInput}</td>
-                                <td style={{ fontWeight: 700, color: c.gap >= 0 ? 'var(--safe-color)' : 'var(--reach-color)' }}>
-                                  {c.gap >= 0 ? `+${c.gap}` : c.gap}
-                                </td>
-                                <td><span className={c.statusClass}>{c.status}</span></td>
-                                <td>
-                                  <button onClick={() => handleToggleShortlist(c.name)} className="chip" style={{ fontSize: 11 }}>
-                                    {shortlist.includes(c.name) ? '★ Saved' : '☆ Save'}
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </>
-                  )}
+                        {/* Filter chips (Pool and Type) */}
+                        <div style={{ display: 'flex', gap: 24, marginBottom: 20, flexWrap: 'wrap' }}>
+                          <div>
+                            <div className="form-label" style={{ marginBottom: 6 }}>Pool</div>
+                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                              {[
+                                { key: 'All', label: 'All Pools' },
+                                { key: 'MH State', label: 'MH State' },
+                                { key: 'MCC AIQ', label: 'MCC AIQ' },
+                                { key: 'Open State', label: 'Open State' }
+                              ].map(p => (
+                                <button key={p.key} className={`chip ${cpPoolFilter === p.key ? 'active' : ''}`} onClick={() => setCpPoolFilter(p.key)}>
+                                  {p.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="form-label" style={{ marginBottom: 6 }}>Institution Type</div>
+                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                              {[
+                                { key: 'All', label: 'All Types' },
+                                { key: 'Government', label: 'Government' },
+                                { key: 'Private', label: 'Private' },
+                                { key: 'Deemed', label: 'Deemed' }
+                              ].map(t => (
+                                <button key={t.key} className={`chip ${cpTypeFilter === t.key ? 'active' : ''}`} onClick={() => setCpTypeFilter(t.key)}>
+                                  {t.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Results list */}
+                        {(!cpScoreInput || isNaN(parseInt(cpScoreInput, 10))) ? (
+                          <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
+                            <div style={{ fontSize: 36, marginBottom: 12 }}>🎯</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>Enter Your NEET Score to Start</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-400)', maxWidth: 280, margin: '0 auto' }}>
+                              Type your NEET score (200-720) above to see matching colleges and admission chances.
+                            </div>
+                          </div>
+                        ) : results.length === 0 ? (
+                          <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
+                            <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>No Matches Found</div>
+                            <div style={{ fontSize: 13, color: 'var(--text-400)', maxWidth: 300, margin: '0 auto' }}>
+                              No colleges match your current score and category. Try changing the filters.
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div style={{ fontSize: 13, color: 'var(--text-500)', marginBottom: 14 }}>
+                              <strong style={{ color: 'var(--text-900)' }}>{results.length}</strong> college{results.length !== 1 ? 's' : ''} matched
+                            </div>
+
+                            <div className="table-container">
+                              <table className="dense-table">
+                                <thead>
+                                  <tr>
+                                    <th>College Name</th>
+                                    <th>Pool</th>
+                                    <th>State</th>
+                                    <th>Last Cutoff</th>
+                                    <th>Projected</th>
+                                    <th>Fee/yr</th>
+                                    <th>Chance</th>
+                                    <th style={{ textAlign: 'center', width: '60px' }}>★</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {results.map((c, i) => {
+                                    const feeVal = feeMap[c.name] ? `₹${feeMap[c.name]}L/yr` : '—';
+                                    return (
+                                      <tr key={i}>
+                                        <td style={{ fontWeight: 700, minWidth: 180 }}>{c.name}</td>
+                                        <td>
+                                          <span style={{
+                                            backgroundColor: 'rgba(106, 13, 173, 0.08)',
+                                            color: '#6a0dad',
+                                            border: '1px solid rgba(106, 13, 173, 0.2)',
+                                            padding: '2px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '10px',
+                                            fontWeight: 'bold',
+                                            whiteSpace: 'nowrap'
+                                          }}>
+                                            {c.pool}
+                                          </span>
+                                        </td>
+                                        <td style={{ whiteSpace: 'nowrap' }}>{c.state}</td>
+                                        <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.cutoff}</td>
+                                        <td style={{ textAlign: 'center' }}>
+                                          <span style={{
+                                            background: 'linear-gradient(135deg, var(--navy), var(--purple))',
+                                            color: '#FFD700',
+                                            padding: '3px 8px',
+                                            borderRadius: '12px',
+                                            fontSize: '11px',
+                                            fontWeight: '800'
+                                          }}>
+                                            {c.projected}
+                                          </span>
+                                        </td>
+                                        <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>{feeVal}</td>
+                                        <td>
+                                          <span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>
+                                            {c.chance}
+                                          </span>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                          <button
+                                            onClick={() => handleToggleShortlist(c.name)}
+                                            style={{
+                                              background: 'none',
+                                              border: 'none',
+                                              cursor: 'pointer',
+                                              fontSize: '18px',
+                                              color: shortlist.includes(c.name) ? '#FFD700' : 'rgba(26, 0, 64, 0.2)',
+                                              padding: '4px',
+                                              lineHeight: 1,
+                                              transition: 'color 0.15s'
+                                            }}
+                                          >
+                                            {shortlist.includes(c.name) ? '★' : '☆'}
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
             )}
