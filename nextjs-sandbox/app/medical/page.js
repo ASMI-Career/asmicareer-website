@@ -800,7 +800,7 @@ export default function MedicalPortal() {
             {/* SVG Road */}
             <svg
               className="highway-svg"
-              viewBox="0 0 1200 500"
+              viewBox="0 0 1200 700"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
@@ -832,7 +832,7 @@ export default function MedicalPortal() {
               {/* Left edge of road */}
               <path
                 className="road-edge-left"
-                d="M 60 80 C 60 80, 380 60, 500 200 C 620 340, 840 420, 1140 420"
+                d="M 60 230 C 60 230, 380 210, 500 350 C 620 490, 840 570, 1140 570"
                 fill="none"
                 stroke="#FFD700"
                 strokeWidth="2"
@@ -841,7 +841,7 @@ export default function MedicalPortal() {
               {/* Right edge of road */}
               <path
                 className="road-edge-right"
-                d="M 60 140 C 60 140, 380 120, 500 260 C 620 400, 840 480, 1140 480"
+                d="M 60 290 C 60 290, 380 270, 500 410 C 620 550, 840 630, 1140 630"
                 fill="none"
                 stroke="#FFD700"
                 strokeWidth="2"
@@ -850,15 +850,15 @@ export default function MedicalPortal() {
               {/* Road surface fill */}
               <path
                 className="road-surface"
-                d="M 60 80 C 60 80, 380 60, 500 200 C 620 340, 840 420, 1140 420
-                   L 1140 480 C 840 480, 620 400, 500 260 C 380 120, 60 140, 60 140 Z"
+                d="M 60 230 C 60 230, 380 210, 500 350 C 620 490, 840 570, 1140 570
+                   L 1140 630 C 840 630, 620 550, 500 410 C 380 270, 60 290, 60 290 Z"
                 fill="#0d001f"
                 opacity="0.9"
               />
               {/* Center dashes */}
               <path
                 className="road-center-dashes"
-                d="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                d="M 60 260 C 60 260, 380 240, 500 380 C 620 520, 840 600, 1140 600"
                 fill="none"
                 stroke="rgba(255,255,255,0.4)"
                 strokeWidth="2"
@@ -868,7 +868,7 @@ export default function MedicalPortal() {
               {/* Animated road draw overlay */}
               <path
                 className={`road-draw${journeyActive ? ' road-draw-active' : ''}`}
-                d="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                d="M 60 260 C 60 260, 380 240, 500 380 C 620 520, 840 600, 1140 600"
                 fill="none"
                 stroke="transparent"
                 strokeWidth="60"
@@ -876,12 +876,12 @@ export default function MedicalPortal() {
 
               {/* Street lamp poles — 6 positions along the road */}
               {[
-                { x: 100, y: 90,  side: 'top',    cardX: '12%', cardY: '15%' },
-                { x: 310, y: 76,  side: 'top',    cardX: '35%', cardY: '8%' },
-                { x: 520, y: 195, side: 'top',    cardX: '50%', cardY: '25%' },
-                { x: 700, y: 340, side: 'bottom', cardX: '59%', cardY: '75%' },
-                { x: 900, y: 415, side: 'bottom', cardX: '75%', cardY: '85%' },
-                { x: 1100, y: 430, side: 'bottom', cardX: '89%', cardY: '85%' },
+                { x: 100, y: 240, side: 'top',    cardX: 147, cardY: 165 },
+                { x: 310, y: 226, side: 'top',    cardX: 387, cardY: 144 },
+                { x: 520, y: 345, side: 'top',    cardX: 627, cardY: 235 },
+                { x: 700, y: 490, side: 'bottom', cardX: 663, cardY: 525 },
+                { x: 900, y: 565, side: 'bottom', cardX: 816, cardY: 570 },
+                { x: 1100, y: 580, side: 'bottom', cardX: 1008, cardY: 585 },
               ].map((lamp, i) => (
                 <g key={i}>
                   {/* Connection to card */}
@@ -931,7 +931,7 @@ export default function MedicalPortal() {
                     begin="indefinite"
                     dur="4.8s"
                     fill="freeze"
-                    path="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
+                    path="M 60 260 C 60 260, 380 240, 500 380 C 620 520, 840 600, 1140 600"
                     rotate="auto"
                   />
                   <g transform="rotate(90)">

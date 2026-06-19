@@ -1288,8 +1288,8 @@
     .highway-scene {
       position: relative;
       width: 100%;
-      aspect-ratio: 1200 / 500;
-      min-height: 600px;
+      aspect-ratio: 1200 / 700;
+      margin-bottom: 40px;
     }
 
     .highway-svg {
@@ -1369,12 +1369,12 @@
     }
 
     /* Card positions — tuned to road path */
-    .pos-top-left            { top: 15%;  left: 5%;   }
-    .pos-top-center-left     { top: 8%;   left: 28%;  }
-    .pos-top-center-right    { top: 15%;  left: 50%;  }
-    .pos-bottom-center-left  { top: 52%;  left: 52%;  }
-    .pos-bottom-center-right { top: 65%;  left: 68%;  }
-    .pos-bottom-right        { top: 68%;  left: 82%;  }
+    .pos-top-left            { top: 5%;   left: 5%;   }
+    .pos-top-center-left     { top: 2%;   left: 25%;  }
+    .pos-top-center-right    { top: 15%;  left: 45%;  }
+    .pos-bottom-center-left  { top: 75%;  left: 48%;  }
+    .pos-bottom-center-right { top: 80%;  left: 68%;  }
+    .pos-bottom-right        { top: 78%;  left: 84%;  }
 
     .hsc-icon {
       font-size: 22px;
