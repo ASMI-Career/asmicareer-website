@@ -654,7 +654,13 @@ export default function StudentDashboard() {
             {NAV_ITEMS.map(item => (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  if (item.id === 'cutoff') {
+                    window.location.href = '/cutoff_explorer.html';
+                  } else {
+                    setActiveTab(item.id);
+                  }
+                }}
                 className={`nav-link ${activeTab === item.id ? 'active' : ''}`}
               >
                 <span className="nav-icon">{item.icon}</span>
@@ -1666,7 +1672,13 @@ export default function StudentDashboard() {
         {/* Mobile bottom nav */}
         <nav className="mobile-bottom-nav">
           {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => setActiveTab(item.id)}
+            <button key={item.id} onClick={() => {
+              if (item.id === 'cutoff') {
+                window.location.href = '/cutoff_explorer.html';
+              } else {
+                setActiveTab(item.id);
+              }
+            }}
               className={`mobile-nav-item ${activeTab === item.id ? 'active' : ''}`}>
               <span className="nav-icon">{item.icon}</span>
               <span>{item.label}</span>

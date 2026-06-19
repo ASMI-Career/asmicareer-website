@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Cutoff Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,600,500,400&display=swap');
+
+    :root {
+      --primary: #1A0040;
+      --primary-accent: #6A0DAD;
+      --foreground: #212529;
+      --secondary: #2d2d2d;
+      --neutral: #5e5e5e;
+      --highlight: #6e61ca;
+      --success: #559822;
+      --error: #e6322a;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      color: #212529;
+    }
+
+    .custom-shadow {
+      box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-active {
+      background-color: rgba(26, 0, 64, 0.07);
+      color: #1A0040;
+      border-right: 3px solid #1A0040;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 999px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 999px;
+      border: 2px solid #f3f4f6;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .row-selected {
+      background: #fff7ed !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-[#F8F9FB] text-[#212529]">
+    <aside class="hidden lg:flex w-64 bg-white border-r border-gray-100 flex-col fixed h-screen z-50">
+      <div class="p-6 flex items-center gap-3">
+        <img src="https://asmicareer.in/asmi-logo.png" alt="ASMI Logo" class="h-10 w-auto">
+      </div>
+      
+      <nav class="flex-1 mt-4 overflow-y-auto px-2">
+        <div class="space-y-1">
+          <a href="/student" id="nav-dashboard-link" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all group">
+            <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Dashboard</span>
+          </a>
+          <a href="#" id="nav-predictor-link" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Predictor</span>
+          </a>
+          <a href="#" id="nav-cutoff-link" class="flex items-center gap-3 px-4 py-3 rounded-lg sidebar-active transition-all">
+            <iconify-icon icon="lucide:search" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Cutoff Explorer</span>
+          </a>
+          <a href="#" id="nav-institutes-link" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:building-2" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Institutes</span>
+          </a>
+          <a href="#" id="nav-documents-link" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:file-text" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Documents</span>
+          </a>
+        </div>
+
+        <div class="mt-8 px-4">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Account</p>
+          <div class="mt-4 space-y-1">
+            <a href="#" id="nav-settings-link" class="flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
+              <iconify-icon icon="lucide:settings" class="text-lg"></iconify-icon>
+              <span class="text-[14px]">Settings</span>
+            </a>
+            <a href="#" id="nav-help-link" class="flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
+              <iconify-icon icon="lucide:help-circle" class="text-lg"></iconify-icon>
+              <span class="text-[14px]">Help Support</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="lg:ml-64 min-h-screen">
+      <header class="sticky top-0 z-40 bg-[#F8F9FB] border-b border-gray-100">
+        <div class="px-4 sm:px-6 lg:px-8 py-4">
+          <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <button class="lg:hidden h-11 w-11 rounded-2xl bg-white border border-gray-100 flex items-center justify-center custom-shadow">
+                <iconify-icon icon="lucide:menu" class="text-xl"></iconify-icon>
+              </button>
+              <div>
+                <div class="flex items-center gap-3">
+                  <h1 class="text-2xl font-bold tracking-tight text-gray-950">Cutoff Explorer</h1>
+                  <button class="h-8 w-8 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-[#1A0040] hover:border-[#1A0040]/30 transition-all flex items-center justify-center" aria-label="Cutoff explorer help">
+                    <iconify-icon icon="lucide:info" class="text-base"></iconify-icon>
+                  </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">Round-wise AIR, SML and chances mapped to your NEET rank.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div class="relative w-full sm:w-80 xl:w-96">
+                <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                  <iconify-icon icon="lucide:search"></iconify-icon>
+                </span>
+                <input id="collegeSearch" type="text" placeholder="Search college, code, city..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20 focus:border-[#1A0040]/40 transition-all text-sm custom-shadow">
+              </div>
+
+              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow">
+                <button class="px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold">2025</button>
+                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2024</button>
+                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2023</button>
+                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2022</button>
+              </div>
+
+              <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold">SM</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative">
+        <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+          <div class="xl:col-span-8 bg-white rounded-3xl border border-gray-100 custom-shadow p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Counselling</p>
+                <h2 class="text-xl font-bold text-gray-950 mt-1">MCC AIQ — All India UG Medical</h2>
+                <p class="text-sm text-gray-500 mt-1">All India Quota · Government colleges · MBBS seats</p>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <button class="inline-flex items-center gap-2 px-4 py-3 bg-[#FDECE7] text-[#1A0040] rounded-2xl text-sm font-bold hover:bg-[#fbd9ce] transition-all">
+                  <iconify-icon icon="lucide:repeat-2"></iconify-icon>
+                  Switch counselling
+                </button>
+                <a href="#" id="counselling-details-link" class="inline-flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-2xl text-gray-700 hover:border-[#1A0040]/40 hover:text-[#1A0040] transition-all text-sm font-bold">
+                  Go to counselling
+                  <iconify-icon icon="lucide:arrow-up-right"></iconify-icon>
+                </a>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <button class="text-left p-4 rounded-2xl border-2 border-[#1A0040] bg-[#FDECE7] transition-all">
+                <span class="text-[11px] font-bold uppercase tracking-widest text-[#1A0040]">Selected</span>
+                <p class="text-sm font-bold text-gray-950 mt-1">MCC AIQ</p>
+                <p class="text-xs text-gray-500 mt-0.5">All India Quota · Govt colleges</p>
+              </button>
+              <button class="text-left p-4 rounded-2xl border border-gray-200 bg-gray-50 hover:bg-white hover:border-[#1A0040]/30 transition-all">
+                <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400">State quota</span>
+                <p class="text-sm font-bold text-gray-950 mt-1">MH State</p>
+                <p class="text-xs text-gray-500 mt-0.5">Maharashtra CAP · Govt & Private</p>
+              </button>
+              <button class="text-left p-4 rounded-2xl border border-gray-200 bg-gray-50 hover:bg-white hover:border-[#1A0040]/30 transition-all">
+                <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400">NRI / MQ</span>
+                <p class="text-sm font-bold text-gray-950 mt-1">Open States</p>
+                <p class="text-xs text-gray-500 mt-0.5">17 states · MQ & NRI quota</p>
+              </button>
+            </div>
+          </div>
+
+          <div class="xl:col-span-4 bg-gradient-to-br from-[#212529] to-[#2d2d2d] rounded-3xl custom-shadow p-6 text-white overflow-hidden relative">
+            <div class="relative z-10">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-widest text-white/50">Your Rank</p>
+                  <div class="flex items-end gap-3 mt-2">
+                    <p class="text-4xl font-bold tracking-tight">#25,678</p>
+                    <span class="mb-2 px-2.5 py-1 rounded-lg bg-[#559822] text-white text-[10px] font-bold uppercase">Synced</span>
+                  </div>
+                  <p class="text-sm text-white/60 mt-2">Pre-loaded from Predictor. Per-round chances shown below.</p>
+                </div>
+                <div class="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                  <iconify-icon icon="lucide:target" class="text-2xl text-[#6A0DAD]"></iconify-icon>
+                </div>
+              </div>
+
+              <div class="mt-6 grid grid-cols-3 gap-2">
+                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                  <p id="count-safe" class="text-lg font-bold text-[#86efac]">0</p>
+                  <p class="text-[10px] text-white/50 font-bold uppercase">Safe</p>
+                </div>
+                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                  <p id="count-likely" class="text-lg font-bold text-[#fde68a]">0</p>
+                  <p class="text-[10px] text-white/50 font-bold uppercase">Likely</p>
+                </div>
+                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                  <p id="count-borderline" class="text-lg font-bold text-[#fdba74]">0</p>
+                  <p class="text-[10px] text-white/50 font-bold uppercase">Border</p>
+                </div>
+              </div>
+            </div>
+            <iconify-icon icon="lucide:activity" class="absolute -right-6 -bottom-8 text-9xl text-white opacity-5 rotate-12"></iconify-icon>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl border border-gray-100 custom-shadow p-5 sm:p-6">
+          <div class="flex flex-col gap-5">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>
+                <div class="flex flex-wrap gap-2">
+                  <button class="px-4 py-2 rounded-full bg-[#1A0040] text-white text-sm font-bold shadow-lg shadow-[#1A0040]/15">General</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">Female</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">HA General</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">HA Female</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">OBC</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">SC</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">ST</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">EWS</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">PWD</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040] text-sm font-bold transition-all">Orphan</button>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2">
+                <button id="compareButton" class="hidden items-center gap-2 px-4 py-2.5 bg-[#212529] text-white rounded-2xl text-sm font-bold hover:bg-black transition-all">
+                  <iconify-icon icon="lucide:git-compare-arrows"></iconify-icon>
+                  Compare Selected <span id="compareCount" class="bg-white text-[#212529] rounded-full px-2 py-0.5 text-[10px]">0</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-5 border-t border-gray-100">
+              <div class="flex flex-wrap items-center gap-2">
+                <button class="px-4 py-2 rounded-full bg-[#6A0DAD] text-white text-sm font-bold">All</button>
+                <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Govt</button>
+                <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Private</button>
+                <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Deemed</button>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 text-xs font-bold text-gray-500">
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-green-100 ring-1 ring-green-200"></span>Safe — rank well within cutoff</span>
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-yellow-100 ring-1 ring-yellow-200"></span>Likely — rank near cutoff</span>
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-orange-100 ring-1 ring-orange-200"></span>Borderline — slightly beyond cutoff</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bg-white rounded-3xl border border-gray-100 custom-shadow overflow-hidden">
+          <div class="p-5 sm:p-6 border-b border-gray-100">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+              <div>
+                <div class="flex items-center gap-3">
+                  <h2 class="text-lg font-bold text-gray-950">1 - 10 of 3,574 Records</h2>
+                  <span class="px-2.5 py-1 rounded-lg bg-[#FDECE7] text-[#1A0040] text-[10px] font-bold uppercase">Live preview</span>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">Click a college name to view detailed allotment list and factors.</p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3">
+                <button id="strayToggle" onclick="toggleStray()" class="text-sm font-bold text-[#1A0040] hover:underline inline-flex items-center gap-1">
+                  <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                  Show stray rounds
+                </button>
+                <div class="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-2xl p-1">
+                  <button class="h-9 w-9 rounded-xl bg-white border border-gray-200 text-sm font-bold">1</button>
+                  <button class="h-9 w-9 rounded-xl text-gray-600 hover:bg-white text-sm font-bold transition-all">2</button>
+                  <button class="h-9 w-9 rounded-xl text-gray-600 hover:bg-white text-sm font-bold transition-all">3</button>
+                  <span class="px-2 text-gray-400 text-sm font-bold">...</span>
+                  <button class="h-9 w-9 rounded-xl text-gray-600 hover:bg-white text-sm font-bold transition-all">72</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto scrollbar-thin">
+            <table class="w-full min-w-[1600px] text-sm">
+              <thead>
+                <tr class="bg-gray-50 border-b border-gray-200 text-gray-900">
+                  <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12">
+                    <span class="sr-only">Select</span>
+                  </th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Code</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[280px]">College Name</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Fees</th>
+                  <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-l border-r border-[#d9d5ff]">Round 1</th>
+                  <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-r border-[#d9d5ff]">Round 2</th>
+                  <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-r border-[#d9d5ff]">Round 3</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th>
+                </tr>
+                <tr class="bg-gray-50 border-b border-gray-200 text-gray-500">
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
+                </tr>
+              </thead>
+              <tbody id="collegeTableBody" class="divide-y divide-gray-100"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="compareToast" class="fixed bottom-6 right-6 z-50 hidden bg-[#212529] text-white rounded-3xl custom-shadow p-4 min-w-[300px]">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-widest text-white/50 font-bold">Comparison ready</p>
+          <p class="text-sm font-bold mt-1"><span id="toastCount">0</span> colleges selected</p>
+        </div>
+        <button class="px-4 py-2 bg-[#1A0040] rounded-2xl text-sm font-bold hover:bg-[#6A0DAD] transition-all">Compare</button>
+      </div>
+    </div>
+  </div>
+
+  
+    <script>
+    const RANK = 25678; // Hardcoded for now
+    let strayVisible = false;
+    let currentData = null;
+    let selectedCounselling = 'MH'; // Default
+    let selectedCategory = 'GENERAL'; // Default
+
+    const compareButton = document.getElementById('compareButton');
+    const compareCount = document.getElementById('compareCount');
+    const compareToast = document.getElementById('compareToast');
+    const toastCount = document.getElementById('toastCount');
+    const searchInput = document.getElementById('collegeSearch');
+
+    function toggleStray() {
+      strayVisible = !strayVisible;
+      document.querySelectorAll('.stray-col').forEach(el => {
+        el.style.display = strayVisible ? '' : 'none';
+      });
+      const strayToggle = document.getElementById('strayToggle');
+      strayToggle.innerHTML = strayVisible
+        ? '<iconify-icon icon="lucide:chevron-up"></iconify-icon> Hide stray rounds'
+        : '<iconify-icon icon="lucide:chevron-down"></iconify-icon> Show stray rounds';
+    }
+
+    function getChance(air) {
+      if (!air || air === '-') return null;
+      const val = parseInt(air.toString().replace(/,/g, ''), 10);
+      if (isNaN(val)) return null;
+      if (RANK <= val * 0.88) return 'safe';
+      if (RANK <= val)        return 'likely';
+      if (RANK <= val * 1.12) return 'borderline';
+      return 'out_of_reach';
+    }
+
+    async function loadData() {
+      const tbody = document.getElementById('collegeTableBody');
+      tbody.innerHTML = `<tr><td colspan="10" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
+      
+      let url = `/data/cutoffs/${selectedCounselling}/2025/${selectedCategory}.json`;
+      if (selectedCounselling === 'OPEN') {
+         // Placeholder for OPEN states logic
+         url = `/data/cutoffs/OPEN/2025/Karnataka/MQ.json`;
+      }
+      
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Data not found');
+        const data = await res.json();
+        currentData = data;
+        renderTable();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="10" class="px-4 py-8 text-center text-red-500">Failed to load data for ${selectedCounselling} - ${selectedCategory}</td></tr>`;
+        updateCounts(0, 0, 0);
+      }
+    }
+
+    function renderTable() {
+      if (!currentData || !currentData.colleges || currentData.colleges.length === 0) return;
+      
+      const tbody = document.getElementById('collegeTableBody');
+      tbody.innerHTML = '';
+      
+      let safeCount = 0;
+      let likelyCount = 0;
+      let borderCount = 0;
+
+      const firstColRounds = currentData.colleges[0].rounds || {};
+      const roundKeys = Object.keys(firstColRounds);
+      
+      const isMH = currentData.counselling === 'MH';
+      const isReserved = ['OBC', 'SC', 'ST', 'EWS'].includes(currentData.category);
+      const isMCC = currentData.counselling === 'MCC';
+      
+      const showSML = isMH && isReserved;
+      
+      const thead = document.querySelector('thead');
+      let headerRow1 = `
+        <tr class="bg-gray-50 border-b border-gray-200 text-gray-900">
+          <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12"><span class="sr-only">Select</span></th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Code</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[280px]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Fees</th>
+      `;
+      let headerRow2 = `<tr class="bg-gray-50 border-b border-gray-200 text-gray-500">`;
+      
+      roundKeys.forEach((round, index) => {
+        const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special');
+        const strayClass = isStray ? 'stray-col' : '';
+        const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+        
+        let cols = 2;
+        if (showSML || isMCC || currentData.counselling === 'OPEN') cols = 3;
+        if (isMH && !isReserved) cols = 2;
+
+        headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
+        
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle}>Intake</th>`;
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle}>AIR</th>`;
+        if (isMCC) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
+        } else if (showSML || currentData.counselling === 'OPEN') {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>SML</th>`;
+        }
+      });
+      
+      headerRow1 += `<th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th></tr>`;
+      headerRow2 += `</tr>`;
+      
+      thead.innerHTML = headerRow1 + headerRow2;
+
+      currentData.colleges.forEach(college => {
+        const tr = document.createElement('tr');
+        tr.className = 'college-row hover:bg-gray-50 transition-all';
+        tr.dataset.search = `${college.code || ''} ${college.name || ''} ${college.type || ''}`.toLowerCase();
+        
+        let typeBadgeClass = 'bg-gray-100 text-gray-700';
+        if (college.type && college.type.toLowerCase().includes('govt')) typeBadgeClass = 'bg-green-100 text-green-700';
+        else if (college.type && college.type.toLowerCase().includes('private')) typeBadgeClass = 'bg-orange-100 text-orange-700';
+        else if (college.type && college.type.toLowerCase().includes('deemed')) typeBadgeClass = 'bg-[#EDE9FF] text-[#6A0DAD]';
+
+        let html = `
+          <td class="sticky left-0 z-10 bg-white px-4 py-4"><input type="checkbox" class="compare-checkbox h-4 w-4 rounded border-gray-300 text-[#1A0040] focus:ring-[#1A0040]"></td>
+          <td class="px-4 py-4 font-medium text-gray-600">${college.code || ''}</td>
+          <td class="px-4 py-4">
+            <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
+            <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
+          </td>
+          <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+          <td class="px-4 py-4 font-medium">₹${college.fees || '-'}</td>
+        `;
+        
+        roundKeys.forEach(round => {
+          const rData = college.rounds[round] || {};
+          const air = rData.AIR;
+          const intake = rData.Intake;
+          const sml = isMCC ? rData.AIR_PWD : rData.SML;
+          
+          const chance = getChance(air);
+          
+          let cellBg = '';
+          let textClass = '';
+          let tagHtml = '';
+          
+          if (chance === 'safe') {
+            cellBg = 'bg-green-50'; textClass = 'text-green-800';
+            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`;
+            safeCount++;
+          } else if (chance === 'likely') {
+            cellBg = 'bg-blue-50'; textClass = 'text-blue-800';
+            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`;
+            likelyCount++;
+          } else if (chance === 'borderline') {
+            cellBg = 'bg-amber-50'; textClass = 'text-amber-800';
+            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`;
+            borderCount++;
+          } else if (chance === 'out_of_reach') {
+            textClass = 'text-gray-950'; // no bg, no tag
+          }
+
+          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special');
+          const strayClass = isStray ? 'stray-col' : '';
+          const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+          
+          html += `<td class="px-4 py-4 text-right ${cellBg} ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
+          html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString() : '-'} ${tagHtml}</td>`;
+          
+          if (isMCC || showSML || currentData.counselling === 'OPEN') {
+            html += `<td class="px-4 py-4 text-right ${cellBg} ${strayClass}" ${displayStyle}>${sml || '-'}</td>`;
+          }
+        });
+
+        html += `<td class="px-4 py-4"><button class="h-8 w-8 rounded-lg hover:bg-gray-100"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>`;
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
+
+      updateCounts(safeCount, likelyCount, borderCount);
+      attachCheckboxes();
+      applySearch(); // reapply search filter to new rows
+    }
+    
+    function updateCounts(s, l, b) {
+      document.getElementById('count-safe').textContent = s;
+      document.getElementById('count-likely').textContent = l;
+      document.getElementById('count-borderline').textContent = b;
+    }
+
+    function updateCompareState() {
+      let selected = 0;
+      const checkboxes = document.querySelectorAll('.compare-checkbox');
+      checkboxes.forEach((checkbox) => {
+        const row = checkbox.closest('tr');
+        if (checkbox.checked) {
+          selected += 1;
+          row.classList.add('row-selected');
+        } else {
+          row.classList.remove('row-selected');
+        }
+      });
+
+      compareCount.textContent = selected;
+      toastCount.textContent = selected;
+
+      if (selected > 0) {
+        compareButton.classList.remove('hidden');
+        compareButton.classList.add('inline-flex');
+        compareToast.classList.remove('hidden');
+      } else {
+        compareButton.classList.add('hidden');
+        compareButton.classList.remove('inline-flex');
+        compareToast.classList.add('hidden');
+      }
+    }
+
+    function attachCheckboxes() {
+      const checkboxes = document.querySelectorAll('.compare-checkbox');
+      checkboxes.forEach((cb) => {
+        cb.addEventListener('change', updateCompareState);
+      });
+    }
+
+    function applySearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      const dynamicRows = document.querySelectorAll('.college-row');
+      dynamicRows.forEach((row) => {
+        const searchable = row.getAttribute('data-search');
+        if (searchable && searchable.includes(query)) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', applySearch);
+
+    // Call loadData initially
+    loadData();
+  </script>
+</body>
+</html>
