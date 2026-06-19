@@ -1,0 +1,450 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <style>
+    @import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+    
+    :root {
+      --primary: #e8460d;
+      --primary-accent: #f46c3c;
+      --secondary: #2d2d2d;
+      --neutral: #5e5e5e;
+      --highlight: #6e61ca;
+      --success: #559822;
+      --bg-main: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      background-color: var(--bg-main);
+      color: #212529;
+    }
+
+    .custom-shadow {
+      box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-active {
+      background-color: rgba(232, 70, 13, 0.08);
+      color: var(--primary);
+      border-right: 4px solid var(--primary);
+    }
+
+    .progress-line {
+      background: repeating-linear-gradient(
+        to right,
+        #e2e8f0,
+        #e2e8f0 10px,
+        transparent 10px,
+        transparent 20px
+      );
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen flex bg-[#F8F9FB]">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-screen z-50">
+      <div class="p-6 flex items-center gap-3">
+        <img src="https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/brand-assets/www.zynerd.com/logo-1781709819642.webp" alt="ASMI Logo" class="h-10 w-auto">
+      </div>
+      
+      <nav class="flex-1 mt-4 overflow-y-auto px-2">
+        <div class="space-y-1">
+          <a href="#" id="nav-dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg sidebar-active transition-all group">
+            <iconify-icon icon="lucide:layout-dashboard" class="text-xl"></iconify-icon>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a href="#" id="nav-predictor" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:bar-chart-3" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Predictor</span>
+          </a>
+          <a href="#" id="nav-cutoff" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:search" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Cutoff Explorer</span>
+          </a>
+          <a href="#" id="nav-institutes" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:building-2" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Institutes</span>
+          </a>
+          <a href="#" id="nav-universities" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:graduation-cap" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Universities</span>
+          </a>
+          <a href="#" id="nav-counselling" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:users-round" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Counsellings</span>
+          </a>
+          <a href="#" id="nav-documents" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all">
+            <iconify-icon icon="lucide:file-text" class="text-xl"></iconify-icon>
+            <span class="font-medium text-[14px]">Documents</span>
+          </a>
+        </div>
+
+        <div class="mt-8 px-4">
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Account</p>
+          <div class="mt-4 space-y-1">
+            <a href="#" id="nav-settings" class="flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
+              <iconify-icon icon="lucide:settings" class="text-lg"></iconify-icon>
+              <span class="text-[14px]">Settings</span>
+            </a>
+            <a href="#" id="nav-help" class="flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
+              <iconify-icon icon="lucide:help-circle" class="text-lg"></iconify-icon>
+              <span class="text-[14px]">Help Support</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="p-4 border-t border-gray-100">
+        <div class="bg-[#212529] rounded-xl p-4 text-white relative overflow-hidden">
+          <div class="relative z-10">
+            <p class="text-xs font-medium opacity-70">Subscription</p>
+            <p class="font-bold mt-1">Elite Plan</p>
+            <button class="mt-3 w-full bg-[#e8460d] text-white py-2 rounded-lg text-xs font-bold hover:bg-[#f46c3c] transition-colors">UPGRADE</button>
+          </div>
+          <iconify-icon icon="lucide:crown" class="absolute -right-2 -bottom-2 text-6xl opacity-10 rotate-12"></iconify-icon>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 ml-64 p-8 relative min-h-screen">
+      <!-- Top Header -->
+      <header class="flex items-center justify-between mb-8 sticky top-0 z-40 bg-[#F8F9FB]/80 backdrop-blur-md py-4">
+        <div class="relative w-96">
+          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <iconify-icon icon="lucide:search"></iconify-icon>
+          </span>
+          <input type="text" placeholder="Search for colleges, cutoffs or help..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e8460d]/20 transition-all text-sm">
+        </div>
+
+        <div class="flex items-center gap-6">
+          <button class="relative text-gray-400 hover:text-gray-600 transition-colors">
+            <iconify-icon icon="lucide:bell" class="text-2xl"></iconify-icon>
+            <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full border-2 border-white"></span>
+          </button>
+          <div class="flex items-center gap-3 cursor-pointer group">
+            <div class="text-right hidden sm:block">
+              <p class="text-sm font-bold text-gray-900">Sahil Niren Mehta</p>
+              <p class="text-xs text-gray-500">NEET Aspirant 2026</p>
+            </div>
+            <div class="h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-bold group-hover:ring-2 ring-purple-200 transition-all">
+              SM
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-12 gap-6">
+        
+        <!-- Left Column: Primary Dashboard Data -->
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          
+          <!-- Hero Section: Welcome & Rank -->
+          <section class="bg-white rounded-3xl p-8 border border-gray-100 custom-shadow">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Welcome back, Sahil ðŸ‘‹</h1>
+                <p class="text-gray-500 mt-2">Your journey to MBBS 2026 is 45% complete. Keep going!</p>
+                <div class="flex items-center gap-4 mt-6">
+                  <div class="bg-[#FDECE7] px-4 py-2 rounded-xl">
+                    <span class="text-[#e8460d] text-xs font-bold uppercase tracking-wide">NEET Rank</span>
+                    <p class="text-2xl font-bold text-[#e8460d]">#12,378</p>
+                  </div>
+                  <div class="bg-blue-50 px-4 py-2 rounded-xl">
+                    <span class="text-blue-600 text-xs font-bold uppercase tracking-wide">Percentile</span>
+                    <p class="text-2xl font-bold text-blue-600">98.4%</p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-center md:items-end">
+                <div class="flex gap-4">
+                  <div class="text-center bg-gray-50 px-5 py-4 rounded-2xl border border-gray-100 min-w-[120px]">
+                    <p class="text-2xl font-bold text-gray-900">5</p>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Shortlisted</p>
+                  </div>
+                  <div class="text-center bg-red-50 px-5 py-4 rounded-2xl border border-red-100 min-w-[120px]">
+                    <p class="text-2xl font-bold text-red-600">1d left</p>
+                    <p class="text-[10px] font-bold text-red-400 uppercase tracking-tighter">Next Deadline</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Tracker -->
+            <div class="mt-12">
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Admission Progress</p>
+              <div class="relative flex justify-between items-center px-4">
+                <!-- Connecting Lines -->
+                <div class="absolute top-1/2 left-0 w-full h-0.5 progress-line -z-0 opacity-50"></div>
+                <div class="absolute top-1/2 left-0 w-1/3 h-1 bg-[#e8460d] -translate-y-1/2"></div>
+                
+                <!-- Step 1 -->
+                <div class="relative z-10 flex flex-col items-center gap-2">
+                  <div class="h-10 w-10 rounded-full bg-[#e8460d] text-white flex items-center justify-center border-4 border-white shadow-lg shadow-[#e8460d]/20">
+                    <iconify-icon icon="lucide:check" class="text-xl"></iconify-icon>
+                  </div>
+                  <span class="text-xs font-bold text-gray-900">Profile</span>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="relative z-10 flex flex-col items-center gap-2">
+                  <div class="h-10 w-10 rounded-full bg-white text-[#e8460d] border-2 border-[#e8460d] flex items-center justify-center shadow-md">
+                    <span class="font-bold">2</span>
+                  </div>
+                  <span class="text-xs font-bold text-[#e8460d]">Counselling</span>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative z-10 flex flex-col items-center gap-2">
+                  <div class="h-10 w-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center border-2 border-white">
+                    <span class="font-bold">3</span>
+                  </div>
+                  <span class="text-xs font-bold text-gray-400">Shortlist</span>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative z-10 flex flex-col items-center gap-2">
+                  <div class="h-10 w-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center border-2 border-white">
+                    <span class="font-bold">4</span>
+                  </div>
+                  <span class="text-xs font-bold text-gray-400">Admission</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Grid: Deadlines & Shortlist -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Upcoming Deadlines -->
+            <div class="bg-white rounded-3xl p-6 border border-gray-100 custom-shadow flex flex-col">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-gray-900 flex items-center gap-2">
+                  <iconify-icon icon="lucide:calendar" class="text-blue-500"></iconify-icon>
+                  Upcoming Deadlines
+                </h3>
+                <a href="#" id="view-all-deadlines" class="text-xs font-bold text-[#e8460d] hover:underline uppercase">View All</a>
+              </div>
+              
+              <div class="space-y-4 flex-1">
+                <div class="flex gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-white hover:ring-1 ring-gray-200 transition-all group">
+                  <div class="flex flex-col items-center justify-center bg-white rounded-xl min-w-[50px] py-1 border border-gray-100">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Jun</span>
+                    <span class="text-lg font-bold text-gray-900">18</span>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900 leading-tight group-hover:text-[#e8460d] transition-colors">KAIET Karad â€” BPT Entrance</h4>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold">EXAM DATE</span>
+                      <span class="text-[10px] text-gray-500 font-medium">1d left</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-white hover:ring-1 ring-gray-200 transition-all group">
+                  <div class="flex flex-col items-center justify-center bg-white rounded-xl min-w-[50px] py-1 border border-gray-100">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Jun</span>
+                    <span class="text-lg font-bold text-gray-900">21</span>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900 leading-tight group-hover:text-[#e8460d] transition-colors">Re-NEET UG 2026 â€” Official Date</h4>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold">URGENT</span>
+                      <span class="text-[10px] text-gray-500 font-medium">4d left</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-white hover:ring-1 ring-gray-200 transition-all group">
+                  <div class="flex flex-col items-center justify-center bg-white rounded-xl min-w-[50px] py-1 border border-gray-100">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase">Jul</span>
+                    <span class="text-lg font-bold text-gray-900">05</span>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-gray-900 leading-tight group-hover:text-[#e8460d] transition-colors">Maharashtra State Quota Registration</h4>
+                    <div class="flex items-center gap-2 mt-1">
+                      <span class="text-[10px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-bold">REGISTRATION</span>
+                      <span class="text-[10px] text-gray-500 font-medium">18d left</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- College Shortlist -->
+            <div class="bg-white rounded-3xl p-6 border border-gray-100 custom-shadow">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="font-bold text-gray-900 flex items-center gap-2">
+                  <iconify-icon icon="lucide:star" class="text-yellow-500"></iconify-icon>
+                  My Shortlist
+                </h3>
+                <a href="#" id="view-all-shortlist" class="text-xs font-bold text-[#e8460d] hover:underline uppercase">Edit List</a>
+              </div>
+
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white transition-all">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-purple-50 rounded-lg flex items-center justify-center">
+                      <iconify-icon icon="lucide:building" class="text-purple-600"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800">Seth G.S. Medical College</span>
+                  </div>
+                  <iconify-icon icon="lucide:x" class="text-gray-400 hover:text-red-500 cursor-pointer"></iconify-icon>
+                </div>
+                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white transition-all">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                      <iconify-icon icon="lucide:building" class="text-blue-600"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800">K J Somaiya Medical College</span>
+                  </div>
+                  <iconify-icon icon="lucide:x" class="text-gray-400 hover:text-red-500 cursor-pointer"></iconify-icon>
+                </div>
+                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white transition-all">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-orange-50 rounded-lg flex items-center justify-center">
+                      <iconify-icon icon="lucide:building" class="text-orange-600"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800">MGM Medical College, Navi Mumbai</span>
+                  </div>
+                  <iconify-icon icon="lucide:x" class="text-gray-400 hover:text-red-500 cursor-pointer"></iconify-icon>
+                </div>
+                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white transition-all">
+                  <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-teal-50 rounded-lg flex items-center justify-center">
+                      <iconify-icon icon="lucide:building" class="text-teal-600"></iconify-icon>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800">Dr. D. Y. Patil Medical College</span>
+                  </div>
+                  <iconify-icon icon="lucide:x" class="text-gray-400 hover:text-red-500 cursor-pointer"></iconify-icon>
+                </div>
+              </div>
+
+              <button class="w-full mt-4 flex items-center justify-center gap-2 py-3 border-2 border-dashed border-gray-200 rounded-2xl text-gray-400 text-sm font-bold hover:bg-gray-50 hover:text-gray-600 transition-all">
+                <iconify-icon icon="lucide:plus"></iconify-icon>
+                Add More Colleges
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Sidebar Widgets -->
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+          
+          <!-- Advisor Connection -->
+          <section class="bg-white rounded-3xl p-6 border border-gray-100 custom-shadow">
+            <h3 class="font-bold text-gray-900 mb-6">My Personal Advisor</h3>
+            <div class="flex items-center gap-4">
+              <div class="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#6e61ca] to-[#a499ed] flex items-center justify-center text-white font-bold text-xl">
+                AK
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900">Anish Kulkarni</h4>
+                <div class="flex items-center gap-1.5 text-gray-500">
+                  <iconify-icon icon="lucide:map-pin" class="text-sm"></iconify-icon>
+                  <span class="text-xs">Mumbai Branch Office</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 space-y-3">
+              <button class="w-full bg-[#559822] text-white py-3 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm hover:opacity-90 transition-all">
+                <iconify-icon icon="lucide:message-square-more"></iconify-icon>
+                Chat with Advisor
+              </button>
+              <button class="w-full border-2 border-[#212529] text-[#212529] py-3 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm hover:bg-gray-50 transition-all">
+                <iconify-icon icon="lucide:users-2"></iconify-icon>
+                Join Support Group
+              </button>
+            </div>
+          </section>
+
+          <!-- Document Checklist -->
+          <section class="bg-white rounded-3xl p-6 border border-gray-100 custom-shadow">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-bold text-gray-900">Document Status</h3>
+              <span class="text-[10px] font-bold text-[#e8460d] bg-[#FDECE7] px-2 py-0.5 rounded">5/8 DONE</span>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-start gap-3">
+                <div class="mt-1 h-5 w-5 bg-green-500 text-white rounded-full flex items-center justify-center">
+                  <iconify-icon icon="lucide:check" class="text-xs font-bold"></iconify-icon>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-gray-900">Class 10 Marksheet</p>
+                  <p class="text-[10px] text-gray-400 uppercase">Verified on 12 May</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="mt-1 h-5 w-5 bg-green-500 text-white rounded-full flex items-center justify-center">
+                  <iconify-icon icon="lucide:check" class="text-xs font-bold"></iconify-icon>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-gray-900">NEET UG Scorecard</p>
+                  <p class="text-[10px] text-gray-400 uppercase">Verified on 14 Jun</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="mt-1 h-5 w-5 border-2 border-gray-200 rounded-full flex items-center justify-center bg-white">
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-gray-400">Domicile Certificate</p>
+                  <p class="text-[10px] text-red-400 font-bold uppercase">Action Required</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3 opacity-50">
+                <div class="mt-1 h-5 w-5 border-2 border-gray-200 rounded-full flex items-center justify-center bg-white">
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-gray-400">Caste/Category Certificate</p>
+                  <p class="text-[10px] text-gray-400 uppercase">Pending</p>
+                </div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-6 py-3 border border-gray-200 rounded-2xl text-gray-600 text-xs font-bold hover:bg-gray-50 transition-all">
+              Upload Remaining Files
+            </button>
+          </section>
+
+          <!-- Quick Resource Box -->
+          <div class="bg-gradient-to-br from-[#e8460d] to-[#f46c3c] rounded-3xl p-6 text-white overflow-hidden relative">
+            <div class="relative z-10">
+              <h3 class="text-xl font-bold leading-tight">Need a custom strategy?</h3>
+              <p class="text-white/80 text-xs mt-2">Get a personalized seat allotment strategy based on your rank and preferences.</p>
+              <button class="mt-4 px-6 py-2 bg-white text-[#e8460d] rounded-xl text-xs font-bold hover:shadow-lg transition-all">
+                Request Now
+              </button>
+            </div>
+            <iconify-icon icon="lucide:compass" class="absolute -right-4 -bottom-4 text-8xl text-white opacity-20 rotate-12"></iconify-icon>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+(function () {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin && !url.searchParams.has('token')) {
+        url.searchParams.set('token', token);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Student Portal — Direction B (Linear Style)</title>
+  <!-- Montserrat & Open Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f11; /* Near-black neutral slate, Linear style */
+      --sidebar-bg: #141416; /* Lighter dark neutral sidebar */
+      --card-bg: #18181b; /* Solid dark grey card/panel background */
+      --border: #232329; /* Solid 1px dark borders, no glow, no purple wash */
+      
+      --text-main: #f5f5f7; /* High-contrast white text */
+      --text-muted: #8e8e9f; /* Crisp warm gray for secondary labels */
+      
+      --purple-accent: transparent; /* Purple completely eliminated to avoid the purple wash */
+      --gold: #ffd700; /* Signature gold - exactly one accent color used sparingly */
+      --gold-glow: rgba(255, 215, 0, 0.1);
+      
+      --safe-green: #10b981;
+      --safe-bg: rgba(16, 185, 129, 0.08);
+      --safe-border: rgba(16, 185, 129, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Open Sans', sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    h1, h2, h3, th {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .preview-header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .preview-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .preview-header p {
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    /* ─── DESKTOP VIEW ─── */
+    .desktop-mockup {
+      width: 1060px;
+      height: 600px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Sidebar Navigation (Linear Style: Flat, Crisp) */
+    .mock-sidebar {
+      width: 210px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 8px;
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Active nav link gets a gold vertical line on the left, Linear style */
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 25%;
+      height: 50%;
+      width: 3px;
+      background: var(--gold);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Main Content Area */
+    .mock-main {
+      flex: 1;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+    }
+
+    .mock-welcome-row h2 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .mock-welcome-row span {
+      color: var(--gold);
+    }
+
+    /* Spacing & Layout Density */
+    .widget-row {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 24px;
+    }
+
+    /* Cards (Solid dark grey panels, no glassmorphism) */
+    .preview-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .counsellor-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 12px;
+    }
+
+    .counsellor-info h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .counsellor-info p {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Primary CTA Button (Gold, high-contrast, no glow) */
+    .btn-gold {
+      background-color: var(--gold);
+      color: var(--bg);
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 9px 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+
+    .btn-gold:hover {
+      opacity: 0.9;
+    }
+
+    /* Secondary Action Button */
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 9px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* Data Table Widget (Restrained Gridlines) */
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-card h3 {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 11px;
+    }
+
+    .preview-table th {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 9px;
+      text-transform: uppercase;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .preview-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .preview-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rank-val {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    /* Restrained status badge */
+    .status-badge-safe {
+      display: inline-block;
+      color: var(--safe-green);
+      background-color: var(--safe-bg);
+      border: 1px solid var(--safe-border);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    /* ─── MOBILE VIEW MOCKUP ─── */
+    .mobile-mockup-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mobile-mockup-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-frame {
+      width: 340px;
+      height: 160px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .mobile-frame-content {
+      flex: 1;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-nav-bar {
+      height: 52px;
+      background: var(--sidebar-bg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      text-decoration: none;
+      flex: 1;
+    }
+
+    .mobile-nav-item.active {
+      color: var(--gold); /* Active item is gold highlighted */
+    }
+
+    .mobile-nav-icon {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="preview-header">
+    <h1>Direction B — Dark, Navy & Gold Dominant (Linear Style)</h1>
+    <p>A crisp, clean dark UI modeled after Linear. Purple is eliminated; gold and white highlights do the work.</p>
+  </div>
+
+  <!-- 1. DESKTOP VIEW -->
+  <div class="desktop-mockup" id="desktopMockup">
+    <!-- Sidebar -->
+    <aside class="mock-sidebar">
+      <div class="logo-container">
+        <div class="logo-dot"></div>
+        <span class="logo-text">ASMI CAREER</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#" class="nav-link active">🏠 Dashboard</a>
+        <a href="#" class="nav-link">🔮 Predictor</a>
+        <a href="#" class="nav-link">📈 Cutoff Explorer</a>
+        <a href="#" class="nav-link">🏫 Institutes</a>
+        <a href="#" class="nav-link">📋 Documents</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="mock-main">
+      <div class="mock-welcome-row">
+        <h2>Welcome back, <span>Sahil Mehta</span> 🎓</h2>
+      </div>
+
+      <!-- Widgets Row -->
+      <div class="widget-row">
+        <!-- Assigned Counsellor Card -->
+        <div class="preview-card">
+          <div>
+            <div class="card-label">Your Advisor</div>
+            <div class="counsellor-profile" style="margin-top: 8px;">
+              <div class="avatar-circle">AK</div>
+              <div class="counsellor-info">
+                <h4>Anish Kulkarni</h4>
+                <p>📍 Mumbai Branch</p>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-gold" style="flex: 1;">💬 Chat Advisor</button>
+            <button class="btn-secondary" style="flex: 1;">👥 Join Group</button>
+          </div>
+        </div>
+
+        <!-- Predictor Results Data Table -->
+        <div class="table-card">
+          <h3>Predicted Matches</h3>
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>College Name</th>
+                <th>Type</th>
+                <th>2025 Cutoff</th>
+                <th>Chance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 700;">Grant Medical College, Mumbai</td>
+                <td>Government</td>
+                <td class="rank-val">#634</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">B.J. Government Medical College, Pune</td>
+                <td>Government</td>
+                <td class="rank-val">#950</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">Lokmanya Tilak Medical College, Mumbai</td>
+                <td>Government</td>
+                <td class="rank-val">#1,120</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">K J Somaiya Medical College, Mumbai</td>
+                <td>Private</td>
+                <td class="rank-val">#5,200</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 2. MOBILE VIEW (Bottom nav focus) -->
+  <div class="mobile-mockup-container">
+    <div class="mobile-mockup-title">Mobile Bottom Navigation Bar Preview</div>
+    <div class="mobile-frame" id="mobileMockup">
+      <div class="mobile-frame-content">
+        <span>Mock Mobile View Content Area</span>
+      </div>
+      <!-- Mobile Nav -->
+      <nav class="mobile-nav-bar">
+        <a href="#" class="mobile-nav-item active">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">🔮</span>
+          <span>Predictor</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📈</span>
+          <span>Explorer</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">🏫</span>
+          <span>Colleges</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📋</span>
+          <span>Docs</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+
+<script>
+(function () {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin && !url.searchParams.has('token')) {
+        url.searchParams.set('token', token);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+})();
+</script>
+</body>
+</html>

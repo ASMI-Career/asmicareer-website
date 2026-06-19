@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Student Portal — Design Preview</title>
+  <!-- Link Montserrat & Open Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07030f; /* Deep Charcoal Navy backdrop */
+      --card-bg: #110a1c; /* Deep slate card/panel background */
+      --card-border: #1e132c; /* Subtle card border, no purple wash */
+      --text-main: #f3eefd; /* Starry sky white */
+      --text-muted: #9a8da9; /* Muted lilac-gray */
+      
+      --purple-indicator: #6a0dad; /* Royal amethyst - active sidebar indicator only */
+      --gold: #ffd700; /* Signature gold - high-energy CTAs, key metrics, Safe badges */
+      --gold-glow: rgba(255, 215, 0, 0.15);
+      
+      --safe-green: #10b981;
+      --safe-bg: rgba(16, 185, 129, 0.12);
+      --safe-border: rgba(16, 185, 129, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Open Sans', sans-serif;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    h1, h2, h3, th {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .preview-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .preview-header h1 {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .preview-header p {
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    /* ─── DESKTOP VIEW MOCKUP ─── */
+    .desktop-mockup {
+      width: 1100px;
+      height: 620px;
+      background: var(--bg-dark);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+
+    /* Mock Sidebar */
+    .mock-sidebar {
+      width: 220px;
+      background: #0d0617; /* Darker than body */
+      border-right: 1px solid var(--card-border);
+      padding: 24px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 8px;
+    }
+
+    .logo-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 6px;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    /* Active nav link gets the purple indicator */
+    .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .nav-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10%;
+      height: 80%;
+      width: 4px;
+      background: var(--purple-indicator);
+      border-radius: 0 4px 4px 0;
+      box-shadow: 0 0 10px var(--purple-indicator);
+    }
+
+    /* Mock Main Content Area */
+    .mock-main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .mock-welcome-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mock-welcome-row h2 {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .mock-welcome-row span {
+      color: var(--gold);
+    }
+
+    /* Widget Row */
+    .widget-row {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+    }
+
+    /* Cards */
+    .preview-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .counsellor-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-border);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--gold);
+      font-size: 13px;
+    }
+
+    .counsellor-info h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .counsellor-info p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Primary CTA Button (Gold) */
+    .btn-gold {
+      background-color: var(--gold);
+      color: #07030f;
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .btn-gold:hover {
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+
+    /* Secondary Action Button */
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-family: 'Open Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    /* Data Table Widget */
+    .table-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .table-card h3 {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .preview-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .preview-table th {
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 10px;
+      text-transform: uppercase;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .preview-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      color: var(--text-main);
+    }
+
+    .preview-table tr:hover td {
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .rank-val {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    /* Status Badge */
+    .status-badge-safe {
+      display: inline-block;
+      color: var(--safe-green);
+      background-color: var(--safe-bg);
+      border: 1px solid var(--safe-border);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    /* ─── MOBILE VIEW MOCKUP ─── */
+    .mobile-mockup-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-mockup-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .mobile-frame {
+      width: 360px;
+      height: 180px;
+      background: var(--bg-dark);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .mobile-frame-content {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-nav-bar {
+      height: 56px;
+      background: #0d0617; /* Darker than body */
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      font-size: 9px;
+      font-weight: 700;
+      text-decoration: none;
+      flex: 1;
+    }
+
+    .mobile-nav-item.active {
+      color: var(--gold); /* Highlight item with gold accent */
+    }
+
+    .mobile-nav-icon {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="preview-header">
+    <h1>ASMI Student Dashboard — Design Preview</h1>
+    <p>Dark Charcoal Navy dominant surface, gold highlight CTAs, and active sidebar indicator in purple.</p>
+  </div>
+
+  <!-- 1. DESKTOP VIEW -->
+  <div class="desktop-mockup" id="desktopMockup">
+    <!-- Sidebar -->
+    <aside class="mock-sidebar">
+      <div class="logo-container">
+        <div class="logo-dot"></div>
+        <span class="logo-text">ASMI CAREER</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#" class="nav-link active">🏠 Dashboard</a>
+        <a href="#" class="nav-link">🔮 Predictor</a>
+        <a href="#" class="nav-link">📈 Cutoff Explorer</a>
+        <a href="#" class="nav-link">🏫 Institutes</a>
+        <a href="#" class="nav-link">📋 Documents</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="mock-main">
+      <div class="mock-welcome-row">
+        <h2>Welcome back, <span>Sahil Mehta</span> 🎓</h2>
+      </div>
+
+      <!-- Widgets Row -->
+      <div class="widget-row">
+        <!-- Assigned Counsellor Card -->
+        <div class="preview-card">
+          <div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Your Advisor</div>
+            <div class="counsellor-profile">
+              <div class="avatar-circle">AK</div>
+              <div class="counsellor-info">
+                <h4>Anish Kulkarni</h4>
+                <p>📍 Mumbai Branch</p>
+              </div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-gold" style="flex: 1;">💬 Chat Advisor</button>
+            <button class="btn-secondary" style="flex: 1;">👥 Join Group</button>
+          </div>
+        </div>
+
+        <!-- Predictor Results Data Table -->
+        <div class="table-card">
+          <h3>Predicted Matches</h3>
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>College Name</th>
+                <th>Type</th>
+                <th>2025 Cutoff</th>
+                <th>Chance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 700;">Grant Medical College, Mumbai</td>
+                <td>Government</td>
+                <td class="rank-val">#634</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">B.J. Government Medical College, Pune</td>
+                <td>Government</td>
+                <td class="rank-val">#950</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">Lokmanya Tilak Medical College, Mumbai</td>
+                <td>Government</td>
+                <td class="rank-val">#1,120</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">K J Somaiya Medical College, Mumbai</td>
+                <td>Private</td>
+                <td class="rank-val">#5,200</td>
+                <td><span class="status-badge-safe">Safe</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 2. MOBILE VIEW (Bottom nav focus) -->
+  <div class="mobile-mockup-container">
+    <div class="mobile-mockup-title">Mobile Bottom Navigation Bar Preview</div>
+    <div class="mobile-frame" id="mobileMockup">
+      <div class="mobile-frame-content">
+        <span>Mock Mobile View Content Area</span>
+      </div>
+      <!-- Mobile Nav -->
+      <nav class="mobile-nav-bar">
+        <a href="#" class="mobile-nav-item active">
+          <span class="mobile-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">🔮</span>
+          <span>Predictor</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📈</span>
+          <span>Explorer</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">🏫</span>
+          <span>Colleges</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+          <span class="mobile-nav-icon">📋</span>
+          <span>Docs</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+
+<script>
+(function () {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin && !url.searchParams.has('token')) {
+        url.searchParams.set('token', token);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+})();
+</script>
+</body>
+</html>

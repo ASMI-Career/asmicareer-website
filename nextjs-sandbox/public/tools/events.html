@@ -132,5 +132,21 @@
     const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }), { threshold: 0.06 });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
+
+<script>
+(function () {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin && !url.searchParams.has('token')) {
+        url.searchParams.set('token', token);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+})();
+</script>
 </body>
 </html>

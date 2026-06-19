@@ -656,7 +656,7 @@ export default function StudentDashboard() {
                 key={item.id}
                 onClick={() => {
                   if (item.id === 'cutoff') {
-                    window.location.href = '/cutoff_explorer.html';
+                    window.location.href = '/cutoff_explorer.html' + window.location.search;
                   } else {
                     setActiveTab(item.id);
                   }
@@ -1674,7 +1674,7 @@ export default function StudentDashboard() {
           {NAV_ITEMS.map(item => (
             <button key={item.id} onClick={() => {
               if (item.id === 'cutoff') {
-                window.location.href = '/cutoff_explorer.html';
+                window.location.href = '/cutoff_explorer.html' + window.location.search;
               } else {
                 setActiveTab(item.id);
               }

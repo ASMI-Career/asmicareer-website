@@ -323,5 +323,21 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
     'slide2_profile.html?token=' + encodeURIComponent(token);
 </script>
 
+
+<script>
+(function () {
+  const token = new URLSearchParams(window.location.search).get('token');
+  if (!token) return;
+  document.querySelectorAll('a[href]').forEach(link => {
+    try {
+      const url = new URL(link.href, window.location.origin);
+      if (url.origin === window.location.origin && !url.searchParams.has('token')) {
+        url.searchParams.set('token', token);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+})();
+</script>
 </body>
 </html>
