@@ -266,32 +266,32 @@
             </div>
           </div>
 
-          <div class="overflow-x-auto scrollbar-thin">
-            <table class="w-full min-w-[1600px] text-sm">
+          <div class="overflow-x-auto overflow-y-visible scrollbar-thin">
+            <table class="w-max min-w-full text-sm">
               <thead>
                 <tr class="bg-gray-50 border-b border-gray-200 text-gray-900">
                   <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12">
                     <span class="sr-only">Select</span>
                   </th>
                   <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
-                  <th rowspan="2" class="sticky left-[120px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
-                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Fees</th>
+                  <th rowspan="2" class="sticky left-[120px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
                   <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-l border-r border-[#d9d5ff]">Round 1</th>
                   <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-r border-[#d9d5ff]">Round 2</th>
                   <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-r border-[#d9d5ff]">Round 3</th>
                   <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th>
                 </tr>
                 <tr class="bg-gray-50 border-b border-gray-200 text-gray-500">
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff]" min-w-[70px] w-[70px]">Intake</th>
                   <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[70px] w-[70px]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[70px] w-[70px]">Intake</th>
                   <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[70px] w-[70px]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[70px] w-[70px]">Intake</th>
                   <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[70px] w-[70px]">SML</th>
                 </tr>
               </thead>
               <tbody id="collegeTableBody" class="divide-y divide-gray-100"></tbody>
@@ -773,20 +773,20 @@
       if (isHP) {
         headerRow1 += `
           <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Category</th>
-          <th rowspan="2" class="sticky left-[128px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
+          <th rowspan="2" class="sticky left-[128px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
       } else {
         headerRow1 += `
           <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12"><span class="sr-only">Select</span></th>
           <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
-          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
+          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
         if (isKeralaMQ) {
-           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide" min-w-[80px] w-[80px]">Intake</th>`;
+           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide" min-w-[70px] w-[70px]">Intake</th>`;
         }
       }
 
@@ -808,7 +808,7 @@
         headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
         
         if (!isKeralaMQ) {
-           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">Intake</th>`;
+           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
         }
         
         const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
@@ -817,10 +817,10 @@
         if (showPWD) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
         } else if (showCSML) {
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">SML</th>`;
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">CSML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">CSML</th>`;
         } else if (showSML) {
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">SML</th>`;
         }
       });
       
@@ -858,7 +858,7 @@
               
               let html = `
                 <td class="sticky left-0 z-10 bg-white px-4 py-4 font-bold text-[#1A0040] uppercase whitespace-nowrap w-[120px]">${cat}</td>
-                <td class="sticky left-[120px] z-10 bg-white px-4 py-4 min-w-[220px] border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+                <td class="sticky left-[120px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
                   <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
                   <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
                 </td>
@@ -905,7 +905,7 @@
         let html = `
           <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12"><input type="checkbox" class="compare-checkbox h-4 w-4 rounded border-gray-300 text-[#1A0040] focus:ring-[#1A0040]"></td>
           <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-medium text-gray-600 w-20">${college.code || ''}</td>
-          <td class="sticky left-[48px] z-10 bg-white px-4 py-4 min-w-[220px] border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+          <td class="sticky left-[48px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
             <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
             <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
           </td>
