@@ -274,7 +274,7 @@
                     <span class="sr-only">Select</span>
                   </th>
                   <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
-                  <th rowspan="2" class="sticky left-[128px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[320px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] border-r border-gray-200">College Name</th>
+                  <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] w-auto">College Name</th>
                   <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
                   <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Fees</th>
                   <th colspan="3" class="px-4 py-3 text-center font-bold text-[#6e61ca] bg-[#f0eeff] border-l border-r border-[#d9d5ff]">Round 1</th>
@@ -283,15 +283,15 @@
                   <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th>
                 </tr>
                 <tr class="bg-gray-50 border-b border-gray-200 text-gray-500">
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff]">Intake</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">Intake</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">Intake</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]">AIR</th>
-                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">Intake</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px]" min-w-[80px] w-[80px]">AIR</th>
+                  <th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff]" min-w-[80px] w-[80px]">SML</th>
                 </tr>
               </thead>
               <tbody id="collegeTableBody" class="divide-y divide-gray-100"></tbody>
@@ -317,7 +317,7 @@
   
   
   <script>
-    const RANK = 25678; // Hardcoded for now
+    let RANK = null;
     let strayVisible = false;
     let currentData = null;
     let selectedCounselling = 'MCC';
@@ -384,7 +384,31 @@
        return [];
     }
     
-    function initUI() {
+    async function initUI() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+      
+      let fetchedRank = null;
+      if (token && token.trim() !== '') {
+        try {
+          const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+          const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
+          const json = await res.json();
+          if (json.success && json.data && json.data.neet_rank) {
+             fetchedRank = parseInt(json.data.neet_rank);
+          }
+        } catch(e) {
+          console.warn('Rank fetch failed:', e);
+        }
+      }
+      
+      RANK = fetchedRank || 25678; // Fallback to 25678 if not found
+      
+      const rankDisplay = document.querySelector('.text-4xl.font-bold.tracking-tight');
+      if (rankDisplay) {
+        rankDisplay.textContent = `#${RANK.toLocaleString('en-IN')}`;
+      }
+
       renderCounsellingCards();
       renderFilters();
       loadData();
@@ -552,9 +576,9 @@
       
       if (isCollapsed) {
          let summary = '';
-         if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')}  ${selectedCategory}`;
-         else if (selectedCounselling === 'OPEN') summary = `${selectedState}  ${selectedCategory}`;
-         else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')}  ${mhCategory}  ${mhSubType}`;
+         if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
          
          html += `<div class="text-sm font-bold text-[#1A0040] bg-[#EDE9FF] px-4 py-2 rounded-xl">${summary}</div>`;
          html += `<button onclick="toggleFilters()" class="p-2 text-gray-500 hover:text-[#1A0040] hover:bg-gray-100 rounded-xl transition-all" title="Expand filters"><iconify-icon icon="lucide:chevron-down" class="text-xl"></iconify-icon></button>`;
@@ -749,7 +773,7 @@
       if (isHP) {
         headerRow1 += `
           <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Category</th>
-          <th rowspan="2" class="sticky left-[120px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[320px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] border-r border-gray-200">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] w-auto">College Name</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
         `;
@@ -757,12 +781,12 @@
         headerRow1 += `
           <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12"><span class="sr-only">Select</span></th>
           <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
-          <th rowspan="2" class="sticky left-[128px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[320px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] border-r border-gray-200">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] w-auto">College Name</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
         `;
         if (isKeralaMQ) {
-           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide">Intake</th>`;
+           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide" min-w-[80px] w-[80px]">Intake</th>`;
         }
       }
 
@@ -784,19 +808,19 @@
         headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
         
         if (!isKeralaMQ) {
-           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle}>Intake</th>`;
+           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">Intake</th>`;
         }
         
         const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
-        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle}>AIR</th>`;
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">AIR</th>`;
         
         if (showPWD) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
         } else if (showCSML) {
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle}>SML</th>`;
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>CSML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">CSML</th>`;
         } else if (showSML) {
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">SML</th>`;
         }
       });
       
@@ -834,7 +858,7 @@
               
               let html = `
                 <td class="sticky left-0 z-10 bg-white px-4 py-4 font-bold text-[#1A0040] uppercase whitespace-nowrap w-[120px]">${cat}</td>
-                <td class="sticky left-[120px] z-10 bg-white px-4 py-4 w-[320px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] border-r border-gray-100">
+                <td class="px-4 py-4 min-w-[220px] w-auto">
                   <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
                   <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
                 </td>
@@ -881,7 +905,7 @@
         let html = `
           <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12"><input type="checkbox" class="compare-checkbox h-4 w-4 rounded border-gray-300 text-[#1A0040] focus:ring-[#1A0040]"></td>
           <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-medium text-gray-600 w-20">${college.code || ''}</td>
-          <td class="sticky left-[128px] z-10 bg-white px-4 py-4 w-[320px] shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)] border-r border-gray-100">
+          <td class="px-4 py-4 min-w-[220px] w-auto">
             <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
             <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
           </td>
@@ -994,7 +1018,9 @@
 
     searchInput.addEventListener('input', applySearch);
 
-    initUI();
+    document.addEventListener('DOMContentLoaded', () => {
+      initUI();
+    });
   </script>
 
 
