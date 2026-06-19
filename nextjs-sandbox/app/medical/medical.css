@@ -1288,7 +1288,7 @@
     .highway-scene {
       position: relative;
       width: 100%;
-      aspect-ratio: 1200 / 700;
+      aspect-ratio: 1200 / 900;
       margin-bottom: 40px;
     }
 
@@ -1372,9 +1372,9 @@
     .pos-top-left            { top: 5%;   left: 5%;   }
     .pos-top-center-left     { top: 2%;   left: 25%;  }
     .pos-top-center-right    { top: 15%;  left: 45%;  }
-    .pos-bottom-center-left  { top: 40%;  left: 48%;  }
-    .pos-bottom-center-right { top: 55%;  left: 68%;  }
-    .pos-bottom-right        { top: 60%;  left: 84%;  }
+    .pos-bottom-center-left  { top: 75%;  left: 48%;  }
+    .pos-bottom-center-right { top: 80%;  left: 68%;  }
+    .pos-bottom-right        { top: 78%;  left: 84%;  }
 
     .hsc-icon {
       font-size: 22px;

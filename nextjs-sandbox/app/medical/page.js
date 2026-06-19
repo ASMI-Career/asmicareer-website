@@ -800,7 +800,7 @@ export default function MedicalPortal() {
             {/* SVG Road */}
             <svg
               className="highway-svg"
-              viewBox="0 0 1200 700"
+              viewBox="0 0 1200 900"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
             >
@@ -879,16 +879,20 @@ export default function MedicalPortal() {
                 { x: 100, y: 240, side: 'top',    cardX: 147, cardY: 165 },
                 { x: 310, y: 226, side: 'top',    cardX: 387, cardY: 144 },
                 { x: 520, y: 345, side: 'top',    cardX: 627, cardY: 235 },
-                { x: 700, y: 490, side: 'bottom', cardX: 663, cardY: 410 },
-                { x: 900, y: 565, side: 'bottom', cardX: 903, cardY: 515 },
-                { x: 1100, y: 580, side: 'bottom', cardX: 1095, cardY: 550 },
-              ].map((lamp, i) => (
+                { x: 700, y: 550, side: 'bottom', cardX: 663, cardY: 675 },
+                { x: 900, y: 625, side: 'bottom', cardX: 903, cardY: 720 },
+                { x: 1100, y: 630, side: 'bottom', cardX: 1095, cardY: 702 },
+              ].map((lamp, i) => {
+                const isTop = lamp.side === 'top';
+                const poleEnd = isTop ? lamp.y - 50 : lamp.y + 50;
+                const headY = isTop ? lamp.y - 55 : lamp.y + 55;
+                return (
                 <g key={i}>
                   {/* Connection to card */}
                   {i >= 3 && (
                     <line
                       x1={lamp.x}
-                      y1={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                      y1={headY}
                       x2={lamp.cardX}
                       y2={lamp.cardY}
                       stroke={activeStep >= i ? '#FFD700' : 'rgba(255,255,255,0.15)'}
@@ -899,16 +903,16 @@ export default function MedicalPortal() {
                   {/* Pole */}
                   <line
                     x1={lamp.x}
-                    y1={lamp.side === 'top' ? lamp.y : lamp.y + 60}
+                    y1={lamp.y}
                     x2={lamp.x}
-                    y2={lamp.side === 'top' ? lamp.y - 50 : lamp.y + 10}
+                    y2={poleEnd}
                     stroke={activeStep >= i ? '#FFD700' : '#333'}
                     strokeWidth="2"
                   />
                   {/* Lamp head */}
                   <circle
                     cx={lamp.x}
-                    cy={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                    cy={headY}
                     r="8"
                     fill={activeStep >= i ? '#FFD700' : '#222'}
                     filter={activeStep >= i ? 'url(#glow-lamp)' : ''}
@@ -917,13 +921,13 @@ export default function MedicalPortal() {
                   {activeStep >= i && (
                     <circle
                       cx={lamp.x}
-                      cy={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                      cy={headY}
                       r="20"
                       fill="rgba(255,215,0,0.08)"
                     />
                   )}
                 </g>
-              ))}
+              )})}
 
               {/* Traveling car */}
               {journeyActive && (
