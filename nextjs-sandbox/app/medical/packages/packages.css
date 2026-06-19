@@ -55,7 +55,7 @@
   align-items: stretch;
 }
 
-.pkg-card {
+.pkg-page .pkg-card {
   background: #FFFFFF;
   border: 2px solid #1A0040;
   border-radius: 20px;
@@ -65,18 +65,20 @@
   box-shadow: 0 10px 30px rgba(26, 0, 64, 0.04);
   position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-.pkg-card:hover {
-  transform: translateY(-4px);
+.pkg-page .pkg-card:hover {
+  transform: translateY(-4px) !important;
   box-shadow: 0 16px 40px rgba(26, 0, 64, 0.08);
 }
 
-.pkg-card-featured {
+.pkg-page .pkg-card-featured {
   border-color: #6A0DAD;
 }
 
-.pkg-badge {
+.pkg-page .pkg-badge {
   position: absolute;
   top: -14px;
   left: 32px;
@@ -90,7 +92,7 @@
   letter-spacing: 1px;
 }
 
-.pkg-title {
+.pkg-page .pkg-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 20px;
   font-weight: 900;
@@ -99,7 +101,7 @@
   margin-bottom: 8px;
 }
 
-.pkg-subtitle {
+.pkg-page .pkg-subtitle {
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   font-weight: 700;
@@ -107,7 +109,7 @@
   margin-bottom: 24px;
 }
 
-.pkg-price-block {
+.pkg-page .pkg-price-block {
   background: #FDFBF6;
   border: 1px solid rgba(26, 0, 64, 0.08);
   border-radius: 12px;
@@ -115,15 +117,16 @@
   margin-bottom: 32px;
 }
 
-.pkg-price {
+.pkg-page .pkg-price {
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
   font-weight: 900;
   color: #1A0040;
   margin-bottom: 4px;
+  letter-spacing: normal;
 }
 
-.pkg-price-note {
+.pkg-page .pkg-price-note {
   font-size: 11px;
   color: rgba(26, 0, 64, 0.6);
   font-weight: 600;
