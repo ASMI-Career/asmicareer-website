@@ -1369,12 +1369,12 @@
     }
 
     /* Card positions — tuned to road path */
-    .pos-top-left            { top: 2%;   left: 1%;   }
-    .pos-top-center-left     { top: 2%;   left: 18.5%; }
-    .pos-top-center-right    { top: 8%;   left: 36%;  }
-    .pos-bottom-center-left  { top: 58%;  left: 51%;  }
-    .pos-bottom-center-right { top: 70%;  left: 67.5%; }
-    .pos-bottom-right        { top: 70%;  left: 84.5%; }
+    .pos-top-left            { top: 15%;  left: 5%;   }
+    .pos-top-center-left     { top: 8%;   left: 28%;  }
+    .pos-top-center-right    { top: 15%;  left: 50%;  }
+    .pos-bottom-center-left  { top: 52%;  left: 52%;  }
+    .pos-bottom-center-right { top: 65%;  left: 68%;  }
+    .pos-bottom-right        { top: 68%;  left: 82%;  }
 
     .hsc-icon {
       font-size: 22px;

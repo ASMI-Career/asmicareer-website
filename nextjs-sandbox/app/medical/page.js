@@ -876,14 +876,24 @@ export default function MedicalPortal() {
 
               {/* Street lamp poles — 6 positions along the road */}
               {[
-                { x: 100, y: 90,  side: 'top' },
-                { x: 310, y: 76,  side: 'top' },
-                { x: 520, y: 195, side: 'top' },
-                { x: 700, y: 340, side: 'bottom' },
-                { x: 900, y: 415, side: 'bottom' },
-                { x: 1100, y: 430, side: 'bottom' },
+                { x: 100, y: 90,  side: 'top',    cardX: '12%', cardY: '15%' },
+                { x: 310, y: 76,  side: 'top',    cardX: '35%', cardY: '8%' },
+                { x: 520, y: 195, side: 'top',    cardX: '50%', cardY: '25%' },
+                { x: 700, y: 340, side: 'bottom', cardX: '59%', cardY: '75%' },
+                { x: 900, y: 415, side: 'bottom', cardX: '75%', cardY: '85%' },
+                { x: 1100, y: 430, side: 'bottom', cardX: '89%', cardY: '85%' },
               ].map((lamp, i) => (
                 <g key={i}>
+                  {/* Connection to card */}
+                  <line
+                    x1={lamp.x}
+                    y1={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                    x2={lamp.cardX}
+                    y2={lamp.cardY}
+                    stroke={activeStep >= i ? '#FFD700' : 'rgba(255,255,255,0.15)'}
+                    strokeWidth="1.5"
+                    strokeDasharray="4 4"
+                  />
                   {/* Pole */}
                   <line
                     x1={lamp.x}
