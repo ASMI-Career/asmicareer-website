@@ -1,0 +1,68 @@
+{
+  "counselling": "MCC",
+  "institution_type": "DEEMED_MBBS",
+  "year": 2025,
+  "category": "MINORITY",
+  "colleges": [
+    {
+      "code": "200380",
+      "name": "Smt. B. K. Shah Medical Institute & Research Centre, Sumandeep Vidyapeeth, Vadodara",
+      "state": "Gujarat",
+      "establishment": 2008,
+      "fees": "2300000",
+      "type": "Deemed",
+      "rounds": {
+        "Round 1": {
+          "Intake": 106,
+          "AIR": 681238
+        },
+        "Round 2": {
+          "Intake": 20,
+          "AIR": 785540
+        },
+        "Round 3": {
+          "Intake": 8,
+          "AIR": 1087718
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": 596656
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "200351",
+      "name": "Yenepoya Medical College, Mangalore",
+      "state": "Karnataka",
+      "establishment": 2000,
+      "fees": "2300000",
+      "type": "Deemed",
+      "rounds": {
+        "Round 1": {
+          "Intake": 65,
+          "AIR": 321845
+        },
+        "Round 2": {
+          "Intake": 23,
+          "AIR": 381970
+        },
+        "Round 3": {
+          "Intake": 5,
+          "AIR": 312752
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    }
+  ]
+}

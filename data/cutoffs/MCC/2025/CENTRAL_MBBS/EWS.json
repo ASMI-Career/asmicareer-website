@@ -1,0 +1,78 @@
+{
+  "counselling": "MCC",
+  "institution_type": "CENTRAL_MBBS",
+  "year": 2025,
+  "category": "EWS",
+  "colleges": [
+    {
+      "code": "200405",
+      "name": "Institute of Medical Science, BHU, Varanasi",
+      "state": "Uttar Pradesh",
+      "establishment": 1960,
+      "fees": "33,739",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 10,
+          "AIR": 2194,
+          "AIR_PWD": 268869
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 2284,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200406",
+      "name": "Jawaharlal Nehru Medical College, AMU, Aligarh",
+      "state": "Uttar Pradesh",
+      "establishment": 1961,
+      "fees": "-",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    }
+  ]
+}
