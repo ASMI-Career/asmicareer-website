@@ -1118,7 +1118,7 @@ export default function StudentDashboard() {
                           ) : (
                             <div className="table-container">
                               <table className="dense-table">
-                                <thead><tr>
+                                <thead className="predictor-header"><tr>
                                   <th>College Name</th>
                                   <th>State</th>
                                   <th>Type</th>
@@ -1254,7 +1254,7 @@ export default function StudentDashboard() {
 
                             <div className="table-container">
                               <table className="dense-table">
-                                <thead>
+                                <thead className="predictor-header">
                                   <tr>
                                     <th>College Name</th>
                                     <th>Pool</th>
@@ -1368,7 +1368,7 @@ export default function StudentDashboard() {
                     </div>
                     <div className="table-container">
                       <table className="dense-table">
-                        <thead><tr>
+                        <thead className="predictor-header"><tr>
                           <th>Institute</th><th>State</th><th>Quota</th><th>Closing Rank (AIR)</th><th>Action</th>
                         </tr></thead>
                         <tbody>
@@ -1407,7 +1407,7 @@ export default function StudentDashboard() {
                         <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--navy)', marginBottom: 16 }}>{ceSingleCollege}</h3>
                         <div className="table-container">
                           <table className="dense-table">
-                            <thead><tr><th>Quota</th><th>State</th><th>Fees</th><th>Closing Rank (AIR)</th></tr></thead>
+                            <thead className="predictor-header"><tr><th>Quota</th><th>State</th><th>Fees</th><th>Closing Rank (AIR)</th></tr></thead>
                             <tbody>
                               {collegeData.filter(c => c.name === ceSingleCollege).map((c, i) => (
                                 <tr key={i}>
