@@ -924,17 +924,19 @@ export default function MedicalPortal() {
                     path="M 60 110 C 60 110, 380 90, 500 230 C 620 370, 840 450, 1140 450"
                     rotate="auto"
                   />
-                  {/* Car body top-down */}
-                  <rect x="-10" y="-16" width="20" height="32" rx="4" fill="#FFD700"/>
-                  <rect x="-7" y="-14" width="14" height="10" rx="2" fill="#1a0040"/>
-                  <rect x="-7" y="4" width="14" height="10" rx="2" fill="#1a0040"/>
-                  {/* Wheels */}
-                  <rect x="-13" y="-12" width="5" height="8" rx="1" fill="#333"/>
-                  <rect x="8" y="-12" width="5" height="8" rx="1" fill="#333"/>
-                  <rect x="-13" y="4" width="5" height="8" rx="1" fill="#333"/>
-                  <rect x="8" y="4" width="5" height="8" rx="1" fill="#333"/>
-                  {/* Headlights */}
-                  <ellipse cx="0" cy="-28" rx="16" ry="24" fill="url(#headlight)" opacity="0.7"/>
+                  <g transform="rotate(90)">
+                    {/* Car body top-down */}
+                    <rect x="-10" y="-16" width="20" height="32" rx="4" fill="#FFD700"/>
+                    <rect x="-7" y="-14" width="14" height="10" rx="2" fill="#1a0040"/>
+                    <rect x="-7" y="4" width="14" height="10" rx="2" fill="#1a0040"/>
+                    {/* Wheels */}
+                    <rect x="-13" y="-12" width="5" height="8" rx="1" fill="#333"/>
+                    <rect x="8" y="-12" width="5" height="8" rx="1" fill="#333"/>
+                    <rect x="-13" y="4" width="5" height="8" rx="1" fill="#333"/>
+                    <rect x="8" y="4" width="5" height="8" rx="1" fill="#333"/>
+                    {/* Headlights */}
+                    <ellipse cx="0" cy="-28" rx="16" ry="24" fill="url(#headlight)" opacity="0.7"/>
+                  </g>
                 </g>
               )}
             </svg>

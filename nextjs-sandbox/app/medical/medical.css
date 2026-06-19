@@ -1345,6 +1345,7 @@
       opacity: 0;
       transform: translateY(12px);
       transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s;
+      z-index: 10;
     }
 
     .highway-step-card.card-active {
@@ -1372,8 +1373,8 @@
     .pos-top-center-left     { top: 2%;   left: 20%;  }
     .pos-top-center-right    { top: 8%;   left: 38%;  }
     .pos-bottom-center-left  { top: 58%;  left: 54%;  }
-    .pos-bottom-center-right { top: 70%;  left: 70%;  }
-    .pos-bottom-right        { top: 70%;  left: 84%;  }
+    .pos-bottom-center-right { top: 70%;  left: 68%;  }
+    .pos-bottom-right        { top: 70%;  left: 86%;  }
 
     .hsc-icon {
       font-size: 22px;
