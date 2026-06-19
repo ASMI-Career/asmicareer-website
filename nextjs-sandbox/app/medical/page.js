@@ -879,21 +879,23 @@ export default function MedicalPortal() {
                 { x: 100, y: 240, side: 'top',    cardX: 147, cardY: 165 },
                 { x: 310, y: 226, side: 'top',    cardX: 387, cardY: 144 },
                 { x: 520, y: 345, side: 'top',    cardX: 627, cardY: 235 },
-                { x: 700, y: 490, side: 'bottom', cardX: 663, cardY: 525 },
-                { x: 900, y: 565, side: 'bottom', cardX: 816, cardY: 570 },
-                { x: 1100, y: 580, side: 'bottom', cardX: 1008, cardY: 585 },
+                { x: 700, y: 490, side: 'bottom', cardX: 663, cardY: 410 },
+                { x: 900, y: 565, side: 'bottom', cardX: 903, cardY: 515 },
+                { x: 1100, y: 580, side: 'bottom', cardX: 1095, cardY: 550 },
               ].map((lamp, i) => (
                 <g key={i}>
                   {/* Connection to card */}
-                  <line
-                    x1={lamp.x}
-                    y1={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
-                    x2={lamp.cardX}
-                    y2={lamp.cardY}
-                    stroke={activeStep >= i ? '#FFD700' : 'rgba(255,255,255,0.15)'}
-                    strokeWidth="1.5"
-                    strokeDasharray="4 4"
-                  />
+                  {i >= 3 && (
+                    <line
+                      x1={lamp.x}
+                      y1={lamp.side === 'top' ? lamp.y - 55 : lamp.y + 5}
+                      x2={lamp.cardX}
+                      y2={lamp.cardY}
+                      stroke={activeStep >= i ? '#FFD700' : 'rgba(255,255,255,0.15)'}
+                      strokeWidth="1.5"
+                      strokeDasharray="4 4"
+                    />
+                  )}
                   {/* Pole */}
                   <line
                     x1={lamp.x}
