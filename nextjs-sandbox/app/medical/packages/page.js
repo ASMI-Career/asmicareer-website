@@ -78,7 +78,7 @@ export default function PackagesPage() {
   ];
 
   return (
-    <div className="pkg-page">
+    <div className="medicalPortal pkg-page">
       <Nav />
 
       <main className="pkg-container">
