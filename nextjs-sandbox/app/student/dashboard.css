@@ -1,10 +1,13 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,600,500,400&display=swap');
 /* ══════════════════════════════════════════════
    ASMI STUDENT PORTAL — DESIGN SYSTEM v3
    Light theme · Yellow dominant · Navy/Purple accent
    ══════════════════════════════════════════════ */
 
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+
 
 
 :root {
@@ -1324,3 +1327,56 @@ input[type="range"]::-moz-range-thumb {
 .predictor-header th:not(:last-child) {
   border-right: 1px solid #e2e8f0;
 }
+
+    
+
+    :root {
+      --primary: #1A0040;
+      --primary-accent: #6A0DAD;
+      --foreground: #212529;
+      --secondary: #2d2d2d;
+      --neutral: #5e5e5e;
+      --highlight: #6e61ca;
+      --success: #559822;
+      --error: #e6322a;
+    }
+
+    body {
+      font-family: 'Satoshi', sans-serif;
+      color: #212529;
+    }
+
+    .custom-shadow {
+      box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar-active {
+      background-color: rgba(26, 0, 64, 0.07);
+      color: #1A0040;
+      border-right: 3px solid #1A0040;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 999px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 999px;
+      border: 2px solid #f3f4f6;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .row-selected {
+      background: #fff7ed !important;
+    }
+  
