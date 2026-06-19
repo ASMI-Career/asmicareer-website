@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import './student.css';
+import './dashboard.css';
 
 // ── Helper functions ──────────────────────────────────────────────────────────
 const getBranchFromToken = (token) => {
