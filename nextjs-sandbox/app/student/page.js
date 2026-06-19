@@ -647,67 +647,63 @@ export default function StudentDashboard() {
       <div className="dashboard-shell">
 
         {/* ── SIDEBAR ── */}
-                <aside className="hidden lg:flex w-64 bg-white border-r border-gray-100 flex-col fixed h-screen z-50">
-          <div className="p-6 flex items-center gap-3">
-            <img src="/asmi-logo.png" alt="ASMI Logo" className="h-10 w-auto" />
+        <aside className="sidebar">
+          <div className="sidebar-logo">
+            <img src="/asmi-logo.png" alt="ASMI Logo" className="logo-img" />
           </div>
-          
-          <nav className="flex-1 mt-4 overflow-y-auto px-2">
-            <div className="space-y-1">
-              <button 
-                onClick={() => setActiveTab('dashboard')} 
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all group ${activeTab === 'dashboard' ? 'sidebar-active' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <iconify-icon icon="lucide:layout-dashboard" className={`text-xl ${activeTab === 'dashboard' ? '' : 'group-hover:text-[#1A0040]'}`}></iconify-icon>
-                <span className="font-medium text-[14px]">Dashboard</span>
-              </button>
-              
-              <button 
-                onClick={() => setActiveTab('predictor')} 
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all group ${activeTab === 'predictor' ? 'sidebar-active' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <iconify-icon icon="lucide:bar-chart-3" className={`text-xl ${activeTab === 'predictor' ? '' : 'group-hover:text-[#1A0040]'}`}></iconify-icon>
-                <span className="font-medium text-[14px]">Predictor</span>
-              </button>
-              
-              <button 
-                onClick={() => { window.location.href = '/cutoff_explorer.html' + window.location.search; }} 
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all group ${activeTab === 'cutoff' ? 'sidebar-active' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <iconify-icon icon="lucide:search" className={`text-xl ${activeTab === 'cutoff' ? '' : 'group-hover:text-[#1A0040]'}`}></iconify-icon>
-                <span className="font-medium text-[14px]">Cutoff Explorer</span>
-              </button>
-              
-              <button 
-                onClick={() => setActiveTab('institutes')} 
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all group ${activeTab === 'institutes' ? 'sidebar-active' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <iconify-icon icon="lucide:building-2" className={`text-xl ${activeTab === 'institutes' ? '' : 'group-hover:text-[#1A0040]'}`}></iconify-icon>
-                <span className="font-medium text-[14px]">Institutes</span>
-              </button>
-              
-              <button 
-                onClick={() => setActiveTab('checklist')} 
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all group ${activeTab === 'checklist' ? 'sidebar-active' : 'text-gray-500 hover:bg-gray-50'}`}
-              >
-                <iconify-icon icon="lucide:file-text" className={`text-xl ${activeTab === 'checklist' ? '' : 'group-hover:text-[#1A0040]'}`}></iconify-icon>
-                <span className="font-medium text-[14px]">Documents</span>
-              </button>
-            </div>
 
-            <div className="mt-8 px-4">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Account</p>
-              <div className="mt-4 space-y-1">
-                <button className="w-full flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
-                  <iconify-icon icon="lucide:settings" className="text-lg"></iconify-icon>
-                  <span className="text-[14px]">Settings</span>
-                </button>
-                <button className="w-full flex items-center gap-3 py-2 text-gray-500 hover:text-gray-900 transition-all">
-                  <iconify-icon icon="lucide:help-circle" className="text-lg"></iconify-icon>
-                  <span className="text-[14px]">Help Support</span>
-                </button>
-              </div>
-            </div>
+          <nav className="sidebar-nav">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`nav-link${activeTab === 'dashboard' ? ' active' : ''}`}
+            >
+              <iconify-icon icon="lucide:layout-dashboard" className="nav-icon"></iconify-icon>
+              <span>Dashboard</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('predictor')}
+              className={`nav-link${activeTab === 'predictor' ? ' active' : ''}`}
+            >
+              <iconify-icon icon="lucide:bar-chart-3" className="nav-icon"></iconify-icon>
+              <span>Predictor</span>
+            </button>
+
+            <button
+              onClick={() => { window.location.href = '/cutoff_explorer.html' + window.location.search; }}
+              className={`nav-link${activeTab === 'cutoff' ? ' active' : ''}`}
+            >
+              <iconify-icon icon="lucide:search" className="nav-icon"></iconify-icon>
+              <span>Cutoff Explorer</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('institutes')}
+              className={`nav-link${activeTab === 'institutes' ? ' active' : ''}`}
+            >
+              <iconify-icon icon="lucide:building-2" className="nav-icon"></iconify-icon>
+              <span>Institutes</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('checklist')}
+              className={`nav-link${activeTab === 'checklist' ? ' active' : ''}`}
+            >
+              <iconify-icon icon="lucide:file-text" className="nav-icon"></iconify-icon>
+              <span>Documents</span>
+            </button>
+
+            <div className="nav-section-label" style={{marginTop: '24px'}}>Account</div>
+
+            <button className="nav-link">
+              <iconify-icon icon="lucide:settings" className="nav-icon"></iconify-icon>
+              <span>Settings</span>
+            </button>
+
+            <button className="nav-link">
+              <iconify-icon icon="lucide:help-circle" className="nav-icon"></iconify-icon>
+              <span>Help &amp; Support</span>
+            </button>
           </nav>
         </aside>
 
