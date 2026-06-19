@@ -1,0 +1,37 @@
+{
+  "counselling": "OPEN",
+  "state": "Meghalaya",
+  "year": 2025,
+  "quota": "NRI",
+  "colleges": [
+    {
+      "code": null,
+      "name": "PA Sangma International Medical College & Hospital, Baridua, Ri-Bhoi",
+      "establishment": 2024,
+      "fees": "$ 200000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 15,
+          "AIR": 988959,
+          "SML": 1
+        },
+        "Round 2": {
+          "Intake": 15,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 15,
+          "AIR": null,
+          "SML": 3
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "counselling": "OPEN",
+  "state": "Karnataka",
+  "year": 2025,
+  "quota": "RC8",
+  "colleges": [
+    {
+      "code": "M011MP",
+      "name": "St. John National Academy of Health Sciences, Bangalore",
+      "establishment": 1963,
+      "fees": "811285",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 55,
+          "AIR": 60360
+        },
+        "Round 2": {
+          "Intake": 13,
+          "AIR": 79997
+        },
+        "Mop Up Round": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    }
+  ]
+}

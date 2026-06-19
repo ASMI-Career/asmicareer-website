@@ -1,0 +1,124 @@
+{
+  "counselling": "OPEN",
+  "state": "Pondicherry",
+  "year": 2025,
+  "quota": "MQ",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Indira Gandhi Medical College and Research Institute, Puducherry (Government College)",
+      "establishment": 2010,
+      "fees": null,
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 124513,
+          "SML": 249
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": 278702,
+          "SML": 1358
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Pondicherry Institute of Medical Sciences & Research, Pondicherry (Christian Minority)",
+      "establishment": 2000,
+      "fees": "1680000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 62,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 57,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 56,
+          "AIR": 192593,
+          "SML": 712
+        },
+        "Stray Round": {
+          "Intake": 3,
+          "AIR": 368020,
+          "SML": 2045
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Sri Manakula Vinayagar Medical College & Hospital, Pondicherry",
+      "establishment": 2006,
+      "fees": "1680000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 120,
+          "AIR": 111902,
+          "SML": 185
+        },
+        "Round 2": {
+          "Intake": 117,
+          "AIR": 230399,
+          "SML": 992
+        },
+        "Round 3": {
+          "Intake": 7,
+          "AIR": 276043,
+          "SML": 1339
+        },
+        "Stray Round": {
+          "Intake": 3,
+          "AIR": 470630,
+          "SML": 2756
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Sri Venkateswaraa Medical College, Hospital & Research Centre, Pondicherry (Telugu Minority)",
+      "establishment": 2007,
+      "fees": "1680000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 120,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 115,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 114,
+          "AIR": 487099,
+          "SML": 2879
+        },
+        "Stray Round": {
+          "Intake": 18,
+          "AIR": 680645,
+          "SML": 5395
+        }
+      }
+    }
+  ]
+}

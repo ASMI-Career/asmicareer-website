@@ -1,0 +1,134 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Jharkhand",
+    "year": 2025,
+    "quota": "MQ",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Laxmi Chandravansi Medical College Hospital, Bisrampur, Palamu",
+        "establishment": 2021,
+        "fees": "1125000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 60,
+            "AIR": 373876,
+            "SML": 215
+          },
+          "Round 2": {
+            "Intake": 10,
+            "AIR": 213087,
+            "SML": 134
+          },
+          "Round 3": {
+            "Intake": 5,
+            "AIR": 66811,
+            "SML": 28
+          },
+          "Stray Round": {
+            "Intake": 20,
+            "AIR": 717898,
+            "SML": 555
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Netaji Subhas Medical College And Hospital, Adityapur",
+        "establishment": 2025,
+        "fees": "1600000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": 60,
+            "AIR": 723819,
+            "SML": 696
+          },
+          "Round 3": {
+            "Intake": 21,
+            "AIR": 711167,
+            "SML": 735
+          },
+          "Stray Round": {
+            "Intake": 22,
+            "AIR": 834143,
+            "SML": 682
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Jharkhand",
+    "year": 2025,
+    "quota": "NRI",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Laxmi Chandravansi Medical College Hospital, Bisrampur, Palamu",
+        "establishment": 2021,
+        "fees": "$ 112500",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Netaji Subhas Medical College And Hospital, Adityapur",
+        "establishment": 2025,
+        "fees": null,
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  }
+]

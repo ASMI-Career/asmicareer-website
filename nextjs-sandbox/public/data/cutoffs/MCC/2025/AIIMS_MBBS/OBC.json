@@ -1,0 +1,708 @@
+{
+  "counselling": "MCC",
+  "institution_type": "AIIMS_MBBS",
+  "year": 2025,
+  "category": "OBC",
+  "colleges": [
+    {
+      "code": "200520",
+      "name": "All India Institute of Medical Sciences, Rajkot",
+      "state": "Gujarat",
+      "establishment": 2020,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 20,
+          "AIR": 2998,
+          "AIR_PWD": 321581
+        },
+        "Round 2": {
+          "Intake": 6,
+          "AIR": 3287,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 3406,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": 11574,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200512",
+      "name": "All India Institute of Medical Sciences, Deogarh",
+      "state": "Jharkhand",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 3784,
+          "AIR_PWD": 376997
+        },
+        "Round 2": {
+          "Intake": 16,
+          "AIR": 4463,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 4,
+          "AIR": 4753,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": 12393,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200519",
+      "name": "All India Institute of Medical Sciences, Guwahati",
+      "state": "Assam",
+      "establishment": 2020,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 4063,
+          "AIR_PWD": 340348
+        },
+        "Round 2": {
+          "Intake": 7,
+          "AIR": 4708,
+          "AIR_PWD": 93985
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 5382,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": 3,
+          "AIR": 14953,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200580",
+      "name": "All India Institute of Medical Sciences, Madurai",
+      "state": "Tamil Nadu",
+      "establishment": 2021,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 14,
+          "AIR": 4627,
+          "AIR_PWD": 409125
+        },
+        "Round 2": {
+          "Intake": 14,
+          "AIR": 6456,
+          "AIR_PWD": 510735
+        },
+        "Round 3": {
+          "Intake": 6,
+          "AIR": 8617,
+          "AIR_PWD": 709434
+        },
+        "Stray Vacancy Round": {
+          "Intake": 3,
+          "AIR": 26016,
+          "AIR_PWD": 1069943
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200511",
+      "name": "All India Institute of Medical Sciences, Bathinda",
+      "state": "Punjab",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 2369,
+          "AIR_PWD": 268965
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 2453,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 2482,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200508",
+      "name": "All India Institute of Medical Sciences, Patna",
+      "state": "Bihar",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 2132,
+          "AIR_PWD": 324957
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 2540,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 2705,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200517",
+      "name": "All India Institute of Medical Sciences, Bibi Nagar, Hyderabad",
+      "state": "Telangana",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 2894,
+          "AIR_PWD": 258759
+        },
+        "Round 2": {
+          "Intake": 6,
+          "AIR": 3191,
+          "AIR_PWD": 107026
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 3464,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200530",
+      "name": "All India Institute of Medical Sciences, Bilaspur",
+      "state": "Himachal Pradesh",
+      "establishment": 2020,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 2959,
+          "AIR_PWD": 330044
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 3153,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 3549,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200513",
+      "name": "All India Institute of Medical Sciences, Gorakhpur",
+      "state": "Uttar Pradesh",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 2654,
+          "AIR_PWD": 338406
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 3151,
+          "AIR_PWD": 34498
+        },
+        "Round 3": {
+          "Intake": 3,
+          "AIR": 3595,
+          "AIR_PWD": 425712
+        },
+        "Stray Vacancy Round": {
+          "Intake": 2,
+          "AIR": null,
+          "AIR_PWD": 1089998
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 1227396
+        }
+      }
+    },
+    {
+      "code": "200516",
+      "name": "All India Institute of Medical Sciences, Rai Bareli",
+      "state": "Uttar Pradesh",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 3279,
+          "AIR_PWD": 354913
+        },
+        "Round 2": {
+          "Intake": 10,
+          "AIR": 3545,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 4282,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200518",
+      "name": "All India Institute of Medical Sciences, Jammu",
+      "state": "Jammu and Kashmir",
+      "establishment": 2020,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 27,
+          "AIR": 4085,
+          "AIR_PWD": 354680
+        },
+        "Round 2": {
+          "Intake": 11,
+          "AIR": 4314,
+          "AIR_PWD": 426229
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 4335,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200514",
+      "name": "All India Institute of Medical Sciences, Kalyani",
+      "state": "West Bengal",
+      "establishment": 2019,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 33,
+          "AIR": 3406,
+          "AIR_PWD": 386570
+        },
+        "Round 2": {
+          "Intake": 7,
+          "AIR": 3861,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 4442,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200502",
+      "name": "All India Institute of Medical Sciences, New Delhi",
+      "state": "Delhi",
+      "establishment": 1956,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 206,
+          "AIR_PWD": 31622
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 207,
+          "AIR_PWD": 230983
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 351802
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 999525
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200504",
+      "name": "All India Institute of Medical Sciences, Bhubaneswar",
+      "state": "Odisha",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 1481,
+          "AIR_PWD": 241313
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 1017,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200507",
+      "name": "All India Institute of Medical Sciences, Rishikesh",
+      "state": "Uttarakhand",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 1077,
+          "AIR_PWD": 161370
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 1104,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200509",
+      "name": "All India Institute of Medical Sciences, Nagpur",
+      "state": "Maharashtra",
+      "establishment": 2018,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 40,
+          "AIR": 1520,
+          "AIR_PWD": 168613
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 1377,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200506",
+      "name": "All India Institute of Medical Sciences, Raipur",
+      "state": "Chhattisgarh",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 33,
+          "AIR": 1914,
+          "AIR_PWD": 306492
+        },
+        "Round 2": {
+          "Intake": 5,
+          "AIR": 2016,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200510",
+      "name": "All India Institute of Medical Sciences, Mangalagiri",
+      "state": "Andhra Pradesh",
+      "establishment": 2018,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 2520,
+          "AIR_PWD": 401069
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 2575,
+          "AIR_PWD": 353464
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 413261
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200505",
+      "name": "All India Institute of Medical Sciences, Jodhpur",
+      "state": "Rajasthan",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 40,
+          "AIR": 766,
+          "AIR_PWD": 98647
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 340348
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 489790
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": null,
+          "AIR_PWD": 1043176
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200503",
+      "name": "All India Institute of Medical Sciences, Bhopal",
+      "state": "Madhya Pradesh",
+      "establishment": 2012,
+      "fees": "5,856",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 34,
+          "AIR": 1142,
+          "AIR_PWD": 116547
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    }
+  ]
+}

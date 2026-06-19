@@ -1,0 +1,76 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Meghalaya",
+    "year": 2025,
+    "quota": "MQ",
+    "colleges": [
+      {
+        "code": null,
+        "name": "PA Sangma International Medical College & Hospital, Baridua, Ri-Bhoi",
+        "establishment": 2024,
+        "fees": "1800000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 42,
+            "AIR": 905051,
+            "SML": 42
+          },
+          "Round 2": {
+            "Intake": 25,
+            "AIR": 988959,
+            "SML": 55
+          },
+          "Round 3": {
+            "Intake": 13,
+            "AIR": 997551,
+            "SML": 23
+          },
+          "Stray Round": {
+            "Intake": 19,
+            "AIR": 1089130,
+            "SML": 84
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Meghalaya",
+    "year": 2025,
+    "quota": "NRI",
+    "colleges": [
+      {
+        "code": null,
+        "name": "PA Sangma International Medical College & Hospital, Baridua, Ri-Bhoi",
+        "establishment": 2024,
+        "fees": "$ 200000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 988959,
+            "SML": 1
+          },
+          "Round 2": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 15,
+            "AIR": null,
+            "SML": 3
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  }
+]

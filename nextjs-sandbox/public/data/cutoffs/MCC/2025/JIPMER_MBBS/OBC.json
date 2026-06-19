@@ -1,0 +1,78 @@
+{
+  "counselling": "MCC",
+  "institution_type": "JIPMER_MBBS",
+  "year": 2025,
+  "category": "OBC",
+  "colleges": [
+    {
+      "code": "200521",
+      "name": "JIPMER, Puducherry",
+      "state": "Puducherry",
+      "establishment": 1956,
+      "fees": "6,770",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 36,
+          "AIR": 738,
+          "AIR_PWD": 276622
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 748,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "200522",
+      "name": "JIPMER, Karaikal",
+      "state": "Puducherry",
+      "establishment": 2016,
+      "fees": "6,770",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 12,
+          "AIR": 3452,
+          "AIR_PWD": 476905
+        },
+        "Round 2": {
+          "Intake": 8,
+          "AIR": 5727,
+          "AIR_PWD": 948886
+        },
+        "Round 3": {
+          "Intake": 3,
+          "AIR": 7700,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    }
+  ]
+}

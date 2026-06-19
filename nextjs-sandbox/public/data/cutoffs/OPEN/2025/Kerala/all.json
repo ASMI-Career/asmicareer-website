@@ -1,0 +1,640 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Kerala",
+    "year": 2025,
+    "quota": "MQ",
+    "colleges": [
+      {
+        "code": "AAM",
+        "name": "Al Azhar Medical college, Thodupuzha (Muslim Minority)",
+        "establishment": 2014,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 37,
+        "rounds": {
+          "Round 1": {
+            "AIR": 62867,
+            "SML": 5939
+          },
+          "Round 2": {
+            "AIR": 72225,
+            "SML": 6778
+          },
+          "Mop Up Round": {
+            "AIR": 76185,
+            "SML": 7150
+          },
+          "Stray Round": {
+            "AIR": 125732,
+            "SML": 11123
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "AMC",
+        "name": "Amala Institute of Medical Sciences, Thrissur (Christian Minority)",
+        "establishment": 2003,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 21885,
+            "SML": 1985
+          },
+          "Round 2": {
+            "AIR": 26736,
+            "SML": 2416
+          },
+          "Mop Up Round": {
+            "AIR": 27594,
+            "SML": 2504
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "AZC",
+        "name": "Azeezia Institute of Medical Science, Meyyannoor, Kollam (Muslim Minority)",
+        "establishment": 2008,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 54489,
+            "SML": 5134
+          },
+          "Round 2": {
+            "AIR": 64332,
+            "SML": 6075
+          },
+          "Mop Up Round": {
+            "AIR": 69018,
+            "SML": 6522
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "BCM",
+        "name": "Believers Church Medical College Hospital, Thiruvallur (Christian Minority)",
+        "establishment": 2016,
+        "fees": "816038",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 30401,
+            "SML": 2812
+          },
+          "Round 2": {
+            "AIR": 33265,
+            "SML": 3083
+          },
+          "Mop Up Round": {
+            "AIR": 33575,
+            "SML": 3118
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "DMM",
+        "name": "Dr. Moopen's Medical College, Meppadi, Wayanad",
+        "establishment": 2013,
+        "fees": "931118",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 56268,
+            "SML": 5309
+          },
+          "Round 2": {
+            "AIR": 62384,
+            "SML": 5895
+          },
+          "Mop Up Round": {
+            "AIR": 65303,
+            "SML": 6165
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "EMC",
+        "name": "MES Medical College, Perinthalmanna, Malappuram (Muslim Minority)",
+        "establishment": 2002,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 29994,
+            "SML": 2768
+          },
+          "Round 2": {
+            "AIR": 33552,
+            "SML": 3112
+          },
+          "Mop Up Round": {
+            "AIR": 34477,
+            "SML": 3208
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "GMC",
+        "name": "Sree Gokulam Medical College, Venjaramoodu",
+        "establishment": 2005,
+        "fees": "810175",
+        "type": "Private",
+        "total_intake": 23,
+        "rounds": {
+          "Round 1": {
+            "AIR": 31222,
+            "SML": 2883
+          },
+          "Round 2": {
+            "AIR": 31697,
+            "SML": 2930
+          },
+          "Mop Up Round": {
+            "AIR": 32658,
+            "SML": 3018
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "JMC",
+        "name": "Jubilee Mission Medical College, Thrissur (Christian Minority)",
+        "establishment": 2002,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 17899,
+            "SML": 1597
+          },
+          "Round 2": {
+            "AIR": 22069,
+            "SML": 2007
+          },
+          "Mop Up Round": {
+            "AIR": 25123,
+            "SML": 2277
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "KCM",
+        "name": "KMCT Medical College, Mukkom, Kozikkode (Muslim Minority)",
+        "establishment": 2008,
+        "fees": "847690",
+        "type": "Private",
+        "total_intake": 38,
+        "rounds": {
+          "Round 1": {
+            "AIR": 42466,
+            "SML": 3959
+          },
+          "Round 2": {
+            "AIR": 45592,
+            "SML": 4274
+          },
+          "Mop Up Round": {
+            "AIR": 47212,
+            "SML": 4426
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "KDM",
+        "name": "P K Das Institute of Medical Sciences, Ottapalam",
+        "establishment": 2014,
+        "fees": "897000",
+        "type": "Private",
+        "total_intake": 38,
+        "rounds": {
+          "Round 1": {
+            "AIR": 54562,
+            "SML": 5140
+          },
+          "Round 2": {
+            "AIR": 63121,
+            "SML": 5971
+          },
+          "Mop Up Round": {
+            "AIR": 67382,
+            "SML": 6367
+          },
+          "Stray Round": {
+            "AIR": 90388,
+            "SML": 8393
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "KEM",
+        "name": "Kerala Medical College, Palakkad",
+        "establishment": 2025,
+        "fees": "810175",
+        "type": "Private",
+        "total_intake": 23,
+        "rounds": {
+          "Round 1": {
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "AIR": null,
+            "SML": null
+          },
+          "Mop Up Round": {
+            "AIR": 43080,
+            "SML": 4007
+          },
+          "Stray Round": {
+            "AIR": 132685,
+            "SML": 11631
+          },
+          "Special Stray Round": {
+            "AIR": 40738,
+            "SML": 3807
+          }
+        }
+      },
+      {
+        "code": "KMM",
+        "name": "Karuna Medical College, Vilayodi, Palakkad (Muslim Minority)",
+        "establishment": 2006,
+        "fees": "827169",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 48840,
+            "SML": 4593
+          },
+          "Round 2": {
+            "AIR": 62851,
+            "SML": 5937
+          },
+          "Mop Up Round": {
+            "AIR": 72225,
+            "SML": 6778
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "MMC",
+        "name": "Malankara Orthodox Syrian Church Medical College, Kolenchery (Christian Minority)",
+        "establishment": 2001,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 26682,
+            "SML": 2412
+          },
+          "Round 2": {
+            "AIR": 30264,
+            "SML": 2798
+          },
+          "Mop Up Round": {
+            "AIR": 31644,
+            "SML": 2924
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "MMH",
+        "name": "Malabar Medical College Hospital, Kozhikkode",
+        "establishment": 2010,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 37,
+        "rounds": {
+          "Round 1": {
+            "AIR": 37092,
+            "SML": 3447
+          },
+          "Round 2": {
+            "AIR": 44572,
+            "SML": 4174
+          },
+          "Mop Up Round": {
+            "AIR": 46789,
+            "SML": 4387
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "MZM",
+        "name": "Mount Zion Medical College, Pathanamthitta (Christian Minority)",
+        "establishment": 2014,
+        "fees": "850436",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 59571,
+            "SML": 5639
+          },
+          "Round 2": {
+            "AIR": 67675,
+            "SML": 6401
+          },
+          "Mop Up Round": {
+            "AIR": 74820,
+            "SML": 7002
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "PIM",
+        "name": "Palakkad Institute of Medical Science, Walayar",
+        "establishment": 2024,
+        "fees": "898800",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 62178,
+            "SML": 5879
+          },
+          "Round 2": {
+            "AIR": 71915,
+            "SML": 6752
+          },
+          "Mop Up Round": {
+            "AIR": 75560,
+            "SML": 7078
+          },
+          "Stray Round": {
+            "AIR": 127769,
+            "SML": 11257
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "PMC",
+        "name": "Pushpagiri Institute of Medical Science, Thiruvallur (Christian)",
+        "establishment": 2002,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 15,
+        "rounds": {
+          "Round 1": {
+            "AIR": 28463,
+            "SML": 2602
+          },
+          "Round 2": {
+            "AIR": 29450,
+            "SML": 2716
+          },
+          "Mop Up Round": {
+            "AIR": 30717,
+            "SML": 2831
+          },
+          "Stray Round": {
+            "AIR": 27350,
+            "SML": 2477
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "SIM",
+        "name": "Sree Narayana Institute of Medical Sciences, Ernakulam",
+        "establishment": 2009,
+        "fees": "892459",
+        "type": "Private",
+        "total_intake": 23,
+        "rounds": {
+          "Round 1": {
+            "AIR": 52016,
+            "SML": 4907
+          },
+          "Round 2": {
+            "AIR": 54489,
+            "SML": 5134
+          },
+          "Mop Up Round": {
+            "AIR": 54489,
+            "SML": 5134
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "SMC",
+        "name": "Dr. Somervell Memorial CSI Medical College, Karakonam (Christian Minority)",
+        "establishment": 2001,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 22,
+        "rounds": {
+          "Round 1": {
+            "AIR": 43744,
+            "SML": 4091
+          },
+          "Round 2": {
+            "AIR": 50742,
+            "SML": 4784
+          },
+          "Mop Up Round": {
+            "AIR": 51573,
+            "SML": 4860
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "SUC",
+        "name": "SUT Accademy of Medical Sciences, Thiruvananthapuram",
+        "establishment": 2006,
+        "fees": "776504",
+        "type": "Private",
+        "total_intake": 38,
+        "rounds": {
+          "Round 1": {
+            "AIR": 40488,
+            "SML": 3794
+          },
+          "Round 2": {
+            "AIR": 50166,
+            "SML": 4733
+          },
+          "Mop Up Round": {
+            "AIR": 54956,
+            "SML": 5181
+          },
+          "Stray Round": {
+            "AIR": 62602,
+            "SML": 5914
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": "TRM",
+        "name": "Travancore Medical College, Umayanalloor, Kollam (Muslim)",
+        "establishment": 2009,
+        "fees": "856840",
+        "type": "Private",
+        "total_intake": 31,
+        "rounds": {
+          "Round 1": {
+            "AIR": 43475,
+            "SML": 4057
+          },
+          "Round 2": {
+            "AIR": 48032,
+            "SML": 4511
+          },
+          "Mop Up Round": {
+            "AIR": 50388,
+            "SML": 4755
+          },
+          "Stray Round": {
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  }
+]

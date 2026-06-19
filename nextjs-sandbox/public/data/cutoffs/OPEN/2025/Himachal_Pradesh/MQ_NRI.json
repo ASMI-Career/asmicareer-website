@@ -1,0 +1,179 @@
+{
+  "counselling": "OPEN",
+  "state": "Himachal Pradesh",
+  "year": 2025,
+  "quota": "MQ NRI",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Maharishi Markandeshwar Medical College & Hospital, Solan",
+      "establishment": 2013,
+      "fees": "1597000",
+      "type": "Private",
+      "categories": {
+        "Open": {
+          "Round 1": {
+            "Intake": 56,
+            "AIR": 261437,
+            "SML": 1625
+          },
+          "Round 2": {
+            "Intake": 49,
+            "AIR": 394277,
+            "SML": 2198
+          },
+          "Round 3": {
+            "Intake": 32,
+            "AIR": 560351,
+            "SML": 2827
+          },
+          "Stray Round 1": {
+            "Intake": 27,
+            "AIR": 745068,
+            "SML": 2343
+          },
+          "Stray Round 2": {
+            "Intake": 4,
+            "AIR": 663668,
+            "SML": 2133
+          }
+        },
+        "OBC": {
+          "Round 1": {
+            "Intake": 16,
+            "AIR": 371947,
+            "SML": 2035
+          },
+          "Round 2": {
+            "Intake": 4,
+            "AIR": 453377,
+            "SML": 2431
+          },
+          "Round 3": {
+            "Intake": 2,
+            "AIR": 615465,
+            "SML": 2968
+          },
+          "Stray Round 1": {
+            "Intake": 2,
+            "AIR": 784031,
+            "SML": 2411
+          },
+          "Stray Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "SC": {
+          "Round 1": {
+            "Intake": 8,
+            "AIR": 551744,
+            "SML": 2596
+          },
+          "Round 2": {
+            "Intake": 11,
+            "AIR": 642187,
+            "SML": 3026
+          },
+          "Round 3": {
+            "Intake": 3,
+            "AIR": 650634,
+            "SML": 3062
+          },
+          "Stray Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "ST": {
+          "Round 1": {
+            "Intake": 5,
+            "AIR": 557965,
+            "SML": 2614
+          },
+          "Round 2": {
+            "Intake": 2,
+            "AIR": 457193,
+            "SML": 2448
+          },
+          "Round 3": {
+            "Intake": 1,
+            "AIR": 569530,
+            "SML": 2851
+          },
+          "Stray Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "PwD": {
+          "Round 1": {
+            "Intake": 4,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": 4,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 4,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "NRI": {
+          "Round 1": {
+            "Intake": 23,
+            "AIR": 1066849,
+            "SML": 3372
+          },
+          "Round 2": {
+            "Intake": 23,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 23,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    }
+  ]
+}

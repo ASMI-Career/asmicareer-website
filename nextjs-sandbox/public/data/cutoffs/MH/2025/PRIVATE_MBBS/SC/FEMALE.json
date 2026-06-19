@@ -1,0 +1,809 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "PRIVATE_MBBS",
+  "category": "SC",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "1105",
+      "name": "K J Somaiya Medical College, Mumbai",
+      "establishment": 1991,
+      "fees": "109091",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 115009,
+          "SML": 9706,
+          "CSML": "SC-417"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1108",
+      "name": "Terna Medical College Nerul, Navi Mumbai",
+      "establishment": 1991,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 142837,
+          "SML": 11879,
+          "CSML": "SC-594"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 169899,
+          "SML": 13755,
+          "CSML": "SC-828"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1112",
+      "name": "MIMER Medical College, Pune",
+      "establishment": 1994,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 149620,
+          "SML": 12368,
+          "CSML": "SC-657"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 159679,
+          "SML": 13086,
+          "CSML": "SC-751"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1118",
+      "name": "Vasantrao Pawar Medical College, Nashik",
+      "establishment": 1990,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 135908,
+          "SML": 11338,
+          "CSML": "SC-544"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 160145,
+          "SML": 13113,
+          "CSML": "SC-754"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 165711,
+          "SML": 13423,
+          "CSML": "SC-792"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1120",
+      "name": "ACPM Medical College Dhule",
+      "establishment": 1990,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 162145,
+          "SML": 13243,
+          "CSML": "SC-776"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 169441,
+          "SML": 13791,
+          "CSML": "SC-831"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 172637,
+          "SML": 13975,
+          "CSML": "SC-851"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Vitthalrao Vikhe Patil Medical College, Ahmednagar",
+      "establishment": 2003,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 157135,
+          "SML": 12916,
+          "CSML": "SC-727"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 165862,
+          "SML": 13499,
+          "CSML": "SC-804"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1136",
+      "name": "Shrimati Kashibai Navale Medical College, Pune",
+      "establishment": 2007,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 137252,
+          "SML": 11433,
+          "CSML": "SC-549"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1137",
+      "name": "Ashwini Rural Medical College, Solapur",
+      "establishment": 2012,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 109416,
+          "SML": 9255,
+          "CSML": "SC-391"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1138",
+      "name": "Dr. Ulhas Patil Medical College, Jalgaon",
+      "establishment": 2008,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 156363,
+          "SML": 12862,
+          "CSML": "SC-719"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 166403,
+          "SML": 13541,
+          "CSML": "SC-810"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 167874,
+          "SML": 13607,
+          "CSML": "SC-814"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1139",
+      "name": "BKL Walawalkar Medical College, Ratnagiri",
+      "establishment": 2015,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 159037,
+          "SML": 13049,
+          "CSML": "SC-746"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 167439,
+          "SML": 13636,
+          "CSML": "SC-819"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 171156,
+          "SML": 13856,
+          "CSML": "SC-839"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1143",
+      "name": "Prakash Institute of Medical Sciences, Sangli",
+      "establishment": 2016,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 165191,
+          "SML": 13454,
+          "CSML": "SC-798"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 171156,
+          "SML": 13918,
+          "CSML": "SC-846"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 175106,
+          "SML": 14135,
+          "CSML": "SC-877"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1144",
+      "name": "SMBT Medical College, Nashik",
+      "establishment": 2014,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 160742,
+          "SML": 13154,
+          "CSML": "SC-759"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 169034,
+          "SML": 13759,
+          "CSML": "SC-827"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1147",
+      "name": "Vedanta Medical College, Palghar",
+      "establishment": 2017,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 175774,
+          "SML": 14231,
+          "CSML": "SC-891"
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 187906,
+          "SML": 15094,
+          "CSML": "SC-1008"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 204003,
+          "SML": 16146,
+          "CSML": "SC-1149"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1152",
+      "name": "SSPM Medical College, Kudal, Sindhudurg",
+      "establishment": 2020,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 167006,
+          "SML": 13594,
+          "CSML": "SC-814"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 175108,
+          "SML": 14199,
+          "CSML": "SC-885"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 178034,
+          "SML": 14332,
+          "CSML": "SC-911"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1156",
+      "name": "DNY Tasgaonkar Medical College, Karjat",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 167959,
+          "SML": 13674,
+          "CSML": "SC-822"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 174588,
+          "SML": 14159,
+          "CSML": "SC-880"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 177371,
+          "SML": 14276,
+          "CSML": "SC-899"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1157",
+      "name": "AB Vajpayee Medical College, Pune",
+      "establishment": 2022,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 143121,
+          "SML": 11898,
+          "CSML": "SC-597"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1175",
+      "name": "Smt. Sakhubai Narayanrao Katkade, Ahilyanagar",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "NKP Salve Medical College Nagpur",
+      "establishment": 1990,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 132507,
+          "SML": 11067,
+          "CSML": "SC-515"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 156472,
+          "SML": 12868,
+          "CSML": "SC-720"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 135898,
+          "SML": 11275,
+          "CSML": "SC-536"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1225",
+      "name": "Dr. Punjabrao Deshmukh Medical College, Amravati",
+      "establishment": 1984,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 156478,
+          "SML": 12870,
+          "CSML": "SC-721"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 160690,
+          "SML": 13147,
+          "CSML": "SC-758"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 164718,
+          "SML": 13354,
+          "CSML": "SC-783"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1261",
+      "name": "Dr Rajendra Gode Medical College, Amaravati",
+      "establishment": 2023,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 160690,
+          "SML": 13147,
+          "CSML": "SC-758"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 165899,
+          "SML": 13502,
+          "CSML": "SC-806"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 169823,
+          "SML": 13751,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1276",
+      "name": "Malati Multispeciality Hospital & Medical College, Akola",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1330",
+      "name": "MIMSR Medical College, Latur",
+      "establishment": 1990,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 152595,
+          "SML": 12592,
+          "CSML": "SC-691"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 161822,
+          "SML": 13221,
+          "CSML": "SC-770"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1345",
+      "name": "JIIU Institute of Medical Sciences, Jalna (Muslim Minority)",
+      "establishment": 2013,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1362",
+      "name": "Parbhani Medical College & Hospital, Parbhani",
+      "establishment": 2023,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 165899,
+          "SML": 13502,
+          "CSML": "SC-806"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 170404,
+          "SML": 13854,
+          "CSML": "SC-840"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 175774,
+          "SML": 14167,
+          "CSML": "SC-884"
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1365",
+      "name": "Shri Ramchandra Institute of Medical Sciences, Aurangabad",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 132452,
+          "SML": 11063,
+          "CSML": "SC-514"
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 149099,
+          "SML": 12331,
+          "CSML": "SC-650"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        },
+        "Stray Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    }
+  ]
+}

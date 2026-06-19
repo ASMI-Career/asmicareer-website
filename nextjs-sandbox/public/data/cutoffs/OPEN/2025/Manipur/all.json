@@ -1,0 +1,76 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Manipur",
+    "year": 2025,
+    "quota": "MQ",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Shija Academy of Health Sciences, Langol, Imphal",
+        "establishment": 2021,
+        "fees": "1700000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 60,
+            "AIR": 505101,
+            "SML": 78
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 29,
+            "AIR": 636467,
+            "SML": 29
+          },
+          "Stray Round": {
+            "Intake": 30,
+            "AIR": 853150,
+            "SML": 30
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Manipur",
+    "year": 2025,
+    "quota": "NRI",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Shija Academy of Health Sciences, Langol, Imphal",
+        "establishment": 2021,
+        "fees": "$ 200000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 1039201,
+            "SML": 1
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 12,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  }
+]
