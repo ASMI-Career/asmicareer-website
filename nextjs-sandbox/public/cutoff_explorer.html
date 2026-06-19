@@ -321,6 +321,7 @@
   
     
   
+  
   <script>
     const RANK = 25678; // Hardcoded for now
     let strayVisible = false;
@@ -329,6 +330,11 @@
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
+    
+    // MH State defaults
+    let mhQuota = 'GOVT_MBBS';
+    let mhCategory = 'OPEN';
+    let mhSubType = 'GENERAL';
 
     const compareButton = document.getElementById('compareButton');
     const compareCount = document.getElementById('compareCount');
@@ -347,7 +353,11 @@
       { id: 'DEEMED_BDS', label: 'Deemed BDS' },
     ];
     const MCC_STD_CATS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST'];
-    const MH_CATS = ['GENERAL', 'OBC', 'SC', 'ST', 'EWS']; // Simplified for now
+
+    const MH_DATA_MAP = {
+      "GOVT_MBBS": {"DEF_1": ["FEMALE", "GENERAL"], "DEF_2": ["FEMALE", "GENERAL"], "DEF_3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NT1": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT2": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT3": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"]},
+      "PRIVATE_MBBS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
+    };
 
     const OPEN_STATES = [
       'Andhra Pradesh', 'Bihar', 'Chhattisgarh', 'Haryana', 'Himachal Pradesh',
@@ -392,7 +402,9 @@
         selectedInstType = 'GOVT_MBBS';
         selectedCategory = 'OPEN';
       } else if (c === 'MH') {
-        selectedCategory = 'GENERAL';
+        mhQuota = 'GOVT_MBBS';
+        mhCategory = 'OPEN';
+        mhSubType = 'GENERAL';
       } else if (c === 'OPEN') {
         selectedState = 'Karnataka';
         selectedCategory = 'MQ';
@@ -426,6 +438,34 @@
       selectedCategory = cat;
       renderFilters();
       loadData();
+    }
+
+    // MH Specific Setters
+    function setMHQuota(q) {
+       mhQuota = q;
+       if (!MH_DATA_MAP[mhQuota][mhCategory]) {
+           mhCategory = Object.keys(MH_DATA_MAP[mhQuota])[0] || 'OPEN';
+       }
+       if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
+           mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
+       }
+       renderFilters();
+       loadData();
+    }
+
+    function setMHCategory(c) {
+       mhCategory = c;
+       if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
+           mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
+       }
+       renderFilters();
+       loadData();
+    }
+
+    function setMHSubType(st) {
+       mhSubType = st;
+       renderFilters();
+       loadData();
     }
 
     function renderCounsellingCards() {
@@ -484,32 +524,65 @@
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setOpenState('${st}')">${st}</button>`;
          });
          html += `</div>`;
-      }
-
-      // Categories
-      const folder = selectedState.replace(/ /g, '_');
-      const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
-      
-      if (!isHP) {
-         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
-         html += `<div class="flex flex-wrap gap-2">`;
-         
-         let cats = [];
-         if (selectedCounselling === 'MCC') {
-            if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
-            else cats = MCC_STD_CATS;
-         } else if (selectedCounselling === 'MH') {
-            cats = MH_CATS;
-         } else if (selectedCounselling === 'OPEN') {
-            cats = OPEN_STATE_CATS[folder] || [];
-         }
-
-         cats.forEach(cat => {
-            const isSel = selectedCategory === cat;
+      } else if (selectedCounselling === 'MH') {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         const quotas = [
+           { id: 'GOVT_MBBS', label: 'Govt MBBS' },
+           { id: 'PRIVATE_MBBS', label: 'Private MBBS' }
+         ];
+         quotas.forEach(q => {
+            const isSel = mhQuota === q.id;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
-            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHQuota('${q.id}')">${q.label}</button>`;
          });
          html += `</div>`;
+
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         const availCats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
+         availCats.forEach(cat => {
+            const isSel = mhCategory === cat;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+         });
+         html += `</div>`;
+         
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Sub-Type</p>`;
+         html += `<div class="flex flex-wrap gap-2">`;
+         const availSubTypes = MH_DATA_MAP[mhQuota][mhCategory] || [];
+         availSubTypes.forEach(st => {
+            const isSel = mhSubType === st;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHSubType('${st}')">${st.replace(/_/g, ' ')}</button>`;
+         });
+         html += `</div>`;
+      }
+
+      // Categories for MCC and OPEN
+      if (selectedCounselling !== 'MH') {
+          const folder = selectedState.replace(/ /g, '_');
+          const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
+          
+          if (!isHP) {
+             html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
+             html += `<div class="flex flex-wrap gap-2">`;
+             
+             let cats = [];
+             if (selectedCounselling === 'MCC') {
+                if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
+                else cats = MCC_STD_CATS;
+             } else if (selectedCounselling === 'OPEN') {
+                cats = OPEN_STATE_CATS[folder] || [];
+             }
+
+             cats.forEach(cat => {
+                const isSel = selectedCategory === cat;
+                const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+                html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+             });
+             html += `</div>`;
+          }
       }
 
       container.innerHTML = html;
@@ -540,12 +613,18 @@
       const tbody = document.getElementById('collegeTableBody');
       tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
       
-      let url = `/data/cutoffs/${selectedCounselling}/2025/${selectedCategory}.json`;
+      let url = '';
+      let errMsg = 'data';
       if (selectedCounselling === 'MCC') {
          url = `/data/cutoffs/MCC/2025/${selectedInstType}/${selectedCategory}.json`;
+         errMsg = selectedCategory;
       } else if (selectedCounselling === 'OPEN') {
          const folder = selectedState.replace(/ /g, '_');
          url = `/data/cutoffs/OPEN/2025/${folder}/${selectedCategory}.json`;
+         errMsg = selectedState;
+      } else if (selectedCounselling === 'MH') {
+         url = `/data/cutoffs/MH/2025/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+         errMsg = `${mhCategory} - ${mhSubType}`;
       }
       
       try {
@@ -555,7 +634,7 @@
         currentData = data;
         renderTable();
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">Failed to load data for ${selectedCounselling === 'OPEN' ? selectedState : selectedCategory}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">No data available for this selection.</td></tr>`;
         updateCounts(0, 0, 0);
       }
     }
@@ -563,7 +642,7 @@
     function renderTable() {
       if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
         const tbody = document.getElementById('collegeTableBody');
-        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No data found</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No data available for this selection.</td></tr>`;
         updateCounts(0,0,0);
         return;
       }
@@ -576,7 +655,6 @@
       let borderCount = 0;
 
       const isMH = currentData.counselling === 'MH';
-      const isReserved = ['OBC', 'SC', 'ST', 'EWS'].includes(currentData.category);
       const isMCC = currentData.counselling === 'MCC';
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
@@ -585,7 +663,8 @@
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       
-      const showSML = (isMH && isReserved) || (isOPEN && !isKarnataka);
+      const showSML = isMH || (isOPEN && !isKarnataka);
+      const showCSML = isMH && currentData.category && currentData.category !== 'OPEN';
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
@@ -631,6 +710,7 @@
         if (isKarnataka) cols = 2; // Intake, AIR
         else if (isKeralaMQ) cols = 2;  // AIR, SML
         else if (showPWD) cols = 3;     // Intake, AIR, PWD
+        else if (showCSML) cols = 4;    // Intake, AIR, SML, CSML
         else if (showSML) cols = 3;     // Intake, AIR, SML
         
         headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
@@ -644,6 +724,9 @@
         
         if (showPWD) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
+        } else if (showCSML) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle}>SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>CSML</th>`;
         } else if (showSML) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>SML</th>`;
         }
@@ -767,7 +850,13 @@
           
           html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
           
-          if (showPWD || showSML) {
+          if (showPWD) {
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+          } else if (showCSML) {
+            const csml = rData.CSML || '-';
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${csml}</td>`;
+          } else if (showSML) {
             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
           }
         });
@@ -839,6 +928,7 @@
 
     initUI();
   </script>
+
 
 
 </body>
