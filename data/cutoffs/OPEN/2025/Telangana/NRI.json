@@ -1,0 +1,926 @@
+{
+  "counselling": "OPEN",
+  "state": "Telangana",
+  "year": 2025,
+  "quota": "NRI",
+  "colleges": [
+    {
+      "code": "APLO",
+      "name": "Apollo Institute of Medical Sciences & Research , Hyderabad",
+      "establishment": 2012,
+      "fees": "26,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 409015,
+          "SML": 3112
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 391317,
+          "SML": 2953
+        },
+        "Mop Up Round": {
+          "Intake": null,
+          "AIR": 398117,
+          "SML": 3009
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "KMHD",
+      "name": "Kamineni Academy of Medical Sciences & Research Center, Hyderabad",
+      "establishment": 2013,
+      "fees": "26,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 569211,
+          "SML": 4243
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 427921,
+          "SML": 3264
+        },
+        "Mop Up Round": {
+          "Intake": 3,
+          "AIR": 526590,
+          "SML": 3990
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "MAMS",
+      "name": "Mamata Academy of Medical Sciences, Bachupally",
+      "establishment": 2019,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 576857,
+          "SML": 4282
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 582771,
+          "SML": 4311
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "MMTA",
+      "name": "Mamata Medical College, Khammam",
+      "establishment": 1998,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 842015,
+          "SML": 5464
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 702041,
+          "SML": 4909
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 791913,
+          "SML": 5292
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 778483,
+          "SML": 5244
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "CARK",
+      "name": "Chalmeda Ananda Rao Inst of Medical Sciences, Karimnagar",
+      "establishment": 2003,
+      "fees": "26,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 974656,
+          "SML": 5847
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 248112,
+          "SML": 1604
+        },
+        "Mop Up Round": {
+          "Intake": 3,
+          "AIR": 1119528,
+          "SML": 6185
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 635532,
+          "SML": 4581
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "PRTM",
+      "name": "Prathima Institute of Medical Sciences, Karimnagar",
+      "establishment": 2002,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 1079186,
+          "SML": 6105
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 844946,
+          "SML": 5471
+        },
+        "Mop Up Round": {
+          "Intake": 3,
+          "AIR": 1136785,
+          "SML": 6206
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "PRIW",
+      "name": "Pratima Relief Institute Of Medical Sciences, Warangal",
+      "establishment": 2022,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1087977,
+          "SML": 6128
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 900519,
+          "SML": 5652
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 1147475,
+          "SML": 6221
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 723019,
+          "SML": 5019
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "SVSM",
+      "name": "S.V.S. Medical College, Yenugonda, Mahaboobnagar",
+      "establishment": 1999,
+      "fees": "25,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 774896,
+          "SML": 5223
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 637323,
+          "SML": 4589
+        },
+        "Mop Up Round": {
+          "Intake": null,
+          "AIR": 837153,
+          "SML": 5447
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "MAHE",
+      "name": "Maheshwara Medical College, Patancheru",
+      "establishment": 2012,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 941295,
+          "SML": 5750
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 543221,
+          "SML": 4090
+        },
+        "Mop Up Round": {
+          "Intake": null,
+          "AIR": 574772,
+          "SML": 4273
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "MNRS",
+      "name": "MNR Medical College, Sangareddy",
+      "establishment": 2001,
+      "fees": "26,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1045518,
+          "SML": 6015
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 839826,
+          "SML": 5455
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 1134139,
+          "SML": 6203
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 559267,
+          "SML": 4180
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "RVMC",
+      "name": "RVM Medical College, Mulugu, Siddipet",
+      "establishment": 2014,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 878735,
+          "SML": 5591
+        },
+        "Round 2": {
+          "Intake": 5,
+          "AIR": 719847,
+          "SML": 5007
+        },
+        "Mop Up Round": {
+          "Intake": 3,
+          "AIR": 917023,
+          "SML": 5694
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "SURB",
+      "name": "Surabhi Institute of Medical Sciences, Siddipet",
+      "establishment": 2019,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1084688,
+          "SML": 6125
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 919998,
+          "SML": 5700
+        },
+        "Mop Up Round": {
+          "Intake": 8,
+          "AIR": 1141067,
+          "SML": 6211
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "TRRM",
+      "name": "TRR Institute of Medical Sciences, Patancheru",
+      "establishment": 2020,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1230887,
+          "SML": 6316
+        },
+        "Round 2": {
+          "Intake": 8,
+          "AIR": 1070846,
+          "SML": 6083
+        },
+        "Mop Up Round": {
+          "Intake": 4,
+          "AIR": 1252257,
+          "SML": 6347
+        },
+        "Stray Round": {
+          "Intake": 3,
+          "AIR": 1081044,
+          "SML": 6110
+        },
+        "Additional Stray Round": {
+          "Intake": 1,
+          "AIR": 1264744,
+          "SML": 6357
+        }
+      }
+    },
+    {
+      "code": "KMNI",
+      "name": "Kamineni Institute of Medical Sciences, Narketpally",
+      "establishment": 1999,
+      "fees": "26,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 1006148,
+          "SML": 5925
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 792403,
+          "SML": 5294
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 956800,
+          "SML": 5793
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "BASK",
+      "name": "Bhaskar Medical College, Moinabad",
+      "establishment": 2003,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 655079,
+          "SML": 4679
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 283465,
+          "SML": 1949
+        },
+        "Mop Up Round": {
+          "Intake": 1,
+          "AIR": 704485,
+          "SML": 4925
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "DPMR",
+      "name": "Dr. Patnam Mahender Reddy Institute of Medical Sciences, Rangareddy",
+      "establishment": 2019,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 776361,
+          "SML": 5231
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 706641,
+          "SML": 4933
+        },
+        "Mop Up Round": {
+          "Intake": 8,
+          "AIR": 807609,
+          "SML": 5350
+        },
+        "Stray Round": {
+          "Intake": 2,
+          "AIR": 736303,
+          "SML": 5073
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "MHVR",
+      "name": "Mahavir Institute of Med Sciences, Vikarabad",
+      "establishment": 2016,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1017649,
+          "SML": 5960
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 879022,
+          "SML": 5597
+        },
+        "Mop Up Round": {
+          "Intake": 8,
+          "AIR": 1076072,
+          "SML": 6096
+        },
+        "Stray Round": {
+          "Intake": 2,
+          "AIR": 834360,
+          "SML": 5434
+        },
+        "Additional Stray Round": {
+          "Intake": 1,
+          "AIR": 1146255,
+          "SML": 6218
+        }
+      }
+    },
+    {
+      "code": "MEDI",
+      "name": "MediCity Institute of Medical Sciences, Ghanpur",
+      "establishment": 2001,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 822509,
+          "SML": 5395
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 841932,
+          "SML": 5463
+        },
+        "Mop Up Round": {
+          "Intake": 4,
+          "AIR": 1034852,
+          "SML": 5994
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "CMRM",
+      "name": "CMR Institute of Medical Sciences, Kandlkoya",
+      "establishment": 2023,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 962533,
+          "SML": 5806
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 710803,
+          "SML": 4957
+        },
+        "Mop Up Round": {
+          "Intake": 16,
+          "AIR": 858737,
+          "SML": 5517
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 583293,
+          "SML": 4315
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "NIMG",
+      "name": "Neelima Institute of Medical Sciences, Ghatkesar (Private University)",
+      "establishment": 2023,
+      "fees": "22,50,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": 970560,
+          "SML": 5829
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 579652,
+          "SML": 4298
+        },
+        "Mop Up Round": {
+          "Intake": 9,
+          "AIR": 941385,
+          "SML": 5751
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "NOVA",
+      "name": "Nova Institute of Medical Sciences, Hayathangar",
+      "establishment": 2024,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1319000,
+          "SML": 6405
+        },
+        "Round 2": {
+          "Intake": 22,
+          "AIR": 1106610,
+          "SML": 6170
+        },
+        "Mop Up Round": {
+          "Intake": 11,
+          "AIR": 1244820,
+          "SML": 6334
+        },
+        "Stray Round": {
+          "Intake": 3,
+          "AIR": 955958,
+          "SML": 5788
+        },
+        "Additional Stray Round": {
+          "Intake": 2,
+          "AIR": 1177354,
+          "SML": 6269
+        }
+      }
+    },
+    {
+      "code": "FCIM",
+      "name": "Father Colombo Institute of Medical Sciences, Warangal",
+      "establishment": 2023,
+      "fees": "-",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 23,
+          "AIR": 1104269,
+          "SML": 6165
+        },
+        "Mop Up Round": {
+          "Intake": 5,
+          "AIR": 1225671,
+          "SML": 6310
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 1116411,
+          "SML": 6179
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "AIMD",
+      "name": "Arundathi Institute of Medical Sciences, Dundigal",
+      "establishment": 2023,
+      "fees": "23,10,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 939838,
+          "SML": 5746
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 852440,
+          "SML": 5497
+        },
+        "Mop Up Round": {
+          "Intake": 1,
+          "AIR": 1012236,
+          "SML": 5945
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "DCMS",
+      "name": "Deccan College of Medical Sciences, Hyderabad (Muslim Minority)",
+      "establishment": 1985,
+      "fees": "27,80,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 615939,
+          "SML": 4491
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 550990,
+          "SML": 4142
+        },
+        "Mop Up Round": {
+          "Intake": null,
+          "AIR": 278094,
+          "SML": 1895
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "SHDN",
+      "name": "Shadan Institute of Medical Sciences, Hyderabad (Muslim Minority)",
+      "establishment": 2005,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 738526,
+          "SML": 5079
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 611184,
+          "SML": 4464
+        },
+        "Mop Up Round": {
+          "Intake": 2,
+          "AIR": 771816,
+          "SML": 5212
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "AYAN",
+      "name": "Ayaan Institute of Medical Sciences, Moinabad (Muslim Minority)",
+      "establishment": 2018,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1151911,
+          "SML": 6228
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 830474,
+          "SML": 5418
+        },
+        "Mop Up Round": {
+          "Intake": 1,
+          "AIR": 887481,
+          "SML": 5621
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": "VRKW",
+      "name": "Dr. V.R.K. Women's Medical College, Aziz Nagar (Muslim Minority)",
+      "establishment": 2010,
+      "fees": "24,00,000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 15,
+          "AIR": 1230144,
+          "SML": 6314
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 868298,
+          "SML": 5552
+        },
+        "Mop Up Round": {
+          "Intake": 1,
+          "AIR": 966638,
+          "SML": 5821
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Additional Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}

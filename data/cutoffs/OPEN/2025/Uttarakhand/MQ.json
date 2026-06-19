@@ -1,0 +1,95 @@
+{
+  "counselling": "OPEN",
+  "state": "Uttarakhand",
+  "year": 2025,
+  "quota": "MQ",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Himalayan Institute of Medical Sciences, Jolly Grant",
+      "establishment": 1995,
+      "fees": "2100000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 75,
+          "AIR": 125238,
+          "SML": 821
+        },
+        "Round 2": {
+          "Intake": 32,
+          "AIR": 176954,
+          "SML": 635
+        },
+        "Round 3": {
+          "Intake": 9,
+          "AIR": 195625,
+          "SML": 607
+        },
+        "Stray Round": {
+          "Intake": 4,
+          "AIR": 362491,
+          "SML": 139
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Shri Guru Ram Rai Institute of Medical & Health Sciences, Dehradun",
+      "establishment": 2006,
+      "fees": "2100000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 64,
+          "AIR": 201286,
+          "SML": 1168
+        },
+        "Round 2": {
+          "Intake": 80,
+          "AIR": 442891,
+          "SML": 1338
+        },
+        "Round 3": {
+          "Intake": 46,
+          "AIR": 618348,
+          "SML": 1174
+        },
+        "Stray Round": {
+          "Intake": 12,
+          "AIR": 637824,
+          "SML": 186
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Gautam Buddha Chikitsa Mahavidyalaya, Dehradun",
+      "establishment": 2022,
+      "fees": "2100000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 64,
+          "AIR": 330639,
+          "SML": 1638
+        },
+        "Round 2": {
+          "Intake": 58,
+          "AIR": 529797,
+          "SML": 1549
+        },
+        "Round 3": {
+          "Intake": 42,
+          "AIR": 690510,
+          "SML": 1288
+        },
+        "Stray Round": {
+          "Intake": 14,
+          "AIR": 702989,
+          "SML": 214
+        }
+      }
+    }
+  ]
+}

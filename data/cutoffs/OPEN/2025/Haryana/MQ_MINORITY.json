@@ -1,0 +1,42 @@
+{
+  "counselling": "OPEN",
+  "state": "Haryana",
+  "year": 2025,
+  "quota": "MQ MINORITY",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Al-Falah School of Medical Science & Research Centre, Faridabad (Muslim Minority)",
+      "establishment": 2019,
+      "fees": "1425000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 69,
+          "AIR": 447694,
+          "SML": 4789
+        },
+        "Round 2": {
+          "Intake": 30,
+          "AIR": 523024,
+          "SML": 1463
+        },
+        "Round 3": {
+          "Intake": 6,
+          "AIR": 644875,
+          "SML": 2679
+        },
+        "Stray Round": {
+          "Intake": 2,
+          "AIR": 652171,
+          "SML": 950
+        },
+        "Special Stray Round": {
+          "Intake": 2,
+          "AIR": 702661,
+          "SML": 623
+        }
+      }
+    }
+  ]
+}

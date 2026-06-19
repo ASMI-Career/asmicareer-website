@@ -320,6 +320,7 @@
 
   
     
+  
   <script>
     const RANK = 25678; // Hardcoded for now
     let strayVisible = false;
@@ -327,6 +328,7 @@
     let selectedCounselling = 'MCC';
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
+    let selectedState = 'Karnataka';
 
     const compareButton = document.getElementById('compareButton');
     const compareCount = document.getElementById('compareCount');
@@ -345,15 +347,38 @@
       { id: 'DEEMED_BDS', label: 'Deemed BDS' },
     ];
     const MCC_STD_CATS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST'];
-    const MCC_DEEMED_CATS = ['OPEN', 'NRI_P-I', 'NRI_P-II', 'MINORITY']; // Changed P1/P2 to match filenames if needed. Wait, instruction says NRI_P-I, NRI_P-II for MBBS and NRI_P1, NRI_P2 for BDS.
+    const MH_CATS = ['GENERAL', 'OBC', 'SC', 'ST', 'EWS']; // Simplified for now
+
+    const OPEN_STATES = [
+      'Andhra Pradesh', 'Bihar', 'Chhattisgarh', 'Haryana', 'Himachal Pradesh',
+      'Jharkhand', 'Karnataka', 'Kerala', 'Manipur', 'Meghalaya', 'Pondicherry',
+      'Sikkim', 'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+    ];
+    const OPEN_STATE_CATS = {
+      'Andhra_Pradesh': ['COUNSELOR', 'NRI', 'GOV_NRI'],
+      'Bihar': ['MGT', 'MINORITY', 'NRI'],
+      'Chhattisgarh': ['UR', 'UR_FEM', 'UR_NRI', 'UR_FEM_NRI'],
+      'Haryana': ['MQ', 'MQ_MINORITY'],
+      'Himachal_Pradesh': ['MQ_NRI'],
+      'Jharkhand': ['MQ', 'NRI'],
+      'Karnataka': ['MQ', 'NRI', 'OTH', 'RC8'],
+      'Kerala': ['MQ'],
+      'Manipur': ['MQ', 'NRI'],
+      'Meghalaya': ['MQ', 'NRI'],
+      'Pondicherry': ['MQ', 'NRI'],
+      'Sikkim': ['General', 'Management'],
+      'Tamil_Nadu': ['OPEN', 'NRI'],
+      'Telangana': ['MQ', 'NRI'],
+      'Uttar_Pradesh': ['MQ', 'MINORITY'],
+      'Uttarakhand': ['MQ', 'NRI'],
+      'West_Bengal': ['MQ', 'NRI']
+    };
     
     function getDeemedCats(inst) {
        if (inst === 'DEEMED_MBBS') return ['OPEN', 'NRI_P-I', 'NRI_P-II', 'MINORITY'];
        if (inst === 'DEEMED_BDS') return ['OPEN', 'NRI_P1', 'NRI_P2', 'MINORITY'];
        return [];
     }
-
-    const MH_CATS = ['GENERAL', 'OBC', 'SC', 'ST', 'EWS']; // Simplified for now
     
     function initUI() {
       renderCounsellingCards();
@@ -368,8 +393,9 @@
         selectedCategory = 'OPEN';
       } else if (c === 'MH') {
         selectedCategory = 'GENERAL';
-      } else {
-         selectedCategory = 'GENERAL';
+      } else if (c === 'OPEN') {
+        selectedState = 'Karnataka';
+        selectedCategory = 'MQ';
       }
       renderCounsellingCards();
       renderFilters();
@@ -386,6 +412,14 @@
       }
       renderFilters();
       loadData();
+    }
+
+    function setOpenState(st) {
+       selectedState = st;
+       const folder = st.replace(/ /g, '_');
+       selectedCategory = OPEN_STATE_CATS[folder][0];
+       renderFilters();
+       loadData();
     }
 
     function setCategory(cat) {
@@ -432,7 +466,6 @@
 
       let html = '';
 
-      // Institution Type (only for MCC)
       if (selectedCounselling === 'MCC') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
@@ -442,28 +475,42 @@
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setInstType('${inst.id}')">${inst.label}</button>`;
          });
          html += `</div>`;
+      } else if (selectedCounselling === 'OPEN') {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         OPEN_STATES.forEach(st => {
+            const isSel = selectedState === st;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setOpenState('${st}')">${st}</button>`;
+         });
+         html += `</div>`;
       }
 
       // Categories
-      html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
-      html += `<div class="flex flex-wrap gap-2">`;
+      const folder = selectedState.replace(/ /g, '_');
+      const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
       
-      let cats = [];
-      if (selectedCounselling === 'MCC') {
-         if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
-         else cats = MCC_STD_CATS;
-      } else if (selectedCounselling === 'MH') {
-         cats = MH_CATS;
-      } else {
-         cats = ['GENERAL', 'MQ'];
-      }
+      if (!isHP) {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
+         html += `<div class="flex flex-wrap gap-2">`;
+         
+         let cats = [];
+         if (selectedCounselling === 'MCC') {
+            if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
+            else cats = MCC_STD_CATS;
+         } else if (selectedCounselling === 'MH') {
+            cats = MH_CATS;
+         } else if (selectedCounselling === 'OPEN') {
+            cats = OPEN_STATE_CATS[folder] || [];
+         }
 
-      cats.forEach(cat => {
-         const isSel = selectedCategory === cat;
-         const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
-         html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace('_', ' ')}</button>`;
-      });
-      html += `</div>`;
+         cats.forEach(cat => {
+            const isSel = selectedCategory === cat;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+         });
+         html += `</div>`;
+      }
 
       container.innerHTML = html;
     }
@@ -497,7 +544,8 @@
       if (selectedCounselling === 'MCC') {
          url = `/data/cutoffs/MCC/2025/${selectedInstType}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'OPEN') {
-         url = `/data/cutoffs/OPEN/2025/Karnataka/MQ.json`;
+         const folder = selectedState.replace(/ /g, '_');
+         url = `/data/cutoffs/OPEN/2025/${folder}/${selectedCategory}.json`;
       }
       
       try {
@@ -507,7 +555,7 @@
         currentData = data;
         renderTable();
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">Failed to load data for ${selectedCategory}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">Failed to load data for ${selectedCounselling === 'OPEN' ? selectedState : selectedCategory}</td></tr>`;
         updateCounts(0, 0, 0);
       }
     }
@@ -527,57 +575,85 @@
       let likelyCount = 0;
       let borderCount = 0;
 
-      const firstColRounds = currentData.colleges[0].rounds || {};
-      const roundKeys = Object.keys(firstColRounds);
-      
       const isMH = currentData.counselling === 'MH';
       const isReserved = ['OBC', 'SC', 'ST', 'EWS'].includes(currentData.category);
       const isMCC = currentData.counselling === 'MCC';
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
+      const isOPEN = currentData.counselling === 'OPEN';
       
-      const showSML = isMH && isReserved;
+      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
+      const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
+      
+      const showSML = (isMH && isReserved) || (isOPEN && !isKarnataka);
       const showPWD = isMCC && !isDeemed;
+
+      let roundKeys = [];
+      if (isHP) {
+         const cats = Object.keys(currentData.colleges[0].categories || {});
+         if (cats.length > 0) roundKeys = Object.keys(currentData.colleges[0].categories[cats[0]] || {});
+      } else {
+         roundKeys = Object.keys(currentData.colleges[0].rounds || {});
+      }
       
       const thead = document.querySelector('thead');
-      let headerRow1 = `
-        <tr class="bg-gray-50 border-b border-gray-200 text-gray-900">
+      let headerRow1 = `<tr class="bg-gray-50 border-b border-gray-200 text-gray-900">`;
+      
+      if (isHP) {
+        headerRow1 += `
+          <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Category</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[280px]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
+        `;
+      } else {
+        headerRow1 += `
           <th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12"><span class="sr-only">Select</span></th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Code</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[280px]">College Name</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[120px]">Fees</th>
-      `;
+        `;
+        if (isKeralaMQ) {
+           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide">Intake</th>`;
+        }
+      }
+
       let headerRow2 = `<tr class="bg-gray-50 border-b border-gray-200 text-gray-500">`;
       
-      roundKeys.forEach((round, index) => {
-        const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special');
+      roundKeys.forEach((round) => {
+        const rl = round.toLowerCase();
+        const isStray = rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended');
         const strayClass = isStray ? 'stray-col' : '';
         const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
         
-        let cols = 2; // Intake, AIR
-        if (showSML || showPWD || currentData.counselling === 'OPEN') cols = 3;
-
+        let cols = 2; // Default Intake, AIR
+        if (isKarnataka) cols = 2; // Intake, AIR
+        else if (isKeralaMQ) cols = 2;  // AIR, SML
+        else if (showPWD) cols = 3;     // Intake, AIR, PWD
+        else if (showSML) cols = 3;     // Intake, AIR, SML
+        
         headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
         
-        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle}>Intake</th>`;
-        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle}>AIR</th>`;
+        if (!isKeralaMQ) {
+           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle}>Intake</th>`;
+        }
+        
+        const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle}>AIR</th>`;
+        
         if (showPWD) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
-        } else if (showSML || currentData.counselling === 'OPEN') {
+        } else if (showSML) {
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>SML</th>`;
         }
       });
       
       headerRow1 += `<th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th></tr>`;
       headerRow2 += `</tr>`;
-      
       thead.innerHTML = headerRow1 + headerRow2;
 
       currentData.colleges.forEach(college => {
-        const tr = document.createElement('tr');
-        tr.className = 'college-row hover:bg-gray-50 transition-all';
-        tr.dataset.search = `${college.code || ''} ${college.name || ''} ${college.type || ''}`.toLowerCase();
-        
         let typeBadgeClass = 'bg-gray-100 text-gray-700';
         if (college.type && college.type.toLowerCase().includes('govt')) typeBadgeClass = 'bg-green-100 text-green-700';
         else if (college.type && college.type.toLowerCase().includes('private')) typeBadgeClass = 'bg-orange-100 text-orange-700';
@@ -585,23 +661,85 @@
 
         let feesDisplay = '-';
         if (college.fees && college.fees !== '-') {
-          if (String(college.fees).includes(',')) {
-            feesDisplay = `₹${college.fees}`;
+          let f = String(college.fees).trim();
+          if (f.includes('/-')) {
+             f = f.replace('/-', '');
+             feesDisplay = `₹${f}`;
+          } else if (f.includes(',')) {
+             feesDisplay = `₹${f}`;
           } else {
-            feesDisplay = `₹${parseInt(college.fees, 10).toLocaleString('en-IN')}`;
+             const parsed = parseInt(f, 10);
+             if (!isNaN(parsed)) feesDisplay = `₹${parsed.toLocaleString('en-IN')}`;
+             else feesDisplay = f;
           }
         }
+
+        if (isHP) {
+           const cats = Object.keys(college.categories || {});
+           cats.forEach(cat => {
+              const tr = document.createElement('tr');
+              tr.className = 'college-row hover:bg-gray-50 transition-all';
+              tr.dataset.search = `${cat} ${college.name || ''}`.toLowerCase();
+              
+              let html = `
+                <td class="sticky left-0 z-10 bg-white px-4 py-4 font-bold text-[#1A0040] uppercase whitespace-nowrap">${cat}</td>
+                <td class="px-4 py-4 min-w-[280px]">
+                  <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
+                  <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
+                </td>
+                <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+                <td class="px-4 py-4 font-medium">${feesDisplay}</td>
+              `;
+
+              roundKeys.forEach(round => {
+                const rData = college.categories[cat][round] || {};
+                const air = rData.AIR;
+                const intake = rData.Intake;
+                const sml = rData.SML;
+                
+                const chance = getChance(air);
+                let cellBg = '';
+                let textClass = 'text-gray-950';
+                let tagHtml = '';
+                
+                if (chance === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
+                else if (chance === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
+                else if (chance === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
+                else if (chance === 'out_of_reach') { textClass = 'text-gray-500'; }
+
+                const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
+                const strayClass = isStray ? 'stray-col' : '';
+                const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+                
+                html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
+                html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
+                html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+              });
+
+              html += `<td class="px-4 py-4"><button class="h-8 w-8 rounded-lg hover:bg-gray-100"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>`;
+              tr.innerHTML = html;
+              tbody.appendChild(tr);
+           });
+           return;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'college-row hover:bg-gray-50 transition-all';
+        tr.dataset.search = `${college.code || ''} ${college.name || ''} ${college.type || ''}`.toLowerCase();
 
         let html = `
           <td class="sticky left-0 z-10 bg-white px-4 py-4"><input type="checkbox" class="compare-checkbox h-4 w-4 rounded border-gray-300 text-[#1A0040] focus:ring-[#1A0040]"></td>
           <td class="px-4 py-4 font-medium text-gray-600">${college.code || ''}</td>
-          <td class="px-4 py-4">
+          <td class="px-4 py-4 min-w-[280px]">
             <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
             <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
           </td>
           <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
           <td class="px-4 py-4 font-medium">${feesDisplay}</td>
         `;
+        if (isKeralaMQ) {
+           html += `<td class="px-4 py-4 text-right font-bold text-[#1A0040] bg-gray-50">${college.total_intake || '-'}</td>`;
+        }
         
         roundKeys.forEach(round => {
           const rData = college.rounds[round] || {};
@@ -610,38 +748,26 @@
           const sml = showPWD ? rData.AIR_PWD : rData.SML;
           
           const chance = getChance(air);
-          
           let cellBg = '';
-          let textClass = 'text-gray-950'; // Default plain text for rank
+          let textClass = 'text-gray-950';
           let tagHtml = '';
           
-          if (chance === 'safe') {
-            cellBg = 'bg-green-50'; textClass = 'text-green-800';
-            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`;
-            safeCount++;
-          } else if (chance === 'likely') {
-            cellBg = 'bg-blue-50'; textClass = 'text-blue-800';
-            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`;
-            likelyCount++;
-          } else if (chance === 'borderline') {
-            cellBg = 'bg-amber-50'; textClass = 'text-amber-800';
-            tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`;
-            borderCount++;
-          } else if (chance === 'out_of_reach') {
-            textClass = 'text-gray-500'; // Grayed out if out of reach
-          }
+          if (chance === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
+          else if (chance === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
+          else if (chance === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
+          else if (chance === 'out_of_reach') { textClass = 'text-gray-500'; }
 
-          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special');
+          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
           const strayClass = isStray ? 'stray-col' : '';
           const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
           
-          // Intake gets NO coloring
-          html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
-          // AIR gets the coloring
+          if (!isKeralaMQ) {
+             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
+          }
+          
           html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
           
-          // SML or PWD gets NO coloring
-          if (showPWD || showSML || currentData.counselling === 'OPEN') {
+          if (showPWD || showSML) {
             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
           }
         });
@@ -653,7 +779,7 @@
 
       updateCounts(safeCount, likelyCount, borderCount);
       attachCheckboxes();
-      applySearch(); // reapply search filter to new rows
+      applySearch();
     }
     
     function updateCounts(s, l, b) {
@@ -711,9 +837,9 @@
 
     searchInput.addEventListener('input', applySearch);
 
-    // Call init UI
     initUI();
   </script>
+
 
 </body>
 </html>

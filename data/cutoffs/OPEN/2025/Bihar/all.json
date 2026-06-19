@@ -1,0 +1,944 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Bihar",
+    "year": 2025,
+    "quota": "MGT",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Katihar Medical College, Katihar",
+        "establishment": 2009,
+        "fees": "1105000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 52,
+            "AIR": 126570,
+            "SML": 4326
+          },
+          "Round 2": {
+            "Intake": 12,
+            "AIR": 131914,
+            "SML": 4424
+          },
+          "Round 3": {
+            "Intake": 18,
+            "AIR": 135519,
+            "SML": 2553
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 110432,
+            "SML": 727
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Lord Buddha Koshi Medical College & Hospital, Saharsa",
+        "establishment": 1996,
+        "fees": "1200000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 128,
+            "AIR": 307128,
+            "SML": 6364
+          },
+          "Round 2": {
+            "Intake": 14,
+            "AIR": 307128,
+            "SML": 6364
+          },
+          "Round 3": {
+            "Intake": 1,
+            "AIR": 138169,
+            "SML": 2577
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 164606,
+            "SML": 916
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Shri Narayan Medical Institute & Hospital, Saharsa",
+        "establishment": 2008,
+        "fees": "1205000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 127,
+            "AIR": 350554,
+            "SML": 6755
+          },
+          "Round 2": {
+            "Intake": 33,
+            "AIR": 375450,
+            "SML": 6991
+          },
+          "Round 3": {
+            "Intake": 5,
+            "AIR": 196755,
+            "SML": 2985
+          },
+          "Stray Round": {
+            "Intake": 1,
+            "AIR": 132961,
+            "SML": 823
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Narayan Medical College & Hospital, Sasaram",
+        "establishment": 2009,
+        "fees": "1225000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 290048,
+            "SML": 6186
+          },
+          "Round 2": {
+            "Intake": 39,
+            "AIR": 311448,
+            "SML": 6401
+          },
+          "Round 3": {
+            "Intake": 7,
+            "AIR": 214288,
+            "SML": 3082
+          },
+          "Stray Round": {
+            "Intake": 3,
+            "AIR": 206926,
+            "SML": 1063
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 214633,
+            "SML": 756
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "RDJM Medical College, Muzaffarpur",
+        "establishment": 2006,
+        "fees": "1335000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 127,
+            "AIR": 367190,
+            "SML": 6919
+          },
+          "Round 2": {
+            "Intake": 24,
+            "AIR": 375395,
+            "SML": 6990
+          },
+          "Round 3": {
+            "Intake": 48,
+            "AIR": 384611,
+            "SML": 3826
+          },
+          "Stray Round": {
+            "Intake": 15,
+            "AIR": 397674,
+            "SML": 1437
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 185961,
+            "SML": 694
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Madhubani Medical College, Madhubani",
+        "establishment": 2015,
+        "fees": "1190000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 52,
+            "AIR": 372645,
+            "SML": 6961
+          },
+          "Round 2": {
+            "Intake": 52,
+            "AIR": 411152,
+            "SML": 11775
+          },
+          "Round 3": {
+            "Intake": 10,
+            "AIR": 420182,
+            "SML": 4001
+          },
+          "Stray Round": {
+            "Intake": 6,
+            "AIR": 432461,
+            "SML": 1512
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 286434,
+            "SML": 874
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Netaji Subhash Medical Collge & Hospital, Bihta",
+        "establishment": 2006,
+        "fees": "1600000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 85,
+            "AIR": 393690,
+            "SML": 7171
+          },
+          "Round 2": {
+            "Intake": 65,
+            "AIR": 435788,
+            "SML": 7614
+          },
+          "Round 3": {
+            "Intake": 23,
+            "AIR": 448421,
+            "SML": 4146
+          },
+          "Stray Round": {
+            "Intake": 12,
+            "AIR": 473262,
+            "SML": 1580
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 404890,
+            "SML": 1009
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Himalaya Medical College& HospitalL, Paliganj, Patna",
+        "establishment": 2023,
+        "fees": "1650000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 85,
+            "AIR": 421385,
+            "SML": 7470
+          },
+          "Round 2": {
+            "Intake": 77,
+            "AIR": 474551,
+            "SML": 7992
+          },
+          "Round 3": {
+            "Intake": 39,
+            "AIR": 518365,
+            "SML": 4479
+          },
+          "Stray Round": {
+            "Intake": 30,
+            "AIR": 629238,
+            "SML": 1833
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Mahabodhi Medical College & Hospital, Gayaji",
+        "establishment": 2025,
+        "fees": "1600000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 85,
+            "AIR": 658309,
+            "SML": 5102
+          },
+          "Stray Round": {
+            "Intake": 21,
+            "AIR": 693346,
+            "SML": 1937
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 553013,
+            "SML": 1145
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Shyamlal Chandrashekhar Medical College, Khagaria",
+        "establishment": 2025,
+        "fees": "1550000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 85,
+            "AIR": 663497,
+            "SML": 5131
+          },
+          "Stray Round": {
+            "Intake": 28,
+            "AIR": 706195,
+            "SML": 1966
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 612620,
+            "SML": 1201
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Viraat Ramayan Institute of Medical Science, East Chaparan",
+        "establishment": 2025,
+        "fees": "1600000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 42,
+            "AIR": 684943,
+            "SML": 5219
+          },
+          "Stray Round": {
+            "Intake": 8,
+            "AIR": 685933,
+            "SML": 1921
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Mata Gujari Memorial Medical College, Kishanganj",
+        "establishment": 2005,
+        "fees": "963000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 83,
+            "AIR": 125773,
+            "SML": 4318
+          },
+          "Round 2": {
+            "Intake": 14,
+            "AIR": 131136,
+            "SML": 4411
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Bihar",
+    "year": 2025,
+    "quota": "MINORITY",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Katihar Medical College, Katihar",
+        "establishment": 2009,
+        "fees": "1105000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 75,
+            "AIR": 235945,
+            "SML": 5686
+          },
+          "Round 2": {
+            "Intake": 9,
+            "AIR": 242879,
+            "SML": 5750
+          },
+          "Round 3": {
+            "Intake": 26,
+            "AIR": 281732,
+            "SML": 3395
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Mata Gujari Memorial Medical College, Kishanganj",
+        "establishment": 2005,
+        "fees": "963000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 45,
+            "AIR": 382891,
+            "SML": 7067
+          },
+          "Round 2": {
+            "Intake": 5,
+            "AIR": 391622,
+            "SML": 7153
+          },
+          "Round 3": {
+            "Intake": 2,
+            "AIR": 303448,
+            "SML": 3478
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 342064,
+            "SML": 1350
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Madhubani Medical College, Madhubani",
+        "establishment": 2015,
+        "fees": "1190000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 75,
+            "AIR": 539283,
+            "SML": 8541
+          },
+          "Round 2": {
+            "Intake": 65,
+            "AIR": 654149,
+            "SML": 9464
+          },
+          "Round 3": {
+            "Intake": 10,
+            "AIR": 563723,
+            "SML": 4669
+          },
+          "Stray Round": {
+            "Intake": 1,
+            "AIR": 433366,
+            "SML": 1516
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Bihar",
+    "year": 2025,
+    "quota": "NRI",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Katihar Medical College, Katihar",
+        "establishment": 2009,
+        "fees": "$28000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 23,
+            "AIR": 1095369,
+            "SML": 11733
+          },
+          "Round 2": {
+            "Intake": 16,
+            "AIR": 1291032,
+            "SML": 12048
+          },
+          "Round 3": {
+            "Intake": 19,
+            "AIR": 1095369,
+            "SML": 6627
+          },
+          "Stray Round": {
+            "Intake": 3,
+            "AIR": 973334,
+            "SML": 2545
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 490591,
+            "SML": 1093
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Mata Gujari Memorial Medical College, Kishanganj",
+        "establishment": 2005,
+        "fees": "$25000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 22,
+            "AIR": 883088,
+            "SML": 10935
+          },
+          "Round 2": {
+            "Intake": 14,
+            "AIR": 1037011,
+            "SML": 11556
+          },
+          "Round 3": {
+            "Intake": 6,
+            "AIR": 850673,
+            "SML": 5902
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 711007,
+            "SML": 1980
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 763208,
+            "SML": 1369
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Narayan Medical College & Hospital, Sasaram",
+        "establishment": 2009,
+        "fees": "$25000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 38,
+            "AIR": 1090355,
+            "SML": 11725
+          },
+          "Round 2": {
+            "Intake": 30,
+            "AIR": 1312625,
+            "SML": 12080
+          },
+          "Round 3": {
+            "Intake": 12,
+            "AIR": 950884,
+            "SML": 6248
+          },
+          "Stray Round": {
+            "Intake": 5,
+            "AIR": 955380,
+            "SML": 2510
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 790545,
+            "SML": 1407
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Lord Buddha Koshi Medical College & Hospital, Saharsa",
+        "establishment": 1996,
+        "fees": "$30000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 22,
+            "AIR": 1029420,
+            "SML": 11531
+          },
+          "Round 2": {
+            "Intake": 16,
+            "AIR": 1113071,
+            "SML": 11775
+          },
+          "Round 3": {
+            "Intake": 7,
+            "AIR": 847527,
+            "SML": 5887
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 965182,
+            "SML": 1621
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Madhubani Medical College, Madhubani",
+        "establishment": 2015,
+        "fees": "$30000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 23,
+            "AIR": 1262114,
+            "SML": 12013
+          },
+          "Round 2": {
+            "Intake": 34,
+            "AIR": 1262114,
+            "SML": 12013
+          },
+          "Round 3": {
+            "Intake": 36,
+            "AIR": 1291032,
+            "SML": 6872
+          },
+          "Stray Round": {
+            "Intake": 13,
+            "AIR": 1096287,
+            "SML": 2733
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 971179,
+            "SML": 1626
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Netaji Subhash Medical Collge & Hospital, Bihta",
+        "establishment": 2006,
+        "fees": "$35000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 1057711,
+            "SML": 11634
+          },
+          "Round 2": {
+            "Intake": 17,
+            "AIR": 1265505,
+            "SML": 12014
+          },
+          "Round 3": {
+            "Intake": 7,
+            "AIR": 903994,
+            "SML": 6086
+          },
+          "Stray Round": {
+            "Intake": 1,
+            "AIR": 835259,
+            "SML": 2280
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 1032237,
+            "SML": 1689
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Shri Narayan Medical Institute & Hospital, Saharsa",
+        "establishment": 2008,
+        "fees": "$30000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 23,
+            "AIR": 980163,
+            "SML": 11350
+          },
+          "Round 2": {
+            "Intake": 22,
+            "AIR": 1296496,
+            "SML": 12057
+          },
+          "Round 3": {
+            "Intake": 1,
+            "AIR": 849651,
+            "SML": 5894
+          },
+          "Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": 1140884,
+            "SML": 1780
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "RDJM Medical College, Muzaffarpur",
+        "establishment": 2006,
+        "fees": "$25000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 23,
+            "AIR": 971766,
+            "SML": 11319
+          },
+          "Round 2": {
+            "Intake": 17,
+            "AIR": 1073374,
+            "SML": 11679
+          },
+          "Round 3": {
+            "Intake": 8,
+            "AIR": 836337,
+            "SML": 5850
+          },
+          "Stray Round": {
+            "Intake": 1,
+            "AIR": 841315,
+            "SML": 2290
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Himalaya Medical College& HospitalL, Paliganj, Patna",
+        "establishment": 2024,
+        "fees": "$27500",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 1222155,
+            "SML": 11964
+          },
+          "Round 2": {
+            "Intake": 16,
+            "AIR": 1313547,
+            "SML": 12083
+          },
+          "Round 3": {
+            "Intake": 13,
+            "AIR": 987551,
+            "SML": 6368
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 773729,
+            "SML": 2157
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Mahabodhi Medical College & Hospital, Gayaji",
+        "establishment": 2025,
+        "fees": "$26000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 15,
+            "AIR": 1075737,
+            "SML": 6591
+          },
+          "Stray Round": {
+            "Intake": 4,
+            "AIR": 934654,
+            "SML": 2461
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Shyamlal Chandrashekhar Medical College, Khagaria",
+        "establishment": 2025,
+        "fees": "$27000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 15,
+            "AIR": 1006276,
+            "SML": 6419
+          },
+          "Stray Round": {
+            "Intake": 3,
+            "AIR": 947466,
+            "SML": 2494
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Viraat Ramayan Institute of Medical Science, East Chaparan",
+        "establishment": 2025,
+        "fees": "$28000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 2": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          },
+          "Round 3": {
+            "Intake": 8,
+            "AIR": 1119238,
+            "SML": 6671
+          },
+          "Stray Round": {
+            "Intake": 2,
+            "AIR": 1000521,
+            "SML": 2597
+          },
+          "Special Stray Round": {
+            "Intake": null,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    ]
+  }
+]

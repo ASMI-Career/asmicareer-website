@@ -1,0 +1,110 @@
+{
+  "counselling": "OPEN",
+  "state": "Bihar",
+  "year": 2025,
+  "quota": "MINORITY",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Katihar Medical College, Katihar",
+      "establishment": 2009,
+      "fees": "1105000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 75,
+          "AIR": 235945,
+          "SML": 5686
+        },
+        "Round 2": {
+          "Intake": 9,
+          "AIR": 242879,
+          "SML": 5750
+        },
+        "Round 3": {
+          "Intake": 26,
+          "AIR": 281732,
+          "SML": 3395
+        },
+        "Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Special Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Mata Gujari Memorial Medical College, Kishanganj",
+      "establishment": 2005,
+      "fees": "963000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 45,
+          "AIR": 382891,
+          "SML": 7067
+        },
+        "Round 2": {
+          "Intake": 5,
+          "AIR": 391622,
+          "SML": 7153
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 303448,
+          "SML": 3478
+        },
+        "Stray Round": {
+          "Intake": 2,
+          "AIR": 342064,
+          "SML": 1350
+        },
+        "Special Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Madhubani Medical College, Madhubani",
+      "establishment": 2015,
+      "fees": "1190000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 75,
+          "AIR": 539283,
+          "SML": 8541
+        },
+        "Round 2": {
+          "Intake": 65,
+          "AIR": 654149,
+          "SML": 9464
+        },
+        "Round 3": {
+          "Intake": 10,
+          "AIR": 563723,
+          "SML": 4669
+        },
+        "Stray Round": {
+          "Intake": 1,
+          "AIR": 433366,
+          "SML": 1516
+        },
+        "Special Stray Round": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}
