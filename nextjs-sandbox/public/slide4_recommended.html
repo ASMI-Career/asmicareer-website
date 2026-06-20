@@ -302,7 +302,7 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
         <div class="rh-sub" id="rhSub">All pools · 2025–26 cutoffs with +15 projection</div>
       </div>
       <div class="rh-actions">
-        <button class="pdf-btn" id="pdfBtn" onclick="downloadPDF()">⬇ Download PDF</button>
+        <button class="pdf-btn" id="pdfBtn" onclick="(async()=>{try{await downloadPDF();}catch(e){console.error('PDF ERROR:',e.message,e.stack);alert('PDF Error: '+e.message);}})()">⬇ Download PDF</button>
         <div class="rh-badge" id="totalBadge">— pools</div>
       </div>
     </div>
