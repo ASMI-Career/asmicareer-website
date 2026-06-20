@@ -325,8 +325,8 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="ub-left">
         <span class="ub-icon">⏰</span>
         <div>
-          <div class="ub-text">Early Bird Price Ends 31st May</div>
-          <div class="ub-sub">Register now and save ₹5,000 on Merit package</div>
+          <div class="ub-text">Early Bird Price Ends 15th July</div>
+          <div class="ub-sub">Register now and save ₹5,000 before 15th July</div>
         </div>
       </div>
       <div>
@@ -342,15 +342,15 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-name">Complete Medical Admission Counselling<br>Merit Based</div>
       <div class="pkg-prices">
         <div class="price-now">
-          <span class="price-now-lbl">Till 31st May</span>
+          <span class="price-now-lbl">Till 15th July 2026</span>
           <span class="price-now-val" id="meritPriceNow">₹30,000</span>
         </div>
         <div class="price-later">
-          <span class="price-later-lbl">After 31st May</span>
+          <span class="price-later-lbl">After 15th July</span>
           <span class="price-later-val" id="meritPriceLater">₹35,000</span>
         </div>
       </div>
-      <span class="saving-pill" id="meritSaving">Save ₹5,000 if registered before 31st May</span>
+      <span class="saving-pill" id="meritSaving">Save ₹5,000 if registered before 15th July</span>
       <div class="pkg-note">For students admitted via general merit / category cutoffs. Covers MH State + MCC counselling.</div>
     </div>
 
@@ -360,15 +360,15 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <div class="pkg-name">Complete Medical Admission Counselling<br>NRI or Management Quota</div>
       <div class="pkg-prices">
         <div class="price-now">
-          <span class="price-now-lbl">Till 31st May</span>
-          <span class="price-now-val" id="nriPriceNow">₹60,000</span>
+          <span class="price-now-lbl">Till 15th July 2026</span>
+          <span class="price-now-val" id="nriPriceNow">₹50,000</span>
         </div>
         <div class="price-later">
-          <span class="price-later-lbl">After 31st May</span>
-          <span class="price-later-val" id="nriPriceLater" style="text-decoration:line-through;">₹70,000</span>
+          <span class="price-later-lbl">After 15th July</span>
+          <span class="price-later-val" id="nriPriceLater" style="text-decoration:line-through;">₹60,000</span>
         </div>
       </div>
-      <span class="saving-pill" id="nriSaving">Save ₹10,000 if registered before 31st May</span>
+      <span class="saving-pill" id="nriSaving">Save ₹10,000 if registered before 15th July</span>
       <div class="pkg-note">For students pursuing NRI quota or management quota seats in private / deemed colleges.</div>
     </div>
 
@@ -530,7 +530,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
       <ul class="tnc-list">
         <li>Registration amount is non-refundable and non-transferable under any circumstances</li>
         <li>All charges are inclusive of GST</li>
-        <li>Early bird rates valid till 31st May only — standard rates apply from 1st June</li>
+        <li>Early bird rates valid till 15th July 2026 only — standard rates apply from 16th July</li>
         <li>Additional state or process form filling charged at ₹5,000 per state (not included in package)</li>
         <li>ASMI reserves the right to assign counsellors based on branch availability</li>
       </ul>
@@ -574,8 +574,8 @@ function buildBranchConfig(group){
     A: {
       meritBefore:  30000,
       meritAfter:   35000,
-      nriBefore:    60000,
-      nriAfter:     70000,
+      nriBefore:    50000,
+      nriAfter:     60000,
       accountName:  'ASMI Youth Career Advisor LLP',
       accountNo:    '50200030649290',
       ifsc:         'HDFC0001274',
@@ -661,7 +661,7 @@ function getBranchConfig(){
 
 // ── Days left counter ────────────────────────────────────────────
 function updateDaysLeft(){
-  const deadline = new Date('2026-05-31T23:59:59');
+  const deadline = new Date('2026-07-15T23:59:59');
   const now = new Date();
   const diff = Math.ceil((deadline - now) / (1000*60*60*24));
   const el = document.getElementById('daysLeft');
@@ -681,7 +681,7 @@ function updateDaysLeft(){
       const laterEl = nriCard.querySelector('.price-later');
       const pill    = nriCard.querySelector('.saving-pill');
       if(nowLbl)  nowLbl.textContent = 'Current Price';
-      if(nowVal)  nowVal.textContent = '₹70,000';
+      if(nowVal)  nowVal.textContent = '₹60,000';
       if(laterEl) laterEl.style.display = 'none';
       if(pill){
         pill.textContent = 'Early bird period has ended';
@@ -705,7 +705,7 @@ function applyBranchConfig(){
 
   if(cfg.meritBefore !== 'PLACEHOLDER' && cfg.meritAfter !== 'PLACEHOLDER'){
     const saving = cfg.meritAfter - cfg.meritBefore;
-    document.getElementById('meritSaving').textContent = `Save ₹${saving.toLocaleString('en-IN')} if registered before 31st May`;
+    document.getElementById('meritSaving').textContent = `Save ₹${saving.toLocaleString('en-IN')} if registered before 15th July`;
   }
 
   // ── NRI PACKAGE ──
@@ -716,7 +716,7 @@ function applyBranchConfig(){
 
   if(cfg.nriBefore !== 'PLACEHOLDER' && cfg.nriAfter !== 'PLACEHOLDER'){
     const nriSaving = cfg.nriAfter - cfg.nriBefore;
-    document.getElementById('nriSaving').textContent = `Save ₹${nriSaving.toLocaleString('en-IN')} if registered before 31st May`;
+    document.getElementById('nriSaving').textContent = `Save ₹${nriSaving.toLocaleString('en-IN')} if registered before 15th July`;
   }
 
   // ── PAYMENT DETAILS ──

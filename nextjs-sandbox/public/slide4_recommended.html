@@ -433,7 +433,7 @@ function buildPoolRows(){
     const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
     const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
-      lastCutoff,projCutoff,status,feeStr,budgetStr});
+      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee});
   }
 
   function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
@@ -671,114 +671,646 @@ function removeFromShortlist(name, btn){
 }
 
 // ── PDF DOWNLOAD ─────────────────────────────────────────────────
-async function downloadPDF(){
-  if(isCounselMode()){ downloadTop50PDF(); return; }
-  const btn=document.getElementById('pdfBtn');
-  btn.textContent='⏳ Generating...';
-  btn.classList.add('loading');
+// ── Fee formatter (PDF pages only — FEE map values are in lakhs, convert before passing) ─
+function formatFee(amount) {
+  if (!amount || amount === 0) return '—';
+  if (amount < 100000) {
+    return '₹' + Math.round(amount / 1000) + 'K';
+  } else if (amount < 10000000) {
+    return '₹' + parseFloat((amount / 100000).toFixed(1)) + 'L';
+  } else {
+    return '₹' + parseFloat((amount / 10000000).toFixed(2)) + 'Cr';
+  }
+}
 
-  const score=activeScore(), cat=activeCategory(), course=activeCourse();
-  const name=STUDENT.name||'Student';
-  const token=STUDENT.token||getSess().token||'—';
-  const date=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-  const rows=buildPoolRows();
+function formatFeeRange(min, max) {
+  if (!min && !max) return '—';
+  if (!max || min === max) return formatFee(min);
+  return formatFee(min) + ' – ' + formatFee(max);
+}
 
-  // Build table rows HTML
-  let lastGroup='';
-  const tableRowsHtml=rows.map((r,i)=>{
-    let groupHeader='';
-    if(r.group!==lastGroup){
-      lastGroup=r.group;
-      groupHeader=`<tr style="background:#1a0040"><td colspan="8" style="color:#FFD700;font-weight:800;font-size:11px;padding:6px 10px;letter-spacing:1px;text-transform:uppercase">${r.group}</td></tr>`;
-    }
-    const statusColor=r.status.key==='safe'?'#15803d':r.status.key==='likely'?'#0369a1':r.status.key==='borderline'?'#b45309':'#b91c1c';
-    const statusBg=r.status.key==='safe'?'rgba(21,128,61,.12)':r.status.key==='likely'?'rgba(56,189,248,.12)':r.status.key==='borderline'?'rgba(251,146,60,.12)':'rgba(185,28,28,.08)';
-    return groupHeader+`<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
-      <td style="padding:7px 10px;font-size:11px;font-weight:700">${r.label}</td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center">${r.course}</td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:900;color:#6a0dad">${r.inReach}/${r.total}</td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:700">${r.lastCutoff}</td>
-      <td style="padding:7px 10px;text-align:center"><span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:900">${r.projCutoff}</span></td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center">${r.feeStr}</td>
-      <td style="padding:7px 10px;font-size:11px;text-align:center;font-weight:900">${r.budgetStr}</td>
-      <td style="padding:7px 10px;text-align:center"><span style="background:${statusBg};color:${statusColor};padding:2px 9px;border-radius:6px;font-size:10px;font-weight:800">${r.status.label}</span></td>
-    </tr>`;
-  }).join('');
+function formatBudgetRange(minFee, maxFee, years) {
+  if (!minFee && !maxFee) return '—';
+  years = years || 4.5;
+  if (!maxFee || minFee === maxFee) return formatFee(minFee * years);
+  return formatFee(minFee * years) + ' – ' + formatFee(maxFee * years);
+}
 
-  // Build full A4 PDF div
-  const pdfDiv=document.getElementById('pdfTemplate');
-  pdfDiv.style.cssText='display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:\'Helvetica\',Arial,sans-serif;padding:30px;';
-  pdfDiv.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <img src="asmi-logo.png" style="height:48px;width:auto;object-fit:contain;" crossorigin="anonymous">
-        <div>
-          <div style="font-size:22px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif;letter-spacing:-0.5px">ASMI Career</div>
-          <div style="font-size:10px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif">Medical Admission Analysis Report</div>
+// ── Status badge helper ───────────────────────────────────────────────────────
+function statusBadgeHTML(status) {
+  const styles = {
+    'Safe':         'background:#dcfce7; color:#166534; border:1px solid #bbf7d0;',
+    'Likely':       'background:#dbeafe; color:#1e40af; border:1px solid #bfdbfe;',
+    'Borderline':   'background:#fef9c3; color:#854d0e; border:1px solid #fef08a;',
+    'Out of Reach': 'background:#fee2e2; color:#991b1b; border:1px solid #fecaca;',
+  };
+  const s = styles[status] || 'background:#f3f4f6; color:#374151;';
+  return `<span style="padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; ${s}">${status}</span>`;
+}
+
+// ── Projected pill helper ─────────────────────────────────────────────────────
+function projectedPill(value) {
+  if (!value) return '—';
+  return `<span style="background:#1A0040; color:#FFD700; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:800;">${value}</span>`;
+}
+
+// ── PAGE 1: COVER ─────────────────────────────────────────────────────────────
+function buildCoverPage(student) {
+  const el = document.createElement('div');
+  el.style.cssText = `
+    width: 794px; min-height: 1123px; background: #FFD700;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    position: absolute; left: -9999px; top: 0;
+    padding: 48px; box-sizing: border-box;
+  `;
+
+  const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+      <img src="asmi-logo.png" crossorigin="anonymous"
+           style="height:56px;" onerror="this.style.display='none'">
+      <div style="text-align:right; color:#1A0040; font-size:11px; font-weight:600;">
+        <div>Generated: ${today}</div>
+        <div style="margin-top:2px;">asmicareer.in &nbsp;·&nbsp; 7410019077</div>
+      </div>
+    </div>
+
+    <div style="background:#1A0040; border-radius:10px; padding:10px 20px; margin-bottom:20px; text-align:center;">
+      <div style="color:#FFD700; font-size:12px; font-weight:800; letter-spacing:2px;">
+        MEDICAL ADMISSION ANALYSIS REPORT
+      </div>
+    </div>
+
+    <div style="background:rgba(26,0,64,0.08); border:1.5px solid rgba(26,0,64,0.15);
+                border-radius:12px; padding:16px 20px; margin-bottom:20px;
+                display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+      ${[
+        ['STUDENT', student.name || '—'],
+        ['TOKEN', student.token || '—'],
+        ['NEET SCORE', `<span style="color:#6A0DAD; font-size:20px; font-weight:900;">${student.score || '—'}</span>`],
+        ['CATEGORY', student.category || '—'],
+        ['COURSE(S)', Array.isArray(student.courses) ? student.courses.join(', ') : (student.courses || '—')],
+        ['DATA BASIS', '2025–26 + 15 adj.'],
+      ].map(([label, val]) => `
+        <div style="min-width:100px;">
+          <div style="color:#6A0DAD; font-size:9px; font-weight:800; letter-spacing:1.5px; margin-bottom:3px;">${label}</div>
+          <div style="color:#1A0040; font-size:14px; font-weight:800;">${val}</div>
+        </div>
+      `).join('<div style="width:1px; background:rgba(26,0,64,0.15); align-self:stretch;"></div>')}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="color:#1A0040; font-size:10px; font-weight:800; letter-spacing:2px; margin-bottom:6px;">
+        MAHARASHTRA'S #1 NEET COUNSELLING
+      </div>
+      <div style="color:#1A0040; font-size:38px; font-weight:900; line-height:1.1; margin-bottom:10px;">
+        Your Dream.<br><span style="color:#6A0DAD;">Our Mission.</span>
+      </div>
+      <div style="color:#1A0040; font-size:13px; margin-bottom:12px;">
+        ASMI ensures your medical admission journey is
+        <strong>simple, transparent, and stress-free.</strong>
+      </div>
+      <div style="background:#1A0040; color:#FFD700; padding:8px 14px; border-radius:8px;
+                  font-size:12px; font-weight:700; display:inline-block;">
+        No more confusion. No more missed deadlines.
+      </div>
+    </div>
+
+    <div style="background:#1A0040; border-radius:12px; padding:20px 24px; margin-bottom:16px;
+                display:flex; align-items:center; gap:24px;">
+      <div style="color:#FFD700; font-size:52px; font-weight:900; line-height:1;">25K+</div>
+      <div>
+        <div style="color:#fff; font-size:16px; font-weight:800;">Admissions Done Across India</div>
+        <div style="color:rgba(255,255,255,0.6); font-size:11px; margin-top:4px;">
+          MBBS &nbsp;·&nbsp; BDS &nbsp;·&nbsp; BAMS &nbsp;·&nbsp; BPTH &nbsp;·&nbsp; Deemed &nbsp;·&nbsp; AIQ
         </div>
       </div>
-      <div style="text-align:right;font-size:10px;color:#888;line-height:1.6">
-        <div>Generated: ${date}</div>
-        <div>asmicareer.in · 7410019077</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:16px;">
+      ${[
+        ['11+', 'YEARS OF EXPERTISE'],
+        ['1000+', 'SEMINARS CONDUCTED'],
+        ['All India', 'COUNSELLING COVERAGE'],
+      ].map(([num, label]) => `
+        <div style="background:rgba(255,255,255,0.45); border-radius:12px; padding:18px;
+                    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+          <div style="color:#1A0040; font-size:28px; font-weight:900;">${num}</div>
+          <div style="color:#1A0040; font-size:9px; font-weight:800; letter-spacing:1px; margin-top:4px;">${label}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="background:rgba(255,255,255,0.45); border-radius:12px; padding:16px 20px; margin-bottom:16px;">
+      <div style="color:#1A0040; font-size:9px; font-weight:800; letter-spacing:1.5px; margin-bottom:10px;">
+        WHAT WE DELIVER
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        ${[
+          'Accurate cutoff data — MH State, AIQ, Open States, Deemed',
+          'Category-wise preference list built for your score',
+          'Live round-by-round alerts so you never miss a deadline',
+          'Document verification before every reporting date',
+        ].map(pt => `
+          <div style="color:#1A0040; font-size:12px; display:flex; gap:8px; align-items:flex-start;">
+            <span style="color:#6A0DAD; font-weight:900; margin-top:1px;">●</span>
+            <span>${pt}</span>
+          </div>
+        `).join('')}
       </div>
     </div>
-    <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:16px"></div>
-    <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;gap:28px;flex-wrap:wrap">
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Student</div><div style="font-weight:800;font-size:13px;color:#1a0040;margin-top:2px">${name}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${token}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px">${score}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${cat}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Course(s)</div><div style="font-weight:800;color:#1a0040;margin-top:2px">${(getSess().course||course)}</div></div>
-      <div><div style="font-size:9px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px">Data Basis</div><div style="font-weight:700;font-size:11px;color:#1a0040;margin-top:2px">2025–26 + 15 adj.</div></div>
+
+    <div style="border-left:4px solid #1A0040; padding:10px 16px;
+                background:rgba(255,255,255,0.35); border-radius:0 8px 8px 0; margin-bottom:32px;">
+      <div style="color:#1A0040; font-size:13px; font-weight:800;">
+        Pan-India Coverage — MH &nbsp;·&nbsp; AIQ &nbsp;·&nbsp; Open States &nbsp;·&nbsp; Deemed
+      </div>
+      <div style="color:#1A0040; font-size:11px; margin-top:3px;">
+        Guiding students from Maharashtra across every admission pool in India
+      </div>
     </div>
-    <table style="width:100%;border-collapse:collapse;font-size:11px">
+
+    <div style="border-top:1px solid rgba(26,0,64,0.2); padding-top:14px;
+                display:flex; justify-content:space-between; align-items:center;">
+      <div style="color:#1A0040; font-size:10px; font-weight:600;">
+        Generated by ASMI Career &nbsp;·&nbsp; asmicareer.in &nbsp;·&nbsp; 7410019077 &nbsp;·&nbsp; Confidential — For student use only
+      </div>
+      <div style="color:#1A0040; font-size:10px; font-weight:700;">Page 1 of 4</div>
+    </div>
+  `;
+  return el;
+}
+
+// ── PAGE 2: POOL SUMMARY ──────────────────────────────────────────────────────
+function buildSummaryPage(student, poolRows) {
+  const el = document.createElement('div');
+  el.style.cssText = `
+    width: 794px; background: #fff;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    position: absolute; left: -9999px; top: 0;
+    padding: 36px 36px 28px; box-sizing: border-box;
+  `;
+
+  let lastSection = '';
+  const rowsHTML = poolRows.map(row => {
+    let sectionRow = '';
+    if (row.section && row.section !== lastSection) {
+      lastSection = row.section;
+      sectionRow = `
+        <tr>
+          <td colspan="8" style="background:#1A0040; color:#FFD700; font-size:11px;
+              font-weight:800; letter-spacing:1.5px; padding:7px 12px;">
+            ${row.section}
+          </td>
+        </tr>`;
+    }
+    return sectionRow + `
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 10px; font-size:12px; font-weight:700; color:#1A0040;">${row.pool}</td>
+        <td style="padding:8px 10px; font-size:11px; color:#6A0DAD; font-weight:700;">${row.course}</td>
+        <td style="padding:8px 10px; font-size:12px; font-weight:800; color:#6A0DAD; text-align:center;">${row.options}</td>
+        <td style="padding:8px 10px; font-size:12px; text-align:center;">${row.lastCutoff || '—'}</td>
+        <td style="padding:8px 10px; text-align:center;">${projectedPill(row.projected)}</td>
+        <td style="padding:8px 10px; font-size:12px; text-align:center;">${row.feeMin ? formatFeeRange(row.feeMin, row.feeMax) : (row.feeStr || '—')}</td>
+        <td style="padding:8px 10px; font-size:12px; text-align:center;">${row.feeMin ? formatBudgetRange(row.feeMin, row.feeMax, row.years) : (row.budgetStr || '—')}</td>
+        <td style="padding:8px 10px; text-align:center;">${statusBadgeHTML(row.status)}</td>
+      </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+      <div>
+        <div style="color:#1A0040; font-size:18px; font-weight:900;">Admission Options — Pool Summary</div>
+        <div style="color:#6A0DAD; font-size:11px; margin-top:3px; font-weight:600;">
+          Score: ${student.score} &nbsp;·&nbsp; Category: ${student.category} &nbsp;·&nbsp; Course: ${Array.isArray(student.courses) ? student.courses.join(', ') : student.courses}
+        </div>
+      </div>
+      <img src="asmi-logo.png" crossorigin="anonymous"
+           style="height:36px;" onerror="this.style.display='none'">
+    </div>
+
+    <div style="background:#f5f3ff; border-left:4px solid #6A0DAD; border-radius:0 8px 8px 0;
+                padding:12px 16px; margin-bottom:18px; font-size:12px; color:#1A0040;">
+      <div style="font-size:9px; font-weight:800; letter-spacing:1.5px; color:#6A0DAD; margin-bottom:4px;">
+        ASMI COUNSELLOR'S VIEW
+      </div>
+      A score of ${student.score} gives you strong options across MH Govt, AIQ, and select open states. The preference list order will make the difference between a govt and a private seat.
+    </div>
+
+    <table style="width:100%; border-collapse:collapse; font-family:'Montserrat','Arial',sans-serif;">
       <thead>
-        <tr style="background:#1a0040">
-          <th style="color:#FFD700;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.5px">Pool</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Course</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Options</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Last Cutoff</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Projected</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Fee/yr</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Total Budget</th>
-          <th style="color:#FFD700;padding:8px 10px;text-align:center;font-size:10px">Status</th>
+        <tr style="background:#1A0040;">
+          ${['POOL','COURSE','OPTIONS','LAST CUTOFF','PROJECTED','FEE / YR','TOTAL BUDGET','STATUS']
+            .map(h => `<th style="padding:9px 10px; color:#FFD700; font-size:10px; font-weight:800;
+                letter-spacing:0.5px; text-align:${h==='POOL'||h==='COURSE'?'left':'center'};">${h}</th>`)
+            .join('')}
         </tr>
       </thead>
-      <tbody>${tableRowsHtml}</tbody>
+      <tbody>
+        ${rowsHTML}
+      </tbody>
     </table>
-    <div style="margin-top:20px;padding-top:10px;border-top:1px solid #ddd;font-size:9px;color:#aaa;text-align:center">
-      Generated by ASMI Career · asmicareer.in · 7410019077 · Confidential — For student use only
-    </div>`;
 
-  try{
-    const canvas=await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
-    const imgData=canvas.toDataURL('image/png');
-    const{jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pageW=pdf.internal.pageSize.getWidth();
-    const pageH=pdf.internal.pageSize.getHeight();
-    const imgW=pageW;
-    const imgH=(canvas.height*imgW)/canvas.width;
-    let yPos=0;
-    if(imgH<=pageH){
-      pdf.addImage(imgData,'PNG',0,0,imgW,imgH);
-    } else {
-      let remaining=imgH;
-      while(remaining>0){
-        pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
-        remaining-=pageH; yPos+=pageH;
-        if(remaining>0) pdf.addPage();
+    <div style="margin-top:12px; font-size:10px; color:#888;">
+      Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 15 marks (ReNEET adjustment).
+    </div>
+
+    <div style="display:flex; gap:20px; margin-top:10px; align-items:center;">
+      <div style="font-size:10px; font-weight:700; color:#1A0040;">STATUS GUIDE:</div>
+      ${[['Safe','#dcfce7','#166534'],['Likely','#dbeafe','#1e40af'],
+          ['Borderline','#fef9c3','#854d0e'],['Out of Reach','#fee2e2','#991b1b']]
+        .map(([label,bg,color]) => `
+          <div style="display:flex; align-items:center; gap:5px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;"></span>
+            <span style="font-size:10px; color:#374151;">${label}</span>
+          </div>`).join('')}
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb; margin-top:18px; padding-top:12px;
+                display:flex; justify-content:space-between;">
+      <div style="font-size:10px; color:#9ca3af;">
+        Generated by ASMI Career &nbsp;·&nbsp; asmicareer.in &nbsp;·&nbsp; 7410019077 &nbsp;·&nbsp; Confidential — For student use only
+      </div>
+      <div style="font-size:10px; color:#1A0040; font-weight:700;">Page 2 of 4</div>
+    </div>
+  `;
+  return el;
+}
+
+// ── PAGE 3: WHY ASMI ──────────────────────────────────────────────────────────
+function buildWhyASMIPage() {
+  const el = document.createElement('div');
+  el.style.cssText = `
+    width: 794px; min-height: 1123px; background: #fff;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    position: absolute; left: -9999px; top: 0;
+    padding: 36px; box-sizing: border-box;
+  `;
+
+  const whyPoints = [
+    {
+      wrong: 'Wrong preference list order',
+      wrongDesc: 'Students rank colleges randomly. One wrong position and a better seat is permanently gone — given to the next person in queue.',
+      wrongBadge: '1-year gap guaranteed',
+      right: 'Expert preference list — built for you',
+      rightDesc: 'ASMI builds your college priority list using 2025–26 actual cutoffs, projected adjustments, and your category — college by college.',
+      rightBadge: 'Maximum seats locked in',
+    },
+    {
+      wrong: 'Missing round deadlines',
+      wrongDesc: 'MCC runs R1, R2, Stray, Special Stray. Missing even one round means you lose your deposit and forfeit your seat permanently.',
+      wrongBadge: '₹50,000 deposit forfeited',
+      right: 'Real-time alerts — every single round',
+      rightDesc: 'Every deadline, every allotment result, every schedule change — delivered directly to you on WhatsApp before you even think to check.',
+      rightBadge: 'Zero missed deadlines',
+    },
+    {
+      wrong: 'Category confusion — seats left on table',
+      wrongDesc: 'OBC/SC/ST students are eligible under both their quota AND open quota. Most students only apply one way — and miss 30% of their options.',
+      wrongBadge: 'Govt seats missed silently',
+      right: 'Full category analysis — every pool covered',
+      rightDesc: 'We check your eligibility across MH quota, AIQ, open states, and deemed — under both your category and open quota simultaneously.',
+      rightBadge: 'Every eligible seat identified',
+    },
+    {
+      wrong: 'Document mismatch at reporting',
+      wrongDesc: 'One wrong document — wrong format, missing attestation, expired certificate — and your admission is cancelled on Day 1 at the college.',
+      wrongBadge: 'Admission cancelled on Day 1',
+      right: 'Document verification before every date',
+      rightDesc: 'ASMI runs a complete document checklist before every reporting date. We catch errors before the college does — every single time.',
+      rightBadge: 'Walk in confident, fully prepared',
+    },
+    {
+      wrong: 'Agents make fake commitments',
+      wrongDesc: 'Agents are paid commission by colleges — not by you. By the time you find out it was false, your deposit is lost and your year is wasted.',
+      wrongBadge: 'Paid by the college, not you',
+      right: 'ASMI works only for the student',
+      rightDesc: 'No college pays us a single rupee. Our only job is to get you the best seat your score deserves — using real data, not sales pressure.',
+      rightBadge: 'Zero conflict of interest',
+    },
+  ];
+
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <img src="asmi-logo.png" crossorigin="anonymous"
+           style="height:32px;" onerror="this.style.display='none'">
+      <div style="color:#6A0DAD; font-size:10px; font-weight:800; letter-spacing:1.5px;">
+        STEP 3 OF 4 — WHY THIS MATTERS
+      </div>
+    </div>
+
+    <div style="background:#1A0040; border-radius:12px; padding:14px 20px; margin-bottom:16px;">
+      <div style="color:#FFD700; font-size:9px; font-weight:800; letter-spacing:1.5px; margin-bottom:5px;">THE HARD TRUTH</div>
+      <div style="color:#fff; font-size:14px; font-weight:800; line-height:1.4;">
+        Most students lose seats they <span style="color:#FFD700;">already qualified for.</span><br>
+        Not because of score. Because of avoidable mistakes.
+      </div>
+      <div style="display:flex; gap:32px; margin-top:10px;">
+        ${[['60%','Wrong college order'],['₹50K+','Avg deposit lost'],['1 Year','Gone if you miss']]
+          .map(([num,label]) => `
+            <div>
+              <div style="color:#FFD700; font-size:18px; font-weight:900;">${num}</div>
+              <div style="color:rgba(255,255,255,0.7); font-size:10px;">${label}</div>
+            </div>`).join('')}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 36px 1fr; margin-bottom:16px;">
+      <div style="background:#fee2e2; padding:7px 12px; border-radius:8px 0 0 0;
+                  font-size:9px; font-weight:800; color:#991b1b; letter-spacing:1px;">
+        WITHOUT ASMI — WHAT GOES WRONG
+      </div>
+      <div style="background:#f3f4f6;"></div>
+      <div style="background:#dcfce7; padding:7px 12px; border-radius:0 8px 0 0;
+                  font-size:9px; font-weight:800; color:#166534; letter-spacing:1px; text-align:right;">
+        WITH ASMI — HOW WE FIX IT ✓
+      </div>
+
+      ${whyPoints.map(p => `
+        <div style="background:#fff8f8; padding:9px 12px; border-bottom:1px solid #fee2e2; border-left:2px solid #fca5a5;">
+          <div style="color:#991b1b; font-size:11px; font-weight:800; margin-bottom:2px;">${p.wrong}</div>
+          <div style="color:#374151; font-size:10px; line-height:1.4; margin-bottom:5px;">${p.wrongDesc}</div>
+          <span style="background:#fee2e2; color:#991b1b; font-size:9px; font-weight:700;
+                padding:2px 8px; border-radius:999px;">✗ ${p.wrongBadge}</span>
+        </div>
+        <div style="background:#f3f4f6; display:flex; align-items:center; justify-content:center;
+                    border-bottom:1px solid #e5e7eb;">
+          <span style="background:#1A0040; color:#fff; font-size:8px; font-weight:800;
+                width:22px; height:22px; border-radius:50%; display:flex; align-items:center;
+                justify-content:center;">VS</span>
+        </div>
+        <div style="background:#f0fdf4; padding:9px 12px; border-bottom:1px solid #dcfce7; border-right:2px solid #86efac;">
+          <div style="color:#166534; font-size:11px; font-weight:800; margin-bottom:2px;">${p.right}</div>
+          <div style="color:#374151; font-size:10px; line-height:1.4; margin-bottom:5px;">${p.rightDesc}</div>
+          <span style="background:#dcfce7; color:#166534; font-size:9px; font-weight:700;
+                padding:2px 8px; border-radius:999px;">✓ ${p.rightBadge}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div style="background:#6A0DAD; border-radius:10px; padding:12px 20px;
+                display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="color:#fff; font-size:13px; font-weight:800;">
+          Your score got you here. Don't let strategy lose it for you.
+        </div>
+        <div style="color:rgba(255,255,255,0.7); font-size:11px; margin-top:2px;">
+          Register with ASMI today — and make sure every seat you qualify for is yours.
+        </div>
+      </div>
+      <div style="background:#FFD700; color:#1A0040; font-size:11px; font-weight:800;
+                  padding:10px 16px; border-radius:8px; white-space:nowrap; margin-left:16px;">
+        Register with ASMI →
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb; margin-top:24px; padding-top:14px;
+                display:flex; justify-content:space-between;">
+      <div style="font-size:10px; color:#9ca3af;">
+        Generated by ASMI Career · asmicareer.in · 7410019077 · Confidential — For student use only
+      </div>
+      <div style="font-size:10px; color:#1A0040; font-weight:700;">Page 3 of 4</div>
+    </div>
+  `;
+  return el;
+}
+
+// ── PAGE 4: PRICING + REGISTRATION ───────────────────────────────────────────
+function buildRegistrationPage() {
+  const el = document.createElement('div');
+  el.style.cssText = `
+    width: 794px; min-height: 1123px; background: #fff;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    position: absolute; left: -9999px; top: 0;
+    padding: 36px; box-sizing: border-box;
+  `;
+
+  el.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <img src="asmi-logo.png" crossorigin="anonymous"
+           style="height:32px;" onerror="this.style.display='none'">
+      <div style="color:#6A0DAD; font-size:10px; font-weight:800; letter-spacing:1.5px;">
+        STEP 4 OF 4 — REGISTER
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:20px;">
+      <div style="background:#1A0040; border-radius:12px; padding:18px; position:relative;">
+        <div style="position:absolute; top:-10px; right:12px; background:#FFD700; color:#1A0040;
+                    font-size:9px; font-weight:800; padding:3px 12px; border-radius:999px;">
+          RECOMMENDED
+        </div>
+        <div style="color:#FFD700; font-size:9px; font-weight:800; letter-spacing:1px; margin-bottom:4px;">PACKAGE 1</div>
+        <div style="color:#fff; font-size:13px; font-weight:800; line-height:1.3; margin-bottom:10px;">
+          Complete Medical Admission<br>Counselling
+          <span style="color:#FFD700;"> — Merit Based</span>
+        </div>
+        <div style="color:#FFD700; font-size:30px; font-weight:900; line-height:1;">₹30,000</div>
+        <div style="color:rgba(255,255,255,0.8); font-size:10px; margin-top:4px;">Early Bird — valid till 15th July 2026</div>
+        <div style="color:rgba(255,255,255,0.5); font-size:10px; margin-top:2px;">After 15th July: ₹35,000</div>
+        <div style="background:#FFD700; color:#1A0040; font-size:9px; font-weight:800;
+                    padding:3px 10px; border-radius:999px; display:inline-block; margin-top:8px;">
+          Save ₹5,000 before 15th July
+        </div>
+        <div style="color:rgba(255,255,255,0.5); font-size:10px; margin-top:8px; line-height:1.5;">
+          For students admitted via general merit / category cutoffs. Covers MH State + MCC counselling.
+        </div>
+      </div>
+
+      <div style="background:#f5f3ff; border:1.5px solid #6A0DAD; border-radius:12px; padding:18px;">
+        <div style="color:#6A0DAD; font-size:9px; font-weight:800; letter-spacing:1px; margin-bottom:4px;">PACKAGE 2</div>
+        <div style="color:#1A0040; font-size:13px; font-weight:800; line-height:1.3; margin-bottom:10px;">
+          Complete Medical Admission<br>Counselling
+          <span style="color:#6A0DAD;"> — NRI / Management Quota</span>
+        </div>
+        <div style="color:#1A0040; font-size:30px; font-weight:900; line-height:1;">₹50,000</div>
+        <div style="color:#374151; font-size:10px; margin-top:4px;">Early Bird — valid till 15th July 2026</div>
+        <div style="color:#9ca3af; font-size:10px; margin-top:2px;">After 15th July: ₹60,000</div>
+        <div style="background:#6A0DAD; color:#fff; font-size:9px; font-weight:800;
+                    padding:3px 10px; border-radius:999px; display:inline-block; margin-top:8px;">
+          Save ₹10,000 before 15th July
+        </div>
+        <div style="color:#6b7280; font-size:10px; margin-top:8px; line-height:1.5;">
+          For students pursuing NRI quota or management quota seats in private / deemed colleges.
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f8f9fb; border-radius:10px; padding:14px 18px; margin-bottom:20px;">
+      <div style="font-size:10px; font-weight:800; color:#1A0040; letter-spacing:1px; margin-bottom:10px;">
+        WHAT'S INCLUDED IN YOUR PACKAGE
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        ${[
+          ['Medical Admission Guidance', 'Comprehensive guidance from start to finish'],
+          ['College Preference List', 'Built for every round — not just once'],
+          ['One-to-One Counselling', 'Sessions covering selection by quality, budget, city'],
+          ['Round-wise Cutoff Data', 'Actual cutoffs shared in real time every round'],
+          ['WhatsApp Admission Alerts', 'Every deadline and allotment result delivered to you'],
+          ['Dedicated Helpline', 'Three numbers saved — student, father, mother'],
+        ].map(([title, desc]) => `
+          <div style="display:flex; gap:8px; align-items:flex-start; padding:4px 0;">
+            <span style="color:#6A0DAD; font-size:12px; margin-top:1px; flex-shrink:0;">✓</span>
+            <div>
+              <div style="font-size:11px; font-weight:700; color:#1A0040;">${title}</div>
+              <div style="font-size:10px; color:#6b7280;">${desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px;">
+      <div style="background:#f8f9fb; border-radius:10px; padding:14px 16px;">
+        <div style="font-size:10px; font-weight:800; color:#1A0040; letter-spacing:1px; margin-bottom:10px;">PAYMENT DETAILS</div>
+        ${[
+          ['Account Name', 'ASMI Youth Career Advisor LLP'],
+          ['Account Number', '50200030649290'],
+          ['IFSC Code', 'HDFC0001274'],
+          ['UPI', 'asmicareer@ybl'],
+          ['Also Accepts', 'Cheque · Cash'],
+        ].map(([label, val]) => `
+          <div style="display:flex; justify-content:space-between; padding:5px 0;
+                      border-bottom:1px solid #e5e7eb;">
+            <span style="font-size:10px; color:#6b7280;">${label}</span>
+            <span style="font-size:10px; font-weight:700; color:#1A0040; text-align:right; max-width:55%;">${val}</span>
+          </div>`).join('')}
+      </div>
+
+      <div style="background:#f8f9fb; border-radius:10px; padding:14px 16px;">
+        <div style="font-size:10px; font-weight:800; color:#1A0040; letter-spacing:1px; margin-bottom:10px;">SCAN TO REGISTER / PAY</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center;">
+          <div>
+            <img src="qr_registration.png" crossorigin="anonymous"
+                 style="width:90px; height:90px; border:1px solid #e5e7eb; border-radius:8px;"
+                 onerror="this.style.background='#f3f4f6'">
+            <div style="font-size:10px; font-weight:700; color:#6A0DAD; margin-top:6px;">REGISTRATION FORM</div>
+            <div style="font-size:9px; color:#9ca3af;">Scan to fill form</div>
+          </div>
+          <div>
+            <img src="qr_payment.png" crossorigin="anonymous"
+                 style="width:90px; height:90px; border:1px solid #e5e7eb; border-radius:8px;"
+                 onerror="this.style.background='#f3f4f6'">
+            <div style="font-size:10px; font-weight:700; color:#6A0DAD; margin-top:6px;">PAYMENT</div>
+            <div style="font-size:9px; color:#9ca3af;">Scan to pay</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#1A0040; border-radius:10px; padding:12px 18px; margin-bottom:14px;
+                display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="color:#FFD700; font-size:11px; font-weight:800;">📞 &nbsp;7410019077 — Central Helpline</div>
+        <div style="color:rgba(255,255,255,0.8); font-size:11px; margin-top:4px;">
+          🌐 &nbsp;www.asmicareer.com &nbsp;&nbsp;
+          📍 &nbsp;42, A Wing, Silver Astra Building, JB Nagar Circle, Andheri East, Mumbai
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:9px; font-weight:800; color:#6A0DAD; letter-spacing:1px; margin-bottom:5px;">TERMS &amp; CONDITIONS</div>
+      <div style="font-size:10px; color:#6b7280; line-height:1.7;">
+        • Registration amount is non-refundable and non-transferable under any circumstances<br>
+        • All charges are inclusive of GST<br>
+        • Early bird rates valid till 15th July 2026 — standard rates apply from 16th July<br>
+        • Additional state or process form filling charged at ₹5,000 per state (not included in package)<br>
+        • ASMI reserves the right to assign counsellors based on branch availability
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb; padding-top:12px;
+                display:flex; justify-content:space-between;">
+      <div style="font-size:10px; color:#9ca3af;">
+        Generated by ASMI Career · asmicareer.in · 7410019077 · Confidential — For student use only
+      </div>
+      <div style="font-size:10px; color:#1A0040; font-weight:700;">Page 4 of 4</div>
+    </div>
+  `;
+  return el;
+}
+
+// ── MAIN downloadPDF() — 4 pages ──────────────────────────────────────────────
+async function downloadPDF() {
+  if(isCounselMode()){ downloadTop50PDF(); return; }
+  const btn = document.getElementById('pdfBtn');
+  if (btn) { btn.textContent = '⏳ Generating…'; btn.disabled = true; }
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const A4_W = 210;
+    const A4_H = 297;
+
+    async function addPageFromElement(el, isFirstPage) {
+      document.body.appendChild(el);
+      await new Promise(r => setTimeout(r, 300));
+      const canvas = await html2canvas(el, {
+        scale: 2, useCORS: true, allowTaint: false, backgroundColor: null, logging: false,
+      });
+      document.body.removeChild(el);
+      const imgData = canvas.toDataURL('image/jpeg', 0.93);
+      const canvasW = canvas.width, canvasH = canvas.height;
+      const imgH = (canvasH * A4_W) / canvasW;
+      if (!isFirstPage) pdf.addPage();
+      const sliceH = (A4_H / imgH) * canvasH;
+      let yOffset = 0;
+      while (yOffset < canvasH) {
+        if (yOffset > 0) pdf.addPage();
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = canvasW;
+        sliceCanvas.height = Math.min(sliceH, canvasH - yOffset);
+        const ctx = sliceCanvas.getContext('2d');
+        ctx.drawImage(canvas, 0, -yOffset, canvasW, canvasH);
+        const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.93);
+        pdf.addImage(sliceData, 'JPEG', 0, 0, A4_W, (sliceCanvas.height * A4_W) / canvasW);
+        yOffset += sliceH;
       }
     }
-    const safeName=(name).replace(/[^a-zA-Z0-9]/g,'_');
-    pdf.save(`ASMI_Analysis_${safeName}_${token}.pdf`);
-  }catch(err){
-    console.error('PDF error:',err);
-    alert('PDF generation failed. Try again.');
-  }finally{
-    pdfDiv.style.display='none';
-    btn.textContent='⬇ Download PDF';
-    btn.classList.remove('loading');
+
+    const liveScore    = activeScore();
+    const liveCategory = activeCategory();
+    const liveCourses  = (getSess().course || STUDENT.courses || 'MBBS').split(',').map(s => s.trim());
+
+    const pdfStudent = {
+      ...STUDENT,
+      score:    liveScore,
+      category: liveCategory,
+      courses:  liveCourses,
+      token:    STUDENT.token || getSess().token || '—',
+    };
+
+    // Map buildPoolRows() output to the schema buildSummaryPage expects.
+    // rawFee is in lakhs; multiply by 100000 to get rupees for formatFee.
+    const poolRows = buildPoolRows().map(r => ({
+      section:   r.group,
+      pool:      r.label,
+      course:    r.course,
+      options:   r.inReach + '/' + r.total,
+      lastCutoff: r.lastCutoff,
+      projected: r.projCutoff,
+      feeMin:    r.rawFee ? r.rawFee * 100000 : null,
+      feeMax:    null,
+      feeStr:    r.feeStr,
+      budgetStr: r.budgetStr,
+      years:     budgetMultiplier(r.course),
+      status:    r.status.label,
+    }));
+
+    await addPageFromElement(buildCoverPage(pdfStudent), true);
+    await addPageFromElement(buildSummaryPage(pdfStudent, poolRows), false);
+    await addPageFromElement(buildWhyASMIPage(), false);
+    await addPageFromElement(buildRegistrationPage(), false);
+
+    const safeName = (pdfStudent.name || 'Student').replace(/\s+/g, '_');
+    pdf.save(`ASMI_Analysis_${safeName}_${pdfStudent.token || 'TOKEN'}.pdf`);
+
+  } catch (err) {
+    console.error('PDF generation error:', err);
+    alert('PDF generation failed. Please try again.');
+  } finally {
+    if (btn) { btn.textContent = '⬇ Download PDF'; btn.disabled = false; }
   }
 }
 
@@ -1149,6 +1681,11 @@ function prob(score, cutoff){
 function feeStr(name){
   if(!FEE || !FEE[name]) return '—';
   return `₹${Number(FEE[name]).toFixed(2)}L/yr`;
+}
+function feeRangeStr(min, max){
+  if(!min && !max) return '—';
+  if(!max || min === max) return feeStr(min);
+  return feeStr(min).replace('/yr','') + ' – ' + feeStr(max);
 }
 
 function getTop25(){

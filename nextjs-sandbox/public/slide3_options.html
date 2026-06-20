@@ -450,6 +450,8 @@ function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
 function updateShortlistBadge(){
   const badge = document.getElementById('shortlistBadge');
   if(!badge) return;
+  if(!isCounselMode()){ badge.style.display='none'; return; }
+  badge.style.display='';
   badge.textContent = shortlist.length > 0
     ? `★ Shortlisted (${shortlist.length})`
     : '☆ Shortlist';
@@ -534,15 +536,18 @@ function renderTable(cols,showState=false){
   const sh=showState?'<th>State</th>':'';
   const rows=sorted.map(c=>{
     const st=showState?`<td>${c.s||''}</td>`:'';
+    const actual=c.openCutoff!==undefined?c.openCutoff:c.c;
+    const projected=actual+15;
     return`<tr>
     <td class="college-name">${c.n}</td>${st}
-    <td class="cutoff-val">${c.c}</td>
+    <td class="cutoff-val">${actual}</td>
+    <td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>
     <td class="fee-val">${feeStr(c.n)}</td>
     <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
   </tr>`;
   }).join('');
   return`<table class="ctable">
-  <thead><tr><th>College</th>${sh}<th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>
+  <thead><tr><th>College</th>${sh}<th>Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th></tr></thead>
   <tbody>${rows}</tbody></table>`;
 }
 
@@ -1329,6 +1334,7 @@ document.addEventListener('keydown',e=>{
 
 // INIT
 async function init(){
+  document.getElementById('editBar').classList.add('visible');
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
   const isCounsel=getSess().mode==='counsel';
