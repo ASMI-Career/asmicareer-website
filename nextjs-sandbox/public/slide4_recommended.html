@@ -1244,10 +1244,7 @@ async function downloadPDF() {
     const pdfW = 210;
 
     // Capture the existing visible pool summary table
-    const tableEl = document.getElementById('poolSummaryTable') ||
-                    document.getElementById('summaryTable') ||
-                    document.querySelector('.pool-summary') ||
-                    document.querySelector('table');
+    const tableEl = document.getElementById('tableOuter');
 
     if (!tableEl) {
       alert('Could not find summary table');
