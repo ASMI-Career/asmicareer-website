@@ -448,6 +448,7 @@ function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
 }
 
 function updateShortlistBadge(){
+  if (!isCounselMode()) return;
   const badge = document.getElementById('shortlistBadge');
   if(!badge) return;
   if(!isCounselMode()){ badge.style.display='none'; return; }
