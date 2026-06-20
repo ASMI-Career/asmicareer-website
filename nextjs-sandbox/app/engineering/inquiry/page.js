@@ -220,15 +220,15 @@ export default function EngineeringInquiryPage() {
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="98765 43210" type="tel" value={formData.studentContact} onChange={handleInputChange} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={handleInputChange} required/>
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Parent's mobile number" type="tel" value={formData.fatherContact} onChange={handleInputChange}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={handleInputChange}/>
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Parent's mobile number" type="tel" value={formData.motherContact} onChange={handleInputChange}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={handleInputChange}/>
                           </div>
                           <div>
                               <label className="field-label">Coaching Class</label>
