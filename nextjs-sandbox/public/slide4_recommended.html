@@ -1287,6 +1287,9 @@ async function downloadPDF() {
     }
 
     const s = STUDENT || {};
+    if (s.courses && !Array.isArray(s.courses)) {
+      s.courses = typeof s.courses === 'string' ? s.courses.split(',').map(c => c.trim()) : [s.courses];
+    }
     const name = (s.name || 'Student').replace(/\s+/g, '_');
     const token = s.token || getSess().token || 'TOKEN';
 
