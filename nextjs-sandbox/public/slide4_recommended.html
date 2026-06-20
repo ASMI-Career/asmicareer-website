@@ -1243,13 +1243,22 @@ async function downloadPDF() {
     const pdfH = 297;
 
     async function captureEl(el) {
-      el.style.cssText += '; position:absolute; left:0; top:0; z-index:-1; opacity:0.01; width:794px;';
+      el.style.position = 'fixed';
+      el.style.left = '0px';
+      el.style.top = '-99999px';
+      el.style.zIndex = '9999';
+      el.style.width = '794px';
       document.body.appendChild(el);
-      await new Promise(r => setTimeout(r, 400));
+      await new Promise(r => setTimeout(r, 500));
       const c = await html2canvas(el, {
-        scale: 1.5, useCORS: true, backgroundColor: '#ffffff',
-        logging: false, width: 794, windowWidth: 794,
-        height: el.scrollHeight
+        scale: 1.5,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        width: 794,
+        windowWidth: 794,
+        scrollX: 0,
+        scrollY: 0
       });
       document.body.removeChild(el);
       return c;
