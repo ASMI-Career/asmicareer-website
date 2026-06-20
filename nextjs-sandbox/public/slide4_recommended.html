@@ -720,7 +720,7 @@ function buildCoverPage(student) {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #FFD700;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: absolute; left: -9999px; top: 0;
+    position: fixed; left: -9999px; top: 0; visibility: hidden;
     padding: 48px; box-sizing: border-box;
   `;
 
@@ -848,7 +848,7 @@ function buildSummaryPage(student, poolRows) {
   el.style.cssText = `
     width: 794px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: absolute; left: -9999px; top: 0;
+    position: fixed; left: -9999px; top: 0; visibility: hidden;
     padding: 36px 36px 28px; box-sizing: border-box;
   `;
 
@@ -944,7 +944,7 @@ function buildWhyASMIPage() {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: absolute; left: -9999px; top: 0;
+    position: fixed; left: -9999px; top: 0; visibility: hidden;
     padding: 36px; box-sizing: border-box;
   `;
 
@@ -1082,7 +1082,7 @@ function buildRegistrationPage() {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: absolute; left: -9999px; top: 0;
+    position: fixed; left: -9999px; top: 0; visibility: hidden;
     padding: 36px; box-sizing: border-box;
   `;
 
@@ -1262,6 +1262,11 @@ async function downloadPDF() {
       const imgW = A4_W;
       const imgH = (canvasH * A4_W) / canvasW;
 
+      if (!imgW || !imgH || isNaN(imgW) || isNaN(imgH) || imgW <= 0 || imgH <= 0) {
+        console.error('Invalid image dimensions:', imgW, imgH);
+        return;
+      }
+
       if (!isFirstPage) pdf.addPage();
 
       const sliceH = (A4_H / imgH) * canvasH;
@@ -1275,8 +1280,8 @@ async function downloadPDF() {
         const ctx = sliceCanvas.getContext('2d');
         ctx.drawImage(canvas, 0, -yOffset, canvasW, canvasH);
         const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.93);
-        pdf.addImage(sliceData, 'JPEG', 0, 0, A4_W,
-          (sliceCanvas.height * A4_W) / canvasW);
+        const sliceImgH = (sliceCanvas.height * A4_W) / canvasW;
+        pdf.addImage(sliceData, 'JPEG', 0, 0, imgW, sliceImgH);
         yOffset += sliceH;
       }
     }
