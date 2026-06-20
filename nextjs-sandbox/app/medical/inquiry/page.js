@@ -25,6 +25,7 @@ export default function InquiryPage() {
   const [showModal, setShowModal] = useState(false);
   const [token, setToken] = useState('---');
   const [errorMsg, setErrorMsg] = useState(null);
+  const [errors, setErrors] = useState({});
 
 
   const branchDetails = {
@@ -69,8 +70,31 @@ export default function InquiryPage() {
     }
   };
 
+  function validateForm(data) {
+    const newErrors = {};
+    if (!data.studentContact || data.studentContact.length !== 10) {
+      newErrors.studentContact = 'Please enter a valid 10-digit mobile number';
+    }
+    if (!data.neetScore || Number(data.neetScore) < 1 || Number(data.neetScore) > 720) {
+      newErrors.neetScore = 'NEET score must be between 1 and 720';
+    }
+    if (data.fatherContact && data.fatherContact.length !== 10) {
+      newErrors.fatherContact = 'Please enter a valid 10-digit number';
+    }
+    if (data.motherContact && data.motherContact.length !== 10) {
+      newErrors.motherContact = 'Please enter a valid 10-digit number';
+    }
+    return newErrors;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     setIsLoading(true);
     setErrorMsg(null);
 
@@ -203,19 +227,23 @@ export default function InquiryPage() {
                           </div>
                           <div>
                               <label className="field-label">NEET Score</label>
-                              <input name="neetScore" className="field-input" placeholder="Your NEET Score (out of 720)" type="number" min={1} max={720} value={formData.neetScore} onChange={e => { if (Number(e.target.value) > 720) { setErrorMsg('NEET score cannot exceed 720'); return; } setErrorMsg(null); handleInputChange(e); }} required/>
+                              <input name="neetScore" className="field-input" placeholder="Your NEET Score (out of 720)" type="number" min={1} max={720} value={formData.neetScore} onChange={e => { handleInputChange(e); if (errors.neetScore) setErrors({...errors, neetScore: ''}); }} required/>
+                              {errors.neetScore && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.neetScore}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={handleInputChange} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
+                              {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={handleInputChange}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
+                              {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={handleInputChange}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
+                              {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Coaching Class</label>
