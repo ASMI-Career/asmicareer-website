@@ -1249,40 +1249,55 @@ async function downloadPDF() {
       await new Promise(r => setTimeout(r, 300));
 
       const canvas = await html2canvas(el, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
         allowTaint: false,
-        backgroundColor: null,
+        backgroundColor: '#ffffff',
         logging: false,
+        width: 794,
+        windowWidth: 794
       });
       document.body.removeChild(el);
 
-      const canvasW = canvas.width;
-      const canvasH = canvas.height;
-      const imgW = A4_W;
-      const imgH = (canvasH * A4_W) / canvasW;
+      if (!canvas.width || !canvas.height) return;
 
-      if (!imgW || !imgH || isNaN(imgW) || isNaN(imgH) || imgW <= 0 || imgH <= 0) {
-        console.error('Invalid image dimensions:', imgW, imgH);
-        return;
-      }
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const pdfWidth = 210;
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
       if (!isFirstPage) pdf.addPage();
 
-      const sliceH = (A4_H / imgH) * canvasH;
-      let yOffset = 0;
+      if (pdfHeight <= 297) {
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      } else {
+        // Multi-page: split into A4 chunks
+        const pageHeightPx = (297 * canvas.width) / pdfWidth;
+        let yPx = 0;
+        let firstChunk = true;
 
-      while (yOffset < canvasH) {
-        if (yOffset > 0) pdf.addPage();
-        const sliceCanvas = document.createElement('canvas');
-        sliceCanvas.width = canvasW;
-        sliceCanvas.height = Math.min(sliceH, canvasH - yOffset);
-        const ctx = sliceCanvas.getContext('2d');
-        ctx.drawImage(canvas, 0, -yOffset, canvasW, canvasH);
-        const sliceData = sliceCanvas.toDataURL('image/jpeg', 0.93);
-        const sliceImgH = (sliceCanvas.height * A4_W) / canvasW;
-        pdf.addImage(sliceData, 'JPEG', 0, 0, imgW, sliceImgH);
-        yOffset += sliceH;
+        while (yPx < canvas.height) {
+          if (!firstChunk) pdf.addPage();
+          firstChunk = false;
+
+          const chunkCanvas = document.createElement('canvas');
+          chunkCanvas.width = canvas.width;
+          chunkCanvas.height = Math.min(pageHeightPx, canvas.height - yPx);
+
+          const ctx = chunkCanvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, chunkCanvas.width, chunkCanvas.height);
+          ctx.drawImage(canvas, 0, yPx, canvas.width, chunkCanvas.height,
+                        0, 0, canvas.width, chunkCanvas.height);
+
+          const chunkW = pdfWidth;
+          const chunkH = (chunkCanvas.height * pdfWidth) / chunkCanvas.width;
+
+          if (chunkW > 0 && chunkH > 0) {
+            pdf.addImage(chunkCanvas.toDataURL('image/jpeg', 0.92),
+                         'JPEG', 0, 0, chunkW, chunkH);
+          }
+          yPx += pageHeightPx;
+        }
       }
     }
 
