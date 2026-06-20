@@ -1286,9 +1286,9 @@ async function downloadPDF() {
       }
     }
 
-    const s = window.studentData || {};
+    const s = STUDENT || {};
     const name = (s.name || 'Student').replace(/\s+/g, '_');
-    const token = s.token || 'TOKEN';
+    const token = s.token || getSess().token || 'TOKEN';
 
     // PAGE 1 — COVER
     const p1 = document.createElement('div');
@@ -1343,15 +1343,21 @@ async function downloadPDF() {
 
     // PAGE 2 — POOL SUMMARY (existing rendered table)
     const tableEl = document.getElementById('tableOuter');
+    const origWidth = tableEl.style.width;
+    const origMaxWidth = tableEl.style.maxWidth;
     const origH = tableEl.style.height;
     const origOv = tableEl.style.overflow;
+    tableEl.style.width = '1200px';
+    tableEl.style.maxWidth = '1200px';
     tableEl.style.height = tableEl.scrollHeight + 'px';
     tableEl.style.overflow = 'visible';
     const c2 = await html2canvas(tableEl, {
       scale: 1.5, useCORS: true, backgroundColor: '#ffffff',
-      logging: false, width: tableEl.scrollWidth,
-      height: tableEl.scrollHeight, windowWidth: window.innerWidth
+      logging: false, width: 1200,
+      height: tableEl.scrollHeight, windowWidth: 1200
     });
+    tableEl.style.width = origWidth;
+    tableEl.style.maxWidth = origMaxWidth;
     tableEl.style.height = origH;
     tableEl.style.overflow = origOv;
     await addCanvas(c2, false);
@@ -1420,6 +1426,31 @@ async function downloadPDF() {
         <div style="background:#1A0040;border-radius:10px;padding:12px 18px;margin-bottom:12px;">
           <div style="color:#FFD700;font-size:11px;font-weight:800;">📞 7410019077 — Central Helpline</div>
           <div style="color:rgba(255,255,255,0.8);font-size:11px;margin-top:4px;">🌐 www.asmicareer.com &nbsp;&nbsp; 📍 42, A Wing, Silver Astra Building, JB Nagar Circle, Andheri East, Mumbai</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div style="background:#f8f9fb;border-radius:10px;padding:14px 16px;">
+            <div style="font-size:10px;font-weight:800;color:#1A0040;letter-spacing:1px;margin-bottom:10px;">PAYMENT DETAILS</div>
+            ${[
+              ['Account Name','ASMI Youth Career Advisor LLP'],
+              ['Account Number','50200030649290'],
+              ['IFSC Code','HDFC0001274'],
+              ['UPI','asmicareer@ybl'],
+              ['Also Accepts','Cheque · Cash'],
+            ].map(([l,v]) => `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #e5e7eb;"><span style="font-size:10px;color:#6b7280;">${l}</span><span style="font-size:10px;font-weight:700;color:#1A0040;text-align:right;">${v}</span></div>`).join('')}
+          </div>
+          <div style="background:#f8f9fb;border-radius:10px;padding:14px 16px;text-align:center;">
+            <div style="font-size:10px;font-weight:800;color:#1A0040;letter-spacing:1px;margin-bottom:10px;">SCAN TO REGISTER / PAY</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <img src="https://asmicareer.in/qr_registration.png" crossorigin="anonymous" style="width:80px;height:80px;border:1px solid #e5e7eb;border-radius:8px;">
+                <div style="font-size:9px;font-weight:700;color:#6A0DAD;margin-top:4px;">REGISTRATION</div>
+              </div>
+              <div>
+                <img src="https://asmicareer.in/qr_payment.png" crossorigin="anonymous" style="width:80px;height:80px;border:1px solid #e5e7eb;border-radius:8px;">
+                <div style="font-size:9px;font-weight:700;color:#6A0DAD;margin-top:4px;">PAYMENT</div>
+              </div>
+            </div>
+          </div>
         </div>
         <div style="background:#6A0DAD;border-radius:10px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
           <div style="color:#fff;font-size:13px;font-weight:800;">Your score got you here. Don't let strategy lose it for you.</div>
