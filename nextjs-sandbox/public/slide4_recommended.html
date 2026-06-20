@@ -1231,40 +1231,72 @@ function buildRegistrationPage() {
   return el;
 }
 
-// ── MAIN downloadPDF() — TEST VERSION ────────────────────────────────────────
+// ── MAIN downloadPDF() ────────────────────────────────────────────────────────
 async function downloadPDF() {
+  if(isCounselMode()){ downloadTop50PDF(); return; }
+  const btn = document.getElementById('downloadPdfBtn') ||
+              document.querySelector('[onclick*="downloadPDF"]');
+  if (btn) { btn.textContent = 'Generating...'; btn.disabled = true; }
+
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfW = 210;
 
-    const el = document.createElement('div');
-    el.style.cssText = 'width:794px; background:red; height:200px; position:absolute; top:0; left:0; z-index:-1;';
-    el.innerHTML = '<h1 style="color:white;">TEST PAGE</h1>';
-    document.body.appendChild(el);
+    // Capture the existing visible pool summary table
+    const tableEl = document.getElementById('poolSummaryTable') ||
+                    document.getElementById('summaryTable') ||
+                    document.querySelector('.pool-summary') ||
+                    document.querySelector('table');
 
-    await new Promise(r => setTimeout(r, 500));
+    if (!tableEl) {
+      alert('Could not find summary table');
+      return;
+    }
 
-    const canvas = await html2canvas(el, {
+    const canvas = await html2canvas(tableEl, {
       scale: 1.5,
-      backgroundColor: '#ff0000',
-      logging: true,
-      width: 794,
-      windowWidth: 794
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: tableEl.scrollWidth,
+      windowWidth: window.innerWidth
     });
 
-    document.body.removeChild(el);
+    const pageH = 297;
+    const pageHeightPx = (pageH * canvas.width) / pdfW;
+    let yPx = 0;
+    let firstPage = true;
 
-    console.log('Canvas:', canvas.width, canvas.height);
+    while (yPx < canvas.height) {
+      if (!firstPage) pdf.addPage();
+      firstPage = false;
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.92);
-    pdf.addImage(imgData, 'JPEG', 0, 0, 210, (canvas.height * 210) / canvas.width);
-    pdf.save('test.pdf');
+      const chunkCanvas = document.createElement('canvas');
+      chunkCanvas.width = canvas.width;
+      chunkCanvas.height = Math.min(pageHeightPx, canvas.height - yPx);
+      const ctx = chunkCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, chunkCanvas.width, chunkCanvas.height);
+      ctx.drawImage(canvas, 0, yPx, canvas.width, chunkCanvas.height,
+                    0, 0, canvas.width, chunkCanvas.height);
+
+      const chunkH = (chunkCanvas.height * pdfW) / chunkCanvas.width;
+      pdf.addImage(chunkCanvas.toDataURL('image/jpeg', 0.92),
+                   'JPEG', 0, 0, pdfW, chunkH);
+      yPx += pageHeightPx;
+    }
+
+    const name = (STUDENT?.name || 'Student').replace(/\s+/g, '_');
+    const token = STUDENT?.token || getSess().token || 'TOKEN';
+    pdf.save('ASMI_Analysis_' + name + '_' + token + '.pdf');
 
   } catch(e) {
     console.error('PDF ERROR:', e.message, e.stack);
-    alert('Error: ' + e.message);
+    alert('PDF Error: ' + e.message);
+  } finally {
+    if (btn) { btn.textContent = '⬇ Download PDF'; btn.disabled = false; }
   }
-
 }
 
 function buildPDFHTML(title, subtitle, sections, studentData){
