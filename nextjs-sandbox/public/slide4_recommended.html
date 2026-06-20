@@ -1231,129 +1231,40 @@ function buildRegistrationPage() {
   return el;
 }
 
-// ── MAIN downloadPDF() — 4 pages ──────────────────────────────────────────────
+// ── MAIN downloadPDF() — TEST VERSION ────────────────────────────────────────
 async function downloadPDF() {
-  if(isCounselMode()){ downloadTop50PDF(); return; }
-  const btn = document.querySelector('[data-pdf-btn]') ||
-              document.getElementById('pdfBtn');
-  if (btn) { btn.textContent = 'Generating PDF…'; btn.disabled = true; }
-
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const A4_W = 210;
-    const A4_H = 297;
 
-    async function addPageFromElement(el, isFirstPage) {
-      document.body.appendChild(el);
-      await new Promise(r => setTimeout(r, 300));
+    const el = document.createElement('div');
+    el.style.cssText = 'width:794px; background:red; height:200px; position:absolute; top:0; left:0; z-index:-1;';
+    el.innerHTML = '<h1 style="color:white;">TEST PAGE</h1>';
+    document.body.appendChild(el);
 
-      const canvas = await html2canvas(el, {
-        scale: 1.5,
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: '#ffffff',
-        logging: false,
-        width: 794,
-        windowWidth: 794,
-        x: 0,
-        y: 0,
-        scrollX: 0,
-        scrollY: 0
-      });
-      document.body.removeChild(el);
+    await new Promise(r => setTimeout(r, 500));
 
-      if (!canvas.width || !canvas.height) return;
+    const canvas = await html2canvas(el, {
+      scale: 1.5,
+      backgroundColor: '#ff0000',
+      logging: true,
+      width: 794,
+      windowWidth: 794
+    });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
-      const pdfWidth = 210;
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    document.body.removeChild(el);
 
-      if (!isFirstPage) pdf.addPage();
+    console.log('Canvas:', canvas.width, canvas.height);
 
-      if (pdfHeight <= 297) {
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      } else {
-        // Multi-page: split into A4 chunks
-        const pageHeightPx = (297 * canvas.width) / pdfWidth;
-        let yPx = 0;
-        let firstChunk = true;
+    const imgData = canvas.toDataURL('image/jpeg', 0.92);
+    pdf.addImage(imgData, 'JPEG', 0, 0, 210, (canvas.height * 210) / canvas.width);
+    pdf.save('test.pdf');
 
-        while (yPx < canvas.height) {
-          if (!firstChunk) pdf.addPage();
-          firstChunk = false;
-
-          const chunkCanvas = document.createElement('canvas');
-          chunkCanvas.width = canvas.width;
-          chunkCanvas.height = Math.min(pageHeightPx, canvas.height - yPx);
-
-          const ctx = chunkCanvas.getContext('2d');
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, chunkCanvas.width, chunkCanvas.height);
-          ctx.drawImage(canvas, 0, yPx, canvas.width, chunkCanvas.height,
-                        0, 0, canvas.width, chunkCanvas.height);
-
-          const chunkW = pdfWidth;
-          const chunkH = (chunkCanvas.height * pdfWidth) / chunkCanvas.width;
-
-          if (chunkW > 0 && chunkH > 0) {
-            pdf.addImage(chunkCanvas.toDataURL('image/jpeg', 0.92),
-                         'JPEG', 0, 0, chunkW, chunkH);
-          }
-          yPx += pageHeightPx;
-        }
-      }
-    }
-
-    const liveScore    = activeScore();
-    const liveCategory = activeCategory();
-    const liveCourses  = (getSess().course || STUDENT.courses || 'MBBS').split(',').map(s => s.trim());
-
-    const pdfStudent = {
-      ...STUDENT,
-      score:    liveScore,
-      category: liveCategory,
-      courses:  liveCourses,
-      token:    STUDENT.token || getSess().token || '—',
-    };
-
-    // rawFee is in lakhs; multiply by 100000 to get rupees for formatFee.
-    const poolRows = buildPoolRows().map(r => ({
-      section:    r.group,
-      pool:       r.label,
-      course:     r.course,
-      options:    r.inReach + '/' + r.total,
-      lastCutoff: r.lastCutoff,
-      projected:  r.projCutoff,
-      feeMin:     r.rawFee ? r.rawFee * 100000 : null,
-      feeMax:     null,
-      feeStr:     r.feeStr,
-      budgetStr:  r.budgetStr,
-      years:      budgetMultiplier(r.course),
-      status:     r.status.label,
-    }));
-
-    // Page 1: Cover
-    await addPageFromElement(buildCoverPage(pdfStudent), true);
-
-    // Page 2: Pool Summary (may auto-paginate if table is long)
-    await addPageFromElement(buildSummaryPage(pdfStudent, poolRows), false);
-
-    // Page 3: Why ASMI
-    await addPageFromElement(buildWhyASMIPage(), false);
-
-    // Page 4: Pricing + Registration
-    await addPageFromElement(buildRegistrationPage(), false);
-
-    const safeName = (pdfStudent.name || 'Student').replace(/\s+/g, '_');
-    pdf.save(`ASMI_Analysis_${safeName}_${pdfStudent.token || 'TOKEN'}.pdf`);
-
-  } catch (err) {
-    console.error('PDF generation error:', err);
-    alert('PDF generation failed. Please try again.');
-  } finally {
-    if (btn) { btn.textContent = '⬇ Download PDF'; btn.disabled = false; }
+  } catch(e) {
+    console.error('PDF ERROR:', e.message, e.stack);
+    alert('Error: ' + e.message);
   }
+
 }
 
 function buildPDFHTML(title, subtitle, sections, studentData){
