@@ -1280,7 +1280,7 @@ function goToShortlist(){
 function collapseAll(){
   currentPane=null;
   document.getElementById('panesContainer').classList.remove('has-expanded');
-  document.getElementById('editBar').classList.remove('visible');
+  // editBar always visible on slide 3 — do not hide
   ['mh','mcc','open'].forEach(p=>document.getElementById('pane-'+p).classList.remove('pane-active','pane-collapsed'));
   renderAllOverviews();
   if (window.innerWidth <= 768) {
