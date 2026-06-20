@@ -1372,6 +1372,21 @@ async function init(){
     });
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('panesContainer').classList.remove('hidden');
+    // Populate navbar fields from session/student data on load
+    document.getElementById('editScore').value = activeScore();
+    document.getElementById('editCategory').value = activeCategory();
+    const allCourses = ['MBBS','BDS','BPTH','BAMS','BHMS'];
+    const currentCourses = (getSess().course || activeCourse()).split(',').map(c => c.trim());
+    const pillsWrap = document.getElementById('editCoursePills');
+    pillsWrap.innerHTML = allCourses.map(c => `
+      <span onclick="toggleCoursePill(this,'${c}')" data-course="${c}" style="
+        font-family:Montserrat,sans-serif;font-size:.62rem;font-weight:800;
+        padding:3px 10px;border-radius:6px;cursor:pointer;letter-spacing:.3px;
+        background:${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.15)'};
+        color:${currentCourses.includes(c)?'#1a0040':'rgba(255,255,255,.7)'};
+        border:1px solid ${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.25)'};
+        transition:.15s;">${c}</span>`).join('');
+    updateShortlistBadge();
     renderAllOverviews();
   }catch(err){
     document.getElementById('loadingOverlay').classList.add('hidden');
