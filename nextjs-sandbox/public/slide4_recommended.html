@@ -720,7 +720,7 @@ function buildCoverPage(student) {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #FFD700;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: fixed; left: -9999px; top: 0; visibility: hidden;
+    position: absolute; top: 0; left: 0; z-index: -9999; opacity: 0; pointer-events: none; width: 794px;
     padding: 48px; box-sizing: border-box;
   `;
 
@@ -848,7 +848,7 @@ function buildSummaryPage(student, poolRows) {
   el.style.cssText = `
     width: 794px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: fixed; left: -9999px; top: 0; visibility: hidden;
+    position: absolute; top: 0; left: 0; z-index: -9999; opacity: 0; pointer-events: none; width: 794px;
     padding: 36px 36px 28px; box-sizing: border-box;
   `;
 
@@ -944,7 +944,7 @@ function buildWhyASMIPage() {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: fixed; left: -9999px; top: 0; visibility: hidden;
+    position: absolute; top: 0; left: 0; z-index: -9999; opacity: 0; pointer-events: none; width: 794px;
     padding: 36px; box-sizing: border-box;
   `;
 
@@ -1082,7 +1082,7 @@ function buildRegistrationPage() {
   el.style.cssText = `
     width: 794px; min-height: 1123px; background: #fff;
     font-family: 'Montserrat', 'Arial', sans-serif;
-    position: fixed; left: -9999px; top: 0; visibility: hidden;
+    position: absolute; top: 0; left: 0; z-index: -9999; opacity: 0; pointer-events: none; width: 794px;
     padding: 36px; box-sizing: border-box;
   `;
 
@@ -1255,7 +1255,11 @@ async function downloadPDF() {
         backgroundColor: '#ffffff',
         logging: false,
         width: 794,
-        windowWidth: 794
+        windowWidth: 794,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0
       });
       document.body.removeChild(el);
 
