@@ -676,7 +676,14 @@ function renderMHBlurred(cols){
       <span class="cutoff-val">${actual}</span>
       <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
     </div>`;
-    const cc=showDual?(c.catCutoff!==null?`<td class="cutoff-val" style="color:var(--purple);font-weight:900">${c.catCutoff}</td>`:`<td class="cutoff-val" style="color:#ccc">—</td>`):'';
+    const catActual=c.catCutoff!==null?c.catCutoff:null;
+    const catProj=catActual!==null?catActual+15:null;
+    const cc=showDual?(catActual!==null?`<td style="text-align:center">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <span class="cutoff-val" style="color:var(--purple);font-weight:900">${catActual}</span>
+        <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
+      </div>
+    </td>`:`<td style="text-align:center;color:#ccc">—</td>`):'';
     return`<tr><td class="college-name">${c.n}</td><td style="text-align:center">${openCell}</td>${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
   }
   const starHeader=isCounselMode()?'<th>★</th>':'';
