@@ -436,8 +436,8 @@ function buildPoolRows(){
     const status=getStatus(score,lastCutoff);
     const fee=medianFee(colleges);
     const mult=budgetMultiplier(course);
-    const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
-    const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
+    const feeStr=fee?formatFee(fee):'—';
+    const budgetStr=fee?formatFee(fee*mult):'—';
     const collegeFees=colleges.map(c=>FEE[c.n]).filter(f=>f&&f>0);
     const computedFeeMin=collegeFees.length?Math.min(...collegeFees):null;
     const computedFeeMax=collegeFees.length?Math.max(...collegeFees):null;
@@ -1518,7 +1518,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
     return cols.map((c,i)=>{
       const actual    = c.openCutoff!==undefined?c.openCutoff:c.c;
       const projected = actual+15;
-      const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
+      const feeVal    = FEE&&FEE[c.n]?formatFee(FEE[c.n])+'/yr':'—';
       const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
       const statusBg    = c.prob.key==='safe'?'rgba(21,128,61,.1)':c.prob.key==='likely'?'rgba(3,105,161,.1)':'rgba(185,28,28,.08)';
       return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
