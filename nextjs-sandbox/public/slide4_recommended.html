@@ -715,8 +715,8 @@ function renderTable(rows){
       <td><span class="course-tag">${r.course}</span></td>
       <td><span class="options-val">${r.inReach}/${r.total}</span></td>
       ${cutoffCells}
-      <td><span class="fee-val">${r.feeStr}</span></td>
-      <td><span class="budget-val">${r.budgetStr}</span></td>
+      <td><span class="fee-val">${r.feeMin ? formatFeeRange(r.feeMin, r.feeMax) : (r.feeStr || '—')}</span></td>
+      <td><span class="budget-val">${r.feeMin ? formatBudgetRange(r.feeMin, r.feeMax, r.years) : (r.budgetStr || '—')}</span></td>
       <td><span class="status ${r.status.cls}">${r.status.label}</span></td>
     </tr>`;
   });
