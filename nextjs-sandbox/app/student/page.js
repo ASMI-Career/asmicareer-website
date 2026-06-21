@@ -803,14 +803,19 @@ export default function StudentDashboard() {
                           <span className="rank-badge-value">{studentCategory ? (studentCategory === 'General' ? 'General / UR' : studentCategory) : '—'}</span>
                         </div>
                       </div>
-                      <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>
-                        {shortlist.length === 0
-                          ? 'No colleges shortlisted yet'
-                          : `${shortlist.length} college${shortlist.length !== 1 ? 's' : ''} shortlisted`}
-                        {deadlines.length > 0
-                          ? ` · Next: ${deadlines[0].title} on ${formatDeadlineDate(deadlines[0].date)}`
-                          : ''}
-                      </p>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '6px 14px', fontSize: 13, color: 'white', fontWeight: 500 }}>
+                        <span>
+                          {shortlist.length === 0
+                            ? 'No colleges shortlisted yet'
+                            : `${shortlist.length} college${shortlist.length !== 1 ? 's' : ''} shortlisted`}
+                        </span>
+                        {deadlines.length > 0 && (
+                          <>
+                            <span style={{ opacity: 0.5 }}>|</span>
+                            <span>Next: {deadlines[0].title} on {formatDeadlineDate(deadlines[0].date)}</span>
+                          </>
+                        )}
+                      </div>
                     </div>
 
                     {/* Progress tracker */}
@@ -829,8 +834,8 @@ export default function StudentDashboard() {
                               {step.status === 'completed' ? '✓' : step.id}
                             </div>
                             <span className={`step-label ${step.status}`} style={
-                              step.status === 'active'  ? { color: '#6A0DAD' }
-                              : step.status === 'pending' ? { color: '#9ca3af' }
+                              step.status === 'active'  ? { color: '#ffffff' }
+                              : step.status === 'pending' ? { color: 'rgba(255,255,255,0.45)' }
                               : { color: 'rgba(255,255,255,0.75)' }
                             }>{step.label}</span>
                           </div>
@@ -848,7 +853,7 @@ export default function StudentDashboard() {
                         <div className="card-title">
                           <span>📅</span> Upcoming Deadlines
                         </div>
-                        <a href="https://asmicareer.in/medical#news" target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
+                        <a href="https://asmicareer.in/medical/news" target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {deadlines.length === 0 ? (
@@ -924,7 +929,7 @@ export default function StudentDashboard() {
                       </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                      <a href={getWhatsAppLink(counsellorWhatsapp)} target="_blank" rel="noreferrer" className="btn-whatsapp">
+                      <a href={`tel:${counsellorWhatsapp && counsellorWhatsapp.trim() ? counsellorWhatsapp.replace(/\D/g, '') : '7410019077'}`} className="btn-whatsapp">
                         📞 Call the Advisor
                       </a>
                       {whatsappGroupLink && whatsappGroupLink.trim() !== '' && (
@@ -1663,17 +1668,8 @@ export default function StudentDashboard() {
                 <h2 className="section-title">📋 Documents Checklist</h2>
                 <p className="section-sub">Track every document you need for MBBS counselling and admission.</p>
 
-                {/* Category & Quota selector */}
+                {/* Quota selector only — category is fixed from token */}
                 <div style={{ marginBottom: 24 }}>
-                  <div className="form-label" style={{ marginBottom: 8 }}>Your Category</div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-                    {['General', 'OBC', 'SC', 'ST', 'EWS'].map(cat => (
-                      <button key={cat} className={`chip ${docCategory === cat ? 'active' : ''}`}
-                        onClick={() => { setDocCategory(cat); saveChecklist(checkedDocs, cat, docQuota); }}>
-                        {cat === 'General' ? 'General / UR' : cat === 'OBC' ? 'OBC (NCL)' : cat}
-                      </button>
-                    ))}
-                  </div>
                   <div className="form-label" style={{ marginBottom: 8 }}>Quota Type</div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {['State', 'AIQ', 'Management'].map(q => (

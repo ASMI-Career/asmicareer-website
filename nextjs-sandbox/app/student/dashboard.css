@@ -643,8 +643,8 @@
 
 .btn-whatsapp {
   width: 100%;
-  background: #22c55e;
-  color: white;
+  background: white;
+  color: #1A0040;
   border: none;
   border-radius: var(--radius-md);
   padding: 12px;
@@ -664,11 +664,11 @@
 
 .btn-outline-navy {
   width: 100%;
-  background: transparent;
-  color: var(--navy);
-  border: 2px solid var(--navy);
+  background: #22c55e;
+  color: white;
+  border: none;
   border-radius: var(--radius-md);
-  padding: 11px;
+  padding: 12px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -677,11 +677,11 @@
   justify-content: center;
   gap: 8px;
   text-decoration: none;
-  transition: background 0.15s;
+  transition: opacity 0.15s;
   font-family: inherit;
 }
 
-.btn-outline-navy:hover { background: var(--bg-subtle); }
+.btn-outline-navy:hover { opacity: 0.88; }
 
 /* ── CTA GRADIENT CARD ── */
 .cta-card {
