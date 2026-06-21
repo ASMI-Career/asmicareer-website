@@ -29,6 +29,8 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${montserrat.variable} ${openSans.variable}`}>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap" rel="stylesheet" />
+        <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,600,500,400&display=swap" rel="stylesheet" />
+        <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" async></script>
       </head>
       <body>
         {children}

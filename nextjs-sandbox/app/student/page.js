@@ -131,11 +131,11 @@ const DOCS = {
 
 // ── Nav items ─────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { id: 'dashboard',  label: 'Dashboard',      icon: '⊞' },
-  { id: 'predictor',  label: 'Predictor',       icon: '◈' },
-  { id: 'cutoff',     label: 'Cutoff Explorer', icon: '⊕' },
-  { id: 'institutes', label: 'Institutes',      icon: '⌂' },
-  { id: 'checklist',  label: 'Documents',       icon: '☰' },
+  { id: 'dashboard',  label: 'Dashboard',      icon: 'lucide:layout-dashboard' },
+  { id: 'predictor',  label: 'Predictor',       icon: 'lucide:bar-chart-3'      },
+  { id: 'cutoff',     label: 'Cutoff Explorer', icon: 'lucide:search'           },
+  { id: 'institutes', label: 'Institutes',      icon: 'lucide:building-2'       },
+  { id: 'checklist',  label: 'Documents',       icon: 'lucide:file-text'        },
 ];
 
 // ── Main Component ────────────────────────────────────────────────────────────
@@ -1712,7 +1712,7 @@ export default function StudentDashboard() {
               }
             }}
               className={`mobile-nav-item ${activeTab === item.id ? 'active' : ''}`}>
-              <span className="nav-icon">{item.icon}</span>
+              <iconify-icon icon={item.icon} className="nav-icon"></iconify-icon>
               <span>{item.label}</span>
             </button>
           ))}
