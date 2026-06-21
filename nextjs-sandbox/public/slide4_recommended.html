@@ -519,7 +519,7 @@ function buildPoolRows(){
     const computedFeeMax=collegeFees.length?Math.max(...collegeFees):null;
     const finalFeeMin=feeOvr?.feeMin??computedFeeMin;
     const finalFeeMax=feeOvr?.feeMax??computedFeeMax;
-    const finalYears=feeOvr?.years??4.5;
+    const finalYears=feeOvr?.years??budgetMultiplier(course);
 
     const openCutoffs = colleges.map(c=>c.openCutoff).filter(x=>x!==null && x!==undefined);
     const catCutoffs = colleges.map(c=>c.catCutoff).filter(x=>x!==null && x!==undefined);
