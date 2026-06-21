@@ -517,11 +517,17 @@ function getColleges(stateKey,courseKey,keys,listType){
     const catC = catMap.has(name) ? catMap.get(name) : null;
     
     let bestC = Infinity;
+    let matchedS = '';
     keys.forEach(k => {
       const list = DB[stateKey][courseKey][k]?.[listType] || [];
       const match = list.find(c => c.n === name);
-      if (match && match.c < bestC) {
-        bestC = match.c;
+      if (match) {
+        if (match.c < bestC) {
+          bestC = match.c;
+        }
+        if (match.s) {
+          matchedS = match.s;
+        }
       }
     });
     
@@ -531,6 +537,7 @@ function getColleges(stateKey,courseKey,keys,listType){
       openCutoff: openC,
       catCutoff: catC,
       c: bestC,
+      s: matchedS,
       prob: prob(score, bestC)
     });
   });
@@ -577,7 +584,7 @@ function renderTable(cols,showState=false){
   <tbody>${rows}</tbody></table>`;
 }
 
-function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
+function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=false){
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
   const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
@@ -596,12 +603,28 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
         </div>
       </td>`
     : showCatCutoff ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
+  
+  let cutoffAndProjCells = '';
+  if (stackCutoff) {
+    const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
+    cutoffAndProjCells = `
+      <td style="text-align:center">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <span class="cutoff-val">${actualStr}</span>
+          ${projPill}
+        </div>
+      </td>`;
+  } else {
+    cutoffAndProjCells = `
+      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
+      <td style="text-align:center">
+        ${projStr}
+      </td>`;
+  }
+
   return `<tr>
     <td class="college-name">${c.n}</td>
-    <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-    <td style="text-align:center">
-      ${projStr}
-    </td>
+    ${cutoffAndProjCells}
     ${catCell}
     <td class="fee-val" style="text-align:center">${feeVal}</td>
     <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
@@ -915,11 +938,10 @@ function renderMCCExpanded(){
   const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
   const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
   
-  const row=c=>{
+  const row=(c, stackCutoff = false)=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
     const projected = actual!==null ? actual + 15 : null;
     const actualStr = actual!==null ? actual : '—';
-    const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
     
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
     const catProj    = catActual!==null ? catActual+15 : null;
@@ -933,14 +955,31 @@ function renderMCCExpanded(){
         </td>`
       : showCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
       
-    return `<tr>
-      <td class="college-name">${c.n}</td>
-      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-      <td style="text-align:center">${projStr}</td>
-      ${catCell}
-      <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-      <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-    </tr>`;
+    if (stackCutoff) {
+      const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
+      return `<tr>
+        <td class="college-name">${c.n}</td>
+        <td style="text-align:center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-val">${actualStr}</span>
+            ${projPill}
+          </div>
+        </td>
+        ${catCell}
+        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+      </tr>`;
+    } else {
+      const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
+      return `<tr>
+        <td class="college-name">${c.n}</td>
+        <td class="cutoff-val" style="text-align:center">${actualStr}</td>
+        <td style="text-align:center">${projStr}</td>
+        ${catCell}
+        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+      </tr>`;
+    }
   };
   document.getElementById('mcc-count-grid').innerHTML=`
     ${(()=>{
@@ -1152,11 +1191,10 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
         const dPreviewTable=`
           <table class="ctable" style="width:100%;margin-top:8px;">
             <thead><tr>
-              <th>College</th><th>Last Cutoff</th>
-              <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+              <th>College</th><th>Cutoff / Projected</th>
               <th>Fee/yr</th><th>Chance</th>
             </tr></thead>
-            <tbody>${dPrev.map(c=>row(c)).join('')}</tbody>
+            <tbody>${dPrev.map(c=>row(c, true)).join('')}</tbody>
           </table>
           ${dRest.length?`<div class="blur-section" style="margin-top:0;">
             <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
@@ -1173,11 +1211,11 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
           ${dPreviewTable}
         </div>`;
       }
-      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ', false, true)).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';

@@ -141,6 +141,7 @@ const NAV_ITEMS = [
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [studentName, setStudentName] = useState('Student');
   const [studentRank, setStudentRank] = useState(null);
   const [shortlist, setShortlist] = useState([]);
@@ -235,6 +236,7 @@ export default function StudentDashboard() {
       const tab = params.get('tab');
       if (tab) setActiveTab(tab);
 
+      if (localStorage.getItem('sidebar_collapsed')) setSidebarCollapsed(true);
       setStudentName(localStorage.getItem('name') || 'Student');
       const savedRank = localStorage.getItem('rank');
       if (savedRank) setStudentRank(parseInt(savedRank, 10));
@@ -573,6 +575,12 @@ export default function StudentDashboard() {
     return filtered;
   };
 
+  const toggleSidebar = () => {
+    const next = !sidebarCollapsed;
+    setSidebarCollapsed(next);
+    localStorage.setItem('sidebar_collapsed', next ? '1' : '');
+  };
+
   const handleToggleShortlist = (name) => {
     const next = shortlist.includes(name) ? shortlist.filter(n => n !== name) : [...shortlist, name];
     setShortlist(next);
@@ -647,7 +655,7 @@ export default function StudentDashboard() {
       <div className="dashboard-shell">
 
         {/* ── SIDEBAR ── */}
-        <aside className="sidebar">
+        <aside className={`sidebar${sidebarCollapsed ? ' collapsed' : ''}`}>
           <div className="sidebar-logo">
             <img src="/asmi-logo.png" alt="ASMI Logo" className="logo-img" />
           </div>
@@ -704,11 +712,16 @@ export default function StudentDashboard() {
               <iconify-icon icon="lucide:help-circle" className="nav-icon"></iconify-icon>
               <span>Help &amp; Support</span>
             </button>
+
+            <button onClick={toggleSidebar} className="nav-link sidebar-toggle-btn" style={{ marginTop: 16 }}>
+              <iconify-icon icon={sidebarCollapsed ? 'lucide:chevron-right' : 'lucide:chevron-left'} className="nav-icon"></iconify-icon>
+              <span>Collapse</span>
+            </button>
           </nav>
         </aside>
 
         {/* ── MAIN ── */}
-        <div className="main-content">
+        <div className={`main-content${sidebarCollapsed ? ' collapsed' : ''}`}>
 
           {/* Top Header */}
           <header className="dashboard-header">
@@ -1152,7 +1165,7 @@ export default function StudentDashboard() {
                                     <tr key={i}>
                                       <td style={{ fontWeight: 700, minWidth: 180 }}>{c.name}</td>
                                       <td style={{ whiteSpace: 'nowrap' }}>{c.state}</td>
-                                      <td><span className="tag tag-gold" style={{ whiteSpace: 'nowrap' }}>{c.type}</span></td>
+                                      <td><span className={`tb ${c.type === 'Government' ? 'tb-govt' : c.type === 'Private' ? 'tb-private' : c.type === 'Deemed' ? 'tb-deemed' : ''}`}>{c.type}</span></td>
                                       <td style={{ fontSize: 11 }}>{c.quota}</td>
                                       <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.closingRank?.toLocaleString() || '—'}</td>
                                       <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>

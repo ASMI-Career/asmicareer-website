@@ -7,10 +7,20 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <link rel="stylesheet" href="/dashboard.css">
+  <style>
+    #cx-sidebar { transition: width 0.2s ease; overflow-x: hidden; }
+    #cx-main    { transition: margin-left 0.2s ease; }
+    #cx-sidebar.collapsed { width: 60px !important; }
+    #cx-sidebar.collapsed nav a span,
+    #cx-sidebar.collapsed nav button span { display: none !important; }
+    #cx-sidebar.collapsed nav .mt-8 { display: none !important; }
+    #cx-sidebar.collapsed #cx-toggle-label { display: none !important; }
+    #cx-main.collapsed { margin-left: 60px !important; }
+  </style>
 </head>
 <body>
   <div class="min-h-screen bg-[#F8F9FB] text-[#212529]">
-    <aside class="hidden lg:flex w-64 bg-white border-r border-gray-100 flex-col fixed h-screen z-50">
+    <aside id="cx-sidebar" class="hidden lg:flex w-64 bg-white border-r border-gray-100 flex-col fixed h-screen z-50">
       <div class="p-6 flex items-center gap-3">
         <img src="https://asmicareer.in/asmi-logo.png" alt="ASMI Logo" class="h-10 w-auto">
       </div>
@@ -52,10 +62,17 @@
             </a>
           </div>
         </div>
+
+        <div class="mt-4 px-2">
+          <button onclick="toggleCxSidebar()" class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-500 hover:bg-gray-50 transition-all w-full">
+            <iconify-icon id="cx-toggle-icon" icon="lucide:chevron-left" class="text-xl flex-shrink-0"></iconify-icon>
+            <span id="cx-toggle-label" class="font-medium text-[14px]">Collapse</span>
+          </button>
+        </div>
       </nav>
     </aside>
 
-    <div class="lg:ml-64 min-h-screen">
+    <div id="cx-main" class="lg:ml-64 min-h-screen">
       <header class="sticky top-0 z-40 bg-[#F8F9FB] border-b border-gray-100">
         <div class="px-4 sm:px-6 lg:px-8 py-4">
           <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
@@ -704,7 +721,7 @@
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && currentData.category && currentData.category !== 'OPEN';
+      const showCSML = isMH && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
@@ -1001,6 +1018,28 @@
     // Watch for sidebar links added dynamically
     const observer = new MutationObserver(fixLinks);
     observer.observe(document.body, { childList: true, subtree: true });
+  })();
+</script>
+
+<script>
+  function toggleCxSidebar() {
+    const sidebar = document.getElementById('cx-sidebar');
+    const main    = document.getElementById('cx-main');
+    const icon    = document.getElementById('cx-toggle-icon');
+    const collapsed = sidebar.classList.toggle('collapsed');
+    main.classList.toggle('collapsed', collapsed);
+    icon.setAttribute('icon', collapsed ? 'lucide:chevron-right' : 'lucide:chevron-left');
+    localStorage.setItem('sidebar_collapsed', collapsed ? '1' : '');
+  }
+  (function() {
+    if (localStorage.getItem('sidebar_collapsed')) {
+      const sidebar = document.getElementById('cx-sidebar');
+      const main    = document.getElementById('cx-main');
+      const icon    = document.getElementById('cx-toggle-icon');
+      if (sidebar) sidebar.classList.add('collapsed');
+      if (main)    main.classList.add('collapsed');
+      if (icon)    icon.setAttribute('icon', 'lucide:chevron-right');
+    }
   })();
 </script>
 </body>
