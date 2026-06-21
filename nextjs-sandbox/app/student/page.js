@@ -262,13 +262,23 @@ export default function StudentDashboard() {
           .then(res => {
             if (res.success && res.data) {
               const s = res.data;
+              console.log('[ASMI] student data:', s);
               if (s.name) { setStudentName(s.name); localStorage.setItem('name', s.name); }
-              if (s.rank) { const r = parseInt(s.rank, 10); setStudentRank(r); localStorage.setItem('rank', r); }
+              const rankVal = s.rank || s.neet_rank || s.air;
+              if (rankVal) { const r = parseInt(rankVal, 10); setStudentRank(r); localStorage.setItem('rank', r); }
               if (s.colleges || s.shortlist) {
                 const sl = (s.colleges || s.shortlist || []).map(c => typeof c === 'object' ? c.name : c);
                 setShortlist(sl); localStorage.setItem('shortlist', JSON.stringify(sl));
               }
-              if (s.category) setDocCategory(s.category);
+              if (s.category) {
+                const cat = String(s.category).toUpperCase();
+                const mapped = cat.includes('OBC') ? 'OBC'
+                  : cat.includes('SC') ? 'SC'
+                  : cat.includes('ST') ? 'ST'
+                  : cat.includes('EWS') ? 'EWS'
+                  : 'General';
+                setDocCategory(mapped);
+              }
               if (s.stage) {
                 const stages = ["Enrolled", "Documents Verified", "Counselled", "Preferences Filed", "Round 1", "Allotted"];
                 const idx = stages.findIndex(st => st.toLowerCase() === String(s.stage).toLowerCase().trim());
@@ -945,13 +955,6 @@ export default function StudentDashboard() {
                     </button>
                   </div>
 
-                  {/* CTA card */}
-                  <div className="cta-card">
-                    <h3>Need a custom strategy?</h3>
-                    <p>Get a personalised seat allotment plan based on your rank and preferences.</p>
-                    <button className="btn-cta-gold">Request Now</button>
-                    <div style={{ position: 'absolute', right: -12, bottom: -12, fontSize: 80, opacity: 0.06 }}>◎</div>
-                  </div>
 
                 </div>
               </div>
@@ -1574,7 +1577,20 @@ export default function StudentDashboard() {
                           return (
                             <a href={`/medical/colleges/${college.slug}`} target="_blank" rel="noreferrer"
                               key={college.slug} className="college-card">
-                              <div className="college-img-placeholder">
+                              <div className="college-img-placeholder" style={{ position: 'relative' }}>
+                                {(college.image || college.cover_image) && (
+                                  <img
+                                    src={college.image || college.cover_image}
+                                    alt={college.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                                    onError={e => { e.target.style.display = 'none'; }}
+                                  />
+                                )}
+                                {!college.image && !college.cover_image && (
+                                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', textAlign: 'center' }}>
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', lineHeight: 1.3 }}>{college.name}</span>
+                                  </div>
+                                )}
                                 {college.asmi_recommended && (
                                   <span className="college-badge-recommend">★ ASMI RECOMMENDS</span>
                                 )}
