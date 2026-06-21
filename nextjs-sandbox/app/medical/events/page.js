@@ -86,6 +86,19 @@ export default function EventsPage() {
     fetchRemainingSeats();
   }, [seminars]);
 
+  useEffect(() => {
+    if (!loading && seminars.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const bookId = params.get('book');
+      if (bookId) {
+        const found = seminars.find(s => s.id === bookId);
+        if (found && !found.coming_soon) {
+          openModal(found, 2);
+        }
+      }
+    }
+  }, [loading, seminars]);
+
   /* ── derived ── */
   const upcoming = seminars.filter(s => !s.coming_soon);
   const cities = ['All', ...Array.from(new Set(seminars.map(s => s.city)))];
