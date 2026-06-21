@@ -1483,26 +1483,65 @@ async function init(){
     ]);
     DB=dbRes;FEE=feeRes;
     STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
-    setSess('token',STUDENT.token||token);
     const sess=getSess();
-    if(!sess.score)    setSess('score',STUDENT.score);
-    if(!sess.category) setSess('category',STUDENT.category);
-    if(!sess.course)   setSess('course',(STUDENT.courses||'MBBS').split(',')[0].trim());
-    
-    // Load saved shortlist from backend if available and not already in session
-    if (STUDENT.shortlist || STUDENT.colleges) {
-      const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
-      if (!sess.shortlist || sess.shortlist.length === 0) {
+    if(token && sess.token !== token) {
+      setSess('token', token);
+      setSess('score', STUDENT.score);
+      setSess('category', STUDENT.category);
+      const initCourses = Array.isArray(STUDENT.courses)
+        ? STUDENT.courses.join(',')
+        : STUDENT.courses;
+      setSess('course', initCourses || 'MBBS');
+      if (STUDENT.shortlist || STUDENT.colleges) {
+        const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
+        setSess('shortlist', backendShortlist);
+        shortlist = backendShortlist;
+      } else {
+        setSess('shortlist', []);
+        shortlist = [];
+      }
+    } else {
+      setSess('token', STUDENT.token||token);
+      if(!sess.score)    setSess('score',STUDENT.score);
+      if(!sess.category) setSess('category',STUDENT.category);
+      if(!sess.course) {
+        const initCourses = Array.isArray(STUDENT.courses)
+          ? STUDENT.courses.join(',')
+          : STUDENT.courses;
+        setSess('course', initCourses || 'MBBS');
+      }
+      if ((STUDENT.shortlist || STUDENT.colleges) && (!sess.shortlist || sess.shortlist.length === 0)) {
+        const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
         setSess('shortlist', backendShortlist);
         shortlist = backendShortlist;
       }
     }
+    
     // Set MH course to student's first MH-compatible course
-    const stuC=(STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
+    const stuC=(getSess().course||STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
     mhCourse=stuC.find(c=>['MBBS','BDS','BPTH','BAMS','BHMS'].includes(c))||'MBBS';
     document.querySelectorAll('.course-tabs .ctab').forEach(btn=>{
       if(!btn.disabled) btn.classList.toggle('active',btn.textContent.trim()===mhCourse);
     });
+
+    // Populate edit bar fields on load since it is permanently visible
+    document.getElementById('editScore').value=activeScore();
+    document.getElementById('editCategory').value=activeCategory();
+    // Build course pills
+    const allCourses=['MBBS','BDS','BPTH','BAMS','BHMS'];
+    const currentCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
+    const pillsWrap=document.getElementById('editCoursePills');
+    if (pillsWrap) {
+      pillsWrap.innerHTML=allCourses.map(c=>`
+        <span onclick="toggleCoursePill(this,'${c}')" data-course="${c}" style="
+          font-family:Montserrat,sans-serif;font-size:.62rem;font-weight:800;
+          padding:3px 10px;border-radius:6px;cursor:pointer;letter-spacing:.3px;
+          background:${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.15)'};
+          color:${currentCourses.includes(c)?'#1a0040':'rgba(255,255,255,.7)'};
+          border:1px solid ${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.25)'};
+          transition:.15s;">${c}</span>`).join('');
+    }
+
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('panesContainer').classList.remove('hidden');
     renderAllOverviews();
