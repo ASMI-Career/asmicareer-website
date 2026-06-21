@@ -938,14 +938,15 @@ function renderMCCExpanded(){
   const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
   const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
   
-  const row=(c, stackCutoff = false)=>{
+  const row=(c, stackCutoff = false, forceHideCat = false)=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
     const projected = actual!==null ? actual + 15 : null;
     const actualStr = actual!==null ? actual : '—';
     
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
     const catProj    = catActual!==null ? catActual+15 : null;
-    const catCell    = showCat && catActual!==null
+    const localShowCat = forceHideCat ? false : showCat;
+    const catCell    = localShowCat && catActual!==null
       ? `<td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
             <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
@@ -953,7 +954,7 @@ function renderMCCExpanded(){
               padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
           </div>
         </td>`
-      : showCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
+      : localShowCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
       
     if (stackCutoff) {
       const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
@@ -1194,7 +1195,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
               <th>College</th><th>Cutoff / Projected</th>
               <th>Fee/yr</th><th>Chance</th>
             </tr></thead>
-            <tbody>${dPrev.map(c=>row(c, true)).join('')}</tbody>
+            <tbody>${dPrev.map(c=>row(c, true, true)).join('')}</tbody>
           </table>
           ${dRest.length?`<div class="blur-section" style="margin-top:0;">
             <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
@@ -1215,7 +1216,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
@@ -1256,7 +1257,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
