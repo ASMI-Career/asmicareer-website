@@ -529,7 +529,13 @@ function getMHDual(listType){
   return{cols,total};
 }
 
-function feeStr(name){const f=FEE[name];return f?`₹${f}L/yr`:'—';}
+function feeStr(name) {
+  const f = FEE[name];
+  if (!f) return '—';
+  if (f < 1) return '₹' + Math.round(f * 100) + 'K/yr';
+  if (f < 100) return '₹' + parseFloat(f.toFixed(1)) + 'L/yr';
+  return '₹' + parseFloat((f / 100).toFixed(2)) + 'Cr/yr';
+}
 
 function renderTable(cols,showState=false){
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
