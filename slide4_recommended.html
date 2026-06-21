@@ -375,16 +375,85 @@ function getStatus(score, lastCutoff){
 // ── GET COLLEGES ─────────────────────────────────────────────────
 function getColleges(stateKey,courseKey,keys,listType){
   if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
-  const seen=new Map(), score=activeScore();
-  keys.forEach(catKey=>{
-    const d=DB[stateKey][courseKey][catKey];
-    if(!d||!d[listType]) return;
-    d[listType].forEach(col=>{
-      if(!seen.has(col.n)) seen.set(col.n,col);
-      else if(col.c<seen.get(col.n).c) seen.set(col.n,col);
+  const score=activeScore(), userCat=activeCategory();
+  
+  const openList = DB[stateKey][courseKey]["OPEN"]?.[listType] || [];
+  const openMap = new Map(openList.map(c => [c.n, c.c]));
+  
+  const isSpecialCat = userCat !== 'General' && userCat !== 'OPEN';
+  const catList = (isSpecialCat && DB[stateKey][courseKey][userCat])
+    ? (DB[stateKey][courseKey][userCat][listType] || [])
+    : [];
+  const catMap = new Map(catList.map(c => [c.n, c.c]));
+  
+  const allNames = new Set();
+  const collegeObjMap = new Map();
+  
+  keys.forEach(k => {
+    const list = DB[stateKey][courseKey][k]?.[listType] || [];
+    list.forEach(c => {
+      allNames.add(c.n);
+      if(!collegeObjMap.has(c.n)) {
+        collegeObjMap.set(c.n, c);
+      } else if(c.c < collegeObjMap.get(c.n).c) {
+        collegeObjMap.set(c.n, c);
+      }
     });
   });
-  return Array.from(seen.values()).map(col=>({...col, prob:prob(score,col.c)}));
+  
+  const cols = [];
+  allNames.forEach(name => {
+    const openC = openMap.has(name) ? openMap.get(name) : null;
+    const catC = catMap.has(name) ? catMap.get(name) : null;
+    
+    let bestC = Infinity;
+    keys.forEach(k => {
+      const list = DB[stateKey][courseKey][k]?.[listType] || [];
+      const match = list.find(c => c.n === name);
+      if (match && match.c < bestC) {
+        bestC = match.c;
+      }
+    });
+    
+    if (bestC === Infinity) return;
+    
+    const origObj = collegeObjMap.get(name) || {};
+    cols.push({
+      ...origObj,
+      n: name,
+      openCutoff: openC,
+      catCutoff: catC,
+      c: bestC,
+      prob: prob(score, bestC)
+    });
+  });
+  
+  return cols;
+}
+
+function findCollegeCutoffs(name, course) {
+  const userCat = activeCategory();
+  let openC = null, catC = null;
+  for (const stateKey in DB) {
+    if (DB[stateKey] && DB[stateKey][course]) {
+      for (const catKey of ['OPEN', userCat]) {
+        if (DB[stateKey][course][catKey]) {
+          for (const listType in DB[stateKey][course][catKey]) {
+            const list = DB[stateKey][course][catKey][listType];
+            const match = list.find(c => c.n === name);
+            if (match) {
+              if (catKey === 'OPEN') openC = match.c;
+              else catC = match.c;
+            }
+          }
+        }
+      }
+      if (openC !== null || catC !== null) {
+        break;
+      }
+    }
+  }
+  return { openCutoff: openC, catCutoff: catC };
 }
 
 // ── MEDIAN FEE ───────────────────────────────────────────────────
@@ -411,6 +480,29 @@ function buildNote(score){
   return `At this score, focus on deemed universities and category quotas. ASMI will identify every reachable seat across all pools.`;
 }
 
+// ── Fee formatter (also used in Slide 4 table) ───────────────────────────────
+function formatFee(lakhs) {
+  if (!lakhs || lakhs === 0) return '—';
+  const n = parseFloat(lakhs);
+  if (isNaN(n)) return '—';
+  if (n < 1) return '₹' + Math.round(n * 100) + 'K';
+  if (n < 100) return '₹' + parseFloat(n.toFixed(1)) + 'L';
+  return '₹' + parseFloat((n / 100).toFixed(2)) + 'Cr';
+}
+
+function formatFeeRange(min, max) {
+  if (!min && !max) return '—';
+  if (!max || min === max) return formatFee(min) + '/yr';
+  return formatFee(min) + ' – ' + formatFee(max) + '/yr';
+}
+
+function formatBudgetRange(minFee, maxFee, years) {
+  years = years || 4.5;
+  if (!minFee && !maxFee) return '—';
+  if (!maxFee || minFee === maxFee) return formatFee(minFee * years);
+  return formatFee(minFee * years) + ' – ' + formatFee(maxFee * years);
+}
+
 // ── BUILD POOL ROWS ──────────────────────────────────────────────
 function buildPoolRows(){
   const score=activeScore(), cat=activeCategory();
@@ -419,7 +511,14 @@ function buildPoolRows(){
   const keys=catKeys(cat);
   const rows=[];
 
-  function addPool(label,group,course,colleges){
+  const MH_FEE_OVERRIDES = {
+    MBBS: {mh_pvt:{feeMin:7,   feeMax:15.57, years:4.5}},
+    BAMS: {mh_govt:{feeMin:0.522,feeMax:1.36,years:4.5},  mh_pvt:{feeMin:0.95, feeMax:3.3,  years:4.5}},
+    BHMS: {mh_govt:{feeMin:0.574,feeMax:0.574,years:4.5}, mh_pvt:{feeMin:0.55, feeMax:7.0,  years:4.5}},
+    BPTH: {mh_govt:{feeMin:0.630,feeMax:0.630,years:3.0}, mh_pvt:{feeMin:0.11, feeMax:2.10, years:3.0}},
+  };
+
+  function addPool(label,group,course,colleges,feeOvr){
     if(!colleges.length) return;
     const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key!=='reach';});
     if(!inReach.length && !colleges.length) return;
@@ -430,42 +529,57 @@ function buildPoolRows(){
     const status=getStatus(score,lastCutoff);
     const fee=medianFee(colleges);
     const mult=budgetMultiplier(course);
-    const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
-    const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
+    const feeStr=fee?formatFee(fee):'—';
+    const budgetStr=fee?formatFee(fee*mult):'—';
+    const collegeFees=colleges.map(c=>FEE[c.n]).filter(f=>f&&f>0);
+    const computedFeeMin=collegeFees.length?Math.min(...collegeFees):null;
+    const computedFeeMax=collegeFees.length?Math.max(...collegeFees):null;
+    const finalFeeMin=feeOvr?.feeMin??computedFeeMin;
+    const finalFeeMax=feeOvr?.feeMax??computedFeeMax;
+    const finalYears=feeOvr?.years??4.5;
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
-      lastCutoff,projCutoff,status,feeStr,budgetStr});
+      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears});
   }
 
-  function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
+  function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label,feeOvr1,feeOvr2){
     if(!colleges.length) return;
     const b1=colleges.filter(c=>(FEE[c.n]||0)<=threshold && FEE[c.n]);
     const b2=colleges.filter(c=>(FEE[c.n]||0)>threshold);
-    if(b1.length) addPool(band1Label,group,course,b1);
-    if(b2.length) addPool(band2Label,group,course,b2);
-    if(!b1.length && !b2.length) addPool(label,group,course,colleges);
+    if(b1.length) addPool(band1Label,group,course,b1,feeOvr1);
+    if(b2.length) addPool(band2Label,group,course,b2,feeOvr2);
+    if(!b1.length && !b2.length) addPool(label,group,course,colleges,feeOvr1||feeOvr2);
   }
 
   function addDeemedBands(group,course){
     const deemed=getColleges('DEEMED',course,['OPEN'],'deemed');
-    const bands=[
-      {label:'Deemed ₹10–20L/yr', min:10, max:20},
-      {label:'Deemed ₹21–25L/yr', min:21, max:25},
-      {label:'Deemed ₹26–35L/yr', min:26, max:35},
-    ];
-    bands.forEach(band=>{
-      const cols=deemed.filter(c=>{const f=FEE[c.n]; return f&&f>=band.min&&f<=band.max;});
-      if(cols.length) addPool(band.label,group,course,cols);
-    });
+    if(course==='BDS'){
+      const mhKa=deemed.filter(c=>['Maharashtra','Karnataka'].includes(c.s||''));
+      const rest=deemed.filter(c=>!['Maharashtra','Karnataka'].includes(c.s||''));
+      if(mhKa.length) addPool('MH & Karnataka Deemed',group,course,mhKa);
+      if(rest.length) addPool('Other State Deemed',group,course,rest);
+    } else {
+      const bands=[
+        {label:'Deemed ₹10–20L/yr', min:10, max:20},
+        {label:'Deemed ₹21–25L/yr', min:21, max:25},
+        {label:'Deemed ₹26–35L/yr', min:26, max:35},
+      ];
+      bands.forEach(band=>{
+        const cols=deemed.filter(c=>{const f=FEE[c.n]; return f&&f>=band.min&&f<=band.max;});
+        if(cols.length) addPool(band.label,group,course,cols);
+      });
+    }
   }
 
   selectedCourses.forEach(course=>{
     const isMBBS=course==='MBBS';
     const isBDS=course==='BDS';
     const isBPTH=course==='BPTH';
+    const isBAMS=course==='BAMS';
+    const isBHMS=course==='BHMS';
 
-    // MH — all courses
-    addPool('MH Govt',   course, course, getColleges('MH',course,keys,'mh_govt'));
-    addPool('MH Private',course, course, getColleges('MH',course,keys,'mh_pvt'));
+    // MH — all courses (fee overrides for courses not in fee_map)
+    addPool('MH Govt',   course, course, getColleges('MH',course,keys,'mh_govt'), MH_FEE_OVERRIDES[course]?.mh_govt);
+    addPool('MH Private',course, course, getColleges('MH',course,keys,'mh_pvt'), MH_FEE_OVERRIDES[course]?.mh_pvt);
 
     if(isMBBS){
       // AIQ
@@ -479,31 +593,51 @@ function buildPoolRows(){
       addPoolBanded('Karnataka','Open States',course,
         getColleges('KA',course,['OPEN'],'open_pvt'),15,'Karnataka ≤₹15L/yr','Karnataka >₹15L/yr');
       addPoolBanded('Uttar Pradesh','Open States',course,
-        getColleges('UP',course,['OPEN'],'open_pvt'),14.52,'Uttar Pradesh ≤₹14.52L/yr','Uttar Pradesh >₹14.52L/yr');
-      addPool('Kerala',      'Open States',course,getColleges('KL',course,['OPEN'],'open_pvt'));
+        getColleges('UP',course,['OPEN'],'open_pvt'),14.52,'Uttar Pradesh ≤₹14.52L/yr','Uttar Pradesh >₹14.52L/yr',
+        {feeMin:11.03,feeMax:14.52},{feeMin:15.19,feeMax:19.78});
+      addPool('Kerala',      'Open States',course,getColleges('KL',course,['OPEN'],'open_pvt'),{feeMin:7.76,feeMax:9.31});
       addPoolBanded('Telangana','Open States',course,
-        getColleges('TS',course,['OPEN'],'open_pvt'),13,'Telangana ≤₹13L/yr','Telangana >₹13L/yr');
-      addPool('Andhra Pradesh','Open States',course,getColleges('AP',course,['OPEN'],'open_pvt'));
+        getColleges('TS',course,['OPEN'],'open_pvt'),13,'Telangana ≤₹13L/yr','Telangana >₹13L/yr',
+        {feeMin:11.55,feeMax:13.90},{feeMin:15,feeMax:15});
+      addPool('Andhra Pradesh','Open States',course,getColleges('AP',course,['OPEN'],'open_pvt'),{feeMin:13.20,feeMax:13.20});
       addPoolBanded('Tamil Nadu','Open States',course,
-        getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr');
-      addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'));
-      addPool('West Bengal', 'Open States',course,getColleges('WB',course,['OPEN'],'open_pvt'));
+        getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr',
+        null,{feeMin:16.20,feeMax:16.20});
+      addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'),{feeMin:12,feeMax:22.50});
+      addPoolBanded('West Bengal','Open States',course,
+        getColleges('WB',course,['OPEN'],'open_pvt'),16,
+        'West Bengal ≤₹16L/yr','West Bengal >₹16L/yr',
+        {feeMin:16,feeMax:16},{feeMin:19,feeMax:22});
       addPoolBanded('Bihar','Open States',course,
-        getColleges('BR',course,['OPEN'],'open_pvt'),14,'Bihar ≤₹14L/yr','Bihar >₹14L/yr');
-      addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'));
-      addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'));
-      addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'));
-      addPool('Jharkhand',   'Open States',course,getColleges('JH',course,['OPEN'],'open_pvt'));
-      addPool('Tripura',     'Open States',course,getColleges('TR',course,['OPEN'],'open_pvt'));
+        getColleges('BR',course,['OPEN'],'open_pvt'),13.35,'Bihar ≤₹13.35L/yr','Bihar >₹13.35L/yr',
+        {feeMin:9.63,feeMax:13.35},{feeMin:15.50,feeMax:16.50});
+      addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'),{feeMin:21,feeMax:21});
+      addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'),{feeMin:7.5,feeMax:8});
+      addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'),{feeMin:16.8,feeMax:16.8});
+      // JH split: Laxmi Chandravansi (11.25L) vs Netaji Subhas (16L)
+      (function(){
+        const jhAll=getColleges('JH',course,['OPEN'],'open_pvt');
+        const jh1=jhAll.filter(c=>c.n.includes('Laxmi')||c.n.includes('Bisrampur')||c.n.includes('Chandravansi'));
+        const jh2=jhAll.filter(c=>!c.n.includes('Laxmi')&&!c.n.includes('Bisrampur')&&!c.n.includes('Chandravansi'));
+        if(jh1.length) addPool('Jharkhand ≤₹13L/yr','Open States',course,jh1,{feeMin:11.25,feeMax:11.25});
+        if(jh2.length) addPool('Jharkhand >₹13L/yr','Open States',course,jh2,{feeMin:16,feeMax:16});
+        if(!jh1.length&&!jh2.length) addPool('Jharkhand','Open States',course,jhAll,{feeMin:11.25,feeMax:16});
+      })();
+      // TR split: Tripura Medical (13.5L) vs Tripura Santiniketan (19.76L)
+      (function(){
+        const trAll=getColleges('TR',course,['OPEN'],'open_pvt');
+        const tr1=trAll.filter(c=>!c.n.includes('Santiniketan'));
+        const tr2=trAll.filter(c=>c.n.includes('Santiniketan'));
+        if(tr1.length) addPool('Tripura ≤₹16L/yr','Open States',course,tr1,{feeMin:13.50,feeMax:13.50});
+        if(tr2.length) addPool('Tripura >₹16L/yr','Open States',course,tr2,{feeMin:19.76,feeMax:19.76});
+        if(!tr1.length&&!tr2.length) addPool('Tripura','Open States',course,trAll,{feeMin:13.50,feeMax:19.76});
+      })();
+      addPool('Himachal Pradesh','Open States',course,getColleges('HP',course,['OPEN'],'open_pvt'),{feeMin:15.97,feeMax:15.97});
     }
 
     if(isBDS){
       addPool('AIQ Govt','MCC AIQ',course,getColleges('AIQ',course,keys,'aiq'));
       addDeemedBands('MCC AIQ',course);
-    }
-
-    if(isBPTH){
-      // MH only — already added above
     }
   });
 
@@ -784,6 +918,8 @@ async function downloadPDF(){
 
 function buildPDFHTML(title, subtitle, sections, studentData){
   const {name, token, score, cat, date} = studentData;
+  const userCat = cat || activeCategory();
+  const showCat = userCat !== 'General' && userCat !== 'OPEN';
 
   let totalSafe=0, totalLikely=0;
   Object.values(sections).forEach(section=>{
@@ -801,25 +937,52 @@ function buildPDFHTML(title, subtitle, sections, studentData){
   });
 
   function tableRows(cols){
-    if(!cols||!cols.length) return `<tr><td colspan="6" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
+    const colspanVal = showCat ? 8 : 6;
+    if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
     return cols.map((c,i)=>{
-      const actual    = c.openCutoff!==undefined?c.openCutoff:c.c;
-      const projected = actual+15;
+      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+      const projected = actual!==null ? actual+15 : null;
+      const actualStr = actual!==null ? actual : '—';
+      const projStr   = projected!==null ? projected : '—';
       const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
       const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
       const statusBg    = c.prob.key==='safe'?'rgba(21,128,61,.1)':c.prob.key==='likely'?'rgba(3,105,161,.1)':'rgba(185,28,28,.08)';
-      return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
-        <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
-        <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
-        <td style="padding:6px 8px;font-size:10px;text-align:center;font-weight:700;font-family:Helvetica,Arial,sans-serif">${actual}</td>
-        <td style="padding:6px 8px;text-align:center">
-          <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projected}</span>
-        </td>
-        <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
-        <td style="padding:6px 8px;text-align:center">
-          <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
-        </td>
-      </tr>`;
+      
+      if(showCat){
+        const catActual = (c.catCutoff!==undefined && c.catCutoff!==null) ? c.catCutoff : null;
+        const catProj   = catActual!==null ? catActual+15 : null;
+        const catActualStr = catActual!==null ? catActual : '—';
+        const catProjStr   = catProj!==null ? catProj : '—';
+        return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+          <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projStr}</span>
+          </td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${catActualStr}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:linear-gradient(135deg,#6a0dad,#1a0040);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${catProjStr}</span>
+          </td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
+          </td>
+        </tr>`;
+      } else {
+        return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+          <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-weight:700;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projStr}</span>
+          </td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
+          </td>
+        </tr>`;
+      }
     }).join('');
   }
 
@@ -830,6 +993,25 @@ function buildPDFHTML(title, subtitle, sections, studentData){
       </div>`;
     Object.entries(subsections).forEach(([subTitle, cols])=>{
       if(!cols||!cols.length) return;
+      
+      const headers = showCat ? `
+              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Open Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Open Projected</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">${userCat} Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">${userCat} Projected</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+      ` : `
+              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Last Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Projected</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+      `;
+      
       html+=`
         <div style="background:rgba(26,0,64,0.06);padding:4px 12px;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:700;color:#6a0dad;letter-spacing:1px;text-transform:uppercase;">
           ${subTitle} — ${cols.length} options
@@ -837,12 +1019,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
         <table style="width:100%;border-collapse:collapse;">
           <thead>
             <tr style="background:#2D0A5E;">
-              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Last Cutoff</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Projected</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+              ${headers}
             </tr>
           </thead>
           <tbody>${tableRows(cols)}</tbody>
@@ -901,19 +1078,28 @@ async function downloadTop50PDF(){
 
   const data = getTop50();
 
+  const selectedCourses = (getSess().course||activeCourse()).split(',').map(c=>c.trim());
+  const mccProc = {
+    'AIIMS':                data.mccProcess['AIIMS'],
+    'JIPMER':               data.mccProcess['JIPMER'],
+    'Central Universities': data.mccProcess['Central'],
+  };
+  if (selectedCourses.includes('MBBS')) {
+    mccProc['Deemed ₹10–20L/yr'] = data.mccProcess['Deemed ₹10–20L/yr'];
+    mccProc['Deemed ₹21–25L/yr'] = data.mccProcess['Deemed ₹21–25L/yr'];
+    mccProc['Deemed ₹26–35L/yr'] = data.mccProcess['Deemed ₹26–35L/yr'];
+  }
+  if (selectedCourses.includes('BDS')) {
+    mccProc['MH & Karnataka Deemed'] = data.mccProcess['MH & Karnataka Deemed'];
+    mccProc['Other State Deemed'] = data.mccProcess['Other State Deemed'];
+  }
+
   const sections = {
     'MH Process': {
       'MH Government Colleges': data.mhProcess['MH Govt'],
       'MH Private Colleges':    data.mhProcess['MH Pvt'],
     },
-    'MCC Process': {
-      'AIIMS':                      data.mccProcess['AIIMS'],
-      'JIPMER':                     data.mccProcess['JIPMER'],
-      'Central Universities':       data.mccProcess['Central'],
-      'Deemed ₹10–20L/yr':         data.mccProcess['Deemed ₹10–20L/yr'],
-      'Deemed ₹21–25L/yr':         data.mccProcess['Deemed ₹21–25L/yr'],
-      'Deemed ₹26–35L/yr':         data.mccProcess['Deemed ₹26–35L/yr'],
-    },
+    'MCC Process': mccProc,
     'Open States': data.openStates,
   };
 
@@ -986,11 +1172,15 @@ async function downloadShortlistPDF(){
   });
 
   const grouped = {};
+  const course = activeCourse();
   sorted.forEach(c=>{
     const pool = c.pool||'Other';
     if(!grouped[pool]) grouped[pool]=[];
+    const cutoffs = findCollegeCutoffs(c.n, course);
     grouped[pool].push({
       n:c.n, c:c.c, state:c.state||'—', pool:c.pool,
+      openCutoff: cutoffs.openCutoff,
+      catCutoff: cutoffs.catCutoff,
       prob:{key:c.probKey,label:c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Out of Reach',cls:c.probKey},
     });
   });
@@ -1161,6 +1351,7 @@ function getTop25(){
   const MH_GOVT=[], MH_PVT=[];
   const AIIMS_C=[], JIPMER_C=[], CENTRAL_C=[];
   const DEEMED_BANDS={'₹10–20L/yr':[],'₹21–25L/yr':[],'₹26–35L/yr':[]};
+  const MH_KA_DEEMED=[], OTHER_STATE_DEEMED=[];
   const OPEN_PRIORITY=['KA','TS','AP','UP'];
   const OPEN_OTHERS=['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
   const OPEN_COLS={};
@@ -1206,10 +1397,11 @@ function getTop25(){
       const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
       bdsDemed.forEach(c=>{
         const entry={...c,pool:'Deemed',state:c.s||'All India'};
-        const f=FEE&&FEE[c.n];
-        if(f&&f>=10&&f<21)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
-        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push(entry);
-        else                      DEEMED_BANDS['₹26–35L/yr'].push(entry);
+        if(['Maharashtra','Karnataka'].includes(c.s||'')) {
+          MH_KA_DEEMED.push(entry);
+        } else {
+          OTHER_STATE_DEEMED.push(entry);
+        }
       });
     }
   });
@@ -1239,6 +1431,8 @@ function getTop25(){
       'Deemed ₹10–20L/yr':   safeAndLikely(DEEMED_BANDS['₹10–20L/yr']),
       'Deemed ₹21–25L/yr':   safeAndLikely(DEEMED_BANDS['₹21–25L/yr']),
       'Deemed ₹26–35L/yr':   safeAndLikely(DEEMED_BANDS['₹26–35L/yr']),
+      'MH & Karnataka Deemed': safeAndLikely(MH_KA_DEEMED),
+      'Other State Deemed':    safeAndLikely(OTHER_STATE_DEEMED),
     },
     openStates,
   };
@@ -1254,6 +1448,7 @@ function getTop50(){
   const MH_GOVT  = [], MH_PVT  = [];
   const AIIMS_C  = [], JIPMER_C= [], CENTRAL_C= [];
   const DEEMED_BANDS = {'₹10–20L/yr':[], '₹21–25L/yr':[], '₹26–35L/yr':[]};
+  const MH_KA_DEEMED = [], OTHER_STATE_DEEMED = [];
   const OPEN_PRIORITY = ['KA','TS','AP','UP'];
   const OPEN_OTHERS   = ['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
   const OPEN_COLS     = {};
@@ -1303,10 +1498,11 @@ function getTop50(){
       const bdsDemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
       bdsDemed.forEach(c=>{
         c.state = c.s||'All India';
-        const f = FEE&&FEE[c.n];
-        if(f&&f>=10&&f<21) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
-        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
-        else DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
+        if(['Maharashtra','Karnataka'].includes(c.s||'')) {
+          MH_KA_DEEMED.push({...c, pool:'Deemed'});
+        } else {
+          OTHER_STATE_DEEMED.push({...c, pool:'Deemed'});
+        }
       });
     }
   });
@@ -1329,6 +1525,8 @@ function getTop50(){
       'Deemed ₹10–20L/yr': safeAndLikely(DEEMED_BANDS['₹10–20L/yr']),
       'Deemed ₹21–25L/yr': safeAndLikely(DEEMED_BANDS['₹21–25L/yr']),
       'Deemed ₹26–35L/yr': safeAndLikely(DEEMED_BANDS['₹26–35L/yr']),
+      'MH & Karnataka Deemed': safeAndLikely(MH_KA_DEEMED),
+      'Other State Deemed':    safeAndLikely(OTHER_STATE_DEEMED),
     },
     openStates: {},
   };
