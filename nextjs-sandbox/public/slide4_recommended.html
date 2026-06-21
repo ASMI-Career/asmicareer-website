@@ -420,6 +420,7 @@ function buildPoolRows(){
   const rows=[];
 
   const MH_FEE_OVERRIDES = {
+    MBBS: {mh_pvt:{feeMin:7,   feeMax:15.57, years:4.5}},
     BAMS: {mh_govt:{feeMin:0.522,feeMax:1.36,years:4.5},  mh_pvt:{feeMin:0.95, feeMax:3.3,  years:4.5}},
     BHMS: {mh_govt:{feeMin:0.574,feeMax:0.574,years:4.5}, mh_pvt:{feeMin:0.55, feeMax:7.0,  years:4.5}},
     BPTH: {mh_govt:{feeMin:0.630,feeMax:0.630,years:3.0}, mh_pvt:{feeMin:0.11, feeMax:2.10, years:3.0}},
@@ -448,13 +449,13 @@ function buildPoolRows(){
       lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears});
   }
 
-  function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
+  function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label,feeOvr1,feeOvr2){
     if(!colleges.length) return;
     const b1=colleges.filter(c=>(FEE[c.n]||0)<=threshold && FEE[c.n]);
     const b2=colleges.filter(c=>(FEE[c.n]||0)>threshold);
-    if(b1.length) addPool(band1Label,group,course,b1);
-    if(b2.length) addPool(band2Label,group,course,b2);
-    if(!b1.length && !b2.length) addPool(label,group,course,colleges);
+    if(b1.length) addPool(band1Label,group,course,b1,feeOvr1);
+    if(b2.length) addPool(band2Label,group,course,b2,feeOvr2);
+    if(!b1.length && !b2.length) addPool(label,group,course,colleges,feeOvr1||feeOvr2);
   }
 
   function addDeemedBands(group,course){
@@ -493,22 +494,27 @@ function buildPoolRows(){
       addPoolBanded('Karnataka','Open States',course,
         getColleges('KA',course,['OPEN'],'open_pvt'),15,'Karnataka ≤₹15L/yr','Karnataka >₹15L/yr');
       addPoolBanded('Uttar Pradesh','Open States',course,
-        getColleges('UP',course,['OPEN'],'open_pvt'),14.52,'Uttar Pradesh ≤₹14.52L/yr','Uttar Pradesh >₹14.52L/yr');
-      addPool('Kerala',      'Open States',course,getColleges('KL',course,['OPEN'],'open_pvt'));
+        getColleges('UP',course,['OPEN'],'open_pvt'),14.52,'Uttar Pradesh ≤₹14.52L/yr','Uttar Pradesh >₹14.52L/yr',
+        {feeMin:11.03,feeMax:14.52},{feeMin:15.19,feeMax:19.78});
+      addPool('Kerala',      'Open States',course,getColleges('KL',course,['OPEN'],'open_pvt'),{feeMin:7.76,feeMax:9.31});
       addPoolBanded('Telangana','Open States',course,
-        getColleges('TS',course,['OPEN'],'open_pvt'),13,'Telangana ≤₹13L/yr','Telangana >₹13L/yr');
-      addPool('Andhra Pradesh','Open States',course,getColleges('AP',course,['OPEN'],'open_pvt'));
+        getColleges('TS',course,['OPEN'],'open_pvt'),13,'Telangana ≤₹13L/yr','Telangana >₹13L/yr',
+        {feeMin:11.55,feeMax:13.90},{feeMin:15,feeMax:15});
+      addPool('Andhra Pradesh','Open States',course,getColleges('AP',course,['OPEN'],'open_pvt'),{feeMin:13.20,feeMax:13.20});
       addPoolBanded('Tamil Nadu','Open States',course,
-        getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr');
-      addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'));
-      addPool('West Bengal', 'Open States',course,getColleges('WB',course,['OPEN'],'open_pvt'));
+        getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr',
+        null,{feeMin:16.20,feeMax:16.20});
+      addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'),{feeMin:12,feeMax:22.50});
+      addPool('West Bengal', 'Open States',course,getColleges('WB',course,['OPEN'],'open_pvt'),{feeMin:16,feeMax:22});
       addPoolBanded('Bihar','Open States',course,
-        getColleges('BR',course,['OPEN'],'open_pvt'),14,'Bihar ≤₹14L/yr','Bihar >₹14L/yr');
-      addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'));
-      addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'));
-      addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'));
-      addPool('Jharkhand',   'Open States',course,getColleges('JH',course,['OPEN'],'open_pvt'));
-      addPool('Tripura',     'Open States',course,getColleges('TR',course,['OPEN'],'open_pvt'));
+        getColleges('BR',course,['OPEN'],'open_pvt'),13.35,'Bihar ≤₹13.35L/yr','Bihar >₹13.35L/yr',
+        {feeMin:9.63,feeMax:13.35},{feeMin:15.50,feeMax:16.50});
+      addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'),{feeMin:21,feeMax:21});
+      addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'),{feeMin:7.5,feeMax:8});
+      addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'),{feeMin:16.8,feeMax:16.8});
+      addPool('Jharkhand',   'Open States',course,getColleges('JH',course,['OPEN'],'open_pvt'),{feeMin:11.25,feeMax:16});
+      addPool('Tripura',     'Open States',course,getColleges('TR',course,['OPEN'],'open_pvt'),{feeMin:13.50,feeMax:19.76});
+      addPool('Himachal Pradesh','Open States',course,getColleges('HP',course,['OPEN'],'open_pvt'),{feeMin:15.97,feeMax:15.97});
     }
 
     if(isBDS){
