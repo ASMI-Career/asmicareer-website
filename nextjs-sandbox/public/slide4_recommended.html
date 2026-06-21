@@ -438,12 +438,14 @@ function buildPoolRows(){
     const mult=budgetMultiplier(course);
     const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
     const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
-    const feeLakhs=colleges.map(c=>FEE[c.n]).filter(Boolean);
-    const feeMin=feeOvr?.feeMin??(feeLakhs.length?Math.min(...feeLakhs):null);
-    const feeMax=feeOvr?.feeMax??(feeLakhs.length?Math.max(...feeLakhs):null);
-    const years=feeOvr?.years??mult;
+    const collegeFees=colleges.map(c=>FEE[c.n]).filter(f=>f&&f>0);
+    const computedFeeMin=collegeFees.length?Math.min(...collegeFees):null;
+    const computedFeeMax=collegeFees.length?Math.max(...collegeFees):null;
+    const finalFeeMin=feeOvr?.feeMin??computedFeeMin;
+    const finalFeeMax=feeOvr?.feeMax??computedFeeMax;
+    const finalYears=feeOvr?.years??4.5;
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
-      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin,feeMax,years});
+      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears});
   }
 
   function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
