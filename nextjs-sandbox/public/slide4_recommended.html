@@ -505,15 +505,34 @@ function buildPoolRows(){
         getColleges('TN',course,['OPEN'],'open_pvt'),15,'Tamil Nadu ≤₹15L/yr','Tamil Nadu >₹15L/yr',
         null,{feeMin:16.20,feeMax:16.20});
       addPool('Haryana',     'Open States',course,getColleges('HR',course,['OPEN'],'open_pvt'),{feeMin:12,feeMax:22.50});
-      addPool('West Bengal', 'Open States',course,getColleges('WB',course,['OPEN'],'open_pvt'),{feeMin:16,feeMax:22});
+      addPoolBanded('West Bengal','Open States',course,
+        getColleges('WB',course,['OPEN'],'open_pvt'),16,
+        'West Bengal ≤₹16L/yr','West Bengal >₹16L/yr',
+        {feeMin:16,feeMax:16},{feeMin:19,feeMax:22});
       addPoolBanded('Bihar','Open States',course,
         getColleges('BR',course,['OPEN'],'open_pvt'),13.35,'Bihar ≤₹13.35L/yr','Bihar >₹13.35L/yr',
         {feeMin:9.63,feeMax:13.35},{feeMin:15.50,feeMax:16.50});
       addPool('Uttarakhand', 'Open States',course,getColleges('UK',course,['OPEN'],'open_pvt'),{feeMin:21,feeMax:21});
       addPool('Chhattisgarh','Open States',course,getColleges('CG',course,['OPEN'],'open_pvt'),{feeMin:7.5,feeMax:8});
       addPool('Pondicherry', 'Open States',course,getColleges('PY',course,['OPEN'],'open_pvt'),{feeMin:16.8,feeMax:16.8});
-      addPool('Jharkhand',   'Open States',course,getColleges('JH',course,['OPEN'],'open_pvt'),{feeMin:11.25,feeMax:16});
-      addPool('Tripura',     'Open States',course,getColleges('TR',course,['OPEN'],'open_pvt'),{feeMin:13.50,feeMax:19.76});
+      // JH split: Laxmi Chandravansi (11.25L) vs Netaji Subhas (16L)
+      (function(){
+        const jhAll=getColleges('JH',course,['OPEN'],'open_pvt');
+        const jh1=jhAll.filter(c=>c.n.includes('Laxmi')||c.n.includes('Bisrampur')||c.n.includes('Chandravansi'));
+        const jh2=jhAll.filter(c=>!c.n.includes('Laxmi')&&!c.n.includes('Bisrampur')&&!c.n.includes('Chandravansi'));
+        if(jh1.length) addPool('Jharkhand ≤₹13L/yr','Open States',course,jh1,{feeMin:11.25,feeMax:11.25});
+        if(jh2.length) addPool('Jharkhand >₹13L/yr','Open States',course,jh2,{feeMin:16,feeMax:16});
+        if(!jh1.length&&!jh2.length) addPool('Jharkhand','Open States',course,jhAll,{feeMin:11.25,feeMax:16});
+      })();
+      // TR split: Tripura Medical (13.5L) vs Tripura Santiniketan (19.76L)
+      (function(){
+        const trAll=getColleges('TR',course,['OPEN'],'open_pvt');
+        const tr1=trAll.filter(c=>!c.n.includes('Santiniketan'));
+        const tr2=trAll.filter(c=>c.n.includes('Santiniketan'));
+        if(tr1.length) addPool('Tripura ≤₹16L/yr','Open States',course,tr1,{feeMin:13.50,feeMax:13.50});
+        if(tr2.length) addPool('Tripura >₹16L/yr','Open States',course,tr2,{feeMin:19.76,feeMax:19.76});
+        if(!tr1.length&&!tr2.length) addPool('Tripura','Open States',course,trAll,{feeMin:13.50,feeMax:19.76});
+      })();
       addPool('Himachal Pradesh','Open States',course,getColleges('HP',course,['OPEN'],'open_pvt'),{feeMin:15.97,feeMax:15.97});
     }
 
