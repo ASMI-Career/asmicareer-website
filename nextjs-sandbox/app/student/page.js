@@ -272,12 +272,21 @@ export default function StudentDashboard() {
               }
               if (s.category) {
                 const cat = String(s.category).toUpperCase();
-                const mapped = cat.includes('OBC') ? 'OBC'
+                setDocCategory(
+                  cat.includes('OBC') ? 'OBC'
                   : cat.includes('SC') ? 'SC'
                   : cat.includes('ST') ? 'ST'
                   : cat.includes('EWS') ? 'EWS'
-                  : 'General';
-                setDocCategory(mapped);
+                  : 'General'
+                );
+              }
+              if (s.quota) {
+                const q = String(s.quota).toUpperCase();
+                setDocQuota(
+                  q.includes('AIQ') ? 'AIQ'
+                  : (q.includes('MQ') || q.includes('MANAGEMENT') || q.includes('NRI')) ? 'Management'
+                  : 'State'
+                );
               }
               if (s.stage) {
                 const stages = ["Enrolled", "Documents Verified", "Counselled", "Preferences Filed", "Round 1", "Allotted"];
@@ -609,6 +618,7 @@ export default function StudentDashboard() {
 
   const getMonthAbbr = (d) => new Date(d).toLocaleString('en-US', { month: 'short' });
   const getDayNum   = (d) => new Date(d).getDate();
+  const formatDeadlineDate = (d) => { const dt = new Date(d); return `${dt.getDate()} ${dt.toLocaleString('en-US', { month: 'short' })}`; };
 
   const ceStates   = Array.from(new Set(collegeData.map(c => c.state))).sort();
   const ceColleges = Array.from(new Set(collegeData.map(c => c.name))).sort();
@@ -782,9 +792,9 @@ export default function StudentDashboard() {
                           <span className="stat-badge-value">{shortlist.length}</span>
                           <span className="stat-badge-label">Shortlisted</span>
                         </div>
-                        <div className={`stat-badge ${deadlines.length > 0 && getCountdown(deadlines[0].date).cls === 'tag-red' ? 'urgent' : ''}`}>
+                        <div className="stat-badge">
                           <span className="stat-badge-value">
-                            {deadlines.length > 0 ? getCountdown(deadlines[0].date).text : '—'}
+                            {deadlines.length > 0 ? formatDeadlineDate(deadlines[0].date) : '—'}
                           </span>
                           <span className="stat-badge-label">Next Deadline</span>
                         </div>
@@ -796,13 +806,21 @@ export default function StudentDashboard() {
                       <div className="progress-label">Admission Progress</div>
                       <div className="progress-steps">
                         <div className="progress-line-track" />
-                        <div className="progress-line-fill" style={{ width: `calc(${progressPct}% * ((100% - 64px) / 100%) + 0px)` }} />
+                        <div className="progress-line-fill" style={{ width: `calc(${progressPct}% * ((100% - 64px) / 100%) + 0px)`, background: '#1A0040' }} />
                         {progressSteps.map((step) => (
                           <div key={step.id} className="step-item">
-                            <div className={`step-circle ${step.status}`}>
+                            <div className={`step-circle ${step.status}`} style={
+                              step.status === 'completed' ? { background: '#1A0040', borderColor: '#1A0040', color: 'white' }
+                              : step.status === 'active'    ? { background: 'white', borderColor: '#6A0DAD', color: '#6A0DAD' }
+                              : { background: '#e5e7eb', borderColor: '#e5e7eb', color: '#9ca3af' }
+                            }>
                               {step.status === 'completed' ? '✓' : step.id}
                             </div>
-                            <span className={`step-label ${step.status}`}>{step.label}</span>
+                            <span className={`step-label ${step.status}`} style={
+                              step.status === 'active'  ? { color: '#6A0DAD' }
+                              : step.status === 'pending' ? { color: '#9ca3af' }
+                              : { color: 'rgba(255,255,255,0.75)' }
+                            }>{step.label}</span>
                           </div>
                         ))}
                       </div>
@@ -1578,15 +1596,15 @@ export default function StudentDashboard() {
                             <a href={`/medical/colleges/${college.slug}`} target="_blank" rel="noreferrer"
                               key={college.slug} className="college-card">
                               <div className="college-img-placeholder" style={{ position: 'relative' }}>
-                                {(college.image || college.cover_image) && (
+                                  {(() => { const imgSrc = college.image || college.cover_image || college.img || college.thumbnail; return imgSrc ? (
                                   <img
-                                    src={college.image || college.cover_image}
+                                    src={imgSrc}
                                     alt={college.name}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
-                                    onError={e => { e.target.style.display = 'none'; }}
+                                    onError={e => { e.currentTarget.style.display = 'none'; }}
                                   />
-                                )}
-                                {!college.image && !college.cover_image && (
+                                ) : null; })()}
+                                {!(college.image || college.cover_image || college.img || college.thumbnail) && (
                                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', textAlign: 'center' }}>
                                     <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', lineHeight: 1.3 }}>{college.name}</span>
                                   </div>
