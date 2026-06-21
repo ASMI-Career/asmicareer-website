@@ -62,7 +62,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .panes.has-expanded .pane.pane-collapsed{flex:.35;cursor:pointer;}
 /* PANE DEFAULT */
 .pane-default{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;
-  align-items:stretch;padding:28px 20px 60px;cursor:pointer;transition:background .25s;}
+  align-items:stretch;padding:70px 20px 60px;cursor:pointer;transition:background .25s;}
 .pane-default:hover{background:rgba(255,255,255,.12);}
 .pane-collapsed .pane-default,.pane-active .pane-default{display:none!important;}
 .pd-eyebrow{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
@@ -564,7 +564,13 @@ function getMHDual(listType){
   return{cols,total};
 }
 
-function feeStr(name){const f=FEE[name];return f?`₹${f}L/yr`:'—';}
+function feeStr(name) {
+  const f = FEE[name];
+  if (!f) return '—';
+  if (f < 1) return '₹' + Math.round(f * 100) + 'K/yr';
+  if (f < 100) return '₹' + parseFloat(f.toFixed(1)) + 'L/yr';
+  return '₹' + parseFloat((f / 100).toFixed(2)) + 'Cr/yr';
+}
 
 function renderTable(cols,showState=false){
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
@@ -598,7 +604,7 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true){
     ? `<td style="text-align:center">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
           <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-          <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;
+          <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
             padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
         </div>
       </td>`
@@ -898,7 +904,7 @@ function renderAIIMSList(cols){
       ? `<td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
             <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;
+            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
               padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
           </div>
         </td>`
@@ -961,7 +967,7 @@ function renderMCCExpanded(){
       ? `<td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
             <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;
+            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
               padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
           </div>
         </td>`
