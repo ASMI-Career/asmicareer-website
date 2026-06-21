@@ -354,24 +354,37 @@
       const token = params.get('token');
       
       let fetchedRank = null;
+      let fetchedScore = null;
       if (token && token.trim() !== '') {
         try {
           const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
           const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
           const json = await res.json();
-          if (json.success && json.data && json.data.neet_rank) {
-             fetchedRank = parseInt(json.data.neet_rank);
+          if (json.success && json.data) {
+            const rawRank  = json.data.rank  || json.data.neet_rank  || json.data.air;
+            const rawScore = json.data.score || json.data.neet_score;
+            if (rawRank  && rawRank  !== 0) fetchedRank  = parseInt(rawRank,  10);
+            if (rawScore && rawScore !== 0) fetchedScore = parseInt(rawScore, 10);
           }
         } catch(e) {
           console.warn('Rank fetch failed:', e);
         }
       }
-      
-      RANK = fetchedRank || 25678; // Fallback to 25678 if not found
-      
-      const rankDisplay = document.querySelector('.text-4xl.font-bold.tracking-tight');
-      if (rankDisplay) {
-        rankDisplay.textContent = `#${RANK.toLocaleString('en-IN')}`;
+
+      const rankEl    = document.querySelector('.text-4xl.font-bold.tracking-tight');
+      const rankLabel = document.querySelector('.text-xs.font-bold.uppercase.tracking-widest.text-white\\/50');
+      if (fetchedRank) {
+        RANK = fetchedRank;
+        if (rankEl)    rankEl.textContent    = `#${RANK.toLocaleString('en-IN')}`;
+        if (rankLabel) rankLabel.textContent = 'YOUR RANK';
+      } else if (fetchedScore) {
+        RANK = null;
+        if (rankEl)    rankEl.textContent    = String(fetchedScore);
+        if (rankLabel) rankLabel.textContent = 'NEET SCORE';
+      } else {
+        RANK = null;
+        if (rankEl)    rankEl.textContent    = '—';
+        if (rankLabel) rankLabel.textContent = 'NEET SCORE';
       }
 
       renderCounsellingCards();

@@ -144,6 +144,7 @@ export default function StudentDashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [studentName, setStudentName] = useState('Student');
   const [studentRank, setStudentRank] = useState(null);
+  const [studentScore, setStudentScore] = useState(null);
   const [shortlist, setShortlist] = useState([]);
   const [deadlines, setDeadlines] = useState([]);
   const [collegeData, setCollegeData] = useState([]);
@@ -240,6 +241,8 @@ export default function StudentDashboard() {
       setStudentName(localStorage.getItem('name') || 'Student');
       const savedRank = localStorage.getItem('rank');
       if (savedRank) setStudentRank(parseInt(savedRank, 10));
+      const savedScore = localStorage.getItem('score');
+      if (savedScore) setStudentScore(parseInt(savedScore, 10));
 
       try {
         const sList = JSON.parse(localStorage.getItem('shortlist')) || [];
@@ -264,8 +267,12 @@ export default function StudentDashboard() {
               const s = res.data;
               console.log('[ASMI] student data:', s);
               if (s.name) { setStudentName(s.name); localStorage.setItem('name', s.name); }
-              const rankVal = s.rank || s.neet_rank || s.air;
-              if (rankVal) { const r = parseInt(rankVal, 10); setStudentRank(r); localStorage.setItem('rank', r); }
+              const rawRank = s.rank || s.neet_rank || s.air;
+              const rawScore = s.score || s.neet_score;
+              const parsedRank = (rawRank && rawRank !== 0) ? parseInt(rawRank, 10) : null;
+              const parsedScore = (rawScore && rawScore !== 0) ? parseInt(rawScore, 10) : null;
+              if (parsedRank)  { setStudentRank(parsedRank);   localStorage.setItem('rank', parsedRank); }
+              if (parsedScore) { setStudentScore(parsedScore); localStorage.setItem('score', parsedScore); }
               if (s.colleges || s.shortlist) {
                 const sl = (s.colleges || s.shortlist || []).map(c => typeof c === 'object' ? c.name : c);
                 setShortlist(sl); localStorage.setItem('shortlist', JSON.stringify(sl));
@@ -779,10 +786,12 @@ export default function StudentDashboard() {
                         <h1 className="hero-greeting">Welcome back, {studentName.split(' ')[0]} 👋</h1>
                         <p className="hero-subtitle">Your journey to MBBS 2026 is in progress. Keep going!</p>
                         <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
-                          {studentRank && (
+                          {(studentRank || studentScore) && (
                             <div className="rank-badge">
-                              <span className="rank-badge-label">NEET AIR Rank</span>
-                              <span className="rank-badge-value">#{studentRank.toLocaleString()}</span>
+                              <span className="rank-badge-label">{studentRank ? 'NEET AIR RANK' : 'NEET SCORE'}</span>
+                              <span className="rank-badge-value">
+                                {studentRank ? `#${studentRank.toLocaleString('en-IN')}` : studentScore}
+                              </span>
                             </div>
                           )}
                         </div>
