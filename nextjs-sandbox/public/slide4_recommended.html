@@ -407,11 +407,17 @@ function getColleges(stateKey,courseKey,keys,listType){
     const catC = catMap.has(name) ? catMap.get(name) : null;
     
     let bestC = Infinity;
+    let matchedS = '';
     keys.forEach(k => {
       const list = DB[stateKey][courseKey][k]?.[listType] || [];
       const match = list.find(c => c.n === name);
-      if (match && match.c < bestC) {
-        bestC = match.c;
+      if (match) {
+        if (match.c < bestC) {
+          bestC = match.c;
+        }
+        if (match.s) {
+          matchedS = match.s;
+        }
       }
     });
     
@@ -424,13 +430,13 @@ function getColleges(stateKey,courseKey,keys,listType){
       openCutoff: openC,
       catCutoff: catC,
       c: bestC,
+      s: matchedS || origObj.s || '',
       prob: prob(score, bestC)
     });
   });
   
   return cols;
 }
-
 function findCollegeCutoffs(name, course) {
   const userCat = activeCategory();
   let openC = null, catC = null;
@@ -514,10 +520,17 @@ function buildPoolRows(){
     const finalFeeMin=feeOvr?.feeMin??computedFeeMin;
     const finalFeeMax=feeOvr?.feeMax??computedFeeMax;
     const finalYears=feeOvr?.years??4.5;
-    rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
-      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears});
-  }
 
+    const openCutoffs = colleges.map(c=>c.openCutoff).filter(x=>x!==null && x!==undefined);
+    const catCutoffs = colleges.map(c=>c.catCutoff).filter(x=>x!==null && x!==undefined);
+    const openC = openCutoffs.length ? Math.min(...openCutoffs) : null;
+    const catC = catCutoffs.length ? Math.min(...catCutoffs) : null;
+
+    rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
+      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears,
+      openCutoff:openC,openProj:openC?openC+15:null,
+      catCutoff:catC,catProj:catC?catC+15:null});
+  }
   function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label,feeOvr1,feeOvr2){
     if(!colleges.length) return;
     const b1=colleges.filter(c=>(FEE[c.n]||0)<=threshold && FEE[c.n]);
@@ -627,9 +640,31 @@ function buildPoolRows(){
 
 // ── RENDER TABLE ─────────────────────────────────────────────────
 function renderTable(rows){
-  const body=document.getElementById('summaryBody');
+  const hasCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
+  const cutoffHeader = hasCat
+    ? '<th>Open Cutoff</th><th>' + activeCategory() + ' Cutoff</th>'
+    : '<th>Last Cutoff</th>';
+  const colspanVal = hasCat ? 9 : 8;
+
+  const tableOuter = document.getElementById('tableOuter');
   if(!rows.length){
-    body.innerHTML=`<tr><td colspan="8"><div class="no-data">No options found. Try adjusting score or category in Slide 3.</div></td></tr>`;
+    tableOuter.innerHTML = `
+      <table class="stable" id="summaryTable">
+        <thead>
+          <tr>
+            <th>Pool</th>
+            <th>Course</th>
+            <th>Options</th>
+            ${cutoffHeader}
+            <th>Fee / yr</th>
+            <th>Total Budget</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody">
+          <tr><td colspan="${colspanVal}"><div class="no-data">No options found. Try adjusting score or category in Slide 3.</div></td></tr>
+        </tbody>
+      </table>`;
     return;
   }
 
@@ -637,22 +672,71 @@ function renderTable(rows){
   rows.forEach(r=>{
     if(r.group!==lastGroup){
       lastGroup=r.group;
-      html+=`<tr class="section-row"><td colspan="8">${r.group}</td></tr>`;
+      html+=`<tr class="section-row"><td colspan="${colspanVal}">${r.group}</td></tr>`;
     }
+
+    let cutoffCells = '';
+    if(hasCat){
+      const openVal = r.openCutoff !== null ? r.openCutoff : '—';
+      const openProjVal = r.openProj !== null ? r.openProj : '—';
+      const openCell = r.openCutoff !== null ? `
+        <td>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw">${openVal}</span>
+            <span class="cutoff-proj">${openProjVal}</span>
+          </div>
+        </td>` : '<td style="color:rgba(26,0,64,0.3)">—</td>';
+
+      const catVal = r.catCutoff !== null ? r.catCutoff : '—';
+      const catProjVal = r.catProj !== null ? r.catProj : '—';
+      const catCell = r.catCutoff !== null ? `
+        <td>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw" style="color:var(--purple);font-weight:900;">${catVal}</span>
+            <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:2px 10px;border-radius:20px;font-family:'Montserrat';font-weight:900;font-size:.75rem;letter-spacing:.3px;">${catProjVal}</span>
+          </div>
+        </td>` : '<td style="color:rgba(26,0,64,0.3)">—</td>';
+
+      cutoffCells = openCell + catCell;
+    } else {
+      const openVal = r.openCutoff !== null ? r.openCutoff : '—';
+      const openProjVal = r.openProj !== null ? r.openProj : '—';
+      cutoffCells = r.openCutoff !== null ? `
+        <td>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw">${openVal}</span>
+            <span class="cutoff-proj">${openProjVal}</span>
+          </div>
+        </td>` : '<td style="color:rgba(26,0,64,0.3)">—</td>';
+    }
+
     html+=`<tr>
       <td><span class="pool-name">${r.label}</span></td>
       <td><span class="course-tag">${r.course}</span></td>
       <td><span class="options-val">${r.inReach}/${r.total}</span></td>
-      <td><span class="cutoff-raw">${r.lastCutoff}</span></td>
-      <td><span class="cutoff-proj">${r.projCutoff}</span></td>
-      <td><span class="fee-val">${r.feeMin ? formatFeeRange(r.feeMin, r.feeMax) : (r.feeStr || '—')}</span></td>
-      <td><span class="budget-val">${r.feeMin ? formatBudgetRange(r.feeMin, r.feeMax, r.years) : (r.budgetStr || '—')}</span></td>
+      ${cutoffCells}
+      <td><span class="fee-val">${r.feeStr}</span></td>
+      <td><span class="budget-val">${r.budgetStr}</span></td>
       <td><span class="status ${r.status.cls}">${r.status.label}</span></td>
     </tr>`;
   });
-  body.innerHTML=html;
-}
 
+  tableOuter.innerHTML=`
+    <table class="stable" id="summaryTable">
+      <thead>
+        <tr>
+          <th>Pool</th>
+          <th>Course</th>
+          <th>Options</th>
+          ${cutoffHeader}
+          <th>Fee / yr</th>
+          <th>Total Budget</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody">${html}</tbody>
+    </table>`;
+}
 // ── TAB SWITCHER ─────────────────────────────────────────────────
 function switchS4Tab(tab, btn){
   document.querySelectorAll('.s4-tab').forEach(t=>t.classList.remove('active'));
@@ -664,24 +748,59 @@ function switchS4Tab(tab, btn){
 // ── TOP 25 TABLE ─────────────────────────────────────────────────
 function renderTop25Table(){
   const data = getTop25();
+  const userCat = activeCategory();
+  const hasCat = userCat !== 'General' && userCat !== 'OPEN';
 
   function subRows(cols){
     if(!cols||!cols.length) return '';
     return cols.map((c,i)=>{
-      const actual    = c.openCutoff!==undefined?c.openCutoff:c.c;
-      const projected = actual+15;
       const feeVal    = feeStr(c.n);
       const starred   = isShortlisted(c.n);
       const probCls   = c.prob.key==='safe'?'safe':c.prob.key==='likely'?'likely':'borderline';
+      
+      let cutoffCells = '';
+      if(hasCat){
+        const openVal = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff : '—';
+        const openProjVal = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff + 15 : '—';
+        const openCell = c.openCutoff !== null && c.openCutoff !== undefined ? `
+          <td style="text-align:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+              <span style="font-weight:800;color:var(--navy)">${openVal}</span>
+              <span class="top25-proj">${openProjVal}</span>
+            </div>
+          </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
+
+        const catVal = c.catCutoff !== null && c.catCutoff !== undefined ? c.catCutoff : '—';
+        const catProjVal = c.catCutoff !== null && c.catCutoff !== undefined ? c.catCutoff + 15 : '—';
+        const catCell = c.catCutoff !== null && c.catCutoff !== undefined ? `
+          <td style="text-align:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+              <span style="font-weight:800;color:var(--purple)">${catVal}</span>
+              <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:2px 10px;border-radius:12px;font-size:.72rem;font-weight:800;display:inline-block;">${catProjVal}</span>
+            </div>
+          </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
+        
+        cutoffCells = openCell + catCell;
+      } else {
+        const actual = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff : c.c;
+        const projected = actual + 15;
+        cutoffCells = `
+          <td style="text-align:center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+              <span style="font-weight:800;color:#6a0dad">${actual}</span>
+              <span class="top25-proj">${projected}</span>
+            </div>
+          </td>`;
+      }
+
       return `<tr style="background:${i%2===0?'rgba(255,255,255,0.55)':'rgba(255,255,255,0.35)'}">
         <td class="top25-college-name">${c.n}</td>
         <td style="font-size:.72rem;color:rgba(26,0,64,0.65);text-align:center">${c.state||'—'}</td>
-        <td style="text-align:center;font-weight:800;color:#6a0dad">${actual}</td>
-        <td style="text-align:center"><span class="top25-proj">${projected}</span></td>
+        ${cutoffCells}
         <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
         <td style="text-align:center"><span class="prob ${probCls}">${c.prob.label}</span></td>
         <td style="text-align:center">
-          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
+          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
             style="background:none;border:none;cursor:pointer;font-size:1.1rem;">${starred?'★':'☆'}</button>
         </td>
       </tr>`;
@@ -697,20 +816,27 @@ function renderTop25Table(){
         ${title}
       </div>`;
     entries.forEach(([subTitle,cols])=>{
+      const headers = hasCat ? `
+        <th>College</th><th style="text-align:center">State</th>
+        <th style="text-align:center">Open Cutoff</th>
+        <th style="text-align:center">${userCat} Cutoff</th>
+        <th style="text-align:center">Fee/yr</th>
+        <th style="text-align:center">Chance</th>
+        <th style="text-align:center">★</th>
+      ` : `
+        <th>College</th><th style="text-align:center">State</th>
+        <th style="text-align:center">Last Cutoff</th>
+        <th style="text-align:center">Fee/yr</th>
+        <th style="text-align:center">Chance</th>
+        <th style="text-align:center">★</th>
+      `;
       html+=`<div style="background:rgba(106,13,173,0.08);padding:5px 14px;
         font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;
         color:#6a0dad;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid rgba(26,0,64,0.08);">
         ${subTitle} — ${cols.length} options
       </div>
       <table class="top25-table">
-        <thead><tr>
-          <th>College</th><th style="text-align:center">State</th>
-          <th style="text-align:center">Last Cutoff</th>
-          <th style="text-align:center;background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700">Projected</th>
-          <th style="text-align:center">Fee/yr</th>
-          <th style="text-align:center">Chance</th>
-          <th style="text-align:center">★</th>
-        </tr></thead>
+        <thead><tr>${headers}</tr></thead>
         <tbody>${subRows(cols)}</tbody>
       </table>`;
     });
@@ -728,13 +854,16 @@ function renderTop25Table(){
   }
   return `<div>${mhHtml}${mccHtml}${openHtml}</div>`;
 }
-
 // ── SHORTLIST VIEW ───────────────────────────────────────────────
 function renderShortlistTable(){
   const shortlist = getSess().shortlist || [];
   if(!shortlist.length){
     return '<div class="no-data">No colleges shortlisted yet. Go back to Slide 3 and tap ☆ to shortlist colleges.</div>';
   }
+
+  const userCat = activeCategory();
+  const hasCat = userCat !== 'General' && userCat !== 'OPEN';
+  const course = activeCourse();
 
   const POOL_ORDER = ['MH Govt','MH Private','AIQ Govt','AIIMS','JIPMER',
     'Central Univ.','Deemed','Open States'];
@@ -750,17 +879,54 @@ function renderShortlistTable(){
   sorted.forEach((c,i)=>{
     if(c.pool!==lastPool){
       lastPool=c.pool;
-      html+=`<tr class="section-row"><td colspan="6">${c.pool} — ${c.poolGroup}</td></tr>`;
+      const colspanVal = hasCat ? 6 : 5;
+      html+=`<tr class="section-row"><td colspan="${colspanVal}">${c.pool} — ${c.poolGroup}</td></tr>`;
     }
     const statusObj=getStatus(activeScore(),c.c);
+    const cutoffs = findCollegeCutoffs(c.n, course);
+    
+    let cutoffCells = '';
+    if(hasCat){
+      const openVal = cutoffs.openCutoff !== null ? cutoffs.openCutoff : '—';
+      const openProjVal = cutoffs.openCutoff !== null ? cutoffs.openCutoff + 15 : '—';
+      const openCell = cutoffs.openCutoff !== null ? `
+        <td style="text-align:center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw">${openVal}</span>
+            <span class="cutoff-proj">${openProjVal}</span>
+          </div>
+        </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
+
+      const catVal = cutoffs.catCutoff !== null ? cutoffs.catCutoff : '—';
+      const catProjVal = cutoffs.catCutoff !== null ? cutoffs.catCutoff + 15 : '—';
+      const catCell = cutoffs.catCutoff !== null ? `
+        <td style="text-align:center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw" style="color:var(--purple);font-weight:900;">${catVal}</span>
+            <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:2px 10px;border-radius:20px;font-family:'Montserrat';font-weight:900;font-size:.75rem;letter-spacing:.3px;">${catProjVal}</span>
+          </div>
+        </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
+      
+      cutoffCells = openCell + catCell;
+    } else {
+      const actual = cutoffs.openCutoff !== null ? cutoffs.openCutoff : c.c;
+      const projected = actual + 15;
+      cutoffCells = `
+        <td style="text-align:center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <span class="cutoff-raw">${actual}</span>
+            <span class="cutoff-proj">${projected}</span>
+          </div>
+        </td>`;
+    }
+
     html+=`<tr>
       <td style="font-family:Montserrat;font-weight:800;font-size:.78rem">${c.n}</td>
-      <td style="text-align:center;font-family:Montserrat;font-weight:700">${c.c}</td>
-      <td style="text-align:center"><span class="cutoff-proj">${c.c+15}</span></td>
+      ${cutoffCells}
       <td style="text-align:center;color:var(--soft)">${c.fee}</td>
       <td style="text-align:center"><span class="status ${statusObj.cls}">${statusObj.label}</span></td>
       <td style="text-align:center">
-        <button onclick="removeFromShortlist('${c.n.replace(/'/g,"\\'")}',this)"
+        <button onclick="removeFromShortlist('${c.n.replace(/'/g,"\\\\'")}',this)"
           style="background:none;border:none;cursor:pointer;color:#b91c1c;font-size:.75rem;font-family:Montserrat;font-weight:700;">
           ✕ Remove
         </button>
@@ -768,23 +934,29 @@ function renderShortlistTable(){
     </tr>`;
   });
 
+  const headers = hasCat ? `
+    <th>College</th><th>Open Cutoff</th><th>${userCat} Cutoff</th>
+    <th>Fee/yr</th><th>Status</th><th></th>
+  ` : `
+    <th>College</th><th>Last Cutoff</th>
+    <th>Fee/yr</th><th>Status</th><th></th>
+  `;
+
   return`<table class="stable">
-    <thead><tr>
-      <th>College</th><th>Last Cutoff</th><th>Projected</th>
-      <th>Fee/yr</th><th>Status</th><th></th>
-    </tr></thead>
+    <thead><tr>${headers}</tr></thead>
     <tbody>${html}</tbody>
   </table>`;
 }
-
 function removeFromShortlist(name, btn){
   const s=getSess();
   s.shortlist=(s.shortlist||[]).filter(c=>c.n!==name);
   sessionStorage.setItem('asmi',JSON.stringify(s));
   document.getElementById('tableOuter').innerHTML=renderShortlistTable();
   document.getElementById('totalBadge').textContent=(s.shortlist.length)+' shortlisted';
+  // Update My Shortlist tab count if it exists
+  const tabs = document.querySelectorAll('.s4-tab');
+  if(tabs[1]) tabs[1].textContent = `★ My Shortlist (${s.shortlist.length})`;
 }
-
 // ── PDF DOWNLOAD ─────────────────────────────────────────────────
 // ── Fee formatter (also used in Slide 4 table) ───────────────────────────────
 function formatFee(lakhs) {
@@ -1617,14 +1789,14 @@ function buildPDFHTML(title, subtitle, sections, studentData){
   });
 
   function tableRows(cols){
-    const colspanVal = showCat ? 8 : 6;
+    const colspanVal = showCat ? 6 : 5;
     if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
     return cols.map((c,i)=>{
       const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
       const projected = actual!==null ? actual+15 : null;
       const actualStr = actual!==null ? actual : '—';
       const projStr   = projected!==null ? projected : '—';
-      const feeVal    = FEE&&FEE[c.n]?formatFee(FEE[c.n])+'/yr':'—';
+      const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
       const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
       const statusBg    = c.prob.key==='safe'?'rgba(21,128,61,.1)':c.prob.key==='likely'?'rgba(3,105,161,.1)':'rgba(185,28,28,.08)';
       
@@ -1636,13 +1808,13 @@ function buildPDFHTML(title, subtitle, sections, studentData){
         return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
           <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
           <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
-          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
-          <td style="padding:6px 8px;text-align:center">
-            <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projStr}</span>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">
+            <div>${actualStr}</div>
+            <div style="font-size:8px;color:#555;">(${projStr})</div>
           </td>
-          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${catActualStr}</td>
-          <td style="padding:6px 8px;text-align:center">
-            <span style="background:linear-gradient(135deg,#6a0dad,#1a0040);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${catProjStr}</span>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">
+            <div>${catActualStr}</div>
+            <div style="font-size:8px;color:#555;">(${catProjStr})</div>
           </td>
           <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
           <td style="padding:6px 8px;text-align:center">
@@ -1653,9 +1825,9 @@ function buildPDFHTML(title, subtitle, sections, studentData){
         return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
           <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
           <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
-          <td style="padding:6px 8px;font-size:10px;text-align:center;font-weight:700;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
-          <td style="padding:6px 8px;text-align:center">
-            <span style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;padding:1px 7px;border-radius:10px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${projStr}</span>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">
+            <div>${actualStr}</div>
+            <div style="font-size:8px;color:#555;">(${projStr})</div>
           </td>
           <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
           <td style="padding:6px 8px;text-align:center">
@@ -1678,16 +1850,13 @@ function buildPDFHTML(title, subtitle, sections, studentData){
               <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Open Cutoff</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Open Projected</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">${userCat} Cutoff</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">${userCat} Projected</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
       ` : `
               <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Last Cutoff</th>
-              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#2D0A5E,#6a0dad)">Projected</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
               <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
       `;
@@ -1744,7 +1913,6 @@ function buildPDFHTML(title, subtitle, sections, studentData){
       </div>
     </div>`;
 }
-
 async function downloadTop50PDF(){
   const btn = document.getElementById('pdfBtn');
   btn.textContent = '⏳ Generating...';
