@@ -70,7 +70,7 @@
                     <iconify-icon icon="lucide:info" class="text-base"></iconify-icon>
                   </button>
                 </div>
-                <p class="text-sm text-gray-500 mt-1">Round-wise AIR, SML and chances mapped to your NEET rank.</p>
+                <p class="text-sm text-gray-500 mt-1">Round-wise AIR and SML cutoffs across all counselling types.</p>
               </div>
             </div>
 
@@ -139,20 +139,6 @@
                 </div>
               </div>
 
-              <div class="mt-6 grid grid-cols-3 gap-2">
-                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
-                  <p id="count-safe" class="text-lg font-bold text-[#86efac]">0</p>
-                  <p class="text-[10px] text-white/50 font-bold uppercase">Safe</p>
-                </div>
-                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
-                  <p id="count-likely" class="text-lg font-bold text-[#fde68a]">0</p>
-                  <p class="text-[10px] text-white/50 font-bold uppercase">Likely</p>
-                </div>
-                <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
-                  <p id="count-borderline" class="text-lg font-bold text-[#fdba74]">0</p>
-                  <p class="text-[10px] text-white/50 font-bold uppercase">Border</p>
-                </div>
-              </div>
             </div>
             <iconify-icon icon="lucide:activity" class="absolute -right-6 -bottom-8 text-9xl text-white opacity-5 rotate-12"></iconify-icon>
           </div>
@@ -184,11 +170,6 @@
                 <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Deemed</button>
               </div>
 
-              <div class="flex flex-wrap items-center gap-3 text-xs font-bold text-gray-500">
-                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-green-100 ring-1 ring-green-200"></span>Safe — rank well within cutoff</span>
-                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-yellow-100 ring-1 ring-yellow-200"></span>Likely — rank near cutoff</span>
-                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-orange-100 ring-1 ring-orange-200"></span>Borderline — slightly beyond cutoff</span>
-              </div>
             </div>
           </div>
         </section>
@@ -673,7 +654,6 @@
         renderTable();
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">No data available for this selection.</td></tr>`;
-        updateCounts(0, 0, 0);
       }
     }
 
@@ -681,7 +661,6 @@
       if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
         const tbody = document.getElementById('collegeTableBody');
         tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No data available for this selection.</td></tr>`;
-        updateCounts(0,0,0);
         return;
       }
       
@@ -690,9 +669,6 @@
       const rCount = document.getElementById('record-count');
       if(rCount) rCount.textContent = `${currentData.colleges.length} Colleges Found`;
       
-      let safeCount = 0;
-      let likelyCount = 0;
-      let borderCount = 0;
 
       const isMH = currentData.counselling === 'MH';
       const isMCC = currentData.counselling === 'MCC';
@@ -820,22 +796,12 @@
                 const intake = rData.Intake;
                 const sml = rData.SML;
                 
-                const chance = getChance(air);
-                let cellBg = '';
-                let textClass = 'text-gray-950';
-                let tagHtml = '';
-                
-                if (chance === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
-                else if (chance === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
-                else if (chance === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
-                else if (chance === 'out_of_reach') { textClass = 'text-gray-500'; }
-
                 const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
                 const strayClass = isStray ? 'stray-col' : '';
                 const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
-                
+
                 html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
-                html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
+                html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'}</td>`;
                 html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
               });
 
@@ -870,25 +836,15 @@
           const intake = rData.Intake;
           const sml = showPWD ? rData.AIR_PWD : rData.SML;
           
-          const chance = getChance(air);
-          let cellBg = '';
-          let textClass = 'text-gray-950';
-          let tagHtml = '';
-          
-          if (chance === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
-          else if (chance === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
-          else if (chance === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
-          else if (chance === 'out_of_reach') { textClass = 'text-gray-500'; }
-
           const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
           const strayClass = isStray ? 'stray-col' : '';
           const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
-          
+
           if (!isKeralaMQ) {
              html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
           }
-          
-          html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
+
+          html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'}</td>`;
           
           if (showPWD) {
             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
@@ -906,17 +862,10 @@
         tbody.appendChild(tr);
       });
 
-      updateCounts(safeCount, likelyCount, borderCount);
       attachCheckboxes();
       applySearch();
     }
     
-    function updateCounts(s, l, b) {
-      document.getElementById('count-safe').textContent = s;
-      document.getElementById('count-likely').textContent = l;
-      document.getElementById('count-borderline').textContent = b;
-    }
-
     function updateCompareState() {
       let selected = 0;
       const checkboxes = document.querySelectorAll('.compare-checkbox');

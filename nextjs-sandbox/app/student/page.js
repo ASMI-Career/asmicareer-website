@@ -153,6 +153,9 @@ export default function StudentDashboard() {
   const [docCategory, setDocCategory] = useState('General');
   const [docQuota, setDocQuota] = useState('State');
   const [studentCategory, setStudentCategory] = useState(null); // null = not yet set from token
+  const [currentToken, setCurrentToken] = useState('');
+
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
 
   // Counsellor
   const [counsellorName, setCounsellorName] = useState('ASMI Counsellor');
@@ -210,6 +213,7 @@ export default function StudentDashboard() {
   const [feeMap, setFeeMap] = useState({});
   const [cpPoolFilter, setCpPoolFilter] = useState('All');
   const [cpTypeFilter, setCpTypeFilter] = useState('All');
+  const [cutoffDbData, setCutoffDbData] = useState([]);
 
   const scoreToRankMap = [
     { s: 720, r: 1 }, { s: 700, r: 80 }, { s: 680, r: 950 },
@@ -260,7 +264,7 @@ export default function StudentDashboard() {
       // params already defined at top of useEffect
       const token = params.get('token');
       if (token && token.trim() !== '') {
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+        setCurrentToken(token);
         fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`)
           .then(res => res.json())
           .then(res => {
@@ -273,7 +277,7 @@ export default function StudentDashboard() {
               const parsedRank = (rawRank && rawRank !== 0) ? parseInt(rawRank, 10) : null;
               const parsedScore = (rawScore && rawScore !== 0) ? parseInt(rawScore, 10) : null;
               if (parsedRank)  { setStudentRank(parsedRank);   localStorage.setItem('rank', parsedRank); }
-              if (parsedScore) { setStudentScore(parsedScore); localStorage.setItem('score', parsedScore); }
+              if (parsedScore) { setStudentScore(parsedScore); localStorage.setItem('score', parsedScore); setCpScoreInput(String(parsedScore)); }
               if (s.colleges || s.shortlist) {
                 const sl = (s.colleges || s.shortlist || []).map(c => typeof c === 'object' ? c.name : c);
                 setShortlist(sl); localStorage.setItem('shortlist', JSON.stringify(sl));
@@ -317,6 +321,23 @@ export default function StudentDashboard() {
               const wGroup = s.whatsapp_group_link || s.whatsappGroupLink || s.whatsapp_group;
               if (wGroup) setWhatsappGroupLink(wGroup);
               setCounsellorBranch(getBranchFromToken(token));
+
+              // Restore document checklist from sheet (source of truth for cross-device sync)
+              const rawDocStatus = s.document_status || s.documentStatus || s.doc_status;
+              if (rawDocStatus) {
+                try {
+                  const parsed = typeof rawDocStatus === 'string' ? JSON.parse(rawDocStatus) : rawDocStatus;
+                  if (parsed.checked) {
+                    const restored = new Set(parsed.checked);
+                    setCheckedDocs(restored);
+                    localStorage.setItem('asmi-checklist', JSON.stringify({
+                      checked: Array.from(restored),
+                      category: parsed.category || docCategory,
+                      quota: parsed.quota || docQuota,
+                    }));
+                  }
+                } catch(e) { console.warn('Doc status parse failed:', e); }
+              }
             }
           }).catch(err => console.warn('Profile fetch failed:', err));
       }
@@ -325,9 +346,16 @@ export default function StudentDashboard() {
     fetch('/data/events.json')
       .then(r => r.json())
       .then(data => {
-        const today = new Date().toISOString().split('T')[0];
+        const todayMidnight = new Date(); todayMidnight.setHours(0, 0, 0, 0);
+        const isExpired = (ev) => {
+          // Result entries stay visible regardless of date
+          if (ev.title && ev.title.toLowerCase().includes('result')) return false;
+          const targetDate = new Date(ev.expiry_date || ev.date);
+          return targetDate < todayMidnight;
+        };
         setDeadlines(
-          data.filter(ev => (ev.expiry_date ? ev.expiry_date.split('T')[0] : ev.date) >= today)
+          data
+            .filter(ev => !isExpired(ev))
             .map(ev => ({ title: ev.title, date: ev.date, tag: ev.tag || 'NOTICE' }))
             .sort((a, b) => new Date(a.date) - new Date(b.date))
         );
@@ -339,10 +367,101 @@ export default function StudentDashboard() {
     fetch('/fee_map.json').then(r => r.json()).then(setFeeMap).catch(() => {});
   }, []);
 
+  useEffect(() => {
+    const mccCatKey = (!studentCategory || studentCategory === 'General') ? 'OPEN' : studentCategory.toUpperCase();
+    const mhCatDir  = mccCatKey;
+
+    const computeClosingRank = (rounds) => Math.max(
+      rounds?.['Round 1']?.AIR ?? 0,
+      rounds?.['Round 2']?.AIR ?? 0,
+      rounds?.['Round 3']?.AIR ?? 0
+    );
+
+    const tryFetch = async (url, fallbackUrl) => {
+      try {
+        let res = await fetch(url);
+        if (!res.ok && fallbackUrl) res = await fetch(fallbackUrl);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch { return null; }
+    };
+
+    const loadCutoffData = async () => {
+      const entries = [];
+
+      const mccTypes = [
+        { key: 'GOVT_MBBS',    type: 'Government' },
+        { key: 'AIIMS_MBBS',   type: 'AIIMS'      },
+        { key: 'JIPMER_MBBS',  type: 'Government' },
+        { key: 'CENTRAL_MBBS', type: 'Government' },
+        { key: 'DEEMED_MBBS',  type: 'Deemed'     },
+      ];
+      await Promise.all(mccTypes.map(async (t) => {
+        const data = await tryFetch(
+          `/data/cutoffs/MCC/2025/${t.key}/${mccCatKey}.json`,
+          `/data/cutoffs/MCC/2025/${t.key}/OPEN.json`
+        );
+        if (!data?.colleges) return;
+        for (const c of data.colleges) {
+          const closingRank = computeClosingRank(c.rounds);
+          if (closingRank > 0)
+            entries.push({ name: c.name, state: c.state || '', closingRank, fees: c.fees || '', type: t.type, pool: 'MCC AIQ', quota: 'AIQ' });
+        }
+      }));
+
+      const mhTypes = [
+        { key: 'GOVT_MBBS',    type: 'Government' },
+        { key: 'PRIVATE_MBBS', type: 'Private'    },
+      ];
+      await Promise.all(mhTypes.map(async (t) => {
+        const data = await tryFetch(
+          `/data/cutoffs/MH/2025/${t.key}/${mhCatDir}/GENERAL.json`,
+          `/data/cutoffs/MH/2025/${t.key}/OPEN/GENERAL.json`
+        );
+        if (!data?.colleges) return;
+        for (const c of data.colleges) {
+          const closingRank = computeClosingRank(c.rounds);
+          if (closingRank > 0)
+            entries.push({ name: c.name, state: 'Maharashtra', closingRank, fees: c.fees || '', type: t.type, pool: 'MH State', quota: 'State' });
+        }
+      }));
+
+      const OPEN_STATES_DIRS = {
+        Karnataka: 'Karnataka', Telangana: 'Telangana', Tamil_Nadu: 'Tamil Nadu',
+        Uttar_Pradesh: 'Uttar Pradesh', Kerala: 'Kerala', Andhra_Pradesh: 'Andhra Pradesh',
+        Haryana: 'Haryana', West_Bengal: 'West Bengal', Bihar: 'Bihar',
+        Uttarakhand: 'Uttarakhand', Chhattisgarh: 'Chhattisgarh', Jharkhand: 'Jharkhand',
+        Himachal_Pradesh: 'Himachal Pradesh', Pondicherry: 'Pondicherry',
+        Manipur: 'Manipur', Meghalaya: 'Meghalaya', Sikkim: 'Sikkim'
+      };
+      await Promise.all(Object.entries(OPEN_STATES_DIRS).map(async ([stateDir, stateName]) => {
+        const data = await tryFetch(`/data/cutoffs/OPEN/2025/${stateDir}/MQ.json`);
+        if (!data?.colleges) return;
+        const seen = new Map();
+        for (const c of data.colleges) {
+          const closingRank = computeClosingRank(c.rounds);
+          if (closingRank > 0 && (!seen.has(c.name) || closingRank > seen.get(c.name).closingRank))
+            seen.set(c.name, { name: c.name, state: stateName, closingRank, fees: c.fees || '', type: 'Private', pool: 'Open State', quota: 'Open State' });
+        }
+        entries.push(...seen.values());
+      }));
+
+      setCutoffDbData(entries);
+    };
+
+    loadCutoffData();
+  }, [studentCategory]);
+
   // Checklist helpers
   const saveChecklist = (set, cat, quota) => {
     setCheckedDocs(set);
-    localStorage.setItem('asmi-checklist', JSON.stringify({ checked: Array.from(set), category: cat, quota }));
+    const payload = { checked: Array.from(set), category: cat, quota };
+    localStorage.setItem('asmi-checklist', JSON.stringify(payload));
+    // Write to sheet for cross-device persistence (requires Apps Script action=saveDocStatus)
+    if (currentToken) {
+      fetch(`${APPS_SCRIPT_URL}?action=saveDocStatus&token=${encodeURIComponent(currentToken)}&data=${encodeURIComponent(JSON.stringify(payload))}`)
+        .catch(() => {}); // silent fail — localStorage remains fallback
+    }
   };
 
   const toggleDoc = (id) => {
@@ -374,14 +493,15 @@ export default function StudentDashboard() {
     const rank = parseInt(cpRankInput, 10);
     if (isNaN(rank) || rank < 1) return [];
 
+    const parseAirFee = (f) => parseInt(String(f || '').replace(/[,\s]/g, ''), 10) || 0;
     let results = [];
-    for (const c of collegeData) {
-      const cutoff = parseInt(c.cutoff, 10);
-      if (isNaN(cutoff)) continue;
+    for (const c of cutoffDbData) {
+      const cutoff = c.closingRank;
+      if (!cutoff || cutoff === 0) continue;
 
       // Budget filter
-      const fee = parseInt(c.fees, 10) || 0;
-      if (fee > 0 && fee > cpMaxBudget) continue;
+      const feeRaw = parseAirFee(c.fees);
+      if (feeRaw > 0 && feeRaw > cpMaxBudget) continue;
 
       // Quota filter
       if (cpQuota !== 'All' && c.quota !== cpQuota) continue;
@@ -405,8 +525,8 @@ export default function StudentDashboard() {
     // Sort
     if (cpSortBy === 'chance')     results.sort((a, b) => a.chanceSort - b.chanceSort || a.closingRank - b.closingRank);
     else if (cpSortBy === 'rank')  results.sort((a, b) => a.closingRank - b.closingRank);
-    else if (cpSortBy === 'fees_asc')  results.sort((a, b) => (parseInt(a.fees,10)||0) - (parseInt(b.fees,10)||0));
-    else if (cpSortBy === 'fees_desc') results.sort((a, b) => (parseInt(b.fees,10)||0) - (parseInt(a.fees,10)||0));
+    else if (cpSortBy === 'fees_asc')  results.sort((a, b) => parseAirFee(a.fees) - parseAirFee(b.fees));
+    else if (cpSortBy === 'fees_desc') results.sort((a, b) => parseAirFee(b.fees) - parseAirFee(a.fees));
     else if (cpSortBy === 'name')  results.sort((a, b) => a.name.localeCompare(b.name));
 
     return results;
@@ -462,6 +582,8 @@ export default function StudentDashboard() {
       const p = prob(score, bestC);
       cols.push({
         name,
+        openCutoff: openC,
+        catCutoff: catC,
         cutoff: bestC,
         projected: bestC + 15,
         chance: p.label,
@@ -476,45 +598,49 @@ export default function StudentDashboard() {
   };
 
   const getMCCCollegesList = (course, userCat, score) => {
-    const keys = getCategoryKeys(userCat);
+    const catKeyForList = (userCat !== 'Open' && userCat !== 'General')
+      ? userCat.toUpperCase() : null;
     const results = [];
-    
-    const addColleges = (stateKey, courseKey, catKeysList, listType, type) => {
+
+    const addColleges = (stateKey, courseKey, listType, type) => {
       if (!asmiDb || !asmiDb[stateKey] || !asmiDb[stateKey][courseKey]) return;
-      const seen = new Map();
-      catKeysList.forEach(catKey => {
-        const d = asmiDb[stateKey][courseKey][catKey];
-        if (!d || !d[listType]) return;
-        d[listType].forEach(col => {
-          const p = prob(score, col.c);
-          const entry = {
-            name: col.n,
-            state: col.s || 'India',
-            cutoff: col.c,
-            projected: col.c + 15,
-            chance: p.label,
-            chanceKey: p.key,
-            chanceClass: p.cls,
-            pool: 'MCC AIQ',
-            type
-          };
-          if (!seen.has(col.n)) {
-            seen.set(col.n, entry);
-          } else if (col.c < seen.get(col.n).cutoff) {
-            seen.set(col.n, entry);
-          }
+      const openList = asmiDb[stateKey][courseKey]['OPEN']?.[listType] || [];
+      const catList = catKeyForList
+        ? (asmiDb[stateKey][courseKey][catKeyForList]?.[listType] || [])
+        : [];
+      const openMap = new Map(openList.map(c => [c.n, c.c]));
+      const catMap = new Map(catList.map(c => [c.n, c.c]));
+      const stateMap = new Map([...openList, ...catList].map(c => [c.n, c.s || 'India']));
+      const allNames = new Set([...openMap.keys(), ...catMap.keys()]);
+      allNames.forEach(name => {
+        const openC = openMap.has(name) ? openMap.get(name) : null;
+        const catC = catMap.has(name) ? catMap.get(name) : null;
+        const bestC = Math.min(openC ?? Infinity, catC ?? Infinity);
+        if (bestC === Infinity) return;
+        const p = prob(score, bestC);
+        results.push({
+          name,
+          openCutoff: openC,
+          catCutoff: catC,
+          cutoff: bestC,
+          projected: bestC + 15,
+          state: stateMap.get(name) || 'India',
+          chance: p.label,
+          chanceKey: p.key,
+          chanceClass: p.cls,
+          pool: 'MCC AIQ',
+          type
         });
       });
-      results.push(...seen.values());
     };
 
-    addColleges('AIQ', course, keys, 'aiq', 'Government');
+    addColleges('AIQ', course, 'aiq', 'Government');
     if (course === 'MBBS') {
-      addColleges('AIIMS', 'MBBS', keys, 'aiims', 'Government');
-      addColleges('JIPMER', 'MBBS', keys, 'jipmer', 'Government');
+      addColleges('AIIMS', 'MBBS', 'aiims', 'Government');
+      addColleges('JIPMER', 'MBBS', 'jipmer', 'Government');
     }
-    addColleges('CENTRAL', course, keys, 'central', 'Government');
-    addColleges('DEEMED', course, ['OPEN'], 'deemed', 'Deemed');
+    addColleges('CENTRAL', course, 'central', 'Government');
+    addColleges('DEEMED', course, 'deemed', 'Deemed');
 
     return results;
   };
@@ -541,6 +667,8 @@ export default function StudentDashboard() {
           const p = prob(score, col.c);
           const entry = {
             name: col.n,
+            openCutoff: col.c,
+            catCutoff: null,
             state: STATE_LABELS[stKey] || stKey,
             cutoff: col.c,
             projected: col.c + 15,
@@ -600,8 +728,9 @@ export default function StudentDashboard() {
       filtered = filtered.filter(c => c.type === cpTypeFilter);
     }
     
-    // Sort
-    filtered.sort((a, b) => b.cutoff - a.cutoff);
+    // Sort: Safe → Likely → Borderline → Out of Reach, then by cutoff descending
+    const PO_SORT = { safe: 0, likely: 1, borderline: 2, reach: 3 };
+    filtered.sort((a, b) => PO_SORT[a.chanceKey] - PO_SORT[b.chanceKey] || b.cutoff - a.cutoff);
     
     return filtered;
   };
@@ -681,6 +810,33 @@ export default function StudentDashboard() {
 
   // ── Shortlist icon colors cycling
   const iconColors = ['tag-purple', 'tag-blue', 'tag-gold', 'tag-green', 'tag-red'];
+
+  // ── Fee formatters ──────────────────────────────────────────────────────────
+  const feeStr = (name) => {
+    const f = parseFloat(feeMap[name]);
+    if (isNaN(f) || f === 0) return '—';
+    if (f < 1)   return `₹${Math.round(f * 100)}K/yr`;
+    if (f < 100) return `₹${parseFloat(f.toFixed(1))}L/yr`;
+    return `₹${(f / 100).toFixed(2)}Cr/yr`;
+  };
+  const feeStrAIR = (rawFees) => {
+    if (!rawFees) return '—';
+    const r = parseFloat(String(rawFees).replace(/[,₹\s]/g, ''));
+    if (isNaN(r) || r === 0) return '—';
+    const lakhs = r / 100000;
+    if (lakhs < 0.1) return `₹${Math.round(r).toLocaleString('en-IN')}/yr`;
+    if (lakhs < 1)   return `₹${Math.round(lakhs * 100)}K/yr`;
+    return `₹${parseFloat(lakhs.toFixed(1))}L/yr`;
+  };
+  const budgetStr = (name, course) => {
+    const f = parseFloat(feeMap[name]);
+    if (isNaN(f) || f === 0) return '—';
+    const mult = course === 'BDS' ? 4 : course === 'BPTH' ? 4 : 4.5;
+    const total = f * mult;
+    if (total < 1)   return `₹${Math.round(total * 100)}K`;
+    if (total < 100) return `₹${parseFloat(total.toFixed(1))}L`;
+    return `₹${(total / 100).toFixed(2)}Cr`;
+  };
 
   return (
     <div className="student-body">
@@ -1029,8 +1185,8 @@ export default function StudentDashboard() {
 
                   {/* ── RANK TAB: full Cutoff Explorer layout ── */}
                   {cpInputMode === 'rank' && (() => {
-                    const allStates = Array.from(new Set(collegeData.map(c => c.state))).sort();
-                    const allTypes  = Array.from(new Set(collegeData.map(c => c.type).filter(Boolean))).sort();
+                    const allStates = Array.from(new Set(cutoffDbData.map(c => c.state))).sort();
+                    const allTypes  = Array.from(new Set(cutoffDbData.map(c => c.type).filter(Boolean))).sort();
                     const filteredCpStates = allStates.filter(s => s.toLowerCase().includes(cpStateSearch.toLowerCase()));
                     const results = getRankPredictedColleges();
                     const highCount  = results.filter(r => r.chance === 'High').length;
@@ -1207,9 +1363,7 @@ export default function StudentDashboard() {
                                       <td style={{ fontSize: 11 }}>{c.quota}</td>
                                       <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.closingRank?.toLocaleString() || '—'}</td>
                                       <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
-                                        {c.fees && parseInt(c.fees, 10) > 0
-                                          ? `₹${(parseInt(c.fees, 10) / 100000).toFixed(1)}L`
-                                          : '—'}
+                                        {feeStrAIR(c.fees)}
                                       </td>
                                       <td><span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>{c.chance}</span></td>
                                       <td>
@@ -1329,67 +1483,57 @@ export default function StudentDashboard() {
                                     <th>College Name</th>
                                     <th>Pool</th>
                                     <th>State</th>
-                                    <th>Last Cutoff</th>
-                                    <th>Projected</th>
+                                    <th>Open Cutoff</th>
+                                    {cpCategory !== 'Open' && <th>Your Cutoff</th>}
                                     <th>Fee/yr</th>
+                                    <th>Total Budget</th>
                                     <th>Chance</th>
                                     <th style={{ textAlign: 'center', width: '60px' }}>★</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   {results.map((c, i) => {
-                                    const feeVal = feeMap[c.name] ? `₹${feeMap[c.name]}L/yr` : '—';
+                                    const feeVal = feeStr(c.name);
+                                    const budgetVal = budgetStr(c.name, cpScoreCourse);
+                                    const goldPill = (val) => val != null ? (
+                                      <span style={{ background: 'linear-gradient(135deg, var(--navy), var(--purple))', color: '#FFD700', padding: '2px 7px', borderRadius: '10px', fontSize: '10px', fontWeight: '800', display: 'inline-block', marginTop: 2 }}>
+                                        {val}
+                                      </span>
+                                    ) : null;
                                     return (
                                       <tr key={i}>
                                         <td style={{ fontWeight: 700, minWidth: 180 }}>{c.name}</td>
                                         <td>
-                                          <span style={{
-                                            backgroundColor: 'rgba(106, 13, 173, 0.08)',
-                                            color: '#6a0dad',
-                                            border: '1px solid rgba(106, 13, 173, 0.2)',
-                                            padding: '2px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '10px',
-                                            fontWeight: 'bold',
-                                            whiteSpace: 'nowrap'
-                                          }}>
+                                          <span style={{ backgroundColor: 'rgba(106, 13, 173, 0.08)', color: '#6a0dad', border: '1px solid rgba(106, 13, 173, 0.2)', padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
                                             {c.pool}
                                           </span>
                                         </td>
                                         <td style={{ whiteSpace: 'nowrap' }}>{c.state}</td>
-                                        <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.cutoff}</td>
                                         <td style={{ textAlign: 'center' }}>
-                                          <span style={{
-                                            background: 'linear-gradient(135deg, var(--navy), var(--purple))',
-                                            color: '#FFD700',
-                                            padding: '3px 8px',
-                                            borderRadius: '12px',
-                                            fontSize: '11px',
-                                            fontWeight: '800'
-                                          }}>
-                                            {c.projected}
-                                          </span>
+                                          {c.openCutoff != null ? (
+                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                              <span style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.openCutoff}</span>
+                                              {goldPill(c.openCutoff + 15)}
+                                            </div>
+                                          ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
                                         </td>
+                                        {cpCategory !== 'Open' && (
+                                          <td style={{ textAlign: 'center' }}>
+                                            {c.catCutoff != null ? (
+                                              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                                                <span style={{ fontWeight: 800, color: 'var(--purple)' }}>{c.catCutoff}</span>
+                                                {goldPill(c.catCutoff + 15)}
+                                              </div>
+                                            ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
+                                          </td>
+                                        )}
                                         <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>{feeVal}</td>
+                                        <td style={{ fontSize: 11, whiteSpace: 'nowrap', fontWeight: 700, color: 'var(--navy)' }}>{budgetVal}</td>
                                         <td>
-                                          <span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>
-                                            {c.chance}
-                                          </span>
+                                          <span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>{c.chance}</span>
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
-                                          <button
-                                            onClick={() => handleToggleShortlist(c.name)}
-                                            style={{
-                                              background: 'none',
-                                              border: 'none',
-                                              cursor: 'pointer',
-                                              fontSize: '18px',
-                                              color: shortlist.includes(c.name) ? '#FFD700' : 'rgba(26, 0, 64, 0.2)',
-                                              padding: '4px',
-                                              lineHeight: 1,
-                                              transition: 'color 0.15s'
-                                            }}
-                                          >
+                                          <button onClick={() => handleToggleShortlist(c.name)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: shortlist.includes(c.name) ? '#FFD700' : 'rgba(26, 0, 64, 0.2)', padding: '4px', lineHeight: 1, transition: 'color 0.15s' }}>
                                             {shortlist.includes(c.name) ? '★' : '☆'}
                                           </button>
                                         </td>
