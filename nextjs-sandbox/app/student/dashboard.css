@@ -354,7 +354,7 @@
 
 /* Hero Welcome Card */
 .hero-card {
-  background: linear-gradient(to bottom right, #212529, #2d2d2d);
+  background: linear-gradient(135deg, #5a0b9d 0%, #6A0DAD 60%, #7c1fc4 100%);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-xl);
   padding: 32px;

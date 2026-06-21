@@ -152,6 +152,7 @@ export default function StudentDashboard() {
   const [checkedDocs, setCheckedDocs] = useState(new Set());
   const [docCategory, setDocCategory] = useState('General');
   const [docQuota, setDocQuota] = useState('State');
+  const [studentCategory, setStudentCategory] = useState(null); // null = not yet set from token
 
   // Counsellor
   const [counsellorName, setCounsellorName] = useState('ASMI Counsellor');
@@ -279,13 +280,17 @@ export default function StudentDashboard() {
               }
               if (s.category) {
                 const cat = String(s.category).toUpperCase();
-                setDocCategory(
-                  cat.includes('OBC') ? 'OBC'
+                const resolvedCat = cat.includes('OBC') ? 'OBC'
                   : cat.includes('SC') ? 'SC'
                   : cat.includes('ST') ? 'ST'
                   : cat.includes('EWS') ? 'EWS'
-                  : 'General'
-                );
+                  : 'General';
+                setDocCategory(resolvedCat);
+                setStudentCategory(resolvedCat);
+                try {
+                  const saved = JSON.parse(localStorage.getItem('asmi-checklist') || '{}');
+                  localStorage.setItem('asmi-checklist', JSON.stringify({ ...saved, category: resolvedCat }));
+                } catch(e) {}
               }
               if (s.quota) {
                 const q = String(s.quota).toUpperCase();
@@ -781,33 +786,31 @@ export default function StudentDashboard() {
 
                   {/* Hero Welcome Card */}
                   <section className="hero-card">
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div>
-                        <h1 className="hero-greeting">Welcome back, {studentName.split(' ')[0]} 👋</h1>
-                        <p className="hero-subtitle">Your journey to MBBS 2026 is in progress. Keep going!</p>
-                        <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
-                          {(studentRank || studentScore) && (
-                            <div className="rank-badge">
-                              <span className="rank-badge-label">{studentRank ? 'NEET AIR RANK' : 'NEET SCORE'}</span>
-                              <span className="rank-badge-value">
-                                {studentRank ? `#${studentRank.toLocaleString('en-IN')}` : studentScore}
-                              </span>
-                            </div>
-                          )}
+                    <div>
+                      <h1 className="hero-greeting">Welcome back, {studentName.split(' ')[0]} 👋</h1>
+                      <p className="hero-subtitle">Your journey to MBBS 2026 is in progress. Keep going!</p>
+                      <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
+                        <div className="rank-badge">
+                          <span className="rank-badge-label">NEET SCORE</span>
+                          <span className="rank-badge-value">{studentScore || '—'}</span>
+                        </div>
+                        <div className="rank-badge">
+                          <span className="rank-badge-label">NEET AIR RANK</span>
+                          <span className="rank-badge-value">—</span>
+                        </div>
+                        <div className="rank-badge">
+                          <span className="rank-badge-label">CATEGORY</span>
+                          <span className="rank-badge-value">{studentCategory ? (studentCategory === 'General' ? 'General / UR' : studentCategory) : '—'}</span>
                         </div>
                       </div>
-                      <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-                        <div className="stat-badge">
-                          <span className="stat-badge-value">{shortlist.length}</span>
-                          <span className="stat-badge-label">Shortlisted</span>
-                        </div>
-                        <div className="stat-badge">
-                          <span className="stat-badge-value">
-                            {deadlines.length > 0 ? formatDeadlineDate(deadlines[0].date) : '—'}
-                          </span>
-                          <span className="stat-badge-label">Next Deadline</span>
-                        </div>
-                      </div>
+                      <p style={{ marginTop: 12, fontSize: 13, color: 'rgba(255,255,255,0.65)', fontWeight: 500 }}>
+                        {shortlist.length === 0
+                          ? 'No colleges shortlisted yet'
+                          : `${shortlist.length} college${shortlist.length !== 1 ? 's' : ''} shortlisted`}
+                        {deadlines.length > 0
+                          ? ` · Next: ${deadlines[0].title} on ${formatDeadlineDate(deadlines[0].date)}`
+                          : ''}
+                      </p>
                     </div>
 
                     {/* Progress tracker */}
@@ -845,7 +848,7 @@ export default function StudentDashboard() {
                         <div className="card-title">
                           <span>📅</span> Upcoming Deadlines
                         </div>
-                        <span className="card-action">View All</span>
+                        <a href="https://asmicareer.in/medical#news" target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {deadlines.length === 0 ? (
@@ -877,7 +880,7 @@ export default function StudentDashboard() {
                         <div className="card-title">
                           <span style={{ color: '#d97706' }}>★</span> My Shortlist
                         </div>
-                        <button className="card-action" onClick={() => setActiveTab('institutes')}>Edit List</button>
+                        <button className="card-action" onClick={() => setActiveTab('predictor')}>Edit List</button>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {shortlist.length === 0 ? (
@@ -898,7 +901,7 @@ export default function StudentDashboard() {
                             +{shortlist.length - 5} more colleges
                           </div>
                         )}
-                        <button onClick={() => setActiveTab('institutes')}
+                        <button onClick={() => setActiveTab('predictor')}
                           style={{ width: '100%', marginTop: 4, padding: '10px', border: '2px dashed var(--border)', borderRadius: 'var(--radius-md)', background: 'transparent', color: 'var(--text-400)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           + Add More Colleges
                         </button>
@@ -922,11 +925,11 @@ export default function StudentDashboard() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
                       <a href={getWhatsAppLink(counsellorWhatsapp)} target="_blank" rel="noreferrer" className="btn-whatsapp">
-                        💬 Chat with Advisor
+                        📞 Call the Advisor
                       </a>
                       {whatsappGroupLink && whatsappGroupLink.trim() !== '' && (
                         <a href={whatsappGroupLink} target="_blank" rel="noreferrer" className="btn-outline-navy">
-                          👥 Join Support Group
+                          💬 Ask in Group
                         </a>
                       )}
                     </div>
