@@ -805,7 +805,7 @@ export default function StudentDashboard() {
                     <div className="progress-tracker">
                       <div className="progress-label">Admission Progress</div>
                       <div className="progress-steps">
-                        <div className="progress-line-track" />
+                        <div className="progress-line-track" style={{ background: '#e5e7eb' }} />
                         <div className="progress-line-fill" style={{ width: `calc(${progressPct}% * ((100% - 64px) / 100%) + 0px)`, background: '#1A0040' }} />
                         {progressSteps.map((step) => (
                           <div key={step.id} className="step-item">
