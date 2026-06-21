@@ -1356,7 +1356,12 @@ async function init(){
     const sess=getSess();
     if(!sess.score)    setSess('score',STUDENT.score);
     if(!sess.category) setSess('category',STUDENT.category);
-    if(!sess.course)   setSess('course',(STUDENT.courses||'MBBS').split(',')[0].trim());
+    if(!sess.course){
+      const initCourses = Array.isArray(STUDENT.courses)
+        ? STUDENT.courses.join(',')
+        : STUDENT.courses;
+      setSess('course', initCourses);
+    }
     
     // Load saved shortlist from backend if available and not already in session
     if (STUDENT.shortlist || STUDENT.colleges) {
