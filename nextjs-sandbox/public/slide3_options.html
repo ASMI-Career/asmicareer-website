@@ -701,21 +701,22 @@ function getMHDualForCourse(course, listType){
 }
 function renderMHOverview(){
   const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
-  let giTotal=0,gtTotal=0,piTotal=0,ptTotal=0;
-  selectedCourses.forEach(course=>{
+  let totalIn=0,totalAll=0;
+  const courseLines=selectedCourses.map(course=>{
     const govt=getMHDualForCourse(course,'mh_govt');
     const pvt =getMHDualForCourse(course,'mh_pvt');
-    giTotal+=govt.cols.filter(c=>c.prob.key!=='reach').length;
-    gtTotal+=govt.total;
-    piTotal+=pvt.cols.filter(c=>c.prob.key!=='reach').length;
-    ptTotal+=pvt.total;
-  });
+    const gi=govt.cols.filter(c=>c.prob.key!=='reach').length;
+    const pi=pvt.cols.filter(c=>c.prob.key!=='reach').length;
+    totalIn+=gi+pi; totalAll+=govt.total+pvt.total;
+    return `<div class="pd-stat" style="flex-direction:column;align-items:flex-start;gap:1px;">
+      <span class="pd-stat-label" style="font-size:.62rem;font-weight:900;">${course}</span>
+      <span style="font-size:.72rem;color:var(--navy);">Govt <strong>${gi}/${govt.total}</strong> &nbsp;·&nbsp; Pvt <strong>${pi}/${pvt.total}</strong></span>
+    </div>`;
+  }).join('');
   // Also run computeMH() so expanded view stays in sync
   computeMH();
-  document.getElementById('mh-overview-stats').innerHTML=`
-    <div class="pd-stat"><span class="pd-stat-label">Govt Colleges</span><span class="pd-stat-val">${giTotal}/${gtTotal}</span></div>
-    <div class="pd-stat"><span class="pd-stat-label">Private Colleges</span><span class="pd-stat-val">${piTotal}/${ptTotal}</span></div>`;
-  document.getElementById('mh-slim-count').textContent=`${giTotal+piTotal}/${gtTotal+ptTotal}`;
+  document.getElementById('mh-overview-stats').innerHTML=courseLines;
+  document.getElementById('mh-slim-count').textContent=`${totalIn}/${totalAll}`;
 }
 function renderMHExpanded(){
   computeMH();

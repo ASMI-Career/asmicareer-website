@@ -419,7 +419,13 @@ function buildPoolRows(){
   const keys=catKeys(cat);
   const rows=[];
 
-  function addPool(label,group,course,colleges){
+  const MH_FEE_OVERRIDES = {
+    BAMS: {mh_govt:{feeMin:0.522,feeMax:1.36,years:4.5},  mh_pvt:{feeMin:0.95, feeMax:3.3,  years:4.5}},
+    BHMS: {mh_govt:{feeMin:0.574,feeMax:0.574,years:4.5}, mh_pvt:{feeMin:0.55, feeMax:7.0,  years:4.5}},
+    BPTH: {mh_govt:{feeMin:0.630,feeMax:0.630,years:3.0}, mh_pvt:{feeMin:0.11, feeMax:2.10, years:3.0}},
+  };
+
+  function addPool(label,group,course,colleges,feeOvr){
     if(!colleges.length) return;
     const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key!=='reach';});
     if(!inReach.length && !colleges.length) return;
@@ -432,8 +438,12 @@ function buildPoolRows(){
     const mult=budgetMultiplier(course);
     const feeStr=fee?`₹${fee.toFixed(1)}L`:'—';
     const budgetStr=fee?`₹${(fee*mult).toFixed(1)}L`:'—';
+    const feeLakhs=colleges.map(c=>FEE[c.n]).filter(Boolean);
+    const feeMin=feeOvr?.feeMin??(feeLakhs.length?Math.min(...feeLakhs):null);
+    const feeMax=feeOvr?.feeMax??(feeLakhs.length?Math.max(...feeLakhs):null);
+    const years=feeOvr?.years??mult;
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
-      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee});
+      lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin,feeMax,years});
   }
 
   function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label){
@@ -462,10 +472,12 @@ function buildPoolRows(){
     const isMBBS=course==='MBBS';
     const isBDS=course==='BDS';
     const isBPTH=course==='BPTH';
+    const isBAMS=course==='BAMS';
+    const isBHMS=course==='BHMS';
 
-    // MH — all courses
-    addPool('MH Govt',   course, course, getColleges('MH',course,keys,'mh_govt'));
-    addPool('MH Private',course, course, getColleges('MH',course,keys,'mh_pvt'));
+    // MH — all courses (fee overrides for courses not in fee_map)
+    addPool('MH Govt',   course, course, getColleges('MH',course,keys,'mh_govt'), MH_FEE_OVERRIDES[course]?.mh_govt);
+    addPool('MH Private',course, course, getColleges('MH',course,keys,'mh_pvt'), MH_FEE_OVERRIDES[course]?.mh_pvt);
 
     if(isMBBS){
       // AIQ
@@ -672,26 +684,24 @@ function removeFromShortlist(name, btn){
 
 // ── PDF DOWNLOAD ─────────────────────────────────────────────────
 // ── Fee formatter (also used in Slide 4 table) ───────────────────────────────
-function formatFee(amount) {
-  if (!amount || amount === 0) return '—';
-  if (amount < 100000) {
-    return '₹' + Math.round(amount / 1000) + 'K';
-  } else if (amount < 10000000) {
-    return '₹' + parseFloat((amount / 100000).toFixed(1)) + 'L';
-  } else {
-    return '₹' + parseFloat((amount / 10000000).toFixed(2)) + 'Cr';
-  }
+function formatFee(lakhs) {
+  if (!lakhs || lakhs === 0) return '—';
+  const n = parseFloat(lakhs);
+  if (isNaN(n)) return '—';
+  if (n < 1) return '₹' + Math.round(n * 100) + 'K';
+  if (n < 100) return '₹' + parseFloat(n.toFixed(1)) + 'L';
+  return '₹' + parseFloat((n / 100).toFixed(2)) + 'Cr';
 }
 
 function formatFeeRange(min, max) {
   if (!min && !max) return '—';
-  if (!max || min === max) return formatFee(min);
-  return formatFee(min) + ' – ' + formatFee(max);
+  if (!max || min === max) return formatFee(min) + '/yr';
+  return formatFee(min) + ' – ' + formatFee(max) + '/yr';
 }
 
 function formatBudgetRange(minFee, maxFee, years) {
-  if (!minFee && !maxFee) return '—';
   years = years || 4.5;
+  if (!minFee && !maxFee) return '—';
   if (!maxFee || minFee === maxFee) return formatFee(minFee * years);
   return formatFee(minFee * years) + ' – ' + formatFee(maxFee * years);
 }
