@@ -435,7 +435,6 @@ function predict() {
   }
 
   if (score > 686) {
-    const tier = getTier(1);
     content.innerHTML = `
       <div class="result-score-line">
         <span class="result-score-badge">Score: ${score}</span>
@@ -445,7 +444,6 @@ function predict() {
         <div class="rank-label">Estimated AIR (All India Rank)</div>
         <div class="rank-value pop-in">Top 1 – 20</div>
         <div class="rank-sub">Score 686 → Rank 1 in 2025 data. You are above that.</div>
-        <span class="tier-badge ${tier.cls}">${tier.label}</span>
       </div>
       ${inquiryBlock(score)}
     `;
@@ -461,8 +459,6 @@ function predict() {
     return;
   }
 
-  const tier = getTier(result.min_rank);
-
   content.innerHTML = `
     <div class="result-score-line">
       <span class="result-score-badge">Score: ${score}</span>
@@ -472,7 +468,6 @@ function predict() {
       <div class="rank-label">Estimated AIR (All India Rank)</div>
       <div class="rank-value pop-in">${fmt(result.min_rank)} – ${fmt(result.max_rank)}</div>
       <div class="rank-sub">Based on actual counselling data from the last 3 years</div>
-      <span class="tier-badge ${tier.cls}">${tier.label}</span>
     </div>
     ${inquiryBlock(score)}
   `;
