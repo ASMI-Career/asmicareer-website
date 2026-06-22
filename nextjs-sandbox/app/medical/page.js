@@ -1388,7 +1388,7 @@ export default function MedicalPortal() {
                           <span className="resource-tag" style={{ background: '#FFD700', color: '#1a0040' }}>FREE TOOL</span>
                       </div>
                       <div className="resource-content">
-                          <div className="resource-title">College Predictor — Enter Your Rank</div>
+                          <div className="resource-title">Rank Predictor — Enter Your Score</div>
                           <p className="resource-body">Enter your NEET AIR and instantly explore your admission possibilities based on previous years' counselling trends. No login required.</p>
                           <div className="resource-footer">
                               <span className="resource-meta">Rank-based · 2025 data</span>
