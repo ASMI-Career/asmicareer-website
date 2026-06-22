@@ -332,7 +332,7 @@ export default function InquiryPage() {
                     <span className="modal-token-lbl">Your Token Number</span>
                     <span id="tokenDisplay">{token}</span>
                 </div>
-                <p className="modal-msg">Your Personalized Medical Admission Health Report will be shared within 24 hours.</p>
+                <p className="modal-msg">{['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) ? 'Please take a seat. A counsellor will call your token shortly.' : 'Your Personalized Medical Admission Health Report will be shared within 24 hours.'}</p>
                 <button onClick={() => setShowModal(false)} className="modal-close">Close</button>
             </div>
         </div>
