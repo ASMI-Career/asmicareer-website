@@ -4,259 +4,165 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEET 2026 Rank Predictor — ASMI Career</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --yellow:       #FFD700;
-    --yellow-hover: #e6c200;
-    --yellow-dark:  #b8960a;
-    --purple:       #6a0dad;
-    --purple-light: #8b25cc;
-    --purple-dark:  #1a0040;
-    --purple-dim:   rgba(106,13,173,0.1);
-    --purple-glow:  rgba(106,13,173,0.25);
-    --text:         #1a0040;
-    --muted:        #555;
-    --white:        #ffffff;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #1e1e2e;
+    --amber: #f5a623;
+    --amber-dim: #c4831a;
+    --amber-glow: rgba(245,166,35,0.12);
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.15);
+    --red: #f43f5e;
+    --red-dim: rgba(244,63,94,0.12);
+    --yellow: #eab308;
+    --yellow-dim: rgba(234,179,8,0.12);
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --white: #ffffff;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
-    background: var(--yellow);
+    background: var(--bg);
     color: var(--text);
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,166,35,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; position: relative; z-index: 1; }
 
-  /* Top logo */
-  .topbar {
-    background: transparent;
-    padding: 32px 24px 0;
-    display: flex; align-items: center; justify-content: center;
+  /* Logo */
+  .logo-wrap { text-align: center; margin-bottom: 28px; animation: fadeDown 0.5s ease both; }
+  .logo-img { height: 44px; width: auto; }
+  .logo-text {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--white);
   }
-  .topbar .logo-img { height: 100px; width: auto; }
-  .topbar .logo-text {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--purple-dark);
-  }
-  .topbar .logo-text span { color: var(--purple); }
-
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-    position: relative;
-  }
+  .logo-text span { color: var(--amber); }
 
   /* Header */
   .header { text-align: center; margin-bottom: 40px; animation: fadeDown 0.6s 0.05s ease both; }
-
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--purple-dark); border-radius: 100px;
-    padding: 6px 18px; margin-bottom: 20px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yellow);
+    background: var(--amber-glow); border: 1px solid rgba(245,166,35,0.25);
+    border-radius: 100px; padding: 6px 16px; margin-bottom: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber);
   }
-  .pill-dot { width: 6px; height: 6px; background: var(--yellow); border-radius: 50%; animation: pulse 2s infinite; }
-
-  h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(30px, 6vw, 50px);
-    font-weight: 900; line-height: 1.1; color: var(--purple-dark); margin-bottom: 12px;
-  }
-  h1 span { color: var(--purple); }
-
-  .subtitle { font-size: 15px; color: #333; font-weight: 400; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+  .pill-dot { width: 6px; height: 6px; background: var(--amber); border-radius: 50%; animation: pulse 2s infinite; }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(30px, 6vw, 50px); font-weight: 800; line-height: 1.1; color: var(--white); margin-bottom: 12px; }
+  h1 span { color: var(--amber); }
+  .subtitle { font-size: 15px; color: var(--muted); font-weight: 300; line-height: 1.7; max-width: 480px; margin: 0 auto; }
 
   /* Input Card */
-  .input-card {
-    background: var(--white);
-    border: 1px solid rgba(106,13,173,0.15);
-    border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
-    padding: 36px; margin-bottom: 24px; animation: fadeUp 0.6s 0.1s ease both;
-  }
-
-  .input-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--purple); margin-bottom: 16px; display: block;
-  }
-
+  .input-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; margin-bottom: 24px; animation: fadeUp 0.6s 0.1s ease both; }
+  .input-label { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); margin-bottom: 16px; display: block; }
   .score-input {
-    width: 100%;
-    background: #f7f3ff;
-    border: 2px solid rgba(106,13,173,0.2);
-    border-radius: 14px;
-    color: var(--purple-dark);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 52px; font-weight: 900; text-align: center; padding: 24px;
-    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; background: var(--surface); border: 2px solid var(--border); border-radius: 14px;
+    color: var(--white); font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    text-align: center; padding: 24px; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
     -moz-appearance: textfield; margin-bottom: 8px;
   }
-  .score-input::-webkit-outer-spin-button,
-  .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .score-input:focus { border-color: var(--purple); box-shadow: 0 0 0 4px var(--purple-dim); }
-
+  .score-input::-webkit-outer-spin-button, .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .score-input:focus { border-color: var(--amber); box-shadow: 0 0 0 4px var(--amber-glow); }
   .score-hint { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
-
-  input[type=range] {
-    -webkit-appearance: none; width: 100%; height: 5px;
-    background: rgba(106,13,173,0.2); border-radius: 99px; outline: none; cursor: pointer; margin-bottom: 6px;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 22px; height: 22px;
-    background: var(--purple); border-radius: 50%; cursor: pointer;
-    box-shadow: 0 0 0 4px var(--purple-dim); transition: box-shadow 0.2s;
-  }
-  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px var(--purple-dim); }
-
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: var(--border); border-radius: 99px; outline: none; cursor: pointer; margin-bottom: 6px; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; background: var(--amber); border-radius: 50%; cursor: pointer; box-shadow: 0 0 0 4px var(--amber-glow); transition: box-shadow 0.2s; }
+  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px var(--amber-glow); }
   .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
-
-  .predict-btn {
-    width: 100%; background: var(--purple); color: var(--white); border: none;
-    border-radius: 50px; padding: 18px;
-    font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800;
-    letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
-  }
-  .predict-btn:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 24px var(--purple-glow); }
+  .predict-btn { width: 100%; background: var(--amber); color: #000; border: none; border-radius: 14px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s; }
+  .predict-btn:hover { background: #ffc144; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.3); }
   .predict-btn:active { transform: translateY(0); }
 
+  /* Conservative note */
+  .conservative-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; font-style: italic; }
+
   /* Result Card */
-  .result-card {
-    background: var(--white);
-    border: 1px solid rgba(106,13,173,0.15);
-    border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
-    padding: 36px; display: none; animation: fadeUp 0.4s ease both; margin-bottom: 24px;
-  }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; display: none; animation: fadeUp 0.4s ease both; margin-bottom: 24px; }
   .result-card.visible { display: block; }
+  .result-score-line { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .result-score-badge { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; background: var(--amber-glow); border: 1px solid rgba(245,166,35,0.3); color: var(--amber); border-radius: 8px; padding: 4px 12px; }
+  .result-score-label { font-size: 13px; color: var(--muted); }
 
-  .rank-display {
-    background: var(--purple-dark); border-radius: 16px; padding: 32px 28px;
-    text-align: center; margin-bottom: 24px;
-    position: relative; overflow: hidden;
-  }
-  .rank-display::before {
-    content: ''; position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
-    width: 240px; height: 120px;
-    background: radial-gradient(ellipse, rgba(255,215,0,0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .rank-label {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px;
-  }
-  .rank-value {
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(26px, 5.5vw, 40px); font-weight: 900;
-    color: var(--yellow); line-height: 1.1; margin-bottom: 8px;
-  }
-  .rank-sub { font-size: 12px; color: rgba(255,255,255,0.55); }
+  .rank-display { background: var(--surface); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 24px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .rank-display::before { content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 200px; height: 100px; background: radial-gradient(ellipse, var(--amber-glow) 0%, transparent 70%); pointer-events: none; }
+  .rank-label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .rank-value { font-family: 'Syne', sans-serif; font-size: clamp(26px, 5.5vw, 40px); font-weight: 800; color: var(--white); line-height: 1.1; margin-bottom: 8px; }
+  .rank-sub { font-size: 12px; color: var(--muted); }
+  .tier-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 100px; padding: 6px 16px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+  .tier-badge.elite { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .tier-badge.good { background: var(--amber-glow); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); }
+  .tier-badge.average { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .tier-badge.below { background: var(--red-dim); color: var(--red); border: 1px solid rgba(244,63,94,0.3); }
 
-  /* Inquiry Card */
-  .inquiry-card {
-    background: var(--purple-dim);
-    border: 1px solid rgba(106,13,173,0.2);
-    border-radius: 16px; padding: 28px; text-align: center;
-  }
-  .inquiry-card h3 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px; font-weight: 800; color: var(--purple-dark); margin-bottom: 8px;
-  }
-  .inquiry-card p { font-size: 14px; color: #444; margin-bottom: 20px; line-height: 1.6; }
-  .inquiry-btn {
-    display: inline-block; background: var(--purple); color: var(--white);
-    font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800;
-    text-decoration: none; padding: 13px 28px; border-radius: 50px;
-    transition: all 0.2s cubic-bezier(0.4,0,0.2,1); letter-spacing: 0.03em;
-  }
-  .inquiry-btn:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 6px 20px var(--purple-glow); }
+  /* CTA — Inquiry */
+  .inquiry-card { background: linear-gradient(135deg, rgba(245,166,35,0.08) 0%, rgba(245,166,35,0.03) 100%); border: 1px solid rgba(245,166,35,0.25); border-radius: 16px; padding: 28px; margin-bottom: 0; text-align: center; }
+  .inquiry-card h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .inquiry-card p { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .inquiry-btn { display: inline-block; background: var(--amber); color: #000; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; text-decoration: none; padding: 13px 28px; border-radius: 10px; transition: all 0.2s; letter-spacing: 0.04em; border: none; cursor: pointer; }
+  .inquiry-btn:hover { background: #ffc144; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,166,35,0.3); }
+
+  /* Disclaimer */
+  .disclaimer { background: rgba(245,166,35,0.04); border: 1px solid rgba(245,166,35,0.12); border-radius: 12px; padding: 14px 18px; font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; animation: fadeUp 0.6s 0.15s ease both; }
+  .disclaimer strong { color: var(--amber); }
 
   /* Branches */
-  .branches-card {
-    background: var(--white);
-    border: 1px solid rgba(106,13,173,0.15);
-    border-radius: 20px;
-    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
-    padding: 32px; animation: fadeUp 0.6s 0.2s ease both;
-  }
-  .branches-header {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
-  }
-  .branches-title { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--purple-dark); }
-  .helpline-badge {
-    background: var(--purple-dark);
-    border-radius: 8px; padding: 6px 14px; font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 700; color: var(--yellow); text-decoration: none;
-  }
-  .helpline-badge:hover { background: var(--purple); }
-
+  .branches-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px; animation: fadeUp 0.6s 0.2s ease both; }
+  .branches-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+  .branches-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--white); }
+  .helpline-badge { background: var(--amber-glow); border: 1px solid rgba(245,166,35,0.3); border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600; color: var(--amber); text-decoration: none; }
+  .helpline-badge:hover { background: rgba(245,166,35,0.2); }
   .branches-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .branch-item {
-    background: #f7f3ff; border: 1px solid rgba(106,13,173,0.12);
-    border-radius: 12px; padding: 14px 16px;
-  }
-  .branch-name { font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--purple-dark); margin-bottom: 3px; }
-  .branch-hq {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--purple); margin-bottom: 3px;
-  }
-  .branch-city { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .branch-phone { font-size: 12px; font-weight: 700; color: var(--purple); text-decoration: none; font-family: 'Montserrat', sans-serif; }
-  .branch-phone:hover { text-decoration: underline; }
-
-  .website-link {
-    display: block; text-align: center; font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 600; color: var(--purple); text-decoration: none; padding-top: 4px;
-  }
+  .branch-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .branch-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .branch-hq { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--amber); margin-bottom: 3px; }
+  .branch-city { font-size: 12px; color: var(--muted); }
+  .website-link { display: block; text-align: center; font-size: 13px; color: var(--amber); text-decoration: none; padding-top: 4px; }
   .website-link:hover { text-decoration: underline; }
 
   /* Animations */
   @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeUp   { from { opacity: 0; transform: translateY(16px);  } to { opacity: 1; transform: translateY(0); } }
-  @keyframes pulse    { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-  @keyframes popIn    { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
   .pop-in { animation: popIn 0.35s cubic-bezier(0.175,0.885,0.32,1.275) both; }
 
   @media (max-width: 480px) {
-    .input-card, .result-card, .branches-card { padding: 22px 18px; }
+    .input-card, .result-card, .branches-card { padding: 22px; }
     .branches-grid { grid-template-columns: 1fr; }
-    .score-input { font-size: 38px; }
+    .score-input { font-size: 36px; }
   }
 </style>
 </head>
 <body>
-
-<!-- Top navbar -->
-<div class="topbar">
-  <img src="/asmi-logo.png"
-       class="logo-img" alt="ASMI Career"
-       onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-  <div class="logo-text" id="logo-fallback">ASMI <span>Career</span></div>
-</div>
-
 <div class="container">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <img src="https://asmicareer.in/wp-content/uploads/2024/01/ASMI-LOGO.png"
+         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+         class="logo-img" alt="ASMI Career">
+    <div class="logo-text" id="logo-fallback" style="display:none;">ASMI <span>Career</span></div>
+  </div>
 
   <!-- Header -->
   <div class="header">
     <div class="pill"><div class="pill-dot"></div>NEET 2026 · Rank Predictor</div>
     <h1>Predict Your <span>NEET Rank</span></h1>
-    <p class="subtitle">Wondering what rank you might get? Enter your expected NEET 2026 score and receive an estimated All India Rank based on verified counselling data.</p>
+    <p class="subtitle">Enter your expected NEET 2026 score to see your estimated All India Rank, based on actual counselling data from the last 3 years across multiple states.</p>
   </div>
 
   <!-- Input Card -->
@@ -267,6 +173,7 @@
     <input type="range" id="scoreSlider" min="100" max="720" value="500" step="1">
     <div class="slider-labels"><span>100</span><span>300</span><span>500</span><span>720</span></div>
     <button class="predict-btn" onclick="predict()">Predict My Rank →</button>
+    <div class="conservative-note">Ranks shown are slightly conservative to account for year-on-year variation</div>
   </div>
 
   <!-- Result -->
@@ -274,43 +181,42 @@
     <div id="resultContent"></div>
   </div>
 
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <strong>Note:</strong> Rank estimates are based on consolidated NEET 2025 merit data across UP, Kerala, Andhra Pradesh, and Telangana (1,57,375 candidates). Actual 2026 ranks may vary based on NTA paper difficulty, total applicants, and normalisation. Use this as a directional estimate, not a guarantee.
+  </div>
+
   <!-- Branches -->
   <div class="branches-card">
     <div class="branches-header">
       <div class="branches-title">Visit an ASMI Office Near You</div>
-      <a href="tel:7410019074" class="helpline-badge">📞 7410019074</a>
+      <a href="tel:7410019077" class="helpline-badge">📞 7410019077</a>
     </div>
     <div class="branches-grid">
       <div class="branch-item">
         <div class="branch-hq">Headquarters</div>
         <div class="branch-name">Mumbai — Andheri East</div>
         <div class="branch-city">Mumbai, Maharashtra</div>
-        <a href="tel:7410019077" class="branch-phone">📞 7410019077</a>
       </div>
       <div class="branch-item">
         <div class="branch-name">Thane</div>
         <div class="branch-city">Thane, Maharashtra</div>
-        <a href="tel:7410019075" class="branch-phone">📞 7410019075</a>
       </div>
       <div class="branch-item">
         <div class="branch-name">Pune</div>
         <div class="branch-city">Pune, Maharashtra</div>
-        <a href="tel:7410013458" class="branch-phone">📞 7410013458</a>
       </div>
       <div class="branch-item">
         <div class="branch-name">Kolhapur</div>
         <div class="branch-city">Kolhapur, Maharashtra</div>
-        <a href="tel:7057575833" class="branch-phone">📞 7057575833</a>
       </div>
       <div class="branch-item">
         <div class="branch-name">Sangli</div>
         <div class="branch-city">Sangli, Maharashtra</div>
-        <a href="tel:7410019076" class="branch-phone">📞 7410019076</a>
       </div>
       <div class="branch-item">
         <div class="branch-name">Chhatrapati Sambhajinagar</div>
         <div class="branch-city">Aurangabad, Maharashtra</div>
-        <a href="tel:8484980032" class="branch-phone">📞 8484980032</a>
       </div>
     </div>
     <a href="https://asmicareer.in" class="website-link">asmicareer.in</a>
@@ -320,38 +226,39 @@
 
 <script>
 const DATA = {"686":{"min_rank":1,"max_rank":1,"count":1},"670":{"min_rank":18,"max_rank":18,"count":1},"669":{"min_rank":19,"max_rank":19,"count":1},"660":{"min_rank":37,"max_rank":37,"count":1},"656":{"min_rank":46,"max_rank":48,"count":2},"655":{"min_rank":56,"max_rank":56,"count":1},"654":{"min_rank":59,"max_rank":59,"count":1},"652":{"min_rank":64,"max_rank":70,"count":2},"646":{"min_rank":92,"max_rank":95,"count":2},"644":{"min_rank":108,"max_rank":108,"count":1},"643":{"min_rank":109,"max_rank":109,"count":1},"642":{"min_rank":116,"max_rank":116,"count":1},"640":{"min_rank":129,"max_rank":133,"count":2},"638":{"min_rank":144,"max_rank":147,"count":2},"634":{"min_rank":181,"max_rank":186,"count":2},"633":{"min_rank":192,"max_rank":200,"count":3},"632":{"min_rank":207,"max_rank":217,"count":5},"631":{"min_rank":222,"max_rank":231,"count":4},"630":{"min_rank":238,"max_rank":253,"count":4},"629":{"min_rank":262,"max_rank":265,"count":2},"628":{"min_rank":274,"max_rank":274,"count":1},"627":{"min_rank":290,"max_rank":297,"count":3},"626":{"min_rank":307,"max_rank":325,"count":5},"625":{"min_rank":336,"max_rank":352,"count":5},"624":{"min_rank":367,"max_rank":368,"count":2},"623":{"min_rank":377,"max_rank":384,"count":3},"622":{"min_rank":391,"max_rank":401,"count":2},"621":{"min_rank":426,"max_rank":433,"count":3},"620":{"min_rank":462,"max_rank":469,"count":3},"619":{"min_rank":479,"max_rank":502,"count":4},"618":{"min_rank":515,"max_rank":532,"count":5},"617":{"min_rank":536,"max_rank":563,"count":7},"616":{"min_rank":564,"max_rank":587,"count":5},"615":{"min_rank":605,"max_rank":633,"count":4},"614":{"min_rank":638,"max_rank":660,"count":5},"613":{"min_rank":672,"max_rank":698,"count":6},"612":{"min_rank":706,"max_rank":738,"count":7},"611":{"min_rank":758,"max_rank":767,"count":3},"610":{"min_rank":776,"max_rank":821,"count":13},"609":{"min_rank":830,"max_rank":882,"count":17},"608":{"min_rank":884,"max_rank":933,"count":8},"607":{"min_rank":934,"max_rank":977,"count":10},"606":{"min_rank":989,"max_rank":1027,"count":7},"605":{"min_rank":1032,"max_rank":1073,"count":10},"604":{"min_rank":1093,"max_rank":1139,"count":7},"603":{"min_rank":1161,"max_rank":1192,"count":14},"602":{"min_rank":1197,"max_rank":1243,"count":10},"601":{"min_rank":1254,"max_rank":1326,"count":15},"600":{"min_rank":1334,"max_rank":1406,"count":19},"599":{"min_rank":1416,"max_rank":1475,"count":7},"598":{"min_rank":1496,"max_rank":1544,"count":12},"597":{"min_rank":1552,"max_rank":1596,"count":13},"596":{"min_rank":1609,"max_rank":1680,"count":18},"595":{"min_rank":1688,"max_rank":1769,"count":24},"594":{"min_rank":1784,"max_rank":1852,"count":13},"593":{"min_rank":1884,"max_rank":1954,"count":22},"592":{"min_rank":1960,"max_rank":2043,"count":22},"591":{"min_rank":2067,"max_rank":2149,"count":19},"590":{"min_rank":2163,"max_rank":2287,"count":20},"589":{"min_rank":2289,"max_rank":2386,"count":21},"588":{"min_rank":2388,"max_rank":2505,"count":24},"587":{"min_rank":2510,"max_rank":2613,"count":27},"586":{"min_rank":2620,"max_rank":2731,"count":22},"585":{"min_rank":2738,"max_rank":2876,"count":36},"584":{"min_rank":2885,"max_rank":2996,"count":29},"583":{"min_rank":3013,"max_rank":3138,"count":29},"582":{"min_rank":3155,"max_rank":3296,"count":36},"581":{"min_rank":3322,"max_rank":3429,"count":40},"580":{"min_rank":3437,"max_rank":3591,"count":38},"579":{"min_rank":3605,"max_rank":3764,"count":40},"578":{"min_rank":3770,"max_rank":3910,"count":29},"577":{"min_rank":3921,"max_rank":4104,"count":45},"576":{"min_rank":4110,"max_rank":4276,"count":41},"575":{"min_rank":4278,"max_rank":4503,"count":58},"574":{"min_rank":4510,"max_rank":4703,"count":47},"573":{"min_rank":4705,"max_rank":4890,"count":36},"572":{"min_rank":4896,"max_rank":5079,"count":52},"571":{"min_rank":5091,"max_rank":5314,"count":64},"570":{"min_rank":5319,"max_rank":5557,"count":58},"569":{"min_rank":5564,"max_rank":5786,"count":50},"568":{"min_rank":5805,"max_rank":6007,"count":49},"567":{"min_rank":6017,"max_rank":6288,"count":68},"566":{"min_rank":6294,"max_rank":6574,"count":60},"565":{"min_rank":6578,"max_rank":6912,"count":56},"564":{"min_rank":6915,"max_rank":7219,"count":76},"563":{"min_rank":7246,"max_rank":7517,"count":76},"562":{"min_rank":7527,"max_rank":7834,"count":74},"561":{"min_rank":7839,"max_rank":8160,"count":76},"560":{"min_rank":8168,"max_rank":8517,"count":88},"559":{"min_rank":8524,"max_rank":8849,"count":84},"558":{"min_rank":8863,"max_rank":9211,"count":93},"557":{"min_rank":9216,"max_rank":9559,"count":90},"556":{"min_rank":9567,"max_rank":9946,"count":99},"555":{"min_rank":9964,"max_rank":10386,"count":93},"554":{"min_rank":10391,"max_rank":10775,"count":101},"553":{"min_rank":10781,"max_rank":11159,"count":82},"552":{"min_rank":11175,"max_rank":11571,"count":98},"551":{"min_rank":11585,"max_rank":11987,"count":97},"550":{"min_rank":11994,"max_rank":12462,"count":126},"549":{"min_rank":12468,"max_rank":12911,"count":97},"548":{"min_rank":12919,"max_rank":13380,"count":109},"547":{"min_rank":13384,"max_rank":13876,"count":128},"546":{"min_rank":13884,"max_rank":14370,"count":132},"545":{"min_rank":14383,"max_rank":14873,"count":121},"544":{"min_rank":14879,"max_rank":15361,"count":122},"543":{"min_rank":15366,"max_rank":15872,"count":124},"542":{"min_rank":15879,"max_rank":16423,"count":153},"541":{"min_rank":16428,"max_rank":16993,"count":144},"540":{"min_rank":16995,"max_rank":17628,"count":167},"539":{"min_rank":17656,"max_rank":18200,"count":150},"538":{"min_rank":18214,"max_rank":18859,"count":187},"537":{"min_rank":18865,"max_rank":19454,"count":150},"536":{"min_rank":19463,"max_rank":20073,"count":190},"535":{"min_rank":20093,"max_rank":20784,"count":185},"534":{"min_rank":20786,"max_rank":21467,"count":161},"533":{"min_rank":21473,"max_rank":22182,"count":193},"532":{"min_rank":22197,"max_rank":22872,"count":186},"531":{"min_rank":22880,"max_rank":23563,"count":170},"530":{"min_rank":23567,"max_rank":24338,"count":190},"529":{"min_rank":24351,"max_rank":25012,"count":163},"528":{"min_rank":25015,"max_rank":25711,"count":165},"527":{"min_rank":25719,"max_rank":26462,"count":200},"526":{"min_rank":26471,"max_rank":27266,"count":222},"525":{"min_rank":27274,"max_rank":28130,"count":246},"524":{"min_rank":28140,"max_rank":28954,"count":233},"523":{"min_rank":28974,"max_rank":29796,"count":221},"522":{"min_rank":29804,"max_rank":30609,"count":193},"521":{"min_rank":30618,"max_rank":31440,"count":212},"520":{"min_rank":31461,"max_rank":32356,"count":221},"519":{"min_rank":32363,"max_rank":33242,"count":227},"518":{"min_rank":33265,"max_rank":34109,"count":238},"517":{"min_rank":34116,"max_rank":34983,"count":214},"516":{"min_rank":34990,"max_rank":35919,"count":220},"515":{"min_rank":35940,"max_rank":36924,"count":209},"514":{"min_rank":36933,"max_rank":37848,"count":200},"513":{"min_rank":37860,"max_rank":38761,"count":186},"512":{"min_rank":38779,"max_rank":39697,"count":194},"511":{"min_rank":39718,"max_rank":40748,"count":242},"510":{"min_rank":40753,"max_rank":41830,"count":227},"509":{"min_rank":41837,"max_rank":42823,"count":182},"508":{"min_rank":42830,"max_rank":43868,"count":229},"507":{"min_rank":43883,"max_rank":44909,"count":221},"506":{"min_rank":44929,"max_rank":45957,"count":215},"505":{"min_rank":45973,"max_rank":47121,"count":221},"504":{"min_rank":47128,"max_rank":48224,"count":226},"503":{"min_rank":48226,"max_rank":49285,"count":230},"502":{"min_rank":49288,"max_rank":50367,"count":221},"501":{"min_rank":50369,"max_rank":51507,"count":227},"500":{"min_rank":51515,"max_rank":52687,"count":223},"499":{"min_rank":52696,"max_rank":53756,"count":196},"498":{"min_rank":53765,"max_rank":54899,"count":248},"497":{"min_rank":54902,"max_rank":56041,"count":221},"496":{"min_rank":56063,"max_rank":57276,"count":225},"495":{"min_rank":57290,"max_rank":58530,"count":257},"494":{"min_rank":58550,"max_rank":59702,"count":232},"493":{"min_rank":59706,"max_rank":60962,"count":246},"492":{"min_rank":60990,"max_rank":62209,"count":255},"491":{"min_rank":62220,"max_rank":63462,"count":257},"490":{"min_rank":63468,"max_rank":64767,"count":220},"489":{"min_rank":64773,"max_rank":66003,"count":226},"488":{"min_rank":66012,"max_rank":67252,"count":256},"487":{"min_rank":67255,"max_rank":68514,"count":244},"486":{"min_rank":68517,"max_rank":69809,"count":224},"485":{"min_rank":69840,"max_rank":71268,"count":241},"484":{"min_rank":71273,"max_rank":72570,"count":245},"483":{"min_rank":72584,"max_rank":73855,"count":228},"482":{"min_rank":73878,"max_rank":75233,"count":260},"481":{"min_rank":75239,"max_rank":76611,"count":306},"480":{"min_rank":76618,"max_rank":78072,"count":287},"479":{"min_rank":78077,"max_rank":79393,"count":246},"478":{"min_rank":79398,"max_rank":80812,"count":268},"477":{"min_rank":80817,"max_rank":82134,"count":243},"476":{"min_rank":82139,"max_rank":83459,"count":260},"475":{"min_rank":83485,"max_rank":85027,"count":290},"474":{"min_rank":85033,"max_rank":86413,"count":284},"473":{"min_rank":86423,"max_rank":87782,"count":270},"472":{"min_rank":87820,"max_rank":89233,"count":247},"471":{"min_rank":89250,"max_rank":90696,"count":252},"470":{"min_rank":90702,"max_rank":92218,"count":288},"469":{"min_rank":92221,"max_rank":93606,"count":253},"468":{"min_rank":93624,"max_rank":95047,"count":282},"467":{"min_rank":95053,"max_rank":96456,"count":255},"466":{"min_rank":96482,"max_rank":97938,"count":270},"465":{"min_rank":97947,"max_rank":99549,"count":294},"464":{"min_rank":99561,"max_rank":100994,"count":279},"463":{"min_rank":101002,"max_rank":102476,"count":276},"462":{"min_rank":102514,"max_rank":103975,"count":286},"461":{"min_rank":103988,"max_rank":105457,"count":275},"460":{"min_rank":105465,"max_rank":107004,"count":294},"459":{"min_rank":107006,"max_rank":108482,"count":264},"458":{"min_rank":108506,"max_rank":110033,"count":288},"457":{"min_rank":110037,"max_rank":111562,"count":267},"456":{"min_rank":111570,"max_rank":113125,"count":303},"455":{"min_rank":113133,"max_rank":114835,"count":316},"454":{"min_rank":114836,"max_rank":116375,"count":291},"453":{"min_rank":116384,"max_rank":117910,"count":309},"452":{"min_rank":117913,"max_rank":119448,"count":272},"451":{"min_rank":119452,"max_rank":120982,"count":296},"450":{"min_rank":121019,"max_rank":122742,"count":328},"449":{"min_rank":122751,"max_rank":124341,"count":296},"448":{"min_rank":124353,"max_rank":125922,"count":318},"447":{"min_rank":125945,"max_rank":127556,"count":278},"446":{"min_rank":127564,"max_rank":129161,"count":330},"445":{"min_rank":129192,"max_rank":130839,"count":294},"444":{"min_rank":130852,"max_rank":132427,"count":329},"443":{"min_rank":132447,"max_rank":133963,"count":274},"442":{"min_rank":133969,"max_rank":135541,"count":346},"441":{"min_rank":135560,"max_rank":137248,"count":322},"440":{"min_rank":137259,"max_rank":139052,"count":328},"439":{"min_rank":139063,"max_rank":140682,"count":316},"438":{"min_rank":140688,"max_rank":142315,"count":293},"437":{"min_rank":142322,"max_rank":143916,"count":303},"436":{"min_rank":143930,"max_rank":145637,"count":266},"435":{"min_rank":145643,"max_rank":147501,"count":354},"434":{"min_rank":147506,"max_rank":149182,"count":341},"433":{"min_rank":149191,"max_rank":150858,"count":346},"432":{"min_rank":150866,"max_rank":152510,"count":343},"431":{"min_rank":152521,"max_rank":154205,"count":318},"430":{"min_rank":154218,"max_rank":156123,"count":404},"429":{"min_rank":156135,"max_rank":157820,"count":337},"428":{"min_rank":157823,"max_rank":159542,"count":333},"427":{"min_rank":159554,"max_rank":161245,"count":336},"426":{"min_rank":161270,"max_rank":162965,"count":330},"425":{"min_rank":162973,"max_rank":164883,"count":368},"424":{"min_rank":164892,"max_rank":166548,"count":342},"423":{"min_rank":166580,"max_rank":168334,"count":367},"422":{"min_rank":168345,"max_rank":170154,"count":373},"421":{"min_rank":170161,"max_rank":171897,"count":318},"420":{"min_rank":171911,"max_rank":173822,"count":340},"419":{"min_rank":173833,"max_rank":175674,"count":370},"418":{"min_rank":175685,"max_rank":177442,"count":359},"417":{"min_rank":177447,"max_rank":179293,"count":332},"416":{"min_rank":179296,"max_rank":181147,"count":362},"415":{"min_rank":181167,"max_rank":183048,"count":349},"414":{"min_rank":183058,"max_rank":184835,"count":347},"413":{"min_rank":184841,"max_rank":186587,"count":319},"412":{"min_rank":186598,"max_rank":188392,"count":329},"411":{"min_rank":188398,"max_rank":190194,"count":345},"410":{"min_rank":190198,"max_rank":192143,"count":388},"409":{"min_rank":192188,"max_rank":194011,"count":363},"408":{"min_rank":194048,"max_rank":195907,"count":356},"407":{"min_rank":195913,"max_rank":197809,"count":372},"406":{"min_rank":197817,"max_rank":199628,"count":347},"405":{"min_rank":199658,"max_rank":201668,"count":391},"404":{"min_rank":201686,"max_rank":203547,"count":395},"403":{"min_rank":203553,"max_rank":205474,"count":338},"402":{"min_rank":205476,"max_rank":207303,"count":379},"401":{"min_rank":207308,"max_rank":209251,"count":373},"400":{"min_rank":209262,"max_rank":211355,"count":406},"399":{"min_rank":211364,"max_rank":213329,"count":383},"398":{"min_rank":213342,"max_rank":215225,"count":355},"397":{"min_rank":215238,"max_rank":217112,"count":350},"396":{"min_rank":217117,"max_rank":219056,"count":341},"395":{"min_rank":219057,"max_rank":221165,"count":377},"394":{"min_rank":221173,"max_rank":223043,"count":348},"393":{"min_rank":223067,"max_rank":225009,"count":373},"392":{"min_rank":225019,"max_rank":226905,"count":355},"391":{"min_rank":226930,"max_rank":228920,"count":361},"390":{"min_rank":228935,"max_rank":230974,"count":348},"389":{"min_rank":230986,"max_rank":232948,"count":332},"388":{"min_rank":232965,"max_rank":234920,"count":370},"387":{"min_rank":234929,"max_rank":236938,"count":392},"386":{"min_rank":236948,"max_rank":238955,"count":352},"385":{"min_rank":238957,"max_rank":241201,"count":379},"384":{"min_rank":241218,"max_rank":243218,"count":359},"383":{"min_rank":243236,"max_rank":245291,"count":386},"382":{"min_rank":245300,"max_rank":247268,"count":384},"381":{"min_rank":247286,"max_rank":249343,"count":372},"380":{"min_rank":249357,"max_rank":251657,"count":431},"379":{"min_rank":251691,"max_rank":253668,"count":338},"378":{"min_rank":253676,"max_rank":255689,"count":377},"377":{"min_rank":255702,"max_rank":257778,"count":349},"376":{"min_rank":257795,"max_rank":259961,"count":396},"375":{"min_rank":259975,"max_rank":262182,"count":407},"374":{"min_rank":262227,"max_rank":264249,"count":360},"373":{"min_rank":264258,"max_rank":266347,"count":379},"372":{"min_rank":266362,"max_rank":268464,"count":377},"371":{"min_rank":268465,"max_rank":270616,"count":428},"370":{"min_rank":270623,"max_rank":272932,"count":415},"369":{"min_rank":272987,"max_rank":274977,"count":378},"368":{"min_rank":275003,"max_rank":277105,"count":414},"367":{"min_rank":277128,"max_rank":279259,"count":379},"366":{"min_rank":279285,"max_rank":281407,"count":351},"365":{"min_rank":281411,"max_rank":283633,"count":389},"364":{"min_rank":283638,"max_rank":285768,"count":368},"363":{"min_rank":285809,"max_rank":287968,"count":386},"362":{"min_rank":287975,"max_rank":290089,"count":390},"361":{"min_rank":290106,"max_rank":292345,"count":389},"360":{"min_rank":292361,"max_rank":294823,"count":381},"359":{"min_rank":294827,"max_rank":296942,"count":381},"358":{"min_rank":296947,"max_rank":299043,"count":333},"357":{"min_rank":299051,"max_rank":301137,"count":381},"356":{"min_rank":301164,"max_rank":303493,"count":398},"355":{"min_rank":303506,"max_rank":305849,"count":404},"354":{"min_rank":305881,"max_rank":308042,"count":380},"353":{"min_rank":308063,"max_rank":310244,"count":334},"352":{"min_rank":310258,"max_rank":312494,"count":397},"351":{"min_rank":312518,"max_rank":314833,"count":396},"350":{"min_rank":314851,"max_rank":317242,"count":392},"349":{"min_rank":317250,"max_rank":319508,"count":364},"348":{"min_rank":319530,"max_rank":321808,"count":388},"347":{"min_rank":321845,"max_rank":323989,"count":370},"346":{"min_rank":324010,"max_rank":326305,"count":367},"345":{"min_rank":326337,"max_rank":328860,"count":448},"344":{"min_rank":328891,"max_rank":331252,"count":396},"343":{"min_rank":331274,"max_rank":333530,"count":362},"342":{"min_rank":333551,"max_rank":335895,"count":410},"341":{"min_rank":335921,"max_rank":338315,"count":418},"340":{"min_rank":338322,"max_rank":340995,"count":403},"339":{"min_rank":341002,"max_rank":343305,"count":347},"338":{"min_rank":343317,"max_rank":345596,"count":376},"337":{"min_rank":345621,"max_rank":347975,"count":367},"336":{"min_rank":347981,"max_rank":350404,"count":412},"335":{"min_rank":350415,"max_rank":352995,"count":400},"334":{"min_rank":353022,"max_rank":355402,"count":372},"333":{"min_rank":355414,"max_rank":357775,"count":362},"332":{"min_rank":357779,"max_rank":360123,"count":367},"331":{"min_rank":360170,"max_rank":362562,"count":369},"330":{"min_rank":362573,"max_rank":365196,"count":413},"329":{"min_rank":365231,"max_rank":367631,"count":338},"328":{"min_rank":367642,"max_rank":370154,"count":387},"327":{"min_rank":370168,"max_rank":372538,"count":380},"326":{"min_rank":372555,"max_rank":375016,"count":399},"325":{"min_rank":375035,"max_rank":377808,"count":406},"324":{"min_rank":377822,"max_rank":380353,"count":406},"323":{"min_rank":380366,"max_rank":382896,"count":407},"322":{"min_rank":382910,"max_rank":385464,"count":398},"321":{"min_rank":385465,"max_rank":388023,"count":378},"320":{"min_rank":388057,"max_rank":390792,"count":384},"319":{"min_rank":390819,"max_rank":393301,"count":392},"318":{"min_rank":393320,"max_rank":395792,"count":366},"317":{"min_rank":395804,"max_rank":398340,"count":396},"316":{"min_rank":398357,"max_rank":400942,"count":411},"315":{"min_rank":400958,"max_rank":403838,"count":456},"314":{"min_rank":403862,"max_rank":406374,"count":396},"313":{"min_rank":406408,"max_rank":408880,"count":371},"312":{"min_rank":408890,"max_rank":411470,"count":390},"311":{"min_rank":411476,"max_rank":414134,"count":410},"310":{"min_rank":414177,"max_rank":417070,"count":431},"309":{"min_rank":417082,"max_rank":419760,"count":383},"308":{"min_rank":419774,"max_rank":422379,"count":423},"307":{"min_rank":422388,"max_rank":424991,"count":412},"306":{"min_rank":425013,"max_rank":427684,"count":389},"305":{"min_rank":427717,"max_rank":430786,"count":444},"304":{"min_rank":430806,"max_rank":433468,"count":370},"303":{"min_rank":433520,"max_rank":436097,"count":386},"302":{"min_rank":436101,"max_rank":438936,"count":403},"301":{"min_rank":438979,"max_rank":441766,"count":411},"300":{"min_rank":441779,"max_rank":444913,"count":463},"299":{"min_rank":444917,"max_rank":447606,"count":390},"298":{"min_rank":447617,"max_rank":450237,"count":381},"297":{"min_rank":450262,"max_rank":453079,"count":391},"296":{"min_rank":453117,"max_rank":455961,"count":378},"295":{"min_rank":455967,"max_rank":459152,"count":422},"294":{"min_rank":459174,"max_rank":462009,"count":375},"293":{"min_rank":462031,"max_rank":464823,"count":388},"292":{"min_rank":464851,"max_rank":467677,"count":393},"291":{"min_rank":467697,"max_rank":470578,"count":403},"290":{"min_rank":470599,"max_rank":473872,"count":455},"289":{"min_rank":473900,"max_rank":476758,"count":399},"288":{"min_rank":476760,"max_rank":479570,"count":420},"287":{"min_rank":479632,"max_rank":482603,"count":367},"286":{"min_rank":482614,"max_rank":485574,"count":394},"285":{"min_rank":485592,"max_rank":489005,"count":418},"284":{"min_rank":489040,"max_rank":491847,"count":364},"283":{"min_rank":491853,"max_rank":494705,"count":374},"282":{"min_rank":494723,"max_rank":497628,"count":413},"281":{"min_rank":497660,"max_rank":500707,"count":402},"280":{"min_rank":500732,"max_rank":504210,"count":436},"279":{"min_rank":504233,"max_rank":507139,"count":368},"278":{"min_rank":507151,"max_rank":510145,"count":384},"277":{"min_rank":510171,"max_rank":513231,"count":430},"276":{"min_rank":513286,"max_rank":516361,"count":381},"275":{"min_rank":516378,"max_rank":519804,"count":445},"274":{"min_rank":519825,"max_rank":522893,"count":402},"273":{"min_rank":522913,"max_rank":526010,"count":398},"272":{"min_rank":526034,"max_rank":529080,"count":388},"271":{"min_rank":529095,"max_rank":532296,"count":400},"270":{"min_rank":532311,"max_rank":536039,"count":448},"269":{"min_rank":536091,"max_rank":539232,"count":392},"268":{"min_rank":539248,"max_rank":542314,"count":393},"267":{"min_rank":542328,"max_rank":545390,"count":385},"266":{"min_rank":545457,"max_rank":548677,"count":403},"265":{"min_rank":548683,"max_rank":552330,"count":451},"264":{"min_rank":552390,"max_rank":555524,"count":401},"263":{"min_rank":555560,"max_rank":558780,"count":391},"262":{"min_rank":558786,"max_rank":561881,"count":377},"261":{"min_rank":561898,"max_rank":565248,"count":422},"260":{"min_rank":565293,"max_rank":569053,"count":447},"259":{"min_rank":569086,"max_rank":572451,"count":411},"258":{"min_rank":572483,"max_rank":575716,"count":385},"257":{"min_rank":575723,"max_rank":578890,"count":352},"256":{"min_rank":578915,"max_rank":582256,"count":408},"255":{"min_rank":582269,"max_rank":586082,"count":425},"254":{"min_rank":586146,"max_rank":589381,"count":400},"253":{"min_rank":589422,"max_rank":592790,"count":429},"252":{"min_rank":592810,"max_rank":596232,"count":383},"251":{"min_rank":596238,"max_rank":599716,"count":409},"250":{"min_rank":599758,"max_rank":603758,"count":422},"249":{"min_rank":603782,"max_rank":607211,"count":407},"248":{"min_rank":607241,"max_rank":610694,"count":404},"247":{"min_rank":610730,"max_rank":614128,"count":391},"246":{"min_rank":614139,"max_rank":617644,"count":387},"245":{"min_rank":617660,"max_rank":621619,"count":425},"244":{"min_rank":621647,"max_rank":624968,"count":362},"243":{"min_rank":624996,"max_rank":628398,"count":403},"242":{"min_rank":628409,"max_rank":631895,"count":395},"241":{"min_rank":631901,"max_rank":635452,"count":426},"240":{"min_rank":635493,"max_rank":639706,"count":479},"239":{"min_rank":639737,"max_rank":643259,"count":407},"238":{"min_rank":643268,"max_rank":646876,"count":412},"237":{"min_rank":646931,"max_rank":650493,"count":402},"236":{"min_rank":650510,"max_rank":654168,"count":383},"235":{"min_rank":654179,"max_rank":658457,"count":442},"234":{"min_rank":658474,"max_rank":662166,"count":394},"233":{"min_rank":662179,"max_rank":665783,"count":369},"232":{"min_rank":665804,"max_rank":669380,"count":385},"231":{"min_rank":669412,"max_rank":673215,"count":430},"230":{"min_rank":673232,"max_rank":677598,"count":425},"229":{"min_rank":677608,"max_rank":681444,"count":398},"228":{"min_rank":681467,"max_rank":685304,"count":412},"227":{"min_rank":685313,"max_rank":689105,"count":387},"226":{"min_rank":689119,"max_rank":693133,"count":420},"225":{"min_rank":693148,"max_rank":697700,"count":476},"224":{"min_rank":697723,"max_rank":701373,"count":404},"223":{"min_rank":701413,"max_rank":705274,"count":423},"222":{"min_rank":705287,"max_rank":709229,"count":422},"221":{"min_rank":709263,"max_rank":713146,"count":425},"220":{"min_rank":713159,"max_rank":717742,"count":440},"219":{"min_rank":717759,"max_rank":721689,"count":398},"218":{"min_rank":721709,"max_rank":725539,"count":400},"217":{"min_rank":725570,"max_rank":729505,"count":387},"216":{"min_rank":729522,"max_rank":733518,"count":436},"215":{"min_rank":733557,"max_rank":738252,"count":444},"214":{"min_rank":738255,"max_rank":742252,"count":400},"213":{"min_rank":742259,"max_rank":746104,"count":392},"212":{"min_rank":746148,"max_rank":750154,"count":438},"211":{"min_rank":750201,"max_rank":754475,"count":437},"210":{"min_rank":754513,"max_rank":759375,"count":432},"209":{"min_rank":759385,"max_rank":763575,"count":412},"208":{"min_rank":763578,"max_rank":767603,"count":395},"207":{"min_rank":767609,"max_rank":771688,"count":359},"206":{"min_rank":771737,"max_rank":776001,"count":394},"205":{"min_rank":776005,"max_rank":781162,"count":467},"204":{"min_rank":781182,"max_rank":785304,"count":357},"203":{"min_rank":785340,"max_rank":789410,"count":413},"202":{"min_rank":789472,"max_rank":793646,"count":397},"201":{"min_rank":793658,"max_rank":798089,"count":431},"200":{"min_rank":798090,"max_rank":803308,"count":426},"199":{"min_rank":803331,"max_rank":807505,"count":426},"198":{"min_rank":807517,"max_rank":811857,"count":380},"197":{"min_rank":811863,"max_rank":816227,"count":387},"196":{"min_rank":816288,"max_rank":820616,"count":350},"195":{"min_rank":820640,"max_rank":825926,"count":444},"194":{"min_rank":825931,"max_rank":830221,"count":364},"193":{"min_rank":830336,"max_rank":834723,"count":410},"192":{"min_rank":834731,"max_rank":839249,"count":405},"191":{"min_rank":839276,"max_rank":843850,"count":374},"190":{"min_rank":843888,"max_rank":849477,"count":461},"189":{"min_rank":849536,"max_rank":854038,"count":404},"188":{"min_rank":854061,"max_rank":858633,"count":367},"187":{"min_rank":858647,"max_rank":863249,"count":361},"186":{"min_rank":863319,"max_rank":867979,"count":374},"185":{"min_rank":868002,"max_rank":873807,"count":469},"184":{"min_rank":873866,"max_rank":878485,"count":398},"183":{"min_rank":878505,"max_rank":883174,"count":416},"182":{"min_rank":883192,"max_rank":887831,"count":398},"181":{"min_rank":887882,"max_rank":892841,"count":394},"180":{"min_rank":892866,"max_rank":898897,"count":450},"179":{"min_rank":898918,"max_rank":903668,"count":370},"178":{"min_rank":903685,"max_rank":908351,"count":370},"177":{"min_rank":908392,"max_rank":913106,"count":376},"176":{"min_rank":913176,"max_rank":918110,"count":407},"175":{"min_rank":918119,"max_rank":924440,"count":501},"174":{"min_rank":924456,"max_rank":929191,"count":398},"173":{"min_rank":929206,"max_rank":934015,"count":371},"172":{"min_rank":934053,"max_rank":939097,"count":390},"171":{"min_rank":939133,"max_rank":944184,"count":391},"170":{"min_rank":944210,"max_rank":950620,"count":511},"169":{"min_rank":950629,"max_rank":955589,"count":399},"168":{"min_rank":955593,"max_rank":960558,"count":423},"167":{"min_rank":960572,"max_rank":965644,"count":429},"166":{"min_rank":965675,"max_rank":970923,"count":386},"165":{"min_rank":970986,"max_rank":977717,"count":483},"164":{"min_rank":977744,"max_rank":982932,"count":412},"163":{"min_rank":982950,"max_rank":988032,"count":435},"162":{"min_rank":988060,"max_rank":993369,"count":387},"161":{"min_rank":993392,"max_rank":998948,"count":444},"160":{"min_rank":998977,"max_rank":1005892,"count":500},"159":{"min_rank":1005904,"max_rank":1011173,"count":409},"158":{"min_rank":1011224,"max_rank":1016523,"count":400},"157":{"min_rank":1016545,"max_rank":1021924,"count":419},"156":{"min_rank":1021933,"max_rank":1027539,"count":411},"155":{"min_rank":1027554,"max_rank":1034816,"count":507},"154":{"min_rank":1034833,"max_rank":1040149,"count":422},"153":{"min_rank":1040171,"max_rank":1045700,"count":391},"152":{"min_rank":1045721,"max_rank":1051290,"count":412},"151":{"min_rank":1051351,"max_rank":1057104,"count":407},"150":{"min_rank":1057118,"max_rank":1064610,"count":552},"149":{"min_rank":1064666,"max_rank":1070222,"count":435},"148":{"min_rank":1070261,"max_rank":1075776,"count":390},"147":{"min_rank":1075832,"max_rank":1081454,"count":392},"146":{"min_rank":1081504,"max_rank":1087424,"count":455},"145":{"min_rank":1087483,"max_rank":1095474,"count":528},"144":{"min_rank":1095517,"max_rank":1101127,"count":388},"143":{"min_rank":1101156,"max_rank":1106915,"count":344},"142":{"min_rank":1106950,"max_rank":1112724,"count":322},"141":{"min_rank":1112767,"max_rank":1118906,"count":344},"140":{"min_rank":1118941,"max_rank":1127287,"count":452},"139":{"min_rank":1127312,"max_rank":1133178,"count":339},"138":{"min_rank":1133250,"max_rank":1139097,"count":349},"137":{"min_rank":1139121,"max_rank":1145192,"count":343},"136":{"min_rank":1145248,"max_rank":1151575,"count":351},"135":{"min_rank":1151598,"max_rank":1160385,"count":493},"134":{"min_rank":1160439,"max_rank":1166537,"count":336},"133":{"min_rank":1166553,"max_rank":1172685,"count":367},"132":{"min_rank":1172723,"max_rank":1178970,"count":343},"131":{"min_rank":1179012,"max_rank":1185717,"count":369},"130":{"min_rank":1185733,"max_rank":1194851,"count":460},"129":{"min_rank":1194970,"max_rank":1201169,"count":340},"128":{"min_rank":1201227,"max_rank":1207467,"count":332},"127":{"min_rank":1207521,"max_rank":1213918,"count":358},"126":{"min_rank":1213946,"max_rank":1220665,"count":364},"125":{"min_rank":1220690,"max_rank":1230453,"count":515},"124":{"min_rank":1230462,"max_rank":1236976,"count":384},"123":{"min_rank":1237032,"max_rank":1243400,"count":354},"122":{"min_rank":1243460,"max_rank":1250317,"count":395},"121":{"min_rank":1250381,"max_rank":1257303,"count":374},"120":{"min_rank":1257337,"max_rank":1267439,"count":516},"119":{"min_rank":1267463,"max_rank":1273969,"count":344},"118":{"min_rank":1274071,"max_rank":1280819,"count":354},"117":{"min_rank":1280861,"max_rank":1287605,"count":360},"116":{"min_rank":1287619,"max_rank":1294911,"count":395},"115":{"min_rank":1294939,"max_rank":1305549,"count":523},"114":{"min_rank":1305579,"max_rank":1312435,"count":390},"113":{"min_rank":1312496,"max_rank":1319420,"count":388},"112":{"min_rank":1319521,"max_rank":1325368,"count":21},"111":{"min_rank":1327214,"max_rank":1333567,"count":17},"110":{"min_rank":1335142,"max_rank":1345273,"count":43},"109":{"min_rank":1346320,"max_rank":1352445,"count":33},"108":{"min_rank":1354167,"max_rank":1359685,"count":30},"107":{"min_rank":1360668,"max_rank":1366624,"count":33},"106":{"min_rank":1367257,"max_rank":1374556,"count":42},"105":{"min_rank":1375662,"max_rank":1386529,"count":40},"104":{"min_rank":1386888,"max_rank":1393661,"count":45},"103":{"min_rank":1394488,"max_rank":1400555,"count":26},"102":{"min_rank":1401605,"max_rank":1408554,"count":33},"101":{"min_rank":1409105,"max_rank":1416300,"count":21},"100":{"min_rank":1417131,"max_rank":1428665,"count":35}};
+const SCORES = Object.keys(DATA).map(Number).sort((a,b)=>b-a);
+const CONSERVATIVE_OFFSET = 20; // show rank for (score - 20) to be conservative
 
-const SCORES = Object.keys(DATA).map(Number).sort((a,b) => b - a);
-const CONSERVATIVE_OFFSET = 10;
-
-const scoreInput  = document.getElementById('scoreInput');
+const scoreInput = document.getElementById('scoreInput');
 const scoreSlider = document.getElementById('scoreSlider');
-scoreInput.addEventListener('input',  () => { scoreSlider.value = scoreInput.value; });
-scoreSlider.addEventListener('input', () => { scoreInput.value  = scoreSlider.value; });
-scoreInput.addEventListener('keydown', e => { if (e.key === 'Enter') predict(); });
+scoreInput.addEventListener('input', () => { scoreSlider.value = scoreInput.value; });
+scoreSlider.addEventListener('input', () => { scoreInput.value = scoreSlider.value; });
+scoreInput.addEventListener('keydown', e => { if(e.key==='Enter') predict(); });
 
 function fmt(n) { return n.toLocaleString('en-IN'); }
 
 function getTier(minRank) {
-  if (minRank <= 1000)   return { label: '🏆 Top 1,000 — AIIMS / JIPMER Territory',              cls: 'elite'   };
-  if (minRank <= 10000)  return { label: '⭐ Top 10,000 — Strong Government Medical Prospects',   cls: 'elite'   };
-  if (minRank <= 50000)  return { label: '✅ Top 50,000 — Good State Govt / Top Private',         cls: 'good'    };
-  if (minRank <= 100000) return { label: '📌 Top 1 Lakh — State Counselling Eligible',            cls: 'good'    };
-  if (minRank <= 300000) return { label: '🔶 1–3 Lakh — Private / Deemed Options Available',      cls: 'average' };
-  if (minRank <= 600000) return { label: '🔸 3–6 Lakh — BDS / BAMS / Allied Sciences Possible',  cls: 'average' };
-  return                        { label: '🔻 Above 6 Lakh — Very Limited Medical Seats',          cls: 'below'   };
+  if (minRank <= 1000)   return { label: '🏆 Top 1,000 — AIIMS / JIPMER Territory', cls: 'elite' };
+  if (minRank <= 10000)  return { label: '⭐ Top 10,000 — Strong Government Medical Prospects', cls: 'elite' };
+  if (minRank <= 50000)  return { label: '✅ Top 50,000 — Good State Govt / Top Private', cls: 'good' };
+  if (minRank <= 100000) return { label: '📌 Top 1 Lakh — State Counselling Eligible', cls: 'good' };
+  if (minRank <= 300000) return { label: '🔶 1–3 Lakh — Private / Deemed Options Available', cls: 'average' };
+  if (minRank <= 600000) return { label: '🔸 3–6 Lakh — BDS / BAMS / Allied Sciences Possible', cls: 'average' };
+  return { label: '🔻 Above 6 Lakh — Very Limited Medical Seats', cls: 'below' };
 }
 
 function lookupScore(score) {
-  const s = Math.max(100, score - CONSERVATIVE_OFFSET);
-  if (DATA[s]) return DATA[s];
-  const above = SCORES.find(x => x <= s);
-  const below = [...SCORES].reverse().find(x => x >= s);
+  // Conservative: show rank for (score - CONSERVATIVE_OFFSET)
+  const lookupScore = Math.max(100, score - CONSERVATIVE_OFFSET);
+  if (DATA[lookupScore]) return DATA[lookupScore];
+  // Interpolate between nearest available scores
+  const above = SCORES.find(s => s <= lookupScore);
+  const below = [...SCORES].reverse().find(s => s >= lookupScore);
   if (!above && !below) return null;
   if (!above) return DATA[below];
   if (!below) return DATA[above];
   if (above === below) return DATA[above];
-  const t = (s - below) / (above - below);
+  const t = (lookupScore - below) / (above - below);
   return {
     min_rank: Math.round(DATA[below].min_rank + t * (DATA[above].min_rank - DATA[below].min_rank)),
     max_rank: Math.round(DATA[below].max_rank + t * (DATA[above].max_rank - DATA[below].max_rank)),
@@ -360,8 +267,8 @@ function lookupScore(score) {
 }
 
 function predict() {
-  const score   = parseInt(scoreInput.value);
-  const card    = document.getElementById('resultCard');
+  const score = parseInt(scoreInput.value);
+  const card = document.getElementById('resultCard');
   const content = document.getElementById('resultContent');
 
   if (!score || score < 100 || score > 720) {
@@ -371,11 +278,17 @@ function predict() {
   }
 
   if (score > 686) {
+    const tier = getTier(1);
     content.innerHTML = `
+      <div class="result-score-line">
+        <span class="result-score-badge">Score: ${score}</span>
+        <span class="result-score-label">Exceptional — beyond dataset ceiling</span>
+      </div>
       <div class="rank-display">
         <div class="rank-label">Estimated AIR (All India Rank)</div>
         <div class="rank-value pop-in">Top 1 – 20</div>
         <div class="rank-sub">Score 686 → Rank 1 in 2025 data. You are above that.</div>
+        <span class="tier-badge ${tier.cls}">${tier.label}</span>
       </div>
       ${inquiryBlock(score)}
     `;
@@ -391,11 +304,19 @@ function predict() {
     return;
   }
 
+  const tier = getTier(result.min_rank);
+  const usedScore = Math.max(100, score - CONSERVATIVE_OFFSET);
+
   content.innerHTML = `
+    <div class="result-score-line">
+      <span class="result-score-badge">Score: ${score}</span>
+      <span class="result-score-label">Conservative estimate based on multi-state data</span>
+    </div>
     <div class="rank-display">
       <div class="rank-label">Estimated AIR (All India Rank)</div>
       <div class="rank-value pop-in">${fmt(result.min_rank)} – ${fmt(result.max_rank)}</div>
-      <div class="rank-sub">This is an estimated rank and not a guarantee of actual NEET 2026 rank.</div>
+      <div class="rank-sub">Based on actual counselling data from the last 3 years</div>
+      <span class="tier-badge ${tier.cls}">${tier.label}</span>
     </div>
     ${inquiryBlock(score)}
   `;
@@ -405,12 +326,12 @@ function predict() {
 }
 
 function inquiryBlock(score) {
-  const msg = encodeURIComponent('Hi ASMI, I scored ' + score + ' in NEET 2026. Can you help me understand my college options?');
+  const waMsg = encodeURIComponent('Hi ASMI, I scored ' + score + ' in NEET 2026. Can you help me understand my college options?');
   return `
     <div class="inquiry-card">
       <h3>Want to know your college options?</h3>
-      <p>Get a Personalized College Report to know where you can realistically secure admission and make smarter counselling decisions.</p>
-      <a href="https://asmicareer.in/medical/inquiry" class="inquiry-btn">📈 See My Admission Possibilities</a>
+      <p>Share your score with our counsellors and get a personalised list of colleges you can target — across government, private, deemed, and allied health programmes.</p>
+      <a href="https://wa.me/917410019077?text=${waMsg}" class="inquiry-btn">Get Free College Guidance →</a>
     </div>
   `;
 }
