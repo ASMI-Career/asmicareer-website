@@ -191,7 +191,9 @@ export default function StudentDashboard() {
 
   // College Predictor — score tab
   const [cpScoreInput, setCpScoreInput] = useState('');
-  const [cpState, setCpState] = useState('All');                 // kept for score tab
+  const [cpState, setCpState] = useState('All');
+  const [cpScoreState, setCpScoreState] = useState('All');
+  const [cpScoreSort, setCpScoreSort] = useState('chance');
   const [cpCategory, setCpCategory] = useState('Open');
   const [cpScoreCourse, setCpScoreCourse] = useState('MBBS');
 
@@ -581,7 +583,7 @@ export default function StudentDashboard() {
         openCutoff: openC,
         catCutoff: catC,
         cutoff: bestC,
-        projected: bestC + 15,
+        projected: bestC + 20,
         chance: p.label,
         chanceKey: p.key,
         chanceClass: p.cls,
@@ -619,7 +621,7 @@ export default function StudentDashboard() {
           openCutoff: openC,
           catCutoff: catC,
           cutoff: bestC,
-          projected: bestC + 15,
+          projected: bestC + 20,
           state: stateMap.get(name) || 'India',
           chance: p.label,
           chanceKey: p.key,
@@ -723,11 +725,18 @@ export default function StudentDashboard() {
     if (cpTypeFilter !== 'All') {
       filtered = filtered.filter(c => c.type === cpTypeFilter);
     }
-    
-    // Sort: Safe → Likely → Borderline → Out of Reach, then by cutoff descending
+
+    if (cpScoreState !== 'All') {
+      filtered = filtered.filter(c => c.state === cpScoreState);
+    }
+
     const PO_SORT = { safe: 0, likely: 1, borderline: 2, reach: 3 };
-    filtered.sort((a, b) => PO_SORT[a.chanceKey] - PO_SORT[b.chanceKey] || b.cutoff - a.cutoff);
-    
+    if (cpScoreSort === 'chance') filtered.sort((a, b) => PO_SORT[a.chanceKey] - PO_SORT[b.chanceKey] || b.cutoff - a.cutoff);
+    else if (cpScoreSort === 'cutoff_asc') filtered.sort((a, b) => a.cutoff - b.cutoff);
+    else if (cpScoreSort === 'cutoff_desc') filtered.sort((a, b) => b.cutoff - a.cutoff);
+    else if (cpScoreSort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+    else if (cpScoreSort === 'fees_asc') filtered.sort((a, b) => parseAirFee(a.fees) - parseAirFee(b.fees));
+
     return filtered;
   };
 
@@ -1414,6 +1423,42 @@ export default function StudentDashboard() {
                           </div>
                         </div>
 
+                        {/* State + Sort row */}
+                        {(() => {
+                          const scoreResults = (cpScoreInput && !isNaN(parseInt(cpScoreInput,10)) && asmiDb) ? (() => {
+                            const score=parseInt(cpScoreInput,10); if(score<200||score>720) return [];
+                            const tmp=[]; const course=cpScoreCourse; const userCat=cpCategory;
+                            if(asmiDb.MH&&asmiDb.MH[course]) {
+                              tmp.push(...getMHCollegesList(course,'mh_govt',userCat,score),...getMHCollegesList(course,'mh_pvt',userCat,score));
+                              if(userCat==='IQ') tmp.push(...getMHCollegesList(course,'mh_iq',userCat,score));
+                            }
+                            tmp.push(...getMCCCollegesList(course,userCat,score));
+                            if(course==='MBBS') tmp.push(...getOpenStateCollegesList(course,score));
+                            return tmp;
+                          })() : [];
+                          const stateOptions = ['All', ...Array.from(new Set(scoreResults.map(c=>c.state).filter(Boolean))).sort()];
+                          return (
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+                              <div className="form-group">
+                                <label className="form-label">State</label>
+                                <select className="form-select" value={cpScoreState} onChange={e => setCpScoreState(e.target.value)}>
+                                  {stateOptions.map(s => <option key={s} value={s}>{s === 'All' ? 'All States' : s}</option>)}
+                                </select>
+                              </div>
+                              <div className="form-group">
+                                <label className="form-label">Sort By</label>
+                                <select className="form-select" value={cpScoreSort} onChange={e => setCpScoreSort(e.target.value)}>
+                                  <option value="chance">Admission Chance</option>
+                                  <option value="cutoff_desc">Cutoff (High → Low)</option>
+                                  <option value="cutoff_asc">Cutoff (Low → High)</option>
+                                  <option value="fees_asc">Fees (Low → High)</option>
+                                  <option value="name">College Name</option>
+                                </select>
+                              </div>
+                            </div>
+                          );
+                        })()}
+
                         {/* Filter chips (Pool and Type) */}
                         <div style={{ display: 'flex', gap: 24, marginBottom: 20, flexWrap: 'wrap' }}>
                           <div>
@@ -1480,7 +1525,7 @@ export default function StudentDashboard() {
                                     <th>Pool</th>
                                     <th>State</th>
                                     <th>Open Cutoff</th>
-                                    {cpCategory !== 'Open' && <th>Your Cutoff</th>}
+                                    {cpCategory !== 'Open' && <th>Category Cutoff</th>}
                                     <th>Fee/yr</th>
                                     <th>Total Budget</th>
                                     <th>Chance</th>
