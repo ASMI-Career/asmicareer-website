@@ -1392,7 +1392,7 @@ export default function MedicalPortal() {
                           <p className="resource-body">Enter your NEET AIR and instantly explore your admission possibilities based on previous years' counselling trends. No login required.</p>
                           <div className="resource-footer">
                               <span className="resource-meta">Rank-based · 2025 data</span>
-                              <a href="/tools/rank-predictor" className="resource-cta-link">Predict Now →</a>
+                              <a href="/tools/rank-predictor/" className="resource-cta-link">Predict Now →</a>
                           </div>
                       </div>
                   </div>
@@ -1795,7 +1795,7 @@ export default function MedicalPortal() {
                       <span className="tool-icon" aria-hidden="true">🔮</span>
                       <div className="tool-title">College Predictor</div>
                       <p className="tool-body">Enter your NEET score to estimate your All India Rank and understand your admission possibilities.</p>
-                      <a href="/tools/rank-predictor" className="tool-cta">Predict Now →</a>
+                      <a href="/tools/rank-predictor/" className="tool-cta">Predict Now →</a>
                   </div>
       
                   <div className="tool-card">

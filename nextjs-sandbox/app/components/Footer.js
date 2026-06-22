@@ -68,7 +68,7 @@ export default function Footer({ tagline = "Guiding Futures, Building Doctors", 
             <Link href={isEngineering ? "/engineering/services" : "/medical/services"} className="footer-link">Services</Link>
             <Link href={isEngineering ? "/engineering#packages" : "/medical/packages"} className="footer-link">Packages</Link>
             <Link href={isEngineering ? "/tools/engineering-cutoff-explorer" : "/tools/cutoff-explorer"} className="footer-link">Cutoff Explorer</Link>
-            <Link href={isEngineering ? "/tools/engineering-college-predictor" : "/tools/rank-predictor"} className="footer-link">Rank Predictor</Link>
+            <Link href={isEngineering ? "/tools/engineering-college-predictor" : "/tools/rank-predictor/"} className="footer-link">Rank Predictor</Link>
             <Link href={isEngineering ? "/engineering/resources" : "/medical/resources"} className="footer-link">Resources</Link>
           </div>
   
