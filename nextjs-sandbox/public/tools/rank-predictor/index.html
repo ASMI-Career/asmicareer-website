@@ -74,7 +74,7 @@
     margin-bottom: 28px;
     animation: fadeDown 0.5s ease both;
   }
-  .logo-img { height: 44px; width: auto; }
+  .logo-img { height: 64px; width: auto; }
   .logo-text {
     display: none;
     align-items: center;
@@ -430,10 +430,6 @@ function predict() {
 
   if (score > 686) {
     content.innerHTML = `
-      <div class="result-score-line">
-        <span class="result-score-badge">Score: ${score}</span>
-        <span class="result-score-label">Exceptional — beyond dataset ceiling</span>
-      </div>
       <div class="rank-display">
         <div class="rank-label">Estimated AIR (All India Rank)</div>
         <div class="rank-value pop-in">Top 1 – 20</div>
@@ -454,10 +450,6 @@ function predict() {
   }
 
   content.innerHTML = `
-    <div class="result-score-line">
-      <span class="result-score-badge">Score: ${score}</span>
-      <span class="result-score-label"></span>
-    </div>
     <div class="rank-display">
       <div class="rank-label">Estimated AIR (All India Rank)</div>
       <div class="rank-value pop-in">${fmt(result.min_rank)} – ${fmt(result.max_rank)}</div>
@@ -476,7 +468,7 @@ function inquiryBlock(score) {
     <div class="inquiry-card">
       <h3>Want to know your college options?</h3>
       <p>Get a Personalized College Report to know where you can realistically secure admission and make smarter counselling decisions.</p>
-      <a href="https://wa.me/917410019074?text=${msg}" class="inquiry-btn">Register Now!</a>
+      <a href="https://asmicareer.in/medical/inquiry" class="inquiry-btn">📈 See My Admission Possibilities</a>
     </div>
   `;
 }
