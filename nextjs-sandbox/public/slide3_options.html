@@ -484,7 +484,7 @@ function catKeys(cat){
 }
 
 function prob(score,cutoff){
-  const gap=score-(cutoff+10);
+  const gap=score-(cutoff+20);
   if(gap>=15)  return{key:'safe',      label:'Safe',       cls:'prob-safe'};
   if(gap>=0)   return{key:'likely',    label:'Likely',     cls:'prob-likely'};
   if(gap>=-10) return{key:'borderline',label:'Borderline', cls:'prob-borderline'};
@@ -594,12 +594,12 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true){
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
   const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-  const projected = actual!==null ? actual + 10 : null;
+  const projected = actual!==null ? actual + 20 : null;
   const actualStr = actual!==null ? actual : '—';
   const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
   
   const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-  const catProj    = catActual!==null ? catActual+10 : null;
+  const catProj    = catActual!==null ? catActual+20 : null;
   const catCell    = showCatCutoff && catActual!==null
     ? `<td style="text-align:center">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -649,7 +649,7 @@ function renderMHBlurred(cols){
   const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+10))-Math.abs(score-(b.c+10)));
+    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
 
   const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
   const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
@@ -671,13 +671,13 @@ function renderMHBlurred(cols){
     : `<th>${activeCategory()} CUTOFF</th>`;
   function row(c){
     const actual=c.openCutoff!==null?c.openCutoff:c.c;
-    const projected=actual+10;
+    const projected=actual+20;
     const openCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
       <span class="cutoff-val">${actual}</span>
       <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
     </div>`;
     const catActual=c.catCutoff!==null?c.catCutoff:null;
-    const catProj=catActual!==null?catActual+10:null;
+    const catProj=catActual!==null?catActual+20:null;
     const cc=showDual?(catActual!==null?`<td style="text-align:center">
       <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
         <span class="cutoff-val" style="color:var(--purple);font-weight:900">${catActual}</span>
@@ -704,7 +704,7 @@ function renderOSTable(stKey,cols){
   const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+10))-Math.abs(score-(b.c+10)));
+    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
 
   const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
   const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
@@ -718,7 +718,7 @@ function renderOSTable(stKey,cols){
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
   function row(c){
-    const projected=c.c+10;
+    const projected=c.c+20;
     const cutoffCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
       <span class="cutoff-val">${c.c}</span>
       <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
@@ -901,12 +901,12 @@ function renderAIIMSList(cols){
   </tr></thead>`;
   const row=c=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 10 : null;
+    const projected = actual!==null ? actual + 20 : null;
     const actualStr = actual!==null ? actual : '—';
     const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
     
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+10 : null;
+    const catProj    = catActual!==null ? catActual+20 : null;
     const catCell    = showCat && catActual!==null
       ? `<td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -940,7 +940,7 @@ function mccPreview(cols){
   if(!cols||!cols.length) return {preview:[], rest:[]};
   const score = activeScore();
   const byClosest = arr=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+10))-Math.abs(score-(b.c+10)));
+    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
   const safe   = byClosest(cols.filter(c=>c.prob&&c.prob.key==='safe')).slice(0,2);
   const likely = byClosest(cols.filter(c=>c.prob&&c.prob.key==='likely')).slice(0,2);
   const reach  = byClosest(cols.filter(c=>c.prob&&c.prob.key==='reach')).slice(0,1);
@@ -964,11 +964,11 @@ function renderMCCExpanded(){
   
   const row=(c, stackCutoff = true, forceHideCat = false)=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 10 : null;
+    const projected = actual!==null ? actual + 20 : null;
     const actualStr = actual!==null ? actual : '—';
     
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+10 : null;
+    const catProj    = catActual!==null ? catActual+20 : null;
     const localShowCat = forceHideCat ? false : showCat;
     const catCell    = localShowCat && catActual!==null
       ? `<td style="text-align:center">
@@ -1023,7 +1023,7 @@ function renderMCCExpanded(){
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
 const _aqsc = activeScore();
 const byAIQClosest = arr => [...arr].sort((a,b) =>
-  Math.abs(_aqsc-(a.c+10)) - Math.abs(_aqsc-(b.c+10)));
+  Math.abs(_aqsc-(a.c+20)) - Math.abs(_aqsc-(b.c+20)));
 
 const aiqSafe   = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'safe')).slice(0, 2);
 const aiqLikely = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'likely')).slice(0, 2);
@@ -1100,7 +1100,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
         ${(()=>{
           const _sc = activeScore();
           const aiimsClosest = [...aiims].sort((a,b)=>
-            Math.abs(_sc-(a.c+10)) - Math.abs(_sc-(b.c+10)));
+            Math.abs(_sc-(a.c+20)) - Math.abs(_sc-(b.c+20)));
           const aiimsPrev = aiimsClosest.slice(0,5);
           const aiimsRest = aiimsClosest.slice(5);
           return !isCounselMode() && hasMBBS && aiims.length ? `
@@ -1201,7 +1201,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       if(!isCounselMode() && b.cols && b.cols.length){
         const _dsc = activeScore();
         const byClosest = [...b.cols].sort((a,b)=>
-          Math.abs(_dsc-(a.c+10)) - Math.abs(_dsc-(b.c+10)));
+          Math.abs(_dsc-(a.c+20)) - Math.abs(_dsc-(b.c+20)));
         const dPrev = byClosest.slice(0,5);
         const dRest = byClosest.slice(5);
         const dPreviewTable=`

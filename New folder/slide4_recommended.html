@@ -192,7 +192,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
         <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
         <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
-        <div class="pc-row"><span class="pc-key">Data basis</span><span class="pc-val" style="font-size:.7rem;color:rgba(255,255,255,.6)">2025–26 + 10 adj.</span></div>
+        <div class="pc-row"><span class="pc-key">Data basis</span><span class="pc-val" style="font-size:.7rem;color:rgba(255,255,255,.6)">2025–26 + 20 adj.</span></div>
       </div>
     </div>
 
@@ -230,7 +230,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
     </div>
 
     <div class="bottom-nav">
-      <div class="bn-note">These recommendations are based on 2025–26 cutoffs with +10 projection.</div>
+      <div class="bn-note">These recommendations are based on 2025–26 cutoffs with +20 projection.</div>
       <a class="bn-btn" id="nextBtn" href="slide5_problems.html">See Why ASMI →</a>
     </div>
 
@@ -263,7 +263,7 @@ function catKeys(cat){
 
 // ── PROBABILITY ──────────────────────────────────────────────────
 function prob(score,cutoff){
-  const gap = score-(cutoff+10);
+  const gap = score-(cutoff+20);
   if(gap>=15)   return {key:'safe',       label:'Safe',       cls:'prob-safe'};
   if(gap>=0)    return {key:'likely',     label:'Likely',     cls:'prob-likely'};
   if(gap>=-10)  return {key:'borderline', label:'Borderline', cls:'prob-borderline'};
@@ -337,7 +337,7 @@ function buildRecs(){
     {key:'central',  fn:()=>getColleges('CENTRAL',course,keys,   'central'),  limit:2, tier:'strong'},
     {key:'jipmer',   fn:()=>getColleges('JIPMER','MBBS', keys,   'jipmer'),   limit:2, tier:'bestbet'},
     {key:'deemed',   fn:()=>getColleges('DEEMED', course,['OPEN'],'deemed')
-                            .sort((a,b)=>Math.abs(score-(a.c+10))-Math.abs(score-(b.c+10))),
+                            .sort((a,b)=>Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20))),
                                                                                limit:4, tier:'consider'},
   ];
 
@@ -430,7 +430,7 @@ function render(){
   // Right header
   document.getElementById('totalBadge').textContent = total+' options';
   document.getElementById('rhSub').textContent =
-    `Score: ${score} · Category: ${cat} · Course: ${course} · 2025–26 cutoffs + 10 adj.`;
+    `Score: ${score} · Category: ${cat} · Course: ${course} · 2025–26 cutoffs + 20 adj.`;
 
   // Tiers
   const html =

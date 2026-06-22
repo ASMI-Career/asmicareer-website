@@ -8,7 +8,7 @@ const TOOLS = [
   {
     icon: '🎯',
     title: 'College Predictor',
-    description: 'Enter your NEET rank and get a list of colleges you can target — filtered by state, category, quota, and fees.',
+    description: 'Enter your NEET score to estimate your All India Rank and understand your admission possibilities.',
     status: 'live',
     link: '/tools/rank-predictor',
     cta: 'Try Now →',

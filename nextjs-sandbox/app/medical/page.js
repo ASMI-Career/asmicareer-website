@@ -1389,7 +1389,7 @@ export default function MedicalPortal() {
                       </div>
                       <div className="resource-content">
                           <div className="resource-title">College Predictor — Enter Your Rank</div>
-                          <p className="resource-body">Enter your NEET AIR and instantly see Safe, Likely, and Borderline college options across India. No login required.</p>
+                          <p className="resource-body">Enter your NEET AIR and instantly explore your admission possibilities based on previous years' counselling trends. No login required.</p>
                           <div className="resource-footer">
                               <span className="resource-meta">Rank-based · 2025 data</span>
                               <a href="/tools/rank-predictor" className="resource-cta-link">Predict Now →</a>
@@ -1794,7 +1794,7 @@ export default function MedicalPortal() {
                       <span className="tool-tier-badge">FREE</span>
                       <span className="tool-icon" aria-hidden="true">🔮</span>
                       <div className="tool-title">College Predictor</div>
-                      <p className="tool-body">Predict your MBBS admission chances using your NEET All India Rank. See Safe, Likely, and Borderline options instantly.</p>
+                      <p className="tool-body">Enter your NEET score to estimate your All India Rank and understand your admission possibilities.</p>
                       <a href="/tools/rank-predictor" className="tool-cta">Predict Now →</a>
                   </div>
       
