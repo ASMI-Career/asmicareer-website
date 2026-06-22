@@ -669,7 +669,7 @@ export default function StudentDashboard() {
             catCutoff: null,
             state: STATE_LABELS[stKey] || stKey,
             cutoff: col.c,
-            projected: col.c + 15,
+            projected: col.c + 20,
             chance: p.label,
             chanceKey: p.key,
             chanceClass: p.cls,
