@@ -2489,6 +2489,10 @@ async function init(){
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('mainPage').classList.remove('hidden');
 
+    if(params.get('download')==='1' && !isCounsel){
+      setTimeout(()=>downloadPDF().catch(e=>console.error('Auto-download failed:',e)),800);
+    }
+
   } catch(err){
     document.getElementById('loadingOverlay').innerHTML=
       `<div style="text-align:center;padding:40px"><div style="font-size:2rem">⚠️</div>
