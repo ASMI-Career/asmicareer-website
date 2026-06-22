@@ -9,91 +9,63 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:           #070114;
-    --surface:      #0f0228;
-    --card:         #13032e;
-    --border:       #2d0d66;
     --yellow:       #FFD700;
     --yellow-hover: #e6c200;
-    --yellow-glow:  rgba(255,215,0,0.12);
-    --yellow-dim:   rgba(255,215,0,0.08);
+    --yellow-dark:  #b8960a;
     --purple:       #6a0dad;
     --purple-light: #8b25cc;
+    --purple-dark:  #1a0040;
+    --purple-dim:   rgba(106,13,173,0.1);
     --purple-glow:  rgba(106,13,173,0.25);
-    --green:        #22c55e;
-    --green-dim:    rgba(34,197,94,0.12);
-    --red:          #f43f5e;
-    --red-dim:      rgba(244,63,94,0.10);
-    --text:         #f3f0ff;
-    --muted:        #a78bfa;
+    --text:         #1a0040;
+    --muted:        #555;
     --white:        #ffffff;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--bg);
+    background: var(--yellow);
     color: var(--text);
     font-family: 'Open Sans', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    top: -200px; left: -10vw;
-    width: 60vw; height: 60vw;
-    background: radial-gradient(circle, rgba(106,13,173,0.3) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-    filter: blur(60px);
+  /* Top navbar */
+  .topbar {
+    background: var(--purple-dark);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0;
   }
-  body::after {
-    content: '';
-    position: fixed;
-    bottom: 0; right: -10vw;
-    width: 50vw; height: 50vw;
-    background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-    filter: blur(60px);
+  .topbar .logo-img { height: 48px; width: auto; }
+  .topbar .logo-text {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--white);
   }
+  .topbar .logo-text span { color: var(--yellow); }
 
   .container {
     max-width: 720px;
     margin: 0 auto;
     padding: 40px 24px 80px;
     position: relative;
-    z-index: 1;
   }
-
-  /* Logo */
-  .logo-wrap {
-    text-align: center;
-    margin-bottom: 28px;
-    animation: fadeDown 0.5s ease both;
-  }
-  .logo-img { height: 64px; width: auto; }
-  .logo-text {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--white);
-  }
-  .logo-text span { color: var(--yellow); }
 
   /* Header */
   .header { text-align: center; margin-bottom: 40px; animation: fadeDown 0.6s 0.05s ease both; }
 
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--yellow-dim); border: 1px solid rgba(255,215,0,0.25);
-    border-radius: 100px; padding: 6px 18px; margin-bottom: 20px;
+    background: var(--purple-dark); border-radius: 100px;
+    padding: 6px 18px; margin-bottom: 20px;
     font-family: 'Montserrat', sans-serif;
     font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yellow);
   }
@@ -102,34 +74,33 @@
   h1 {
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(30px, 6vw, 50px);
-    font-weight: 900; line-height: 1.1; color: var(--white); margin-bottom: 12px;
+    font-weight: 900; line-height: 1.1; color: var(--purple-dark); margin-bottom: 12px;
   }
-  h1 span { color: var(--yellow); }
+  h1 span { color: var(--purple); }
 
-  .subtitle { font-size: 15px; color: var(--muted); font-weight: 400; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+  .subtitle { font-size: 15px; color: #333; font-weight: 400; line-height: 1.7; max-width: 480px; margin: 0 auto; }
 
   /* Input Card */
   .input-card {
-    background: rgba(19,3,46,0.7);
-    border: 1px solid rgba(106,13,173,0.3);
+    background: var(--white);
+    border: 1px solid rgba(106,13,173,0.15);
     border-radius: 20px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
     padding: 36px; margin-bottom: 24px; animation: fadeUp 0.6s 0.1s ease both;
   }
 
   .input-label {
     font-family: 'Montserrat', sans-serif;
     font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: block;
+    text-transform: uppercase; color: var(--purple); margin-bottom: 16px; display: block;
   }
 
   .score-input {
     width: 100%;
-    background: rgba(7,1,20,0.7);
-    border: 2px solid rgba(106,13,173,0.4);
+    background: #f7f3ff;
+    border: 2px solid rgba(106,13,173,0.2);
     border-radius: 14px;
-    color: var(--white);
+    color: var(--purple-dark);
     font-family: 'Montserrat', sans-serif;
     font-size: 52px; font-weight: 900; text-align: center; padding: 24px;
     outline: none; transition: border-color 0.2s, box-shadow 0.2s;
@@ -137,151 +108,122 @@
   }
   .score-input::-webkit-outer-spin-button,
   .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-  .score-input:focus { border-color: var(--yellow); box-shadow: 0 0 0 4px var(--yellow-glow); }
+  .score-input:focus { border-color: var(--purple); box-shadow: 0 0 0 4px var(--purple-dim); }
 
   .score-hint { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
 
   input[type=range] {
     -webkit-appearance: none; width: 100%; height: 5px;
-    background: rgba(106,13,173,0.4); border-radius: 99px; outline: none; cursor: pointer; margin-bottom: 6px;
+    background: rgba(106,13,173,0.2); border-radius: 99px; outline: none; cursor: pointer; margin-bottom: 6px;
   }
   input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none; width: 22px; height: 22px;
-    background: var(--yellow); border-radius: 50%; cursor: pointer;
-    box-shadow: 0 0 0 4px var(--yellow-glow); transition: box-shadow 0.2s;
+    background: var(--purple); border-radius: 50%; cursor: pointer;
+    box-shadow: 0 0 0 4px var(--purple-dim); transition: box-shadow 0.2s;
   }
-  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px var(--yellow-glow); }
+  input[type=range]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 8px var(--purple-dim); }
 
   .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
 
   .predict-btn {
-    width: 100%; background: var(--yellow); color: #000; border: none;
+    width: 100%; background: var(--purple); color: var(--white); border: none;
     border-radius: 50px; padding: 18px;
     font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800;
     letter-spacing: 0.04em; cursor: pointer; transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
   }
-  .predict-btn:hover { background: var(--yellow-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,215,0,0.25); }
+  .predict-btn:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 8px 24px var(--purple-glow); }
   .predict-btn:active { transform: translateY(0); }
-
-  .conservative-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; font-style: italic; }
 
   /* Result Card */
   .result-card {
-    background: rgba(19,3,46,0.7);
-    border: 1px solid rgba(106,13,173,0.3);
+    background: var(--white);
+    border: 1px solid rgba(106,13,173,0.15);
     border-radius: 20px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
     padding: 36px; display: none; animation: fadeUp 0.4s ease both; margin-bottom: 24px;
   }
   .result-card.visible { display: block; }
 
-  .result-score-line { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-  .result-score-badge {
-    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
-    background: var(--yellow-dim); border: 1px solid rgba(255,215,0,0.3);
-    color: var(--yellow); border-radius: 8px; padding: 4px 12px;
-  }
-  .result-score-label { font-size: 13px; color: var(--muted); }
-
   .rank-display {
-    background: rgba(7,1,20,0.6); border-radius: 16px; padding: 32px 28px;
-    text-align: center; margin-bottom: 24px; border: 1px solid rgba(255,215,0,0.15);
+    background: var(--purple-dark); border-radius: 16px; padding: 32px 28px;
+    text-align: center; margin-bottom: 24px;
     position: relative; overflow: hidden;
   }
   .rank-display::before {
     content: ''; position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
     width: 240px; height: 120px;
-    background: radial-gradient(ellipse, rgba(255,215,0,0.08) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(255,215,0,0.15) 0%, transparent 70%);
     pointer-events: none;
   }
   .rank-label {
     font-family: 'Montserrat', sans-serif;
     font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+    text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 10px;
   }
   .rank-value {
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(26px, 5.5vw, 40px); font-weight: 900;
     color: var(--yellow); line-height: 1.1; margin-bottom: 8px;
   }
-  .rank-sub { font-size: 12px; color: var(--muted); }
-
-  .tier-badge {
-    display: inline-flex; align-items: center; gap: 6px; border-radius: 100px;
-    padding: 6px 16px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; margin-top: 14px;
-  }
-  .tier-badge.elite   { background: var(--green-dim);   color: var(--green);  border: 1px solid rgba(34,197,94,0.3); }
-  .tier-badge.good    { background: var(--yellow-dim);  color: var(--yellow); border: 1px solid rgba(255,215,0,0.3); }
-  .tier-badge.average { background: var(--purple-glow); color: #c084fc;       border: 1px solid rgba(139,37,204,0.4); }
-  .tier-badge.below   { background: var(--red-dim);     color: var(--red);    border: 1px solid rgba(244,63,94,0.3); }
+  .rank-sub { font-size: 12px; color: rgba(255,255,255,0.55); }
 
   /* Inquiry Card */
   .inquiry-card {
-    background: rgba(255,215,0,0.05);
-    border: 1px solid rgba(255,215,0,0.2);
+    background: var(--purple-dim);
+    border: 1px solid rgba(106,13,173,0.2);
     border-radius: 16px; padding: 28px; text-align: center;
   }
   .inquiry-card h3 {
     font-family: 'Montserrat', sans-serif;
-    font-size: 18px; font-weight: 800; color: var(--white); margin-bottom: 8px;
+    font-size: 18px; font-weight: 800; color: var(--purple-dark); margin-bottom: 8px;
   }
-  .inquiry-card p { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .inquiry-card p { font-size: 14px; color: #444; margin-bottom: 20px; line-height: 1.6; }
   .inquiry-btn {
-    display: inline-block; background: var(--yellow); color: #000;
+    display: inline-block; background: var(--purple); color: var(--white);
     font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800;
     text-decoration: none; padding: 13px 28px; border-radius: 50px;
     transition: all 0.2s cubic-bezier(0.4,0,0.2,1); letter-spacing: 0.03em;
   }
-  .inquiry-btn:hover { background: var(--yellow-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,215,0,0.25); }
-
-  /* Disclaimer */
-  .disclaimer {
-    background: rgba(255,215,0,0.04); border: 1px solid rgba(255,215,0,0.12);
-    border-radius: 12px; padding: 14px 18px; font-size: 12px; color: var(--muted);
-    line-height: 1.7; margin-bottom: 28px; animation: fadeUp 0.6s 0.15s ease both;
-  }
-  .disclaimer strong { color: var(--yellow); }
+  .inquiry-btn:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: 0 6px 20px var(--purple-glow); }
 
   /* Branches */
   .branches-card {
-    background: rgba(19,3,46,0.7);
-    border: 1px solid rgba(106,13,173,0.3);
+    background: var(--white);
+    border: 1px solid rgba(106,13,173,0.15);
     border-radius: 20px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(26,0,64,0.08);
     padding: 32px; animation: fadeUp 0.6s 0.2s ease both;
   }
   .branches-header {
     display: flex; align-items: center; justify-content: space-between;
     flex-wrap: wrap; gap: 12px; margin-bottom: 24px;
   }
-  .branches-title { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--white); }
+  .branches-title { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--purple-dark); }
   .helpline-badge {
-    background: var(--yellow-dim); border: 1px solid rgba(255,215,0,0.3);
+    background: var(--purple-dark);
     border-radius: 8px; padding: 6px 14px; font-family: 'Montserrat', sans-serif;
     font-size: 13px; font-weight: 700; color: var(--yellow); text-decoration: none;
   }
-  .helpline-badge:hover { background: rgba(255,215,0,0.15); }
+  .helpline-badge:hover { background: var(--purple); }
 
   .branches-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
   .branch-item {
-    background: rgba(7,1,20,0.5); border: 1px solid rgba(106,13,173,0.25);
+    background: #f7f3ff; border: 1px solid rgba(106,13,173,0.12);
     border-radius: 12px; padding: 14px 16px;
   }
-  .branch-name { font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .branch-name { font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--purple-dark); margin-bottom: 3px; }
   .branch-hq {
     font-family: 'Montserrat', sans-serif;
     font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--yellow); margin-bottom: 3px;
+    text-transform: uppercase; color: var(--purple); margin-bottom: 3px;
   }
   .branch-city { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .branch-phone { font-size: 12px; font-weight: 700; color: var(--yellow); text-decoration: none; font-family: 'Montserrat', sans-serif; }
+  .branch-phone { font-size: 12px; font-weight: 700; color: var(--purple); text-decoration: none; font-family: 'Montserrat', sans-serif; }
   .branch-phone:hover { text-decoration: underline; }
 
   .website-link {
     display: block; text-align: center; font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 600; color: var(--yellow); text-decoration: none; padding-top: 4px;
+    font-size: 13px; font-weight: 600; color: var(--purple); text-decoration: none; padding-top: 4px;
   }
   .website-link:hover { text-decoration: underline; }
 
@@ -300,15 +242,16 @@
 </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- Logo -->
-  <div class="logo-wrap">
-    <img src="/asmi-logo.png"
-         class="logo-img" alt="ASMI Career"
-         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-    <div class="logo-text" id="logo-fallback">ASMI <span>Career</span></div>
-  </div>
+<!-- Top navbar -->
+<div class="topbar">
+  <img src="/asmi-logo.png"
+       class="logo-img" alt="ASMI Career"
+       onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+  <div class="logo-text" id="logo-fallback">ASMI <span>Career</span></div>
+</div>
+
+<div class="container">
 
   <!-- Header -->
   <div class="header">
