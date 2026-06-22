@@ -10,7 +10,7 @@ const TOOLS = [
     title: 'College Predictor',
     description: 'Enter your NEET rank and get a list of colleges you can target — filtered by state, category, quota, and fees.',
     status: 'live',
-    link: '/tools/college-predictor',
+    link: '/tools/rank-predictor',
     cta: 'Try Now →',
   },
   {
