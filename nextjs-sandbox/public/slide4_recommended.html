@@ -2486,11 +2486,34 @@ async function init(){
       renderTable(rows);
     }
 
-    document.getElementById('loadingOverlay').classList.add('hidden');
-    document.getElementById('mainPage').classList.remove('hidden');
-
     if(params.get('download')==='1' && !isCounsel){
-      setTimeout(()=>downloadPDF().catch(e=>console.error('Auto-download failed:',e)),800);
+      document.getElementById('loadingOverlay').innerHTML=
+        `<div style="text-align:center;padding:40px">
+           <div style="font-size:2rem;margin-bottom:12px">📄</div>
+           <div style="font-family:Montserrat;font-weight:800;color:#1a0040;font-size:1.1rem;margin-bottom:6px">Preparing your report…</div>
+           <div style="font-size:.8rem;color:#4a0080">Your PDF will download automatically.</div>
+         </div>`;
+      setTimeout(async()=>{
+        try{
+          await downloadPDF();
+          document.getElementById('loadingOverlay').innerHTML=
+            `<div style="text-align:center;padding:40px">
+               <div style="font-size:2rem;margin-bottom:12px">✅</div>
+               <div style="font-family:Montserrat;font-weight:800;color:#1a0040;font-size:1.1rem;margin-bottom:6px">Download Started</div>
+               <div style="font-size:.8rem;color:#4a0080">Check your downloads folder.</div>
+             </div>`;
+        }catch(e){
+          document.getElementById('loadingOverlay').innerHTML=
+            `<div style="text-align:center;padding:40px">
+               <div style="font-size:2rem;margin-bottom:12px">⚠️</div>
+               <div style="font-family:Montserrat;font-weight:800;color:#b91c1c;margin-bottom:6px">Download Failed</div>
+               <div style="font-size:.8rem;color:#4a0080">${e.message}</div>
+             </div>`;
+        }
+      },800);
+    } else {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+      document.getElementById('mainPage').classList.remove('hidden');
     }
 
   } catch(err){
