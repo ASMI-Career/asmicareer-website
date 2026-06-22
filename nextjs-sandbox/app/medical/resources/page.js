@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 const TOOLS = [
   {
     icon: '🎯',
-    title: 'College Predictor',
+    title: 'Rank Predictor',
     description: 'Enter your NEET score to estimate your All India Rank and understand your admission possibilities.',
     status: 'live',
     link: '/tools/rank-predictor/',
