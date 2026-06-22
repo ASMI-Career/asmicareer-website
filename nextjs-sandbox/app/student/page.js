@@ -474,7 +474,7 @@ export default function StudentDashboard() {
   const handlePredictRank = () => {
     const score = parseInt(predictorScore, 10);
     if (isNaN(score) || score < 200 || score > 720) { alert('Enter a valid NEET score between 200 and 720.'); return; }
-    setPredictedRank(getRankFromScore(score));
+    setPredictedRank(getRankFromScore(Math.max(100, score - 20)));
   };
 
   // ── Chance label (mirrors the live Cutoff Explorer tool) ──────────────────
@@ -533,7 +533,7 @@ export default function StudentDashboard() {
   };
 
   const prob = (score, cutoff) => {
-    const gap = score - (cutoff + 15);
+    const gap = score - (cutoff + 20);
     if (gap >= 15)  return { key: 'safe',       label: 'Safe',        cls: 'badge-safe' };
     if (gap >= 0)   return { key: 'likely',     label: 'Likely',      cls: 'badge-likely' };
     if (gap >= -10) return { key: 'borderline', label: 'Borderline',  cls: 'badge-borderline' };
