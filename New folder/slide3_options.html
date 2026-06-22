@@ -418,7 +418,7 @@ function catKeys(cat){
 
 // ── PROBABILITY ──────────────────────────────────────────────────
 function prob(score, cutoff){
-  const adj = cutoff + 15;
+  const adj = cutoff + 10;
   const gap = score - adj;
   if(gap>=15)  return {key:'safe',      label:'Safe',       cls:'prob-safe'};
   if(gap>=0)   return {key:'likely',    label:'Likely',     cls:'prob-likely'};
@@ -544,7 +544,7 @@ function computeMCC(){
   // Deemed — top 10 by closest to score
   const deemed = getColleges('DEEMED',course,['OPEN'],'deemed');
   const deemedSorted = [...deemed]
-    .sort((a,b)=>Math.abs(score-(a.c+15))-Math.abs(score-(b.c+15)))
+    .sort((a,b)=>Math.abs(score-(a.c+10))-Math.abs(score-(b.c+10)))
     .slice(0,10);
 
   return {aiq,aiqR,aiims,aiimsR,jipmer,jipmerR,central,centralR,deemed,deemedSorted};

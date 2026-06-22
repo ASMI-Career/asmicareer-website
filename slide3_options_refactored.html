@@ -62,7 +62,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
 .panes.has-expanded .pane.pane-collapsed{flex:.35;cursor:pointer;}
 /* PANE DEFAULT */
 .pane-default{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;
-  align-items:stretch;padding:70px 20px 60px;cursor:pointer;transition:background .25s;}
+  align-items:stretch;padding:28px 20px 60px;cursor:pointer;transition:background .25s;}
 .pane-default:hover{background:rgba(255,255,255,.12);}
 .pane-collapsed .pane-default,.pane-active .pane-default{display:none!important;}
 .pd-eyebrow{font-family:'Montserrat';font-size:.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:8px;}
@@ -495,81 +495,45 @@ const PO={safe:0,likely:1,borderline:2,reach:3};
 function getColleges(stateKey,courseKey,keys,listType){
   if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
   const score=activeScore(), userCat=activeCategory();
+  const isDual = keys.length > 1 && userCat !== 'General';
   
-  const openList = DB[stateKey][courseKey]["OPEN"]?.[listType] || [];
-  const openMap = new Map(openList.map(c => [c.n, c.c]));
-  
-  const isSpecialCat = userCat !== 'General' && userCat !== 'OPEN';
-  const catList = (isSpecialCat && DB[stateKey][courseKey][userCat])
-    ? (DB[stateKey][courseKey][userCat][listType] || [])
-    : [];
-  const catMap = new Map(catList.map(c => [c.n, c.c]));
-  
-  const allNames = new Set();
-  keys.forEach(k => {
-    const list = DB[stateKey][courseKey][k]?.[listType] || [];
-    list.forEach(c => allNames.add(c.n));
-  });
-  
-  const cols = [];
-  allNames.forEach(name => {
-    const openC = openMap.has(name) ? openMap.get(name) : null;
-    const catC = catMap.has(name) ? catMap.get(name) : null;
-    
-    let bestC = Infinity;
-    let matchedS = '';
-    keys.forEach(k => {
-      const list = DB[stateKey][courseKey][k]?.[listType] || [];
-      const match = list.find(c => c.n === name);
-      if (match) {
-        if (match.c < bestC) {
-          bestC = match.c;
-        }
-        if (match.s) {
-          matchedS = match.s;
-        }
-      }
+  if (isDual) {
+    const openList = DB[stateKey][courseKey]['OPEN']?.[listType] || [];
+    const catList = DB[stateKey][courseKey][userCat]?.[listType] || [];
+    const openMap = new Map(openList.map(c=>[c.n,c.c]));
+    const catMap = new Map(catList.map(c=>[c.n,c.c]));
+    const allNames = new Set([...openMap.keys(), ...catMap.keys()]);
+    const cols = [];
+    allNames.forEach(name=>{
+      const openC = openMap.has(name) ? openMap.get(name) : null;
+      const catC = catMap.has(name) ? catMap.get(name) : null;
+      const bestC = Math.min(openC??Infinity, catC??Infinity);
+      if(bestC === Infinity) return;
+      const orig = openList.find(c=>c.n===name) || catList.find(c=>c.n===name);
+      cols.push({...orig, n:name, openCutoff:openC, catCutoff:catC, c:bestC, prob:prob(score,bestC)});
     });
-    
-    if (bestC === Infinity) return;
-    cols.push({
-      n: name,
-      openCutoff: openC,
-      catCutoff: catC,
-      c: bestC,
-      s: matchedS,
-      prob: prob(score, bestC)
+    return cols;
+  } else {
+    const seen=new Map();
+    keys.forEach(catKey=>{
+      const d=DB[stateKey][courseKey][catKey];
+      if(!d||!d[listType]) return;
+      d[listType].forEach(col=>{
+        const p=prob(score,col.c),entry={...col,quota:catKey,prob:p};
+        if(!seen.has(col.n)) seen.set(col.n,entry);
+        else if(col.c<seen.get(col.n).c) seen.set(col.n,entry);
+      });
     });
-  });
-  
-  return cols;
-}
-
-function getMHDual(listType){
-  const score=activeScore(),userCat=activeCategory();
-  if(!DB.MH||!DB.MH[mhCourse]) return{cols:[],total:0};
-  const openList=DB.MH[mhCourse]?.OPEN?.[listType]||[];
-  const catList=(userCat!=='General')?(DB.MH[mhCourse]?.[userCat]?.[listType]||[]):[];
-  const openMap=new Map(openList.map(c=>[c.n,c.c]));
-  const catMap=new Map(catList.map(c=>[c.n,c.c]));
-  const allNames=new Set([...openMap.keys(),...catMap.keys()]);
-  const total=allNames.size,cols=[];
-  allNames.forEach(name=>{
-    const openC=openMap.has(name)?openMap.get(name):null;
-    const catC=catMap.has(name)?catMap.get(name):null;
-    const bestC=Math.min(openC??Infinity,catC??Infinity);
-    if(bestC===Infinity) return;
-    cols.push({n:name,openCutoff:openC,catCutoff:catC,c:bestC,prob:prob(score,bestC)});
-  });
-  return{cols,total};
+    return Array.from(seen.values());
+  }
 }
 
 function feeStr(name) {
   const f = FEE[name];
   if (!f) return '—';
-  if (f < 1) return '₹' + Math.round(f * 100) + 'K/yr';
-  if (f < 100) return '₹' + parseFloat(f.toFixed(1)) + 'L/yr';
-  return '₹' + parseFloat((f / 100).toFixed(2)) + 'Cr/yr';
+  const val = parseFloat(f);
+  if (isNaN(val)) return '—';
+  return val < 1 ? `₹${Math.round(val * 100)}K/yr` : `₹${Number(val.toFixed(2))}L/yr`;
 }
 
 function renderTable(cols,showState=false){
@@ -590,47 +554,43 @@ function renderTable(cols,showState=false){
   <tbody>${rows}</tbody></table>`;
 }
 
-function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true){
+function getThead(showCatCutoff = false, showState = false) {
+  const showDualHeaders = showCatCutoff;
+  const dh = showDualHeaders 
+    ? `<th style="text-align:center;line-height:1.2;padding:6px;">General<br><span style="font-size:0.65rem;font-weight:600;color:var(--soft)">(Cutoff / Proj)</span></th>
+       <th style="text-align:center;line-height:1.2;padding:6px;color:var(--purple);">Category<br><span style="font-size:0.65rem;font-weight:600;color:var(--soft)">(Cutoff / Proj)</span></th>`
+    : `<th style="text-align:center;">Last Cutoff</th>
+       <th style="text-align:center;background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>`;
+  const starHeader = isCounselMode() ? '<th>Shortlist</th>' : '';
+  const stateHeader = showState ? '<th>State</th>' : '';
+  return `<thead><tr><th>College</th>${stateHeader}${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
+}
+
+function rowWithStar(c, pool, poolGroup, showCatCutoff=false){
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
-  const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-  const projected = actual!==null ? actual + 10 : null;
-  const actualStr = actual!==null ? actual : '—';
-  const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-  
+  const actual    = c.openCutoff!==undefined ? c.openCutoff : c.c;
+  const projected = actual + 10;
   const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
   const catProj    = catActual!==null ? catActual+10 : null;
   const catCell    = showCatCutoff && catActual!==null
     ? `<td style="text-align:center">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
           <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-          <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+          <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;
             padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
         </div>
       </td>`
     : showCatCutoff ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-  
-  let cutoffAndProjCells = '';
-  if (stackCutoff) {
-    const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
-    cutoffAndProjCells = `
-      <td style="text-align:center">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-          <span class="cutoff-val">${actualStr}</span>
-          ${projPill}
-        </div>
-      </td>`;
-  } else {
-    cutoffAndProjCells = `
-      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-      <td style="text-align:center">
-        ${projStr}
-      </td>`;
-  }
-
   return `<tr>
     <td class="college-name">${c.n}</td>
-    ${cutoffAndProjCells}
+    <td class="cutoff-val" style="text-align:center">${actual}</td>
+    <td style="text-align:center">
+      <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
+        padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">
+        ${projected}
+      </span>
+    </td>
     ${catCell}
     <td class="fee-val" style="text-align:center">${feeVal}</td>
     <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
@@ -666,29 +626,45 @@ function renderMHBlurred(cols){
   // fill to 5 from reach if still not enough
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
-  const dh = activeCategory()==='General' || activeCategory()==='OPEN'
-    ? ''
-    : `<th>${activeCategory()} CUTOFF</th>`;
-  function row(c){
-    const actual=c.openCutoff!==null?c.openCutoff:c.c;
-    const projected=actual+10;
-    const openCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <span class="cutoff-val">${actual}</span>
-      <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
-    </div>`;
-    const catActual=c.catCutoff!==null?c.catCutoff:null;
-    const catProj=catActual!==null?catActual+10:null;
-    const cc=showDual?(catActual!==null?`<td style="text-align:center">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-        <span class="cutoff-val" style="color:var(--purple);font-weight:900">${catActual}</span>
-        <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-      </div>
-    </td>`:`<td style="text-align:center;color:#ccc">—</td>`):'';
-    return`<tr><td class="college-name">${c.n}</td><td style="text-align:center">${openCell}</td>${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+  
+  const showDualHeaders=(activeCategory()!=='General');
+  const dh=showDualHeaders?
+    `<th style="text-align:center;line-height:1.2;">General<br><span style="font-size:0.65rem;font-weight:500;opacity:0.8">Cutoff / Proj</span></th><th style="color:var(--purple);text-align:center;line-height:1.2;">Category<br><span style="font-size:0.65rem;font-weight:500;opacity:0.8">Cutoff / Proj</span></th>` :
+    `<th>Last Cutoff</th><th style="color:#FFD700;background:linear-gradient(135deg,var(--navy),var(--purple))">Projected</th>`;
+
+  const row=(c)=>{
+    const showDual=(activeCategory()!=='General');
+    let oc='',cc='';
+    if(showDual){
+      let actual = c.openCutoff!==undefined && c.openCutoff!==null ? c.openCutoff : c.c;
+      let genProj = actual !== '-' && actual !== null && actual !== undefined ? actual + 10 : '-';
+      let catActual = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : '-';
+      let catProj = catActual !== '-' ? catActual + 10 : '-';
+
+      oc = `<td style="text-align:center">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                <span class="cutoff-val">${actual}</span>
+                <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${genProj}</span>
+              </div>
+            </td>`;
+      cc = `<td style="text-align:center">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+                <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
+                <span style="background:linear-gradient(135deg,var(--purple),var(--mid));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
+              </div>
+            </td>`;
+      return `<tr><td class="college-name">${c.n}</td>${oc}${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+    }else{
+      oc=`<td class="cutoff-val">${c.c}</td>`;
+      const projected = c.c + 10;
+      const projCell = `<td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>`;
+      return`<tr><td class="college-name">${c.n}</td>${oc}${projCell}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+    }
   }
   const starHeader=isCounselMode()?'<th>★</th>':'';
-  const thead=`<thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
+  const thead=`<thead><tr><th>College</th>${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
   const previewHtml=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
+
   if(isCounselMode()){
     // Show all colleges with star buttons — no blur
     const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
@@ -717,19 +693,12 @@ function renderOSTable(stKey,cols){
   preview.push(...borderRemaining.slice(0,2));
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
-  function row(c){
-    const projected=c.c+10;
-    const cutoffCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <span class="cutoff-val">${c.c}</span>
-      <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
-    </div>`;
-    return`<tr><td class="college-name">${c.n}</td><td style="text-align:center">${cutoffCell}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
-  }
-  const thead=`<thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
+  function row(c){return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;}
+  const thead=`<thead><tr><th>College</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
     const allRows=sorted.map(c=>rowWithStar(c, STATE_LABELS[stKey]||stKey, 'Open States')).join('');
-    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
+    return`<table class="ctable"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
   return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
@@ -751,8 +720,6 @@ function getOSTotal(stKey,course){
 }
 
 // MH
-let mhGovt={cols:[],total:0},mhPvt={cols:[],total:0};
-function computeMH(){mhGovt=getMHDual('mh_govt');mhPvt=getMHDual('mh_pvt');}
 function getMHDualForCourse(course, listType){
   const score=activeScore(), userCat=activeCategory();
   if(!DB.MH||!DB.MH[course]) return{cols:[],total:0};
@@ -767,10 +734,18 @@ function getMHDualForCourse(course, listType){
     const catC=catMap.has(name)?catMap.get(name):null;
     const bestC=Math.min(openC??Infinity,catC??Infinity);
     if(bestC===Infinity) return;
-    cols.push({n:name,openCutoff:openC,catCutoff:catC,c:bestC,prob:prob(score,bestC)});
+    const orig = openList.find(c=>c.n===name) || catList.find(c=>c.n===name);
+    cols.push({...orig, n:name,openCutoff:openC,catCutoff:catC,c:bestC,prob:prob(score,bestC)});
   });
-  return{cols,total};
+  return {cols,total};
 }
+
+function getMHDual(listType){
+  return getMHDualForCourse(mhCourse, listType);
+}
+
+let mhGovt={cols:[],total:0},mhPvt={cols:[],total:0};
+function computeMH(){mhGovt=getMHDual('mh_govt');mhPvt=getMHDual('mh_pvt');}
 function renderMHOverview(){
   const selectedCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
   let giTotal=0,gtTotal=0,piTotal=0,ptTotal=0;
@@ -888,46 +863,23 @@ function toggleDeemedBand(id, btn){
 function renderAIIMSList(cols){
   if(!cols.length) return '';
   const sorted=[...cols].sort((a,b)=>PO[a.prob.key]-PO[b.prob.key]||b.c-a.c);
-  const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
-  const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
   const aiimsThead=`<thead><tr>
     <th>College</th>
     <th>Last Cutoff</th>
     <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
-    ${dh}
     <th>Fee/yr</th>
     <th>Chance</th>
     ${isCounselMode()?'<th>★</th>':''}
   </tr></thead>`;
-  const row=c=>{
-    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 10 : null;
-    const actualStr = actual!==null ? actual : '—';
-    const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-    
-    const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+10 : null;
-    const catCell    = showCat && catActual!==null
-      ? `<td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-              padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-          </div>
-        </td>`
-      : showCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-      
-    return `<tr>
-      <td class="college-name">${c.n}</td>
-      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-      <td style="text-align:center">${projStr}</td>
-      ${catCell}
-      <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-      <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-    </tr>`;
-  };
+  const row=c=>{const actual=c.c,projected=actual+10;return`<tr>
+    <td class="college-name">${c.n}</td>
+    <td class="cutoff-val" style="text-align:center">${actual}</td>
+    <td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>
+    <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+    <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+  </tr>`;};
   if(isCounselMode()){
-    const allRows=sorted.map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join('');
+    const allRows=sorted.map(c=>rowWithStar(c,'AIIMS','MCC AIQ')).join('');
     return`<table class="ctable">${aiimsThead}<tbody>${allRows}</tbody></table>`;
   }
   const preview=sorted.slice(0,5),rest=sorted.slice(5);
@@ -935,7 +887,6 @@ function renderAIIMSList(cols){
   if(!rest.length) return previewHtml;
   return`${previewHtml}<div class="blur-section"><div class="blur-content"><table class="ctable"><tbody>${rest.map(row).join('')}</tbody></table></div><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
 }
-
 function mccPreview(cols){
   if(!cols||!cols.length) return {preview:[], rest:[]};
   const score = activeScore();
@@ -958,54 +909,13 @@ function renderMCCExpanded(){
   const hasMBBS=selectedCourses.includes('MBBS');
   const hasBDS=selectedCourses.includes('BDS');
   const isMBBS=hasMBBS; // keep for count grid compatibility
-  
-  const showCat = activeCategory() !== 'General' && activeCategory() !== 'OPEN';
-  const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
-  
-  const row=(c, stackCutoff = true, forceHideCat = false)=>{
-    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 10 : null;
-    const actualStr = actual!==null ? actual : '—';
-    
-    const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+10 : null;
-    const localShowCat = forceHideCat ? false : showCat;
-    const catCell    = localShowCat && catActual!==null
-      ? `<td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-              padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-          </div>
-        </td>`
-      : localShowCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-      
-    if (stackCutoff) {
-      const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
-      return `<tr>
-        <td class="college-name">${c.n}</td>
-        <td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val">${actualStr}</span>
-            ${projPill}
-          </div>
-        </td>
-        ${catCell}
-        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-      </tr>`;
-    } else {
-      const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-      return `<tr>
-        <td class="college-name">${c.n}</td>
-        <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-        <td style="text-align:center">${projStr}</td>
-        ${catCell}
-        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-      </tr>`;
-    }
-  };
+  const row=c=>{const actual=c.c,projected=actual+10;return`<tr>
+    <td class="college-name">${c.n}</td>
+    <td class="cutoff-val" style="text-align:center">${actual}</td>
+    <td style="text-align:center"><span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span></td>
+    <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+    <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+  </tr>`;};
   document.getElementById('mcc-count-grid').innerHTML=`
     ${(()=>{
       let aiqTotal=aiq, aiqReach=aiqR;
@@ -1018,8 +928,8 @@ function renderMCCExpanded(){
         aiqTotal=[...aiq,...extraCols];
         aiqReach=[...aiqR,...extraReach];
       }
-      const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ', showCat)).join(''):'';
-      const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
+      const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ')).join(''):'';
+      const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
 const _aqsc = activeScore();
 const byAIQClosest = arr => [...arr].sort((a,b) =>
@@ -1041,11 +951,7 @@ if (aiqPrev.length < 5) {
 const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const aiqPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
-          <thead><tr>
-            <th>College</th><th>Cutoff / Projected</th>
-            ${dh}
-            <th>Fee/yr</th><th>Chance</th>
-          </tr></thead>
+          ${getThead(false, false)}
           <tbody>${aiqPrev.map(c=>row(c)).join('')}</tbody>
         </table>
         ${aiqRest.length?`<div class="blur-section" style="margin-top:0;">
@@ -1065,13 +971,13 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       </div>`;
     })()}
     ${(()=>{
-      const aiimsColRows=isCounselMode()?aiims.map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join(''):'';
+      const aiimsColRows=isCounselMode()?aiims.map(c=>rowWithStar(c,'AIIMS','MCC AIQ')).join(''):'';
       const aiimsTable=isCounselMode()?`
         <table class="ctable" style="width:100%">
           <thead><tr>
             <th>College</th>
-            <th>Cutoff / Projected</th>
-            ${dh}
+            <th>Last Cutoff</th>
+            <th style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700">Projected</th>
             <th>Fee/yr</th>
             <th>Chance</th>
             <th>★</th>
@@ -1105,12 +1011,8 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
           const aiimsRest = aiimsClosest.slice(5);
           return !isCounselMode() && hasMBBS && aiims.length ? `
             <table class="ctable" style="width:100%;margin-top:8px;">
-              <thead><tr>
-                <th>College</th><th>Cutoff / Projected</th>
-                ${dh}
-                <th>Fee/yr</th><th>Chance</th>
-              </tr></thead>
-              <tbody>${aiimsPrev.map(c=>row(c, true)).join('')}</tbody>
+              ${getThead(false, false)}
+              <tbody>${aiimsPrev.map(c=>row(c)).join('')}</tbody>
             </table>
             ${aiimsRest.length?`<div class="blur-section" style="margin-top:0;">
               <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
@@ -1123,19 +1025,15 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       </div>`;
     })()}
     ${(()=>{
-      const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ', showCat)).join(''):'';
-      const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
+      const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ')).join(''):'';
+      const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
       const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
       const jipmerShowAll = jipmer.length <= 5;
       const {preview:jipPrev, rest:jipRest} = jipmerShowAll ? {preview:jipmer, rest:[]} : mccPreview(jipmer);
       const jipmerPreviewHtml = !isCounselMode() && hasMBBS ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
-          <thead><tr>
-            <th>College</th><th>Cutoff / Projected</th>
-            ${dh}
-            <th>Fee/yr</th><th>Chance</th>
-          </tr></thead>
-          <tbody>${jipPrev.map(c=>row(c, true)).join('')}</tbody>
+          ${getThead(false, false)}
+          <tbody>${jipPrev.map(c=>row(c)).join('')}</tbody>
         </table>
         ${jipRest.length?`<div class="blur-section" style="margin-top:0;">
           <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
@@ -1161,14 +1059,14 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const totalCentral=central.length+(hasBDS?jmiCols.length:0);
       const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
       const centralAll=[...central,...(hasBDS?jmiCols:[])];
-      const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ', showCat)).join(''):'';
-      const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
+      const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ')).join(''):'';
+      const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
       const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
       const centralShowAll = centralAll.length <= 5;
       const {preview:cenPrev, rest:cenRest} = centralShowAll ? {preview:centralAll, rest:[]} : mccPreview(centralAll);
       const centralPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
-          <thead><tr>
+          ${getThead(false, false)}
           <tbody>${cenPrev.map(c=>row(c)).join('')}</tbody>
         </table>
         ${cenRest.length?`<div class="blur-section" style="margin-top:0;">
@@ -1206,11 +1104,8 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
         const dRest = byClosest.slice(5);
         const dPreviewTable=`
           <table class="ctable" style="width:100%;margin-top:8px;">
-            <thead><tr>
-              <th>College</th><th>Cutoff / Projected</th>
-              <th>Fee/yr</th><th>Chance</th>
-            </tr></thead>
-            <tbody>${dPrev.map(c=>row(c, true, true)).join('')}</tbody>
+            ${getThead(false, false)}
+            <tbody>${dPrev.map(c=>row(c)).join('')}</tbody>
           </table>
           ${dRest.length?`<div class="blur-section" style="margin-top:0;">
             <div class="blur-overlay" style="width:100%;box-sizing:border-box;">
@@ -1227,11 +1122,11 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
           ${dPreviewTable}
         </div>`;
       }
-      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ', false, true)).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ')).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
@@ -1272,7 +1167,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Last Cutoff</th><th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
@@ -1413,7 +1308,7 @@ function goToShortlist(){
 function collapseAll(){
   currentPane=null;
   document.getElementById('panesContainer').classList.remove('has-expanded');
-  // editBar always visible on slide 3 — do not hide
+  document.getElementById('editBar').classList.remove('visible');
   ['mh','mcc','open'].forEach(p=>document.getElementById('pane-'+p).classList.remove('pane-active','pane-collapsed'));
   renderAllOverviews();
   if (window.innerWidth <= 768) {
@@ -1467,7 +1362,6 @@ document.addEventListener('keydown',e=>{
 
 // INIT
 async function init(){
-  document.getElementById('editBar').classList.add('visible');
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
   const isCounsel=getSess().mode==='counsel';
@@ -1483,65 +1377,26 @@ async function init(){
     ]);
     DB=dbRes;FEE=feeRes;
     STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
+    setSess('token',STUDENT.token||token);
     const sess=getSess();
-    if(token && sess.token !== token) {
-      setSess('token', token);
-      setSess('score', STUDENT.score);
-      setSess('category', STUDENT.category);
-      const initCourses = Array.isArray(STUDENT.courses)
-        ? STUDENT.courses.join(',')
-        : STUDENT.courses;
-      setSess('course', initCourses || 'MBBS');
-      if (STUDENT.shortlist || STUDENT.colleges) {
-        const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
-        setSess('shortlist', backendShortlist);
-        shortlist = backendShortlist;
-      } else {
-        setSess('shortlist', []);
-        shortlist = [];
-      }
-    } else {
-      setSess('token', STUDENT.token||token);
-      if(!sess.score)    setSess('score',STUDENT.score);
-      if(!sess.category) setSess('category',STUDENT.category);
-      if(!sess.course) {
-        const initCourses = Array.isArray(STUDENT.courses)
-          ? STUDENT.courses.join(',')
-          : STUDENT.courses;
-        setSess('course', initCourses || 'MBBS');
-      }
-      if ((STUDENT.shortlist || STUDENT.colleges) && (!sess.shortlist || sess.shortlist.length === 0)) {
-        const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
+    if(!sess.score)    setSess('score',STUDENT.score);
+    if(!sess.category) setSess('category',STUDENT.category);
+    if(!sess.course)   setSess('course',(STUDENT.courses||'MBBS').split(',')[0].trim());
+    
+    // Load saved shortlist from backend if available and not already in session
+    if (STUDENT.shortlist || STUDENT.colleges) {
+      const backendShortlist = STUDENT.shortlist || STUDENT.colleges || [];
+      if (!sess.shortlist || sess.shortlist.length === 0) {
         setSess('shortlist', backendShortlist);
         shortlist = backendShortlist;
       }
     }
-    
     // Set MH course to student's first MH-compatible course
-    const stuC=(getSess().course||STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
+    const stuC=(STUDENT.courses||'MBBS').split(',').map(c=>c.trim());
     mhCourse=stuC.find(c=>['MBBS','BDS','BPTH','BAMS','BHMS'].includes(c))||'MBBS';
     document.querySelectorAll('.course-tabs .ctab').forEach(btn=>{
       if(!btn.disabled) btn.classList.toggle('active',btn.textContent.trim()===mhCourse);
     });
-
-    // Populate edit bar fields on load since it is permanently visible
-    document.getElementById('editScore').value=activeScore();
-    document.getElementById('editCategory').value=activeCategory();
-    // Build course pills
-    const allCourses=['MBBS','BDS','BPTH','BAMS','BHMS'];
-    const currentCourses=(getSess().course||activeCourse()).split(',').map(c=>c.trim());
-    const pillsWrap=document.getElementById('editCoursePills');
-    if (pillsWrap) {
-      pillsWrap.innerHTML=allCourses.map(c=>`
-        <span onclick="toggleCoursePill(this,'${c}')" data-course="${c}" style="
-          font-family:Montserrat,sans-serif;font-size:.62rem;font-weight:800;
-          padding:3px 10px;border-radius:6px;cursor:pointer;letter-spacing:.3px;
-          background:${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.15)'};
-          color:${currentCourses.includes(c)?'#1a0040':'rgba(255,255,255,.7)'};
-          border:1px solid ${currentCourses.includes(c)?'#FFD700':'rgba(255,255,255,.25)'};
-          transition:.15s;">${c}</span>`).join('');
-    }
-
     document.getElementById('loadingOverlay').classList.add('hidden');
     document.getElementById('panesContainer').classList.remove('hidden');
     renderAllOverviews();

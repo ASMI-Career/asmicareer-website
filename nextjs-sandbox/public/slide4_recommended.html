@@ -276,7 +276,7 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
       <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
       <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
       <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
-      <div class="pc-row"><span class="pc-key">Projection</span><span class="pc-val" style="font-size:.68rem;color:rgba(255,255,255,.55)">2025–26 + 15 adj.</span></div>
+      <div class="pc-row"><span class="pc-key">Projection</span><span class="pc-val" style="font-size:.68rem;color:rgba(255,255,255,.55)">2025–26 + 10 adj.</span></div>
     </div>
 
     <div class="counsellor-note">
@@ -299,7 +299,7 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
     <div class="right-header">
       <div class="rh-left">
         <div class="rh-title" id="rh-title">Admission Options — Pool Summary</div>
-        <div class="rh-sub" id="rhSub">All pools · 2025–26 cutoffs with +15 projection</div>
+        <div class="rh-sub" id="rhSub">All pools · 2025–26 cutoffs with +10 projection</div>
       </div>
       <div class="rh-actions">
         <button class="pdf-btn" id="pdfBtn" onclick="(async()=>{try{await downloadPDF();}catch(e){console.error('PDF ERROR:',e.message,e.stack);alert('PDF Error: '+e.message);}})()">⬇ Download PDF</button>
@@ -326,7 +326,7 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
     </div>
 
     <div class="bottom-nav">
-      <div class="bn-note">Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 15 marks.</div>
+      <div class="bn-note">Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 10 marks.</div>
       <a class="bn-btn" id="nextBtn" href="slide5_problems.html">See Why ASMI →</a>
     </div>
   </div>
@@ -365,7 +365,7 @@ function catKeys(cat){
 
 // ── PROBABILITY vs PROJECTED ─────────────────────────────────────
 function getStatus(score, lastCutoff){
-  const proj=lastCutoff+15, gap=score-proj;
+  const proj=lastCutoff+10, gap=score-proj;
   if(gap>=15)  return{key:'safe',      label:'Safe',       cls:'status-safe'};
   if(gap>=0)   return{key:'likely',    label:'Likely',     cls:'status-likely'};
   if(gap>=-10) return{key:'borderline',label:'Borderline', cls:'status-borderline'};
@@ -508,7 +508,7 @@ function buildPoolRows(){
     const allSorted=[...colleges].sort((a,b)=>a.c-b.c);
     const lastCutoff=allSorted[0]?.c??null;
     if(lastCutoff===null) return;
-    const projCutoff=lastCutoff+15;
+    const projCutoff=lastCutoff+10;
     const status=getStatus(score,lastCutoff);
     const fee=medianFee(colleges);
     const mult=budgetMultiplier(course);
@@ -528,8 +528,8 @@ function buildPoolRows(){
 
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
       lastCutoff,projCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears,
-      openCutoff:openC,openProj:openC?openC+15:null,
-      catCutoff:catC,catProj:catC?catC+15:null});
+      openCutoff:openC,openProj:openC?openC+10:null,
+      catCutoff:catC,catProj:catC?catC+10:null});
   }
   function addPoolBanded(label,group,course,colleges,threshold,band1Label,band2Label,feeOvr1,feeOvr2){
     if(!colleges.length) return;
@@ -761,7 +761,7 @@ function renderTop25Table(){
       let cutoffCells = '';
       if(hasCat){
         const openVal = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff : '—';
-        const openProjVal = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff + 15 : '—';
+        const openProjVal = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff + 10 : '—';
         const openCell = c.openCutoff !== null && c.openCutoff !== undefined ? `
           <td style="text-align:center">
             <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -771,7 +771,7 @@ function renderTop25Table(){
           </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
 
         const catVal = c.catCutoff !== null && c.catCutoff !== undefined ? c.catCutoff : '—';
-        const catProjVal = c.catCutoff !== null && c.catCutoff !== undefined ? c.catCutoff + 15 : '—';
+        const catProjVal = c.catCutoff !== null && c.catCutoff !== undefined ? c.catCutoff + 10 : '—';
         const catCell = c.catCutoff !== null && c.catCutoff !== undefined ? `
           <td style="text-align:center">
             <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -783,7 +783,7 @@ function renderTop25Table(){
         cutoffCells = openCell + catCell;
       } else {
         const actual = c.openCutoff !== null && c.openCutoff !== undefined ? c.openCutoff : c.c;
-        const projected = actual + 15;
+        const projected = actual + 10;
         cutoffCells = `
           <td style="text-align:center">
             <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -888,7 +888,7 @@ function renderShortlistTable(){
     let cutoffCells = '';
     if(hasCat){
       const openVal = cutoffs.openCutoff !== null ? cutoffs.openCutoff : '—';
-      const openProjVal = cutoffs.openCutoff !== null ? cutoffs.openCutoff + 15 : '—';
+      const openProjVal = cutoffs.openCutoff !== null ? cutoffs.openCutoff + 10 : '—';
       const openCell = cutoffs.openCutoff !== null ? `
         <td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -898,7 +898,7 @@ function renderShortlistTable(){
         </td>` : '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>';
 
       const catVal = cutoffs.catCutoff !== null ? cutoffs.catCutoff : '—';
-      const catProjVal = cutoffs.catCutoff !== null ? cutoffs.catCutoff + 15 : '—';
+      const catProjVal = cutoffs.catCutoff !== null ? cutoffs.catCutoff + 10 : '—';
       const catCell = cutoffs.catCutoff !== null ? `
         <td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -910,7 +910,7 @@ function renderShortlistTable(){
       cutoffCells = openCell + catCell;
     } else {
       const actual = cutoffs.openCutoff !== null ? cutoffs.openCutoff : c.c;
-      const projected = actual + 15;
+      const projected = actual + 10;
       cutoffCells = `
         <td style="text-align:center">
           <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
@@ -1036,7 +1036,7 @@ function buildCoverPage(student) {
         ['NEET SCORE', `<span style="color:#6A0DAD; font-size:20px; font-weight:900;">${student.score || '—'}</span>`],
         ['CATEGORY', student.category || '—'],
         ['COURSE(S)', Array.isArray(student.courses) ? student.courses.join(', ') : (student.courses || '—')],
-        ['DATA BASIS', '2025–26 + 15 adj.'],
+        ['DATA BASIS', '2025–26 + 10 adj.'],
       ].map(([label, val]) => `
         <div style="min-width:100px;">
           <div style="color:#6A0DAD; font-size:9px; font-weight:800; letter-spacing:1.5px; margin-bottom:3px;">${label}</div>
@@ -1198,7 +1198,7 @@ function buildSummaryPage(student, poolRows) {
     </table>
 
     <div style="margin-top:12px; font-size:10px; color:#888;">
-      Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 15 marks (ReNEET adjustment).
+      Cutoffs from 2025–26 actuals. Projected = Last Cutoff + 10 marks (ReNEET adjustment).
     </div>
 
     <div style="display:flex; gap:20px; margin-top:10px; align-items:center;">
@@ -1598,7 +1598,7 @@ async function downloadPDF() {
           <div><div style="color:#6A0DAD;font-size:9px;font-weight:800;letter-spacing:1.5px;">NEET SCORE</div><div style="color:#6A0DAD;font-size:20px;font-weight:900;">${s.score||'—'}</div></div>
           <div><div style="color:#6A0DAD;font-size:9px;font-weight:800;letter-spacing:1.5px;">CATEGORY</div><div style="color:#1A0040;font-size:14px;font-weight:800;">${s.category||'—'}</div></div>
           <div><div style="color:#6A0DAD;font-size:9px;font-weight:800;letter-spacing:1.5px;">COURSE(S)</div><div style="color:#1A0040;font-size:14px;font-weight:800;">${(s.courses||[]).join(', ')||'—'}</div></div>
-          <div><div style="color:#6A0DAD;font-size:9px;font-weight:800;letter-spacing:1.5px;">DATA BASIS</div><div style="color:#1A0040;font-size:14px;font-weight:800;">2025–26 + 15 adj.</div></div>
+          <div><div style="color:#6A0DAD;font-size:9px;font-weight:800;letter-spacing:1.5px;">DATA BASIS</div><div style="color:#1A0040;font-size:14px;font-weight:800;">2025–26 + 10 adj.</div></div>
         </div>
         <div style="color:#1A0040;font-size:10px;font-weight:800;letter-spacing:2px;margin-bottom:6px;">MAHARASHTRA'S #1 NEET COUNSELLING</div>
         <div style="color:#1A0040;font-size:38px;font-weight:900;line-height:1.1;margin-bottom:10px;">Your Dream.<br><span style="color:#6A0DAD;">Our Mission.</span></div>
@@ -1793,7 +1793,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
     if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
     return cols.map((c,i)=>{
       const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-      const projected = actual!==null ? actual+15 : null;
+      const projected = actual!==null ? actual+10 : null;
       const actualStr = actual!==null ? actual : '—';
       const projStr   = projected!==null ? projected : '—';
       const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
@@ -1802,7 +1802,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
       
       if(showCat){
         const catActual = (c.catCutoff!==undefined && c.catCutoff!==null) ? c.catCutoff : null;
-        const catProj   = catActual!==null ? catActual+15 : null;
+        const catProj   = catActual!==null ? catActual+10 : null;
         const catActualStr = catActual!==null ? catActual : '—';
         const catProjStr   = catProj!==null ? catProj : '—';
         return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
@@ -2177,8 +2177,8 @@ function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
 }
 
 function prob(score, cutoff){
-  const projected = cutoff + 15;
-  if(score >= projected + 15) return {key:'safe',       label:'Safe',         cls:'safe'};
+  const projected = cutoff + 10;
+  if(score >= projected + 10) return {key:'safe',       label:'Safe',         cls:'safe'};
   if(score >= projected)      return {key:'likely',     label:'Likely',       cls:'likely'};
   if(score >= projected - 10) return {key:'borderline', label:'Borderline',   cls:'borderline'};
   return                             {key:'reach',      label:'Out of Reach', cls:'reach'};
