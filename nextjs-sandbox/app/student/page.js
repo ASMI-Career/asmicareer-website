@@ -1554,7 +1554,7 @@ export default function StudentDashboard() {
                                           {c.openCutoff != null ? (
                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                                               <span style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.openCutoff}</span>
-                                              {goldPill(c.openCutoff + 15)}
+                                              {goldPill(c.openCutoff + 20)}
                                             </div>
                                           ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
                                         </td>
@@ -1563,7 +1563,7 @@ export default function StudentDashboard() {
                                             {c.catCutoff != null ? (
                                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                                                 <span style={{ fontWeight: 800, color: 'var(--purple)' }}>{c.catCutoff}</span>
-                                                {goldPill(c.catCutoff + 15)}
+                                                {goldPill(c.catCutoff + 20)}
                                               </div>
                                             ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
                                           </td>
