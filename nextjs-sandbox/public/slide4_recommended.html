@@ -2487,6 +2487,7 @@ async function init(){
     }
 
     if(params.get('download')==='1' && !isCounsel){
+      document.querySelector('.slide-nav').style.display='none';
       document.getElementById('loadingOverlay').innerHTML=
         `<div style="text-align:center;padding:40px">
            <div style="font-size:2rem;margin-bottom:12px">📄</div>
