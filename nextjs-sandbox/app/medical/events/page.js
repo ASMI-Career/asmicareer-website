@@ -825,41 +825,27 @@ export default function EventsPage() {
                     />
                   </div>
                   <div className="ev-fg">
-                    <label className="ev-fl">Appearing In</label>
+                    <label className="ev-fl">Seats Required</label>
                     <div className="ev-radio-row">
-                      {['NEET 2026', 'NEET 2027', 'Parent/Guardian'].map(opt => (
+                      {[
+                        { label: 'Student', members: 0 },
+                        { label: 'Student + 1', members: 1 },
+                        { label: 'Student + 2', members: 2 },
+                      ].map(opt => (
                         <label
-                          key={opt}
-                          className={`ev-radio-pill ${form.neetYear === opt ? 'active' : ''}`}
+                          key={opt.label}
+                          className={`ev-radio-pill ${form.members === opt.members ? 'active' : ''}`}
                         >
                           <input
-                            type="radio" name="neetYear" value={opt}
-                            checked={form.neetYear === opt}
-                            onChange={() => setForm(f => ({...f, neetYear: opt}))}
+                            type="radio" name="members" value={opt.members}
+                            checked={form.members === opt.members}
+                            onChange={() => setForm(f => ({...f, members: opt.members}))}
                           />
-                          {opt}
+                          {opt.label}
                         </label>
                       ))}
                     </div>
-                  </div>
-                  <div className="ev-fg">
-                    <label className="ev-fl">Additional Members</label>
-                    <div className="ev-counter">
-                      <button
-                        className="ev-counter-btn"
-                        onClick={() => setForm(f => ({...f, members: Math.max(0, f.members - 1)}))}
-                        disabled={form.members === 0}
-                        type="button"
-                      >−</button>
-                      <span className="ev-counter-num">{form.members}</span>
-                      <button
-                        className="ev-counter-btn"
-                        onClick={() => setForm(f => ({...f, members: Math.min(4, f.members + 1)}))}
-                        disabled={form.members === 4}
-                        type="button"
-                      >+</button>
-                    </div>
-                    <p className="ev-fhint">People accompanying you (max 4, each needs 1 seat)</p>
+                    <p className="ev-fhint">Each person needs 1 seat</p>
                   </div>
                   {!hasEnoughSeats && selectedSeminar && (
                     <p className="ev-error">
