@@ -2433,7 +2433,7 @@ async function init(){
     const[dbRes,feeRes,studentRes]=await Promise.all([
       fetch(DB_URL).then(r=>r.json()),
       fetch(FEE_URL).then(r=>r.json()),
-      token?fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)).then(r=>r.json()):Promise.resolve({demo:true})
+      token?fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)+'&_t='+Date.now()).then(r=>r.json()):Promise.resolve({demo:true})
     ]);
     DB=dbRes; FEE=feeRes;
     STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
