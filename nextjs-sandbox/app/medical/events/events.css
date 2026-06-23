@@ -224,7 +224,7 @@
 .ev-modal {
   background: #fff; border-radius: 20px;
   width: 100%; max-width: 560px; max-height: 90vh;
-  overflow-y: auto; display: flex; flex-direction: column;
+  overflow: hidden; display: flex; flex-direction: column;
   box-shadow: 0 24px 60px rgba(0,0,0,.3);
   animation: modalIn .25s cubic-bezier(.4,0,.2,1);
 }
@@ -270,7 +270,7 @@
 .ev-step-line.done { background: #6a0dad; }
 
 /* Modal body */
-.ev-modal-body { padding: 20px 24px 24px; flex: 1; }
+.ev-modal-body { padding: 20px 24px 0; flex: 1; overflow-y: auto; }
 .ev-step-hint { font-size: 13px; color: rgba(26,0,64,.5); margin-bottom: 16px; }
 
 /* ── Step 1: Seminar picker ── */
@@ -358,7 +358,7 @@
 .ev-error { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #c0131b; }
 
 /* Modal footer */
-.ev-modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+.ev-modal-footer { display: flex; gap: 10px; justify-content: flex-end; padding: 16px 24px; margin-top: 8px; position: sticky; bottom: 0; background: #fff; border-top: 1px solid rgba(26,0,64,.08); flex-shrink: 0; }
 .ev-modal-btn-primary {
   font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800;
   background: #1a0040; color: #FFD700; padding: 12px 24px; border-radius: 10px;
