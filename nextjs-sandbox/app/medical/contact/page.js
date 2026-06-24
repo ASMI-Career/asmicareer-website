@@ -18,7 +18,7 @@ const BRANCHES = [
   {
     city: 'Thane',
     area: 'Thane West',
-    address: '201, 2nd Floor, Ram Niwas, Gokhale Road, near Shri Gaondevi Temple, Besides McDonald\'s, Thane West',
+    address: '411, 4th Floor, Shah Avenue, Gokhale Road, Besides Mango Stationary, Naupada, Thane West',
     phone: '7410019075',
     whatsapp: '917410019075',
     maps: 'https://maps.app.goo.gl/9va5LoADHXwLUwBq9',
