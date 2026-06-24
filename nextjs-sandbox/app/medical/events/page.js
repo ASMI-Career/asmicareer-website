@@ -603,27 +603,116 @@ export default function EventsPage() {
           </div>
         </section>
 
-        {/* ── NEW SECTION 6 — "Glimpses of Previous Seminars" Video Section ── */}
-        <section className="ev-video-section">
-          <div className="ev-video-inner">
-            <div className="ev-sec-head-center">
-              <span className="ev-section-eyebrow">SEMINAR GALLERY</span>
-              <h2 className="ev-section-title-dark-center">Glimpses of Our Previous Seminars</h2>
-              <p className="ev-section-sub-dark-center">See what happens in the room — real students, real questions, real answers.</p>
+        {/* VIDEO SECTION */}
+        <section style={{background:'#1a0040',padding:'80px 40px'}}>
+          <div style={{maxWidth:'1100px',margin:'0 auto',textAlign:'center'}}>
+            <div style={{display:'inline-block',background:'rgba(255,215,0,0.12)',
+              color:'#FFD700',border:'1px solid rgba(255,215,0,0.25)',
+              borderRadius:'20px',padding:'5px 16px',fontSize:'11px',
+              fontWeight:'700',letterSpacing:'2px',marginBottom:'16px'}}>
+              SEMINAR GLIMPSES
             </div>
-            <div className="ev-video-wrapper">
-              <video
-                className="seminar-glimpse-video"
-                poster="/images/events/glimpses-poster.jpg"
-                controls
-                muted
-                loop
-                playsInline
-                preload="none"
-              >
-                <source src="/videos/events/seminar-glimpses.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+            <h2 style={{color:'#FFD700',fontFamily:'Montserrat,sans-serif',
+              fontWeight:'900',fontSize:'clamp(28px,4vw,44px)',marginBottom:'8px'}}>
+              See What Happens In The Room
+            </h2>
+            <p style={{color:'rgba(255,215,0,0.6)',fontSize:'16px',marginBottom:'48px'}}>
+              Real students. Real questions. Real answers.
+            </p>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',
+              gap:'24px',justifyItems:'center'}}>
+              {['hW_Z9vTIPVo','A6EcZ35_ZsE','5To544g3ztY'].map((id,i)=>(
+                <div key={i} style={{width:'100%',maxWidth:'300px',
+                  borderRadius:'16px',overflow:'hidden',
+                  boxShadow:'0 8px 32px rgba(0,0,0,0.4)',
+                  border:'1px solid rgba(255,215,0,0.15)'}}>
+                  <div style={{position:'relative',paddingBottom:'177.78%',height:0}}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`}
+                      title={`ASMI Seminar Glimpse ${i+1}`}
+                      style={{position:'absolute',top:0,left:0,
+                        width:'100%',height:'100%',border:'none'}}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* PHOTO COLLAGE SECTION */}
+        <section style={{background:'#fffdf0',padding:'80px 40px'}}>
+          <div style={{maxWidth:'1200px',margin:'0 auto',textAlign:'center'}}>
+            <div style={{display:'inline-block',background:'rgba(106,13,173,0.08)',
+              color:'#6a0dad',border:'1px solid rgba(106,13,173,0.2)',
+              borderRadius:'20px',padding:'5px 16px',fontSize:'11px',
+              fontWeight:'700',letterSpacing:'2px',marginBottom:'16px'}}>
+              PHOTO GALLERY
+            </div>
+            <h2 style={{color:'#1a0040',fontFamily:'Montserrat,sans-serif',
+              fontWeight:'900',fontSize:'clamp(28px,4vw,44px)',marginBottom:'8px'}}>
+              Moments From Our Seminars
+            </h2>
+            <p style={{color:'rgba(26,0,64,0.6)',fontSize:'16px',marginBottom:'48px'}}>
+              Hundreds of students. One goal — the right college.
+            </p>
+            <style>{`
+              .seminar-photo {
+                break-inside: avoid;
+                margin-bottom: 16px;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 16px rgba(26,0,64,0.1);
+                transition: transform 0.35s ease, box-shadow 0.35s ease;
+                cursor: pointer;
+              }
+              .seminar-photo:hover {
+                transform: translateY(-6px) scale(1.02);
+                box-shadow: 0 16px 40px rgba(26,0,64,0.22);
+              }
+              .seminar-photo img {
+                width: 100%;
+                display: block;
+                border-radius: 12px;
+              }
+              @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to   { opacity: 1; transform: translateY(0); }
+              }
+              .seminar-photo {
+                animation: fadeInUp 0.6s ease both;
+              }
+              .seminar-photo:nth-child(1)  { animation-delay: 0.05s; }
+              .seminar-photo:nth-child(2)  { animation-delay: 0.10s; }
+              .seminar-photo:nth-child(3)  { animation-delay: 0.15s; }
+              .seminar-photo:nth-child(4)  { animation-delay: 0.20s; }
+              .seminar-photo:nth-child(5)  { animation-delay: 0.25s; }
+              .seminar-photo:nth-child(6)  { animation-delay: 0.30s; }
+              .seminar-photo:nth-child(7)  { animation-delay: 0.35s; }
+              .seminar-photo:nth-child(8)  { animation-delay: 0.40s; }
+              .seminar-photo:nth-child(9)  { animation-delay: 0.45s; }
+              .seminar-photo:nth-child(10) { animation-delay: 0.50s; }
+              .seminar-photo:nth-child(11) { animation-delay: 0.55s; }
+              .seminar-photo:nth-child(12) { animation-delay: 0.60s; }
+              .seminar-photo:nth-child(13) { animation-delay: 0.65s; }
+              .seminar-photo:nth-child(14) { animation-delay: 0.70s; }
+              .seminar-photo:nth-child(15) { animation-delay: 0.75s; }
+            `}</style>
+            <div style={{columns:'3 280px',columnGap:'16px',textAlign:'left'}}>
+              {Array.from({length:15},(_,i)=>{
+                const num = String(i+1).padStart(2,'0');
+                return (
+                  <div key={i} className="seminar-photo">
+                    <img
+                      src={`/images_events/seminar-${num}.jpg`}
+                      alt={`ASMI Seminar ${num}`}
+                      loading="lazy"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
