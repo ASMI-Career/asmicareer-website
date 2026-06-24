@@ -68,22 +68,20 @@ export default function AboutPage() {
             </div>
 
             <div className="about-founder-card">
-              <div className="about-founder-card">
-                <div className="about-founder-avatar" style={{padding:0,overflow:'hidden'}}>
-                  <img src="/images_events/Sharang.jpg" alt="Sharang Katti"
-                    style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
-                </div>
-                <div className="about-founder-info">
-                  <div className="about-founder-name">Sharang Katti</div>
-                  <div className="about-founder-role">Director</div>
-                  <p className="about-founder-bio">
-                    An engineer by training, Sharang brings deep expertise in JoSAA, COMEDK,
-                    and state engineering counselling. His systematic approach to preference
-                    filling and his network across Karnataka, UP and Maharashtra institutions
-                    has helped thousands of engineering aspirants secure their dream colleges.
-                    He personally oversees quality across all ASMI branches.
-                  </p>
-                </div>
+              <div className="about-founder-avatar" style={{padding:0,overflow:'hidden'}}>
+                <img src="/images_events/Sharang.jpg" alt="Sharang Katti"
+                  style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+              </div>
+              <div className="about-founder-info">
+                <div className="about-founder-name">Sharang Katti</div>
+                <div className="about-founder-role">Director</div>
+                <p className="about-founder-bio">
+                  An engineer by training, Sharang brings deep expertise in JoSAA, COMEDK,
+                  and state engineering counselling. His systematic approach to preference
+                  filling and his network across Karnataka, UP and Maharashtra institutions
+                  has helped thousands of engineering aspirants secure their dream colleges.
+                  He personally oversees quality across all ASMI branches.
+                </p>
               </div>
             </div>
           </div>

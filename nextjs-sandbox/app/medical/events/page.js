@@ -135,13 +135,6 @@ function SeminarCarousel() {
         ))}
       </div>
 
-      {/* counter badge */}
-      <div style={{position:'absolute',top:'12px',right:'14px',
-        background:'rgba(26,0,64,0.65)',backdropFilter:'blur(6px)',
-        color:'#FFD700',fontSize:'11px',fontWeight:'700',
-        padding:'4px 10px',borderRadius:'20px',letterSpacing:'1px'}}>
-        {current+1} / {SEMINAR_PHOTOS.length}
-      </div>
     </div>
   );
 }
@@ -366,7 +359,8 @@ export default function EventsPage() {
             <span className="ev-hero-eyebrow">FREE · LIVE · EXPERT-LED · MAHARASHTRA</span>
             <h1 className="ev-hero-h1">
               ASMI Career<br />
-              <span className="ev-h1-gold">Free Counselling</span> Seminars 2026
+              <span className="ev-h1-gold">Free Counselling</span><br />
+              Seminars 2026
             </h1>
             <p className="ev-hero-sub">
               Attend a live session with our NEET counselling experts. Understand
@@ -641,7 +635,7 @@ export default function EventsPage() {
               <h2 className="ev-section-title-dark-center">Meet The Counsellors Guiding This Session</h2>
               <p className="ev-section-sub-dark-center">Real experts. 12+ years of combined experience. No sales pitch — just clarity.</p>
             </div>
-            <div className="ev-counsellors-grid" style={{justifyContent:'center'}}>
+            <div className="ev-counsellors-grid" style={{justifyContent:'center',display:'flex',gap:'32px',flexWrap:'wrap'}}>
               {[
                 { name: 'Anish Kulkarni', role: 'Founder & Director', seminars: 'Vile Parle & Pune Seminar', img: '/images_events/Anish.jpg' },
                 { name: 'Sharang Katti',  role: 'Director',           seminars: 'Thane Seminar',             img: '/images_events/Sharang.jpg' },
