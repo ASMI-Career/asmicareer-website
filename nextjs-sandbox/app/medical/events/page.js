@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './events.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
@@ -46,6 +46,106 @@ const ABOUT_ITEMS = [
 /* ══════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ══════════════════════════════════════════════════════════════ */
+const SEMINAR_PHOTOS = [
+  '/images_events/seminar-01.jpg',
+  '/images_events/seminar-02.jpg',
+  '/images_events/seminar-03.jpg',
+  '/images_events/seminar-04.jpeg',
+  '/images_events/seminar-05.jpeg',
+  '/images_events/seminar-06.jpeg',
+  '/images_events/seminar-07.jpeg',
+  '/images_events/seminar-08.jpeg',
+  '/images_events/seminar-09.jpeg',
+  '/images_events/seminar-10.jpeg',
+  '/images_events/seminar-11.jpeg',
+  '/images_events/seminar-12.jpeg',
+  '/images_events/seminar-13.jpeg',
+  '/images_events/seminar-14.jpeg',
+  '/images_events/seminar-15.jpeg',
+];
+
+function SeminarCarousel() {
+  const [current, setCurrent] = useState(0);
+  const [prev, setPrev] = useState(null);
+  const [animating, setAnimating] = useState(false);
+  const timerRef = useRef(null);
+
+  const goTo = (idx) => {
+    if (animating) return;
+    setPrev(current);
+    setCurrent(idx);
+    setAnimating(true);
+    setTimeout(() => { setPrev(null); setAnimating(false); }, 700);
+  };
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setCurrent(c => {
+        const next = (c + 1) % SEMINAR_PHOTOS.length;
+        setPrev(c);
+        setAnimating(true);
+        setTimeout(() => { setPrev(null); setAnimating(false); }, 700);
+        return next;
+      });
+    }, 3500);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  return (
+    <div style={{position:'relative',width:'100%',borderRadius:'18px',overflow:'hidden',
+      boxShadow:'0 12px 48px rgba(26,0,64,0.22)',aspectRatio:'4/3',background:'#1a0040'}}>
+      <style>{`
+        @keyframes sc-fadein {
+          from { opacity:0; transform:scale(1.06); }
+          to   { opacity:1; transform:scale(1); }
+        }
+        @keyframes sc-fadeout {
+          from { opacity:1; transform:scale(1); }
+          to   { opacity:0; transform:scale(0.96); }
+        }
+        .sc-slide-in  { animation: sc-fadein  0.7s ease both; }
+        .sc-slide-out { animation: sc-fadeout 0.7s ease both; }
+      `}</style>
+
+      {/* outgoing */}
+      {prev !== null && (
+        <img key={'out'+prev} src={SEMINAR_PHOTOS[prev]} alt=""
+          className="sc-slide-out"
+          style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
+      )}
+      {/* incoming */}
+      <img key={'in'+current} src={SEMINAR_PHOTOS[current]} alt={`ASMI Seminar ${current+1}`}
+        className="sc-slide-in"
+        style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
+
+      {/* gradient overlay */}
+      <div style={{position:'absolute',inset:0,
+        background:'linear-gradient(to top, rgba(26,0,64,0.55) 0%, transparent 60%)',
+        pointerEvents:'none'}} />
+
+      {/* dot indicators */}
+      <div style={{position:'absolute',bottom:'14px',left:0,right:0,
+        display:'flex',justifyContent:'center',gap:'6px',flexWrap:'wrap',padding:'0 12px'}}>
+        {SEMINAR_PHOTOS.map((_,i) => (
+          <button key={i} onClick={() => goTo(i)}
+            style={{width: i===current?'22px':'8px', height:'8px',borderRadius:'4px',
+              border:'none',cursor:'pointer',padding:0,transition:'width 0.3s ease',
+              background: i===current ? '#FFD700' : 'rgba(255,255,255,0.45)'}}
+            aria-label={`Go to slide ${i+1}`} />
+        ))}
+      </div>
+
+      {/* counter badge */}
+      <div style={{position:'absolute',top:'12px',right:'14px',
+        background:'rgba(26,0,64,0.65)',backdropFilter:'blur(6px)',
+        color:'#FFD700',fontSize:'11px',fontWeight:'700',
+        padding:'4px 10px',borderRadius:'20px',letterSpacing:'1px'}}>
+        {current+1} / {SEMINAR_PHOTOS.length}
+      </div>
+    </div>
+  );
+}
+
 export default function EventsPage() {
   const [seminars, setSeminars] = useState([]);
   const [cityFilter, setCityFilter] = useState('All');
@@ -265,8 +365,8 @@ export default function EventsPage() {
           <div className="ev-hero-inner">
             <span className="ev-hero-eyebrow">FREE · LIVE · EXPERT-LED · MAHARASHTRA</span>
             <h1 className="ev-hero-h1">
-              ASMI Career <span className="ev-h1-gold">Free Counselling</span><br />
-              Seminars 2026
+              ASMI Career<br />
+              <span className="ev-h1-gold">Free Counselling</span> Seminars 2026
             </h1>
             <p className="ev-hero-sub">
               Attend a live session with our NEET counselling experts. Understand
@@ -312,17 +412,7 @@ export default function EventsPage() {
           <div className="ev-why-inner">
             <div className="ev-why-grid">
               <div className="ev-why-left">
-                <div className="ev-why-img-wrapper">
-                  <img
-                    src="/images/events/audience-placeholder.jpg"
-                    alt="ASMI seminar audience"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.parentNode.classList.add('placeholder-fallback');
-                    }}
-                  />
-                  <div className="ev-img-fallback-text">ASMI Seminar Audience</div>
-                </div>
+                <SeminarCarousel />
               </div>
               <div className="ev-why-right">
                 <span className="ev-section-eyebrow">WHY ATTEND?</span>
@@ -551,20 +641,16 @@ export default function EventsPage() {
               <h2 className="ev-section-title-dark-center">Meet The Counsellors Guiding This Session</h2>
               <p className="ev-section-sub-dark-center">Real experts. 12+ years of combined experience. No sales pitch — just clarity.</p>
             </div>
-            <div className="ev-counsellors-grid">
+            <div className="ev-counsellors-grid" style={{justifyContent:'center'}}>
               {[
-                { n: '1', b: 'Mumbai East' },
-                { n: '2', b: 'Thane Central' },
-                { n: '3', b: 'Pune Campus' },
-                { n: '4', b: 'Kolhapur Division' },
-                { n: '5', b: 'Sangli District' },
-                { n: '6', b: 'Senior Advisory Board' }
+                { name: 'Anish Kulkarni', role: 'Founder & Director', seminars: 'Vile Parle & Pune Seminar', img: '/images_events/Anish.jpg' },
+                { name: 'Sharang Katti',  role: 'Director',           seminars: 'Thane Seminar',             img: '/images_events/Sharang.jpg' },
               ].map((c, idx) => (
                 <div className="ev-counsellor-card" key={idx}>
                   <div className="ev-counsellor-avatar-wrapper">
                     <img
-                      src={`/images/events/counsellor-${c.n}.jpg`}
-                      alt={`Counsellor Name ${c.n}`}
+                      src={c.img}
+                      alt={c.name}
                       className="ev-counsellor-avatar"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -573,8 +659,9 @@ export default function EventsPage() {
                     />
                     <div className="ev-avatar-fallback-icon">👤</div>
                   </div>
-                  <h4 className="ev-counsellor-name">Counsellor Name {c.n}</h4>
-                  <p className="ev-counsellor-title">Senior Counsellor — {c.b}</p>
+                  <h4 className="ev-counsellor-name">{c.name}</h4>
+                  <p className="ev-counsellor-title">{c.role}</p>
+                  <p className="ev-counsellor-title" style={{fontSize:'12px',marginTop:'4px',color:'#6a0dad'}}>{c.seminars}</p>
                 </div>
               ))}
             </div>
@@ -642,80 +729,6 @@ export default function EventsPage() {
           </div>
         </section>
 
-        {/* PHOTO COLLAGE SECTION */}
-        <section style={{background:'#fffdf0',padding:'80px 40px'}}>
-          <div style={{maxWidth:'1200px',margin:'0 auto',textAlign:'center'}}>
-            <div style={{display:'inline-block',background:'rgba(106,13,173,0.08)',
-              color:'#6a0dad',border:'1px solid rgba(106,13,173,0.2)',
-              borderRadius:'20px',padding:'5px 16px',fontSize:'11px',
-              fontWeight:'700',letterSpacing:'2px',marginBottom:'16px'}}>
-              PHOTO GALLERY
-            </div>
-            <h2 style={{color:'#1a0040',fontFamily:'Montserrat,sans-serif',
-              fontWeight:'900',fontSize:'clamp(28px,4vw,44px)',marginBottom:'8px'}}>
-              Moments From Our Seminars
-            </h2>
-            <p style={{color:'rgba(26,0,64,0.6)',fontSize:'16px',marginBottom:'48px'}}>
-              Hundreds of students. One goal — the right college.
-            </p>
-            <style>{`
-              .seminar-photo {
-                break-inside: avoid;
-                margin-bottom: 16px;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 4px 16px rgba(26,0,64,0.1);
-                transition: transform 0.35s ease, box-shadow 0.35s ease;
-                cursor: pointer;
-              }
-              .seminar-photo:hover {
-                transform: translateY(-6px) scale(1.02);
-                box-shadow: 0 16px 40px rgba(26,0,64,0.22);
-              }
-              .seminar-photo img {
-                width: 100%;
-                display: block;
-                border-radius: 12px;
-              }
-              @keyframes fadeInUp {
-                from { opacity: 0; transform: translateY(30px); }
-                to   { opacity: 1; transform: translateY(0); }
-              }
-              .seminar-photo {
-                animation: fadeInUp 0.6s ease both;
-              }
-              .seminar-photo:nth-child(1)  { animation-delay: 0.05s; }
-              .seminar-photo:nth-child(2)  { animation-delay: 0.10s; }
-              .seminar-photo:nth-child(3)  { animation-delay: 0.15s; }
-              .seminar-photo:nth-child(4)  { animation-delay: 0.20s; }
-              .seminar-photo:nth-child(5)  { animation-delay: 0.25s; }
-              .seminar-photo:nth-child(6)  { animation-delay: 0.30s; }
-              .seminar-photo:nth-child(7)  { animation-delay: 0.35s; }
-              .seminar-photo:nth-child(8)  { animation-delay: 0.40s; }
-              .seminar-photo:nth-child(9)  { animation-delay: 0.45s; }
-              .seminar-photo:nth-child(10) { animation-delay: 0.50s; }
-              .seminar-photo:nth-child(11) { animation-delay: 0.55s; }
-              .seminar-photo:nth-child(12) { animation-delay: 0.60s; }
-              .seminar-photo:nth-child(13) { animation-delay: 0.65s; }
-              .seminar-photo:nth-child(14) { animation-delay: 0.70s; }
-              .seminar-photo:nth-child(15) { animation-delay: 0.75s; }
-            `}</style>
-            <div style={{columns:'3 280px',columnGap:'16px',textAlign:'left'}}>
-              {Array.from({length:15},(_,i)=>{
-                const num = String(i+1).padStart(2,'0');
-                return (
-                  <div key={i} className="seminar-photo">
-                    <img
-                      src={`/images_events/seminar-${num}.jpg`}
-                      alt={`ASMI Seminar ${num}`}
-                      loading="lazy"
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
 
         {/* ── NEW SECTION 7 — Closing CTA Banner ── */}
         <section className="ev-closing-cta-section">

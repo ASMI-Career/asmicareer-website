@@ -50,7 +50,10 @@ export default function AboutPage() {
 
           <div className="about-founder-grid">
             <div className="about-founder-card">
-              <div className="about-founder-avatar">AK</div>
+              <div className="about-founder-avatar" style={{padding:0,overflow:'hidden'}}>
+                <img src="/images_events/Anish.jpg" alt="Anish Kulkarni"
+                  style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+              </div>
               <div className="about-founder-info">
                 <div className="about-founder-name">Anish Kulkarni</div>
                 <div className="about-founder-role">Founder & Director</div>
@@ -66,7 +69,10 @@ export default function AboutPage() {
 
             <div className="about-founder-card">
               <div className="about-founder-card">
-                <div className="about-founder-avatar">SK</div>
+                <div className="about-founder-avatar" style={{padding:0,overflow:'hidden'}}>
+                  <img src="/images_events/Sharang.jpg" alt="Sharang Katti"
+                    style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+                </div>
                 <div className="about-founder-info">
                   <div className="about-founder-name">Sharang Katti</div>
                   <div className="about-founder-role">Director</div>
