@@ -1,172 +1,138 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import { buildDocumentList } from '../../../lib/buildDocumentList';
 import './checklist.css';
 
-const DOCS = {
-  sections: [
-    {
-      title: 'Academic Documents',
-      docs: [
-        { id: 'neet-admit',   label: 'NEET 2025 Admit Card',                             copies: 'Original + 2 self-attested photocopies' },
-        { id: 'neet-score',   label: 'NEET 2025 Scorecard / Rank Letter',                copies: 'Original + 2 self-attested photocopies' },
-        { id: 'cls10-mark',   label: 'Class 10 Marksheet',                               copies: 'Original + 3 attested photocopies',      note: 'Required as date of birth proof' },
-        { id: 'cls10-cert',   label: 'Class 10 Passing Certificate',                     copies: 'Original + 3 attested photocopies' },
-        { id: 'cls12-mark',   label: 'Class 12 Marksheet',                               copies: 'Original + 3 attested photocopies' },
-        { id: 'cls12-cert',   label: 'Class 12 Passing Certificate / School Leaving',    copies: 'Original + 3 attested photocopies' },
-      ]
-    },
-    {
-      title: 'Identity & Address Proof',
-      docs: [
-        { id: 'aadhar-self',   label: 'Aadhaar Card — Student', copies: 'Original + 3 self-attested photocopies' },
-        { id: 'aadhar-father', label: 'Aadhaar Card — Father',  copies: 'Original + 2 self-attested photocopies' },
-        { id: 'aadhar-mother', label: 'Aadhaar Card — Mother',  copies: 'Original + 2 self-attested photocopies' },
-        { id: 'photos',        label: 'Passport-size Photographs', copies: '10–15 recent, white background', note: 'Same set as used in NEET 2025 application form' },
-      ]
-    },
-    {
-      title: 'School / College Certificates',
-      docs: [
-        { id: 'tc',        label: 'Transfer Certificate (TC)',  copies: 'Original + 2 attested photocopies' },
-        { id: 'migration', label: 'Migration Certificate',      copies: 'Original + 1 photocopy', note: 'Required if schooling was outside Maharashtra' },
-        { id: 'character', label: 'Character Certificate',      copies: 'Original (from last institution)' },
-      ]
-    },
-    {
-      title: 'Medical Certificate',
-      docs: [
-        { id: 'medical-fit', label: 'Medical Fitness Certificate', copies: "Original on doctor's letterhead", note: 'From a registered MBBS doctor; some colleges issue their own format at reporting' },
-      ]
-    },
-  ],
-  category: {
-    OBC: {
-      title: 'OBC Category Documents',
-      docs: [
-        { id: 'obc-cert', label: 'OBC Certificate',                    copies: 'Original + 2 attested photocopies', note: 'Central format for AIQ; state government format for State Quota' },
-        { id: 'ncl-cert', label: 'Non-Creamy Layer (NCL) Certificate', copies: 'Original + 2 attested photocopies', note: 'Must be issued within the last 1 year; annual family income below ₹8 lakh' },
-      ]
-    },
-    SC: {
-      title: 'SC Category Documents',
-      docs: [
-        { id: 'caste-sc',    label: 'Caste Certificate (SC)',   copies: 'Original + 2 attested photocopies' },
-        { id: 'validity-sc', label: 'Caste Validity Certificate', copies: 'Original + 1 photocopy', note: 'Maharashtra: issued by District Caste Scrutiny Committee' },
-      ]
-    },
-    ST: {
-      title: 'ST Category Documents',
-      docs: [
-        { id: 'tribe-st',    label: 'Tribe Certificate (ST)',    copies: 'Original + 2 attested photocopies' },
-        { id: 'validity-st', label: 'Tribe Validity Certificate', copies: 'Original + 1 photocopy', note: 'Maharashtra: issued by District Caste Scrutiny Committee' },
-      ]
-    },
-    EWS: {
-      title: 'EWS Category Documents',
-      docs: [
-        { id: 'ews-cert',    label: 'EWS Certificate',   copies: 'Original + 2 attested photocopies', note: 'Current financial year; issued by Tehsildar or Sub-Divisional Officer' },
-        { id: 'income-cert', label: 'Income Certificate', copies: 'Original + 1 photocopy',            note: 'Annual family income below ₹8 lakh' },
-      ]
-    },
+const STEPS = [
+  {
+    id: 'quota',
+    question: 'Which counselling are you preparing for?',
+    options: [
+      { label: 'MH State Quota', value: 'mh' },
+      { label: 'MCC / All India Quota', value: 'aiq' },
+      { label: 'Open State Quota', value: 'open_state' },
+      { label: 'NRI / Management', value: 'nri' },
+    ],
   },
-  quota: {
-    AIQ: {
-      title: 'All India Quota (AIQ) Documents',
-      docs: [
-        { id: 'mcc-reg',       label: 'MCC Registration Printout',   copies: '2 photocopies',              note: 'Print from the MCC NEET UG 2025 counselling portal' },
-        { id: 'mcc-allotment', label: 'AIQ Seat Allotment Letter',   copies: 'Original + 2 photocopies',   note: 'Download from MCC portal after seat allotment round' },
-      ]
-    },
-    State: {
-      title: 'State Quota (Maharashtra) Documents',
-      docs: [
-        { id: 'domicile', label: 'Maharashtra Domicile / Nativity Certificate', copies: 'Original + 2 attested photocopies', note: 'Issued by Tehsildar or SDO; family requires 15+ years Maharashtra residence' },
-      ]
-    },
-    Management: {
-      title: 'Management / NRI Quota Documents',
-      docs: [
-        { id: 'mgmt-allotment', label: 'Management / NRI Seat Allotment Letter', copies: 'Original + 2 photocopies', note: 'From college trust or state management quota authority' },
-        { id: 'fee-receipt',    label: 'Fee Payment Receipt',                    copies: '2 photocopies',             note: 'If partial fee was collected at time of allotment' },
-      ]
-    },
-  }
+  {
+    id: 'category',
+    question: 'What is your reservation category?',
+    options: [
+      { label: 'General / UR', value: 'general' },
+      { label: 'OBC', value: 'obc' },
+      { label: 'SEBC', value: 'sebc' },
+      { label: 'VJ / NT / SBC', value: 'vj_nt_sbc' },
+      { label: 'SC', value: 'sc' },
+      { label: 'ST', value: 'st' },
+      { label: 'EWS', value: 'ews' },
+    ],
+  },
+  {
+    id: 'additional',
+    question: 'Any additional reservation?',
+    options: [
+      { label: 'None', value: 'none' },
+      { label: 'Defence — D1', value: 'defence_d1' },
+      { label: 'Defence — D2', value: 'defence_d2' },
+      { label: 'Defence — D3', value: 'defence_d3' },
+      { label: 'Hilly Area', value: 'hilly' },
+      { label: 'PWD', value: 'pwd' },
+    ],
+  },
+  {
+    id: 'attempt',
+    question: 'Is this your first NEET attempt?',
+    options: [
+      { label: 'Yes — first attempt', value: 'false' },
+      { label: 'No — dropper / repeater', value: 'true' },
+    ],
+  },
+  {
+    id: 'minority',
+    question: 'Applying under any minority quota?',
+    options: [
+      { label: 'No', value: 'none' },
+      { label: 'Jain', value: 'minority_jain' },
+      { label: 'Muslim', value: 'minority_muslim' },
+      { label: 'Christian', value: 'minority_christian' },
+      { label: 'Hindi (Linguistic)', value: 'minority_hindi' },
+    ],
+  },
+];
+
+const CHIP_LABELS = {
+  quota: { mh: 'MH State Quota', aiq: 'MCC / All India Quota', open_state: 'Open State Quota', nri: 'NRI / Management' },
+  category: { general: 'General / UR', obc: 'OBC', sebc: 'SEBC', vj_nt_sbc: 'VJ / NT / SBC', sc: 'SC', st: 'ST', ews: 'EWS' },
+  additional: { none: 'No Add. Reservation', defence_d1: 'Defence D1', defence_d2: 'Defence D2', defence_d3: 'Defence D3', hilly: 'Hilly Area', pwd: 'PWD' },
+  attempt: { false: 'Fresher', true: 'Repeater' },
+  minority: { none: 'No Minority', minority_jain: 'Jain Minority', minority_muslim: 'Muslim Minority', minority_christian: 'Christian Minority', minority_hindi: 'Hindi Linguistic' },
 };
 
 export default function DocumentChecklistPage() {
-  const [checkedDocs, setCheckedDocs] = useState(new Set());
-  const [selectedCategory, setSelectedCategory] = useState('General');
-  const [selectedQuota, setSelectedQuota] = useState('State');
-  const [isClient, setIsClient] = useState(false);
+  const [step, setStep] = useState(0); // 0-4 = wizard steps, 5 = checklist
+  const [selections, setSelections] = useState({});
+  const [checked, setChecked] = useState(new Set());
 
-  useEffect(() => {
-    setIsClient(true);
-    try {
-      const saved = JSON.parse(localStorage.getItem('asmi-checklist') || '{}');
-      if (saved.checked) setCheckedDocs(new Set(saved.checked));
-      if (saved.category) setSelectedCategory(saved.category);
-      if (saved.quota) setSelectedQuota(saved.quota);
-    } catch(e) {}
+  const handleSelect = useCallback((stepId, value) => {
+    const newSelections = { ...selections, [stepId]: value };
+    // Clear later selections when going back
+    setSelections(newSelections);
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      // Step 5 (minority) done — show checklist
+      setStep(5);
+      setChecked(new Set());
+    }
+  }, [selections, step]);
+
+  const handleBack = useCallback(() => {
+    if (step > 0) {
+      // Clear current step's selection
+      const stepId = STEPS[step].id;
+      const newSel = { ...selections };
+      delete newSel[stepId];
+      setSelections(newSel);
+      setStep(step - 1);
+    }
+  }, [step, selections]);
+
+  const handleStartOver = useCallback(() => {
+    setSelections({});
+    setStep(0);
+    setChecked(new Set());
   }, []);
 
-  const saveState = (checked, cat, quota) => {
-    try {
-      localStorage.setItem('asmi-checklist', JSON.stringify({
-        checked: [...checked],
-        category: cat,
-        quota: quota
-      }));
-    } catch(e) {}
-  };
+  const toggleDoc = useCallback((id) => {
+    setChecked(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
-  const handleCategoryChange = (cat) => {
-    setSelectedCategory(cat);
-    saveState(checkedDocs, cat, selectedQuota);
-  };
+  // Build checklist when on step 5
+  let checklistData = null;
+  if (step === 5) {
+    checklistData = buildDocumentList({
+      quota: selections.quota,
+      category: selections.category,
+      additional: selections.additional,
+      isRepeater: selections.attempt === 'true',
+      minority: selections.minority,
+    });
+  }
 
-  const handleQuotaChange = (quota) => {
-    setSelectedQuota(quota);
-    saveState(checkedDocs, selectedCategory, quota);
-  };
-
-  const toggleDoc = (id) => {
-    const newChecked = new Set(checkedDocs);
-    if (newChecked.has(id)) {
-      newChecked.delete(id);
-    } else {
-      newChecked.add(id);
-    }
-    setCheckedDocs(newChecked);
-    saveState(newChecked, selectedCategory, selectedQuota);
-  };
-
-  const resetChecklist = () => {
-    if (confirm('Clear all checkmarks and start fresh?')) {
-      const empty = new Set();
-      setCheckedDocs(empty);
-      saveState(empty, selectedCategory, selectedQuota);
-    }
-  };
-
-  if (!isClient) return null;
-
-  const sectionsToRender = [
-    ...DOCS.sections,
-    ...(selectedCategory !== 'General' && DOCS.category[selectedCategory] ? [DOCS.category[selectedCategory]] : []),
-    ...(DOCS.quota[selectedQuota] ? [DOCS.quota[selectedQuota]] : []),
-  ];
-
-  const allIds = sectionsToRender.flatMap(s => s.docs.map(d => d.id));
-  const doneCount = allIds.filter(id => checkedDocs.has(id)).length;
-  const pct = allIds.length ? Math.round((doneCount / allIds.length) * 100) : 0;
+  const today = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
     <div className="min-h-screen bg-[#f6f5f9]">
       <Nav />
-      
+
       {/* HERO */}
       <div className="dc-hero">
         <div className="dc-hero-bg"></div>
@@ -178,134 +144,121 @@ export default function DocumentChecklistPage() {
           <div className="dc-badge">Free Tool</div>
           <h1 className="dc-h1">Your Complete Documents Checklist</h1>
           <p className="dc-sub">
-            Select your category and quota — get a personalised list of every certificate you need, how many copies, and what needs attestation. Print it and walk in prepared.
+            Answer 5 quick questions — get a personalised list of every document you need, how many copies, and what needs attestation. Print it and walk in prepared.
           </p>
-          <div className="flex justify-center gap-3">
-            <Link href="/inquiry" className="btn-gold">
-              Get Expert Guidance <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
-            </Link>
-          </div>
         </div>
       </div>
 
       <div className="dc-container">
-        
-        {/* Profile Selector */}
-        <div className="profile-card">
-          <div className="mb-4">
-            <div className="profile-label">Your Category</div>
-            <div className="chip-row">
-              {['General', 'OBC', 'SC', 'ST', 'EWS'].map(cat => (
-                <div 
-                  key={cat} 
-                  className={`chip ${selectedCategory === cat ? 'active' : ''}`}
-                  onClick={() => handleCategoryChange(cat)}
-                >
-                  {cat === 'General' ? 'General / UR' : cat === 'OBC' ? 'OBC (Non-Creamy Layer)' : cat}
-                </div>
+
+        {step < 5 ? (
+          /* ── WIZARD ── */
+          <div className="wizard-card">
+            {/* Step indicator */}
+            <div className="step-indicator">
+              {STEPS.map((s, i) => (
+                <div key={s.id} className={`step-dot ${i < step ? 'done' : i === step ? 'active' : ''}`} />
               ))}
             </div>
-          </div>
-          <div>
-            <div className="profile-label">Quota Type</div>
-            <div className="chip-row">
-              {['State', 'AIQ', 'Management'].map(q => (
-                <div 
-                  key={q} 
-                  className={`chip ${selectedQuota === q ? 'active' : ''}`}
-                  onClick={() => handleQuotaChange(q)}
+
+            <div className="step-counter">Step {step + 1} of {STEPS.length}</div>
+            <div className="step-question">{STEPS[step].question}</div>
+
+            <div className="step-options">
+              {STEPS[step].options.map(opt => (
+                <button
+                  key={opt.value}
+                  className="step-option"
+                  onClick={() => handleSelect(STEPS[step].id, opt.value)}
                 >
-                  {q === 'State' ? 'State Quota (Maharashtra)' : q === 'AIQ' ? 'All India Quota (AIQ)' : 'Management / NRI'}
-                </div>
+                  {opt.label}
+                </button>
               ))}
             </div>
+
+            {step > 0 && (
+              <button className="step-back" onClick={handleBack}>
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_back</span>
+                Back
+              </button>
+            )}
           </div>
-        </div>
-
-        {/* Progress */}
-        <div className="progress-card">
-          <span className="material-symbols-outlined" style={{ color: '#7b41b3', fontSize: '18px' }}>checklist</span>
-          <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${pct}%` }}></div>
-          </div>
-          <div className="progress-label">{doneCount} of {allIds.length} ready</div>
-        </div>
-
-        {/* Callout */}
-        <div className="callout">
-          <span className="material-symbols-outlined" style={{ color: '#7b41b3', fontSize: '18px', flexShrink: 0, marginTop: '1px' }}>info</span>
-          <p><strong>Attestation tip:</strong> &quot;Self-attested&quot; means you sign and write &quot;True Copy&quot; on the photocopy yourself. &quot;Attested copy&quot; means a gazetted officer, notary, or school principal signs it. Always carry a few extra copies — colleges often ask for more than listed.</p>
-        </div>
-
-        {/* Checklist */}
-        <div>
-          {sectionsToRender.map((section, idx) => (
-            <div key={idx} className="doc-section">
-              <div className="section-label">{section.title}</div>
-              <div className="doc-list">
-                {section.docs.map(doc => (
-                  <div 
-                    key={doc.id}
-                    className={`doc-item ${checkedDocs.has(doc.id) ? 'checked' : ''}`}
-                    role="checkbox"
-                    aria-checked={checkedDocs.has(doc.id)}
-                    tabIndex="0"
-                    onClick={() => toggleDoc(doc.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        toggleDoc(doc.id);
-                      }
-                    }}
-                  >
-                    <div className="doc-check">
-                      <span className="material-symbols-outlined check-icon">check</span>
-                    </div>
-                    <div>
-                      <div className="doc-label">{doc.label}</div>
-                      <div className="doc-copies">{doc.copies}</div>
-                      {doc.note && <div className="doc-note">{doc.note}</div>}
-                    </div>
-                  </div>
-                ))}
-              </div>
+        ) : (
+          /* ── CHECKLIST ── */
+          <>
+            {/* Profile summary bar */}
+            <div className="profile-summary no-print">
+              {Object.entries(selections).map(([key, val]) => (
+                <span key={key} className="profile-chip">{CHIP_LABELS[key]?.[val] ?? val}</span>
+              ))}
+              <button className="start-over-link" onClick={handleStartOver}>Start over</button>
             </div>
-          ))}
-        </div>
 
-        {/* Actions */}
-        <div className="action-row">
-          <button className="btn-secondary" onClick={() => window.print()}>
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span> Print Checklist
-          </button>
-          <button className="btn-secondary btn-danger" onClick={resetChecklist}>
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>restart_alt</span> Reset
-          </button>
-          <Link href="/inquiry" className="btn-gold ml-auto hidden sm:inline-flex" style={{ fontSize: '0.875rem' }}>
-            Talk to a Counsellor <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
-          </Link>
-        </div>
+            {/* Print-only profile summary */}
+            <div className="print-only print-profile">
+              {Object.entries(selections).map(([key, val]) => (
+                <span key={key} className="print-chip">{CHIP_LABELS[key]?.[val] ?? val}</span>
+              ))}
+            </div>
 
-        {/* Other Tools */}
-        <div className="other-tools-section">
-          <div className="other-tool-label">Explore Other Tools</div>
-          <div className="other-tool-grid">
-            <Link href="/resources" className="other-tool">
-              <span className="other-tool-icon">📚</span>
-              <div>
-                <div className="other-tool-title">Resources Hub</div>
-                <div className="other-tool-desc">View all free guides and PDFs</div>
+            {/* Progress counter */}
+            <div className="progress-card no-print">
+              <span className="material-symbols-outlined" style={{ color: '#7b41b3', fontSize: '18px' }}>checklist</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: checklistData.total ? `${Math.round((checked.size / checklistData.total) * 100)}%` : '0%' }}></div>
               </div>
-            </Link>
-            <Link href="/medical#events" className="other-tool">
-              <span className="other-tool-icon">🎓</span>
-              <div>
-                <div className="other-tool-title">Events &amp; Seminars</div>
-                <div className="other-tool-desc">Free counselling seminars</div>
+              <div className="progress-label">{checked.size} of {checklistData.total} ready</div>
+            </div>
+
+            {/* Checklist groups */}
+            {Object.entries(checklistData.groups).map(([groupName, items]) => (
+              <div key={groupName} className="doc-section">
+                <div className="section-label">{groupName}</div>
+                <div className="doc-list">
+                  {items.map(doc => (
+                    <div
+                      key={doc.id + '_' + groupName}
+                      className={`doc-item ${checked.has(doc.id) ? 'checked' : ''}`}
+                      role="checkbox"
+                      aria-checked={checked.has(doc.id)}
+                      tabIndex="0"
+                      onClick={() => toggleDoc(doc.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDoc(doc.id); }
+                      }}
+                    >
+                      <div className="doc-check">
+                        <span className="material-symbols-outlined check-icon">check</span>
+                      </div>
+                      <div className="doc-content">
+                        <div className="doc-label">{doc.name}</div>
+                        <div className="doc-copies">{doc.copies}</div>
+                        {doc.note && <div className="doc-note">{doc.note}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </Link>
-          </div>
-        </div>
+            ))}
+
+            {/* Actions */}
+            <div className="action-row no-print">
+              <button className="btn-secondary" onClick={() => window.print()}>
+                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>print</span> Print Checklist
+              </button>
+            </div>
+
+            {/* Registered user CTA */}
+            <div className="student-cta no-print">
+              ASMI students — <Link href="/student">log in to track your document submission status →</Link>
+            </div>
+
+            {/* Print footer */}
+            <div className="print-only print-footer">
+              asmicareer.in &nbsp;|&nbsp; Generated {today}
+            </div>
+          </>
+        )}
 
       </div>
 

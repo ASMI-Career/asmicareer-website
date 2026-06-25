@@ -1,0 +1,512 @@
+{
+  "base": [
+    {
+      "id": "neet_confirmation",
+      "name": "NEET Confirmation Page",
+      "group": "NEET Documents",
+      "note": "Printout of submitted application — from NTA portal",
+      "copies": "1 copy"
+    },
+    {
+      "id": "neet_admit",
+      "name": "NEET Admit Card",
+      "group": "NEET Documents",
+      "note": "Original downloaded from NTA website",
+      "copies": "Original + 2 self-attested photocopies"
+    },
+    {
+      "id": "neet_scorecard",
+      "name": "NEET Scorecard / Rank Letter",
+      "group": "NEET Documents",
+      "note": "Downloaded from NTA portal after result",
+      "copies": "Original + 2 self-attested photocopies"
+    },
+    {
+      "id": "class10_marksheet",
+      "name": "Class 10 Marksheet",
+      "group": "Class X Documents",
+      "note": "Also serves as date of birth proof",
+      "copies": "Original + 3 attested photocopies"
+    },
+    {
+      "id": "class10_passing",
+      "name": "Class 10 Passing Certificate",
+      "group": "Class X Documents",
+      "note": "",
+      "copies": "Original + 2 attested photocopies"
+    },
+    {
+      "id": "class12_marksheet",
+      "name": "Class 12 Marksheet",
+      "group": "Class XII Documents",
+      "note": "",
+      "copies": "Original + 3 attested photocopies"
+    },
+    {
+      "id": "class12_passing",
+      "name": "Class 12 Passing Certificate",
+      "group": "Class XII Documents",
+      "note": "",
+      "copies": "Original + 3 attested photocopies"
+    },
+    {
+      "id": "tc",
+      "name": "Transfer / Leaving Certificate (TC)",
+      "group": "School & College Certificates",
+      "note": "From last institution attended",
+      "copies": "Original + 2 attested photocopies"
+    },
+    {
+      "id": "bonafide",
+      "name": "Bonafide Certificate",
+      "group": "School & College Certificates",
+      "note": "From last institution attended",
+      "copies": "Original"
+    },
+    {
+      "id": "character_cert",
+      "name": "Character Certificate",
+      "group": "School & College Certificates",
+      "note": "From last institution attended",
+      "copies": "Original"
+    },
+    {
+      "id": "aadhaar",
+      "name": "Aadhaar Card",
+      "group": "Identity & Address Proof",
+      "note": "",
+      "copies": "Original + 3 self-attested photocopies"
+    },
+    {
+      "id": "medical_fitness",
+      "name": "Medical Fitness Certificate",
+      "group": "Medical Certificate",
+      "note": "From a registered MBBS doctor — some colleges issue their own format at reporting",
+      "copies": "Original on doctor's letterhead"
+    },
+    {
+      "id": "photos",
+      "name": "Passport-size Photographs",
+      "group": "Identity & Address Proof",
+      "note": "White background — same set used in NEET application",
+      "copies": "10–15 recent copies"
+    }
+  ],
+  "byQuota": {
+    "mh": [
+      {
+        "id": "domicile",
+        "name": "Nationality & Domicile Certificate",
+        "group": "Identity & Address Proof",
+        "note": "Issued by Tehsildar or SDO — family must have 15+ years Maharashtra residence",
+        "copies": "Original + 2 attested photocopies"
+      }
+    ],
+    "aiq": [],
+    "open_state": [
+      {
+        "id": "migration",
+        "name": "Migration Certificate",
+        "group": "School & College Certificates",
+        "note": "Issued by your Class 12 college — required when joining a college outside Maharashtra",
+        "copies": "Original + 1 photocopy"
+      },
+      {
+        "id": "eligibility",
+        "name": "Eligibility Certificate",
+        "group": "School & College Certificates",
+        "note": "From the destination state university or authority",
+        "copies": "Original + 1 photocopy"
+      },
+      {
+        "id": "equivalence",
+        "name": "Equivalence Certificate",
+        "group": "School & College Certificates",
+        "note": "Required if your 12th board differs from the destination state board",
+        "copies": "Original + 1 photocopy",
+        "conditional": true,
+        "conditionalNote": "Only if board differs"
+      }
+    ],
+    "nri": [
+      {
+        "id": "migration",
+        "name": "Migration Certificate",
+        "group": "School & College Certificates",
+        "note": "Issued by your Class 12 college",
+        "copies": "Original + 1 photocopy"
+      },
+      {
+        "id": "passport_student",
+        "name": "Passport — Student",
+        "group": "NRI Documents",
+        "note": "Valid passport",
+        "copies": "Original + 2 photocopies"
+      },
+      {
+        "id": "passport_sponsor",
+        "name": "Passport — Sponsor (Parent / Guardian)",
+        "group": "NRI Documents",
+        "note": "Valid passport of NRI sponsor",
+        "copies": "Original + 2 photocopies"
+      },
+      {
+        "id": "nri_visa",
+        "name": "Visa / OCI Card / PIO Card",
+        "group": "NRI Documents",
+        "note": "Current valid visa or OCI / PIO card of NRI sponsor",
+        "copies": "Original + 2 photocopies"
+      },
+      {
+        "id": "nri_affidavit",
+        "name": "NRI Sponsorship Affidavit",
+        "group": "NRI Documents",
+        "note": "Notarised — confirming sponsor relationship and financial support",
+        "copies": "Original"
+      },
+      {
+        "id": "bank_statements",
+        "name": "Bank Statements — 6 months",
+        "group": "NRI Documents",
+        "note": "NRI sponsor's foreign bank account, last 6 months",
+        "copies": "Attested copies"
+      }
+    ]
+  },
+  "byCategory": {
+    "general": [],
+    "obc": [
+      {
+        "id": "caste_cert",
+        "name": "Caste Certificate — State",
+        "group": "Category Documents",
+        "note": "Issued by SDO or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "OBC"
+      },
+      {
+        "id": "caste_validity",
+        "name": "Caste Validity Certificate",
+        "group": "Category Documents",
+        "note": "Issued by Caste Validity Scrutiny Committee — non-negotiable",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "OBC"
+      },
+      {
+        "id": "ncl_state",
+        "name": "OBC Non-Creamy Layer Certificate — State",
+        "group": "Category Documents",
+        "note": "Required for MH state quota seats — must be valid for current financial year",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "OBC"
+      },
+      {
+        "id": "ncl_central",
+        "name": "OBC Non-Creamy Layer Certificate — Central",
+        "group": "Category Documents",
+        "note": "Required for AIQ / MCC seats — must be valid for current financial year",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "OBC"
+      },
+      {
+        "id": "income_cert",
+        "name": "Income Certificate",
+        "group": "Category Documents",
+        "note": "Annual family income — issued by Tehsildar",
+        "copies": "Original + 1 photocopy",
+        "tag": "OBC"
+      }
+    ],
+    "sebc": [
+      {
+        "id": "caste_cert",
+        "name": "Caste Certificate — State",
+        "group": "Category Documents",
+        "note": "Issued by SDO or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "SEBC"
+      },
+      {
+        "id": "caste_validity",
+        "name": "Caste Validity Certificate",
+        "group": "Category Documents",
+        "note": "Issued by Caste Validity Scrutiny Committee",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "SEBC"
+      },
+      {
+        "id": "sebc_cert",
+        "name": "SEBC Certificate",
+        "group": "Category Documents",
+        "note": "Issued by competent authority",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "SEBC"
+      },
+      {
+        "id": "income_cert",
+        "name": "Income Certificate",
+        "group": "Category Documents",
+        "note": "Annual family income — issued by Tehsildar",
+        "copies": "Original + 1 photocopy",
+        "tag": "SEBC"
+      }
+    ],
+    "vj_nt_sbc": [
+      {
+        "id": "caste_cert",
+        "name": "Caste Certificate — State",
+        "group": "Category Documents",
+        "note": "Issued by SDO or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "VJ/NT/SBC"
+      },
+      {
+        "id": "caste_validity",
+        "name": "Caste Validity Certificate",
+        "group": "Category Documents",
+        "note": "Issued by Caste Validity Scrutiny Committee",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "VJ/NT/SBC"
+      },
+      {
+        "id": "ncl_state",
+        "name": "OBC Non-Creamy Layer Certificate — State",
+        "group": "Category Documents",
+        "note": "Required for MH state quota seats",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "VJ/NT/SBC"
+      },
+      {
+        "id": "ncl_central",
+        "name": "OBC Non-Creamy Layer Certificate — Central",
+        "group": "Category Documents",
+        "note": "Required for AIQ / MCC seats",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "VJ/NT/SBC"
+      },
+      {
+        "id": "income_cert",
+        "name": "Income Certificate",
+        "group": "Category Documents",
+        "note": "Annual family income — issued by Tehsildar",
+        "copies": "Original + 1 photocopy",
+        "tag": "VJ/NT/SBC"
+      }
+    ],
+    "sc": [
+      {
+        "id": "caste_cert",
+        "name": "Caste Certificate — State",
+        "group": "Category Documents",
+        "note": "Issued by SDO or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "SC"
+      },
+      {
+        "id": "caste_validity",
+        "name": "Caste Validity Certificate",
+        "group": "Category Documents",
+        "note": "Issued by Caste Validity Scrutiny Committee",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "SC"
+      }
+    ],
+    "st": [
+      {
+        "id": "caste_cert",
+        "name": "Caste Certificate — State",
+        "group": "Category Documents",
+        "note": "Issued by SDO or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "ST"
+      },
+      {
+        "id": "caste_validity",
+        "name": "Caste Validity Certificate",
+        "group": "Category Documents",
+        "note": "Issued by Caste Validity Scrutiny Committee",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "ST"
+      }
+    ],
+    "ews": [
+      {
+        "id": "ews_state",
+        "name": "EWS Certificate — State",
+        "group": "Category Documents",
+        "note": "For Maharashtra state quota process",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "EWS"
+      },
+      {
+        "id": "ews_central",
+        "name": "EWS Certificate — Central",
+        "group": "Category Documents",
+        "note": "For All India Quota / MCC process",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "EWS"
+      },
+      {
+        "id": "income_cert",
+        "name": "Income Certificate",
+        "group": "Category Documents",
+        "note": "Annual family income below ₹8 lakh — from Tehsildar",
+        "copies": "Original + 1 photocopy",
+        "tag": "EWS"
+      }
+    ]
+  },
+  "byAdditional": {
+    "none": [],
+    "defence_d1": [
+      {
+        "id": "defence_cert_d1",
+        "name": "D1 Defence Service Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Issued by competent military authority",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D1"
+      },
+      {
+        "id": "parent_domicile_mh",
+        "name": "Parent's Maharashtra Domicile Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Required for D1 candidates",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D1"
+      }
+    ],
+    "defence_d2": [
+      {
+        "id": "defence_cert_d2",
+        "name": "D2 Defence Service Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Issued by competent military authority",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D2"
+      },
+      {
+        "id": "parent_domicile_mh",
+        "name": "Parent's Maharashtra Domicile Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Required for D2 candidates",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D2"
+      }
+    ],
+    "defence_d3": [
+      {
+        "id": "defence_cert_d3",
+        "name": "D3 Defence Service Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Issued by competent military authority",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D3"
+      },
+      {
+        "id": "transfer_order",
+        "name": "Service Transfer Order",
+        "group": "Additional Reservation Documents",
+        "note": "Proof of inter-state transfer posting",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Defence D3"
+      }
+    ],
+    "hilly": [
+      {
+        "id": "hilly_cert",
+        "name": "Hilly Area Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Issued by District Collector or Tehsildar",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Hilly Area"
+      },
+      {
+        "id": "parent_domicile_hilly",
+        "name": "Parent's Domicile Certificate — Same Hilly Area",
+        "group": "Additional Reservation Documents",
+        "note": "Must confirm residence in the same notified hilly area",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "Hilly Area"
+      },
+      {
+        "id": "hilly_school_proof",
+        "name": "10th or 12th Certificate from Same Area School",
+        "group": "Additional Reservation Documents",
+        "note": "Proof that student studied in the same hilly area",
+        "copies": "Original + 1 attested photocopy",
+        "tag": "Hilly Area"
+      }
+    ],
+    "pwd": [
+      {
+        "id": "disability_cert",
+        "name": "Disability Certificate",
+        "group": "Additional Reservation Documents",
+        "note": "Must be from Grant Medical College Mumbai or AIIMS Nagpur specifically — not from general hospitals",
+        "copies": "Original + 2 attested photocopies",
+        "tag": "PWD"
+      },
+      {
+        "id": "udid_card",
+        "name": "UDID Card",
+        "group": "Additional Reservation Documents",
+        "note": "Unique Disability ID — from the UDID portal (swavlambancard.gov.in)",
+        "copies": "Original + 1 photocopy",
+        "tag": "PWD"
+      }
+    ]
+  },
+  "conditional": {
+    "repeater": [
+      {
+        "id": "gap_cert",
+        "name": "Gap Certificate",
+        "group": "Conditional Documents",
+        "note": "Notarised affidavit on stamp paper explaining the gap year",
+        "copies": "Original",
+        "tag": "Repeater"
+      }
+    ],
+    "minority_jain": [
+      {
+        "id": "minority_affidavit",
+        "name": "Jain Minority Affidavit",
+        "group": "Conditional Documents",
+        "note": "Self-declaration on stamp paper — notarised",
+        "copies": "Original",
+        "tag": "Jain Minority"
+      }
+    ],
+    "minority_muslim": [
+      {
+        "id": "minority_affidavit",
+        "name": "Muslim Minority Affidavit",
+        "group": "Conditional Documents",
+        "note": "Self-declaration on stamp paper — notarised",
+        "copies": "Original",
+        "tag": "Muslim Minority"
+      }
+    ],
+    "minority_christian": [
+      {
+        "id": "minority_affidavit",
+        "name": "Christian Minority Affidavit",
+        "group": "Conditional Documents",
+        "note": "Self-declaration on stamp paper — notarised",
+        "copies": "Original",
+        "tag": "Christian Minority"
+      }
+    ],
+    "minority_hindi": [
+      {
+        "id": "minority_affidavit",
+        "name": "Hindi Minority Affidavit",
+        "group": "Conditional Documents",
+        "note": "Self-declaration on stamp paper — notarised",
+        "copies": "Original",
+        "tag": "Hindi Linguistic Minority"
+      }
+    ]
+  }
+}
