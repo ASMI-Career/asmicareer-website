@@ -333,6 +333,15 @@ export default function InquiryPage() {
                     <span id="tokenDisplay">{token}</span>
                 </div>
                 <p className="modal-msg">{['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) ? 'Please take a seat. A counsellor will call your token shortly.' : 'Your Personalized Medical Admission Health Report will be shared within 24 hours.'}</p>
+                {!['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
+                  <a
+                    href={`/slide4_recommended.html?token=${encodeURIComponent(token)}&download=1`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="modal-close"
+                    style={{ display: 'block', marginBottom: 10, background: 'linear-gradient(135deg,#1a0040,#6a0dad)', color: '#FFD700', textDecoration: 'none', textAlign: 'center' }}
+                  >⬇ Download My Report</a>
+                )}
                 <button onClick={() => setShowModal(false)} className="modal-close">Close</button>
             </div>
         </div>
