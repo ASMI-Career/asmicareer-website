@@ -1222,7 +1222,7 @@ export default function MedicalPortal() {
           {/* HERO QUOTE — Bora AIR 1 */}
           <div className={`bora-card${testiVisible ? ' bora-visible' : ''}`}>
             <div className="bora-glow-ring" aria-hidden="true" />
-            <div className="bora-avatar">VB</div>
+            <div className="bora-avatar"><img src="/testimonials/varunchakravarti-bora.jpg" alt="Varunchakravarti Bora" style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'50%'}} /></div>
             <div className="bora-content">
               <div className="bora-air-badge">
                 <span className="bora-air-label">NEET 2023</span>
@@ -1245,24 +1245,24 @@ export default function MedicalPortal() {
           <div className="toppers-wrap">
             <div className={`toppers-track${testiVisible ? ' toppers-animate' : ''}`}>
               {[
-                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM' },
-                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG' },
-                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP' },
-                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP' },
-                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ' },
-                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS' },
-                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH' },
+                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM', img: '/testimonials/umayma-malbari.jpg' },
+                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG', img: '/testimonials/soham-gaykar.jpg' },
+                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP', img: '/testimonials/maulik-patel.jpg' },
+                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP', img: '/testimonials/sammed-patil.jpg' },
+                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ', img: '/testimonials/satyajit-jagtap.jpg' },
+                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS', img: '/testimonials/kartik-satpute.jpg' },
+                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH', img: '/testimonials/amit-honmore.jpg' },
                 // Duplicate for seamless loop
-                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM' },
-                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG' },
-                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP' },
-                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP' },
-                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ' },
-                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS' },
-                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH' },
+                { air: 52,   name: 'Umayma Malbari', score: 715, college: 'KEM Mumbai',   initials: 'UM', img: '/testimonials/umayma-malbari.jpg' },
+                { air: 91,   name: 'Soham Gaykar',   score: 715, college: 'AIIMS Delhi',  initials: 'SG', img: '/testimonials/soham-gaykar.jpg' },
+                { air: 123,  name: 'Maulik Patel',   score: 715, college: 'KEM Mumbai',   initials: 'MP', img: '/testimonials/maulik-patel.jpg' },
+                { air: 208,  name: 'Sammed Patil',   score: 715, college: 'MAMC Delhi',   initials: 'SP', img: '/testimonials/sammed-patil.jpg' },
+                { air: 1053, name: 'Satyajit Jagtap',score: 700, college: 'AIIMS Raipur', initials: 'SJ', img: '/testimonials/satyajit-jagtap.jpg' },
+                { air: 1315, name: 'Kartik Satpute', score: 700, college: 'AIIMS Nagpur', initials: 'KS', img: '/testimonials/kartik-satpute.jpg' },
+                { air: 1622, name: 'Amit Honmore',   score: 700, college: 'AIIMS Bhopal', initials: 'AH', img: '/testimonials/amit-honmore.jpg' },
               ].map((t, i) => (
                 <div className="topper-card" key={i}>
-                  <div className="topper-avatar">{t.initials}</div>
+                  <div className="topper-avatar">{t.img ? <img src={t.img} alt={t.name} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'50%'}} /> : t.initials}</div>
                   <div className="topper-air">AIR {t.air}</div>
                   <div className="topper-name">{t.name}</div>
                   <div className="topper-score">Score {t.score}</div>
@@ -1279,6 +1279,7 @@ export default function MedicalPortal() {
                 name: 'Renuka Bhandari',
                 college: 'Armed Forces Medical College, Pune',
                 initials: 'RB',
+                img: '/testimonials/renuka-bhandari.jpg',
                 quote: 'I owe my success in securing admission to AFMC, Pune, to the unwavering support of ASMI Career and Sharang Sir. Their tailored guidance during the interview and test preparation, along with connections to seniors, played a pivotal role.',
                 delay: 0
               },
@@ -1286,6 +1287,7 @@ export default function MedicalPortal() {
                 name: 'Aditi Sawant',
                 college: 'AIIMS Delhi',
                 initials: 'AS',
+                img: '/testimonials/aditi-sawant.jpg',
                 quote: 'Navigating the AIIMS admission process as an OCI student was daunting. However, ASMI Career and Sharang Sir\'s expertise in eligibility requirements and document verification ensured I overcame every hurdle to earn my spot at AIIMS Delhi.',
                 delay: 200
               },
@@ -1293,6 +1295,7 @@ export default function MedicalPortal() {
                 name: 'Shivansh Siingh',
                 college: 'Seth GS Medical College, Mumbai',
                 initials: 'SS',
+                img: '/testimonials/shivansh-siingh.jpg',
                 quote: 'Achieving a NEET score of 691 was great, but figuring out the right college was another challenge. Thanks to Anish Sir\'s insightful advice and ASMI\'s meticulous handling of paperwork and updates, I secured Seth GS Medical College.',
                 delay: 400
               }
@@ -1315,7 +1318,7 @@ export default function MedicalPortal() {
                 </div>
                 <p className="testi-body-new">{t.quote}</p>
                 <div className="testi-student">
-                  <div className="testi-avatar-new">{t.initials}</div>
+                  <div className="testi-avatar-new">{t.img ? <img src={t.img} alt={t.name} style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'50%'}} /> : t.initials}</div>
                   <div>
                     <div className="testi-name-new">{t.name}</div>
                     <div className="testi-college-new">{t.college}</div>
