@@ -888,18 +888,6 @@ export default function MedicalPortal() {
                 const headY = isTop ? lamp.y - 55 : lamp.y + 55;
                 return (
                 <g key={i}>
-                  {/* Connection to card */}
-                  {i >= 3 && (
-                    <line
-                      x1={lamp.x}
-                      y1={headY}
-                      x2={lamp.cardX}
-                      y2={lamp.cardY}
-                      stroke={activeStep >= i ? '#FFD700' : 'rgba(255,255,255,0.15)'}
-                      strokeWidth="1.5"
-                      strokeDasharray="4 4"
-                    />
-                  )}
                   {/* Pole */}
                   <line
                     x1={lamp.x}
