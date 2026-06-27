@@ -13,6 +13,11 @@ function isExpired(event) {
 
   const targetDate = event.expiry_date ? event.expiry_date : event.date;
   const eventDate = new Date(targetDate);
+  const now = new Date();
+  // If expiry_date includes a time component, compare exact timestamps; otherwise compare by day
+  if (event.expiry_date && event.expiry_date.includes('T')) {
+    return eventDate < now;
+  }
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate < today;
