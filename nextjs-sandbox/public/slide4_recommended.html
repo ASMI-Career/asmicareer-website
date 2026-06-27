@@ -503,7 +503,7 @@ function buildPoolRows(){
 
   function addPool(label,group,course,colleges,feeOvr){
     if(!colleges.length) return;
-    const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key!=='reach';});
+    const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key==='safe'||s.key==='likely';});
     if(!inReach.length && !colleges.length) return;
     const allSorted=[...colleges].sort((a,b)=>a.c-b.c);
     const lastCutoff=allSorted[0]?.c??null;
@@ -1629,7 +1629,16 @@ async function downloadPDF() {
       </div>`;
     await addCanvas(await captureEl(p1), true);
 
-    // PAGE 2 — POOL SUMMARY (existing rendered table)
+    // PAGE 2 — POOL SUMMARY (all courses)
+    const allCourses = (STUDENT.courses || 'MBBS');
+    const allCoursesArr = typeof allCourses === 'string' ? allCourses.split(',').map(c=>c.trim()) : allCourses;
+    const origSessStr = sessionStorage.getItem('asmi');
+    // Temporarily set sess.course to all courses so buildPoolRows includes all
+    const sessForPDF = getSess();
+    sessForPDF.course = allCoursesArr.join(',');
+    sessionStorage.setItem('asmi', JSON.stringify(sessForPDF));
+    const pdfRows = buildPoolRows();
+    renderTable(pdfRows);
     const tableEl = document.getElementById('tableOuter');
     const origWidth = tableEl.style.width;
     const origMaxWidth = tableEl.style.maxWidth;
@@ -1648,6 +1657,9 @@ async function downloadPDF() {
     tableEl.style.maxWidth = origMaxWidth;
     tableEl.style.height = origH;
     tableEl.style.overflow = origOv;
+    // Restore original session + re-render with original course
+    sessionStorage.setItem('asmi', origSessStr);
+    renderTable(buildPoolRows());
     await addCanvas(c2, false);
 
     // PAGE 3 REMOVED
