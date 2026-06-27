@@ -24,30 +24,6 @@
     "color_to": "#1a0040"
   },
   {
-    "id": "pune-jun-2026",
-    "title": "ASMI NEET Counselling Seminar",
-    "subtitle": "Maharashtra Cutoffs, College Options & Admission Strategy",
-    "city": "Pune",
-    "branch": "Pune",
-    "venue": "Bharatiya Vidya Bhavan's Sulochana Natu Vidya Mandir, Shivajinagar, Pune",
-    "venue_maps": "https://maps.app.goo.gl/uNbortWo8RyytKUi6",
-    "date": "2026-07-12",
-    "display_date": "12th July 2026",
-    "day": "Sunday",
-    "slots": [
-      {
-        "id": "slot-a",
-        "time": "11:00 AM – 1:00 PM"
-      }
-    ],
-    "phone": "7410013458",
-    "whatsapp": "917410013458",
-    "is_free": true,
-    "coming_soon": false,
-    "color_from": "#2a0050",
-    "color_to": "#4a0080"
-  },
-  {
     "id": "vile-parle-jul-2026",
     "title": "ASMI NEET Counselling Seminar",
     "subtitle": "Maharashtra Cutoffs, College Options & Admission Strategy",
@@ -70,5 +46,29 @@
     "coming_soon": false,
     "color_from": "#1a0040",
     "color_to": "#6a0dad"
+  },
+  {
+    "id": "pune-jun-2026",
+    "title": "ASMI NEET Counselling Seminar",
+    "subtitle": "Maharashtra Cutoffs, College Options & Admission Strategy",
+    "city": "Pune",
+    "branch": "Pune",
+    "venue": "Bharatiya Vidya Bhavan's Sulochana Natu Vidya Mandir, Shivajinagar, Pune",
+    "venue_maps": "https://maps.app.goo.gl/uNbortWo8RyytKUi6",
+    "date": "2026-07-12",
+    "display_date": "12th July 2026",
+    "day": "Sunday",
+    "slots": [
+      {
+        "id": "slot-a",
+        "time": "11:00 AM – 1:00 PM"
+      }
+    ],
+    "phone": "7410013458",
+    "whatsapp": "917410013458",
+    "is_free": true,
+    "coming_soon": false,
+    "color_from": "#2a0050",
+    "color_to": "#4a0080"
   }
 ]
