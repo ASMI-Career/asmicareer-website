@@ -252,6 +252,7 @@ export default function EventsPage() {
       email:        form.email.trim(),
       neetYear:     form.neetYear,
       members:      form.members,
+      whatsapp:     selectedSeminar.whatsapp,
     };
 
     try {
@@ -342,7 +343,7 @@ export default function EventsPage() {
     const msg = encodeURIComponent(
       `Hi, I've registered for the ASMI Seminar.\nBooking ID: ${booking.bookingId}\nName: ${booking.name}\nCity: ${booking.city}\nDate: ${booking.date}`
     );
-    window.open(`https://wa.me/917410019074?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${booking.whatsapp || '917410019074'}?text=${msg}`, '_blank');
   }
 
   /* ══════════════════════════════════════════════════════════
