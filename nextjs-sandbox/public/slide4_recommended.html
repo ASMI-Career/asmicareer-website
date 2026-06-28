@@ -439,25 +439,27 @@ function getColleges(stateKey,courseKey,keys,listType){
 }
 function findCollegeCutoffs(name, course) {
   const userCat = activeCategory();
+  const COURSE_ORDER = ['MBBS','BDS','BAMS','BHMS','BPTH'];
+  const coursesToTry = course ? [course, ...COURSE_ORDER.filter(c=>c!==course)] : COURSE_ORDER;
   let openC = null, catC = null;
-  for (const stateKey in DB) {
-    if (DB[stateKey] && DB[stateKey][course]) {
-      for (const catKey of ['OPEN', userCat]) {
-        if (DB[stateKey][course][catKey]) {
-          for (const listType in DB[stateKey][course][catKey]) {
-            const list = DB[stateKey][course][catKey][listType];
-            const match = list.find(c => c.n === name);
-            if (match) {
-              if (catKey === 'OPEN') openC = match.c;
-              else catC = match.c;
+  for (const tryC of coursesToTry) {
+    for (const stateKey in DB) {
+      if (DB[stateKey] && DB[stateKey][tryC]) {
+        for (const catKey of ['OPEN', userCat]) {
+          if (DB[stateKey][tryC][catKey]) {
+            for (const listType in DB[stateKey][tryC][catKey]) {
+              const list = DB[stateKey][tryC][catKey][listType];
+              const match = list.find(c => c.n === name);
+              if (match) {
+                if (catKey === 'OPEN') openC = match.c;
+                else catC = match.c;
+              }
             }
           }
         }
       }
-      if (openC !== null || catC !== null) {
-        break;
-      }
     }
+    if (openC !== null || catC !== null) break;
   }
   return { openCutoff: openC, catCutoff: catC };
 }
@@ -800,7 +802,7 @@ function renderTop25Table(){
         <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
         <td style="text-align:center"><span class="prob ${probCls}">${c.prob.label}</span></td>
         <td style="text-align:center">
-          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}')"
+          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}','${c.course||''}')"
             style="background:none;border:none;cursor:pointer;font-size:1.1rem;">${starred?'★':'☆'}</button>
         </td>
       </tr>`;
@@ -865,21 +867,30 @@ function renderShortlistTable(){
   const hasCat = userCat !== 'General' && userCat !== 'OPEN';
   const course = activeCourse();
 
+  const COURSE_ORDER = ['MBBS','BDS','BAMS','BHMS','BPTH'];
   const POOL_ORDER = ['MH Govt','MH Private','AIQ Govt','AIIMS','JIPMER',
     'Central Univ.','Deemed','Open States'];
   const PROB_ORDER_MAP = {safe:0,likely:1,borderline:2,reach:3};
 
   const sorted = [...shortlist].sort((a,b)=>{
+    const ca = COURSE_ORDER.indexOf(a.course||'MBBS'), cb = COURSE_ORDER.indexOf(b.course||'MBBS');
+    if(ca!==cb) return ca-cb;
     const pa = POOL_ORDER.indexOf(a.pool), pb = POOL_ORDER.indexOf(b.pool);
     if(pa!==pb) return pa-pb;
     return (PROB_ORDER_MAP[a.probKey]||0)-(PROB_ORDER_MAP[b.probKey]||0);
   });
 
-  let html='', lastPool='';
+  let html='', lastPool='', lastCourse='';
   sorted.forEach((c,i)=>{
+    const colspanVal = hasCat ? 6 : 5;
+    const itemCourse = c.course || 'MBBS';
+    if(itemCourse!==lastCourse){
+      lastCourse=itemCourse;
+      lastPool='';
+      html+=`<tr style="background:linear-gradient(135deg,var(--navy),var(--purple))"><td colspan="${colspanVal}" style="color:#FFD700;font-weight:900;font-size:.8rem;letter-spacing:1.5px;padding:8px 12px;">${itemCourse}</td></tr>`;
+    }
     if(c.pool!==lastPool){
       lastPool=c.pool;
-      const colspanVal = hasCat ? 6 : 5;
       html+=`<tr class="section-row"><td colspan="${colspanVal}">${c.pool} — ${c.poolGroup}</td></tr>`;
     }
     const statusObj=getStatus(activeScore(),c.c);
@@ -2166,13 +2177,13 @@ function isShortlisted(name){
   return shortlist.some(s=>s.n===name);
 }
 
-function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
+function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee, course){
   const sess = getSess();
   let shortlist = sess.shortlist || [];
   if(isShortlisted(name)){
     shortlist = shortlist.filter(s=>s.n!==name);
   } else {
-    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee});
+    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee, course:course||activeCourse()});
   }
   sess.shortlist = shortlist;
   sessionStorage.setItem('asmi', JSON.stringify(sess));
@@ -2226,24 +2237,24 @@ function getTop25(){
   const OPEN_OTHERS=['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
   const OPEN_COLS={};
 
-  function addWithProb(arr, cols, pool, stKey){
+  function addWithProb(arr, cols, pool, stKey, course){
     cols.forEach(c=>{
-      arr.push({...c, pool, state: getStateForCollege(c.n, pool, stKey)});
+      arr.push({...c, pool, state: getStateForCollege(c.n, pool, stKey), course});
     });
   }
 
   selectedCourses.forEach(course=>{
-    addWithProb(MH_GOVT, getColleges('MH',course,keys,'mh_govt'),'MH Govt','MH');
-    addWithProb(MH_PVT,  getColleges('MH',course,keys,'mh_pvt'), 'MH Pvt', 'MH');
+    addWithProb(MH_GOVT, getColleges('MH',course,keys,'mh_govt'),'MH Govt','MH', course);
+    addWithProb(MH_PVT,  getColleges('MH',course,keys,'mh_pvt'), 'MH Pvt', 'MH', course);
 
     if(course==='MBBS'){
-      addWithProb(AIIMS_C,   getColleges('AIIMS','MBBS',keys,'aiims'),    'AIIMS',   null);
-      addWithProb(JIPMER_C,  getColleges('JIPMER','MBBS',keys,'jipmer'),  'JIPMER',  null);
-      addWithProb(CENTRAL_C, getColleges('CENTRAL',course,keys,'central'),'Central', null);
+      addWithProb(AIIMS_C,   getColleges('AIIMS','MBBS',keys,'aiims'),    'AIIMS',   null, 'MBBS');
+      addWithProb(JIPMER_C,  getColleges('JIPMER','MBBS',keys,'jipmer'),  'JIPMER',  null, 'MBBS');
+      addWithProb(CENTRAL_C, getColleges('CENTRAL',course,keys,'central'),'Central', null, 'MBBS');
 
       const deemed=getColleges('DEEMED','MBBS',['OPEN'],'deemed');
       deemed.forEach(c=>{
-        const entry={...c, pool:'Deemed', state:c.s||'All India'};
+        const entry={...c, pool:'Deemed', state:c.s||'All India', course:'MBBS'};
         const f=FEE&&FEE[c.n];
         if(f&&f>=10&&f<21)      DEEMED_BANDS['₹10–20L/yr'].push(entry);
         else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push(entry);
@@ -2256,17 +2267,17 @@ function getTop25(){
         if(cols.length){
           OPEN_COLS[stKey]=cols.map(c=>({
             ...c, pool:OPEN_STATE_NAME_MAP[stKey]||stKey,
-            state:OPEN_STATE_NAME_MAP[stKey]||stKey
+            state:OPEN_STATE_NAME_MAP[stKey]||stKey, course:'MBBS'
           }));
         }
       });
     }
 
     if(course==='BDS'){
-      addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null);
+      addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null,'MBBS');
       const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
       bdsDemed.forEach(c=>{
-        const entry={...c,pool:'Deemed',state:c.s||'All India'};
+        const entry={...c,pool:'Deemed',state:c.s||'All India',course:'BDS'};
         if(['Maharashtra','Karnataka'].includes(c.s||'')) {
           MH_KA_DEEMED.push(entry);
         } else {
