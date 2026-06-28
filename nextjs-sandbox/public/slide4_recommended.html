@@ -811,7 +811,7 @@ function renderTop25Table(){
         <td style="text-align:center;color:rgba(26,0,64,0.65)">${feeVal}</td>
         <td style="text-align:center"><span class="prob ${probCls}">${c.prob.label}</span></td>
         <td style="text-align:center">
-          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}','${c.course||''}')"
+          <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\\\'")}','${c.pool}','Top 25',${c.c},'${c.prob.key}','${feeVal}','${c.course||''}',${c.openCutoff??'null'},${c.catCutoff??'null'})"
             style="background:none;border:none;cursor:pointer;font-size:1.1rem;">${starred?'★':'☆'}</button>
         </td>
       </tr>`;
@@ -905,7 +905,11 @@ function renderShortlistTable(){
       html+=`<tr class="section-row"><td colspan="${colspanVal}">${c.pool} — ${c.poolGroup}</td></tr>`;
     }
     const statusObj=getStatus(activeScore(),c.c);
-    const cutoffs = findCollegeCutoffs(c.n, course);
+    // Use stored cutoffs from shortlist time (exact values from slide3); fall back to live lookup
+    const storedOpen = (c.openCutoff !== undefined && c.openCutoff !== null) ? c.openCutoff : null;
+    const storedCat  = (c.catCutoff  !== undefined && c.catCutoff  !== null) ? c.catCutoff  : null;
+    const liveCutoffs = (storedOpen === null && storedCat === null) ? findCollegeCutoffs(c.n, c.course||activeCourse()) : null;
+    const cutoffs = { openCutoff: storedOpen ?? liveCutoffs?.openCutoff ?? null, catCutoff: storedCat ?? liveCutoffs?.catCutoff ?? null };
     
     let cutoffCells = '';
     if(hasCat){
@@ -2188,13 +2192,13 @@ function isShortlisted(name){
   return shortlist.some(s=>s.n===name);
 }
 
-function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee, course){
+function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee, course, openCutoff, catCutoff){
   const sess = getSess();
   let shortlist = sess.shortlist || [];
   if(isShortlisted(name)){
     shortlist = shortlist.filter(s=>s.n!==name);
   } else {
-    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee, course:course||activeCourse()});
+    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee, course:course||activeCourse(), openCutoff:openCutoff??null, catCutoff:catCutoff??null});
   }
   sess.shortlist = shortlist;
   sessionStorage.setItem('asmi', JSON.stringify(sess));
