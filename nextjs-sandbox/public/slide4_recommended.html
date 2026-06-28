@@ -437,18 +437,37 @@ function getColleges(stateKey,courseKey,keys,listType){
   
   return cols;
 }
-function findCollegeCutoffs(name, course) {
+const POOL_TO_STATE = {
+  'MH Govt':'MH','MH Private':'MH','MH':'MH',
+  'AIQ Govt':'AIQ','AIIMS':'AIIMS','JIPMER':'JIPMER','Central Univ.':'CENTRAL','Central':'CENTRAL',
+  'Deemed':'DEEMED','Deemed MBBS':'DEEMED','Deemed BDS':'DEEMED',
+};
+const POOL_TO_LISTTYPE = {
+  'MH Govt':'mh_govt','MH Private':'mh_pvt',
+  'AIQ Govt':'aiq','AIIMS':'aiims','JIPMER':'jipmer',
+  'Central Univ.':'central','Central':'central',
+  'Deemed':'deemed','Deemed MBBS':'deemed','Deemed BDS':'deemed',
+};
+function findCollegeCutoffs(name, course, pool) {
   const userCat = activeCategory();
   const COURSE_ORDER = ['MBBS','BDS','BAMS','BHMS','BPTH'];
   const coursesToTry = course ? [course, ...COURSE_ORDER.filter(c=>c!==course)] : COURSE_ORDER;
+  // Narrow search using pool hint to avoid wrong-pool matches
+  const hintState    = pool ? POOL_TO_STATE[pool]    : null;
+  const hintListType = pool ? POOL_TO_LISTTYPE[pool] : null;
   let openC = null, catC = null;
   for (const tryC of coursesToTry) {
-    for (const stateKey in DB) {
+    const stateKeys = hintState ? [hintState] : Object.keys(DB);
+    for (const stateKey of stateKeys) {
       if (DB[stateKey] && DB[stateKey][tryC]) {
         for (const catKey of ['OPEN', userCat]) {
           if (DB[stateKey][tryC][catKey]) {
-            for (const listType in DB[stateKey][tryC][catKey]) {
+            const listTypes = hintListType
+              ? (DB[stateKey][tryC][catKey][hintListType] ? [hintListType] : Object.keys(DB[stateKey][tryC][catKey]))
+              : Object.keys(DB[stateKey][tryC][catKey]);
+            for (const listType of listTypes) {
               const list = DB[stateKey][tryC][catKey][listType];
+              if (!Array.isArray(list)) continue;
               const match = list.find(c => c.n === name);
               if (match) {
                 if (catKey === 'OPEN') openC = match.c;
@@ -908,7 +927,7 @@ function renderShortlistTable(){
     // Use stored cutoffs from shortlist time (exact values from slide3); fall back to live lookup
     const storedOpen = (c.openCutoff !== undefined && c.openCutoff !== null) ? c.openCutoff : null;
     const storedCat  = (c.catCutoff  !== undefined && c.catCutoff  !== null) ? c.catCutoff  : null;
-    const liveCutoffs = (storedOpen === null && storedCat === null) ? findCollegeCutoffs(c.n, c.course||activeCourse()) : null;
+    const liveCutoffs = (storedOpen === null && storedCat === null) ? findCollegeCutoffs(c.n, c.course||activeCourse(), c.pool) : null;
     const cutoffs = { openCutoff: storedOpen ?? liveCutoffs?.openCutoff ?? null, catCutoff: storedCat ?? liveCutoffs?.catCutoff ?? null };
     
     let cutoffCells = '';
