@@ -753,9 +753,18 @@ function renderTop25Table(){
   const userCat = activeCategory();
   const hasCat = userCat !== 'General' && userCat !== 'OPEN';
 
+  const COURSE_ORDER_T25 = ['MBBS','BDS','BAMS','BHMS','BPTH'];
   function subRows(cols){
     if(!cols||!cols.length) return '';
-    return cols.map((c,i)=>{
+    // Group by course in MBBS→BDS→BAMS→BHMS order
+    const byCourse = {};
+    cols.forEach(c=>{ const cr=c.course||'MBBS'; if(!byCourse[cr]) byCourse[cr]=[]; byCourse[cr].push(c); });
+    const courseKeys = COURSE_ORDER_T25.filter(cr=>byCourse[cr]);
+    const needsCourseHeader = courseKeys.length > 1;
+    return courseKeys.flatMap((cr,ci)=>{
+      const courseRows = byCourse[cr];
+      const headerRow = needsCourseHeader ? `<tr><td colspan="999" style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;font-weight:900;font-size:.72rem;letter-spacing:1.5px;padding:6px 12px;">${cr}</td></tr>` : '';
+      const dataRows = courseRows.map((c,i)=>{
       const feeVal    = feeStr(c.n);
       const starred   = isShortlisted(c.n);
       const probCls   = c.prob.key==='safe'?'safe':c.prob.key==='likely'?'likely':'borderline';
@@ -806,6 +815,8 @@ function renderTop25Table(){
             style="background:none;border:none;cursor:pointer;font-size:1.1rem;">${starred?'★':'☆'}</button>
         </td>
       </tr>`;
+      }).join('');
+      return headerRow + dataRows;
     }).join('');
   }
 
