@@ -2083,11 +2083,19 @@ async function downloadShortlistPDF(){
   sorted.forEach(c=>{
     const pool = c.pool||'Other';
     if(!grouped[pool]) grouped[pool]=[];
-    const cutoffs = findCollegeCutoffs(c.n, course);
+    const storedOpen2 = (c.openCutoff!==undefined&&c.openCutoff!==null)?c.openCutoff:null;
+    const storedCat2  = (c.catCutoff !==undefined&&c.catCutoff !==null)?c.catCutoff :null;
+    const liveCuts2   = (storedOpen2===null&&storedCat2===null)?findCollegeCutoffs(c.n,c.course||activeCourse(),c.pool):null;
+    const derivedState = pool==='MH Govt'||pool==='MH Private'||pool==='MH'?'Maharashtra'
+      : pool==='AIIMS'?getStateForCollege(c.n,'AIIMS',null)
+      : pool==='JIPMER'?getStateForCollege(c.n,'JIPMER',null)
+      : pool==='Central Univ.'||pool==='Central'?getStateForCollege(c.n,'Central',null)
+      : pool==='Deemed'||pool==='Deemed MBBS'||pool==='Deemed BDS'?'All India'
+      : c.poolGroup||pool||'—';
     grouped[pool].push({
-      n:c.n, c:c.c, state:c.state||'—', pool:c.pool,
-      openCutoff: cutoffs.openCutoff,
-      catCutoff: cutoffs.catCutoff,
+      n:c.n, c:c.c, state:c.state||derivedState||'—', pool:c.pool,
+      openCutoff: storedOpen2??liveCuts2?.openCutoff??null,
+      catCutoff:  storedCat2 ??liveCuts2?.catCutoff ??null,
       prob:{key:c.probKey,label:c.probKey==='safe'?'Safe':c.probKey==='likely'?'Likely':c.probKey==='borderline'?'Borderline':'Out of Reach',cls:c.probKey},
     });
   });
