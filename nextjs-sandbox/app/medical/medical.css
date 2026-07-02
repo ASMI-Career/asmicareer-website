@@ -1369,7 +1369,7 @@
     }
 
     /* Card positions — tuned to road path */
-    .pos-top-left            { top: 5%;   left: 5%;   }
+    .pos-top-left            { top: -5%;  left: 5%;   }
     .pos-top-center-left     { top: 2%;   left: 25%;  }
     .pos-top-center-right    { top: 15%;  left: 45%;  }
     .pos-bottom-center-left  { top: 75%;  left: 48%;  }

@@ -417,8 +417,8 @@ table.ctable th:not(:first-child){text-align:center;}
 
 <script>
 const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
-const DB_URL='ASMI_DB_Final.json';
-const FEE_URL='fee_map.json';
+const DB_URL='/ASMI_DB_Final.json';
+const FEE_URL='/fee_map.json';
 const BLUR_STATES=['KA','KL','TS','UP','AP','TN'];
 const KA_MGMT_ONLY=[];
 const OPEN_STATES=['KA','TS','TN','UP','KL','AP','HR','WB','BR','UK','CG','JH','HP','PY','TR','MN','ML','SK'];
@@ -434,11 +434,11 @@ let shortlist = []; // array of {n, pool, poolGroup, c, prob, fee}
 
 function isShortlisted(name){ return shortlist.some(s=>s.n===name); }
 
-function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee){
+function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee, course, openCutoff, catCutoff){
   if(isShortlisted(name)){
     shortlist = shortlist.filter(s=>s.n!==name);
   } else {
-    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee});
+    shortlist.push({n:name, pool, poolGroup, c:cutoff, probKey, fee, course:course||mhCourse||activeCourse(), openCutoff:openCutoff??null, catCutoff:catCutoff??null});
   }
   updateShortlistBadge();
   // Re-render current pane to update star state
@@ -590,7 +590,7 @@ function renderTable(cols,showState=false){
   <tbody>${rows}</tbody></table>`;
 }
 
-function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true){
+function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true, course=mhCourse||activeCourse()){
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
   const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
@@ -635,7 +635,7 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true){
     <td class="fee-val" style="text-align:center">${feeVal}</td>
     <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
     <td style="text-align:center">
-      <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${pool}','${poolGroup}',${c.c},'${c.prob.key}','${feeVal}')"
+      <button onclick="toggleShortlist('${c.n.replace(/'/g,"\\'")}','${pool}','${poolGroup}',${c.c},'${c.prob.key}','${feeVal}','${course}',${c.openCutoff??'null'},${c.catCutoff??'null'})"
         style="background:none;border:none;cursor:pointer;font-size:1.1rem;line-height:1;">
         ${starred?'★':'☆'}
       </button>
@@ -777,9 +777,9 @@ function renderMHOverview(){
   selectedCourses.forEach(course=>{
     const govt=getMHDualForCourse(course,'mh_govt');
     const pvt =getMHDualForCourse(course,'mh_pvt');
-    giTotal+=govt.cols.filter(c=>c.prob.key!=='reach').length;
+    giTotal+=govt.cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
     gtTotal+=govt.total;
-    piTotal+=pvt.cols.filter(c=>c.prob.key!=='reach').length;
+    piTotal+=pvt.cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
     ptTotal+=pvt.total;
   });
   // Also run computeMH() so expanded view stays in sync
@@ -807,7 +807,7 @@ function setMHTab(tab,btn){
 }
 function setMHTabContent(){
   const data=mhTab==='govt'?mhGovt:mhPvt;
-  const inReach=data.cols.filter(c=>c.prob.key!=='reach').length;
+  const inReach=data.cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
   document.getElementById('mh-exp-sub').innerHTML=
     `Score: ${activeScore()} · Category: ${activeCategory()} · Course: ${mhCourse}
     <span class="exp-count-badge">${inReach}/${data.total} in reach</span>`;
@@ -823,10 +823,10 @@ function computeMCC(){
   const central=getColleges('CENTRAL',course,keys,'central');
   const deemedCourse=primaryCourse()==='MBBS'?'MBBS':'BDS';
   const deemed=getColleges('DEEMED',deemedCourse,['OPEN'],'deemed');
-  return{aiq,aiqR:aiq.filter(c=>c.prob.key!=='reach'),
-    aiims,aiimsR:aiims.filter(c=>c.prob.key!=='reach'),
-    jipmer,jipmerR:jipmer.filter(c=>c.prob.key!=='reach'),
-    central,centralR:central.filter(c=>c.prob.key!=='reach'),deemed};
+  return{aiq,aiqR:aiq.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'),
+    aiims,aiimsR:aiims.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'),
+    jipmer,jipmerR:jipmer.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'),
+    central,centralR:central.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'),deemed};
 }
 function getDeemedBands(deemed){
   const bands=[{label:'₹10–20L / year',icon:'💰',min:10,max:20,inReach:0,total:0,cols:[]},
@@ -834,7 +834,7 @@ function getDeemedBands(deemed){
     {label:'₹26–35L / year',icon:'🏛️',min:26,max:35,inReach:0,total:0,cols:[]}];
   deemed.forEach(col=>{
     const fee=FEE[col.n];if(!fee) return;
-    bands.forEach((b,bi)=>{const inBand=bi<2?(fee>=b.min&&fee<b.max+1):(fee>=b.min&&fee<=b.max);if(inBand){b.total++;b.cols.push(col);if(col.prob.key!=='reach') b.inReach++;}});
+    bands.forEach((b,bi)=>{const inBand=bi<2?(fee>=b.min&&fee<b.max+1):(fee>=b.min&&fee<=b.max);if(inBand){b.total++;b.cols.push(col);if(col.prob.key==='safe'||col.prob.key==='likely') b.inReach++;}});
   });
   return bands;
 }
@@ -849,7 +849,7 @@ function renderMCCOverview(){
   const aiqBDS=hasBDS?getColleges('AIQ','BDS',keys,'aiq'):[];
   const seenAIQ=new Set(aiqMBBS.map(c=>c.n));
   const aiqAll=[...aiqMBBS,...aiqBDS.filter(c=>!seenAIQ.has(c.n))];
-  const aiqAllR=aiqAll.filter(c=>c.prob&&c.prob.key!=='reach');
+  const aiqAllR=aiqAll.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'));
 
   // AIIMS — MBBS only
   const{aiimsR,aiims,jipmerR,jipmer,centralR,central}=computeMCC();
@@ -864,7 +864,7 @@ function renderMCCOverview(){
   }
   if(hasBDS){
     const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
-    di+=bdsDemed.filter(c=>c.prob&&c.prob.key!=='reach').length;
+    di+=bdsDemed.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely')).length;
     dt+=bdsDemed.length;
   }
 
@@ -1011,7 +1011,7 @@ function renderMCCExpanded(){
       let aiqTotal=aiq, aiqReach=aiqR;
       if(hasBDS){
         const aiqBDS=getColleges('AIQ','BDS',keys,'aiq');
-        const aiqBDSR=aiqBDS.filter(c=>c.prob&&c.prob.key!=='reach');
+        const aiqBDSR=aiqBDS.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'));
         const seen=new Set(aiq.map(c=>c.n));
         const extraCols=aiqBDS.filter(c=>!seen.has(c.n));
         const extraReach=aiqBDSR.filter(c=>!seen.has(c.n));
@@ -1157,7 +1157,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
     })()}
     ${(()=>{
       const jmiCols=hasBDS?getColleges('CENTRAL','BDS',keys,'central').filter(c=>c.n.includes('Jamia')):[];
-      const jmiR=jmiCols.filter(c=>c.prob&&c.prob.key!=='reach');
+      const jmiR=jmiCols.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'));
       const totalCentral=central.length+(hasBDS?jmiCols.length:0);
       const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
       const centralAll=[...central,...(hasBDS?jmiCols:[])];
@@ -1258,7 +1258,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
     const bdsDemed=getColleges('DEEMED','BDS',['OPEN'],'deemed');
     const mhKa=bdsDemed.filter(c=>['Maharashtra','Karnataka'].includes(c.s||''));
     const rest=bdsDemed.filter(c=>!['Maharashtra','Karnataka'].includes(c.s||''));
-    function bandStats(cols){return{inReach:cols.filter(c=>c.prob&&c.prob.key!=='reach').length,total:cols.length};}
+    function bandStats(cols){return{inReach:cols.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely')).length,total:cols.length};}
     const s1=bandStats(mhKa),s2=bandStats(rest);
     if(hasMBBS) deemedHtml+=`<div class="deemed-label" style="margin-top:10px;margin-bottom:6px">BDS Deemed</div>`;
 
@@ -1318,14 +1318,14 @@ function computeOS(){
       const cols=getOSColleges(stKey,sc);
       const total=getOSTotal(stKey,sc);
       totalCount+=total;
-      inReachCount+=cols.filter(c=>c.prob.key!=='reach').length;
+      inReachCount+=cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
       allCols=[...allCols,...cols];
     });
     // If no MBBS selected fall back to primaryCourse
     if(!selectedCourses.includes('MBBS')){
       const cols=getOSColleges(stKey,course);
       totalCount=getOSTotal(stKey,course);
-      inReachCount=cols.filter(c=>c.prob.key!=='reach').length;
+      inReachCount=cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
       allCols=cols;
     }
     if(inReachCount>0){

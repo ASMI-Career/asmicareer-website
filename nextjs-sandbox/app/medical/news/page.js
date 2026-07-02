@@ -13,6 +13,11 @@ function isExpired(event) {
 
   const targetDate = event.expiry_date ? event.expiry_date : event.date;
   const eventDate = new Date(targetDate);
+  const now = new Date();
+  // If expiry_date includes a time component, compare exact timestamps; otherwise compare by day
+  if (event.expiry_date && event.expiry_date.includes('T')) {
+    return eventDate < now;
+  }
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate < today;
@@ -33,6 +38,7 @@ const TAG_CFG = {
   'ASMI SEMINAR':{ bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
   'RESULT':      { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
   'NOTICE':      { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
+  'COUNSELLING': { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
 
