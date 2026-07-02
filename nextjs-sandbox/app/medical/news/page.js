@@ -38,6 +38,7 @@ const TAG_CFG = {
   'ASMI SEMINAR':{ bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
   'RESULT':      { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
   'NOTICE':      { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
+  'COUNSELLING': { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
 

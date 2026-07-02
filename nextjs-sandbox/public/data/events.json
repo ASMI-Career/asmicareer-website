@@ -106,18 +106,28 @@
     "title": "BVDU CET (BPT) — Exam Date (Revised)",
     "date": "2026-06-27",
     "display_date": "27th June 2026",
-    "link": null,
-    "cta": null,
+    "link": "https://bvducet.bharatividyapeeth.edu/",
+    "cta": "View Details",
     "pdf": "https://bvducet.bharatividyapeeth.edu/BVDU_CET_UG_SCHEDULE%202026-04-06-2026.pdf"
   },
   {
     "type": "exam",
     "tag": "RESULT",
     "title": "BVDU CET (BPT) — Result Date",
+    "date": "2026-07-02",
+    "display_date": "2nd July 2026",
+    "link": "https://bvducet.bharatividyapeeth.edu/",
+    "cta": "Check Result",
+    "pdf": "https://bvducet.bharatividyapeeth.edu/BVDU_CET_UG_SCHEDULE%202026-04-06-2026.pdf"
+  },
+  {
+    "type": "exam",
+    "tag": "NOTICE",
+    "title": "BVDU CET (BPT) — Counselling Date",
     "date": "2026-07-13",
     "display_date": "13th July 2026",
-    "link": null,
-    "cta": null,
+    "link": "https://bvducet.bharatividyapeeth.edu/",
+    "cta": "Apply",
     "pdf": "https://bvducet.bharatividyapeeth.edu/BVDU_CET_UG_SCHEDULE%202026-04-06-2026.pdf"
   },
   {
@@ -265,6 +275,7 @@
     "tag": "URGENT",
     "title": "Symbiosis College of Physiotherapy (SCOP), Pune — Last Date to Submit BPT Application",
     "date": "2026-06-25",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "25th June 2026",
     "link": "https://siu26.ishinfo.com/SCOPY26/Register/Index.aspx",
     "cta": "Apply Now",
@@ -275,6 +286,7 @@
     "tag": "EXAM DATE",
     "title": "Symbiosis SCOP Pune — Provisional Merit List Declaration",
     "date": "2026-06-26",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "26th June 2026",
     "link": null,
     "cta": null,
@@ -285,6 +297,7 @@
     "tag": "EXAM DATE",
     "title": "Symbiosis SCOP Pune — Merit List of Eligible Candidates",
     "date": "2026-06-27",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "27th June 2026",
     "link": null,
     "cta": null,
@@ -295,6 +308,7 @@
     "tag": "EXAM DATE",
     "title": "Symbiosis SCOP Pune — Selection Date",
     "date": "2026-06-27",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "27th June 2026",
     "link": null,
     "cta": null,
@@ -305,6 +319,7 @@
     "tag": "NOTICE",
     "title": "Symbiosis SCOP Pune — Publication Schedule of 2nd Round",
     "date": "2026-07-04",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "4th July 2026",
     "link": null,
     "cta": null,
@@ -315,6 +330,7 @@
     "tag": "URGENT",
     "title": "Symbiosis SCOP Pune — Physical Reporting, Document Verification & Fee Payment (Round 1)",
     "date": "2026-07-03",
+    "expiry_date": "2020-01-01T00:00:00",
     "display_date": "29th June – 3rd July 2026",
     "link": null,
     "cta": null,
@@ -411,5 +427,27 @@
     "link": "https://examinationservices.nic.in/AdmitCardService/AcNeet/Login",
     "cta": "Download Link",
     "pdf": "https://cdnbbsr.s3waas.gov.in/s37bc1ec1d9c3426357e69acd5bf320061/uploads/2026/06/20260617412348097.pdf"
+  },
+  {
+    "type": "Admission Registration",
+    "tag": "COUNSELLING",
+    "title": "Tamil Nadu MBBS/BDS Management Quota 2026 — Registration Started",
+    "date": "2026-06-28",
+    "expiry_date": "2099-12-31T23:59:59",
+    "display_date": "Registration Open",
+    "link": "https://regug.tnmedicalonline.co.in/MBBSBDS26/",
+    "cta": "Register Now",
+    "pdf": "https://tnmedicalselection.net/news/28062026235144.pdf"
+  },
+  {
+    "type": "Admission Registration",
+    "tag": "COUNSELLING",
+    "title": "CMC Vellore MBBS 2026 — Applications Open",
+    "date": "2026-07-02",
+    "expiry_date": "2099-12-31T23:59:59",
+    "display_date": "Applications Open",
+    "link": "http://admissions.cmcvellore.ac.in",
+    "cta": "Apply Now",
+    "pdf": "https://admissions.cmcvellore.ac.in/process.aspx"
   }
 ]
