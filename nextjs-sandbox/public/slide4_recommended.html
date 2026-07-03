@@ -1675,8 +1675,12 @@ async function downloadPDF() {
     await addCanvas(await captureEl(p1), true);
 
     // PAGE 2 — POOL SUMMARY (all courses)
-    const allCourses = (STUDENT.courses || 'MBBS');
-    const allCoursesArr = typeof allCourses === 'string' ? allCourses.split(',').map(c=>c.trim()) : allCourses;
+    // Union of backend courses + any course selected via nav tab
+    const _sc = typeof STUDENT.courses === 'string'
+      ? STUDENT.courses.split(',').map(c=>c.trim())
+      : (Array.isArray(STUDENT.courses) ? STUDENT.courses : ['MBBS']);
+    const _activeCourses = (getSess().course||'').split(',').map(c=>c.trim()).filter(Boolean);
+    const allCoursesArr = [...new Set([..._sc, ..._activeCourses])].filter(Boolean);
     const origSessStr = sessionStorage.getItem('asmi');
     // Temporarily set sess.course to all courses so buildPoolRows includes all
     const sessForPDF = getSess();
