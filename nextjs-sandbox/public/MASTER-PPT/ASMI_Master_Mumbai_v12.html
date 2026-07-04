@@ -525,13 +525,14 @@
     
     #slide-mcc-intro .scope-banner { background: linear-gradient(135deg, rgba(255,215,0,0.10), rgba(106,13,173,0.15)); border: 1px solid rgba(255,215,0,0.22); border-left: 4px solid var(--asmi-yellow); border-radius: 0 14px 14px 0; padding: 16px 22px; opacity: 0; transform: translateY(15px); }
     #slide-mcc-intro.active .scope-banner { animation: mccFadeUp 0.5s 0.15s ease-out forwards; }
-    #slide-mcc-intro .scope-label { font-size: 0.68rem; font-weight: 700; font-family: 'Montserrat', sans-serif; letter-spacing: 2.5px; text-transform: uppercase; color: #1C1917 !important; margin-bottom: 8px; }
+    #slide-mcc-intro .scope-label { font-size: 0.68rem; font-weight: 700; font-family: 'Montserrat', sans-serif; letter-spacing: 2.5px; text-transform: uppercase; color: #1C1917 !important; margin-bottom: 4px; }
     #slide-mcc-intro .scope-items { display: flex; flex-wrap: wrap; gap: 8px; }
     #slide-mcc-intro .scope-pill { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 800; padding: 5px 13px; border-radius: 20px; letter-spacing: 0.5px; }
     #slide-mcc-intro .sp-gold { background: rgba(255,215,0,0.14); color: var(--asmi-yellow); border: 1px solid rgba(255,215,0,0.30); }
     #slide-mcc-intro .sp-purple { background: rgba(106,13,173,0.22); color: #c084fc; border: 1px solid rgba(106,13,173,0.40); }
     #slide-mcc-intro .sp-white { background: rgba(255,255,255,0.07); color: #2D0A5E; border: 1px solid rgba(255,255,255,0.14); }
     #slide-mcc-intro .sp-teal { background: rgba(13,148,136,0.14); color: #0d9488; border: 1px solid rgba(13,148,136,0.35); }
+    #slide-mcc-intro .sp-rose { background: rgba(219,39,119,0.10); color: #db2777; border: 1px solid rgba(219,39,119,0.3); }
 
     #slide-mcc-intro .info-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; }
     #slide-mcc-intro .info-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px; transition: 0.25s; opacity: 0; transform: translateY(15px); }
@@ -1376,7 +1377,7 @@
     #slide-mah-r1 .group-tag{font-size:.62rem;font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:1.5px;text-transform:uppercase;}
     #slide-mah-r1 .gt-a{color:rgba(255,215,0,.7);} #slide-mah-r1 .gt-b{color:rgba(192,132,252,.7);} #slide-mah-r1 .gt-c{color:rgba(56,189,248,.7);}
     #slide-mah-r1 .group-courses{font-family:'Montserrat',sans-serif;font-size:.9rem;font-weight:900;color:#1a0040;}
-    #slide-mah-r1 .group-right{width:48%;background:rgba(0,0,0,.35);padding:16px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;}
+    #slide-mah-r1 .group-right{width:48%;background:rgba(91,33,182,0.06);padding:16px 18px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;}
     #slide-mah-r1 .round-big{font-family:'Montserrat',sans-serif;font-size:2.8rem;font-weight:900;line-height:1;}
     #slide-mah-r1 .rb-a{color:var(--asmi-yellow);} #slide-mah-r1 .rb-b{color:#c084fc;} #slide-mah-r1 .rb-c{color:#38bdf8;}
     #slide-mah-r1 .round-sub{font-size:.65rem;color:#9F7AEA;font-family:'Montserrat',sans-serif;letter-spacing:1px;text-transform:uppercase;}
@@ -1601,7 +1602,7 @@
     #slide-mah-r2 .tab-btn.active{background:var(--asmi-yellow);color:#000;}
     #slide-mah-r2 .tab-btn:hover:not(.active){background:rgba(255,255,255,.1);color:#2D0A5E;}
     #slide-mah-r2 .tab-pane{display:none;min-height:0;height:100%;}
-    #slide-mah-r2 #tab-elig.active{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;}
+    #slide-mah-r2 #tab-elig.active{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
     #slide-mah-r2 .elig-col{display:flex;flex-direction:column;gap:14px;}
     #slide-mah-r2 .sec-label{font-size:.65rem;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:2px;text-transform:uppercase;color:rgba(255,215,0,.65);flex-shrink:0;}
     #slide-mah-r2 .elig-card{border-radius:12px;padding:16px 18px;opacity:0;animation:mahFadeUp .5s ease-out forwards;}
@@ -3239,17 +3240,73 @@ body, p, li, td, th, .step-details, .pc-details, .stats-desc,
                     </div>
 
                     <h3 style="color: #1a0040; margin: 8px 0 12px;">Other Courses via NEET — Maharashtra Seats</h3>
-                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BDS <span style="float:right; font-size:0.65rem; color:#7E57C2;">5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>318</strong> (5 Colleges)</div><div style="font-size:0.75rem;">Pvt: <strong>2,400</strong> (25 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BAMS <span style="float:right; font-size:0.65rem; color:#7E57C2;">5.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>1,561</strong> (22 Colleges)</div><div style="font-size:0.75rem;">Pvt: <strong>8,388</strong> (124 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BHMS <span style="float:right; font-size:0.65rem; color:#7E57C2;">5.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>54</strong> (1 College)</div><div style="font-size:0.75rem;">Pvt: <strong>3,722</strong> (54 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BUMS <span style="float:right; font-size:0.65rem; color:#7E57C2;">5.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>153</strong> (3 Colleges)</div><div style="font-size:0.75rem;">Pvt: <strong>281</strong> (5 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BPTh <span style="float:right; font-size:0.65rem; color:#7E57C2;">4.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>90</strong> (4 Colleges)</div><div style="font-size:0.75rem;">Pvt: <strong>5,266</strong> (108 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BOTh <span style="float:right; font-size:0.65rem; color:#7E57C2;">4.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>90</strong> (4 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BASLP <span style="float:right; font-size:0.65rem; color:#7E57C2;">4 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>25</strong> (2 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BP&amp;O <span style="float:right; font-size:0.65rem; color:#7E57C2;">4.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>8</strong> (1 College)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BVSc <span style="float:right; font-size:0.65rem; color:#7E57C2;">5.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>467</strong> (6 Colleges)</div></div>
-                        <div class="info-box"><div style="font-weight:800; color:var(--asmi-purple);">BNYS <span style="float:right; font-size:0.65rem; color:#7E57C2;">5.5 Yrs</span></div><div style="font-size:0.75rem; margin-top:6px;">Govt: <strong>60</strong> (1 College)</div><div style="font-size:0.75rem;">Pvt: <strong>102</strong> (2 Colleges)</div></div>
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BDS <span style="float:right; font-size:0.6rem; color:#7E57C2;">5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">318</div><div style="font-size:0.5rem; color:#2D0A5E;">5 Colleges</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">2,400</div><div style="font-size:0.5rem; color:#2D0A5E;">25 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BAMS <span style="float:right; font-size:0.6rem; color:#7E57C2;">5.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">1,561</div><div style="font-size:0.5rem; color:#2D0A5E;">22 Colleges</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">8,388</div><div style="font-size:0.5rem; color:#2D0A5E;">124 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BHMS <span style="float:right; font-size:0.6rem; color:#7E57C2;">5.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">54</div><div style="font-size:0.5rem; color:#2D0A5E;">1 College</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">3,722</div><div style="font-size:0.5rem; color:#2D0A5E;">54 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BUMS <span style="float:right; font-size:0.6rem; color:#7E57C2;">5.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">153</div><div style="font-size:0.5rem; color:#2D0A5E;">3 Colleges</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">281</div><div style="font-size:0.5rem; color:#2D0A5E;">5 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BPTh <span style="float:right; font-size:0.6rem; color:#7E57C2;">4.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">90</div><div style="font-size:0.5rem; color:#2D0A5E;">4 Colleges</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">5,266</div><div style="font-size:0.5rem; color:#2D0A5E;">108 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BOTh <span style="float:right; font-size:0.6rem; color:#7E57C2;">4.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">90</div><div style="font-size:0.5rem; color:#2D0A5E;">4 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BASLP <span style="float:right; font-size:0.6rem; color:#7E57C2;">4 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">25</div><div style="font-size:0.5rem; color:#2D0A5E;">2 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BP&amp;O <span style="float:right; font-size:0.6rem; color:#7E57C2;">4.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">8</div><div style="font-size:0.5rem; color:#2D0A5E;">1 College</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BVSc <span style="float:right; font-size:0.6rem; color:#7E57C2;">5.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">467</div><div style="font-size:0.5rem; color:#2D0A5E;">6 Colleges</div></div>
+                            </div>
+                        </div>
+                        <div class="info-box" style="padding:10px;">
+                            <div style="font-weight:800; color:var(--asmi-purple); font-size:0.85rem;">BNYS <span style="float:right; font-size:0.6rem; color:#7E57C2;">5.5 Yrs</span></div>
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">GOVT</div><div style="font-weight:800; font-size:0.85rem;">60</div><div style="font-size:0.5rem; color:#2D0A5E;">1 College</div></div>
+                                <div style="flex:1; background:rgba(255,255,255,0.5); border-radius:6px; padding:5px;"><div style="font-size:0.55rem; color:#7E57C2;">PRIVATE</div><div style="font-weight:800; font-size:0.85rem;">102</div><div style="font-size:0.5rem; color:#2D0A5E;">2 Colleges</div></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3513,7 +3570,7 @@ body, p, li, td, th, .step-details, .pc-details, .stats-desc,
 
     <span class="scope-pill sp-teal">Deemed Univ.</span>
 
-                    <span class="scope-pill sp-teal">AFMC Pune</span>
+                    <span class="scope-pill sp-rose">AFMC Pune</span>
 
                 </div>
 
@@ -5894,7 +5951,7 @@ body, p, li, td, th, .step-details, .pc-details, .stats-desc,
         <div style="font-size:0.72rem; color:var(--asmi-yellow); line-height:1.4;">
             🚨 <strong>No one can guarantee a seat</strong> — allotment is rank-based via official counselling only. Any cash payment outside an official receipt is illegal under NMC rules. WhatsApp "seat offers" and agents claiming "direct contacts" are frauds — they take payment and disappear. <strong style="color:#fff;">One wrong payment can cost ₹5–25 Lakh and a full year.</strong>
         </div>
-        <div style="background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.4); border-radius:8px; padding:8px 14px; font-size:0.72rem; color:var(--asmi-yellow); font-weight:800; white-space:nowrap;">
+        <div style="background:rgba(255,215,0,.15); border:1px solid rgba(255,215,0,.4); border-radius:8px; padding:8px 14px; font-size:0.72rem; color:#B45309; font-weight:800; white-space:nowrap;">
             Call ASMI first: 74100 19077 / 19075
         </div>
     </div>
