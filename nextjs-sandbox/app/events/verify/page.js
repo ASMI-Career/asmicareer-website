@@ -43,7 +43,7 @@ function VerifyContent() {
   // Feature 1 — score/category/course entry after check-in
   const [neetScore, setNeetScore] = useState('');
   const [category, setCategory] = useState('OPEN');
-  const [course, setCourse] = useState('MBBS');
+  const [courses, setCourses] = useState(['MBBS']);
   const [dashSubmitting, setDashSubmitting] = useState(false);
   const [dashToken, setDashToken] = useState('');
   const [dashError, setDashError] = useState('');
@@ -51,7 +51,7 @@ function VerifyContent() {
   // Feature 2 — walk-in registration
   const [showWalkIn, setShowWalkIn] = useState(false);
   const [walkForm, setWalkForm] = useState({
-    name: '', phone: '', email: '', neetScore: '', category: 'OPEN', course: 'MBBS'
+    name: '', phone: '', email: '', neetScore: '', category: 'OPEN', courses: ['MBBS']
   });
   const [walkSubmitting, setWalkSubmitting] = useState(false);
   const [walkError, setWalkError] = useState('');
@@ -116,6 +116,17 @@ function VerifyContent() {
     router.push('/events/verify');
   };
 
+  const toggleCourse = (c) => {
+    setCourses((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]);
+  };
+
+  const toggleWalkInCourse = (c) => {
+    setWalkForm((f) => ({
+      ...f,
+      courses: f.courses.includes(c) ? f.courses.filter((x) => x !== c) : [...f.courses, c]
+    }));
+  };
+
   const handleScoreSubmit = async (e) => {
     e.preventDefault();
     setDashSubmitting(true);
@@ -126,7 +137,7 @@ function VerifyContent() {
         studentContact: result?.phone,
         neetScore,
         category,
-        courses: course,
+        courses: courses.join(', '),
         city: result?.city
       });
       setDashToken(token);
@@ -167,12 +178,12 @@ function VerifyContent() {
         studentContact: walkForm.phone,
         neetScore: walkForm.neetScore,
         category: walkForm.category,
-        courses: walkForm.course,
+        courses: walkForm.courses.join(', '),
         city: ''
       });
       setWalkToken(token);
     } catch (err) {
-      setWalkError('Could not complete walk-in registration. Try again.');
+      setWalkError('Could not complete walk-in registration: ' + (err?.message || 'unknown error'));
     } finally {
       setWalkSubmitting(false);
     }
@@ -260,9 +271,14 @@ function VerifyContent() {
               <select value={walkForm.category} onChange={handleWalkInFieldChange('category')} className="sv-pin-input">
                 {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <select value={walkForm.course} onChange={handleWalkInFieldChange('course')} className="sv-pin-input">
-                {COURSE_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <div className="sv-checkbox-group">
+                {COURSE_OPTIONS.map((c) => (
+                  <label key={c} className="sv-checkbox-label">
+                    <input type="checkbox" checked={walkForm.courses.includes(c)} onChange={() => toggleWalkInCourse(c)} />
+                    {c}
+                  </label>
+                ))}
+              </div>
               {walkError && <p className="sv-error-text">{walkError}</p>}
               <button type="submit" disabled={walkSubmitting} className="sv-btn-primary">
                 {walkSubmitting ? 'Submitting…' : 'Register Walk-in'}
@@ -368,9 +384,14 @@ function VerifyContent() {
                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="sv-pin-input">
                   {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
-                <select value={course} onChange={(e) => setCourse(e.target.value)} className="sv-pin-input">
-                  {COURSE_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <div className="sv-checkbox-group">
+                  {COURSE_OPTIONS.map((c) => (
+                    <label key={c} className="sv-checkbox-label">
+                      <input type="checkbox" checked={courses.includes(c)} onChange={() => toggleCourse(c)} />
+                      {c}
+                    </label>
+                  ))}
+                </div>
                 {dashError && <p className="sv-error-text">{dashError}</p>}
                 <button type="submit" disabled={dashSubmitting} className="sv-btn-primary">
                   {dashSubmitting ? 'Submitting…' : 'Submit Score'}
