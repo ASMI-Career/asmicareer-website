@@ -49,6 +49,7 @@
         width: 100vw;
         overflow: hidden;
     }
+    body.scroll-slide { overflow-y: auto !important; }
     .slide { color: var(--text-white); }
 
     /* --- BACKGROUND SPLASH --- */
@@ -3771,15 +3772,15 @@ body, p, li, td, th, .step-details, .pc-details, .stats-desc,
             </div>
             <div class="table-wrap" style="margin-top:6px;">
                 <div style="font-weight:800; color:var(--asmi-yellow); font-size:0.85rem; margin-bottom:3px;">🦷 BDS</div>
-                <table style="font-size: 0.6rem;">
-                    <thead><tr><th style="padding:3px 6px;">Institution Type</th><th style="padding:3px 6px;">Colleges</th><th style="padding:3px 6px;">Seats</th></tr></thead>
+                <table style="font-size: 0.8rem;">
+                    <thead><tr><th style="padding:5px 8px;">Institution Type</th><th style="padding:5px 8px;">Colleges</th><th style="padding:5px 8px;">Seats</th></tr></thead>
                     <tbody>
-                        <tr><td style="padding:2px 6px;">Government BDS</td><td class="num-col" style="padding:2px 6px;">50</td><td class="seat-col" style="padding:2px 6px;">521</td></tr>
-                        <tr><td style="padding:2px 6px;">Deemed BDS</td><td class="num-col" style="padding:2px 6px;">34</td><td class="seat-col" style="padding:2px 6px;">3290</td></tr>
-                        <tr><td style="padding:2px 6px;">BHU BDS</td><td class="num-col" style="padding:2px 6px;">1</td><td class="seat-col" style="padding:2px 6px;">63</td></tr>
-                        <tr><td style="padding:2px 6px;">AMU BDS</td><td class="num-col" style="padding:2px 6px;">1</td><td class="seat-col" style="padding:2px 6px;">40</td></tr>
-                        <tr><td style="padding:2px 6px;">JMI BDS</td><td class="num-col" style="padding:2px 6px;">1</td><td class="seat-col" style="padding:2px 6px;">50</td></tr>
-                        <tr class="sub-total"><td style="padding:2px 6px;">Total BDS Seats</td><td class="num-col" style="padding:2px 6px;">87</td><td class="seat-col" style="padding:2px 6px;">3964</td></tr>
+                        <tr><td style="padding:4px 8px;">Government BDS</td><td class="num-col" style="padding:4px 8px;">50</td><td class="seat-col" style="padding:4px 8px;">521</td></tr>
+                        <tr><td style="padding:4px 8px;">Deemed BDS</td><td class="num-col" style="padding:4px 8px;">34</td><td class="seat-col" style="padding:4px 8px;">3290</td></tr>
+                        <tr><td style="padding:4px 8px;">BHU BDS</td><td class="num-col" style="padding:4px 8px;">1</td><td class="seat-col" style="padding:4px 8px;">63</td></tr>
+                        <tr><td style="padding:4px 8px;">AMU BDS</td><td class="num-col" style="padding:4px 8px;">1</td><td class="seat-col" style="padding:4px 8px;">40</td></tr>
+                        <tr><td style="padding:4px 8px;">JMI BDS</td><td class="num-col" style="padding:4px 8px;">1</td><td class="seat-col" style="padding:4px 8px;">50</td></tr>
+                        <tr class="sub-total"><td style="padding:4px 8px;">Total BDS Seats</td><td class="num-col" style="padding:4px 8px;">87</td><td class="seat-col" style="padding:4px 8px;">3964</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -6494,6 +6495,10 @@ if (target) {
     target.style.opacity = '1';
     target.classList.add('active');
   }, 50);
+
+  // Slides that need to scroll instead of clipping at 100vh
+  const scrollSlides = ['slide-mcc-rounds'];
+  document.body.classList.toggle('scroll-slide', scrollSlides.includes(target.id));
 }
 
         const counterEl = document.getElementById('slideCounter');
