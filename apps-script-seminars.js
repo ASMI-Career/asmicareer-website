@@ -29,7 +29,7 @@ const CONFIG = {
   // ── Capacity per venue ──────────────────────────────────────
   CAPACITY_MULUND:     300,
   CAPACITY_VILE_PARLE: 350,
-  CAPACITY_PUNE:       300,
+  CAPACITY_PUNE: 375,   // was 300
   CAPACITY_KOLHAPUR:   300,
 
   // ── Admin ───────────────────────────────────────────────────
@@ -46,8 +46,8 @@ const CONFIG = {
       label:   "Thane",
       date:    "28 June 2026",
       time:    "TBD",
-      address: "Vasantrao Naik Sabhagruh, Above Waman Hari Pethe Jewellers, Naupada, Thane",
-      maps:    "https://maps.app.goo.gl/ybGGaCq6Z7ZuYzua6",
+      address: "Balaji Banquets, Balaji Mandir, Dr. Ambedkar Road, Mulund West, Mumbai",
+      maps:    "https://maps.app.goo.gl/SjD5JV4FUGY68Fyj7",
       phone:   "7410019075",
       email:   "thane@asmicareer.com"
     },
@@ -55,7 +55,7 @@ const CONFIG = {
     VILE_PARLE: {
       label:   "Vile Parle",
       date:    "05 July 2026",
-      time:    "TBD",
+      time:    "11 AM to 1 PM",
       address: "P.L Deshpande Hall, Lokmanya Seva Sangh, Vile Parle East, Mumbai",
       maps:    "https://maps.app.goo.gl/hJzA2trDnim5roQs5",
       phone:   "7410019077",
@@ -64,8 +64,8 @@ const CONFIG = {
 
     PUNE: {
       label:   "Pune",
-      date:    "TBD",
-      time:    "TBD",
+      date:    "12 July 2026",    // was "TBD"
+      time:    "11 AM to 1 PM",   // was "TBD"
       address: "Bharatiya Vidya Bhuvan's Sulochana Natu Vidya Mandir, Near Senapati Bapat Road, Dhotre Path, Shivajinagar, Pune, Maharashtra 411016",
       maps:    "https://maps.app.goo.gl/o3sd8LfJaowGyUsJ8",
       phone:   "7410013458",
@@ -121,7 +121,7 @@ function getSeatCount(text) {
 function getVenueKey(text) {
   if (!text) return null;
   text = text.toLowerCase();
-  if (text.includes("mulund") || text.includes("vasantrao") || text.includes("naik") || text.includes("sabhagruh") || text.includes("thane"))   return "MULUND";
+  if (text.includes("mulund"))   return "MULUND";
   if (text.includes("vile"))     return "VILE_PARLE";
   if (text.includes("pune"))     return "PUNE";
   if (text.includes("kolhapur")) return "KOLHAPUR";
@@ -432,6 +432,9 @@ function handleWebBooking(e) {
     } else if (params.action === "verifySeminarTicket") {
       output.setContent(JSON.stringify(verifySeminarTicket(params.bookingId)));
 
+    } else if (params.action === "addWalkIn") {
+      output.setContent(JSON.stringify(addWalkIn(params)));
+
     } else if (params.action === "getRemainingSeats") {
       output.setContent(JSON.stringify(getRemainingSeats()));
 
@@ -504,10 +507,10 @@ function getRemainingSeats() {
   // Define capacities for each seminar
   var capacities = {
     "thane-jun-2026": 300,
-    "vile-parle-jul-2026": 350, // Default fallback. Dynamically set below.
+    "vile-parle-jul-2026": 477, // Default fallback. Dynamically set below.
     "kolhapur-tbd-2026": 300,
     "sangli-tbd-2026": 300,
-    "pune-tbd-2026": 300
+    "pune-jun-2026": 375,   // change key from "pune-tbd-2026" and set 375
   };
 
   // Find exact old Vile Parle registrations count to dynamically adjust capacity
@@ -526,8 +529,8 @@ function getRemainingSeats() {
     }
   }
 
-  // Vile Parle gets exactly 50 new seats on top of the old registrations
-  capacities["vile-parle-jul-2026"] = oldVileParleCount + 50;
+  // Vile Parle gets 177 new seats on top of the old registrations (100 + 77 freed via cancellation calls)
+  capacities["vile-parle-jul-2026"] = oldVileParleCount + 177;
 
   Object.keys(capacities).forEach(function(id) {
     var count = booked[id] || 0;
@@ -557,10 +560,10 @@ function bookSeminar(params) {
   var semId = params.seminarId;
   if (remaining[semId] !== undefined) {
     if (remaining[semId] < totalSeats) {
-      return { 
-        success: false, 
-        error: "HOUSEFULL", 
-        message: "Sorry, this seminar has only " + remaining[semId] + " seat(s) remaining, but you requested " + totalSeats + " seat(s)." 
+      return {
+        success: false,
+        error: "HOUSEFULL",
+        message: "Sorry, this seminar has only " + remaining[semId] + " seat(s) remaining, but you requested " + totalSeats + " seat(s)."
       };
     }
   }
@@ -648,6 +651,7 @@ function verifySeminarTicket(bookingId) {
           status:      "already_checked_in",
           bookingId:   rowObj["BookingID"],
           name:        rowObj["Name"],
+          phone:       rowObj["Phone"],
           city:        rowObj["City"],
           date:        rowObj["Date"],
           slot:        rowObj["Slot"],
@@ -669,6 +673,7 @@ function verifySeminarTicket(bookingId) {
         status:      "checked_in",
         bookingId:   rowObj["BookingID"],
         name:        rowObj["Name"],
+        phone:       rowObj["Phone"],
         city:        rowObj["City"],
         date:        rowObj["Date"],
         slot:        rowObj["Slot"],
@@ -681,6 +686,72 @@ function verifySeminarTicket(bookingId) {
   }
 
   return { success: true, valid: false, status: "not_found", message: "Booking ID not found" };
+}
+
+// ── Walk-in registration (no prior booking — already at venue) ───
+
+function generateWalkInBookingId() {
+  var now  = new Date();
+  var ds   = Utilities.formatDate(now, Session.getScriptTimeZone(), "yyyyMMdd");
+  var rand = Math.floor(1000 + Math.random() * 9000);
+  return "ASMI-WLK-" + ds + "-" + rand;
+}
+
+function addWalkIn(params) {
+
+  var required = ["name", "phone"];
+  for (var i = 0; i < required.length; i++) {
+    if (!params[required[i]]) {
+      return { success: false, error: "Missing field: " + required[i] };
+    }
+  }
+
+  ensureCheckInColumns();
+
+  var ss    = SpreadsheetApp.openById(SEMINAR_SPREADSHEET_ID);
+  var sheet = ss.getSheetByName(SEMINAR_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(SEMINAR_SHEET_NAME);
+    sheet.appendRow([
+      "BookingID", "SeminarID", "City", "Branch", "Venue",
+      "Date", "Slot", "Name", "Phone", "Email",
+      "NEETYear", "AdditionalMembers", "TotalSeats", "BookingDate",
+      "CheckedIn", "CheckInTime"
+    ]);
+    sheet.setFrozenRows(1);
+    sheet.getRange(1, 1, 1, 16)
+      .setFontWeight("bold")
+      .setBackground("#1a0040")
+      .setFontColor("#FFD700");
+  }
+
+  var bookingId = generateWalkInBookingId();
+  var now       = new Date();
+
+  // Walk-ins arrive with no prior venue/date/slot selection —
+  // placeholder values since the check-in desk form only asks for
+  // name/phone/email/score/category/course.
+  sheet.appendRow([
+    bookingId,
+    "walk-in",
+    params.city  || "Mumbai",
+    params.city  || "Mumbai",
+    params.venue || "P.L Deshpande Hall, Lokmanya Seva Sangh, Vile Parle East, Mumbai",
+    params.date  || "5th July 2026",
+    params.slot  || "11:00 AM – 01:00 PM",
+    params.name,
+    params.phone,
+    params.email || "",
+    params.neetYear || "NEET 2026",
+    0,
+    1,
+    now,
+    true,   // already at the venue — checked in immediately
+    now
+  ]);
+
+  return { success: true, bookingId: bookingId };
 }
 
 // ── Idempotent columns checker ────────────────────────────────────
@@ -717,7 +788,7 @@ function sendWebBookingEmail(p) {
     + "&data="    + encodeURIComponent(verifyUrl)
     + "&color=1a0040&bgcolor=ffffff";
 
-  var subject = "\u2705 Booking Confirmed | ASMI Seminar \u2014 "
+  var subject = "✅ Booking Confirmed | ASMI Seminar — "
     + p.city + " | " + p.date;
 
   var html =
@@ -738,7 +809,7 @@ function sendWebBookingEmail(p) {
     + " onerror=\"this.style.display='none'\">"
     + "<div style='display:inline-block;background:#FFD700;color:#1a0040;"
     + "font-weight:900;font-size:12px;padding:6px 20px;border-radius:50px;"
-    + "letter-spacing:.5px;margin-bottom:12px;'>\u2705 BOOKING CONFIRMED</div>"
+    + "letter-spacing:.5px;margin-bottom:12px;'>✅ BOOKING CONFIRMED</div>"
     + "<h1 style='color:#ffffff;font-size:22px;font-weight:900;margin:0;'>"
     + "Your seat is reserved!</h1>"
     + "<p style='color:rgba(255,255,255,.65);font-size:13px;margin:8px 0 0;'>"
@@ -780,7 +851,7 @@ function sendWebBookingEmail(p) {
     + "<p style='color:#6a0dad;font-size:9px;font-weight:800;letter-spacing:2px;"
     + "text-transform:uppercase;margin:0 0 12px;'>EVENT DETAILS</p>"
     + "<table style='width:100%;border-collapse:collapse;font-size:13px;'>"
-    + emailRow("Event",     (p.seminarTitle || "ASMI Seminar") + " \u2014 " + p.city)
+    + emailRow("Event",     (p.seminarTitle || "ASMI Seminar") + " — " + p.city)
     + emailRow("Date",      p.date)
     + emailRow("Time",      p.slot)
     + emailRow("Venue",     p.venue)
@@ -790,7 +861,7 @@ function sendWebBookingEmail(p) {
     + "<a href='" + mapsLink + "' target='_blank'"
     + " style='display:inline-block;margin-top:14px;color:#6a0dad;"
     + "font-size:12px;font-weight:700;text-decoration:none;'>"
-    + "\ud83d\udccd View Location on Maps &rarr;</a>"
+    + "📍 View Location on Maps &rarr;</a>"
     + "</div>"
 
     // ─ Help buttons
@@ -801,14 +872,14 @@ function sendWebBookingEmail(p) {
     + " style='display:inline-block;padding:10px 20px;background:#1a0040;"
     + "color:#FFD700;text-decoration:none;border-radius:8px;"
     + "font-weight:700;font-size:13px;margin-right:10px;'>"
-    + "\ud83d\udcde Call Us</a>"
+    + "📞 Call Us</a>"
     + "<a href='https://wa.me/917410019074' target='_blank'"
     + " style='display:inline-block;padding:10px 20px;background:#25D366;"
     + "color:#ffffff;text-decoration:none;border-radius:8px;"
     + "font-weight:700;font-size:13px;'>"
     + "\ud83d\udacac WhatsApp</a>"
     + "<p style='color:#888;font-size:11px;margin:12px 0 0;'>"
-    + "\ud83d\udce7 support@asmicareer.com &nbsp;&middot;&nbsp; \ud83c\udf10 asmicareer.in</p>"
+    + "📧 support@asmicareer.com &nbsp;&middot;&nbsp; 🌐 asmicareer.in</p>"
     + "</div>"
 
     // ─ Footer

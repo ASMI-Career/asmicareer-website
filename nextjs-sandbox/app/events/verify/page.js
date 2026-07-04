@@ -4,7 +4,28 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import './verify.css';
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySE02MPVvJobNKjT5NlAIazXAslEIdYz-yPXIKPiae7t3JNxpxcxAVneImTpNEzCvHhg/exec';
+const DASHBOARD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
 const STAFF_PIN = '2026';
+
+const CATEGORY_OPTIONS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST', 'VJ', 'NT1', 'NT2', 'NT3', 'SEBC'];
+const COURSE_OPTIONS = ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BPT'];
+
+async function submitDashboardInquiry({ fullName, studentContact, neetScore, category, courses, city }) {
+  const body = new URLSearchParams();
+  body.append('source', 'Seminar');
+  body.append('fullName', fullName || '');
+  body.append('studentContact', studentContact || '');
+  body.append('neetScore', neetScore || '');
+  body.append('category', category || '');
+  body.append('courses', courses || '');
+  body.append('city', city || '');
+
+  const res = await fetch(DASHBOARD_SCRIPT_URL, { method: 'POST', body });
+  const text = await res.text();
+  const token = text.trim();
+  if (!token) throw new Error('Empty token returned');
+  return token;
+}
 
 function VerifyContent() {
   const searchParams = useSearchParams();
@@ -18,6 +39,24 @@ function VerifyContent() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+
+  // Feature 1 — score/category/course entry after check-in
+  const [neetScore, setNeetScore] = useState('');
+  const [category, setCategory] = useState('OPEN');
+  const [course, setCourse] = useState('MBBS');
+  const [dashSubmitting, setDashSubmitting] = useState(false);
+  const [dashToken, setDashToken] = useState('');
+  const [dashError, setDashError] = useState('');
+
+  // Feature 2 — walk-in registration
+  const [showWalkIn, setShowWalkIn] = useState(false);
+  const [walkForm, setWalkForm] = useState({
+    name: '', phone: '', email: '', neetScore: '', category: 'OPEN', course: 'MBBS'
+  });
+  const [walkSubmitting, setWalkSubmitting] = useState(false);
+  const [walkError, setWalkError] = useState('');
+  const [walkToken, setWalkToken] = useState('');
+  const [walkBookingId, setWalkBookingId] = useState('');
 
   // Check pin authorization
   useEffect(() => {
@@ -77,6 +116,68 @@ function VerifyContent() {
     router.push('/events/verify');
   };
 
+  const handleScoreSubmit = async (e) => {
+    e.preventDefault();
+    setDashSubmitting(true);
+    setDashError('');
+    try {
+      const token = await submitDashboardInquiry({
+        fullName: result?.name,
+        studentContact: result?.phone,
+        neetScore,
+        category,
+        courses: course,
+        city: result?.city
+      });
+      setDashToken(token);
+    } catch (err) {
+      setDashError('Could not submit. Check connection and try again.');
+    } finally {
+      setDashSubmitting(false);
+    }
+  };
+
+  const handleWalkInFieldChange = (field) => (e) => {
+    setWalkForm((f) => ({ ...f, [field]: e.target.value }));
+  };
+
+  const handleWalkInSubmit = async (e) => {
+    e.preventDefault();
+    setWalkSubmitting(true);
+    setWalkError('');
+    try {
+      const res1 = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'addWalkIn',
+          name: walkForm.name,
+          phone: walkForm.phone,
+          email: walkForm.email,
+          neetYear: 'NEET 2026'
+        })
+      });
+      const data1 = await res1.json();
+      if (!data1 || !data1.success) {
+        throw new Error(data1?.error || 'Walk-in registration failed');
+      }
+      setWalkBookingId(data1.bookingId);
+
+      const token = await submitDashboardInquiry({
+        fullName: walkForm.name,
+        studentContact: walkForm.phone,
+        neetScore: walkForm.neetScore,
+        category: walkForm.category,
+        courses: walkForm.course,
+        city: ''
+      });
+      setWalkToken(token);
+    } catch (err) {
+      setWalkError('Could not complete walk-in registration. Try again.');
+    } finally {
+      setWalkSubmitting(false);
+    }
+  };
+
   // Render 1: PIN Entry Screen
   if (!verified) {
     return (
@@ -122,12 +223,64 @@ function VerifyContent() {
 
   // Render 3: No Booking ID provided
   if (!id) {
+    if (walkToken) {
+      return (
+        <div className="sv-container">
+          <div className="sv-card sv-green-card">
+            <div className="sv-icon-circle green">✓</div>
+            <h2 className="sv-result-title">Walk-in Registered ✓</h2>
+            <p className="sv-checkin-time-badge success">Booking ID: {walkBookingId}</p>
+            <a href={`https://asmicareer.in/dashboard.html?token=${encodeURIComponent(walkToken)}&mode=counsel`}
+               target="_blank" rel="noopener noreferrer" className="sv-btn-primary">
+              View Report
+            </a>
+            <button onClick={() => { setShowWalkIn(false); setWalkToken(''); setWalkBookingId(''); }} className="sv-btn-sec">
+              Scan Next Ticket
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (showWalkIn) {
+      return (
+        <div className="sv-container">
+          <div className="sv-card sv-neutral-card">
+            <div className="sv-icon-circle neutral">🚶</div>
+            <h2 className="sv-result-title">Walk-in Registration</h2>
+            <form onSubmit={handleWalkInSubmit} className="sv-form">
+              <input type="text" placeholder="Full Name" required
+                value={walkForm.name} onChange={handleWalkInFieldChange('name')} className="sv-pin-input" />
+              <input type="tel" placeholder="Phone" required
+                value={walkForm.phone} onChange={handleWalkInFieldChange('phone')} className="sv-pin-input" />
+              <input type="email" placeholder="Email" required
+                value={walkForm.email} onChange={handleWalkInFieldChange('email')} className="sv-pin-input" />
+              <input type="number" placeholder="NEET Score" required
+                value={walkForm.neetScore} onChange={handleWalkInFieldChange('neetScore')} className="sv-pin-input" />
+              <select value={walkForm.category} onChange={handleWalkInFieldChange('category')} className="sv-pin-input">
+                {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              <select value={walkForm.course} onChange={handleWalkInFieldChange('course')} className="sv-pin-input">
+                {COURSE_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              {walkError && <p className="sv-error-text">{walkError}</p>}
+              <button type="submit" disabled={walkSubmitting} className="sv-btn-primary">
+                {walkSubmitting ? 'Submitting…' : 'Register Walk-in'}
+              </button>
+            </form>
+            <button onClick={() => setShowWalkIn(false)} className="sv-btn-sec">Cancel</button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="sv-container">
         <div className="sv-card sv-neutral-card">
           <div className="sv-icon-circle neutral">🎟️</div>
           <h2 className="sv-result-title">Ready to Scan</h2>
           <p className="sv-result-desc">No booking ID provided. Scan a valid ticket QR code at the seminar entrance.</p>
+          <button onClick={() => setShowWalkIn(true)} className="sv-btn-sec">Walk-in / Not Registered</button>
         </div>
       </div>
     );
@@ -198,7 +351,7 @@ function VerifyContent() {
             <div className="sv-icon-circle green">✓</div>
             <h2 className="sv-result-title">Verified ✓</h2>
             <p className="sv-checkin-time-badge success">Checked in just now</p>
-            
+
             <div className="sv-details-section">
               <div className="sv-detail-row"><span className="sv-dl">Name:</span><span className="sv-dv">{result.name}</span></div>
               <div className="sv-detail-row"><span className="sv-dl">Category:</span><span className="sv-dv">{result.neetYear}</span></div>
@@ -207,7 +360,31 @@ function VerifyContent() {
               <div className="sv-detail-row"><span className="sv-dl">Seminar:</span><span className="sv-dv">{result.city} — {result.slot}</span></div>
               <div className="sv-detail-row"><span className="sv-dl">Venue:</span><span className="sv-dv">{result.venue}</span></div>
             </div>
-            
+
+            {!dashToken && (
+              <form onSubmit={handleScoreSubmit} className="sv-form">
+                <input type="number" placeholder="NEET Score" required
+                  value={neetScore} onChange={(e) => setNeetScore(e.target.value)} className="sv-pin-input" />
+                <select value={category} onChange={(e) => setCategory(e.target.value)} className="sv-pin-input">
+                  {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <select value={course} onChange={(e) => setCourse(e.target.value)} className="sv-pin-input">
+                  {COURSE_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                {dashError && <p className="sv-error-text">{dashError}</p>}
+                <button type="submit" disabled={dashSubmitting} className="sv-btn-primary">
+                  {dashSubmitting ? 'Submitting…' : 'Submit Score'}
+                </button>
+              </form>
+            )}
+
+            {dashToken && (
+              <a href={`https://asmicareer.in/dashboard.html?token=${encodeURIComponent(dashToken)}&mode=counsel`}
+                 target="_blank" rel="noopener noreferrer" className="sv-btn-primary">
+                View Report
+              </a>
+            )}
+
             <button onClick={handleScanNext} className="sv-btn-sec">Scan Next Ticket</button>
           </div>
         </div>
