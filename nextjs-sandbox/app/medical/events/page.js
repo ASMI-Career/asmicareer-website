@@ -638,7 +638,7 @@ export default function EventsPage() {
             </div>
             <div className="ev-counsellors-grid" style={{justifyContent:'center',display:'flex',gap:'32px',flexWrap:'wrap'}}>
               {[
-                { name: 'Anish Kulkarni', role: 'Founder & Director', seminars: 'Vile Parle & Pune Seminar', img: '/images_events/Anish.jpg' },
+                { name: 'Anish Kulkarni', role: 'Founder & Director', seminars: 'Pune Seminar', img: '/images_events/Anish.jpg' },
                 { name: 'Sharang Katti',  role: 'Director',           seminars: 'Thane Seminar',             img: '/images_events/Sharang.jpg' },
               ].map((c, idx) => (
                 <div className="ev-counsellor-card" key={idx}>
@@ -1027,7 +1027,7 @@ export default function EventsPage() {
         <div className="ev-sticky-inner">
           <div className="ev-sticky-left">
             <span className="ev-sticky-icon">🗓️</span>
-            <span className="ev-sticky-date">Next Seminar: Sunday, 5 July 2026</span>
+            <span className="ev-sticky-date">Next Seminar: Sunday, 12 July 2026</span>
           </div>
           <div className="ev-sticky-center">
             <span className="ev-sticky-badge">100% FREE</span>
