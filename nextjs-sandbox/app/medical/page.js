@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
@@ -59,6 +59,10 @@ export default function MedicalPortal() {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activePs, setActivePs] = useState(0);
   const psTimerRef = useRef(null);
+
+  const CARD_STATES = ['shortlist', 'cutoffs', 'checklist', 'advisor'];
+  const [activeCardState, setActiveCardState] = useState(0);
+  const cardStateTimerRef = useRef(null);
 
   const uniTrackRef = useRef(null);
   const statRefs = useRef([]);
@@ -160,6 +164,23 @@ export default function MedicalPortal() {
   function handlePsLeave() {
     psTimerRef.current = setInterval(() => {
       setActivePs(prev => (prev + 1) % PS_PAIRS.length);
+    }, 3500);
+  }
+
+  useEffect(() => {
+    cardStateTimerRef.current = setInterval(() => {
+      setActiveCardState(prev => (prev + 1) % CARD_STATES.length);
+    }, 3500);
+    return () => clearInterval(cardStateTimerRef.current);
+  }, []);
+
+  function handleCardStateHover() {
+    clearInterval(cardStateTimerRef.current);
+  }
+
+  function handleCardStateLeave() {
+    cardStateTimerRef.current = setInterval(() => {
+      setActiveCardState(prev => (prev + 1) % CARD_STATES.length);
     }, 3500);
   }
 
@@ -369,43 +390,192 @@ export default function MedicalPortal() {
                           <span className="card-top-bold">ASMI Dashboard</span>
                       </div>
       
-                      <div className="card-inner">
-      
-                          <div className="card-inner-header">
-                              <span className="card-inner-title">Your College Shortlist</span>
-                              <span className="card-ai-pill">Live · Personalised</span>
+                      <div
+                          className="card-inner"
+                          onMouseEnter={handleCardStateHover}
+                          onMouseLeave={handleCardStateLeave}
+                      >
+
+                          <AnimatePresence mode="wait">
+                              {activeCardState === 0 && (
+                                  <motion.div
+                                      key="shortlist"
+                                      initial={{ opacity: 0, y: 8 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{ opacity: 0, y: -8 }}
+                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  >
+                                      <div className="card-inner-header">
+                                          <span className="card-inner-title">Your College Shortlist</span>
+                                          <span className="card-ai-pill">Live · Personalised</span>
+                                      </div>
+
+                                      <div className="rank-display">
+                                          <div className="rank-label">YOUR NEET RANK</div>
+                                          <div className="rank-number">25,678</div>
+                                          <div className="rank-sub">AIR · Open Category</div>
+                                      </div>
+
+                                      <ul className="college-list" aria-label="College shortlist">
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-dot green" aria-hidden="true"></span>
+                                                  <span className="college-name">GMC Pune</span>
+                                              </div>
+                                              <span className="likelihood-pill pill-safe">Safe ✓</span>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-dot yellow" aria-hidden="true"></span>
+                                                  <span className="college-name">GMC Nagpur</span>
+                                              </div>
+                                              <span className="likelihood-pill pill-likely">Likely</span>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-dot blue" aria-hidden="true"></span>
+                                                  <span className="college-name">Seth GS Medical, Mumbai</span>
+                                              </div>
+                                              <span className="likelihood-pill pill-possible">Borderline</span>
+                                          </li>
+                                      </ul>
+                                  </motion.div>
+                              )}
+
+                              {activeCardState === 1 && (
+                                  <motion.div
+                                      key="cutoffs"
+                                      initial={{ opacity: 0, y: 8 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{ opacity: 0, y: -8 }}
+                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  >
+                                      <div className="card-inner-header">
+                                          <span className="card-inner-title">Cutoff Explorer</span>
+                                          <span className="card-ai-pill">Round-wise · AIR</span>
+                                      </div>
+
+                                      <ul className="college-list" aria-label="Cutoff explorer">
+                                          <li className="college-item cutoff-header-row">
+                                              <span className="college-name">College</span>
+                                              <span className="cutoff-cols">
+                                                  <span>R1</span>
+                                                  <span>R2</span>
+                                                  <span>R3</span>
+                                              </span>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-name">Grant Medical College, Mumbai</span>
+                                              </div>
+                                              <span className="cutoff-cols">
+                                                  <span>2,368</span>
+                                                  <span>4,354</span>
+                                                  <span>6,251</span>
+                                              </span>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-name">LLRM Medical College, Meerut</span>
+                                              </div>
+                                              <span className="cutoff-cols">
+                                                  <span>4,621</span>
+                                                  <span>6,556</span>
+                                                  <span>8,670</span>
+                                              </span>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="college-name">Indira Gandhi Medical College, Shimla</span>
+                                              </div>
+                                              <span className="cutoff-cols">
+                                                  <span>2,882</span>
+                                                  <span>4,222</span>
+                                                  <span>6,571</span>
+                                              </span>
+                                          </li>
+                                      </ul>
+                                  </motion.div>
+                              )}
+
+                              {activeCardState === 2 && (
+                                  <motion.div
+                                      key="checklist"
+                                      initial={{ opacity: 0, y: 8 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{ opacity: 0, y: -8 }}
+                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  >
+                                      <div className="card-inner-header">
+                                          <span className="card-inner-title">Document Checklist</span>
+                                          <span className="card-ai-pill">5/15 Ready · 33%</span>
+                                      </div>
+
+                                      <div className="checklist-progress-track">
+                                          <div className="checklist-progress-fill" style={{ width: '33%' }}></div>
+                                      </div>
+
+                                      <ul className="college-list" aria-label="Document checklist">
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="checklist-check" aria-hidden="true">✓</span>
+                                                  <span className="college-name">NEET Admit Card</span>
+                                              </div>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="checklist-check" aria-hidden="true">✓</span>
+                                                  <span className="college-name">NEET Scorecard / Rank Letter</span>
+                                              </div>
+                                          </li>
+                                          <li className="college-item">
+                                              <div className="college-dot-name">
+                                                  <span className="checklist-check" aria-hidden="true">✓</span>
+                                                  <span className="college-name">Class 10 Marksheet</span>
+                                              </div>
+                                          </li>
+                                      </ul>
+                                  </motion.div>
+                              )}
+
+                              {activeCardState === 3 && (
+                                  <motion.div
+                                      key="advisor"
+                                      initial={{ opacity: 0, y: 8 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      exit={{ opacity: 0, y: -8 }}
+                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                  >
+                                      <div className="card-inner-header">
+                                          <span className="card-inner-title">Your Personal Advisor</span>
+                                          <span className="card-ai-pill">Assigned</span>
+                                      </div>
+
+                                      <div className="advisor-profile-row">
+                                          <span className="advisor-avatar" aria-hidden="true">AK</span>
+                                          <div className="advisor-profile-info">
+                                              <span className="college-name">Anish Kulkarni</span>
+                                              <span className="rank-sub">Mumbai Branch Office</span>
+                                          </div>
+                                      </div>
+
+                                      <div className="advisor-cta-row">
+                                          <span className="btn-primary advisor-btn">Call the Advisor</span>
+                                          <span className="btn-secondary advisor-btn">Ask in Group</span>
+                                      </div>
+                                  </motion.div>
+                              )}
+                          </AnimatePresence>
+
+                          <div className="card-state-dots" aria-hidden="true">
+                              {CARD_STATES.map((state, i) => (
+                                  <span
+                                      key={state}
+                                      className={`card-state-dot${i === activeCardState ? ' active' : ''}`}
+                                  ></span>
+                              ))}
                           </div>
-      
-                          <div className="rank-display">
-                              <div className="rank-label">YOUR NEET RANK</div>
-                              <div className="rank-number">25,678</div>
-                              <div className="rank-sub">AIR · Open Category</div>
-                          </div>
-      
-                          <ul className="college-list" aria-label="College shortlist">
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot green" aria-hidden="true"></span>
-                                      <span className="college-name">GMC Pune</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-safe">Safe ✓</span>
-                              </li>
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot yellow" aria-hidden="true"></span>
-                                      <span className="college-name">GMC Nagpur</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-likely">Likely</span>
-                              </li>
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot blue" aria-hidden="true"></span>
-                                      <span className="college-name">Seth GS Medical, Mumbai</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-possible">Borderline</span>
-                              </li>
-                          </ul>
-      
+
                       </div>
       
                       <div className="card-bottom-row">
