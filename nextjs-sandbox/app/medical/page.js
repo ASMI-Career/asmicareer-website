@@ -60,9 +60,13 @@ export default function MedicalPortal() {
   const [activePs, setActivePs] = useState(0);
   const psTimerRef = useRef(null);
 
-  const CARD_STATES = ['shortlist', 'cutoffs', 'checklist', 'advisor'];
-  const [activeCardState, setActiveCardState] = useState(0);
-  const cardStateTimerRef = useRef(null);
+  const BSCREENS = [
+    { key: 'dashboard', url: 'asmicareer.in/student' },
+    { key: 'predictor', url: 'asmicareer.in/student/predictor' },
+    { key: 'cutoffs',   url: 'asmicareer.in/cutoff_explorer' },
+  ];
+  const [activeScreen, setActiveScreen] = useState(0);
+  const screenTimerRef = useRef(null);
 
   const uniTrackRef = useRef(null);
   const statRefs = useRef([]);
@@ -168,20 +172,20 @@ export default function MedicalPortal() {
   }
 
   useEffect(() => {
-    cardStateTimerRef.current = setInterval(() => {
-      setActiveCardState(prev => (prev + 1) % CARD_STATES.length);
-    }, 3500);
-    return () => clearInterval(cardStateTimerRef.current);
+    screenTimerRef.current = setInterval(() => {
+      setActiveScreen(prev => (prev + 1) % BSCREENS.length);
+    }, 5000);
+    return () => clearInterval(screenTimerRef.current);
   }, []);
 
-  function handleCardStateHover() {
-    clearInterval(cardStateTimerRef.current);
+  function handleScreenHover() {
+    clearInterval(screenTimerRef.current);
   }
 
-  function handleCardStateLeave() {
-    cardStateTimerRef.current = setInterval(() => {
-      setActiveCardState(prev => (prev + 1) % CARD_STATES.length);
-    }, 3500);
+  function handleScreenLeave() {
+    screenTimerRef.current = setInterval(() => {
+      setActiveScreen(prev => (prev + 1) % BSCREENS.length);
+    }, 5000);
   }
 
   useEffect(() => {
@@ -391,191 +395,305 @@ export default function MedicalPortal() {
                       </div>
       
                       <div
-                          className="card-inner"
-                          onMouseEnter={handleCardStateHover}
-                          onMouseLeave={handleCardStateLeave}
+                          className="card-inner dm-frame"
+                          onMouseEnter={handleScreenHover}
+                          onMouseLeave={handleScreenLeave}
                       >
-
-                          <AnimatePresence mode="wait">
-                              {activeCardState === 0 && (
-                                  <motion.div
-                                      key="shortlist"
-                                      initial={{ opacity: 0, y: 8 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      exit={{ opacity: 0, y: -8 }}
-                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                                  >
-                                      <div className="card-inner-header">
-                                          <span className="card-inner-title">Your College Shortlist</span>
-                                          <span className="card-ai-pill">Live · Personalised</span>
-                                      </div>
-
-                                      <div className="rank-display">
-                                          <div className="rank-label">YOUR NEET RANK</div>
-                                          <div className="rank-number">25,678</div>
-                                          <div className="rank-sub">AIR · Open Category</div>
-                                      </div>
-
-                                      <ul className="college-list" aria-label="College shortlist">
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-dot green" aria-hidden="true"></span>
-                                                  <span className="college-name">GMC Pune</span>
-                                              </div>
-                                              <span className="likelihood-pill pill-safe">Safe ✓</span>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-dot yellow" aria-hidden="true"></span>
-                                                  <span className="college-name">GMC Nagpur</span>
-                                              </div>
-                                              <span className="likelihood-pill pill-likely">Likely</span>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-dot blue" aria-hidden="true"></span>
-                                                  <span className="college-name">Seth GS Medical, Mumbai</span>
-                                              </div>
-                                              <span className="likelihood-pill pill-possible">Borderline</span>
-                                          </li>
-                                      </ul>
-                                  </motion.div>
-                              )}
-
-                              {activeCardState === 1 && (
-                                  <motion.div
-                                      key="cutoffs"
-                                      initial={{ opacity: 0, y: 8 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      exit={{ opacity: 0, y: -8 }}
-                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                                  >
-                                      <div className="card-inner-header">
-                                          <span className="card-inner-title">Cutoff Explorer</span>
-                                          <span className="card-ai-pill">Round-wise · AIR</span>
-                                      </div>
-
-                                      <ul className="college-list" aria-label="Cutoff explorer">
-                                          <li className="college-item cutoff-header-row">
-                                              <span className="college-name">College</span>
-                                              <span className="cutoff-cols">
-                                                  <span>R1</span>
-                                                  <span>R2</span>
-                                                  <span>R3</span>
-                                              </span>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-name">Grant Medical College, Mumbai</span>
-                                              </div>
-                                              <span className="cutoff-cols">
-                                                  <span>2,368</span>
-                                                  <span>4,354</span>
-                                                  <span>6,251</span>
-                                              </span>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-name">LLRM Medical College, Meerut</span>
-                                              </div>
-                                              <span className="cutoff-cols">
-                                                  <span>4,621</span>
-                                                  <span>6,556</span>
-                                                  <span>8,670</span>
-                                              </span>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="college-name">Indira Gandhi Medical College, Shimla</span>
-                                              </div>
-                                              <span className="cutoff-cols">
-                                                  <span>2,882</span>
-                                                  <span>4,222</span>
-                                                  <span>6,571</span>
-                                              </span>
-                                          </li>
-                                      </ul>
-                                  </motion.div>
-                              )}
-
-                              {activeCardState === 2 && (
-                                  <motion.div
-                                      key="checklist"
-                                      initial={{ opacity: 0, y: 8 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      exit={{ opacity: 0, y: -8 }}
-                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                                  >
-                                      <div className="card-inner-header">
-                                          <span className="card-inner-title">Document Checklist</span>
-                                          <span className="card-ai-pill">5/15 Ready · 33%</span>
-                                      </div>
-
-                                      <div className="checklist-progress-track">
-                                          <div className="checklist-progress-fill" style={{ width: '33%' }}></div>
-                                      </div>
-
-                                      <ul className="college-list" aria-label="Document checklist">
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="checklist-check" aria-hidden="true">✓</span>
-                                                  <span className="college-name">NEET Admit Card</span>
-                                              </div>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="checklist-check" aria-hidden="true">✓</span>
-                                                  <span className="college-name">NEET Scorecard / Rank Letter</span>
-                                              </div>
-                                          </li>
-                                          <li className="college-item">
-                                              <div className="college-dot-name">
-                                                  <span className="checklist-check" aria-hidden="true">✓</span>
-                                                  <span className="college-name">Class 10 Marksheet</span>
-                                              </div>
-                                          </li>
-                                      </ul>
-                                  </motion.div>
-                              )}
-
-                              {activeCardState === 3 && (
-                                  <motion.div
-                                      key="advisor"
-                                      initial={{ opacity: 0, y: 8 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                      exit={{ opacity: 0, y: -8 }}
-                                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                                  >
-                                      <div className="card-inner-header">
-                                          <span className="card-inner-title">Your Personal Advisor</span>
-                                          <span className="card-ai-pill">Assigned</span>
-                                      </div>
-
-                                      <div className="advisor-profile-row">
-                                          <span className="advisor-avatar" aria-hidden="true">AK</span>
-                                          <div className="advisor-profile-info">
-                                              <span className="college-name">Anish Kulkarni</span>
-                                              <span className="rank-sub">Mumbai Branch Office</span>
-                                          </div>
-                                      </div>
-
-                                      <div className="advisor-cta-row">
-                                          <span className="btn-primary advisor-btn">Call the Advisor</span>
-                                          <span className="btn-secondary advisor-btn">Ask in Group</span>
-                                      </div>
-                                  </motion.div>
-                              )}
-                          </AnimatePresence>
-
-                          <div className="card-state-dots" aria-hidden="true">
-                              {CARD_STATES.map((state, i) => (
-                                  <span
-                                      key={state}
-                                      className={`card-state-dot${i === activeCardState ? ' active' : ''}`}
-                                  ></span>
-                              ))}
+                          <div className="dm-bar">
+                              <span className="dm-dots" aria-hidden="true">
+                                  <span className="dm-dot dm-dot-red"></span>
+                                  <span className="dm-dot dm-dot-yellow"></span>
+                                  <span className="dm-dot dm-dot-green"></span>
+                              </span>
+                              <span className="dm-url">{BSCREENS[activeScreen].url}</span>
                           </div>
 
+                          <div className="dm-viewport">
+                              <AnimatePresence mode="wait">
+                                  {activeScreen === 0 && (
+                                      <motion.div
+                                          key="dashboard"
+                                          className="dm-slide"
+                                          initial={{ x: 40, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          exit={{ x: -40, opacity: 0 }}
+                                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                      >
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-dashboard">
+                                              <div className="dm-welcome">
+                                                  <h1 className="dm-welcome-h1">Welcome back, Sahil 👋</h1>
+                                                  <p className="dm-welcome-sub">Your journey to MBBS 2026 is in progress. Keep going!</p>
+                                                  <div className="dm-stat-badges">
+                                                      <div className="dm-stat-badge">
+                                                          <span className="dm-stat-badge-lbl">NEET SCORE</span>
+                                                          <span className="dm-stat-badge-val">518</span>
+                                                      </div>
+                                                      <div className="dm-stat-badge">
+                                                          <span className="dm-stat-badge-lbl">NEET AIR RANK</span>
+                                                          <span className="dm-stat-badge-val">25,678</span>
+                                                      </div>
+                                                      <div className="dm-stat-badge">
+                                                          <span className="dm-stat-badge-lbl">CATEGORY</span>
+                                                          <span className="dm-stat-badge-val">General / UR</span>
+                                                      </div>
+                                                  </div>
+                                                  <div className="dm-pill-row">3 colleges shortlisted &nbsp;|&nbsp; Next: MHT-CET Round 2 on 18 Jul</div>
+                                                  <div className="dm-stepper">
+                                                      <div className="dm-stepper-track"></div>
+                                                      <div className="dm-stepper-fill" style={{ width: '40%' }}></div>
+                                                      <div className="dm-step completed"><span className="dm-step-circle">✓</span><span className="dm-step-lbl">Profile</span></div>
+                                                      <div className="dm-step active"><span className="dm-step-circle">2</span><span className="dm-step-lbl">Counselling</span></div>
+                                                      <div className="dm-step pending"><span className="dm-step-circle">3</span><span className="dm-step-lbl">Shortlist</span></div>
+                                                      <div className="dm-step pending"><span className="dm-step-circle">4</span><span className="dm-step-lbl">Admission</span></div>
+                                                  </div>
+                                              </div>
+
+                                              <div className="dm-dash-grid">
+                                                  <div className="dm-dash-left">
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header">
+                                                              <span className="dm-card-title">📅 Upcoming Deadlines</span>
+                                                          </div>
+                                                          <div className="dm-list">
+                                                              <div className="dm-deadline-item">
+                                                                  <span className="dm-deadline-date">18<br />JUL</span>
+                                                                  <span className="dm-deadline-title">MHT-CET Round 2 Registration</span>
+                                                              </div>
+                                                              <div className="dm-deadline-item">
+                                                                  <span className="dm-deadline-date">22<br />JUL</span>
+                                                                  <span className="dm-deadline-title">Document Verification Window</span>
+                                                              </div>
+                                                              <div className="dm-deadline-item">
+                                                                  <span className="dm-deadline-date">29<br />JUL</span>
+                                                                  <span className="dm-deadline-title">Seat Acceptance Deadline</span>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header">
+                                                              <span className="dm-card-title">★ My Shortlist</span>
+                                                          </div>
+                                                          <div className="dm-list">
+                                                              <div className="dm-shortlist-item">🏥 GMC Pune</div>
+                                                              <div className="dm-shortlist-item">🏥 GMC Nagpur</div>
+                                                              <div className="dm-shortlist-item">🏥 Seth GS Medical, Mumbai</div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="dm-dash-right">
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-title" style={{ marginBottom: 14 }}>My Personal Advisor</div>
+                                                          <div className="dm-advisor-row">
+                                                              <span className="advisor-avatar dm-avatar" aria-hidden="true">AK</span>
+                                                              <div>
+                                                                  <div className="dm-advisor-name">Anish Kulkarni</div>
+                                                                  <div className="dm-advisor-branch">📍 Mumbai Branch Office</div>
+                                                              </div>
+                                                          </div>
+                                                          <div className="dm-advisor-btns">
+                                                              <span className="advisor-btn-fill dm-advisor-btn">📞 Call the Advisor</span>
+                                                              <span className="advisor-btn-outline dm-advisor-btn">💬 Ask in Group</span>
+                                                          </div>
+                                                      </div>
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header">
+                                                              <span className="dm-card-title">Document Status</span>
+                                                              <span className="dm-card-badge">3/15 DONE</span>
+                                                          </div>
+                                                          <div className="dm-checklist-mini">
+                                                              <div className="dm-doc-row"><span className="checklist-check">✓</span>NEET Admit Card</div>
+                                                              <div className="dm-doc-row"><span className="checklist-check">✓</span>NEET Scorecard</div>
+                                                              <div className="dm-doc-row"><span className="dm-doc-pending"></span>Class 10 Marksheet</div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+
+                                  {activeScreen === 1 && (
+                                      <motion.div
+                                          key="predictor"
+                                          className="dm-slide"
+                                          initial={{ x: 40, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          exit={{ x: -40, opacity: 0 }}
+                                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                      >
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-predictor">
+                                              <div className="dm-page-header">College Predictor</div>
+                                              <div className="dm-toggle-row">
+                                                  <span className="dm-toggle-btn active">Use NEET AIR</span>
+                                                  <span className="dm-toggle-btn">Use NEET Score</span>
+                                              </div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill">Course: MBBS</span>
+                                                  <span className="dm-filter-pill">Category: General</span>
+                                                  <span className="dm-filter-pill">State: All India</span>
+                                                  <span className="dm-filter-pill">Sort: Cutoff ↑</span>
+                                              </div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill dm-filter-pill-active">All</span>
+                                                  <span className="dm-filter-pill">AIQ</span>
+                                                  <span className="dm-filter-pill">State Quota</span>
+                                                  <span className="dm-filter-pill">Deemed</span>
+                                              </div>
+                                              <div className="dm-results-count"><strong>225</strong> colleges matched</div>
+                                              <table className="dm-table">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>College</th><th>Pool</th><th>State</th><th>Cutoff</th><th>Fee/yr</th><th>Chance</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                      <tr>
+                                                          <td className="dm-college-cell">Grant Medical College, Mumbai <span className="dm-tb dm-tb-govt">Govt</span></td>
+                                                          <td className="pool-chip">AIQ</td><td>MH</td><td>2,368</td><td>₹1.2L</td>
+                                                          <td><span className="chance-badge chance-high">Safe</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">Seth GS Medical College <span className="dm-tb dm-tb-govt">Govt</span></td>
+                                                          <td className="pool-chip">State</td><td>MH</td><td>4,890</td><td>₹1.5L</td>
+                                                          <td><span className="chance-badge chance-high">Safe</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">Terna Medical College <span className="dm-tb dm-tb-private">Private</span></td>
+                                                          <td className="pool-chip">State</td><td>MH</td><td>12,450</td><td>₹18L</td>
+                                                          <td><span className="chance-badge dm-chance-likely">Likely</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">Symbiosis Medical College <span className="dm-tb dm-tb-deemed">Deemed</span></td>
+                                                          <td className="pool-chip">AIQ</td><td>MH</td><td>28,900</td><td>₹22L</td>
+                                                          <td><span className="chance-badge dm-chance-likely">Likely</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">D Y Patil Medical College <span className="dm-tb dm-tb-private">Private</span></td>
+                                                          <td className="pool-chip">State</td><td>MH</td><td>45,600</td><td>₹24L</td>
+                                                          <td><span className="chance-badge dm-chance-border">Border</span></td>
+                                                      </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+
+                                  {activeScreen === 2 && (
+                                      <motion.div
+                                          key="cutoffs"
+                                          className="dm-slide"
+                                          initial={{ x: 40, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          exit={{ x: -40, opacity: 0 }}
+                                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                      >
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-cutoffs">
+                                              <div className="dm-page-header">Cutoff Explorer</div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill">2024</span>
+                                                  <span className="dm-filter-pill dm-filter-pill-active">2025</span>
+                                                  <span className="dm-filter-pill">2026</span>
+                                              </div>
+                                              <div className="dm-counsel-cards">
+                                                  <div className="dm-counsel-card dm-counsel-card-active">MCC AIQ</div>
+                                                  <div className="dm-counsel-card">State Quota</div>
+                                                  <div className="dm-counsel-card">Deemed / Mgmt</div>
+                                              </div>
+
+                                              <div className="dm-cutoff-grid">
+                                                  <div className="dm-cutoff-left">
+                                                      <div className="dm-filter-row">
+                                                          <span className="dm-filter-pill dm-filter-pill-active">All Types</span>
+                                                          <span className="dm-filter-pill">Govt</span>
+                                                          <span className="dm-filter-pill">Private</span>
+                                                          <span className="dm-filter-pill">General</span>
+                                                      </div>
+                                                      <table className="dm-table dm-cutoff-table">
+                                                          <thead>
+                                                              <tr>
+                                                                  <th rowSpan={2}>College</th>
+                                                                  <th rowSpan={2}>Fees</th>
+                                                                  <th colSpan={3} className="dm-round-head">Round 1</th>
+                                                                  <th colSpan={3} className="dm-round-head">Round 2</th>
+                                                                  <th colSpan={3} className="dm-round-head">Round 3</th>
+                                                              </tr>
+                                                              <tr>
+                                                                  <th>Intake</th><th>AIR</th><th>SML</th>
+                                                                  <th>Intake</th><th>AIR</th><th>SML</th>
+                                                                  <th>Intake</th><th>AIR</th><th>SML</th>
+                                                              </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">Grant Medical College</td><td>₹1.2L</td>
+                                                                  <td>40</td><td>2,368</td><td>2,400</td>
+                                                                  <td>38</td><td>4,354</td><td>4,400</td>
+                                                                  <td>35</td><td>6,251</td><td>6,300</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">LLRM Medical College</td><td>₹1.4L</td>
+                                                                  <td>30</td><td>4,621</td><td>4,700</td>
+                                                                  <td>28</td><td>6,556</td><td>6,600</td>
+                                                                  <td>25</td><td>8,670</td><td>8,700</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">Indira Gandhi Medical</td><td>₹1.3L</td>
+                                                                  <td>25</td><td>2,882</td><td>2,950</td>
+                                                                  <td>23</td><td>4,222</td><td>4,300</td>
+                                                                  <td>20</td><td>6,571</td><td>6,650</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">Maulana Azad Medical</td><td>₹1.1L</td>
+                                                                  <td>50</td><td>1,200</td><td>1,250</td>
+                                                                  <td>48</td><td>2,100</td><td>2,150</td>
+                                                                  <td>45</td><td>3,400</td><td>3,450</td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </div>
+                                                  <div className="dm-cutoff-right">
+                                                      <div className="rank-panel-dark dm-rank-panel">
+                                                          <div className="rank-panel-label">YOUR RANK</div>
+                                                          <div className="rank-panel-number">#25,678</div>
+                                                          <div className="rank-panel-tiles">
+                                                              <div className="rank-panel-tile">
+                                                                  <span className="rank-panel-tile-num rank-tile-safe">12</span>
+                                                                  <span className="rank-panel-tile-lbl">Safe</span>
+                                                              </div>
+                                                              <div className="rank-panel-tile">
+                                                                  <span className="rank-panel-tile-num rank-tile-likely">6</span>
+                                                                  <span className="rank-panel-tile-lbl">Likely</span>
+                                                              </div>
+                                                              <div className="rank-panel-tile">
+                                                                  <span className="rank-panel-tile-num rank-tile-border">3</span>
+                                                                  <span className="rank-panel-tile-lbl">Border</span>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                              </AnimatePresence>
+                          </div>
+
+                          <div className="dm-footer">
+                              <div className="card-state-dots" aria-hidden="true">
+                                  {BSCREENS.map((s, i) => (
+                                      <span
+                                          key={s.key}
+                                          className={`card-state-dot${i === activeScreen ? ' active' : ''}`}
+                                      ></span>
+                                  ))}
+                              </div>
+                          </div>
                       </div>
       
                       <div className="card-bottom-row">
