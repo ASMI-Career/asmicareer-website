@@ -61,9 +61,11 @@ export default function MedicalPortal() {
   const psTimerRef = useRef(null);
 
   const BSCREENS = [
-    { key: 'dashboard', url: 'asmicareer.in/student' },
-    { key: 'predictor', url: 'asmicareer.in/student/predictor' },
-    { key: 'cutoffs',   url: 'asmicareer.in/cutoff_explorer' },
+    { key: 'dashboard',   url: 'asmicareer.in/student' },
+    { key: 'predictor',   url: 'asmicareer.in/student/predictor' },
+    { key: 'cutoffs',     url: 'asmicareer.in/cutoff_explorer' },
+    { key: 'institutes',  url: 'asmicareer.in/student?tab=institutes' },
+    { key: 'documents',   url: 'asmicareer.in/tools/documents-checklist' },
   ];
   const [activeScreen, setActiveScreen] = useState(0);
   const screenTimerRef = useRef(null);
@@ -388,12 +390,6 @@ export default function MedicalPortal() {
                       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                       className="hero-card"
                   >
-      
-                      <div className="card-top-row">
-                          <span className="card-pill-grey">Your Admission Portal</span>
-                          <span className="card-top-bold">ASMI Dashboard</span>
-                      </div>
-      
                       <div
                           className="card-inner dm-frame"
                           onMouseEnter={handleScreenHover}
@@ -457,16 +453,25 @@ export default function MedicalPortal() {
                                                           </div>
                                                           <div className="dm-list">
                                                               <div className="dm-deadline-item">
-                                                                  <span className="dm-deadline-date">18<br />JUL</span>
-                                                                  <span className="dm-deadline-title">MHT-CET Round 2 Registration</span>
+                                                                  <span className="dm-deadline-date">FEB<br />23</span>
+                                                                  <div className="dm-deadline-body">
+                                                                      <span className="dm-deadline-title">MHT-CET Round 2 Registration</span>
+                                                                      <span className="dm-deadline-tag">COUNSELLING · Closed</span>
+                                                                  </div>
                                                               </div>
                                                               <div className="dm-deadline-item">
-                                                                  <span className="dm-deadline-date">22<br />JUL</span>
-                                                                  <span className="dm-deadline-title">Document Verification Window</span>
+                                                                  <span className="dm-deadline-date">JUL<br />22</span>
+                                                                  <div className="dm-deadline-body">
+                                                                      <span className="dm-deadline-title">Document Verification Window</span>
+                                                                      <span className="dm-deadline-tag dm-deadline-tag-open">DOCUMENTS · Open</span>
+                                                                  </div>
                                                               </div>
                                                               <div className="dm-deadline-item">
-                                                                  <span className="dm-deadline-date">29<br />JUL</span>
-                                                                  <span className="dm-deadline-title">Seat Acceptance Deadline</span>
+                                                                  <span className="dm-deadline-date">JUL<br />29</span>
+                                                                  <div className="dm-deadline-body">
+                                                                      <span className="dm-deadline-title">Seat Acceptance Deadline</span>
+                                                                      <span className="dm-deadline-tag dm-deadline-tag-soon">ADMISSION · 6 days left</span>
+                                                                  </div>
                                                               </div>
                                                           </div>
                                                       </div>
@@ -681,6 +686,115 @@ export default function MedicalPortal() {
                                       </div>
                                       </motion.div>
                                   )}
+
+                                  {activeScreen === 3 && (
+                                      <motion.div
+                                          key="institutes"
+                                          className="dm-slide"
+                                          initial={{ x: 40, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          exit={{ x: -40, opacity: 0 }}
+                                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                      >
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-institutes">
+                                              <div className="dm-page-header">Institutes Directory</div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill dm-filter-pill-active">All Colleges</span>
+                                                  <span className="dm-filter-pill">Private</span>
+                                                  <span className="dm-filter-pill">Government</span>
+                                                  <span className="dm-filter-pill">Deemed</span>
+                                                  <span className="dm-filter-pill">AIIMS</span>
+                                                  <span className="dm-filter-pill">JIPMER</span>
+                                                  <span className="dm-filter-pill">Central</span>
+                                              </div>
+                                              <div className="dm-results-count"><strong>820</strong> colleges matching</div>
+                                              <div className="dm-institute-grid">
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img">
+                                                          <span className="dm-institute-heart" aria-hidden="true">♡</span>
+                                                          <span className="dm-institute-img-name">Grant Medical College, Mumbai</span>
+                                                      </div>
+                                                      <div className="dm-institute-body">
+                                                          <div className="dm-institute-tags">📍 MUMBAI &nbsp;·&nbsp; 🎓 GOVERNMENT</div>
+                                                          <div className="dm-institute-name">Grant Medical College, Mumbai</div>
+                                                          <div className="dm-institute-seats">250 MBBS seats</div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img">
+                                                          <span className="dm-institute-heart" aria-hidden="true">♡</span>
+                                                          <span className="dm-institute-img-name">JIPMER, Puducherry</span>
+                                                      </div>
+                                                      <div className="dm-institute-body">
+                                                          <div className="dm-institute-tags">📍 PUDUCHERRY &nbsp;·&nbsp; 🎓 CENTRAL</div>
+                                                          <div className="dm-institute-name">Jawaharlal Institute of Postgraduate Medical Education &amp; Research, Puducherry</div>
+                                                          <div className="dm-institute-seats">200 MBBS seats</div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img">
+                                                          <span className="dm-institute-heart dm-institute-heart-active" aria-hidden="true">♥</span>
+                                                          <span className="dm-institute-img-name">Seth GS Medical College, Mumbai</span>
+                                                      </div>
+                                                      <div className="dm-institute-body">
+                                                          <div className="dm-institute-tags">📍 MUMBAI &nbsp;·&nbsp; 🎓 GOVERNMENT</div>
+                                                          <div className="dm-institute-name">Seth GS Medical College, Mumbai</div>
+                                                          <div className="dm-institute-seats">180 MBBS seats</div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+
+                                  {activeScreen === 4 && (
+                                      <motion.div
+                                          key="documents"
+                                          className="dm-slide"
+                                          initial={{ x: 40, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          exit={{ x: -40, opacity: 0 }}
+                                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                      >
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-documents">
+                                              <div className="dm-page-header">Documents Checklist</div>
+                                              <div className="dm-toggle-row">
+                                                  <span className="dm-toggle-btn active">State Quota (Maharashtra)</span>
+                                                  <span className="dm-toggle-btn">All India Quota (AIQ)</span>
+                                                  <span className="dm-toggle-btn">Management / NRI</span>
+                                              </div>
+                                              <div className="dm-progress-card">
+                                                  <div className="dm-progress-track">
+                                                      <div className="dm-progress-fill" style={{ width: '33%' }}></div>
+                                                  </div>
+                                                  <div className="dm-progress-label">5/15 ready · 33%</div>
+                                              </div>
+                                              <div className="dm-doc-section-label">Academic Documents</div>
+                                              <div className="dm-doc-list">
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="checklist-check">✓</span>
+                                                      <span className="dm-doc-list-label">NEET Admit Card</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="checklist-check">✓</span>
+                                                      <span className="dm-doc-list-label">NEET Scorecard / Rank Letter</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="dm-doc-pending"></span>
+                                                      <span className="dm-doc-list-label">Class 10 Marksheet</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="dm-doc-pending"></span>
+                                                      <span className="dm-doc-list-label">Class 10 Passing Certificate</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
                               </AnimatePresence>
                           </div>
 
@@ -695,12 +809,6 @@ export default function MedicalPortal() {
                               </div>
                           </div>
                       </div>
-      
-                      <div className="card-bottom-row">
-                          <span className="card-bottom-label">Counsellor assigned</span>
-                          <span className="card-bottom-bold">Anish Kulkarni</span>
-                      </div>
-      
                   </motion.div>
               </div>
       
