@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
@@ -59,6 +59,12 @@ export default function MedicalPortal() {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [activePs, setActivePs] = useState(0);
   const psTimerRef = useRef(null);
+
+  const psWipe = useMotionValue(0);
+  const psWipeClip = useTransform(psWipe, v => `inset(0 ${v}% 0 0)`);
+  const psWipeLeft = useTransform(psWipe, v => `${100 - v}%`);
+  const psWipeControls = useRef(null);
+  const psImgColRef = useRef(null);
 
   const BSCREENS = [
     { key: 'dashboard',   url: 'asmicareer.in/student' },
@@ -172,6 +178,34 @@ export default function MedicalPortal() {
       setActivePs(prev => (prev + 1) % PS_PAIRS.length);
     }, 3500);
   }
+
+  useEffect(() => {
+    psWipeControls.current = animate(psWipe, [0, 100, 0], {
+      duration: 8,
+      times: [0, 0.5, 1],
+      ease: [0.45, 0, 0.55, 1],
+      repeat: Infinity,
+    });
+
+    const node = psImgColRef.current;
+    if (!node) return () => psWipeControls.current?.stop();
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!psWipeControls.current) return;
+      if (entry.isIntersecting) {
+        psWipeControls.current.play();
+      } else {
+        psWipeControls.current.pause();
+      }
+    }, { threshold: 0.1 });
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+      psWipeControls.current?.stop();
+    };
+  }, []);
 
   useEffect(() => {
     screenTimerRef.current = setInterval(() => {
@@ -1018,20 +1052,28 @@ export default function MedicalPortal() {
               ))}
             </div>
 
-            {/* CENTER: IMAGE PLACEHOLDER */}
-            <div className="ps-img-col" role="img" aria-label="Problem vs Solution comparison">
+            {/* CENTER: BEFORE/AFTER IMAGE WIPE */}
+            <div className="ps-img-col" role="img" aria-label="Before ASMI vs after ASMI" ref={psImgColRef}>
               <div className="ps-img-placeholder">
-                <div className="ps-pair-counter">
-                  {PS_PAIRS.map((_, i) => (
-                    <span
-                      key={i}
-                      className={`ps-counter-dot${activePs === i ? ' active' : ''}`}
-                      onClick={() => setActivePs(i)}
-                      aria-hidden="true"
-                    />
-                  ))}
-                </div>
-                <div className="ps-vs" aria-label="VS">VS</div>
+                <img
+                  className="ps-img-base"
+                  src="/images/medical/story-before.jpg"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <motion.img
+                  className="ps-img-after"
+                  src="/images/medical/story-after.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  style={{ clipPath: psWipeClip }}
+                />
+                <motion.div className="ps-handle" style={{ left: psWipeLeft }} aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 8L4 12L8 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M16 8L20 12L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </motion.div>
               </div>
             </div>
 
