@@ -185,9 +185,29 @@
 
     /* ── Mobile ───────────────────────────────────────────────── */
     @media (max-width: 768px) {
-      .tool-layout { flex-direction: column; height: auto; overflow: auto; }
+      .tool-layout { flex-direction: column; height: auto; overflow: visible; }
       .left-col, .right-col { flex: none; width: 100%; height: auto; }
-      .right-col { min-height: 300px; border-top: 1px solid rgba(106,13,173,0.12); }
+      .left-col { border-right: none; }
+      .right-col {
+        min-height: 0;
+        max-height: 70vh;
+        border-top: 1px solid rgba(106,13,173,0.12);
+      }
+      .pref-list { max-height: 40vh; }
+
+      header .flex.items-center.gap-4 h1 { font-size: 1.05rem; line-height: 1.35; }
+      header p.text-sm { font-size: 12px; }
+      header img.h-9 { height: 30px; }
+
+      #counselling-cards { gap: 8px; }
+      .add-btn { padding: 4px 8px; font-size: 10px; }
+      .pref-name { font-size: 10.5px; }
+      .pref-meta { font-size: 9px; }
+    }
+
+    @media (max-width: 480px) {
+      header .h-11.w-11 { height: 2.2rem; width: 2.2rem; font-size: 12px; }
+      .year-btn { padding: 6px 8px !important; font-size: 12px !important; }
     }
   </style>
 </head>
@@ -206,7 +226,7 @@
             </div>
           </div>
 
-          <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-3">
             <div class="relative w-full sm:w-80 xl:w-96">
               <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
                 <iconify-icon icon="lucide:search"></iconify-icon>
@@ -214,14 +234,16 @@
               <input id="collegeSearch" type="text" placeholder="Search college, code, city..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20 focus:border-[#1A0040]/40 transition-all text-sm custom-shadow">
             </div>
 
-            <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow">
-              <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025" onclick="setYear('2025')">2025</button>
-              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2024" disabled title="Data coming soon">2024</button>
-              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2023" disabled title="Data coming soon">2023</button>
-              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2022" disabled title="Data coming soon">2022</button>
-            </div>
+            <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
+                <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025" onclick="setYear('2025')">2025</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2024" disabled title="Data coming soon">2024</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2023" disabled title="Data coming soon">2023</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2022" disabled title="Data coming soon">2022</button>
+              </div>
 
-            <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold">CN</div>
+              <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold flex-shrink-0">CN</div>
+            </div>
           </div>
         </div>
       </div>
