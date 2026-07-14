@@ -6,8 +6,8 @@ import Footer from '../../components/Footer';
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function isExpired(event) {
-  // Result entries never expire — stay visible until manually removed
-  if (event.title && event.title.toLowerCase().includes('result')) {
+  // Result entries never auto-expire unless an explicit expiry_date is set
+  if (!event.expiry_date && event.title && event.title.toLowerCase().includes('result')) {
     return false;
   }
 
