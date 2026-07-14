@@ -4,34 +4,8 @@ import './events.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 
-/* ─── CONFIG ────────────────────────────────────────────────
-   Replace with your deployed Apps Script Web App URL.
-   Deploy the apps-script-seminars.js additions as a Web App
-   (Execute as: Me, Who has access: Anyone).
-────────────────────────────────────────────────────────────── */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySE02MPVvJobNKjT5NlAIazXAslEIdYz-yPXIKPiae7t3JNxpxcxAVneImTpNEzCvHhg/exec';
-
-/* ─── CITY CODES for Booking ID ───────────────────────────── */
-const CITY_CODE = {
-  Mumbai: 'MUM', Thane: 'THA', Pune: 'PUN',
-  Kolhapur: 'KOL', Sangli: 'SAN', 'Chh. Sambhajinagar': 'SAM',
-};
-
-function generateBookingId(city) {
-  const code = CITY_CODE[city] || 'ASM';
-  const d = new Date();
-  const ds = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  return `ASMI-${code}-${ds}-${rand}`;
-}
-
-/* ─── STEP CONFIG ──────────────────────────────────────────── */
-const STEPS = [
-  { label: 'Choose Seminar', icon: '📍' },
-  { label: 'Time Slot',      icon: '🕐' },
-  { label: 'Your Details',   icon: '👤' },
-  { label: 'Your Ticket',    icon: '🎟️' },
-];
+const WHATSAPP_COMMUNITY_URL = 'https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu';
+const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@ASMICareervideo';
 
 /* ─── ABOUT ITEMS ──────────────────────────────────────────── */
 const ABOUT_ITEMS = [
@@ -140,212 +114,6 @@ function SeminarCarousel() {
 }
 
 export default function EventsPage() {
-  const [seminars, setSeminars] = useState([]);
-  const [cityFilter, setCityFilter] = useState('All');
-  const [loading, setLoading] = useState(true);
-  const [remainingSeats, setRemainingSeats] = useState({});
-
-  /* Modal state */
-  const [modalOpen, setModalOpen] = useState(false);
-  const [step, setStep] = useState(1);
-  const [selectedSeminar, setSelectedSeminar] = useState(null);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [form, setForm] = useState({ name: '', phone: '', email: '', neetYear: 'NEET 2026', members: 0 });
-  const [booking, setBooking] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState('');
-
-  const fetchRemainingSeats = () => {
-    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
-      fetch(`${APPS_SCRIPT_URL}?action=getRemainingSeats`)
-        .then(r => r.json())
-        .then(data => {
-          if (data && typeof data === 'object') {
-            setRemainingSeats(data);
-          }
-        })
-        .catch(err => console.error("Error fetching remaining seats:", err));
-    }
-  };
-
-  useEffect(() => {
-    fetch('/data/seminars.json')
-      .then(r => r.json())
-      .then(data => { setSeminars(data); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetchRemainingSeats();
-  }, [seminars]);
-
-  useEffect(() => {
-    if (!loading && seminars.length > 0) {
-      const params = new URLSearchParams(window.location.search);
-      const bookId = params.get('book');
-      if (bookId) {
-        const found = seminars.find(s => s.id === bookId);
-        if (found && !found.coming_soon) {
-          openModal(found, 2);
-        }
-      }
-    }
-  }, [loading, seminars]);
-
-  /* ── derived ── */
-  const upcoming = seminars.filter(s => !s.coming_soon);
-  const cities = ['All', ...Array.from(new Set(seminars.map(s => s.city)))];
-  const filtered = cityFilter === 'All' ? seminars : seminars.filter(s => s.city === cityFilter);
-
-  /* ── modal helpers ── */
-  function openModal(seminar = null, startStep = 1) {
-    fetchRemainingSeats(); // refresh remaining seats on modal open
-    setStep(startStep);
-    setSelectedSeminar(seminar);
-    setSelectedSlot(seminar?.slots?.[0] ?? null);
-    setForm({ name: '', phone: '', email: '', neetYear: 'NEET 2026', members: 0 });
-    setBooking(null);
-    setSubmitError('');
-    setModalOpen(true);
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    setModalOpen(false);
-    document.body.style.overflow = '';
-  }
-
-  function nextStep() { setStep(s => Math.min(4, s + 1)); }
-  function prevStep() { setStep(s => Math.max(1, s - 1)); }
-
-  /* ── validation ── */
-  const requestedSeats = form.members + 1;
-  const hasEnoughSeats = selectedSeminar ? (remainingSeats[selectedSeminar.id] === undefined || remainingSeats[selectedSeminar.id] >= requestedSeats) : true;
-
-  const ok1 = selectedSeminar && !selectedSeminar.coming_soon && (remainingSeats[selectedSeminar.id] === undefined || remainingSeats[selectedSeminar.id] > 0);
-  const ok2 = !!selectedSlot;
-  const ok3 = form.name.trim().length > 1
-    && form.phone.replace(/\D/g,'').length === 10
-    && form.email.includes('@') && form.email.includes('.')
-    && hasEnoughSeats;
-
-  /* ── submission ── */
-  async function handleSubmit() {
-    if (!ok3 || submitting) return;
-    setSubmitting(true);
-    setSubmitError('');
-
-    const bookingId = generateBookingId(selectedSeminar.city);
-    const payload = {
-      action: 'bookSeminar',
-      bookingId,
-      seminarId:    selectedSeminar.id,
-      seminarTitle: selectedSeminar.title,
-      city:         selectedSeminar.city,
-      branch:       selectedSeminar.branch,
-      venue:        selectedSeminar.venue,
-      venueMaps:    selectedSeminar.venue_maps,
-      date:         selectedSeminar.display_date,
-      slot:         selectedSlot?.time ?? 'TBD',
-      name:         form.name.trim(),
-      phone:        form.phone.replace(/\D/g,''),
-      email:        form.email.trim(),
-      neetYear:     form.neetYear,
-      members:      form.members,
-      whatsapp:     selectedSeminar.whatsapp,
-    };
-
-    try {
-      // Build query string to call GET endpoint for reading CORS JSON response
-      const q = new URLSearchParams();
-      Object.keys(payload).forEach(k => q.append(k, payload[k]));
-      
-      const res = await fetch(`${APPS_SCRIPT_URL}?${q.toString()}`);
-      const data = await res.json();
-      
-      if (data && data.success) {
-        setBooking(payload);
-        setStep(4);
-      } else {
-        setSubmitError(data.message || 'Booking failed. This seminar might be fully booked. Please try again.');
-      }
-    } catch (err) {
-      setSubmitError('Could not connect. Please try again or call ' + selectedSeminar.phone);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  /* ── print ticket ── */
-  function handlePrint() {
-    if (!booking) return;
-    const verifyUrl = `https://asmicareer.in/events/verify?id=${encodeURIComponent(booking.bookingId)}`;
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(verifyUrl)}&color=1a0040&bgcolor=ffffff`;
-    const win = window.open('', '_blank');
-    win.document.write(`<!DOCTYPE html><html><head><title>ASMI Ticket — ${booking.bookingId}</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;background:#fff;padding:32px}
-  .ticket{max-width:600px;margin:0 auto;border:2px solid #1a0040;border-radius:16px;overflow:hidden}
-  .t-header{background:linear-gradient(135deg,#1a0040,#6a0dad);padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
-  .t-header img{height:40px}
-  .t-confirmed{background:#FFD700;color:#1a0040;font-weight:900;font-size:12px;padding:5px 14px;border-radius:50px;letter-spacing:.5px}
-  .t-main{padding:20px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #eee}
-  .t-bid-lbl{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#6a0dad;margin-bottom:4px}
-  .t-bid{font-size:20px;font-weight:900;color:#1a0040;letter-spacing:.5px}
-  .t-name{font-size:15px;font-weight:700;color:#1a0040;margin-top:12px}
-  .t-contact{font-size:12px;color:#555;margin-top:2px}
-  .t-qr{border:2px solid #FFD700;border-radius:8px;padding:4px}
-  .t-details{padding:16px 24px;background:#fafafa;border-bottom:1px solid #eee}
-  .t-row{display:flex;gap:12px;margin-bottom:6px;font-size:13px}
-  .t-lbl{width:80px;color:#888;flex-shrink:0}
-  .t-val{color:#1a0040;font-weight:600;flex:1}
-  .t-footer{background:#1a0040;padding:14px 24px;text-align:center}
-  .t-footer p{color:rgba(255,255,255,.65);font-size:11px;margin-bottom:2px}
-  .t-footer b{color:#FFD700}
-  @media print{body{padding:0}button{display:none}}
-</style></head><body>
-<div class="ticket">
-  <div class="t-header">
-    <img src="${window.location.origin}/asmi-logo.png" alt="ASMI Career" onerror="this.style.display='none'">
-    <span class="t-confirmed">✅ BOOKING CONFIRMED</span>
-  </div>
-  <div class="t-main">
-    <div>
-      <div class="t-bid-lbl">BOOKING ID</div>
-      <div class="t-bid">${booking.bookingId}</div>
-      <div class="t-name">${booking.name}</div>
-      <div class="t-contact">${booking.phone} &nbsp;·&nbsp; ${booking.email}</div>
-    </div>
-    <img src="${qrSrc}" alt="QR Code" class="t-qr" width="100" height="100">
-  </div>
-  <div class="t-details">
-    <div class="t-row"><span class="t-lbl">Event</span><span class="t-val">${booking.seminarTitle} — ${booking.city}</span></div>
-    <div class="t-row"><span class="t-lbl">Date</span><span class="t-val">${booking.date}</span></div>
-    <div class="t-row"><span class="t-lbl">Time</span><span class="t-val">${booking.slot}</span></div>
-    <div class="t-row"><span class="t-lbl">Venue</span><span class="t-val">${booking.venue}</span></div>
-    <div class="t-row"><span class="t-lbl">Attendees</span><span class="t-val">${parseInt(booking.members) + 1} person${parseInt(booking.members) > 0 ? 's' : ''}</span></div>
-    <div class="t-row"><span class="t-lbl">Category</span><span class="t-val">${booking.neetYear}</span></div>
-  </div>
-  <div class="t-footer">
-    <p>Show this ticket at the venue entrance &nbsp;|&nbsp; Booking Date: ${new Date().toLocaleDateString('en-IN')}</p>
-    <p><b>ASMI Career</b> &nbsp;·&nbsp; 7410019074 &nbsp;·&nbsp; asmicareer.in</p>
-  </div>
-</div>
-<br><button onclick="window.print()" style="display:block;margin:16px auto;padding:10px 28px;background:#1a0040;color:#FFD700;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">🖨️ Print Ticket</button>
-</body></html>`);
-    win.document.close();
-    win.focus();
-  }
-
-  /* ── WhatsApp share ── */
-  function handleWAShare() {
-    const msg = encodeURIComponent(
-      `Hi, I've registered for the ASMI Seminar.\nBooking ID: ${booking.bookingId}\nName: ${booking.name}\nCity: ${booking.city}\nDate: ${booking.date}`
-    );
-    window.open(`https://wa.me/${booking.whatsapp || '917410019074'}?text=${msg}`, '_blank');
-  }
-
   /* ══════════════════════════════════════════════════════════
      RENDER
   ══════════════════════════════════════════════════════════ */
@@ -369,11 +137,15 @@ export default function EventsPage() {
               Seats are limited and entry is completely free.
             </p>
             <div className="ev-hero-btns">
-              <button className="ev-btn-primary" onClick={() => openModal(null, 1)}>
-                Book Your Free Seat →
-              </button>
               <a
-                href="https://chat.whatsapp.com/IukRVFifsfS2yiFiA80HOu"
+                href={WHATSAPP_COMMUNITY_URL}
+                target="_blank" rel="noopener noreferrer"
+                className="ev-btn-primary"
+              >
+                Join Our WhatsApp Community →
+              </a>
+              <a
+                href={WHATSAPP_COMMUNITY_URL}
                 target="_blank" rel="noopener noreferrer"
                 className="ev-btn-wa"
               >
@@ -477,135 +249,35 @@ export default function EventsPage() {
           </div>
         </section>
 
-        {/* ── SEMINAR CARDS ─────────────────────────────────── */}
+        {/* ── THANK YOU / WHATSAPP SECTION (replaces seminar registration) ── */}
         <section className="ev-seminars-section" id="seminar-grid">
           <div className="ev-seminars-inner">
-
             <div className="ev-sec-head">
               <h2 className="ev-sec-title">
-                ASMI Seminars 2026 <span className="ev-sec-title-accent">— Book Your Seat</span>
+                Thank You <span className="ev-sec-title-accent">— See You Online</span>
               </h2>
-              <p className="ev-sec-sub">Select a city · Entry is completely free</p>
+              <p className="ev-sec-sub">
+                Thank you to everyone who attended our seminars this year! Any further
+                sessions will be conducted online — please join our WhatsApp Community
+                to stay updated.
+              </p>
             </div>
-
-            {/* City Filter */}
-            <div className="ev-city-filters">
-              {cities.map(city => (
-                <button
-                  key={city}
-                  className={`ev-city-pill ${cityFilter === city ? 'active' : ''}`}
-                  onClick={() => setCityFilter(city)}
-                >
-                  {city}
-                </button>
-              ))}
+            <div style={{display:'flex',justifyContent:'center',gap:'16px',flexWrap:'wrap'}}>
+              <a
+                href={WHATSAPP_COMMUNITY_URL}
+                target="_blank" rel="noopener noreferrer"
+                className="ev-wa-cta"
+              >
+                💬 Join WhatsApp Community
+              </a>
+              <a
+                href={YOUTUBE_CHANNEL_URL}
+                target="_blank" rel="noopener noreferrer"
+                className="ev-btn-primary"
+              >
+                ▶ Subscribe on YouTube
+              </a>
             </div>
-
-            {loading && <div className="ev-loading">Loading seminars…</div>}
-
-            {/* Grid */}
-            {!loading && (
-              <div className="ev-grid">
-                {filtered.map(s => {
-                  const seatsLeft = remainingSeats[s.id];
-                  const isFull = seatsLeft !== undefined && seatsLeft <= 0;
-                  return (
-                    <div className={`ev-card ${s.coming_soon ? 'ev-card-soon' : ''} ${isFull ? 'ev-card-full' : ''}`} key={s.id}>
-
-                      {/* Card header strip */}
-                      <div
-                        className="ev-card-strip"
-                        style={{ background: `linear-gradient(135deg, ${s.color_from}, ${s.color_to})` }}
-                      >
-                        <div className="ev-card-strip-left">
-                          {!s.coming_soon ? (
-                            <>
-                              <span className="ev-card-daynum">{new Date(s.date + 'T00:00:00').getDate()}</span>
-                              <div className="ev-card-daydetail">
-                                <span className="ev-card-mon">{new Date(s.date + 'T00:00:00').toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
-                                {s.day && <span className="ev-card-dow">{s.day}</span>}
-                              </div>
-                            </>
-                          ) : (
-                            <span className="ev-card-tba">📢 Date TBA</span>
-                          )}
-                        </div>
-                        <div className="ev-card-strip-right">
-                          <span className="ev-card-city-label">{s.branch}</span>
-                          {s.is_free && <span className="ev-free-badge">FREE</span>}
-                          {s.coming_soon && <span className="ev-soon-badge">Coming Soon</span>}
-                        </div>
-                      </div>
-
-                      {/* Card body */}
-                      <div className="ev-card-body">
-                        <h3 className="ev-card-title">{s.title}</h3>
-                        <p className="ev-card-subtitle">{s.subtitle}</p>
-
-                        {!s.coming_soon ? (
-                          <div className="ev-card-details">
-                            {s.slots.map((slot, si) => (
-                              <div className="ev-detail-row" key={si}>
-                                <span className="ev-detail-icon">🕐</span>
-                                <span className="ev-slot-time">{slot.time}</span>
-                              </div>
-                            ))}
-                            <div className="ev-detail-row">
-                              <span className="ev-detail-icon">📍</span>
-                              <span className="ev-venue-text">{s.venue}</span>
-                            </div>
-                            {seatsLeft !== undefined && (
-                              <div className="ev-detail-row">
-                                <span className="ev-detail-icon">🎟️</span>
-                                <span className={`ev-seats-badge ${isFull ? 'full' : 'left'}`}>
-                                  {isFull ? 'Sold Out / Full' : `${seatsLeft} seats left`}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="ev-coming-soon-msg">
-                            <p>Date will be announced soon.</p>
-                            <p>Join our WhatsApp to get notified instantly.</p>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Card footer */}
-                      <div className="ev-card-footer">
-                        {!s.coming_soon ? (
-                          <>
-                            <button
-                              className="ev-book-btn"
-                              disabled={isFull}
-                              onClick={() => openModal(s, 2)}
-                            >
-                              {isFull ? 'FULL' : 'Book Ticket'}
-                            </button>
-                            <a
-                              href={s.venue_maps}
-                              target="_blank" rel="noopener noreferrer"
-                              className="ev-dir-btn"
-                            >
-                              📍 Directions
-                            </a>
-                          </>
-                        ) : (
-                          <a
-                            href={`https://wa.me/${s.whatsapp}?text=${encodeURIComponent(`Hi, I'd like to be notified when the ${s.city} ASMI seminar date is announced.`)}`}
-                            target="_blank" rel="noopener noreferrer"
-                            className="ev-notify-btn"
-                          >
-                            💬 Notify Me on WhatsApp
-                          </a>
-                        )}
-                      </div>
-
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </section>
 
@@ -733,8 +405,8 @@ export default function EventsPage() {
             <p className="ev-closing-sub">
               Be a part of ASMI's Free Counselling Seminars — and build your medical future with the right guidance.
             </p>
-            <a href="#seminar-grid" className="ev-closing-btn">
-              Reserve Your Slot Now →
+            <a href={WHATSAPP_COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="ev-closing-btn">
+              Join Our WhatsApp Community →
             </a>
           </div>
         </section>
@@ -759,283 +431,20 @@ export default function EventsPage() {
         <Footer />
       </div>
 
-      {/* ══════════════════════════════════════════════════
-          BOOKING MODAL
-      ══════════════════════════════════════════════════ */}
-      {modalOpen && (
-        <div
-          className="ev-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Book Ticket"
-          onClick={e => { if (e.target === e.currentTarget) closeModal(); }}
-        >
-          <div className="ev-modal">
-
-            {/* Modal header */}
-            <div className="ev-modal-hdr">
-              <h2 className="ev-modal-hdr-title">Book Ticket</h2>
-              <button className="ev-modal-close" onClick={closeModal} aria-label="Close">✕</button>
-            </div>
-
-            {/* Progress steps */}
-            <div className="ev-steps-bar">
-              {STEPS.map((s, i) => {
-                const num = i + 1;
-                const isDone   = num < step;
-                const isActive = num === step;
-                return (
-                  <div className="ev-step-wrap" key={i}>
-                    <div className={`ev-step-circle ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}`}>
-                      {isDone ? '✓' : s.icon}
-                    </div>
-                    <span className={`ev-step-label ${isActive ? 'active' : ''}`}>{s.label}</span>
-                    {i < STEPS.length - 1 && (
-                      <div className={`ev-step-line ${num < step ? 'done' : ''}`} />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* ── STEP 1: Choose Seminar ── */}
-            {step === 1 && (
-              <div className="ev-modal-body">
-                <p className="ev-step-hint">Select an upcoming ASMI seminar</p>
-                {upcoming.length === 0 ? (
-                  <p className="ev-no-seminars">No seminars scheduled yet. Follow us on WhatsApp for announcements.</p>
-                ) : (
-                  <div className="ev-seminar-pick-list">
-                    {upcoming.map(s => {
-                      const semSeats = remainingSeats[s.id];
-                      const semFull = semSeats !== undefined && semSeats <= 0;
-                      return (
-                        <div
-                          key={s.id}
-                          className={`ev-seminar-pick ${selectedSeminar?.id === s.id ? 'selected' : ''} ${semFull ? 'disabled' : ''}`}
-                          onClick={() => {
-                            if (semFull) return;
-                            setSelectedSeminar(s);
-                            setSelectedSlot(s.slots[0] ?? null);
-                          }}
-                        >
-                          <div className="ev-sp-datebox">
-                            <span className="ev-sp-day">{new Date(s.date + 'T00:00:00').getDate()}</span>
-                            <span className="ev-sp-mon">{new Date(s.date + 'T00:00:00').toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
-                          </div>
-                          <div className="ev-sp-info">
-                            <span className="ev-sp-city">{s.city} — {s.branch}</span>
-                            <span className="ev-sp-venue">{s.venue.length > 50 ? s.venue.slice(0, 50) + '…' : s.venue}</span>
-                            {semSeats !== undefined && (
-                              <span className={`ev-sp-seats ${semFull ? 'full' : ''}`}>
-                                {semFull ? 'Fully Booked' : `${semSeats} seats left`}
-                              </span>
-                            )}
-                          </div>
-                          <div className={`ev-sp-radio ${selectedSeminar?.id === s.id ? 'selected' : ''} ${semFull ? 'disabled' : ''}`} />
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-                <div className="ev-modal-footer">
-                  <button
-                    className="ev-modal-btn-primary"
-                    disabled={!ok1}
-                    onClick={nextStep}
-                  >
-                    Next →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 2: Choose Slot ── */}
-            {step === 2 && selectedSeminar && (
-              <div className="ev-modal-body">
-                <div className="ev-step2-summary">
-                  <span className="ev-s2-date-pill">{selectedSeminar.display_date}</span>
-                  <span className="ev-s2-city">{selectedSeminar.city} — {selectedSeminar.branch}</span>
-                </div>
-                <p className="ev-step-hint">Choose your preferred time slot</p>
-                <div className="ev-slot-list">
-                  {selectedSeminar.slots.map(slot => (
-                    <div
-                      key={slot.id}
-                      className={`ev-slot-row ${selectedSlot?.id === slot.id ? 'selected' : ''}`}
-                      onClick={() => setSelectedSlot(slot)}
-                    >
-                      <div className="ev-slot-info">
-                        <p className="ev-slot-event-name">{selectedSeminar.title}</p>
-                        <p className="ev-slot-venue-name">{selectedSeminar.venue}</p>
-                        <span className="ev-slot-time-pill">{slot.time}</span>
-                      </div>
-                      <button
-                        className={`ev-slot-select-btn ${selectedSlot?.id === slot.id ? 'selected' : ''}`}
-                      >
-                        {selectedSlot?.id === slot.id ? '✓ Selected' : 'Select'}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div className="ev-modal-footer">
-                  <button className="ev-modal-btn-sec" onClick={prevStep}>← Back</button>
-                  <button className="ev-modal-btn-primary" disabled={!ok2} onClick={nextStep}>Next →</button>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 3: Your Details ── */}
-            {step === 3 && (
-              <div className="ev-modal-body">
-                <p className="ev-step-hint">Enter your details — your ticket will be emailed to you</p>
-                <div className="ev-form">
-                  <div className="ev-fg">
-                    <label className="ev-fl">Full Name *</label>
-                    <input
-                      className="ev-fi"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={form.name}
-                      onChange={e => setForm(f => ({...f, name: e.target.value}))}
-                    />
-                  </div>
-                  <div className="ev-fg">
-                    <label className="ev-fl">Mobile Number *</label>
-                    <input
-                      className="ev-fi"
-                      type="tel"
-                      placeholder="10-digit mobile number"
-                      maxLength={10}
-                      value={form.phone}
-                      onChange={e => setForm(f => ({...f, phone: e.target.value.replace(/\D/g,'')}))}
-                    />
-                  </div>
-                  <div className="ev-fg">
-                    <label className="ev-fl">Email Address *</label>
-                    <input
-                      className="ev-fi"
-                      type="email"
-                      placeholder="Email address (ticket will be sent here)"
-                      value={form.email}
-                      onChange={e => setForm(f => ({...f, email: e.target.value}))}
-                    />
-                  </div>
-                  <div className="ev-fg">
-                    <label className="ev-fl">Seats Required</label>
-                    <div className="ev-radio-row">
-                      {[
-                        { label: 'Student', members: 0 },
-                        { label: 'Student + 1', members: 1 },
-                        { label: 'Student + 2', members: 2 },
-                      ].map(opt => (
-                        <label
-                          key={opt.label}
-                          className={`ev-radio-pill ${form.members === opt.members ? 'active' : ''}`}
-                        >
-                          <input
-                            type="radio" name="members" value={opt.members}
-                            checked={form.members === opt.members}
-                            onChange={() => setForm(f => ({...f, members: opt.members}))}
-                          />
-                          {opt.label}
-                        </label>
-                      ))}
-                    </div>
-                    <p className="ev-fhint">Each person needs 1 seat</p>
-                  </div>
-                  {!hasEnoughSeats && selectedSeminar && (
-                    <p className="ev-error">
-                      Only {remainingSeats[selectedSeminar.id]} seat(s) left. Please reduce the number of additional members.
-                    </p>
-                  )}
-                  {submitError && <p className="ev-error">{submitError}</p>}
-                </div>
-                <div className="ev-modal-footer">
-                  <button className="ev-modal-btn-sec" onClick={prevStep}>← Back</button>
-                  <button
-                    className="ev-modal-btn-primary"
-                    disabled={!ok3 || submitting}
-                    onClick={handleSubmit}
-                  >
-                    {submitting ? 'Booking…' : 'Confirm & Get Ticket →'}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* ── STEP 4: Ticket ── */}
-            {step === 4 && booking && (
-              <div className="ev-modal-body ev-ticket-body">
-                {/* Ticket card */}
-                <div className="ev-ticket">
-                  <div className="ev-ticket-top">
-                    <img src="/asmi-logo.png" alt="ASMI Career" className="ev-ticket-logo" />
-                    <span className="ev-ticket-confirmed">✅ Booking Confirmed</span>
-                  </div>
-                  <div className="ev-ticket-mid">
-                    <div className="ev-ticket-id-block">
-                      <p className="ev-ticket-id-lbl">BOOKING ID</p>
-                      <p className="ev-ticket-id">{booking.bookingId}</p>
-                      <p className="ev-ticket-attendee">{booking.name}</p>
-                      <p className="ev-ticket-contact">{booking.phone} · {booking.email}</p>
-                    </div>
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`https://asmicareer.in/events/verify?id=${booking.bookingId}`)}&color=1a0040`}
-                      alt="QR Code"
-                      className="ev-ticket-qr"
-                    />
-                  </div>
-                  <div className="ev-ticket-details">
-                    {[
-                      { l: 'Event',     v: `${booking.seminarTitle} — ${booking.city}` },
-                      { l: 'Date',      v: booking.date },
-                      { l: 'Time',      v: booking.slot },
-                      { l: 'Venue',     v: booking.venue },
-                      { l: 'Attendees', v: `${parseInt(booking.members)+1} person${parseInt(booking.members)>0?'s':''}` },
-                    ].map(row => (
-                      <div className="ev-ticket-row" key={row.l}>
-                        <span className="ev-ticket-row-lbl">{row.l}</span>
-                        <span className="ev-ticket-row-val">{row.v}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="ev-ticket-bottom">
-                    Show this ticket at the venue entrance · Ticket also sent to {booking.email}
-                  </div>
-                </div>
-
-                {/* Action buttons */}
-                <div className="ev-ticket-actions">
-                  <button className="ev-download-btn" onClick={handlePrint}>
-                    📥 Download / Print Ticket
-                  </button>
-                  <button className="ev-wa-share-btn" onClick={handleWAShare}>
-                    💬 Share on WhatsApp
-                  </button>
-                  <button className="ev-done-btn" onClick={closeModal}>Done</button>
-                </div>
-              </div>
-            )}
-
-          </div>
-        </div>
-      )}
-
       {/* ── STICKY BOTTOM BAR ── */}
       <div className="ev-sticky-bar">
         <div className="ev-sticky-inner">
           <div className="ev-sticky-left">
             <span className="ev-sticky-icon">🗓️</span>
-            <span className="ev-sticky-date">Next Seminar: Sunday, 12 July 2026</span>
+            <span className="ev-sticky-date">Thank you for a great season!</span>
           </div>
           <div className="ev-sticky-center">
-            <span className="ev-sticky-badge">100% FREE</span>
-            <span className="ev-sticky-text">Limited Seats — First Come, First Serve</span>
+            <span className="ev-sticky-badge">ONLINE NOW</span>
+            <span className="ev-sticky-text">Further sessions will be conducted online</span>
           </div>
           <div className="ev-sticky-right">
-            <a href="#seminar-grid" className="ev-sticky-btn">
-              Book Your Free Seat →
+            <a href={WHATSAPP_COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="ev-sticky-btn">
+              Join WhatsApp Community →
             </a>
           </div>
         </div>
