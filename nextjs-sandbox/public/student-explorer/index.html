@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI Student Explorer — Find Your Colleges</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:wght@400;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: 'Open Sans', sans-serif; background: #f9f5ff; color: #1a0040; }
+
+/* Header */
+.header { background: #1a0040; padding: 14px 20px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 100; }
+.header-logo { height: 32px; mix-blend-mode: screen; }
+.header-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #fff; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 1px; }
+
+/* Page wrapper */
+.page-wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* Input card */
+.input-card { background: #fff; border: 1px solid rgba(106,13,173,0.12); border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(106,13,173,0.08); }
+.input-card-title { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 900; color: #1a0040; margin-bottom: 4px; }
+.input-card-sub { font-size: 13px; color: #4a0080; margin-bottom: 20px; }
+.input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.input-group label { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #4a0080; text-transform: uppercase; letter-spacing: 0.8px; }
+.input-group input, .input-group select { font-family: 'Open Sans', sans-serif; font-size: 15px; padding: 12px 14px; border: 1.5px solid rgba(106,13,173,0.2); border-radius: 10px; color: #1a0040; background: #fff; width: 100%; outline: none; transition: border-color 0.15s; }
+.input-group input:focus, .input-group select:focus { border-color: #6a0dad; }
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.explore-btn { width: 100%; background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; padding: 14px; border-radius: 10px; border: none; cursor: pointer; margin-top: 8px; transition: opacity 0.15s; }
+.explore-btn:hover { opacity: 0.88; }
+.input-error { font-size: 12px; color: #b91c1c; margin-top: 4px; display: none; }
+.input-error.visible { display: block; }
+
+/* Results section */
+.results-section { display: none; }
+.results-section.visible { display: block; }
+
+/* Summary strip */
+.summary-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.summary-item { background: #fff; border: 1px solid rgba(106,13,173,0.12); border-radius: 12px; padding: 12px; text-align: center; }
+.summary-num { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 900; display: block; line-height: 1; margin-bottom: 4px; }
+.summary-label { font-size: 10px; font-weight: 600; color: #4a0080; text-transform: uppercase; letter-spacing: 0.5px; }
+.summary-item.safe .summary-num { color: #15803d; }
+.summary-item.likely .summary-num { color: #0369a1; }
+.summary-item.borderline .summary-num { color: #b45309; }
+.summary-item.total .summary-num { color: #6a0dad; }
+
+/* Pool tabs */
+.pool-tabs { display: flex; gap: 6px; margin-bottom: 12px; overflow-x: auto; }
+.pool-tab { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; padding: 8px 18px; border-radius: 8px; border: 1.5px solid rgba(26,0,64,0.15); background: #fff; color: #1a0040; cursor: pointer; white-space: nowrap; transition: 0.15s; flex-shrink: 0; }
+.pool-tab.active { background: #1a0040; color: #FFD700; border-color: #1a0040; }
+
+/* Search */
+.search-bar { width: 100%; padding: 10px 14px; border: 1.5px solid rgba(106,13,173,0.15); border-radius: 10px; font-size: 13px; margin-bottom: 10px; font-family: 'Open Sans', sans-serif; outline: none; }
+.search-bar:focus { border-color: #6a0dad; }
+
+/* Table */
+.table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid rgba(106,13,173,0.1); margin-bottom: 16px; }
+table.rtable { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
+table.rtable thead th { background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; padding: 9px 10px; text-align: center; position: sticky; top: 0; white-space: nowrap; }
+table.rtable thead th:first-child { text-align: left; }
+table.rtable tbody tr:nth-child(odd) { background: #fff; }
+table.rtable tbody tr:nth-child(even) { background: #f9f5ff; }
+table.rtable tbody tr:hover { background: rgba(106,13,173,0.04) !important; }
+table.rtable td { padding: 9px 10px; border-bottom: 1px solid rgba(106,13,173,0.06); text-align: center; }
+table.rtable td:first-child { text-align: left; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 12px; }
+.chance-badge { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 8px; white-space: nowrap; }
+.chance-safe       { background: rgba(21,128,61,0.1);  color: #15803d; }
+.chance-likely     { background: rgba(3,105,161,0.1);  color: #0369a1; }
+.chance-borderline { background: rgba(180,83,9,0.1);   color: #b45309; }
+.chance-out_of_reach{ background: rgba(185,28,28,0.08); color: #b91c1c; }
+.stray-col { display: none; }
+.stray-col.visible { display: table-cell; }
+
+/* PDF CTA */
+.pdf-cta { background: linear-gradient(135deg, #1a0040, #6a0dad); border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; }
+.pdf-btn { background: #FFD700; color: #1a0040; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; padding: 14px 32px; border-radius: 10px; border: none; cursor: pointer; width: 100%; transition: opacity 0.15s; }
+.pdf-btn:hover { opacity: 0.88; }
+.pdf-sub { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+/* Counselling CTA */
+.counselling-cta { background: #fff; border: 1px solid rgba(106,13,173,0.12); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+.cta-headline { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 900; color: #1a0040; margin-bottom: 6px; }
+.cta-sub { font-size: 12px; color: #4a0080; line-height: 1.6; margin-bottom: 14px; }
+.cta-btn { display: block; background: #1a0040; color: #FFD700; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; padding: 12px; border-radius: 10px; text-decoration: none; text-align: center; }
+
+/* Loading spinner */
+.loading { display: none; text-align: center; padding: 40px 20px; }
+.loading.visible { display: block; }
+.spinner { width: 36px; height: 36px; border: 3px solid rgba(106,13,173,0.15); border-top: 3px solid #6a0dad; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #4a0080; }
+
+/* Stray rounds toggle */
+.stray-toggle { font-size: 12px; color: #4a0080; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; cursor: pointer; }
+.stray-toggle input { cursor: pointer; }
+
+.empty-msg { text-align: center; padding: 30px 16px; font-size: 13px; color: #4a0080; }
+
+/* Mobile sticky PDF button */
+@media (max-width: 480px) {
+  .pdf-cta { position: sticky; bottom: 0; border-radius: 0; margin: 0 -16px; padding: 12px 16px; }
+  .summary-strip { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    <img src="/asmi-logo.png" alt="ASMI Logo" class="header-logo">
+    <div>
+      <div class="header-title">Student Explorer</div>
+      <div class="header-sub">Find your colleges by NEET AIR rank</div>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <div class="input-card">
+      <div class="input-card-title">Enter Your Details</div>
+      <div class="input-card-sub">Get a personalised list of colleges you can target</div>
+
+      <div class="input-group">
+        <label>Your NEET AIR Rank</label>
+        <input type="number" id="rankInput" placeholder="e.g. 25678" min="1" max="2000000">
+      </div>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>Category</label>
+          <select id="categoryInput">
+            <option value="OPEN">Open / General</option>
+            <option value="OBC">OBC</option>
+            <option value="SC">SC</option>
+            <option value="ST">ST</option>
+            <option value="EWS">EWS</option>
+            <option value="VJ">VJ (MH)</option>
+            <option value="NT1">NT1 (MH)</option>
+            <option value="NT2">NT2 (MH)</option>
+            <option value="NT3">NT3 (MH)</option>
+            <option value="SEBC">SEBC (MH)</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Course</label>
+          <select id="courseInput">
+            <option value="MBBS">MBBS</option>
+            <option value="BDS">BDS</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-error" id="rankError">Please enter a valid AIR rank (1 – 20,00,000).</div>
+      <button class="explore-btn" onclick="exploreOptions()">Explore My Options →</button>
+    </div>
+
+    <div class="loading" id="loadingBox">
+      <div class="spinner"></div>
+      <div class="loading-text">Fetching your matching colleges...</div>
+    </div>
+
+    <div class="results-section" id="resultsSection">
+      <div class="summary-strip">
+        <div class="summary-item safe"><span class="summary-num" id="countSafe">0</span><span class="summary-label">Safe</span></div>
+        <div class="summary-item likely"><span class="summary-num" id="countLikely">0</span><span class="summary-label">Likely</span></div>
+        <div class="summary-item borderline"><span class="summary-num" id="countBorderline">0</span><span class="summary-label">Borderline</span></div>
+        <div class="summary-item total"><span class="summary-num" id="countTotal">0</span><span class="summary-label">Total Options</span></div>
+      </div>
+
+      <div class="pool-tabs" id="poolTabs">
+        <button class="pool-tab active" data-pool="MH" onclick="setPool('MH')">MH State</button>
+        <button class="pool-tab" data-pool="MCC" onclick="setPool('MCC')">MCC AIQ</button>
+        <button class="pool-tab" data-pool="OPEN" onclick="setPool('OPEN')">Open States</button>
+      </div>
+
+      <input type="text" id="searchInput" class="search-bar" placeholder="Search college name..." oninput="applySearch()">
+
+      <label class="stray-toggle">
+        <input type="checkbox" id="strayCheckbox" onchange="toggleStray()">
+        Show stray round AIR
+      </label>
+
+      <div class="table-wrap">
+        <table class="rtable">
+          <thead>
+            <tr>
+              <th>College Name</th>
+              <th>R1 AIR</th>
+              <th>R2 AIR</th>
+              <th>R3 AIR</th>
+              <th class="stray-col">Stray 1</th>
+              <th class="stray-col">Stray 2</th>
+              <th>Fees</th>
+              <th>Chance</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pdf-cta">
+        <button class="pdf-btn" onclick="downloadReport()">📄 Download My College Report</button>
+        <div class="pdf-sub">Free · Includes all Safe, Likely &amp; Borderline colleges</div>
+      </div>
+    </div>
+
+    <div class="counselling-cta">
+      <div class="cta-text">
+        <div class="cta-headline">Want a personalised preference list?</div>
+        <div class="cta-sub">Our counsellors build a round-wise preference list tailored to your rank, category, budget and city preference.</div>
+      </div>
+      <a href="/inquiry" class="cta-btn">Book Free Counselling →</a>
+    </div>
+  </div>
+
+  <div id="pdfTemplate" style="display:none;"></div>
+
+<script>
+  // ── Data maps (copied from cutoff_explorer.html) ──────────────────
+  const MCC_INST_TYPES_MBBS = ['GOVT_MBBS', 'AIIMS_MBBS', 'JIPMER_MBBS', 'CENTRAL_MBBS', 'DEEMED_MBBS'];
+  const MCC_INST_TYPES_BDS  = ['GOVT_BDS', 'CENTRAL_BDS', 'DEEMED_BDS'];
+  const MCC_STD_CATS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST'];
+
+  const MH_DATA_MAP = {
+    "GOVT_MBBS": {"DEF_1": ["FEMALE", "GENERAL"], "DEF_2": ["FEMALE", "GENERAL"], "DEF_3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NT1": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT2": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT3": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"]},
+    "PRIVATE_MBBS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
+  };
+
+  const OPEN_STATES = [
+    'Andhra Pradesh', 'Bihar', 'Chhattisgarh', 'Haryana', 'Himachal Pradesh',
+    'Jharkhand', 'Karnataka', 'Kerala', 'Manipur', 'Meghalaya', 'Pondicherry',
+    'Sikkim', 'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+  ];
+
+  // ── Chance formula — bands kept identical to cutoff_explorer.html ──
+  function getChance(air, rank) {
+    if (!air || air === '-') return null;
+    const val = parseInt(air.toString().replace(/,/g, ''), 10);
+    if (isNaN(val)) return null;
+    if (rank <= val * 0.88) return { key: 'safe',         label: 'Safe'         };
+    if (rank <= val)        return { key: 'likely',       label: 'Likely'       };
+    if (rank <= val * 1.12) return { key: 'borderline',   label: 'Borderline'   };
+    return                         { key: 'out_of_reach', label: 'Out of Reach' };
+  }
+
+  let RANK = null;
+  let currentCategory = 'OPEN';
+  let currentCourse = 'MBBS';
+  let activePool = 'MH';
+  let poolData = { MH: [], MCC: [], OPEN: [] };
+  let strayVisible = false;
+
+  function normalizeRecord(college, poolLabel) {
+    const rounds = college.rounds || {};
+    const keys = Object.keys(rounds);
+    const strayKeys = keys.filter(k => k.toLowerCase().includes('stray'));
+    const airs = keys.map(k => rounds[k] && rounds[k].AIR).filter(v => v != null && v !== '' && !isNaN(parseInt(v, 10)));
+    const closingRank = airs.length ? Math.max(...airs.map(v => parseInt(v, 10))) : null;
+    const chance = closingRank ? getChance(closingRank, RANK) : null;
+
+    return {
+      name: college.name || '',
+      state: college.state || '',
+      type: college.type || '',
+      fees: college.fees || '-',
+      r1: rounds['Round 1'] ? rounds['Round 1'].AIR : null,
+      r2: rounds['Round 2'] ? rounds['Round 2'].AIR : null,
+      r3: rounds['Round 3'] ? rounds['Round 3'].AIR : null,
+      stray1: strayKeys[0] ? rounds[strayKeys[0]].AIR : null,
+      stray2: strayKeys[1] ? rounds[strayKeys[1]].AIR : null,
+      closingRank,
+      chanceKey: chance ? chance.key : null,
+      chanceLabel: chance ? chance.label : '—',
+      pool: poolLabel,
+    };
+  }
+
+  async function fetchMCCPool() {
+    const instTypes = currentCourse === 'BDS' ? MCC_INST_TYPES_BDS : MCC_INST_TYPES_MBBS;
+    const results = [];
+    for (const inst of instTypes) {
+      let cat = currentCategory;
+      if (inst.includes('DEEMED')) {
+        const deemedCats = inst === 'DEEMED_MBBS' ? ['OPEN', 'NRI_P-I', 'NRI_P-II', 'MINORITY'] : ['OPEN', 'NRI_P1', 'NRI_P2', 'MINORITY'];
+        if (!deemedCats.includes(cat)) cat = 'OPEN';
+      } else if (!MCC_STD_CATS.includes(cat)) {
+        cat = 'OPEN';
+      }
+      try {
+        const res = await fetch(`/data/cutoffs/MCC/2025/${inst}/${cat}.json`);
+        if (!res.ok) continue;
+        const data = await res.json();
+        (data.colleges || []).forEach(c => results.push(normalizeRecord(c, 'MCC AIQ')));
+      } catch (e) { /* skip missing file */ }
+    }
+    return results;
+  }
+
+  async function fetchMHPool() {
+    if (currentCourse === 'BDS') return [];
+    const results = [];
+    for (const q of ['GOVT_MBBS', 'PRIVATE_MBBS']) {
+      const catsAvail = Object.keys(MH_DATA_MAP[q] || {});
+      const cat = catsAvail.includes(currentCategory) ? currentCategory : 'OPEN';
+      if (!catsAvail.includes(cat)) continue;
+      const subTypes = MH_DATA_MAP[q][cat] || [];
+      const subtype = subTypes.includes('GENERAL') ? 'GENERAL' : subTypes[0];
+      if (!subtype) continue;
+      try {
+        const res = await fetch(`/data/cutoffs/MH/2025/${q}/${cat}/${subtype}.json`);
+        if (!res.ok) continue;
+        const data = await res.json();
+        (data.colleges || []).forEach(c => results.push(normalizeRecord(
+          { ...c, state: 'Maharashtra', type: q === 'GOVT_MBBS' ? 'Govt' : 'Private' },
+          'MH State'
+        )));
+      } catch (e) { /* skip missing file */ }
+    }
+    return results;
+  }
+
+  async function fetchOpenPool() {
+    if (currentCourse === 'BDS') return [];
+    const results = [];
+    for (const st of OPEN_STATES) {
+      const folder = st.replace(/ /g, '_');
+      try {
+        const res = await fetch(`/data/cutoffs/OPEN/2025/${folder}/all.json`);
+        if (!res.ok) continue;
+        const data = await res.json();
+        const blocks = Array.isArray(data) ? data : [data];
+        blocks.forEach(block => {
+          (block.colleges || []).forEach(college => {
+            if (college.categories) {
+              const catKeys = Object.keys(college.categories);
+              const matchKey = catKeys.find(k => k.toUpperCase() === currentCategory.toUpperCase())
+                || catKeys.find(k => k.toUpperCase() === 'OPEN')
+                || catKeys[0];
+              const rounds = college.categories[matchKey] || {};
+              results.push(normalizeRecord({ ...college, state: block.state || st, rounds }, `Open States`));
+            } else {
+              results.push(normalizeRecord({ ...college, state: college.state || block.state || st }, `Open States`));
+            }
+          });
+        });
+      } catch (e) { /* skip missing file */ }
+    }
+    return results;
+  }
+
+  function validateRank(val) {
+    const n = parseInt(val, 10);
+    return !isNaN(n) && n >= 1 && n <= 2000000;
+  }
+
+  async function exploreOptions() {
+    const rankVal = document.getElementById('rankInput').value;
+    const errorEl = document.getElementById('rankError');
+
+    if (!validateRank(rankVal)) {
+      errorEl.classList.add('visible');
+      return;
+    }
+    errorEl.classList.remove('visible');
+
+    RANK = parseInt(rankVal, 10);
+    currentCategory = document.getElementById('categoryInput').value;
+    currentCourse = document.getElementById('courseInput').value;
+
+    document.getElementById('loadingBox').classList.add('visible');
+    document.getElementById('resultsSection').classList.remove('visible');
+
+    const [mh, mcc, open] = await Promise.all([fetchMHPool(), fetchMCCPool(), fetchOpenPool()]);
+    poolData = { MH: mh, MCC: mcc, OPEN: open };
+
+    document.getElementById('loadingBox').classList.remove('visible');
+    document.getElementById('resultsSection').classList.add('visible');
+
+    setPool(activePool);
+
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function chanceRank(key) {
+    return { safe: 0, likely: 1, borderline: 2, out_of_reach: 3 }[key] ?? 4;
+  }
+
+  function setPool(pool) {
+    activePool = pool;
+    document.querySelectorAll('.pool-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.pool === pool);
+    });
+    renderTable();
+  }
+
+  function currentPoolRealistic() {
+    return (poolData[activePool] || [])
+      .filter(r => r.chanceKey && r.chanceKey !== 'out_of_reach')
+      .sort((a, b) => chanceRank(a.chanceKey) - chanceRank(b.chanceKey) || (b.closingRank || 0) - (a.closingRank || 0));
+  }
+
+  function renderTable() {
+    const list = currentPoolRealistic();
+    const tbody = document.getElementById('resultsTbody');
+    const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    const filtered = query ? list.filter(r => r.name.toLowerCase().includes(query)) : list;
+
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="empty-msg">No colleges found for this selection.</td></tr>`;
+    } else {
+      tbody.innerHTML = filtered.map(r => `
+        <tr>
+          <td>${r.name}</td>
+          <td>${r.r1 ? parseInt(r.r1).toLocaleString('en-IN') : '-'}</td>
+          <td>${r.r2 ? parseInt(r.r2).toLocaleString('en-IN') : '-'}</td>
+          <td>${r.r3 ? parseInt(r.r3).toLocaleString('en-IN') : '-'}</td>
+          <td class="stray-col ${strayVisible ? 'visible' : ''}">${r.stray1 ? parseInt(r.stray1).toLocaleString('en-IN') : '-'}</td>
+          <td class="stray-col ${strayVisible ? 'visible' : ''}">${r.stray2 ? parseInt(r.stray2).toLocaleString('en-IN') : '-'}</td>
+          <td>${r.fees || '-'}</td>
+          <td><span class="chance-badge chance-${r.chanceKey}">${r.chanceLabel}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const list = currentPoolRealistic();
+    const safe = list.filter(r => r.chanceKey === 'safe').length;
+    const likely = list.filter(r => r.chanceKey === 'likely').length;
+    const border = list.filter(r => r.chanceKey === 'borderline').length;
+    document.getElementById('countSafe').textContent = safe;
+    document.getElementById('countLikely').textContent = likely;
+    document.getElementById('countBorderline').textContent = border;
+    document.getElementById('countTotal').textContent = safe + likely + border;
+  }
+
+  function applySearch() {
+    renderTable();
+  }
+
+  function toggleStray() {
+    strayVisible = document.getElementById('strayCheckbox').checked;
+    document.querySelectorAll('th.stray-col').forEach(el => el.classList.toggle('visible', strayVisible));
+    renderTable();
+  }
+
+  // ── URL param prefill ──────────────────────────────────────────
+  (function initFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const preRank = params.get('rank');
+    const preCat = params.get('category');
+    if (preRank) document.getElementById('rankInput').value = preRank;
+    if (preCat) document.getElementById('categoryInput').value = preCat;
+    if (preRank && preCat) {
+      document.addEventListener('DOMContentLoaded', () => exploreOptions());
+    }
+  })();
+
+  // ══════════════════ PDF EXPORT ══════════════════
+  async function downloadReport() {
+    const btn = document.querySelector('.pdf-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ Generating...';
+
+    const date = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const poolLabels = { MH: 'MH State Colleges', MCC: 'MCC AIQ Colleges', OPEN: 'Open States Colleges' };
+    const chanceColor = { safe: '#15803d', likely: '#0369a1', borderline: '#b45309' };
+
+    function sectionHtml(poolKey) {
+      const rows = (poolData[poolKey] || [])
+        .filter(r => r.chanceKey && r.chanceKey !== 'out_of_reach')
+        .sort((a, b) => chanceRank(a.chanceKey) - chanceRank(b.chanceKey) || (b.closingRank || 0) - (a.closingRank || 0));
+      if (!rows.length) return '';
+      const trs = rows.map(r => `
+        <tr>
+          <td style="padding:6px 8px;text-align:left;border-bottom:1px solid #eee;font-weight:700;">${r.name}</td>
+          <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${r.r1 ? parseInt(r.r1).toLocaleString('en-IN') : '-'}</td>
+          <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${r.r2 ? parseInt(r.r2).toLocaleString('en-IN') : '-'}</td>
+          <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${r.r3 ? parseInt(r.r3).toLocaleString('en-IN') : '-'}</td>
+          <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${r.fees || '-'}</td>
+          <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;color:${chanceColor[r.chanceKey] || '#555'};font-weight:700;">${r.chanceLabel}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div style="margin-bottom:20px;">
+          <div style="background:#1a0040;color:#FFD700;font-weight:800;font-size:12px;padding:8px 12px;border-radius:8px 8px 0 0;text-transform:uppercase;letter-spacing:1px;">${poolLabels[poolKey]}</div>
+          <table style="width:100%;border-collapse:collapse;font-size:10px;border:1px solid #eee;border-top:none;">
+            <thead>
+              <tr style="background:#f0eeff;">
+                <th style="padding:7px 8px;text-align:left;color:#1a0040;">College</th>
+                <th style="padding:7px 8px;text-align:center;color:#1a0040;">R1 AIR</th>
+                <th style="padding:7px 8px;text-align:center;color:#1a0040;">R2 AIR</th>
+                <th style="padding:7px 8px;text-align:center;color:#1a0040;">R3 AIR</th>
+                <th style="padding:7px 8px;text-align:center;color:#1a0040;">Fees</th>
+                <th style="padding:7px 8px;text-align:center;color:#1a0040;">Chance</th>
+              </tr>
+            </thead>
+            <tbody>${trs}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    const sectionsHtml = ['MH', 'MCC', 'OPEN'].map(sectionHtml).join('');
+    const totalRealistic = ['MH', 'MCC', 'OPEN'].reduce((sum, k) => sum + (poolData[k] || []).filter(r => r.chanceKey && r.chanceKey !== 'out_of_reach').length, 0);
+
+    if (!totalRealistic) {
+      alert('No colleges found for this rank/category yet. Try adjusting your details.');
+      btn.textContent = originalText;
+      return;
+    }
+
+    const html = `
+      <div id="pdfInner" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:28px;font-family:Helvetica,Arial,sans-serif;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img src="/asmi-logo.png" style="height:44px;" crossorigin="anonymous">
+            <div>
+              <div style="font-size:20px;font-weight:900;color:#1a0040;">ASMI Career</div>
+              <div style="font-size:9px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">Your College Options Report</div>
+            </div>
+          </div>
+          <div style="text-align:right;font-size:9px;color:#888;">
+            <div>asmicareer.com &middot; 7410019074</div>
+          </div>
+        </div>
+
+        <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:14px;"></div>
+
+        <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;">
+          <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">AIR Rank</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;">${RANK.toLocaleString('en-IN')}</div></div>
+          <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Category</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${currentCategory}</div></div>
+          <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Course</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${currentCourse}</div></div>
+          <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Generated</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${date}</div></div>
+        </div>
+
+        ${sectionsHtml}
+
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#aaa;text-align:center;">
+          ASMI Career &middot; asmicareer.com &middot; 7410019074 &middot; Based on 2025 counselling data. Actual cutoffs may vary.
+        </div>
+
+        <div style="margin-top:24px;background:linear-gradient(135deg,#1a0040,#6a0dad);border-radius:12px;padding:24px;text-align:center;color:#fff;">
+          <div style="font-size:16px;font-weight:900;margin-bottom:10px;">Want to go deeper?</div>
+          <div style="font-size:11px;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:14px;">
+            ASMI counsellors have guided 25,000+ students.<br>
+            Book a free session to get a personalised preference list,<br>
+            document checklist, and round-by-round strategy.
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#FFD700;">
+            📞 7410019074 &nbsp;&middot;&nbsp; 💬 wa.me/917410019074 &nbsp;&middot;&nbsp; 🌐 asmicareer.in/inquiry
+          </div>
+        </div>
+      </div>
+    `;
+
+    const pdfDiv = document.getElementById('pdfTemplate');
+    pdfDiv.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+    pdfDiv.innerHTML = html;
+
+    try {
+      const target = document.getElementById('pdfInner');
+      const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#fff', useCORS: true, allowTaint: true, logging: false });
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const imgW = pageW;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      let yPos = 0, remaining = imgH;
+      while (remaining > 0) {
+        pdf.addImage(imgData, 'PNG', 0, -yPos, imgW, imgH);
+        remaining -= pageH; yPos += pageH;
+        if (remaining > 0) pdf.addPage();
+      }
+      const dateSlug = date.replace(/ /g, '');
+      pdf.save(`ASMI_CollegeReport_AIR${RANK}_${currentCategory}_${dateSlug}.pdf`);
+    } catch (err) {
+      console.error('PDF error:', err);
+      alert('PDF generation failed. Try again.');
+    } finally {
+      pdfDiv.style.display = 'none';
+      pdfDiv.innerHTML = '';
+      btn.textContent = originalText;
+    }
+  }
+</script>
+</body>
+</html>
