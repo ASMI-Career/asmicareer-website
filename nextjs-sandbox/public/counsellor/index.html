@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Counsellor — Preference List Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <style>
+    /* ── Two-column layout ────────────────────────────────────── */
+    .tool-layout {
+      display: flex;
+      height: calc(100vh - 89px);
+      overflow: hidden;
+    }
+    .left-col {
+      flex: 0 0 70%;
+      overflow-y: auto;
+      border-right: 1px solid rgba(106,13,173,0.12);
+    }
+    .right-col {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    /* ── Add button in table ─────────────────────────────────── */
+    .add-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background: #FFD700;
+      color: #1a0040;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+    .add-btn.added {
+      background: rgba(21,128,61,0.1);
+      color: #15803d;
+      border: 1px solid rgba(21,128,61,0.25);
+    }
+    tr.added-row { border-left: 3px solid #15803d; }
+
+    /* ── Preference panel ────────────────────────────────────── */
+    .pref-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(106,13,173,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .pref-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #1a0040;
+    }
+    .pref-count {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      background: #1a0040;
+      color: #FFD700;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .pref-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .pref-empty {
+      padding: 32px 16px;
+      text-align: center;
+      font-size: 12px;
+      color: #4a0080;
+      line-height: 1.6;
+    }
+    .pref-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid rgba(106,13,173,0.12);
+      border-radius: 10px;
+      margin-bottom: 6px;
+      cursor: grab;
+      transition: box-shadow 0.15s;
+    }
+    .pref-item:hover { box-shadow: 0 2px 12px rgba(106,13,173,0.1); }
+    .pref-item.dragging { opacity: 0.5; transform: rotate(1.5deg); }
+    .pref-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 900;
+      color: #1a0040;
+      width: 20px;
+      flex-shrink: 0;
+    }
+    .drag-handle { color: rgba(106,13,173,0.3); font-size: 14px; flex-shrink: 0; }
+    .pref-info { flex: 1; min-width: 0; }
+    .pref-name {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      color: #1a0040;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pref-meta { font-size: 10px; color: #4a0080; margin-top: 2px; }
+    .pref-chance {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pref-chance.safe        { background: rgba(21,128,61,0.1);  color: #15803d; }
+    .pref-chance.likely      { background: rgba(3,105,161,0.1);  color: #0369a1; }
+    .pref-chance.borderline  { background: rgba(180,83,9,0.1);   color: #b45309; }
+    .pref-chance.out_of_reach{ background: rgba(185,28,28,0.08); color: #b91c1c; }
+    .pref-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(185,28,28,0.35);
+      font-size: 14px;
+      flex-shrink: 0;
+      padding: 2px 4px;
+    }
+    .pref-remove:hover { color: #b91c1c; }
+
+    /* ── Preference actions ──────────────────────────────────── */
+    .pref-actions {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(106,13,173,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .pref-export {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+    }
+    .pref-export.excel { background: #FFD700; color: #1a0040; }
+    .pref-export.pdf   { background: #1a0040; color: #FFD700; }
+    .pref-export:hover { opacity: 0.88; }
+    .pref-clear {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(185,28,28,0.5);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+    .pref-clear:hover { color: #b91c1c; }
+
+    /* ── Year switcher ───────────────────────────────────────── */
+    .year-btn[disabled] { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── Mobile ───────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .tool-layout { flex-direction: column; height: auto; overflow: auto; }
+      .left-col, .right-col { flex: none; width: 100%; height: auto; }
+      .right-col { min-height: 300px; border-top: 1px solid rgba(106,13,173,0.12); }
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-[#F8F9FB] text-[#212529]">
+    <header class="sticky top-0 z-40 bg-[#F8F9FB] border-b border-gray-100">
+      <div class="px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <img src="/asmi-logo.png" alt="ASMI Logo" class="h-9 w-auto">
+            <div>
+              <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-bold tracking-tight text-gray-950">Counsellor — Preference List Builder</h1>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">Round-wise AIR, SML and chances — build a ranked preference list for the student.</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="relative w-full sm:w-80 xl:w-96">
+              <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                <iconify-icon icon="lucide:search"></iconify-icon>
+              </span>
+              <input id="collegeSearch" type="text" placeholder="Search college, code, city..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20 focus:border-[#1A0040]/40 transition-all text-sm custom-shadow">
+            </div>
+
+            <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow">
+              <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025" onclick="setYear('2025')">2025</button>
+              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2024" disabled title="Data coming soon">2024</button>
+              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2023" disabled title="Data coming soon">2023</button>
+              <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2022" disabled title="Data coming soon">2022</button>
+            </div>
+
+            <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold">CN</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="tool-layout">
+      <!-- ══════════════ LEFT COLUMN — Cutoff Explorer (unchanged logic) ══════════════ -->
+      <div class="left-col">
+        <main class="px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative">
+          <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div class="xl:col-span-8 bg-white rounded-3xl border border-gray-100 custom-shadow p-6">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+                <div>
+                  <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Counselling</p>
+                  <h2 id="counselling-title" class="text-xl font-bold text-gray-950 mt-1">MCC AIQ — All India UG Medical</h2>
+                  <p id="counselling-subtitle" class="text-sm text-gray-500 mt-1">All India Quota &middot; Government colleges &middot; MBBS seats</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="counselling-cards">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <div class="xl:col-span-4 bg-gradient-to-br from-[#212529] to-[#2d2d2d] rounded-3xl custom-shadow p-6 text-white overflow-hidden relative">
+              <div class="relative z-10">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-white/50">Student Rank</p>
+                    <div class="flex items-end gap-3 mt-2">
+                      <p class="text-4xl font-bold tracking-tight">#25,678</p>
+                      <span class="mb-2 px-2.5 py-1 rounded-lg bg-[#559822] text-white text-[10px] font-bold uppercase">Synced</span>
+                    </div>
+                    <p class="text-sm text-white/60 mt-2">Pre-loaded from student token. Per-round chances shown below.</p>
+                  </div>
+                  <div class="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <iconify-icon icon="lucide:target" class="text-2xl text-[#6A0DAD]"></iconify-icon>
+                  </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-3 gap-2">
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                    <p id="count-safe" class="text-lg font-bold text-[#86efac]">0</p>
+                    <p class="text-[10px] text-white/50 font-bold uppercase">Safe</p>
+                  </div>
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                    <p id="count-likely" class="text-lg font-bold text-[#fde68a]">0</p>
+                    <p class="text-[10px] text-white/50 font-bold uppercase">Likely</p>
+                  </div>
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3">
+                    <p id="count-borderline" class="text-lg font-bold text-[#fdba74]">0</p>
+                    <p class="text-[10px] text-white/50 font-bold uppercase">Border</p>
+                  </div>
+                </div>
+              </div>
+              <iconify-icon icon="lucide:activity" class="absolute -right-6 -bottom-8 text-9xl text-white opacity-5 rotate-12"></iconify-icon>
+            </div>
+          </section>
+
+          <section class="bg-white rounded-3xl border border-gray-100 custom-shadow p-5 sm:p-6">
+            <div class="flex flex-col gap-5">
+              <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <div id="dynamic-filters">
+                  <!-- Rendered via JS -->
+                </div>
+              </div>
+
+              <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 pt-5 border-t border-gray-100">
+                <div class="flex flex-wrap items-center gap-2" id="inst-type-filters">
+                  <button class="px-4 py-2 rounded-full bg-[#6A0DAD] text-white text-sm font-bold">All</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Govt</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Private</button>
+                  <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Deemed</button>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3 text-xs font-bold text-gray-500">
+                  <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-green-100 ring-1 ring-green-200"></span>Safe — rank well within cutoff</span>
+                  <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-yellow-100 ring-1 ring-yellow-200"></span>Likely — rank near cutoff</span>
+                  <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-orange-100 ring-1 ring-orange-200"></span>Borderline — slightly beyond cutoff</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-white rounded-3xl border border-gray-100 custom-shadow overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-gray-100">
+              <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-3">
+                    <h2 id="record-count" class="text-lg font-bold text-gray-950">0 Colleges Found</h2>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                  <button id="strayToggle" onclick="toggleStray()" class="text-sm font-bold text-[#1A0040] hover:underline inline-flex items-center gap-1">
+                    <iconify-icon icon="lucide:chevron-down"></iconify-icon>
+                    Show stray rounds
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto overflow-y-visible scrollbar-thin">
+              <table class="w-max min-w-full text-sm">
+                <thead>
+                  <!-- Rendered via JS (renderTable rebuilds thead each load) -->
+                </thead>
+                <tbody id="collegeTableBody" class="divide-y divide-gray-100"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- ══════════════ RIGHT COLUMN — Preference List Builder ══════════════ -->
+      <div class="right-col">
+        <div id="prefPanel" class="flex flex-col h-full">
+          <div class="pref-header">
+            <span class="pref-title">Preference List</span>
+            <span class="pref-count" id="prefCount">0</span>
+          </div>
+
+          <div class="pref-list" id="prefList">
+            <div class="pref-empty" id="prefEmptyMsg">
+              Add colleges from the table using the + button
+            </div>
+          </div>
+
+          <div class="pref-actions">
+            <button class="pref-export excel" onclick="exportExcel()">Export Excel →</button>
+            <button class="pref-export pdf" onclick="exportPDF()">Export PDF →</button>
+            <button class="pref-clear" onclick="clearPreferences()">Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pdfTemplate" style="display:none;"></div>
+  </div>
+
+  <script>
+    let RANK = null;
+    let STUDENT = {};
+    let strayVisible = false;
+    let currentData = null;
+    let currentYear = '2025';
+    let selectedCounselling = 'MCC';
+    let selectedInstType = 'GOVT_MBBS';
+    let selectedCategory = 'OPEN'; // Default
+    let selectedState = 'Karnataka';
+
+    // MH State defaults
+    let mhQuota = 'GOVT_MBBS';
+    let mhCategory = 'OPEN';
+    let mhSubType = 'GENERAL';
+
+    const searchInput = document.getElementById('collegeSearch');
+
+    const MCC_INST_TYPES = [
+      { id: 'GOVT_MBBS', label: 'GOVT MBBS' },
+      { id: 'AIIMS_MBBS', label: 'AIIMS' },
+      { id: 'JIPMER_MBBS', label: 'JIPMER' },
+      { id: 'CENTRAL_MBBS', label: 'Central Univ MBBS' },
+      { id: 'DEEMED_MBBS', label: 'Deemed MBBS' },
+      { id: 'GOVT_BDS', label: 'GOVT BDS' },
+      { id: 'CENTRAL_BDS', label: 'Central Univ BDS' },
+      { id: 'DEEMED_BDS', label: 'Deemed BDS' },
+    ];
+    const MCC_STD_CATS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST'];
+
+    const MH_DATA_MAP = {
+      "GOVT_MBBS": {"DEF_1": ["FEMALE", "GENERAL"], "DEF_2": ["FEMALE", "GENERAL"], "DEF_3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NT1": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT2": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT3": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"]},
+      "PRIVATE_MBBS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
+    };
+
+    const OPEN_STATES = [
+      'Andhra Pradesh', 'Bihar', 'Chhattisgarh', 'Haryana', 'Himachal Pradesh',
+      'Jharkhand', 'Karnataka', 'Kerala', 'Manipur', 'Meghalaya', 'Pondicherry',
+      'Sikkim', 'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+    ];
+    const OPEN_STATE_CATS = {
+      'Andhra_Pradesh': ['COUNSELOR', 'NRI', 'GOV_NRI'],
+      'Bihar': ['MGT', 'MINORITY', 'NRI'],
+      'Chhattisgarh': ['UR', 'UR_FEM', 'UR_NRI', 'UR_FEM_NRI'],
+      'Haryana': ['MQ', 'MQ_MINORITY'],
+      'Himachal_Pradesh': ['MQ_NRI'],
+      'Jharkhand': ['MQ', 'NRI'],
+      'Karnataka': ['MQ', 'NRI', 'OTH', 'RC8'],
+      'Kerala': ['MQ'],
+      'Manipur': ['MQ', 'NRI'],
+      'Meghalaya': ['MQ', 'NRI'],
+      'Pondicherry': ['MQ', 'NRI'],
+      'Sikkim': ['General', 'Management'],
+      'Tamil_Nadu': ['OPEN', 'NRI'],
+      'Telangana': ['MQ', 'NRI'],
+      'Uttar_Pradesh': ['MQ', 'MINORITY'],
+      'Uttarakhand': ['MQ', 'NRI'],
+      'West_Bengal': ['MQ', 'NRI']
+    };
+
+    function getDeemedCats(inst) {
+       if (inst === 'DEEMED_MBBS') return ['OPEN', 'NRI_P-I', 'NRI_P-II', 'MINORITY'];
+       if (inst === 'DEEMED_BDS') return ['OPEN', 'NRI_P1', 'NRI_P2', 'MINORITY'];
+       return [];
+    }
+
+    async function initUI() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('token');
+
+      let fetchedRank = null;
+      let fetchedScore = null;
+      if (token && token.trim() !== '') {
+        try {
+          const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+          const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
+          const json = await res.json();
+          if (json.success && json.data) {
+            STUDENT = json.data;
+            STUDENT.token = token;
+            const rawRank  = json.data.rank  || json.data.neet_rank  || json.data.air;
+            const rawScore = json.data.score || json.data.neet_score;
+            if (rawRank  && rawRank  !== 0) fetchedRank  = parseInt(rawRank,  10);
+            if (rawScore && rawScore !== 0) fetchedScore = parseInt(rawScore, 10);
+          }
+        } catch(e) {
+          console.warn('Rank fetch failed:', e);
+        }
+      }
+
+      const rankEl    = document.querySelector('.text-4xl.font-bold.tracking-tight');
+      const rankLabel = document.querySelector('.text-xs.font-bold.uppercase.tracking-widest.text-white\\/50');
+      if (fetchedRank) {
+        RANK = fetchedRank;
+        if (rankEl)    rankEl.textContent    = `#${RANK.toLocaleString('en-IN')}`;
+        if (rankLabel) rankLabel.textContent = 'STUDENT RANK';
+      } else if (fetchedScore) {
+        RANK = null;
+        if (rankEl)    rankEl.textContent    = String(fetchedScore);
+        if (rankLabel) rankLabel.textContent = 'NEET SCORE';
+      } else {
+        RANK = null;
+        if (rankEl)    rankEl.textContent    = '—';
+        if (rankLabel) rankLabel.textContent = 'NEET SCORE';
+      }
+
+      renderCounsellingCards();
+      renderFilters();
+      loadData();
+    }
+
+    function setCounselling(c) {
+      selectedCounselling = c;
+      if (c === 'MCC') {
+        selectedInstType = 'GOVT_MBBS';
+        selectedCategory = 'OPEN';
+      } else if (c === 'MH') {
+        mhQuota = 'GOVT_MBBS';
+        mhCategory = 'OPEN';
+        mhSubType = 'GENERAL';
+      } else if (c === 'OPEN') {
+        selectedState = 'Karnataka';
+        selectedCategory = 'MQ';
+      }
+
+      const titleEl = document.getElementById('counselling-title');
+      const subtitleEl = document.getElementById('counselling-subtitle');
+      if (titleEl && subtitleEl) {
+        if (c === 'MCC') {
+          titleEl.textContent = 'MCC AIQ — All India UG Medical';
+          subtitleEl.textContent = 'All India Quota · Government colleges · MBBS seats';
+        } else if (c === 'MH') {
+          titleEl.textContent = 'MH State — Maharashtra CAP';
+          subtitleEl.textContent = 'Maharashtra State Quota · Govt & Private · MBBS seats';
+        } else if (c === 'OPEN') {
+          titleEl.textContent = 'Open States — Management Quota';
+          subtitleEl.textContent = '17 states · MQ & NRI quota · MBBS seats';
+        }
+      }
+
+      const typeFilters = document.getElementById('inst-type-filters');
+      if (typeFilters) {
+        if (c === 'MCC') {
+          typeFilters.innerHTML = `
+            <button class="px-4 py-2 rounded-full bg-[#6A0DAD] text-white text-sm font-bold">All</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Govt</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Private</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Deemed</button>
+          `;
+        } else if (c === 'MH') {
+          typeFilters.innerHTML = `
+            <button class="px-4 py-2 rounded-full bg-[#6A0DAD] text-white text-sm font-bold">All</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Govt</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Private</button>
+          `;
+        } else if (c === 'OPEN') {
+          typeFilters.innerHTML = `
+            <button class="px-4 py-2 rounded-full bg-[#6A0DAD] text-white text-sm font-bold">All</button>
+            <button class="px-4 py-2 rounded-full bg-gray-50 text-gray-700 hover:bg-gray-100 text-sm font-bold transition-all">Private</button>
+          `;
+        }
+      }
+
+      renderCounsellingCards();
+      renderFilters();
+      loadData();
+    }
+
+    function setInstType(type) {
+      selectedInstType = type;
+      if (type.includes('DEEMED')) {
+         const cats = getDeemedCats(type);
+         if (!cats.includes(selectedCategory)) selectedCategory = 'OPEN';
+      } else {
+         if (!MCC_STD_CATS.includes(selectedCategory)) selectedCategory = 'OPEN';
+      }
+      renderFilters();
+      loadData();
+    }
+
+    function setOpenState(st) {
+       selectedState = st;
+       const folder = st.replace(/ /g, '_');
+       selectedCategory = OPEN_STATE_CATS[folder][0];
+       renderFilters();
+       loadData();
+    }
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      renderFilters();
+      loadData();
+    }
+
+    // MH Specific Setters
+    function setMHQuota(q) {
+       mhQuota = q;
+       if (!MH_DATA_MAP[mhQuota][mhCategory]) {
+           mhCategory = Object.keys(MH_DATA_MAP[mhQuota])[0] || 'OPEN';
+       }
+       if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
+           mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
+       }
+       renderFilters();
+       loadData();
+    }
+
+    function setMHCategory(c) {
+       mhCategory = c;
+       if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
+           mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
+       }
+       renderFilters();
+       loadData();
+    }
+
+    function setMHSubType(st) {
+       mhSubType = st;
+       renderFilters();
+       loadData();
+    }
+
+    // ── Year switcher (wired) ──────────────────────────────────
+    function setYear(year) {
+      currentYear = year;
+      document.querySelectorAll('.year-btn').forEach(b => {
+        const isActive = b.dataset.year === year;
+        b.classList.toggle('bg-[#1A0040]', isActive);
+        b.classList.toggle('text-white', isActive);
+        b.classList.toggle('text-gray-400', !isActive);
+      });
+      loadData();
+    }
+
+    function toggleFilters() {
+      let isCollapsed = sessionStorage.getItem('filtersCollapsed') === 'true';
+      sessionStorage.setItem('filtersCollapsed', !isCollapsed);
+      renderFilters();
+    }
+
+    function renderCounsellingCards() {
+      const container = document.getElementById('counselling-cards');
+      if (!container) return;
+
+      const cards = [
+        { id: 'MCC', title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
+        { id: 'MH', title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
+        { id: 'OPEN', title: 'Open States', subtitle: '17 states · MQ & NRI quota' }
+      ];
+
+      container.innerHTML = cards.map(c => {
+        const isSel = selectedCounselling === c.id;
+        if (isSel) {
+          return `
+            <button class="text-left p-4 rounded-2xl border-2 border-[#1A0040] bg-[#FDECE7] transition-all" onclick="setCounselling('${c.id}')">
+              <span class="text-[11px] font-bold uppercase tracking-widest text-[#1A0040]">Selected</span>
+              <p class="text-sm font-bold text-gray-950 mt-1">${c.title}</p>
+              <p class="text-xs text-gray-500 mt-0.5">${c.subtitle}</p>
+            </button>
+          `;
+        } else {
+          return `
+            <button class="text-left p-4 rounded-2xl border border-gray-200 bg-gray-50 hover:bg-white hover:border-[#1A0040]/30 transition-all" onclick="setCounselling('${c.id}')">
+              <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400">Select</span>
+              <p class="text-sm font-bold text-gray-950 mt-1">${c.title}</p>
+              <p class="text-xs text-gray-500 mt-0.5">${c.subtitle}</p>
+            </button>
+          `;
+        }
+      }).join('');
+    }
+
+    function renderFilters() {
+      const container = document.getElementById('dynamic-filters');
+      if (!container) return;
+
+      let isCollapsed = sessionStorage.getItem('filtersCollapsed') === 'true';
+      let html = '<div class="flex justify-between items-start w-full mb-4">';
+
+      if (isCollapsed) {
+         let summary = '';
+         if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
+
+         html += `<div class="text-sm font-bold text-[#1A0040] bg-[#EDE9FF] px-4 py-2 rounded-xl">${summary}</div>`;
+         html += `<button onclick="toggleFilters()" class="p-2 text-gray-500 hover:text-[#1A0040] hover:bg-gray-100 rounded-xl transition-all" title="Expand filters"><iconify-icon icon="lucide:chevron-down" class="text-xl"></iconify-icon></button>`;
+         html += `</div>`;
+         container.innerHTML = html;
+         container.parentElement.classList.remove('w-full');
+         return;
+      }
+
+      html += `<div class="flex-1"></div>`;
+      html += `<button onclick="toggleFilters()" class="p-2 text-gray-500 hover:text-[#1A0040] hover:bg-gray-100 rounded-xl transition-all" title="Collapse filters"><iconify-icon icon="lucide:chevron-up" class="text-xl"></iconify-icon></button>`;
+      html += `</div>`;
+
+      container.parentElement.classList.add('w-full');
+
+      if (selectedCounselling === 'MCC') {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         MCC_INST_TYPES.forEach(inst => {
+            const isSel = selectedInstType === inst.id;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setInstType('${inst.id}')">${inst.label}</button>`;
+         });
+         html += `</div>`;
+      } else if (selectedCounselling === 'OPEN') {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         OPEN_STATES.forEach(st => {
+            const isSel = selectedState === st;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setOpenState('${st}')">${st}</button>`;
+         });
+         html += `</div>`;
+      } else if (selectedCounselling === 'MH') {
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         const quotas = [
+           { id: 'GOVT_MBBS', label: 'Govt MBBS' },
+           { id: 'PRIVATE_MBBS', label: 'Private MBBS' }
+         ];
+         quotas.forEach(q => {
+            const isSel = mhQuota === q.id;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHQuota('${q.id}')">${q.label}</button>`;
+         });
+         html += `</div>`;
+
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p>`;
+         html += `<div class="flex flex-wrap gap-2 mb-6">`;
+         const availCats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
+         availCats.forEach(cat => {
+            const isSel = mhCategory === cat;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+         });
+         html += `</div>`;
+
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Sub-Type</p>`;
+         html += `<div class="flex flex-wrap gap-2">`;
+         const availSubTypes = MH_DATA_MAP[mhQuota][mhCategory] || [];
+         availSubTypes.forEach(st => {
+            const isSel = mhSubType === st;
+            const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+            html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHSubType('${st}')">${st.replace(/_/g, ' ')}</button>`;
+         });
+         html += `</div>`;
+      }
+
+      if (selectedCounselling !== 'MH') {
+          const folder = selectedState.replace(/ /g, '_');
+          const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
+
+          if (!isHP) {
+             html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
+             html += `<div class="flex flex-wrap gap-2">`;
+
+             let cats = [];
+             if (selectedCounselling === 'MCC') {
+                if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
+                else cats = MCC_STD_CATS;
+             } else if (selectedCounselling === 'OPEN') {
+                cats = OPEN_STATE_CATS[folder] || [];
+             }
+
+             cats.forEach(cat => {
+                const isSel = selectedCategory === cat;
+                const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+                html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+             });
+             html += `</div>`;
+          }
+      }
+
+      container.innerHTML = html;
+    }
+
+    function toggleStray() {
+      strayVisible = !strayVisible;
+      document.querySelectorAll('.stray-col').forEach(el => {
+        el.style.display = strayVisible ? '' : 'none';
+      });
+      const strayToggle = document.getElementById('strayToggle');
+      strayToggle.innerHTML = strayVisible
+        ? '<iconify-icon icon="lucide:chevron-up"></iconify-icon> Hide stray rounds'
+        : '<iconify-icon icon="lucide:chevron-down"></iconify-icon> Show stray rounds';
+    }
+
+    // ── Chance formula — standardised labels (bands kept identical to source) ──
+    function getChance(air) {
+      if (!air || air === '-') return null;
+      const val = parseInt(air.toString().replace(/,/g, ''), 10);
+      if (isNaN(val)) return null;
+      if (RANK <= val * 0.88) return { key: 'safe',         label: 'Safe'         };
+      if (RANK <= val)        return { key: 'likely',       label: 'Likely'       };
+      if (RANK <= val * 1.12) return { key: 'borderline',   label: 'Borderline'   };
+      return                         { key: 'out_of_reach', label: 'Out of Reach' };
+    }
+
+    async function loadData() {
+      const tbody = document.getElementById('collegeTableBody');
+      tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
+
+      let url = '';
+      if (selectedCounselling === 'MCC') {
+         url = `/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
+      } else if (selectedCounselling === 'OPEN') {
+         const folder = selectedState.replace(/ /g, '_');
+         url = `/data/cutoffs/OPEN/${currentYear}/${folder}/${selectedCategory}.json`;
+      } else if (selectedCounselling === 'MH') {
+         url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+      }
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Data not found');
+        const data = await res.json();
+        currentData = data;
+        renderTable();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">No data available for this selection.</td></tr>`;
+        updateCounts(0, 0, 0);
+      }
+    }
+
+    function escAttr(s) {
+      return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+
+    function renderTable() {
+      if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
+        const tbody = document.getElementById('collegeTableBody');
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No data available for this selection.</td></tr>`;
+        updateCounts(0,0,0);
+        return;
+      }
+
+      const tbody = document.getElementById('collegeTableBody');
+      tbody.innerHTML = '';
+      const rCount = document.getElementById('record-count');
+      if(rCount) rCount.textContent = `${currentData.colleges.length} Colleges Found`;
+
+      let safeCount = 0;
+      let likelyCount = 0;
+      let borderCount = 0;
+
+      const isMH = currentData.counselling === 'MH';
+      const isMCC = currentData.counselling === 'MCC';
+      const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
+      const isOPEN = currentData.counselling === 'OPEN';
+
+      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
+      const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
+
+      const showSML = isMH || (isOPEN && !isKarnataka);
+      const showCSML = isMH && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showPWD = isMCC && !isDeemed;
+
+      let roundKeys = [];
+      if (isHP) {
+         const cats = Object.keys(currentData.colleges[0].categories || {});
+         if (cats.length > 0) roundKeys = Object.keys(currentData.colleges[0].categories[cats[0]] || {});
+      } else {
+         roundKeys = Object.keys(currentData.colleges[0].rounds || {});
+      }
+
+      const thead = document.querySelector('thead');
+      let headerRow1 = `<tr class="bg-gray-50 border-b border-gray-200 text-gray-900">`;
+      headerRow1 += `<th rowspan="2" class="sticky left-0 z-20 bg-gray-50 px-4 py-4 text-left w-12"><span class="sr-only">Add</span></th>`;
+
+      if (isHP) {
+        headerRow1 += `
+          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Category</th>
+          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
+        `;
+      } else {
+        headerRow1 += `
+          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
+          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
+        `;
+        if (isKeralaMQ) {
+           headerRow1 += `<th rowspan="2" class="px-4 py-4 text-right font-bold uppercase text-xs tracking-wide" min-w-[70px] w-[70px]">Intake</th>`;
+        }
+      }
+
+      let headerRow2 = `<tr class="bg-gray-50 border-b border-gray-200 text-gray-500">`;
+
+      roundKeys.forEach((round) => {
+        const rl = round.toLowerCase();
+        const isStray = rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended');
+        const strayClass = isStray ? 'stray-col' : '';
+        const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+
+        let cols = 2;
+        if (isKarnataka) cols = 2;
+        else if (isKeralaMQ) cols = 2;
+        else if (showPWD) cols = 3;
+        else if (showCSML) cols = 4;
+        else if (showSML) cols = 3;
+
+        headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
+
+        if (!isKeralaMQ) {
+           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
+        }
+
+        const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">AIR</th>`;
+
+        if (showPWD) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle}>AIR (PWD)</th>`;
+        } else if (showCSML) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">SML</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">CSML</th>`;
+        } else if (showSML) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">SML</th>`;
+        }
+      });
+
+      headerRow1 += `<th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide">More</th></tr>`;
+      headerRow2 += `</tr>`;
+      thead.innerHTML = headerRow1 + headerRow2;
+
+      currentData.colleges.forEach(college => {
+        let typeBadgeClass = 'bg-gray-100 text-gray-700';
+        if (college.type && college.type.toLowerCase().includes('govt')) typeBadgeClass = 'bg-green-100 text-green-700';
+        else if (college.type && college.type.toLowerCase().includes('private')) typeBadgeClass = 'bg-orange-100 text-orange-700';
+        else if (college.type && college.type.toLowerCase().includes('deemed')) typeBadgeClass = 'bg-[#EDE9FF] text-[#6A0DAD]';
+
+        let feesDisplay = '-';
+        if (college.fees && college.fees !== '-') {
+          let f = String(college.fees).trim();
+          if (f.includes('/-')) {
+             f = f.replace('/-', '');
+             feesDisplay = `₹${f}`;
+          } else if (f.includes(',')) {
+             feesDisplay = `₹${f}`;
+          } else {
+             const parsed = parseInt(f, 10);
+             if (!isNaN(parsed)) feesDisplay = `₹${parsed.toLocaleString('en-IN')}`;
+             else feesDisplay = f;
+          }
+        }
+
+        // gather round AIRs (R1/R2/R3) for preference-list export, regardless of layout mode
+        const roundAirs = {};
+        roundKeys.forEach((round, idx) => {
+          if (idx > 2) return; // only first 3 rounds tracked for export columns
+          const rData = isHP ? null : (college.rounds[round] || {});
+          roundAirs[`r${idx+1}air`] = rData && rData.AIR ? rData.AIR : '';
+        });
+
+        if (isHP) {
+           const cats = Object.keys(college.categories || {});
+           cats.forEach(cat => {
+              const tr = document.createElement('tr');
+              tr.className = 'college-row hover:bg-gray-50 transition-all';
+              tr.dataset.search = `${cat} ${college.name || ''}`.toLowerCase();
+
+              const catRoundAirs = {};
+              roundKeys.forEach((round, idx) => {
+                if (idx > 2) return;
+                const rData = college.categories[cat][round] || {};
+                catRoundAirs[`r${idx+1}air`] = rData.AIR || '';
+              });
+
+              const bestChance = getChance(college.categories[cat][roundKeys[0]]?.AIR);
+              const meta = `${cat} · ${college.type || ''} · ${feesDisplay}`;
+              const addBtnHtml = `<button class="add-btn" onclick="addToPreferences(this, '${escAttr(college.name)}', '${escAttr(meta)}', '${escAttr(currentData.state || '')}', '${escAttr(college.type || '')}', '${escAttr(cat)}', '${escAttr(feesDisplay)}', '${escAttr(catRoundAirs.r1air)}', '${escAttr(catRoundAirs.r2air)}', '${escAttr(catRoundAirs.r3air)}', '${bestChance ? bestChance.key : ''}', '${bestChance ? bestChance.label : ''}')">+</button>`;
+
+              let html = `
+                <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12">${addBtnHtml}</td>
+                <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-bold text-[#1A0040] uppercase whitespace-nowrap w-[120px]">${cat}</td>
+                <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+                  <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
+                  <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
+                </td>
+                <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+                <td class="px-4 py-4 font-medium">${feesDisplay}</td>
+              `;
+
+              roundKeys.forEach(round => {
+                const rData = college.categories[cat][round] || {};
+                const air = rData.AIR;
+                const intake = rData.Intake;
+                const sml = rData.SML;
+
+                const chance = getChance(air);
+                let cellBg = '';
+                let textClass = 'text-gray-950';
+                let tagHtml = '';
+
+                if (chance && chance.key === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
+                else if (chance && chance.key === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
+                else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
+                else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
+
+                const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
+                const strayClass = isStray ? 'stray-col' : '';
+                const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+
+                html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
+                html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
+                html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+              });
+
+              html += `<td class="px-4 py-4"><button class="h-8 w-8 rounded-lg hover:bg-gray-100"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>`;
+              tr.innerHTML = html;
+              tbody.appendChild(tr);
+           });
+           return;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'college-row hover:bg-gray-50 transition-all';
+        tr.dataset.search = `${college.code || ''} ${college.name || ''} ${college.type || ''}`.toLowerCase();
+        tr.dataset.collegeName = college.name || '';
+
+        const bestChance = getChance(college.rounds[roundKeys[0]]?.AIR);
+        const meta = `${currentData.state || ''} · ${college.type || ''} · ${feesDisplay}`;
+        const addBtnHtml = `<button class="add-btn" onclick="addToPreferences(this, '${escAttr(college.name)}', '${escAttr(meta)}', '${escAttr(currentData.state || '')}', '${escAttr(college.type || '')}', '${escAttr(selectedCategory || mhCategory || '')}', '${escAttr(feesDisplay)}', '${escAttr(roundAirs.r1air)}', '${escAttr(roundAirs.r2air)}', '${escAttr(roundAirs.r3air)}', '${bestChance ? bestChance.key : ''}', '${bestChance ? bestChance.label : ''}')">+</button>`;
+
+        let html = `
+          <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12">${addBtnHtml}</td>
+          <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-medium text-gray-600 w-20">${college.code || ''}</td>
+          <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+            <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
+            <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
+          </td>
+          <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+          <td class="px-4 py-4 font-medium">${feesDisplay}</td>
+        `;
+        if (isKeralaMQ) {
+           html += `<td class="px-4 py-4 text-right font-bold text-[#1A0040] bg-gray-50">${college.total_intake || '-'}</td>`;
+        }
+
+        roundKeys.forEach(round => {
+          const rData = college.rounds[round] || {};
+          const air = rData.AIR;
+          const intake = rData.Intake;
+          const sml = showPWD ? rData.AIR_PWD : rData.SML;
+
+          const chance = getChance(air);
+          let cellBg = '';
+          let textClass = 'text-gray-950';
+          let tagHtml = '';
+
+          if (chance && chance.key === 'safe') { cellBg = 'bg-green-50'; textClass = 'text-green-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-[10px]">Safe</span>`; safeCount++; }
+          else if (chance && chance.key === 'likely') { cellBg = 'bg-blue-50'; textClass = 'text-blue-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 text-[10px]">Likely</span>`; likelyCount++; }
+          else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
+          else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
+
+          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
+          const strayClass = isStray ? 'stray-col' : '';
+          const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
+
+          if (!isKeralaMQ) {
+             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
+          }
+
+          html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
+
+          if (showPWD) {
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+          } else if (showCSML) {
+            const csml = rData.CSML || '-';
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${csml}</td>`;
+          } else if (showSML) {
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${sml ? parseInt(sml).toLocaleString('en-IN') : '-'}</td>`;
+          }
+        });
+
+        html += `<td class="px-4 py-4"><button class="h-8 w-8 rounded-lg hover:bg-gray-100"><iconify-icon icon="lucide:chevron-right"></iconify-icon></button></td>`;
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
+
+      updateCounts(safeCount, likelyCount, borderCount);
+      syncAddButtonsWithPreferenceList();
+      applySearch();
+    }
+
+    function updateCounts(s, l, b) {
+      document.getElementById('count-safe').textContent = s;
+      document.getElementById('count-likely').textContent = l;
+      document.getElementById('count-borderline').textContent = b;
+    }
+
+    function applySearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      const dynamicRows = document.querySelectorAll('.college-row');
+      dynamicRows.forEach((row) => {
+        const searchable = row.getAttribute('data-search');
+        if (searchable && searchable.includes(query)) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', applySearch);
+
+    // ══════════════════ PREFERENCE LIST BUILDER ══════════════════
+    let dragSrc = null;
+
+    function syncAddButtonsWithPreferenceList() {
+      const addedNames = new Set(
+        [...document.querySelectorAll('.pref-item')].map(item => item.dataset.name)
+      );
+      document.querySelectorAll('.college-row').forEach(row => {
+        const name = row.dataset.collegeName;
+        const btn = row.querySelector('.add-btn');
+        if (!btn) return;
+        if (name && addedNames.has(name)) {
+          btn.textContent = '✓';
+          btn.classList.add('added');
+          row.classList.add('added-row');
+        } else {
+          btn.textContent = '+';
+          btn.classList.remove('added');
+          row.classList.remove('added-row');
+        }
+      });
+    }
+
+    function addToPreferences(btn, name, meta, state, type, quota, fees, r1air, r2air, r3air, chanceKey, chanceLabel) {
+      const row = btn.closest('tr');
+      const isAdded = btn.classList.contains('added');
+
+      if (isAdded) {
+        // toggle off — remove matching pref item
+        const existing = [...document.querySelectorAll('.pref-item')].find(it => it.dataset.name === name);
+        if (existing) existing.remove();
+        btn.textContent = '+';
+        btn.classList.remove('added');
+        if (row) row.classList.remove('added-row');
+        renumberPreferences();
+        return;
+      }
+
+      addPreferenceItem({ name, meta, state, type, quota, fees, r1air, r2air, r3air, chanceKey, chanceLabel });
+      btn.textContent = '✓';
+      btn.classList.add('added');
+      if (row) row.classList.add('added-row');
+      renumberPreferences();
+    }
+
+    function addPreferenceItem(data) {
+      const list = document.getElementById('prefList');
+      const emptyMsg = document.getElementById('prefEmptyMsg');
+      if (emptyMsg) emptyMsg.remove();
+
+      const item = document.createElement('div');
+      item.className = 'pref-item';
+      item.draggable = true;
+      item.dataset.name = data.name;
+      item.dataset.meta = data.meta;
+      item.dataset.state = data.state;
+      item.dataset.type = data.type;
+      item.dataset.quota = data.quota;
+      item.dataset.fees = data.fees;
+      item.dataset.r1air = data.r1air;
+      item.dataset.r2air = data.r2air;
+      item.dataset.r3air = data.r3air;
+      item.dataset.chancekey = data.chanceKey;
+      item.dataset.chancelabel = data.chanceLabel;
+
+      item.innerHTML = `
+        <span class="pref-num">${document.querySelectorAll('.pref-item').length + 1}</span>
+        <span class="drag-handle">≡</span>
+        <div class="pref-info">
+          <div class="pref-name">${data.name}</div>
+          <div class="pref-meta">${data.meta}</div>
+        </div>
+        <span class="pref-chance ${data.chanceKey || ''}">${data.chanceLabel || '—'}</span>
+        <button class="pref-remove" onclick="removePreference(this)">×</button>
+      `;
+
+      list.appendChild(item);
+      initDragDrop();
+      updatePrefCount();
+    }
+
+    function removePreference(btn) {
+      const item = btn.closest('.pref-item');
+      const name = item?.dataset.name;
+      item.remove();
+      renumberPreferences();
+
+      if (name) {
+        const row = document.querySelector(`.college-row[data-college-name="${CSS.escape(name)}"]`);
+        const addBtn = row?.querySelector('.add-btn');
+        if (addBtn) {
+          addBtn.textContent = '+';
+          addBtn.classList.remove('added');
+        }
+        row?.classList.remove('added-row');
+      }
+
+      const list = document.getElementById('prefList');
+      if (!list.querySelector('.pref-item')) {
+        list.innerHTML = `<div class="pref-empty" id="prefEmptyMsg">Add colleges from the table using the + button</div>`;
+      }
+    }
+
+    function clearPreferences() {
+      document.querySelectorAll('.add-btn.added').forEach(btn => {
+        btn.textContent = '+';
+        btn.classList.remove('added');
+      });
+      document.querySelectorAll('tr.added-row').forEach(row => row.classList.remove('added-row'));
+
+      const list = document.getElementById('prefList');
+      list.innerHTML = `<div class="pref-empty" id="prefEmptyMsg">Add colleges from the table using the + button</div>`;
+      updatePrefCount();
+    }
+
+    function initDragDrop() {
+      document.querySelectorAll('.pref-item').forEach(item => {
+        item.addEventListener('dragstart', e => {
+          dragSrc = item;
+          item.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragend', () => {
+          item.classList.remove('dragging');
+          renumberPreferences();
+        });
+        item.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+        item.addEventListener('drop', e => {
+          e.stopPropagation();
+          if (dragSrc !== item) {
+            const rect = item.getBoundingClientRect();
+            const insertBefore = e.clientY < rect.top + rect.height / 2;
+            item.parentNode.insertBefore(dragSrc, insertBefore ? item : item.nextSibling);
+            renumberPreferences();
+          }
+        });
+      });
+    }
+
+    function renumberPreferences() {
+      document.querySelectorAll('.pref-item').forEach((item, i) => {
+        item.querySelector('.pref-num').textContent = i + 1;
+      });
+      updatePrefCount();
+    }
+
+    function updatePrefCount() {
+      const count = document.querySelectorAll('.pref-item').length;
+      document.getElementById('prefCount').textContent = count;
+    }
+
+    // ══════════════════ EXCEL EXPORT ══════════════════
+    function exportExcel() {
+      const items = [...document.querySelectorAll('.pref-item')];
+      if (!items.length) { alert('Add colleges to the list first.'); return; }
+
+      const rows = items.map((item, i) => ({
+        '#': i + 1,
+        'College Name': item.dataset.name,
+        'State': item.dataset.state || '',
+        'Type': item.dataset.type || '',
+        'Quota': item.dataset.quota || '',
+        'Round 1 AIR': item.dataset.r1air || '',
+        'Round 2 AIR': item.dataset.r2air || '',
+        'Round 3 AIR': item.dataset.r3air || '',
+        'Fees/yr': item.dataset.fees || '',
+        'Chance': item.dataset.chancelabel || '',
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+
+      const headerStyle = { font: { bold: true, color: { rgb: 'FFD700' } }, fill: { fgColor: { rgb: '1A0040' } } };
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let C = range.s.c; C <= range.e.c; C++) {
+        const cell = ws[XLSX.utils.encode_cell({ r: 0, c: C })];
+        if (cell) cell.s = headerStyle;
+      }
+
+      const footerRow = rows.length + 2;
+      XLSX.utils.sheet_add_aoa(ws, [
+        [],
+        [`Generated by ASMI Career | asmicareer.com | ${new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}`],
+        [`Student: ${STUDENT?.name || ''} | AIR: ${RANK || '—'} | Category: ${selectedCategory || mhCategory || ''}`],
+      ], { origin: { r: footerRow, c: 0 } });
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Preference List');
+
+      const safeName = (STUDENT?.name || 'Student').replace(/[^a-zA-Z0-9]/g, '_');
+      const date = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }).replace(/ /g,'');
+      XLSX.writeFile(wb, `ASMI_PrefList_${safeName}_${date}.xlsx`);
+    }
+
+    // ══════════════════ PDF EXPORT ══════════════════
+    async function exportPDF() {
+      const items = [...document.querySelectorAll('.pref-item')];
+      if (!items.length) { alert('Add colleges to the list first.'); return; }
+
+      const date = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+      const name = STUDENT?.name || 'Student';
+      const rankDisplay = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
+      const category = selectedCategory || mhCategory || '—';
+      const counsellingLabel = selectedCounselling === 'MCC' ? 'MCC AIQ' : selectedCounselling === 'MH' ? 'MH State' : 'Open States';
+
+      const chanceColor = {
+        safe: '#15803d',
+        likely: '#0369a1',
+        borderline: '#b45309',
+        out_of_reach: '#b91c1c',
+      };
+
+      const rowsHtml = items.map((item, i) => {
+        const color = chanceColor[item.dataset.chancekey] || '#555';
+        return `
+          <tr style="background:${i % 2 === 0 ? '#fff' : '#faf9ff'};">
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${i + 1}</td>
+            <td style="padding:6px 8px;text-align:left;border-bottom:1px solid #eee;font-weight:700;">${item.dataset.name}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.state || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.type || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r1air || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r2air || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r3air || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.fees || '-'}</td>
+            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;color:${color};font-weight:700;">${item.dataset.chancelabel || '-'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const html = `
+        <div id="pdfInner" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:28px;font-family:Helvetica,Arial,sans-serif;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <img src="/asmi-logo.png" style="height:44px;" crossorigin="anonymous">
+              <div>
+                <div style="font-size:20px;font-weight:900;color:#1a0040;">ASMI Career</div>
+                <div style="font-size:9px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">College Preference List</div>
+              </div>
+            </div>
+            <div style="text-align:right;font-size:9px;color:#888;">
+              <div>Generated: ${date}</div>
+              <div>asmicareer.com &middot; 7410019074</div>
+            </div>
+          </div>
+
+          <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:14px;"></div>
+
+          <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:20px;flex-wrap:wrap;">
+            <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Student</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${name}</div></div>
+            <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">AIR</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;">${rankDisplay}</div></div>
+            <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Category</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${category}</div></div>
+            <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Counselling</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${counsellingLabel}</div></div>
+            <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Year</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${currentYear}</div></div>
+          </div>
+
+          <table style="width:100%;border-collapse:collapse;font-size:10px;">
+            <thead>
+              <tr style="background:#1a0040;">
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">#</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:left;">College</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">State</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Type</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R1 AIR</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R2 AIR</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R3 AIR</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Fees</th>
+                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Chance</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <div style="margin-top:16px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#aaa;text-align:center;">
+            ASMI Career &middot; asmicareer.com &middot; 7410019074 &middot; Confidential — For student use only
+          </div>
+        </div>
+      `;
+
+      const pdfDiv = document.getElementById('pdfTemplate');
+      pdfDiv.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+      pdfDiv.innerHTML = html;
+
+      try {
+        const target = document.getElementById('pdfInner');
+        const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#fff', useCORS: true, allowTaint: true, logging: false });
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const pageW = pdf.internal.pageSize.getWidth();
+        const pageH = pdf.internal.pageSize.getHeight();
+        const imgW = pageW;
+        const imgH = (canvas.height * imgW) / canvas.width;
+        let yPos = 0, remaining = imgH;
+        while (remaining > 0) {
+          pdf.addImage(imgData, 'PNG', 0, -yPos, imgW, imgH);
+          remaining -= pageH; yPos += pageH;
+          if (remaining > 0) pdf.addPage();
+        }
+        const safeName = name.replace(/[^a-zA-Z0-9]/g, '_');
+        const dateSlug = date.replace(/ /g, '');
+        pdf.save(`ASMI_PrefList_${safeName}_${dateSlug}.pdf`);
+      } catch (err) {
+        console.error('PDF error:', err);
+        alert('PDF generation failed. Try again.');
+      } finally {
+        pdfDiv.style.display = 'none';
+        pdfDiv.innerHTML = '';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initUI();
+    });
+  </script>
+</body>
+</html>
