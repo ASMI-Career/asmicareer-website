@@ -17,12 +17,18 @@ const engineeringNavLinks = [
 
 /* ─── helpers ─────────────────────────────────────────────── */
 function isExpired(event) {
-  // Result entries never expire — stay visible until manually removed
-  if (event.title && event.title.toLowerCase().includes('result')) {
+  // Result entries never auto-expire unless an explicit expiry_date is set
+  if (!event.expiry_date && event.title && event.title.toLowerCase().includes('result')) {
     return false;
   }
 
-  const eventDate = new Date(event.date);
+  const targetDate = event.expiry_date ? event.expiry_date : event.date;
+  const eventDate = new Date(targetDate);
+  const now = new Date();
+  // If expiry_date includes a time component, compare exact timestamps; otherwise compare by day
+  if (event.expiry_date && event.expiry_date.includes('T')) {
+    return eventDate < now;
+  }
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate < today;
