@@ -180,6 +180,46 @@
     }
     .pref-clear:hover { color: #b91c1c; }
 
+    /* ── Preference panel collapse ───────────────────────────── */
+    .pref-toggle-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #1a0040;
+      padding: 4px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    .pref-toggle-btn:hover { background: rgba(106,13,173,0.08); }
+    .pref-badge-collapsed {
+      display: none;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      color: #4a0080;
+      line-height: 1.4;
+    }
+    .right-col.collapsed { flex: 0 0 60px; }
+    .right-col.collapsed .pref-list,
+    .right-col.collapsed .pref-actions,
+    .right-col.collapsed .pref-title,
+    .right-col.collapsed .pref-count { display: none; }
+    .right-col.collapsed .pref-header {
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 6px;
+      gap: 10px;
+    }
+    .right-col.collapsed .pref-badge-collapsed {
+      display: block;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      text-align: center;
+      white-space: nowrap;
+    }
+
     /* ── Year switcher ───────────────────────────────────────── */
     .year-btn[disabled] { opacity: 0.35; cursor: not-allowed; }
 
@@ -203,6 +243,13 @@
       .add-btn { padding: 4px 8px; font-size: 10px; }
       .pref-name { font-size: 10.5px; }
       .pref-meta { font-size: 9px; }
+
+      .right-col.collapsed { flex: none; max-height: 56px; overflow: hidden; }
+      .right-col.collapsed .pref-header { flex-direction: row; padding: 10px 16px; }
+      .right-col.collapsed .pref-badge-collapsed {
+        writing-mode: horizontal-tb;
+        text-orientation: initial;
+      }
     }
 
     @media (max-width: 480px) {
@@ -338,6 +385,14 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
+                  <label for="sortSelect" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Sort</label>
+                  <select id="sortSelect" onchange="setSortKey(this.value)" class="px-3 py-2 rounded-full bg-gray-50 text-gray-700 text-sm font-bold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20">
+                    <option value="r1-asc">Round 1: Low to High</option>
+                    <option value="r1-desc">Round 1: High to Low</option>
+                    <option value="r2-asc">Round 2: Low to High</option>
+                    <option value="r3-asc">Round 3: Low to High</option>
+                    <option value="fees-asc">Fees: Low to High</option>
+                  </select>
                   <button id="strayToggle" onclick="toggleStray()" class="text-sm font-bold text-[#1A0040] hover:underline inline-flex items-center gap-1">
                     <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                     Show stray rounds
@@ -362,8 +417,14 @@
       <div class="right-col">
         <div id="prefPanel" class="flex flex-col h-full">
           <div class="pref-header">
-            <span class="pref-title">Preference List</span>
+            <div class="flex items-center gap-2">
+              <button class="pref-toggle-btn" id="prefToggleBtn" onclick="togglePrefPanel()" title="Collapse panel">
+                <iconify-icon id="prefToggleIcon" icon="lucide:chevron-right"></iconify-icon>
+              </button>
+              <span class="pref-title">Preference List</span>
+            </div>
             <span class="pref-count" id="prefCount">0</span>
+            <span class="pref-badge-collapsed" id="prefBadgeCollapsed"></span>
           </div>
 
           <div class="pref-list" id="prefList">
@@ -394,6 +455,8 @@
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
+    let selectedStates = []; // MCC state filter (multi-select, client-side)
+    let currentSort = 'r1-asc'; // main table sort key
 
     // MH State defaults
     let mhQuota = 'GOVT_MBBS';
@@ -451,6 +514,8 @@
     }
 
     async function initUI() {
+      applyPrefPanelState();
+
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
 
@@ -497,6 +562,7 @@
 
     function setCounselling(c) {
       selectedCounselling = c;
+      selectedStates = [];
       if (c === 'MCC') {
         selectedInstType = 'GOVT_MBBS';
         selectedCategory = 'OPEN';
@@ -554,6 +620,7 @@
 
     function setInstType(type) {
       selectedInstType = type;
+      selectedStates = [];
       if (type.includes('DEEMED')) {
          const cats = getDeemedCats(type);
          if (!cats.includes(selectedCategory)) selectedCategory = 'OPEN';
@@ -692,6 +759,23 @@
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setInstType('${inst.id}')">${inst.label}</button>`;
          });
          html += `</div>`;
+
+         // MCC State filter — client-side, built from currently loaded data (states vary by institution type)
+         const availableStates = (currentData && currentData.colleges)
+           ? [...new Set(currentData.colleges.map(c => c.state).filter(Boolean))].sort()
+           : [];
+         if (availableStates.length) {
+            html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
+            html += `<div class="flex flex-wrap gap-2 mb-6">`;
+            const allSel = selectedStates.length === 0;
+            html += `<button class="px-4 py-2 rounded-full ${allSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]'} text-sm font-bold transition-all" onclick="clearMCCStateFilter()">All</button>`;
+            availableStates.forEach(st => {
+               const isSel = selectedStates.includes(st);
+               const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+               html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="toggleMCCState('${escAttr(st)}')">${st}</button>`;
+            });
+            html += `</div>`;
+         }
       } else if (selectedCounselling === 'OPEN') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
@@ -775,6 +859,39 @@
         : '<iconify-icon icon="lucide:chevron-down"></iconify-icon> Show stray rounds';
     }
 
+    // ── Preference panel collapse (Feature 1) — mirrors toggleFilters()'s sessionStorage pattern ──
+    function togglePrefPanel() {
+      let isCollapsed = sessionStorage.getItem('prefPanelCollapsed') === 'true';
+      sessionStorage.setItem('prefPanelCollapsed', !isCollapsed);
+      applyPrefPanelState();
+    }
+
+    function applyPrefPanelState() {
+      const isCollapsed = sessionStorage.getItem('prefPanelCollapsed') === 'true';
+      const rightCol = document.querySelector('.right-col');
+      const icon = document.getElementById('prefToggleIcon');
+      const btn = document.getElementById('prefToggleBtn');
+      if (rightCol) rightCol.classList.toggle('collapsed', isCollapsed);
+      if (icon) icon.setAttribute('icon', isCollapsed ? 'lucide:chevron-left' : 'lucide:chevron-right');
+      if (btn) btn.title = isCollapsed ? 'Expand panel' : 'Collapse panel';
+      updatePrefBadge();
+    }
+
+    // ── MCC State filter (Feature 3) ──────────────────────────
+    function toggleMCCState(state) {
+      const idx = selectedStates.indexOf(state);
+      if (idx === -1) selectedStates.push(state);
+      else selectedStates.splice(idx, 1);
+      renderFilters();
+      renderTable();
+    }
+
+    function clearMCCStateFilter() {
+      selectedStates = [];
+      renderFilters();
+      renderTable();
+    }
+
     // ── Chance formula — standardised labels (bands kept identical to source) ──
     function getChance(air) {
       if (!air || air === '-') return null;
@@ -786,9 +903,65 @@
       return                         { key: 'out_of_reach', label: 'Out of Reach' };
     }
 
+    // ── Sort control (Feature 2) — pure function, never mutates currentData.colleges ──
+    function setSortKey(key) {
+      currentSort = key;
+      renderTable();
+    }
+
+    function getSortedColleges(colleges) {
+      const list = [...colleges];
+      const isHP = currentData && currentData.counselling === 'OPEN' && currentData.state === 'Himachal Pradesh';
+
+      function airFor(college, roundName) {
+        if (isHP) {
+          const cats = Object.keys(college.categories || {});
+          if (!cats.length) return null;
+          const r = college.categories[cats[0]] && college.categories[cats[0]][roundName];
+          return (r && r.AIR != null && r.AIR !== '') ? parseInt(r.AIR, 10) : null;
+        }
+        const r = college.rounds && college.rounds[roundName];
+        return (r && r.AIR != null && r.AIR !== '') ? parseInt(r.AIR, 10) : null;
+      }
+
+      function feesFor(college) {
+        if (!college.fees || college.fees === '-') return null;
+        const cleaned = String(college.fees).replace(/[^0-9.]/g, '');
+        const n = parseFloat(cleaned);
+        return isNaN(n) ? null : n;
+      }
+
+      let roundKey = 'Round 1', dir = 1, useFees = false;
+      switch (currentSort) {
+        case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
+        case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
+        case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
+        case 'fees-asc': useFees = true; dir = 1; break;
+        case 'r1-asc':
+        default: roundKey = 'Round 1'; dir = 1; break;
+      }
+
+      list.sort((a, b) => {
+        const va = useFees ? feesFor(a) : airFor(a, roundKey);
+        const vb = useFees ? feesFor(b) : airFor(b, roundKey);
+        const aNull = va == null, bNull = vb == null;
+        if (aNull && bNull) return 0;
+        if (aNull) return 1;  // nulls always sort to the end
+        if (bNull) return -1;
+        return dir * (va - vb);
+      });
+
+      return list;
+    }
+
     async function loadData() {
       const tbody = document.getElementById('collegeTableBody');
       tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
+
+      // Default sort on every fresh fetch (Round 1: Low to High)
+      currentSort = 'r1-asc';
+      const sortSelectEl = document.getElementById('sortSelect');
+      if (sortSelectEl) sortSelectEl.value = 'r1-asc';
 
       let url = '';
       if (selectedCounselling === 'MCC') {
@@ -805,6 +978,7 @@
         if (!res.ok) throw new Error('Data not found');
         const data = await res.json();
         currentData = data;
+        if (selectedCounselling === 'MCC') renderFilters(); // refresh State pills against newly loaded colleges
         renderTable();
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">No data available for this selection.</td></tr>`;
@@ -824,10 +998,22 @@
         return;
       }
 
+      let workingColleges = getSortedColleges(currentData.colleges);
+      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+        workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
+      }
+
+      if (workingColleges.length === 0) {
+        const tbody = document.getElementById('collegeTableBody');
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No colleges match the selected filters.</td></tr>`;
+        updateCounts(0, 0, 0);
+        return;
+      }
+
       const tbody = document.getElementById('collegeTableBody');
       tbody.innerHTML = '';
       const rCount = document.getElementById('record-count');
-      if(rCount) rCount.textContent = `${currentData.colleges.length} Colleges Found`;
+      if(rCount) rCount.textContent = `${workingColleges.length} Colleges Found`;
 
       let safeCount = 0;
       let likelyCount = 0;
@@ -848,10 +1034,10 @@
 
       let roundKeys = [];
       if (isHP) {
-         const cats = Object.keys(currentData.colleges[0].categories || {});
-         if (cats.length > 0) roundKeys = Object.keys(currentData.colleges[0].categories[cats[0]] || {});
+         const cats = Object.keys(workingColleges[0].categories || {});
+         if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
       } else {
-         roundKeys = Object.keys(currentData.colleges[0].rounds || {});
+         roundKeys = Object.keys(workingColleges[0].rounds || {});
       }
 
       const thead = document.querySelector('thead');
@@ -915,7 +1101,7 @@
       headerRow2 += `</tr>`;
       thead.innerHTML = headerRow1 + headerRow2;
 
-      currentData.colleges.forEach(college => {
+      workingColleges.forEach(college => {
         let typeBadgeClass = 'bg-gray-100 text-gray-700';
         if (college.type && college.type.toLowerCase().includes('govt')) typeBadgeClass = 'bg-green-100 text-green-700';
         else if (college.type && college.type.toLowerCase().includes('private')) typeBadgeClass = 'bg-orange-100 text-orange-700';
@@ -1099,6 +1285,32 @@
     // ══════════════════ PREFERENCE LIST BUILDER ══════════════════
     let dragSrc = null;
 
+    // ── Feature 1b: normalized type + collapsed-state badge ──
+    function normalizeCollegeType(rawType) {
+      const t = String(rawType || '');
+      if (/govt|government/i.test(t)) return 'Govt';
+      if (/private/i.test(t)) return 'Private';
+      if (/deemed/i.test(t)) return 'Deemed';
+      return 'Other';
+    }
+
+    function updatePrefBadge() {
+      const badgeEl = document.getElementById('prefBadgeCollapsed');
+      if (!badgeEl) return;
+      const items = [...document.querySelectorAll('.pref-item')];
+      const counts = { Govt: 0, Deemed: 0, Private: 0, Other: 0 };
+      items.forEach(it => {
+        const nt = it.dataset.normtype || 'Other';
+        if (counts[nt] === undefined) counts[nt] = 0;
+        counts[nt]++;
+      });
+      const parts = [];
+      ['Govt', 'Deemed', 'Private', 'Other'].forEach(k => {
+        if (counts[k] > 0) parts.push(`${counts[k]} ${k}`);
+      });
+      badgeEl.textContent = items.length ? `${parts.join(' · ')} (${items.length} shortlisted)` : '';
+    }
+
     function syncAddButtonsWithPreferenceList() {
       const addedNames = new Set(
         [...document.querySelectorAll('.pref-item')].map(item => item.dataset.name)
@@ -1153,6 +1365,7 @@
       item.dataset.meta = data.meta;
       item.dataset.state = data.state;
       item.dataset.type = data.type;
+      item.dataset.normtype = normalizeCollegeType(data.type);
       item.dataset.quota = data.quota;
       item.dataset.fees = data.fees;
       item.dataset.r1air = data.r1air;
@@ -1248,6 +1461,7 @@
     function updatePrefCount() {
       const count = document.querySelectorAll('.pref-item').length;
       document.getElementById('prefCount').textContent = count;
+      updatePrefBadge();
     }
 
     // ══════════════════ EXCEL EXPORT ══════════════════
