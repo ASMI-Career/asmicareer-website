@@ -343,14 +343,26 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
 
 <script>
 const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
-const DB_URL='/ASMI_DB_Final.json';
+const DB_URL='/ASMI_DB_Final.json'; // LEGACY (FALLBACK) score-based source — kept in place, still used when a student has no rank yet (see RANK_MODE)
+const RANKS_URL='/data/closing_ranks_2025.json';
 const FEE_URL='/fee_map.json';
 
-let DB={}, FEE={}, STUDENT={};
+let DB={}, RANKS=null, FEE={}, STUDENT={};
+// RANK_MODE: true once STUDENT.rank is present -> rank-based matching against closing_ranks_2025.json.
+// false (no rank submitted yet) -> FALLBACK to the legacy score-based matching against ASMI_DB_Final.json.
+// Remove the *Legacy functions and this flag once every student has a rank (see init()).
+let RANK_MODE=false;
 
 // ── SESSION ──────────────────────────────────────────────────────
 function getSess(){try{return JSON.parse(sessionStorage.getItem('asmi')||'{}');}catch{return {};}}
-function activeScore(){return parseInt(getSess().score||STUDENT.score||0);}
+function activeRank(){return parseInt(getSess().rank||STUDENT.rank||0);}
+// activeScore() returns whichever numeric value actually drives matching: RANK when RANK_MODE
+// is on, else the legacy score. See the identical comment in slide3_options.html for why this
+// name is kept rather than renaming every call site.
+function activeScore(){
+  if(RANK_MODE) return activeRank();
+  return parseInt(getSess().score||STUDENT.score||0);
+}
 function activeCategory(){return getSess().category||STUDENT.category||'General';}
 function activeCourse(){return getSess().course||(STUDENT.courses||'MBBS').split(',')[0].trim();}
 function isCounselMode(){ return getSess().mode==='counsel'; }
@@ -373,22 +385,24 @@ function getStatus(score, lastCutoff){
 }
 
 // ── GET COLLEGES ─────────────────────────────────────────────────
-function getColleges(stateKey,courseKey,keys,listType){
+// LEGACY (FALLBACK) — original ASMI_DB_Final.json score-based college matcher.
+// Used only when RANK_MODE is false. Remove once all students have ranks.
+function getCollegesLegacy(stateKey,courseKey,keys,listType){
   if(!DB[stateKey]||!DB[stateKey][courseKey]) return [];
   const score=activeScore(), userCat=activeCategory();
-  
+
   const openList = DB[stateKey][courseKey]["OPEN"]?.[listType] || [];
   const openMap = new Map(openList.map(c => [c.n, c.c]));
-  
+
   const isSpecialCat = userCat !== 'General' && userCat !== 'OPEN';
   const catList = (isSpecialCat && DB[stateKey][courseKey][userCat])
     ? (DB[stateKey][courseKey][userCat][listType] || [])
     : [];
   const catMap = new Map(catList.map(c => [c.n, c.c]));
-  
+
   const allNames = new Set();
   const collegeObjMap = new Map();
-  
+
   keys.forEach(k => {
     const list = DB[stateKey][courseKey][k]?.[listType] || [];
     list.forEach(c => {
@@ -400,12 +414,12 @@ function getColleges(stateKey,courseKey,keys,listType){
       }
     });
   });
-  
+
   const cols = [];
   allNames.forEach(name => {
     const openC = openMap.has(name) ? openMap.get(name) : null;
     const catC = catMap.has(name) ? catMap.get(name) : null;
-    
+
     let bestC = Infinity;
     let matchedS = '';
     keys.forEach(k => {
@@ -420,9 +434,9 @@ function getColleges(stateKey,courseKey,keys,listType){
         }
       }
     });
-    
+
     if (bestC === Infinity) return;
-    
+
     const origObj = collegeObjMap.get(name) || {};
     cols.push({
       ...origObj,
@@ -434,9 +448,58 @@ function getColleges(stateKey,courseKey,keys,listType){
       prob: prob(score, bestC)
     });
   });
-  
+
   return cols;
 }
+
+// RANK-based — reads closing_ranks_2025.json's MCC section (grouped by institution_type +
+// category, not the old state/course/category/listType DB nesting). `listType` param dropped
+// since institution_type already disambiguates AIQ/AIIMS/JIPMER/CENTRAL/DEEMED.
+function mccInstType(stateKey, courseKey){
+  const course = courseKey==='BDS' ? 'BDS' : 'MBBS';
+  if(stateKey==='AIQ')     return 'GOVT_'+course;
+  if(stateKey==='AIIMS')   return 'AIIMS_MBBS';
+  if(stateKey==='JIPMER')  return 'JIPMER_MBBS';
+  if(stateKey==='CENTRAL') return 'CENTRAL_'+course;
+  if(stateKey==='DEEMED')  return 'DEEMED_'+course;
+  return null;
+}
+function getCollegesRank(stateKey, courseKey, keys){
+  const instType = mccInstType(stateKey, courseKey);
+  if(!instType || !RANKS) return [];
+  const rank = activeRank();
+  const records = (RANKS.MCC||[]).filter(r=>r.institution_type===instType);
+
+  const openMap = new Map(records.filter(r=>r.category==='OPEN').map(r=>[r.name, r.closing_rank]));
+  const userCatKey = keys.find(k=>k!=='OPEN');
+  const catMap = new Map((userCatKey ? records.filter(r=>r.category===userCatKey) : []).map(r=>[r.name, r.closing_rank]));
+
+  const best = new Map();
+  keys.forEach(k=>{
+    records.filter(r=>r.category===k).forEach(r=>{
+      const ex=best.get(r.name);
+      if(!ex || r.closing_rank>ex.closing_rank) best.set(r.name, r);
+    });
+  });
+
+  const cols=[];
+  best.forEach((rec,name)=>{
+    cols.push({
+      n:name,
+      openCutoff: openMap.has(name)?openMap.get(name):null,
+      catCutoff: catMap.has(name)?catMap.get(name):null,
+      c: rec.closing_rank,
+      s: rec.state||'',
+      prob: prob(rank, rec.closing_rank)
+    });
+  });
+  return cols;
+}
+
+function getColleges(stateKey,courseKey,keys,listType){
+  return RANK_MODE ? getCollegesRank(stateKey,courseKey,keys) : getCollegesLegacy(stateKey,courseKey,keys,listType);
+}
+
 const POOL_TO_STATE = {
   'MH Govt':'MH','MH Private':'MH','MH':'MH',
   'AIQ Govt':'AIQ','AIIMS':'AIIMS','JIPMER':'JIPMER','Central Univ.':'CENTRAL','Central':'CENTRAL',
@@ -2074,7 +2137,7 @@ async function downloadShortlistPDF(){
   const POOL_ORDER = ['MH Govt','MH Pvt','AIIMS','JIPMER','Central','Deemed','Karnataka',
     'Telangana','Andhra Pradesh','Uttar Pradesh','Kerala','Haryana','West Bengal',
     'Bihar','Uttarakhand','Chhattisgarh','Puducherry','Jharkhand','Tripura'];
-  const PROB_MAP = {safe:0,likely:1,borderline:2,reach:3};
+  const PROB_MAP = {safe:0,likely:1,borderline:2,out_of_reach:3};
 
   const sorted = [...shortlist].sort((a,b)=>{
     const pa = POOL_ORDER.indexOf(a.pool), pb = POOL_ORDER.indexOf(b.pool);
@@ -2247,12 +2310,26 @@ function toggleShortlist(name, pool, poolGroup, cutoff, probKey, fee, course, op
   if(tabs[1]) tabs[1].textContent = `★ My Shortlist (${shortlist.length})`;
 }
 
-function prob(score, cutoff){
+// LEGACY (FALLBACK) — original score+20-gap formula. Used only when RANK_MODE is false
+// (student has no rank yet). Remove once all students have ranks — see RANK_MODE.
+function probScore(score, cutoff){
   const projected = cutoff + 20;
   if(score >= projected + 20) return {key:'safe',       label:'Safe',         cls:'safe'};
   if(score >= projected)      return {key:'likely',     label:'Likely',       cls:'likely'};
   if(score >= projected - 10) return {key:'borderline', label:'Borderline',   cls:'borderline'};
-  return                             {key:'reach',      label:'Out of Reach', cls:'reach'};
+  return                             {key:'out_of_reach', label:'Out of Reach', cls:'out_of_reach'};
+}
+// Rank-based chance — mirrors counsellor/index.html's getChance() exactly (0.88/1.0/1.12 bands).
+// closingRank = worst AIR the college admitted across Round 1-3 (see closing_ranks_2025.json).
+function probRank(rank, closingRank){
+  if(closingRank==null || closingRank==='' || isNaN(closingRank)) return{key:'out_of_reach',label:'Out of Reach',cls:'out_of_reach'};
+  if(rank<=closingRank*0.88) return{key:'safe',      label:'Safe',       cls:'safe'};
+  if(rank<=closingRank)      return{key:'likely',    label:'Likely',     cls:'likely'};
+  if(rank<=closingRank*1.12) return{key:'borderline',label:'Borderline', cls:'borderline'};
+  return                            {key:'out_of_reach', label:'Out of Reach',cls:'out_of_reach'};
+}
+function prob(value, cutoff){
+  return RANK_MODE ? probRank(value, cutoff) : probScore(value, cutoff);
 }
 
 function feeStr(name) {
@@ -2333,8 +2410,9 @@ function getTop25(){
     }
   });
 
+  // 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
   function safeAndLikely(arr){
-    return arr.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'))
+    return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
               .sort((a,b)=>b.c-a.c);
   }
 
@@ -2434,8 +2512,9 @@ function getTop50(){
     }
   });
 
+  // 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
   function safeAndLikely(arr){
-    return arr.filter(c=>c.prob&&(c.prob.key==='safe'||c.prob.key==='likely'))
+    return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
               .sort((a,b)=>b.c-a.c);
   }
 
@@ -2499,17 +2578,23 @@ async function init(){
   document.getElementById('nextBtn').href='slide5_problems.html?token='+encodeURIComponent(token);
 
   try{
-    const[dbRes,feeRes,studentRes]=await Promise.all([
-      fetch(DB_URL).then(r=>r.json()),
+    const[dbRes,ranksRes,feeRes,studentRes]=await Promise.all([
+      fetch(DB_URL).then(r=>r.json()),      // LEGACY fallback source — see RANK_MODE below
+      fetch(RANKS_URL).then(r=>r.json()),
       fetch(FEE_URL).then(r=>r.json()),
       token?fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)+'&_t='+Date.now()).then(r=>r.json()):Promise.resolve({demo:true})
     ]);
-    DB=dbRes; FEE=feeRes;
+    DB=dbRes; RANKS=ranksRes; FEE=feeRes;
     STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
+    // RANK_MODE: on once the student has a real rank submitted (STUDENT.rank, Apps Script
+    // getStudent() column F). Demo/no-token sessions and students who haven't submitted a
+    // rank yet fall back to the legacy score-based path (see getCollegesLegacy etc.).
+    RANK_MODE = !!(STUDENT.rank && parseInt(STUDENT.rank,10) > 0);
 
     // Seed session
     const sess=getSess();
     if(!sess.score)    {const s=getSess();s.score=STUDENT.score;sessionStorage.setItem('asmi',JSON.stringify(s));}
+    if(!sess.rank)     {const s=getSess();s.rank=STUDENT.rank;sessionStorage.setItem('asmi',JSON.stringify(s));}
     if(!sess.category) {const s=getSess();s.category=STUDENT.category;sessionStorage.setItem('asmi',JSON.stringify(s));}
     if(!sess.course)   {const s=getSess();s.course=(STUDENT.courses||'MBBS').split(',')[0].trim();sessionStorage.setItem('asmi',JSON.stringify(s));}
     const s2=getSess();s2.token=STUDENT.token||token;sessionStorage.setItem('asmi',JSON.stringify(s2));
