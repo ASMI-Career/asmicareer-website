@@ -342,7 +342,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--bg);font-fam
         <span class="pc-val" id="tokenVal">—</span>
       </div>
       <div class="pc-row">
-        <span class="pc-key">NEET Score</span>
+        <span class="pc-key">NEET Rank (AIR)</span>
         <span class="pc-val big" id="scoreVal">—</span>
       </div>
       <div class="pc-row">
@@ -402,7 +402,7 @@ function populate(data) {
 
   document.getElementById('tokenVal').textContent    = data.token    || '—';
   document.getElementById('welcomeName').textContent = data.name ? 'Welcome, ' + data.name : 'Welcome';
-  document.getElementById('scoreVal').textContent    = data.score    || '—';
+  document.getElementById('scoreVal').textContent    = data.rank     || '—';
   document.getElementById('categoryVal').textContent = data.category || '—';
   // Budget pills (for pills section below)
   const budgetList = (data.budget || '').split(',').map(b => b.trim()).filter(Boolean);
