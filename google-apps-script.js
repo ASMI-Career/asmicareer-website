@@ -52,13 +52,13 @@ function getStudent(token) {
     return jsonOut({ error: 'not_found' });
   }
 
-  // Shortlist now lives as a single JSON string in column N (index 13) —
-  // replaces the old col 14-36 name/probability/cr spread (no legacy data to preserve).
-  let savedColleges = [];
+  // Shortlist lives as a single JSON string in column N (index 13), now grouped
+  // by counselling type: { "MCC": [...], "MH": [...], "OPEN": [...] }.
+  let savedColleges = {};
   try {
-    savedColleges = studentRow[13] ? JSON.parse(studentRow[13]) : [];
+    savedColleges = studentRow[13] ? JSON.parse(studentRow[13]) : {};
   } catch (err) {
-    savedColleges = [];
+    savedColleges = {};
   }
 
   const student = {
@@ -119,9 +119,17 @@ function saveShortlist(token, colleges) {
     return jsonOut({ error: 'not_found' });
   }
 
-  sheet.getRange(rowIndex, 14).setValue(JSON.stringify(colleges || []));
+  // colleges is now a grouped object { "MCC": [...], "MH": [...], "OPEN": [...] },
+  // not a flat array — stringify as-is, no legacy shape to preserve.
+  sheet.getRange(rowIndex, 14).setValue(JSON.stringify(colleges || {}));
 
-  return jsonOut({ success: true, count: (colleges || []).length });
+  var total = 0;
+  var groups = colleges || {};
+  for (var key in groups) {
+    if (Array.isArray(groups[key])) total += groups[key].length;
+  }
+
+  return jsonOut({ success: true, count: total });
 }
 
 function jsonOut(obj) {

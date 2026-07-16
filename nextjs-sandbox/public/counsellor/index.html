@@ -90,6 +90,53 @@
       color: #4a0080;
       line-height: 1.6;
     }
+
+    /* ── Per-counselling-type tabs ────────────────────────────── */
+    .pref-tabs {
+      display: none;
+      gap: 6px;
+      padding: 10px 12px 0;
+      flex-wrap: wrap;
+    }
+    .pref-tab-btn {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(106,13,173,0.15);
+      background: #fff;
+      color: #4a0080;
+      cursor: pointer;
+      transition: 0.15s;
+      white-space: nowrap;
+    }
+    .pref-tab-btn.active {
+      background: #1a0040;
+      color: #FFD700;
+      border-color: #1a0040;
+    }
+    .pref-tab-badge {
+      padding: 8px 12px 0;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pref-tab-badge-seg {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+    /* Same colors as the main table's typeBadgeClass logic (~line 1149-1152) — reused, not new */
+    .pref-tab-badge-seg.govt    { background: #dcfce7; color: #15803d; }
+    .pref-tab-badge-seg.private { background: #ffedd5; color: #c2410c; }
+    .pref-tab-badge-seg.deemed  { background: #EDE9FF; color: #6A0DAD; }
+    .pref-tab-badge-seg.other   { background: #f3f4f6; color: #374151; }
+
+    .pref-list-group { display: none; }
+    .pref-list-group.active { display: block; }
     .pref-item {
       display: flex;
       align-items: center;
@@ -230,6 +277,8 @@
        grow past its intended fixed width. */
     .right-col.collapsed { flex: 0 0 48px; min-width: 0; }
     .right-col.collapsed .pref-list,
+    .right-col.collapsed .pref-tabs,
+    .right-col.collapsed .pref-tab-badge,
     .right-col.collapsed .pref-actions,
     .right-col.collapsed .pref-title,
     .right-col.collapsed .pref-count { display: none; }
@@ -458,10 +507,15 @@
             <span class="pref-badge-collapsed" id="prefBadgeCollapsed"></span>
           </div>
 
-          <div class="pref-list" id="prefList">
+          <div class="pref-tabs" id="prefTabs"></div>
+          <div class="pref-tab-badge" id="prefTabBadge"></div>
+          <div class="pref-list" id="prefListWrap">
             <div class="pref-empty" id="prefEmptyMsg">
               Add colleges from the table using the + button
             </div>
+            <div class="pref-list-group" id="prefList-MCC" data-ctype="MCC"></div>
+            <div class="pref-list-group" id="prefList-MH" data-ctype="MH"></div>
+            <div class="pref-list-group" id="prefList-OPEN" data-ctype="OPEN"></div>
           </div>
 
           <div class="pref-actions">
@@ -492,6 +546,7 @@
     let selectedState = 'Karnataka';
     let selectedStates = []; // MCC state filter (multi-select, client-side)
     let currentSort = 'r1-asc'; // main table sort key
+    let activePrefTab = null; // which counselling-type tab is showing in the preference panel
 
     // MH State defaults
     let mhQuota = 'GOVT_MBBS';
@@ -1347,26 +1402,99 @@
       const badgeEl = document.getElementById('prefBadgeCollapsed');
       if (!badgeEl) return;
       const items = [...document.querySelectorAll('.pref-item')];
-      const counts = { Govt: 0, Deemed: 0, Private: 0, Other: 0 };
+      const typeCounts = { Govt: 0, Deemed: 0, Private: 0, Other: 0 };
+      const quotaCounts = { MCC: 0, MH: 0, OPEN: 0 };
       items.forEach(it => {
         const nt = it.dataset.normtype || 'Other';
-        if (counts[nt] === undefined) counts[nt] = 0;
-        counts[nt]++;
+        if (typeCounts[nt] === undefined) typeCounts[nt] = 0;
+        typeCounts[nt]++;
+        const ct = it.dataset.counsellingType;
+        if (quotaCounts[ct] !== undefined) quotaCounts[ct]++;
       });
-      const parts = [];
+      const typeParts = [];
       ['Govt', 'Deemed', 'Private', 'Other'].forEach(k => {
-        if (counts[k] > 0) parts.push(`${counts[k]} ${k}`);
+        if (typeCounts[k] > 0) typeParts.push(`${typeCounts[k]} ${k}`);
       });
-      // Collapsed strip is only ~48px wide — full "X Govt · Y Deemed..." text is
-      // illegible at that width (and risks forcing the flex item wider than its
-      // fixed basis). Show just the total as a small circular badge; the full
-      // breakdown is available on hover via the title attribute.
+      const quotaLabels = { MCC: 'MCC', MH: 'MH', OPEN: 'Open' };
+      const quotaParts = [];
+      ['MCC', 'MH', 'OPEN'].forEach(k => {
+        if (quotaCounts[k] > 0) quotaParts.push(`${quotaLabels[k]}: ${quotaCounts[k]}`);
+      });
+      // Collapsed strip is only ~48px wide — full breakdown text is illegible at
+      // that width (and risks forcing the flex item wider than its fixed basis).
+      // Show just the grand total as a small circular badge; the per-quota and
+      // per-type breakdown is available on hover via the title attribute.
       badgeEl.textContent = items.length ? String(items.length) : '';
-      badgeEl.title = items.length ? `${parts.join(' · ')} (${items.length} shortlisted)` : '';
+      badgeEl.title = items.length
+        ? `${quotaParts.join(' · ')}\n${typeParts.join(' · ')} (${items.length} shortlisted)`
+        : '';
       // CSS shows this circle unconditionally whenever collapsed; with zero items
       // that rendered as an empty navy dot with no digit. Hide it entirely until
       // there's something to report.
       badgeEl.style.display = items.length ? '' : 'none';
+    }
+
+    // ── Preference tabs (per counselling type) ──────────────────
+    function renderPrefTabs() {
+      const tabsEl = document.getElementById('prefTabs');
+      const tabBadgeEl = document.getElementById('prefTabBadge');
+      const emptyMsg = document.getElementById('prefEmptyMsg');
+      if (!tabsEl || !tabBadgeEl || !emptyMsg) return;
+
+      const labels = { MCC: 'MCC AIQ', MH: 'MH State', OPEN: 'Open States' };
+      const counts = {};
+      ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+        counts[ctype] = document.querySelectorAll(`#prefList-${ctype} .pref-item`).length;
+      });
+      const nonEmpty = ['MCC', 'MH', 'OPEN'].filter(ctype => counts[ctype] > 0);
+
+      if (!nonEmpty.length) {
+        tabsEl.style.display = 'none';
+        tabsEl.innerHTML = '';
+        tabBadgeEl.innerHTML = '';
+        emptyMsg.style.display = '';
+        ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+          const group = document.getElementById('prefList-' + ctype);
+          if (group) group.classList.remove('active');
+        });
+        return;
+      }
+
+      emptyMsg.style.display = 'none';
+
+      if (!activePrefTab || !nonEmpty.includes(activePrefTab)) {
+        activePrefTab = nonEmpty.includes(selectedCounselling) ? selectedCounselling : nonEmpty[0];
+      }
+
+      tabsEl.style.display = 'flex';
+      tabsEl.innerHTML = nonEmpty.map(ctype => {
+        const isActive = ctype === activePrefTab;
+        return `<button class="pref-tab-btn ${isActive ? 'active' : ''}" onclick="setPrefTab('${ctype}')">${labels[ctype]} <span style="opacity:0.7">(${counts[ctype]})</span></button>`;
+      }).join('');
+
+      ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+        const group = document.getElementById('prefList-' + ctype);
+        if (group) group.classList.toggle('active', ctype === activePrefTab);
+      });
+
+      // Per-tab Govt/Deemed/Private breakdown — same colors as the main table's typeBadgeClass
+      const activeItems = [...document.querySelectorAll(`#prefList-${activePrefTab} .pref-item`)];
+      const typeCounts = { Govt: 0, Deemed: 0, Private: 0, Other: 0 };
+      activeItems.forEach(it => {
+        const nt = it.dataset.normtype || 'Other';
+        if (typeCounts[nt] === undefined) typeCounts[nt] = 0;
+        typeCounts[nt]++;
+      });
+      const segClass = { Govt: 'govt', Private: 'private', Deemed: 'deemed', Other: 'other' };
+      tabBadgeEl.innerHTML = ['Govt', 'Deemed', 'Private', 'Other']
+        .filter(k => typeCounts[k] > 0)
+        .map(k => `<span class="pref-tab-badge-seg ${segClass[k]}">${typeCounts[k]} ${k}</span>`)
+        .join('');
+    }
+
+    function setPrefTab(ctype) {
+      activePrefTab = ctype;
+      renderPrefTabs();
     }
 
     function syncAddButtonsWithPreferenceList() {
@@ -1404,7 +1532,7 @@
         return;
       }
 
-      addPreferenceItem({ name, meta, state, type, quota, fees, r1air, r2air, r3air, chanceKey, chanceLabel });
+      addPreferenceItem({ name, meta, state, type, quota, fees, r1air, r2air, r3air, chanceKey, chanceLabel, counsellingType: selectedCounselling });
       btn.textContent = '✓';
       btn.classList.add('added');
       if (row) row.classList.add('added-row');
@@ -1412,9 +1540,8 @@
     }
 
     function addPreferenceItem(data) {
-      const list = document.getElementById('prefList');
-      const emptyMsg = document.getElementById('prefEmptyMsg');
-      if (emptyMsg) emptyMsg.remove();
+      const ctype = data.counsellingType || 'MCC';
+      const list = document.getElementById('prefList-' + ctype) || document.getElementById('prefList-MCC');
 
       const item = document.createElement('div');
       item.className = 'pref-item';
@@ -1431,9 +1558,10 @@
       item.dataset.r3air = data.r3air;
       item.dataset.chancekey = data.chanceKey;
       item.dataset.chancelabel = data.chanceLabel;
+      item.dataset.counsellingType = ctype;
 
       item.innerHTML = `
-        <span class="pref-num">${document.querySelectorAll('.pref-item').length + 1}</span>
+        <span class="pref-num">${list.querySelectorAll('.pref-item').length + 1}</span>
         <span class="drag-handle">≡</span>
         <div class="pref-info">
           <div class="pref-name">${data.name}</div>
@@ -1449,21 +1577,25 @@
     }
 
     // ── Load saved shortlist on page open (from getStudent's saved_colleges) ──
-    function loadSavedShortlist(saved) {
-      if (!Array.isArray(saved) || !saved.length) return;
-      saved.forEach(c => {
-        addPreferenceItem({
-          name: c.name,
-          meta: c.meta,
-          state: c.state,
-          type: c.type,
-          quota: c.quota,
-          fees: c.fees,
-          r1air: c.r1air,
-          r2air: c.r2air,
-          r3air: c.r3air,
-          chanceKey: c.chancekey,
-          chanceLabel: c.chancelabel,
+    function loadSavedShortlist(savedGrouped) {
+      if (!savedGrouped || typeof savedGrouped !== 'object') return;
+      ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+        const arr = Array.isArray(savedGrouped[ctype]) ? savedGrouped[ctype] : [];
+        arr.forEach(c => {
+          addPreferenceItem({
+            name: c.name,
+            meta: c.meta,
+            state: c.state,
+            type: c.type,
+            quota: c.quota,
+            fees: c.fees,
+            r1air: c.r1air,
+            r2air: c.r2air,
+            r3air: c.r3air,
+            chanceKey: c.chancekey,
+            chanceLabel: c.chancelabel,
+            counsellingType: ctype,
+          });
         });
       });
     }
@@ -1480,20 +1612,25 @@
         return;
       }
 
-      const colleges = items.map(item => ({
-        name: item.dataset.name,
-        meta: item.dataset.meta,
-        state: item.dataset.state,
-        type: item.dataset.type,
-        quota: item.dataset.quota,
-        fees: item.dataset.fees,
-        r1air: item.dataset.r1air,
-        r2air: item.dataset.r2air,
-        r3air: item.dataset.r3air,
-        chancekey: item.dataset.chancekey,
-        chancelabel: item.dataset.chancelabel,
-        normtype: item.dataset.normtype,
-      }));
+      const collegesGrouped = { MCC: [], MH: [], OPEN: [] };
+      items.forEach(item => {
+        const ctype = item.dataset.counsellingType || 'MCC';
+        if (!collegesGrouped[ctype]) collegesGrouped[ctype] = [];
+        collegesGrouped[ctype].push({
+          name: item.dataset.name,
+          meta: item.dataset.meta,
+          state: item.dataset.state,
+          type: item.dataset.type,
+          quota: item.dataset.quota,
+          fees: item.dataset.fees,
+          r1air: item.dataset.r1air,
+          r2air: item.dataset.r2air,
+          r3air: item.dataset.r3air,
+          chancekey: item.dataset.chancekey,
+          chancelabel: item.dataset.chancelabel,
+          normtype: item.dataset.normtype,
+        });
+      });
 
       const originalText = btn.textContent;
       btn.disabled = true;
@@ -1505,7 +1642,7 @@
         const res = await fetch(APPS_SCRIPT_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges }),
+          body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges: collegesGrouped }),
         });
         const json = await res.json();
         if (json && json.success) {
@@ -1540,11 +1677,8 @@
         }
         row?.classList.remove('added-row');
       }
-
-      const list = document.getElementById('prefList');
-      if (!list.querySelector('.pref-item')) {
-        list.innerHTML = `<div class="pref-empty" id="prefEmptyMsg">Add colleges from the table using the + button</div>`;
-      }
+      // Empty-state / tab visibility is now handled centrally by renderPrefTabs(),
+      // called via renumberPreferences() -> updatePrefCount() above.
     }
 
     function clearPreferences() {
@@ -1554,8 +1688,11 @@
       });
       document.querySelectorAll('tr.added-row').forEach(row => row.classList.remove('added-row'));
 
-      const list = document.getElementById('prefList');
-      list.innerHTML = `<div class="pref-empty" id="prefEmptyMsg">Add colleges from the table using the + button</div>`;
+      ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+        const group = document.getElementById('prefList-' + ctype);
+        if (group) group.innerHTML = '';
+      });
+      activePrefTab = null;
       updatePrefCount();
     }
 
@@ -1587,8 +1724,14 @@
     }
 
     function renumberPreferences() {
-      document.querySelectorAll('.pref-item').forEach((item, i) => {
-        item.querySelector('.pref-num').textContent = i + 1;
+      // Numbering is per-tab (per counselling type), not global — each group
+      // renumbers its own children independently.
+      ['MCC', 'MH', 'OPEN'].forEach(ctype => {
+        const group = document.getElementById('prefList-' + ctype);
+        if (!group) return;
+        group.querySelectorAll('.pref-item').forEach((item, i) => {
+          item.querySelector('.pref-num').textContent = i + 1;
+        });
       });
       updatePrefCount();
     }
@@ -1596,6 +1739,7 @@
     function updatePrefCount() {
       const count = document.querySelectorAll('.pref-item').length;
       document.getElementById('prefCount').textContent = count;
+      renderPrefTabs();
       updatePrefBadge();
     }
 
