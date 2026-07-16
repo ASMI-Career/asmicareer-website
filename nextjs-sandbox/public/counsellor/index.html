@@ -195,13 +195,12 @@
     .pref-toggle-btn:hover { background: rgba(106,13,173,0.08); }
     .pref-badge-collapsed {
       display: none;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      color: #4a0080;
-      line-height: 1.4;
     }
-    .right-col.collapsed { flex: 0 0 60px; }
+    /* min-width:0 is required — flex items default to min-width:auto, which lets
+       content (e.g. wide text) force the item past its flex-basis regardless of
+       the basis value. Without this override the collapsed strip can silently
+       grow past its intended fixed width. */
+    .right-col.collapsed { flex: 0 0 48px; min-width: 0; }
     .right-col.collapsed .pref-list,
     .right-col.collapsed .pref-actions,
     .right-col.collapsed .pref-title,
@@ -209,15 +208,23 @@
     .right-col.collapsed .pref-header {
       flex-direction: column;
       align-items: center;
-      padding: 14px 6px;
+      padding: 12px 4px;
       gap: 10px;
     }
     .right-col.collapsed .pref-badge-collapsed {
-      display: block;
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      text-align: center;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: #1a0040;
+      color: #FFD700;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: default;
     }
 
     /* ── Year switcher ───────────────────────────────────────── */
@@ -244,12 +251,8 @@
       .pref-name { font-size: 10.5px; }
       .pref-meta { font-size: 9px; }
 
-      .right-col.collapsed { flex: none; max-height: 56px; overflow: hidden; }
+      .right-col.collapsed { flex: none; min-width: 0; max-height: 56px; overflow: hidden; }
       .right-col.collapsed .pref-header { flex-direction: row; padding: 10px 16px; }
-      .right-col.collapsed .pref-badge-collapsed {
-        writing-mode: horizontal-tb;
-        text-orientation: initial;
-      }
     }
 
     @media (max-width: 480px) {
@@ -1308,7 +1311,12 @@
       ['Govt', 'Deemed', 'Private', 'Other'].forEach(k => {
         if (counts[k] > 0) parts.push(`${counts[k]} ${k}`);
       });
-      badgeEl.textContent = items.length ? `${parts.join(' · ')} (${items.length} shortlisted)` : '';
+      // Collapsed strip is only ~48px wide — full "X Govt · Y Deemed..." text is
+      // illegible at that width (and risks forcing the flex item wider than its
+      // fixed basis). Show just the total as a small circular badge; the full
+      // breakdown is available on hover via the title attribute.
+      badgeEl.textContent = items.length ? String(items.length) : '';
+      badgeEl.title = items.length ? `${parts.join(' · ')} (${items.length} shortlisted)` : '';
     }
 
     function syncAddButtonsWithPreferenceList() {
