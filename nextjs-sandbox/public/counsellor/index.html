@@ -1207,7 +1207,11 @@
         // selected quota folder instead of expecting it in the data. MCC/OPEN
         // already carry a real `type` field, so this only fires for MH.
         if (isMH && !college.type) {
-          college.type = mhQuota === 'GOVT_MBBS' ? 'Govt' : 'Private';
+          // IQ_BDS is a distinct Institutional Quota, not Govt or Private (confirmed from
+          // source data) — keep it as its own label rather than lumping it into "Private".
+          college.type = mhQuota.startsWith('GOVT_') ? 'Govt'
+            : mhQuota.startsWith('IQ_') ? 'IQ'
+            : 'Private';
         }
 
         let typeBadgeClass = 'bg-gray-100 text-gray-700';
