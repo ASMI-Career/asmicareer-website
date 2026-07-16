@@ -1,0 +1,139 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "GOVT_BDS",
+  "category": "NT_2",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": 2101,
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 83392,
+          "SML": 7029,
+          "Score": "NT(C)-347"
+        },
+        "Stray Round 2": {
+          "Intake": 476,
+          "AIR": 1,
+          "SML": 132664,
+          "Score": 11081
+        },
+        "Stray Round 3": {
+          "Intake": "NT(C)-564",
+          "AIR": 553,
+          "SML": 0,
+          "Score": "-"
+        }
+      }
+    },
+    {
+      "code": 2102,
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 106402,
+          "SML": 9009,
+          "Score": "NT(C)-450"
+        },
+        "Stray Round 2": {
+          "Intake": 460,
+          "AIR": 1,
+          "SML": 112440,
+          "Score": 9510
+        },
+        "Stray Round 3": {
+          "Intake": "NT(C)-478",
+          "AIR": 557,
+          "SML": 0,
+          "Score": "-"
+        }
+      }
+    },
+    {
+      "code": 2136,
+      "name": "Government Dental College, Jalgaon",
+      "establishment": 2025,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": "-",
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 2": {
+          "Intake": "-",
+          "AIR": 0,
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 3": {
+          "Intake": "-",
+          "AIR": "-",
+          "SML": 0,
+          "Score": "-"
+        }
+      }
+    },
+    {
+      "code": 2207,
+      "name": "Government Dental College, Nagpur",
+      "establishment": 1968,
+      "fees": "11,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 119755,
+          "SML": 10077,
+          "Score": "NT(C)-513"
+        },
+        "Stray Round 2": {
+          "Intake": 451,
+          "AIR": 0,
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 3": {
+          "Intake": "-",
+          "AIR": "-",
+          "SML": 0,
+          "Score": "-"
+        }
+      }
+    },
+    {
+      "code": 2313,
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "-",
+      "rounds": {
+        "Round 1": {
+          "Intake": "-",
+          "AIR": "-",
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 2": {
+          "Intake": "-",
+          "AIR": 0,
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 3": {
+          "Intake": "-",
+          "AIR": "-",
+          "SML": 0,
+          "Score": "-"
+        }
+      }
+    }
+  ]
+}

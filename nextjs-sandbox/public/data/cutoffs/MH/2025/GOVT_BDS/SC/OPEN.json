@@ -1,0 +1,109 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "GOVT_BDS",
+  "category": "SC",
+  "sub_type": "OPEN ",
+  "colleges": [
+    {
+      "code": 2101,
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 195314,
+          "SML": 15618,
+          "Score": "SC-1073"
+        },
+        "Stray Round 2": {
+          "Intake": 408,
+          "AIR": 3,
+          "SML": 209900,
+          "Score": 16616
+        }
+      }
+    },
+    {
+      "code": 2102,
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 197310,
+          "SML": 15760,
+          "Score": "SC-1098"
+        },
+        "Stray Round 2": {
+          "Intake": 407,
+          "AIR": 3,
+          "SML": 211219,
+          "Score": 16694
+        }
+      }
+    },
+    {
+      "code": 2136,
+      "name": "Government Dental College, Jalgaon ",
+      "establishment": 2025,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 218054,
+          "SML": 17143,
+          "Score": "SC-1296"
+        },
+        "Stray Round 2": {
+          "Intake": 396,
+          "AIR": 3,
+          "SML": 235354,
+          "Score": 18219
+        }
+      }
+    },
+    {
+      "code": 2207,
+      "name": "Government Dental College, Nagpur",
+      "establishment": 1968,
+      "fees": "11,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 205512,
+          "SML": 16314,
+          "Score": "SC-1174"
+        },
+        "Stray Round 2": {
+          "Intake": 402,
+          "AIR": 0,
+          "SML": 213641,
+          "Score": 16843
+        }
+      }
+    },
+    {
+      "code": 2313,
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "11,150/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 209742,
+          "SML": 16607,
+          "Score": "SC-1216"
+        },
+        "Stray Round 2": {
+          "Intake": 400,
+          "AIR": 3,
+          "SML": 222744,
+          "Score": 17419
+        }
+      }
+    }
+  ]
+}

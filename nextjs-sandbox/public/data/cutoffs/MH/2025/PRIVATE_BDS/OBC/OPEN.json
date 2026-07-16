@@ -1,0 +1,509 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "PRIVATE_BDS",
+  "category": "OBC",
+  "sub_type": "OPEN",
+  "colleges": [
+    {
+      "code": 2123,
+      "name": "M.G.M. Dental College, Navi Mumbai",
+      "establishment": 2003,
+      "fees": "2,31,740/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 133985,
+          "SML": 11167,
+          "Score": "OBC-3279"
+        },
+        "Stray Round 2": {
+          "Intake": 443,
+          "AIR": 1,
+          "SML": 140420,
+          "Score": 11688
+        }
+      }
+    },
+    {
+      "code": 2115,
+      "name": "Y.M.T. Dental College & Hospital, Navi Mumbai",
+      "establishment": 2000,
+      "fees": "2,08,364/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 173579,
+          "SML": 14091,
+          "Score": "OBC-4146"
+        },
+        "Stray Round 2": {
+          "Intake": 420,
+          "AIR": 5,
+          "SML": 224113,
+          "Score": 17510
+        }
+      }
+    },
+    {
+      "code": 2122,
+      "name": "Terna Dental College, Navi Mumbai",
+      "establishment": 2002,
+      "fees": "2,09,000/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 185534,
+          "SML": 14913,
+          "Score": "OBC-4353"
+        },
+        "Stray Round 2": {
+          "Intake": 413,
+          "AIR": 5,
+          "SML": 234067,
+          "Score": 18135
+        }
+      }
+    },
+    {
+      "code": 2314,
+      "name": "C.S.M.S.S.\u2019s Dental College & Hospital, Aurangabad",
+      "establishment": 1991,
+      "fees": "1,59,250/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 197931,
+          "SML": 15804,
+          "Score": "OBC-4593"
+        },
+        "Stray Round 2": {
+          "Intake": 406,
+          "AIR": 6,
+          "SML": 241920,
+          "Score": 18644
+        }
+      }
+    },
+    {
+      "code": 2212,
+      "name": "VSPM's Dental College, Nagpur",
+      "establishment": 1996,
+      "fees": "2,12,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 241580,
+          "SML": 18621,
+          "Score": "OBC-5402"
+        },
+        "Stray Round 2": {
+          "Intake": 384,
+          "AIR": 5,
+          "SML": 287623,
+          "Score": 21427
+        }
+      }
+    },
+    {
+      "code": 2124,
+      "name": "Sinhagad Dental College & Hospital, Pune",
+      "establishment": 2006,
+      "fees": "3,45,913/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 226977,
+          "SML": 17693,
+          "Score": "OBC-5151"
+        },
+        "Stray Round 2": {
+          "Intake": 391,
+          "AIR": 5,
+          "SML": 277982,
+          "Score": 20870
+        }
+      }
+    },
+    {
+      "code": 2116,
+      "name": "D Y Patil Dental College, Lohgaon",
+      "establishment": 2011,
+      "fees": "2,09,413/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 232490,
+          "SML": 18041,
+          "Score": "OBC-5244"
+        },
+        "Stray Round 2": {
+          "Intake": 389,
+          "AIR": 6,
+          "SML": 287939,
+          "Score": 21446
+        }
+      }
+    },
+    {
+      "code": 2105,
+      "name": "MGV\u2019s KBH Dental College & Hospital, Nashik",
+      "establishment": 1991,
+      "fees": "2,07,435/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 237534,
+          "SML": 18356,
+          "Score": "OBC-5333"
+        },
+        "Stray Round 2": {
+          "Intake": 386,
+          "AIR": 4,
+          "SML": 288597,
+          "Score": 21490
+        }
+      }
+    },
+    {
+      "code": 2104,
+      "name": "Vasantdada Patil Dental College, Sangli",
+      "establishment": 1989,
+      "fees": "2,00,455/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 203543,
+          "SML": 16189,
+          "Score": "OBC-4701"
+        },
+        "Stray Round 2": {
+          "Intake": 404,
+          "AIR": 2,
+          "SML": 274048,
+          "Score": 20650
+        }
+      }
+    },
+    {
+      "code": 2121,
+      "name": "A.C.P.M. Dental College, Dhule",
+      "establishment": 2002,
+      "fees": "1,07,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 288597,
+          "SML": 21490,
+          "Score": "OBC-6147"
+        },
+        "Stray Round 2": {
+          "Intake": 362,
+          "AIR": 5,
+          "SML": 357094,
+          "Score": 25706
+        }
+      }
+    },
+    {
+      "code": 2135,
+      "name": "SMBT Institute of Dental Sciences & Research, Nashik",
+      "establishment": 2016,
+      "fees": "2,26,122/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 270508,
+          "SML": 20422,
+          "Score": "OBC-5864"
+        },
+        "Stray Round 2": {
+          "Intake": 371,
+          "AIR": 5,
+          "SML": 335137,
+          "Score": 24380
+        }
+      }
+    },
+    {
+      "code": 2325,
+      "name": "Maharashtra Institute of Dental Sciences & Research, Latur",
+      "establishment": 2006,
+      "fees": "1,63,884/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 263231,
+          "SML": 19962,
+          "Score": "OBC-5745"
+        },
+        "Stray Round 2": {
+          "Intake": 374,
+          "AIR": 5,
+          "SML": 358269,
+          "Score": 25788
+        }
+      }
+    },
+    {
+      "code": 2117,
+      "name": "Sau. Mathurabai Bhausaheb Thorat Dental College & Hospital, Sangamner",
+      "establishment": 2001,
+      "fees": "2,52,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 288449,
+          "SML": 21475,
+          "Score": "OBC-6141"
+        },
+        "Stray Round 2": {
+          "Intake": 362,
+          "AIR": 5,
+          "SML": 358469,
+          "Score": 25803
+        }
+      }
+    },
+    {
+      "code": 2120,
+      "name": "Tatyasaheb Kore Dental College & Research Centre, Kolhapur",
+      "establishment": 2002,
+      "fees": "1,43,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 267944,
+          "SML": 20257,
+          "Score": "OBC-5824"
+        },
+        "Stray Round 2": {
+          "Intake": 372,
+          "AIR": 4,
+          "SML": 375917,
+          "Score": 26881
+        }
+      }
+    },
+    {
+      "code": 2230,
+      "name": "Swargiya Dadasaheb Kalmegh Smruti Dental College & Hospital, Nagpur",
+      "establishment": 2006,
+      "fees": "1,52,000/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 320340,
+          "SML": 23463,
+          "Score": "OBC-6689"
+        },
+        "Stray Round 2": {
+          "Intake": 348,
+          "AIR": 5,
+          "SML": 389764,
+          "Score": 27750
+        }
+      }
+    },
+    {
+      "code": 2134,
+      "name": "Late Shri. YCM Dental College & Hospital, Ahmednagar",
+      "establishment": 2007,
+      "fees": "2,28,000/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 328508,
+          "SML": 23973,
+          "Score": "OBC-6815"
+        },
+        "Stray Round 2": {
+          "Intake": 345,
+          "AIR": 5,
+          "SML": 400044,
+          "Score": 28380
+        }
+      }
+    },
+    {
+      "code": 2118,
+      "name": "P.D.U. Dental College, Solapur",
+      "establishment": 2001,
+      "fees": "1,12,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 313232,
+          "SML": 23070,
+          "Score": "OBC-6578"
+        },
+        "Stray Round 2": {
+          "Intake": 351,
+          "AIR": 6,
+          "SML": 402335,
+          "Score": 28512
+        }
+      }
+    },
+    {
+      "code": 2127,
+      "name": "Yogita Dental College, Khed",
+      "establishment": 2008,
+      "fees": "1,58,000/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 344238,
+          "SML": 24905,
+          "Score": "OBC-7066"
+        },
+        "Stray Round 2": {
+          "Intake": 338,
+          "AIR": 4,
+          "SML": 408633,
+          "Score": 28904
+        }
+      }
+    },
+    {
+      "code": 2211,
+      "name": "V.Y.W.S. Dental College & Hospital, Amaravati",
+      "establishment": 1989,
+      "fees": "1,65,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 344482,
+          "SML": 24920,
+          "Score": "OBC-7073"
+        },
+        "Stray Round 2": {
+          "Intake": 338,
+          "AIR": 4,
+          "SML": 415414,
+          "Score": 29294
+        }
+      }
+    },
+    {
+      "code": 2333,
+      "name": "Nanded Rural Dental College & Research Centre, Nanded",
+      "establishment": 2014,
+      "fees": "1,37,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 320096,
+          "SML": 23444,
+          "Score": "OBC-6683"
+        },
+        "Stray Round 2": {
+          "Intake": 348,
+          "AIR": 6,
+          "SML": 406913,
+          "Score": 28806
+        }
+      }
+    },
+    {
+      "code": 2229,
+      "name": "Dr. Rajesh Ramdasji Kambe Dental College & Hospital, Akola",
+      "establishment": 2015,
+      "fees": "1,42,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 365634,
+          "SML": 26265,
+          "Score": "OBC-7433"
+        },
+        "Stray Round 2": {
+          "Intake": 329,
+          "AIR": 4,
+          "SML": 444706,
+          "Score": 31046
+        }
+      }
+    },
+    {
+      "code": 2326,
+      "name": "Saraswati Dhanwantari Dental College & Hospital, Parbhani",
+      "establishment": 2007,
+      "fees": "1,81,750/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 366837,
+          "SML": 26336,
+          "Score": "OBC-7454"
+        },
+        "Stray Round 2": {
+          "Intake": 329,
+          "AIR": 4,
+          "SML": 443364,
+          "Score": 30979
+        }
+      }
+    },
+    {
+      "code": 2332,
+      "name": "Dr. Hedgewar Smruti Rugna Seva Mandal\u2019s Dental College & Hospital, Hingoli",
+      "establishment": 2008,
+      "fees": "1,07,500/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 369582,
+          "SML": 26502,
+          "Score": "OBC-7496"
+        },
+        "Stray Round 2": {
+          "Intake": 328,
+          "AIR": 5,
+          "SML": 460150,
+          "Score": 32006
+        }
+      }
+    },
+    {
+      "code": 2331,
+      "name": "Aditya Dental College, Beed",
+      "establishment": 2006,
+      "fees": "2,04,250/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 381445,
+          "SML": 27209,
+          "Score": "OBC-7684"
+        },
+        "Stray Round 2": {
+          "Intake": 323,
+          "AIR": 6,
+          "SML": 462609,
+          "Score": 32166
+        }
+      }
+    },
+    {
+      "code": 2119,
+      "name": "M.A. Rangoonwala Dental College, Pune",
+      "establishment": 2000,
+      "fees": "-",
+      "rounds": {
+        "Round 1": {
+          "Intake": "-",
+          "AIR": "-",
+          "SML": "-",
+          "Score": "-"
+        },
+        "Stray Round 2": {
+          "Intake": "-",
+          "AIR": 0,
+          "SML": "-",
+          "Score": "-"
+        }
+      }
+    }
+  ]
+}

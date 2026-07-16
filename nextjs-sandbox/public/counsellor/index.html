@@ -569,7 +569,13 @@
 
     const MH_DATA_MAP = {
       "GOVT_MBBS": {"DEF_1": ["FEMALE", "GENERAL"], "DEF_2": ["FEMALE", "GENERAL"], "DEF_3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NT1": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT2": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT3": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"]},
-      "PRIVATE_MBBS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
+      "PRIVATE_MBBS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      // BDS quotas — subtype file is named "OPEN" here (not "GENERAL" like the MBBS quotas
+      // above); folder names use NT_1/NT_2/NT_3 (underscored), unlike MBBS's NT1/NT2/NT3.
+      // Both confirmed against the actual delivered files, not assumed.
+      "GOVT_BDS": {"DEF_1": ["FEMALE", "OPEN"], "DEF_2": ["FEMALE", "OPEN"], "DEF_3": ["FEMALE", "OPEN"], "EWS": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "OPEN"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "OPEN", "ORPHAN", "PWD"]},
+      "PRIVATE_BDS": {"NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "OPEN"], "OPEN": ["FEMALE", "OPEN"], "SC": ["FEMALE", "OPEN"], "SEBC": ["FEMALE", "OPEN"], "ST": ["FEMALE", "OPEN"], "VJ": ["FEMALE", "OPEN"]},
+      "IQ_BDS": {"IQ": ["IQ"]}
     };
 
     const OPEN_STATES = [
@@ -881,7 +887,10 @@
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
          const quotas = [
            { id: 'GOVT_MBBS', label: 'Govt MBBS' },
-           { id: 'PRIVATE_MBBS', label: 'Private MBBS' }
+           { id: 'PRIVATE_MBBS', label: 'Private MBBS' },
+           { id: 'GOVT_BDS', label: 'Govt BDS' },
+           { id: 'PRIVATE_BDS', label: 'Private BDS' },
+           { id: 'IQ_BDS', label: 'IQ BDS' }
          ];
          quotas.forEach(q => {
             const isSel = mhQuota === q.id;
