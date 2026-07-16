@@ -183,6 +183,31 @@
     }
     .pref-clear:hover { color: #b91c1c; }
 
+    .pref-save {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.15s;
+      background: #15803d;
+      color: #fff;
+    }
+    .pref-save:hover { opacity: 0.88; }
+    .pref-save:disabled { opacity: 0.6; cursor: not-allowed; }
+    .pref-save-status {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      min-height: 14px;
+    }
+    .pref-save-status.ok  { color: #15803d; }
+    .pref-save-status.err { color: #b91c1c; }
+
     /* ── Preference panel collapse ───────────────────────────── */
     .pref-toggle-btn {
       background: none;
@@ -440,6 +465,8 @@
           </div>
 
           <div class="pref-actions">
+            <button class="pref-save" id="prefSaveBtn" onclick="saveShortlistToServer()">Save Shortlist</button>
+            <div class="pref-save-status" id="prefSaveStatus"></div>
             <button class="pref-export excel" onclick="exportExcel()">Export Excel →</button>
             <button class="pref-export pdf" onclick="exportPDF()">Export PDF →</button>
             <button class="pref-clear" onclick="clearPreferences()">Clear All</button>
@@ -454,6 +481,8 @@
   <script>
     let RANK = null;
     let STUDENT = {};
+    let PAGE_TOKEN = null;
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
     let strayVisible = false;
     let currentData = null;
     let currentYear = '2025';
@@ -524,12 +553,12 @@
 
       const params = new URLSearchParams(window.location.search);
       const token = params.get('token');
+      PAGE_TOKEN = token;
 
       let fetchedRank = null;
       let fetchedScore = null;
       if (token && token.trim() !== '') {
         try {
-          const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
           const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
           const json = await res.json();
           if (json.success && json.data) {
@@ -539,6 +568,7 @@
             const rawScore = json.data.score || json.data.neet_score;
             if (rawRank  && rawRank  !== 0) fetchedRank  = parseInt(rawRank,  10);
             if (rawScore && rawScore !== 0) fetchedScore = parseInt(rawScore, 10);
+            loadSavedShortlist(json.data.saved_colleges);
           }
         } catch(e) {
           console.warn('Rank fetch failed:', e);
@@ -1054,14 +1084,14 @@
         headerRow1 += `
           <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Category</th>
           <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[90px] w-[90px] whitespace-nowrap">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
       } else {
         headerRow1 += `
           <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
           <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[70px] w-[70px]">Est.</th>
+          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[90px] w-[90px] whitespace-nowrap">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
         if (isKeralaMQ) {
@@ -1169,7 +1199,7 @@
                   <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
                   <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
                 </td>
-                <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+                <td class="px-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
                 <td class="px-4 py-4 font-medium">${feesDisplay}</td>
               `;
 
@@ -1226,7 +1256,7 @@
             <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
             <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
           </td>
-          <td class="px-4 py-4 text-gray-700">${college.establishment || '-'}</td>
+          <td class="px-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
           <td class="px-4 py-4 font-medium">${feesDisplay}</td>
         `;
         if (isKeralaMQ) {
@@ -1416,6 +1446,83 @@
       list.appendChild(item);
       initDragDrop();
       updatePrefCount();
+    }
+
+    // ── Load saved shortlist on page open (from getStudent's saved_colleges) ──
+    function loadSavedShortlist(saved) {
+      if (!Array.isArray(saved) || !saved.length) return;
+      saved.forEach(c => {
+        addPreferenceItem({
+          name: c.name,
+          meta: c.meta,
+          state: c.state,
+          type: c.type,
+          quota: c.quota,
+          fees: c.fees,
+          r1air: c.r1air,
+          r2air: c.r2air,
+          r3air: c.r3air,
+          chanceKey: c.chancekey,
+          chanceLabel: c.chancelabel,
+        });
+      });
+    }
+
+    // ── Save shortlist to server (explicit button, no auto-save) ──
+    async function saveShortlistToServer() {
+      const btn = document.getElementById('prefSaveBtn');
+      const statusEl = document.getElementById('prefSaveStatus');
+      const items = [...document.querySelectorAll('.pref-item')];
+
+      if (!PAGE_TOKEN) {
+        statusEl.textContent = 'Save failed — no student token in URL';
+        statusEl.className = 'pref-save-status err';
+        return;
+      }
+
+      const colleges = items.map(item => ({
+        name: item.dataset.name,
+        meta: item.dataset.meta,
+        state: item.dataset.state,
+        type: item.dataset.type,
+        quota: item.dataset.quota,
+        fees: item.dataset.fees,
+        r1air: item.dataset.r1air,
+        r2air: item.dataset.r2air,
+        r3air: item.dataset.r3air,
+        chancekey: item.dataset.chancekey,
+        chancelabel: item.dataset.chancelabel,
+        normtype: item.dataset.normtype,
+      }));
+
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+      statusEl.textContent = '';
+      statusEl.className = 'pref-save-status';
+
+      try {
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges }),
+        });
+        const json = await res.json();
+        if (json && json.success) {
+          const time = new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+          statusEl.textContent = `Saved ✓ ${time}`;
+          statusEl.className = 'pref-save-status ok';
+        } else {
+          statusEl.textContent = 'Save failed — try again';
+          statusEl.className = 'pref-save-status err';
+        }
+      } catch (err) {
+        statusEl.textContent = 'Save failed — try again';
+        statusEl.className = 'pref-save-status err';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
 
     function removePreference(btn) {
