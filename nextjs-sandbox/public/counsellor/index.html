@@ -18,7 +18,10 @@
       overflow: hidden;
     }
     .left-col {
-      flex: 0 0 70%;
+      /* flex-grow:1 so this always fills whatever width right-col isn't using —
+         a fixed basis here would leave a dead gap when right-col collapses. */
+      flex: 1 1 0%;
+      min-width: 0;
       overflow-y: auto;
       border-right: 1px solid rgba(106,13,173,0.12);
     }
@@ -1317,6 +1320,10 @@
       // breakdown is available on hover via the title attribute.
       badgeEl.textContent = items.length ? String(items.length) : '';
       badgeEl.title = items.length ? `${parts.join(' · ')} (${items.length} shortlisted)` : '';
+      // CSS shows this circle unconditionally whenever collapsed; with zero items
+      // that rendered as an empty navy dot with no digit. Hide it entirely until
+      // there's something to report.
+      badgeEl.style.display = items.length ? '' : 'none';
     }
 
     function syncAddButtonsWithPreferenceList() {
