@@ -1212,8 +1212,10 @@
 
         const bestChance = getChance(college.rounds[roundKeys[0]]?.AIR);
         // MH source JSON has no top-level `state` field either — MH counselling is
-        // Maharashtra-only, so hardcode it here. MCC/OPEN keep reading currentData.state.
-        const displayState = isMH ? 'Maharashtra' : (currentData.state || '');
+        // Maharashtra-only, so hardcode it here. MCC's state lives per-college
+        // (college.state), never at top level — currentData.state is undefined
+        // for MCC responses. OPEN keeps reading currentData.state (per-state fetch).
+        const displayState = isMH ? 'Maharashtra' : (isMCC ? (college.state || '') : (currentData.state || ''));
         const meta = `${displayState} · ${college.type || ''} · ${feesDisplay}`;
         const addBtnHtml = `<button class="add-btn" onclick="addToPreferences(this, '${escAttr(college.name)}', '${escAttr(meta)}', '${escAttr(displayState)}', '${escAttr(college.type || '')}', '${escAttr(selectedCategory || mhCategory || '')}', '${escAttr(feesDisplay)}', '${escAttr(roundAirs.r1air)}', '${escAttr(roundAirs.r2air)}', '${escAttr(roundAirs.r3air)}', '${bestChance ? bestChance.key : ''}', '${bestChance ? bestChance.label : ''}')">+</button>`;
 
