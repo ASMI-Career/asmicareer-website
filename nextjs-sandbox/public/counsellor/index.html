@@ -1787,14 +1787,13 @@
 
     // ══════════════════ PDF EXPORT ══════════════════
     async function exportPDF() {
-      const items = [...document.querySelectorAll('.pref-item')];
-      if (!items.length) { alert('Add colleges to the list first.'); return; }
-
-      const date = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
-      const name = STUDENT?.name || 'Student';
-      const rankDisplay = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
-      const category = selectedCategory || mhCategory || '—';
-      const counsellingLabel = selectedCounselling === 'MCC' ? 'MCC AIQ' : selectedCounselling === 'MH' ? 'MH State' : 'Open States';
+      // Tab-aware: each counselling type gets its own section, built from its
+      // own list container rather than one flat query across all tabs.
+      const sectionDefs = [
+        { ctype: 'MCC',  heading: 'MCC AIQ Preferences' },
+        { ctype: 'MH',   heading: 'MH State Preferences' },
+        { ctype: 'OPEN', heading: 'Open States Preferences' },
+      ];
 
       const chanceColor = {
         safe: '#15803d',
@@ -1803,22 +1802,60 @@
         out_of_reach: '#b91c1c',
       };
 
-      const rowsHtml = items.map((item, i) => {
-        const color = chanceColor[item.dataset.chancekey] || '#555';
-        return `
-          <tr style="background:${i % 2 === 0 ? '#fff' : '#faf9ff'};">
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${i + 1}</td>
-            <td style="padding:6px 8px;text-align:left;border-bottom:1px solid #eee;font-weight:700;">${item.dataset.name}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.state || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.type || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r1air || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r2air || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r3air || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.fees || '-'}</td>
-            <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;color:${color};font-weight:700;">${item.dataset.chancelabel || '-'}</td>
-          </tr>
-        `;
-      }).join('');
+      function buildRowsHtml(items) {
+        return items.map((item, i) => {
+          const color = chanceColor[item.dataset.chancekey] || '#555';
+          return `
+            <tr style="background:${i % 2 === 0 ? '#fff' : '#faf9ff'};">
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${i + 1}</td>
+              <td style="padding:6px 8px;text-align:left;border-bottom:1px solid #eee;font-weight:700;">${item.dataset.name}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.state || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.type || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r1air || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r2air || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.r3air || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;">${item.dataset.fees || '-'}</td>
+              <td style="padding:6px 8px;text-align:center;border-bottom:1px solid #eee;color:${color};font-weight:700;">${item.dataset.chancelabel || '-'}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const sections = sectionDefs
+        .map(def => ({ ...def, items: [...document.querySelectorAll(`#prefList-${def.ctype} .pref-item`)] }))
+        .filter(def => def.items.length > 0); // skip empty quotas entirely — no blank headings
+
+      if (!sections.length) { alert('Add colleges to the list first.'); return; }
+
+      const date = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+      const name = STUDENT?.name || 'Student';
+      const rankDisplay = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
+      const category = selectedCategory || mhCategory || '—';
+      const counsellingLabel = selectedCounselling === 'MCC' ? 'MCC AIQ' : selectedCounselling === 'MH' ? 'MH State' : 'Open States';
+
+      const sectionsHtml = sections.map(sec => `
+        <div style="margin-top:18px;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid #1a0040;font-size:13px;font-weight:900;color:#1a0040;">
+          ${sec.heading}
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:6px;">
+          <thead>
+            <tr style="background:#1a0040;">
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">#</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:left;">College</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">State</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">Type</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">R1 AIR</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">R2 AIR</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">R3 AIR</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">Fees</th>
+              <th style="color:#FFD700;padding:7px 8px;text-align:center;">Chance</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${buildRowsHtml(sec.items)}
+          </tbody>
+        </table>
+      `).join('');
 
       const html = `
         <div id="pdfInner" style="position:fixed;left:-9999px;top:0;width:794px;background:#fff;padding:28px;font-family:Helvetica,Arial,sans-serif;">
@@ -1846,24 +1883,7 @@
             <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;">Year</div><div style="font-weight:800;font-size:12px;color:#1a0040;">${currentYear}</div></div>
           </div>
 
-          <table style="width:100%;border-collapse:collapse;font-size:10px;">
-            <thead>
-              <tr style="background:#1a0040;">
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">#</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:left;">College</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">State</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Type</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R1 AIR</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R2 AIR</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">R3 AIR</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Fees</th>
-                <th style="color:#FFD700;padding:7px 8px;text-align:center;">Chance</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-          </table>
+          ${sectionsHtml}
 
           <div style="margin-top:16px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#aaa;text-align:center;">
             ASMI Career &middot; asmicareer.com &middot; 7410019074 &middot; Confidential — For student use only
@@ -1878,6 +1898,14 @@
       try {
         const target = document.getElementById('pdfInner');
         const canvas = await html2canvas(target, { scale: 2, backgroundColor: '#fff', useCORS: true, allowTaint: true, logging: false });
+
+        // Guard: a zero-size canvas (capture failure) would make
+        // (canvas.height * imgW) / canvas.width evaluate to Infinity/NaN below,
+        // which infinite-loops the pagination while-loop. Abort cleanly instead.
+        if (!canvas.width || !canvas.height) {
+          throw new Error('PDF capture produced an empty canvas');
+        }
+
         const imgData = canvas.toDataURL('image/png');
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
