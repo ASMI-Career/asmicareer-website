@@ -858,14 +858,20 @@ function getOSCollegesRank(stKey, course){
 
   // Rank-only states: ignore category/quota distinctions, dedupe by name keeping the
   // most favorable (largest) closing rank.
+  // Dedupe by name+quota+fees (not name alone) — colleges can have distinct
+  // quota/fee-tier offerings under the same name (e.g. UR vs UR-FEM vs NRI, or
+  // separate fee-tier admission avenues), which must render as separate
+  // entries; genuine round-duplicates (identical name+quota+fees recorded
+  // more than once) still collapse to the worst closing rank.
   const best=new Map();
   records.forEach(r=>{
-    const ex=best.get(r.name);
-    if(!ex||r.closing_rank>ex.closing_rank) best.set(r.name,r);
+    const key=r.name+'||'+(r.quota||'')+'||'+(r.fees||'');
+    const ex=best.get(key);
+    if(!ex||r.closing_rank>ex.closing_rank) best.set(key,r);
   });
   const cols=[];
-  best.forEach((rec,name)=>{
-    cols.push({n:name,openCutoff:null,catCutoff:null,c:rec.closing_rank,s:rec.state||stateName,prob:prob(rank,rec.closing_rank)});
+  best.forEach(rec=>{
+    cols.push({n:rec.name,openCutoff:null,catCutoff:null,c:rec.closing_rank,s:rec.state||stateName,prob:prob(rank,rec.closing_rank)});
   });
   return cols;
 }
