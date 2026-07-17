@@ -10,12 +10,12 @@ const STAFF_PIN = '2026';
 const CATEGORY_OPTIONS = ['OPEN', 'OBC', 'EWS', 'SC', 'ST', 'VJ', 'NT1', 'NT2', 'NT3', 'SEBC'];
 const COURSE_OPTIONS = ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BPT'];
 
-async function submitDashboardInquiry({ fullName, studentContact, neetScore, category, courses, city }) {
+async function submitDashboardInquiry({ fullName, studentContact, neetRank, category, courses, city }) {
   const body = new URLSearchParams();
   body.append('source', 'Seminar');
   body.append('fullName', fullName || '');
   body.append('studentContact', studentContact || '');
-  body.append('neetScore', neetScore || '');
+  body.append('neetRank', neetRank || '');
   body.append('category', category || '');
   body.append('courses', courses || '');
   body.append('city', city || '');
@@ -40,8 +40,8 @@ function VerifyContent() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
 
-  // Feature 1 — score/category/course entry after check-in
-  const [neetScore, setNeetScore] = useState('');
+  // Feature 1 — rank/category/course entry after check-in
+  const [neetRank, setNeetRank] = useState('');
   const [category, setCategory] = useState('OPEN');
   const [courses, setCourses] = useState(['MBBS']);
   const [dashSubmitting, setDashSubmitting] = useState(false);
@@ -51,7 +51,7 @@ function VerifyContent() {
   // Feature 2 — walk-in registration
   const [showWalkIn, setShowWalkIn] = useState(false);
   const [walkForm, setWalkForm] = useState({
-    name: '', phone: '', email: '', neetScore: '', category: 'OPEN', courses: ['MBBS']
+    name: '', phone: '', email: '', neetRank: '', category: 'OPEN', courses: ['MBBS']
   });
   const [walkSubmitting, setWalkSubmitting] = useState(false);
   const [walkError, setWalkError] = useState('');
@@ -135,7 +135,7 @@ function VerifyContent() {
       const token = await submitDashboardInquiry({
         fullName: result?.name,
         studentContact: result?.phone,
-        neetScore,
+        neetRank,
         category,
         courses: courses.join(', '),
         city: result?.city
@@ -176,7 +176,7 @@ function VerifyContent() {
       const token = await submitDashboardInquiry({
         fullName: walkForm.name,
         studentContact: walkForm.phone,
-        neetScore: walkForm.neetScore,
+        neetRank: walkForm.neetRank,
         category: walkForm.category,
         courses: walkForm.courses.join(', '),
         city: ''
@@ -266,8 +266,8 @@ function VerifyContent() {
                 value={walkForm.phone} onChange={handleWalkInFieldChange('phone')} className="sv-pin-input" />
               <input type="email" placeholder="Email" required
                 value={walkForm.email} onChange={handleWalkInFieldChange('email')} className="sv-pin-input" />
-              <input type="number" placeholder="NEET Score" required
-                value={walkForm.neetScore} onChange={handleWalkInFieldChange('neetScore')} className="sv-pin-input" />
+              <input type="number" placeholder="NEET Rank (AIR)" required
+                value={walkForm.neetRank} onChange={handleWalkInFieldChange('neetRank')} className="sv-pin-input" />
               <select value={walkForm.category} onChange={handleWalkInFieldChange('category')} className="sv-pin-input">
                 {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -379,8 +379,8 @@ function VerifyContent() {
 
             {!dashToken && (
               <form onSubmit={handleScoreSubmit} className="sv-form">
-                <input type="number" placeholder="NEET Score" required
-                  value={neetScore} onChange={(e) => setNeetScore(e.target.value)} className="sv-pin-input" />
+                <input type="number" placeholder="NEET Rank (AIR)" required
+                  value={neetRank} onChange={(e) => setNeetRank(e.target.value)} className="sv-pin-input" />
                 <select value={category} onChange={(e) => setCategory(e.target.value)} className="sv-pin-input">
                   {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -394,7 +394,7 @@ function VerifyContent() {
                 </div>
                 {dashError && <p className="sv-error-text">{dashError}</p>}
                 <button type="submit" disabled={dashSubmitting} className="sv-btn-primary">
-                  {dashSubmitting ? 'Submitting…' : 'Submit Score'}
+                  {dashSubmitting ? 'Submitting…' : 'Submit Rank'}
                 </button>
               </form>
             )}

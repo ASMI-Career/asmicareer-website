@@ -8,7 +8,7 @@ import Footer from '../../components/Footer';
 export default function InquiryPage() {
   const [formData, setFormData] = useState({
     fullName: '',
-    neetScore: '',
+    neetRank: '',
     studentContact: '',
     fatherContact: '',
     motherContact: '',
@@ -75,8 +75,8 @@ export default function InquiryPage() {
     if (!data.studentContact || data.studentContact.length !== 10) {
       newErrors.studentContact = 'Please enter a valid 10-digit mobile number';
     }
-    if (!data.neetScore || Number(data.neetScore) < 1 || Number(data.neetScore) > 720) {
-      newErrors.neetScore = 'NEET score must be between 1 and 720';
+    if (!data.neetRank || Number(data.neetRank) < 1) {
+      newErrors.neetRank = 'Please enter a valid NEET Rank (AIR)';
     }
     if (data.fatherContact && data.fatherContact.length !== 10) {
       newErrors.fatherContact = 'Please enter a valid 10-digit number';
@@ -116,7 +116,7 @@ export default function InquiryPage() {
         setShowModal(true);
         setFormData({
           fullName: '',
-          neetScore: '',
+          neetRank: '',
           studentContact: '',
           fatherContact: '',
           motherContact: '',
@@ -146,7 +146,7 @@ export default function InquiryPage() {
       
       {/* ── PAGE HEADER ── */}
       <div className="page-header">
-          <span className="page-header-eyebrow">Free · No Obligation · Any Score</span>
+          <span className="page-header-eyebrow">Free · No Obligation · Any Rank</span>
           <h1>Book Your Free Counselling Session</h1>
           <p className="page-header-sub">Fill in your details below. A counsellor from your nearest branch will reach out within 24 hours.</p>
       </div>
@@ -226,9 +226,9 @@ export default function InquiryPage() {
                               <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={handleInputChange} required/>
                           </div>
                           <div>
-                              <label className="field-label">NEET Score</label>
-                              <input name="neetScore" className="field-input" placeholder="Your NEET Score (out of 720)" type="number" min={1} max={720} value={formData.neetScore} onChange={e => { handleInputChange(e); if (errors.neetScore) setErrors({...errors, neetScore: ''}); }} required/>
-                              {errors.neetScore && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.neetScore}</p>}
+                              <label className="field-label">NEET Rank (AIR)</label>
+                              <input name="neetRank" className="field-input" placeholder="All India Rank" type="number" min={1} value={formData.neetRank} onChange={e => { handleInputChange(e); if (errors.neetRank) setErrors({...errors, neetRank: ''}); }} required/>
+                              {errors.neetRank && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.neetRank}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
