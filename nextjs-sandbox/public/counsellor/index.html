@@ -575,7 +575,12 @@
       // Both confirmed against the actual delivered files, not assumed.
       "GOVT_BDS": {"DEF_1": ["FEMALE", "OPEN"], "DEF_2": ["FEMALE", "OPEN"], "DEF_3": ["FEMALE", "OPEN"], "EWS": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "OPEN"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "OPEN", "ORPHAN", "PWD"]},
       "PRIVATE_BDS": {"NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "OPEN"], "OPEN": ["FEMALE", "OPEN"], "SC": ["FEMALE", "OPEN"], "SEBC": ["FEMALE", "OPEN"], "ST": ["FEMALE", "OPEN"], "VJ": ["FEMALE", "OPEN"]},
-      "IQ_BDS": {"IQ": ["IQ"]}
+      "IQ_BDS": {"IQ": ["IQ"]},
+      "GOVT_BAMS": {"EWS": ["FEMALE", "GENERAL", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL", "PWD"], "NTC": ["FEMALE", "GENERAL", "PWD"], "NTD": ["FEMALE", "GENERAL", "PWD"], "OBC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "PWD"], "SC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "PWD"], "ST": ["FEMALE", "GENERAL", "PWD"], "VJ": ["FEMALE", "GENERAL", "PWD"]},
+      "PRIVATE_BAMS": {"NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "IQ_BAMS": {"IQ": ["IQ"]},
+      "GOVT_BPTH": {"D1": ["FEMALE", "GENERAL"], "D2": ["FEMALE", "GENERAL"], "D3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "PRIVATE_BPTH": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
     };
 
     const OPEN_STATES = [
@@ -680,7 +685,11 @@
           subtitleEl.textContent = 'All India Quota · Government colleges · MBBS seats';
         } else if (c === 'MH') {
           titleEl.textContent = 'MH State — Maharashtra CAP';
-          subtitleEl.textContent = 'Maharashtra State Quota · Govt & Private · MBBS seats';
+          let courseLabel = 'MBBS';
+          if (mhQuota.includes('BDS')) courseLabel = 'BDS';
+          else if (mhQuota.includes('BAMS')) courseLabel = 'BAMS';
+          else if (mhQuota.includes('BPTH')) courseLabel = 'BPTH';
+          subtitleEl.textContent = `Maharashtra State Quota · Govt & Private · ${courseLabel} seats`;
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
           subtitleEl.textContent = '17 states · MQ & NRI quota · MBBS seats';
@@ -750,6 +759,14 @@
        }
        if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
            mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
+       }
+       const subtitleEl = document.getElementById('counselling-subtitle');
+       if (subtitleEl) {
+         let courseLabel = 'MBBS';
+         if (mhQuota.includes('BDS')) courseLabel = 'BDS';
+         else if (mhQuota.includes('BAMS')) courseLabel = 'BAMS';
+         else if (mhQuota.includes('BPTH')) courseLabel = 'BPTH';
+         subtitleEl.textContent = `Maharashtra State Quota · Govt & Private · ${courseLabel} seats`;
        }
        renderFilters();
        loadData();
@@ -890,7 +907,12 @@
            { id: 'PRIVATE_MBBS', label: 'Private MBBS' },
            { id: 'GOVT_BDS', label: 'Govt BDS' },
            { id: 'PRIVATE_BDS', label: 'Private BDS' },
-           { id: 'IQ_BDS', label: 'IQ BDS' }
+           { id: 'IQ_BDS', label: 'IQ BDS' },
+           { id: 'GOVT_BAMS', label: 'Govt BAMS' },
+           { id: 'PRIVATE_BAMS', label: 'Private BAMS' },
+           { id: 'IQ_BAMS', label: 'IQ BAMS' },
+           { id: 'GOVT_BPTH', label: 'Govt BPTH' },
+           { id: 'PRIVATE_BPTH', label: 'Private BPTH' }
          ];
          quotas.forEach(q => {
             const isSel = mhQuota === q.id;
@@ -1167,7 +1189,7 @@
 
       roundKeys.forEach((round) => {
         const rl = round.toLowerCase();
-        const isStray = rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended');
+        const isStray = rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended') || rl.includes('round 4') || rl.includes('round4');
         const strayClass = isStray ? 'stray-col' : '';
         const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
@@ -1287,7 +1309,7 @@
                 else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
                 else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
 
-                const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
+                const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4');
                 const strayClass = isStray ? 'stray-col' : '';
                 const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
@@ -1347,7 +1369,7 @@
           else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
           else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
 
-          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended');
+          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4');
           const strayClass = isStray ? 'stray-col' : '';
           const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
