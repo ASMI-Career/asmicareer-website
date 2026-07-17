@@ -671,7 +671,7 @@ function buildPoolRows(){
     if(!colleges.length) return;
     const inReach=colleges.filter(c=>{const s=getStatus(score,c.c);return s.key==='safe'||s.key==='likely';});
     if(!inReach.length && !colleges.length) return;
-    const allSorted=[...colleges].sort((a,b)=>a.c-b.c);
+    const allSorted=[...colleges].sort((a,b)=>b.c-a.c);
     const lastCutoff=allSorted[0]?.c??null;
     if(lastCutoff===null) return;
     const status=getStatus(score,lastCutoff);
@@ -688,8 +688,8 @@ function buildPoolRows(){
 
     const openCutoffs = colleges.map(c=>c.openCutoff).filter(x=>x!==null && x!==undefined);
     const catCutoffs = colleges.map(c=>c.catCutoff).filter(x=>x!==null && x!==undefined);
-    const openC = openCutoffs.length ? Math.min(...openCutoffs) : null;
-    const catC = catCutoffs.length ? Math.min(...catCutoffs) : null;
+    const openC = openCutoffs.length ? Math.max(...openCutoffs) : null;
+    const catC = catCutoffs.length ? Math.max(...catCutoffs) : null;
 
     rows.push({label,group,course,inReach:inReach.length,total:colleges.length,
       lastCutoff,status,feeStr,budgetStr,rawFee:fee,feeMin:finalFeeMin,feeMax:finalFeeMax,years:finalYears,

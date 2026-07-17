@@ -298,7 +298,7 @@ table.ctable th:not(:first-child){text-align:center;}
   <div class="eb-divider-v"></div>
   <button class="eb-back" onclick="collapseAll()">← Back</button>
   <div class="eb-divider-v"></div>
-  <div class="eb-group"><span class="eb-label">Score</span><input type="number" id="editScore" min="0" max="720" placeholder="Score"></div>
+  <div class="eb-group"><span class="eb-label">Rank</span><input type="number" id="editScore" min="0" max="720" placeholder="Rank"></div>
   <div class="eb-group">
     <span class="eb-label">Category</span>
     <select id="editCategory">
@@ -963,7 +963,7 @@ function setMHTabContent(){
   const data=mhTab==='govt'?mhGovt:mhPvt;
   const inReach=data.cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely').length;
   document.getElementById('mh-exp-sub').innerHTML=
-    `Score: ${activeScore()} · Category: ${activeCategory()} · Course: ${mhCourse}
+    `Rank: ${activeScore()} · Category: ${activeCategory()} · Course: ${mhCourse}
     <span class="exp-count-badge">${inReach}/${data.total} in reach</span>`;
   document.getElementById('mh-table-area').innerHTML=renderMHBlurred(data.cols);
 }
