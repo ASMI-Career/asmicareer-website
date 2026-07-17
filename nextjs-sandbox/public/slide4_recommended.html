@@ -273,7 +273,7 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
 
     <div class="profile-card">
       <div class="pc-label">Your Profile</div>
-      <div class="pc-row"><span class="pc-key">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
+      <div class="pc-row"><span class="pc-key" id="lScoreLabel">NEET Score</span><span class="pc-val score" id="lScore">—</span></div>
       <div class="pc-row"><span class="pc-key">Category</span><span class="pc-val" id="lCat">—</span></div>
       <div class="pc-row"><span class="pc-key">Course</span><span class="pc-val" id="lCourse">—</span></div>
       <div class="pc-row"><span class="pc-key">Projection</span><span class="pc-val" style="font-size:.68rem;color:rgba(255,255,255,.55)">2025–26 + 20 adj.</span></div>
@@ -2052,7 +2052,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
       <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:24px;flex-wrap:wrap;">
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Student</div><div style="font-weight:800;font-size:12px;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${name}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${token}</div></div>
-        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">${RANK_MODE?'NEET Rank (AIR)':'NEET Score'}</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${cat}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Safe Options</div><div style="font-weight:900;font-size:18px;color:#15803d;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalSafe}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Likely Options</div><div style="font-weight:900;font-size:18px;color:#0369a1;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalLikely}</div></div>
@@ -2278,7 +2278,7 @@ function buildPDFHTMLMultiCourse(title, subtitle, courseSections, studentData){
       <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:24px;flex-wrap:wrap;">
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Student</div><div style="font-weight:800;font-size:12px;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${name}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${token}</div></div>
-        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">${RANK_MODE?'NEET Rank (AIR)':'NEET Score'}</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${cat}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Safe Options</div><div style="font-weight:900;font-size:18px;color:#15803d;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalSafe}</div></div>
         <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Likely Options</div><div style="font-weight:900;font-size:18px;color:#0369a1;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalLikely}</div></div>
@@ -2916,6 +2916,7 @@ async function init(){
     }
 
     // Populate left panel
+    document.getElementById('lScoreLabel').textContent=RANK_MODE?'NEET Rank (AIR)':'NEET Score';
     document.getElementById('lScore').textContent=activeScore()||'—';
     document.getElementById('lCat').textContent=activeCategory();
     document.getElementById('lCourse').textContent=activeCourse();
@@ -2925,7 +2926,7 @@ async function init(){
     if(isCounselMode()){
       document.getElementById('rh-title').textContent='Counselling Summary';
       document.getElementById('rhSub').textContent=
-        `Score: ${activeScore()} · Category: ${activeCategory()} · Counselling Session`;
+        `${RANK_MODE?'Rank (AIR)':'Score'}: ${activeScore()} · Category: ${activeCategory()} · Counselling Session`;
       const shortlist=getSess().shortlist||[];
       document.getElementById('totalBadge').textContent=shortlist.length+' shortlisted';
       document.getElementById('nextBtn').textContent='← Back to Options';
@@ -2942,7 +2943,7 @@ async function init(){
       const rows=buildPoolRows();
       document.getElementById('totalBadge').textContent=rows.length+' pools';
       document.getElementById('rhSub').textContent=
-        `Score: ${activeScore()} · Category: ${activeCategory()} · Course: ${activeCourse()}`;
+        `${RANK_MODE?'Rank (AIR)':'Score'}: ${activeScore()} · Category: ${activeCategory()} · Course: ${activeCourse()}`;
       renderTable(rows);
     }
 
