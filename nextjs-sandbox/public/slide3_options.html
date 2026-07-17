@@ -475,11 +475,9 @@ function activeRank(){return parseInt(getSess().rank||STUDENT.rank||0);}
 // is on, else the legacy score. Kept this name (rather than renaming ~15+ call sites across
 // this file that read `const score=activeScore()` then pass it into prob()/sort comparisons)
 // so the migration's blast radius stays limited to prob()/getColleges()-family functions.
-// NOTE: the "+20 projected" pills and "closest to score" sorts elsewhere in this file still
-// do arithmetic on whatever activeScore() returns — when RANK_MODE is on that's a rank, so
-// those specific displays/sorts become a nonsensical "rank+20" number. Left as-is (out of
-// scope for this migration, confirmed) — the actual Safe/Likely/Borderline/Out of Reach
-// categorization from prob() is correct regardless.
+// NOTE: "+20 projected" pills and byClosest sorts (which did arithmetic on activeScore()+20,
+// a score-era heuristic) have been removed/simplified — sorts now compare directly against
+// activeScore() with no offset, correct for both rank and legacy score modes.
 function activeScore(){
   if(RANK_MODE) return activeRank();
   return parseInt(getSess().score||STUDENT.score||0);
@@ -707,39 +705,15 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true, 
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
   const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-  const projected = actual!==null ? actual + 20 : null;
   const actualStr = actual!==null ? actual : '—';
-  const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-  
+
+  // "+20 projected cutoff" removed — rank comparison is a direct value, no projection concept applies.
   const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-  const catProj    = catActual!==null ? catActual+20 : null;
   const catCell    = showCatCutoff && catActual!==null
-    ? `<td style="text-align:center">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-          <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-          <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-            padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-        </div>
-      </td>`
+    ? `<td style="text-align:center"><span class="cutoff-val" style="color:var(--purple)">${catActual}</span></td>`
     : showCatCutoff ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-  
-  let cutoffAndProjCells = '';
-  if (stackCutoff) {
-    const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
-    cutoffAndProjCells = `
-      <td style="text-align:center">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-          <span class="cutoff-val">${actualStr}</span>
-          ${projPill}
-        </div>
-      </td>`;
-  } else {
-    cutoffAndProjCells = `
-      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-      <td style="text-align:center">
-        ${projStr}
-      </td>`;
-  }
+
+  const cutoffAndProjCells = `<td class="cutoff-val" style="text-align:center">${actualStr}</td>`;
 
   return `<tr>
     <td class="college-name">${c.n}</td>
@@ -762,7 +736,7 @@ function renderMHBlurred(cols){
   const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
+    Math.abs(score-a.c)-Math.abs(score-b.c));
 
   const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
   const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
@@ -784,23 +758,12 @@ function renderMHBlurred(cols){
     : `<th>${activeCategory()} CUTOFF</th>`;
   function row(c){
     const actual=c.openCutoff!==null?c.openCutoff:c.c;
-    const projected=actual+20;
-    const openCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <span class="cutoff-val">${actual}</span>
-      <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
-    </div>`;
     const catActual=c.catCutoff!==null?c.catCutoff:null;
-    const catProj=catActual!==null?catActual+20:null;
-    const cc=showDual?(catActual!==null?`<td style="text-align:center">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-        <span class="cutoff-val" style="color:var(--purple);font-weight:900">${catActual}</span>
-        <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-      </div>
-    </td>`:`<td style="text-align:center;color:#ccc">—</td>`):'';
-    return`<tr><td class="college-name">${c.n}</td><td style="text-align:center">${openCell}</td>${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+    const cc=showDual?(catActual!==null?`<td style="text-align:center"><span class="cutoff-val" style="color:var(--purple);font-weight:900">${catActual}</span></td>`:`<td style="text-align:center;color:#ccc">—</td>`):'';
+    return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val" style="text-align:center">${actual}</td>${cc}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
   }
   const starHeader=isCounselMode()?'<th>★</th>':'';
-  const thead=`<thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
+  const thead=`<thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th>${starHeader}</tr></thead>`;
   const previewHtml=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
     // Show all colleges with star buttons — no blur
@@ -817,7 +780,7 @@ function renderOSTable(stKey,cols){
   const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
+    Math.abs(score-a.c)-Math.abs(score-b.c));
 
   const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
   const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
@@ -831,18 +794,13 @@ function renderOSTable(stKey,cols){
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
   function row(c){
-    const projected=c.c+20;
-    const cutoffCell=`<div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <span class="cutoff-val">${c.c}</span>
-      <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>
-    </div>`;
-    return`<tr><td class="college-name">${c.n}</td><td style="text-align:center">${cutoffCell}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+    return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val" style="text-align:center">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
   }
-  const thead=`<thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
+  const thead=`<thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
     const allRows=sorted.map(c=>rowWithStar(c, STATE_LABELS[stKey]||stKey, 'Open States')).join('');
-    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
+    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
   return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
@@ -1082,8 +1040,7 @@ function renderAIIMSList(cols){
   const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
   const aiimsThead=`<thead><tr>
     <th>College</th>
-    <th>Last Cutoff</th>
-    <th style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700">Projected</th>
+    <th>Cutoff (AIR)</th>
     ${dh}
     <th>Fee/yr</th>
     <th>Chance</th>
@@ -1091,26 +1048,16 @@ function renderAIIMSList(cols){
   </tr></thead>`;
   const row=c=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 20 : null;
     const actualStr = actual!==null ? actual : '—';
-    const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-    
+
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+20 : null;
     const catCell    = showCat && catActual!==null
-      ? `<td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-              padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-          </div>
-        </td>`
+      ? `<td style="text-align:center"><span class="cutoff-val" style="color:var(--purple)">${catActual}</span></td>`
       : showCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-      
+
     return `<tr>
       <td class="college-name">${c.n}</td>
       <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-      <td style="text-align:center">${projStr}</td>
       ${catCell}
       <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
       <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
@@ -1130,7 +1077,7 @@ function mccPreview(cols){
   if(!cols||!cols.length) return {preview:[], rest:[]};
   const score = activeScore();
   const byClosest = arr=>[...arr].sort((a,b)=>
-    Math.abs(score-(a.c+20))-Math.abs(score-(b.c+20)));
+    Math.abs(score-a.c)-Math.abs(score-b.c));
   const safe   = byClosest(cols.filter(c=>c.prob&&c.prob.key==='safe')).slice(0,2);
   const likely = byClosest(cols.filter(c=>c.prob&&c.prob.key==='likely')).slice(0,2);
   const reach  = byClosest(cols.filter(c=>c.prob&&c.prob.key==='out_of_reach')).slice(0,1);
@@ -1154,47 +1101,21 @@ function renderMCCExpanded(){
   
   const row=(c, stackCutoff = true, forceHideCat = false)=>{
     const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
-    const projected = actual!==null ? actual + 20 : null;
     const actualStr = actual!==null ? actual : '—';
-    
+
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
-    const catProj    = catActual!==null ? catActual+20 : null;
     const localShowCat = forceHideCat ? false : showCat;
     const catCell    = localShowCat && catActual!==null
-      ? `<td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val" style="color:var(--purple)">${catActual}</span>
-            <span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;
-              padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${catProj}</span>
-          </div>
-        </td>`
+      ? `<td style="text-align:center"><span class="cutoff-val" style="color:var(--purple)">${catActual}</span></td>`
       : localShowCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
-      
-    if (stackCutoff) {
-      const projPill = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:1px 7px;border-radius:10px;font-size:.68rem;font-weight:800;">${projected}</span>` : '—';
-      return `<tr>
-        <td class="college-name">${c.n}</td>
-        <td style="text-align:center">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-            <span class="cutoff-val">${actualStr}</span>
-            ${projPill}
-          </div>
-        </td>
-        ${catCell}
-        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-      </tr>`;
-    } else {
-      const projStr   = projected!==null ? `<span style="background:linear-gradient(135deg,var(--navy),var(--purple));color:#FFD700;padding:2px 8px;border-radius:12px;font-size:.72rem;font-weight:800;">${projected}</span>` : '—';
-      return `<tr>
-        <td class="college-name">${c.n}</td>
-        <td class="cutoff-val" style="text-align:center">${actualStr}</td>
-        <td style="text-align:center">${projStr}</td>
-        ${catCell}
-        <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
-        <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
-      </tr>`;
-    }
+
+    return `<tr>
+      <td class="college-name">${c.n}</td>
+      <td class="cutoff-val" style="text-align:center">${actualStr}</td>
+      ${catCell}
+      <td class="fee-val" style="text-align:center">${feeStr(c.n)}</td>
+      <td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td>
+    </tr>`;
   };
   document.getElementById('mcc-count-grid').innerHTML=`
     ${(()=>{
@@ -1209,11 +1130,11 @@ function renderMCCExpanded(){
         aiqReach=[...aiqR,...extraReach];
       }
       const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ', showCat)).join(''):'';
-      const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
+      const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
 const _aqsc = activeScore();
 const byAIQClosest = arr => [...arr].sort((a,b) =>
-  Math.abs(_aqsc-(a.c+20)) - Math.abs(_aqsc-(b.c+20)));
+  Math.abs(_aqsc-a.c) - Math.abs(_aqsc-b.c));
 
 const aiqSafe   = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'safe')).slice(0, 2);
 const aiqLikely = byAIQClosest(aiqTotal.filter(c => c.prob?.key === 'likely')).slice(0, 2);
@@ -1232,7 +1153,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const aiqPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
-            <th>College</th><th>Cutoff / Projected</th>
+            <th>College</th><th>Cutoff (AIR)</th>
             ${dh}
             <th>Fee/yr</th><th>Chance</th>
           </tr></thead>
@@ -1260,7 +1181,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
         <table class="ctable" style="width:100%">
           <thead><tr>
             <th>College</th>
-            <th>Cutoff / Projected</th>
+            <th>Cutoff (AIR)</th>
             ${dh}
             <th>Fee/yr</th>
             <th>Chance</th>
@@ -1290,13 +1211,13 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
         ${(()=>{
           const _sc = activeScore();
           const aiimsClosest = [...aiims].sort((a,b)=>
-            Math.abs(_sc-(a.c+20)) - Math.abs(_sc-(b.c+20)));
+            Math.abs(_sc-a.c) - Math.abs(_sc-b.c));
           const aiimsPrev = aiimsClosest.slice(0,5);
           const aiimsRest = aiimsClosest.slice(5);
           return !isCounselMode() && hasMBBS && aiims.length ? `
             <table class="ctable" style="width:100%;margin-top:8px;">
               <thead><tr>
-                <th>College</th><th>Cutoff / Projected</th>
+                <th>College</th><th>Cutoff (AIR)</th>
                 ${dh}
                 <th>Fee/yr</th><th>Chance</th>
               </tr></thead>
@@ -1314,14 +1235,14 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
     })()}
     ${(()=>{
       const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ', showCat)).join(''):'';
-      const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
+      const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
       const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
       const jipmerShowAll = jipmer.length <= 5;
       const {preview:jipPrev, rest:jipRest} = jipmerShowAll ? {preview:jipmer, rest:[]} : mccPreview(jipmer);
       const jipmerPreviewHtml = !isCounselMode() && hasMBBS ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
-            <th>College</th><th>Cutoff / Projected</th>
+            <th>College</th><th>Cutoff (AIR)</th>
             ${dh}
             <th>Fee/yr</th><th>Chance</th>
           </tr></thead>
@@ -1352,7 +1273,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
       const centralAll=[...central,...(hasBDS?jmiCols:[])];
       const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ', showCat)).join(''):'';
-      const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff / Projected</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
+      const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
       const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
       const centralShowAll = centralAll.length <= 5;
       const {preview:cenPrev, rest:cenRest} = centralShowAll ? {preview:centralAll, rest:[]} : mccPreview(centralAll);
@@ -1391,13 +1312,13 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       if(!isCounselMode() && b.cols && b.cols.length){
         const _dsc = activeScore();
         const byClosest = [...b.cols].sort((a,b)=>
-          Math.abs(_dsc-(a.c+20)) - Math.abs(_dsc-(b.c+20)));
+          Math.abs(_dsc-a.c) - Math.abs(_dsc-b.c));
         const dPrev = byClosest.slice(0,5);
         const dRest = byClosest.slice(5);
         const dPreviewTable=`
           <table class="ctable" style="width:100%;margin-top:8px;">
             <thead><tr>
-              <th>College</th><th>Cutoff / Projected</th>
+              <th>College</th><th>Cutoff (AIR)</th>
               <th>Fee/yr</th><th>Chance</th>
             </tr></thead>
             <tbody>${dPrev.map(c=>row(c, true, true)).join('')}</tbody>
@@ -1421,7 +1342,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
@@ -1462,7 +1383,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
-            <thead><tr><th>College</th><th>Cutoff / Projected</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
+            <thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead>
             <tbody>${colRows}</tbody>
           </table>
         </div>`:'';
