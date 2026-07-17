@@ -649,11 +649,19 @@ function getMHDualLegacy(listType){
 
 // RANK-based — reads closing_ranks_2025.json's MH section (already GENERAL-subtype-collapsed
 // per category). `listType` here is 'mh_govt'/'mh_pvt', mapped to the quota field.
-function mhQuotaFromListType(listType){ return listType==='mh_pvt' ? 'PRIVATE_MBBS' : 'GOVT_MBBS'; }
+// Quota strings follow GOVT_${course}/PRIVATE_${course} for every course present in the data
+// (MBBS/BDS/BAMS/BPTH). BHMS has no MH data at all -- falls through to an empty result, same
+// as any course with a valid pattern but zero matching records. IQ_BDS/IQ_BAMS quotas exist in
+// the data but aren't wired here -- they're a structurally different quota (single "IQ" category,
+// no OPEN/reserved split) with no corresponding UI tab (only Govt/Private sub-tabs exist).
+function mhQuotaFromListType(listType, courseKey){
+  const course = courseKey || mhCourse;
+  return (listType==='mh_pvt' ? 'PRIVATE_' : 'GOVT_') + course;
+}
 function getMHDualRank(listType){
   const rank=activeRank(),userCat=activeCategory();
-  if(mhCourse!=='MBBS' || !RANKS) return{cols:[],total:0}; // closing_ranks MH data is MBBS-only (see report)
-  const quota=mhQuotaFromListType(listType);
+  if(!RANKS) return{cols:[],total:0};
+  const quota=mhQuotaFromListType(listType, mhCourse);
   const records=(RANKS.MH||[]).filter(r=>r.quota===quota);
   const openList=records.filter(r=>r.category==='OPEN');
   const catList=(userCat!=='General')?records.filter(r=>r.category===userCat):[];

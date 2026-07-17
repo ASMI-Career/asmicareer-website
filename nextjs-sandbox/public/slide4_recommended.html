@@ -512,11 +512,18 @@ function getCollegesMCCRank(stateKey, courseKey, keys){
 // return a flat array (slide4's getColleges() callers — addWithProb()/buildPoolRows() —
 // consume a flat array directly, unlike slide3's {cols,total} shape; slide4 has no separate
 // "total available" concept, callers just use the returned array's length).
-function mhQuotaFromListType(listType){ return listType==='mh_pvt' ? 'PRIVATE_MBBS' : 'GOVT_MBBS'; }
+// Quota strings follow GOVT_${course}/PRIVATE_${course} for every course present in the data
+// (MBBS/BDS/BAMS/BPTH). BHMS has no MH data at all -- falls through to an empty array, same as
+// any course with a valid pattern but zero matching records. IQ_BDS/IQ_BAMS quotas exist in the
+// data but aren't wired here -- see slide3_options.html's getMHDualRank() for why.
+function mhQuotaFromListType(listType, courseKey){
+  const course = courseKey || 'MBBS';
+  return (listType==='mh_pvt' ? 'PRIVATE_' : 'GOVT_') + course;
+}
 function getCollegesMHRank(courseKey, listType){
   const rank=activeRank(), userCat=activeCategory();
-  if(courseKey!=='MBBS' || !RANKS) return []; // closing_ranks MH data is MBBS-only
-  const quota=mhQuotaFromListType(listType);
+  if(!RANKS) return [];
+  const quota=mhQuotaFromListType(listType, courseKey);
   const records=(RANKS.MH||[]).filter(r=>r.quota===quota);
   const openMap=new Map(records.filter(r=>r.category==='OPEN').map(r=>[r.name,r.closing_rank]));
   const catMap=new Map((userCat!=='General'?records.filter(r=>r.category===userCat):[]).map(r=>[r.name,r.closing_rank]));
