@@ -2432,9 +2432,11 @@ function getTop25(){
   });
 
   // 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
+  // Counsel Mode only (getTop25/getTop50 are never called outside isCounselMode()) — sort
+  // ascending by rank (best/lowest first), matching slide3_options.html's Counsel Mode tables.
   function safeAndLikely(arr){
     return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
-              .sort((a,b)=>b.c-a.c);
+              .sort((a,b)=>a.c-b.c);
   }
 
   const openStates={};
@@ -2534,9 +2536,11 @@ function getTop50(){
   });
 
   // 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
+  // Counsel Mode only (getTop25/getTop50 are never called outside isCounselMode()) — sort
+  // ascending by rank (best/lowest first), matching slide3_options.html's Counsel Mode tables.
   function safeAndLikely(arr){
     return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
-              .sort((a,b)=>b.c-a.c);
+              .sort((a,b)=>a.c-b.c);
   }
 
   // Build structured result
