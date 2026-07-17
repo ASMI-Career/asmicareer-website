@@ -733,7 +733,7 @@ function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true, 
 function renderMHBlurred(cols){
   const userCat=activeCategory(),showDual=(userCat!=='General');
   if(!cols.length) return '<div class="no-data">No colleges found for this score and category.</div>';
-  const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  const sorted=[...cols].sort((a,b)=>isCounselMode()?a.c-b.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
     Math.abs(score-a.c)-Math.abs(score-b.c));
@@ -777,7 +777,7 @@ function renderMHBlurred(cols){
 
 function renderOSTable(stKey,cols){
   if(!cols.length) return '<div class="no-data">No colleges found.</div>';
-  const sorted=[...cols].sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+  const sorted=[...cols].sort((a,b)=>isCounselMode()?a.c-b.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
     Math.abs(score-a.c)-Math.abs(score-b.c));
@@ -1070,7 +1070,8 @@ function renderAIIMSList(cols){
     </tr>`;
   };
   if(isCounselMode()){
-    const allRows=sorted.map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join('');
+    const rankSorted=[...cols].sort((a,b)=>a.c-b.c);
+    const allRows=rankSorted.map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join('');
     return`<table class="ctable">${aiimsThead}<tbody>${allRows}</tbody></table>`;
   }
   const preview=sorted.slice(0,5),rest=sorted.slice(5);
@@ -1135,7 +1136,7 @@ function renderMCCExpanded(){
         aiqTotal=[...aiq,...extraCols];
         aiqReach=[...aiqR,...extraReach];
       }
-      const aiqColRows=isCounselMode()?aiqTotal.map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ', showCat)).join(''):'';
+      const aiqColRows=isCounselMode()?[...aiqTotal].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'AIQ Govt','MCC AIQ', showCat)).join(''):'';
       const aiqTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${aiqColRows}</tbody></table>`:'';
       const aiqToggleBtn=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${aiqTable}</div>`:'';
 const _aqsc = activeScore();
@@ -1182,7 +1183,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       </div>`;
     })()}
     ${(()=>{
-      const aiimsColRows=isCounselMode()?aiims.map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join(''):'';
+      const aiimsColRows=isCounselMode()?[...aiims].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'AIIMS','MCC AIQ', showCat)).join(''):'';
       const aiimsTable=isCounselMode()?`
         <table class="ctable" style="width:100%">
           <thead><tr>
@@ -1240,7 +1241,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       </div>`;
     })()}
     ${(()=>{
-      const jipmerColRows=isCounselMode()&&hasMBBS?jipmer.map(c=>rowWithStar(c,'JIPMER','MCC AIQ', showCat)).join(''):'';
+      const jipmerColRows=isCounselMode()&&hasMBBS?[...jipmer].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'JIPMER','MCC AIQ', showCat)).join(''):'';
       const jipmerTable=isCounselMode()&&hasMBBS?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${jipmerColRows}</tbody></table>`:'';
       const jipmerToggle=isCounselMode()&&hasMBBS?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${jipmerTable}</div>`:'';
       const jipmerShowAll = jipmer.length <= 5;
@@ -1278,7 +1279,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const totalCentral=central.length+(hasBDS?jmiCols.length:0);
       const reachCentral=centralR.length+(hasBDS?jmiR.length:0);
       const centralAll=[...central,...(hasBDS?jmiCols:[])];
-      const centralColRows=isCounselMode()?centralAll.map(c=>rowWithStar(c,'Central Univ.','MCC AIQ', showCat)).join(''):'';
+      const centralColRows=isCounselMode()?[...centralAll].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'Central Univ.','MCC AIQ', showCat)).join(''):'';
       const centralTable=isCounselMode()?`<table class="ctable" style="width:100%"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${centralColRows}</tbody></table>`:'';
       const centralToggle=isCounselMode()?`<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('Show')?'▲ Hide':'▼ Show All'" style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.25);border-radius:6px;color:var(--yellow);font-size:11px;font-family:Montserrat,sans-serif;font-weight:700;padding:4px 12px;cursor:pointer;margin-top:6px;width:100%;">▼ Show All Colleges</button><div style="display:none;">${centralTable}</div>`:'';
       const centralShowAll = centralAll.length <= 5;
@@ -1348,7 +1349,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
           ${dPreviewTable}
         </div>`;
       }
-      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ', false, true)).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?[...b.cols].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'Deemed MBBS','MCC AIQ', false, true)).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${bandId}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
@@ -1389,7 +1390,7 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
     ];
 
     deemedHtml+=bdsBands.map(b=>{
-      const colRows=isCounselMode()&&b.cols&&b.cols.length?b.cols.map(c=>rowWithStar(c,'Deemed BDS','MCC AIQ')).join(''):'';
+      const colRows=isCounselMode()&&b.cols&&b.cols.length?[...b.cols].sort((a,b)=>a.c-b.c).map(c=>rowWithStar(c,'Deemed BDS','MCC AIQ')).join(''):'';
       const colTable=isCounselMode()?`
         <div class="deemed-college-list" id="${b.id}" style="display:none;margin-top:8px;">
           <table class="ctable" style="width:100%">
@@ -1450,7 +1451,7 @@ function computeOS(){
       allCols=cols;
     }
     if(inReachCount>0){
-      const sorted=allCols.sort((a,b)=>isCounselMode()?b.c-a.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
+      const sorted=allCols.sort((a,b)=>isCounselMode()?a.c-b.c:PO[a.prob.key]-PO[b.prob.key]||a.c-b.c);
       osResults.push({stKey,label:STATE_LABELS[stKey]||stKey,colleges:sorted,inReach:inReachCount,total:totalCount});
     }
   });
