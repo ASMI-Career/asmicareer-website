@@ -2139,6 +2139,224 @@ async function downloadTop50PDF(){
   }
 }
 
+// Same rendering as buildPDFHTML(), but for the sheet-link (?download=1) entry point:
+// one fully separate top-level section per course (own banner + its own MH/MCC/Open
+// sub-structure), concatenated in courseSections' order. Courses with no results were
+// already filtered out by getTop50AllCourses() before reaching here.
+function buildPDFHTMLMultiCourse(title, subtitle, courseSections, studentData){
+  const {name, token, score, cat, date} = studentData;
+  const userCat = cat || activeCategory();
+  const showCat = userCat !== 'General' && userCat !== 'OPEN';
+
+  function tableRows(cols){
+    const colspanVal = showCat ? 6 : 5;
+    if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
+    return cols.map((c,i)=>{
+      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+      const actualStr = actual!==null ? actual : '—';
+      const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
+      const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
+      const statusBg    = c.prob.key==='safe'?'rgba(21,128,61,.1)':c.prob.key==='likely'?'rgba(3,105,161,.1)':'rgba(185,28,28,.08)';
+
+      if(showCat){
+        const catActual = (c.catCutoff!==undefined && c.catCutoff!==null) ? c.catCutoff : null;
+        const catActualStr = catActual!==null ? catActual : '—';
+        return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+          <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${catActualStr}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
+          </td>
+        </tr>`;
+      } else {
+        return `<tr style="background:${i%2===0?'#fff':'#f8f6ff'}">
+          <td style="padding:6px 8px;font-size:10px;font-weight:700;font-family:Helvetica,Arial,sans-serif">${c.n}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${c.state||'—'}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${actualStr}</td>
+          <td style="padding:6px 8px;font-size:10px;text-align:center;font-family:Helvetica,Arial,sans-serif">${feeVal}</td>
+          <td style="padding:6px 8px;text-align:center">
+            <span style="background:${statusBg};color:${statusColor};padding:1px 8px;border-radius:5px;font-size:9px;font-weight:800;font-family:Helvetica,Arial,sans-serif">${c.prob.label}</span>
+          </td>
+        </tr>`;
+      }
+    }).join('');
+  }
+
+  function sectionBlock(sectionTitle, subsections){
+    // Skip the whole section banner if every subsection is empty (e.g. "MCC Process" /
+    // "Open States" for BAMS/BPTH, which only ever have MH results) -- same "skip
+    // silently" principle as courses with zero results, one level down.
+    const hasAny = Object.values(subsections).some(cols=>cols&&cols.length);
+    if(!hasAny) return '';
+    let html = `<div style="margin-bottom:16px;">
+      <div style="background:#1a0040;color:#FFD700;font-family:Helvetica,Arial,sans-serif;font-weight:800;font-size:11px;padding:8px 12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0;">
+        ${sectionTitle}
+      </div>`;
+    Object.entries(subsections).forEach(([subTitle, cols])=>{
+      if(!cols||!cols.length) return;
+
+      const headers = showCat ? `
+              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Open Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">${userCat} Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+      ` : `
+              <th style="color:#FFD700;padding:5px 8px;text-align:left;font-size:9px;font-family:Helvetica,Arial,sans-serif;letter-spacing:.5px">College</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">State</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Last Cutoff</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Fee/yr</th>
+              <th style="color:#FFD700;padding:5px 8px;text-align:center;font-size:9px;font-family:Helvetica,Arial,sans-serif">Chance</th>
+      `;
+
+      html+=`
+        <div style="background:rgba(26,0,64,0.06);padding:4px 12px;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:700;color:#6a0dad;letter-spacing:1px;text-transform:uppercase;">
+          ${subTitle} — ${cols.length} options
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#2D0A5E;">
+              ${headers}
+            </tr>
+          </thead>
+          <tbody>${tableRows(cols)}</tbody>
+        </table>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  let totalSafe=0, totalLikely=0, courseBlocksHTML='';
+
+  courseSections.forEach(({course, sections})=>{
+    let courseSafe=0, courseLikely=0;
+    Object.values(sections).forEach(section=>{
+      Object.values(section).forEach(arr=>{
+        if(Array.isArray(arr)){
+          courseSafe   += arr.filter(c=>c.prob&&c.prob.key==='safe').length;
+          courseLikely += arr.filter(c=>c.prob&&c.prob.key==='likely').length;
+        }
+      });
+    });
+    totalSafe += courseSafe; totalLikely += courseLikely;
+
+    let sectionsHTML = '';
+    Object.entries(sections).forEach(([secTitle, subsections])=>{
+      sectionsHTML += sectionBlock(secTitle, subsections);
+    });
+
+    courseBlocksHTML += `
+      <div style="margin-bottom:20px;">
+        <div style="background:linear-gradient(135deg,#1a0040,#6a0dad);color:#FFD700;font-family:Helvetica,Arial,sans-serif;font-weight:900;font-size:15px;padding:10px 14px;letter-spacing:2px;text-transform:uppercase;border-radius:6px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+          <span>${course}</span>
+          <span style="font-size:9px;font-weight:700;letter-spacing:1px;opacity:.85;">${courseSafe} Safe · ${courseLikely} Likely</span>
+        </div>
+        ${sectionsHTML}
+      </div>`;
+  });
+
+  return `
+    <div style="font-family:Helvetica,Arial,sans-serif;background:#fff;padding:28px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="asmi-logo.png" style="height:44px;width:auto;" crossorigin="anonymous">
+          <div>
+            <div style="font-size:20px;font-weight:900;color:#1a0040;font-family:Helvetica,Arial,sans-serif;">${title}</div>
+            <div style="font-size:9px;color:#6a0dad;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${subtitle}</div>
+          </div>
+        </div>
+        <div style="text-align:right;font-size:9px;color:#888;line-height:1.6;font-family:Helvetica,Arial,sans-serif;">
+          <div>Generated: ${date}</div>
+          <div>asmicareer.com · 7410019077</div>
+        </div>
+      </div>
+      <div style="height:3px;background:linear-gradient(90deg,#1a0040,#6a0dad);border-radius:2px;margin-bottom:14px;"></div>
+      <div style="background:#FFF9CC;border:1.5px solid #1a0040;border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;gap:24px;flex-wrap:wrap;">
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Student</div><div style="font-weight:800;font-size:12px;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${name}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Token</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${token}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">NEET Score</div><div style="font-weight:900;font-size:18px;color:#6a0dad;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${score}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Category</div><div style="font-weight:800;color:#1a0040;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${cat}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Safe Options</div><div style="font-weight:900;font-size:18px;color:#15803d;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalSafe}</div></div>
+        <div><div style="font-size:8px;color:#6a0dad;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:Helvetica,Arial,sans-serif;">Likely Options</div><div style="font-weight:900;font-size:18px;color:#0369a1;line-height:1;margin-top:2px;font-family:Helvetica,Arial,sans-serif;">${totalLikely}</div></div>
+      </div>
+      ${courseBlocksHTML}
+      <div style="margin-top:16px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#aaa;text-align:center;font-family:Helvetica,Arial,sans-serif;">
+        ASMI Career · asmicareer.com · 7410019077 · Counselling Session Report — All Courses · ${date}
+      </div>
+    </div>`;
+}
+
+// Sheet-link entry point (?token=X&mode=counsel&download=1) — always generates all 4
+// courses (MBBS, BDS, BAMS, BPTH, in that fixed order), each as its own fully separate
+// section, skipping any course with zero results entirely. The manual "Best Options PDF"
+// button keeps using downloadTop50PDF() (student's actual selected course(s), merged).
+async function downloadAllCoursesTop50PDF(){
+  const name  = STUDENT.name||'Student';
+  const token = STUDENT.token||getSess().token||'—';
+  const score = activeScore();
+  const cat   = activeCategory();
+  const date  = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+  const perCourse = getTop50AllCourses();
+
+  const courseSections = perCourse.map(({course, data})=>({
+    course,
+    sections: {
+      'MH Process': {
+        'MH Government Colleges': data.mhProcess['MH Govt'],
+        'MH Private Colleges':    data.mhProcess['MH Pvt'],
+      },
+      'MCC Process': {
+        'AIIMS':                  data.mccProcess['AIIMS'],
+        'JIPMER':                 data.mccProcess['JIPMER'],
+        'Central Universities':   data.mccProcess['Central'],
+        'Deemed ₹10–20L/yr':      data.mccProcess['Deemed ₹10–20L/yr'],
+        'Deemed ₹21–25L/yr':      data.mccProcess['Deemed ₹21–25L/yr'],
+        'Deemed ₹26–35L/yr':      data.mccProcess['Deemed ₹26–35L/yr'],
+        'MH & Karnataka Deemed':  data.mccProcess['MH & Karnataka Deemed'],
+        'Other State Deemed':     data.mccProcess['Other State Deemed'],
+      },
+      'Open States': data.openStates,
+    }
+  }));
+
+  const html = buildPDFHTMLMultiCourse(
+    'ASMI Career',
+    'Counselling Session — Best Options Report (All Courses)',
+    courseSections,
+    {name, token, score, cat, date}
+  );
+
+  const pdfDiv = document.getElementById('pdfTemplate');
+  pdfDiv.style.cssText = 'display:block;position:fixed;left:-9999px;top:0;width:794px;background:#fff;';
+  pdfDiv.innerHTML = html;
+
+  try{
+    const canvas = await html2canvas(pdfDiv,{scale:2,backgroundColor:'#fff',useCORS:true,allowTaint:true,logging:false});
+    const imgData = canvas.toDataURL('image/png');
+    const{jsPDF} = window.jspdf;
+    const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW  = pageW;
+    const imgH  = (canvas.height*imgW)/canvas.width;
+    let yPos=0, remaining=imgH;
+    while(remaining>0){
+      pdf.addImage(imgData,'PNG',0,-yPos,imgW,imgH);
+      remaining-=pageH; yPos+=pageH;
+      if(remaining>0) pdf.addPage();
+    }
+    const safeName = name.replace(/[^a-zA-Z0-9]/g,'_');
+    pdf.save(`ASMI_BestOptions_AllCourses_${safeName}_${token}.pdf`);
+  }finally{
+    pdfDiv.style.display='none';
+  }
+}
+
 async function downloadShortlistPDF(){
   const btn = document.getElementById('pdfBtn');
   btn.textContent = '⏳ Generating...';
@@ -2472,12 +2690,23 @@ function getTop25(){
   };
 }
 
-function getTop50(){
-  const score  = activeScore();
-  const cat    = activeCategory();
-  const sess   = getSess();
-  const selectedCourses = (sess.course||activeCourse()).split(',').map(c=>c.trim());
-  const keys   = catKeys(cat);
+// 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
+// Counsel Mode only (getTop25/getTop50/getTop50ForCourse are never called outside
+// isCounselMode()) — sort ascending by rank (best/lowest first), matching
+// slide3_options.html's Counsel Mode tables.
+function safeAndLikely(arr){
+  return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
+            .sort((a,b)=>a.c-b.c);
+}
+
+// Builds the mhProcess/mccProcess/openStates pool structure for a SINGLE course.
+// Shared by getTop50() (merges the student's actual selected course(s), used by the
+// manual "Best Options PDF" button and the on-screen Top 25 tab) and
+// getTop50AllCourses() (the sheet-link download=1 entry point — always all 4 courses,
+// each kept in its own separate result rather than merged).
+function getTop50ForCourse(course){
+  const cat  = activeCategory();
+  const keys = catKeys(cat);
 
   const MH_GOVT  = [], MH_PVT  = [];
   const AIIMS_C  = [], JIPMER_C= [], CENTRAL_C= [];
@@ -2494,59 +2723,49 @@ function getTop50(){
     });
   }
 
-  selectedCourses.forEach(course=>{
-    addWithProb(MH_GOVT,  getColleges('MH',course,keys,'mh_govt'), 'MH Govt',  'MH');
-    addWithProb(MH_PVT,   getColleges('MH',course,keys,'mh_pvt'),  'MH Pvt',   'MH');
+  addWithProb(MH_GOVT,  getColleges('MH',course,keys,'mh_govt'), 'MH Govt',  'MH');
+  addWithProb(MH_PVT,   getColleges('MH',course,keys,'mh_pvt'),  'MH Pvt',   'MH');
 
-    if(course==='MBBS'){
-      addWithProb(AIIMS_C,  getColleges('AIIMS','MBBS',keys,'aiims'),   'AIIMS',   null);
-      addWithProb(JIPMER_C, getColleges('JIPMER','MBBS',keys,'jipmer'), 'JIPMER',  null);
-      addWithProb(CENTRAL_C,getColleges('CENTRAL',course,keys,'central'),'Central',null);
+  if(course==='MBBS'){
+    addWithProb(AIIMS_C,  getColleges('AIIMS','MBBS',keys,'aiims'),   'AIIMS',   null);
+    addWithProb(JIPMER_C, getColleges('JIPMER','MBBS',keys,'jipmer'), 'JIPMER',  null);
+    addWithProb(CENTRAL_C,getColleges('CENTRAL',course,keys,'central'),'Central',null);
 
-      // Deemed — split by fee band
-      const deemed = getColleges('DEEMED','MBBS',['OPEN'],'deemed');
-      deemed.forEach(c=>{
-        c.state = c.s||'All India';
-        const f = FEE&&FEE[c.n];
-        if(f&&f>=10&&f<21) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
-        else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
-        else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
-        else DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
-      });
+    // Deemed — split by fee band
+    const deemed = getColleges('DEEMED','MBBS',['OPEN'],'deemed');
+    deemed.forEach(c=>{
+      c.state = c.s||'All India';
+      const f = FEE&&FEE[c.n];
+      if(f&&f>=10&&f<21) DEEMED_BANDS['₹10–20L/yr'].push({...c,pool:'Deemed'});
+      else if(f&&f>=21&&f<26) DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+      else if(f&&f>=26&&f<=35) DEEMED_BANDS['₹26–35L/yr'].push({...c,pool:'Deemed'});
+      else DEEMED_BANDS['₹21–25L/yr'].push({...c,pool:'Deemed'});
+    });
 
-      // Open States
-      [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
-        const cols = getColleges(stKey,course,['OPEN'],'open_pvt');
-        if(cols.length){
-          OPEN_COLS[stKey] = cols.map(c=>({
-            ...c,
-            pool: OPEN_STATE_NAME_MAP[stKey]||stKey,
-            state: OPEN_STATE_NAME_MAP[stKey]||stKey
-          }));
-        }
-      });
-    }
+    // Open States
+    [...OPEN_PRIORITY,...OPEN_OTHERS].forEach(stKey=>{
+      const cols = getColleges(stKey,course,['OPEN'],'open_pvt');
+      if(cols.length){
+        OPEN_COLS[stKey] = cols.map(c=>({
+          ...c,
+          pool: OPEN_STATE_NAME_MAP[stKey]||stKey,
+          state: OPEN_STATE_NAME_MAP[stKey]||stKey
+        }));
+      }
+    });
+  }
 
-    if(course==='BDS'){
-      addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null);
-      const bdsDemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
-      bdsDemed.forEach(c=>{
-        c.state = c.s||'All India';
-        if(['Maharashtra','Karnataka'].includes(c.s||'')) {
-          MH_KA_DEEMED.push({...c, pool:'Deemed'});
-        } else {
-          OTHER_STATE_DEEMED.push({...c, pool:'Deemed'});
-        }
-      });
-    }
-  });
-
-  // 3-tier inclusive "in reach" — safe, likely, OR borderline (only out_of_reach excluded).
-  // Counsel Mode only (getTop25/getTop50 are never called outside isCounselMode()) — sort
-  // ascending by rank (best/lowest first), matching slide3_options.html's Counsel Mode tables.
-  function safeAndLikely(arr){
-    return arr.filter(c=>c.prob&&c.prob.key!=='out_of_reach')
-              .sort((a,b)=>a.c-b.c);
+  if(course==='BDS'){
+    addWithProb(AIIMS_C, getColleges('AIIMS','MBBS',keys,'aiims'),'AIIMS',null);
+    const bdsDemed = getColleges('DEEMED','BDS',['OPEN'],'deemed');
+    bdsDemed.forEach(c=>{
+      c.state = c.s||'All India';
+      if(['Maharashtra','Karnataka'].includes(c.s||'')) {
+        MH_KA_DEEMED.push({...c, pool:'Deemed'});
+      } else {
+        OTHER_STATE_DEEMED.push({...c, pool:'Deemed'});
+      }
+    });
   }
 
   // Build structured result
@@ -2578,6 +2797,59 @@ function getTop50(){
 
   return result;
 }
+
+// Merges getTop50ForCourse() results across every course in a merge-set into single
+// shared pool buckets (original getTop50() behavior) — used by the manual "Best Options
+// PDF" button and the on-screen Top 25 tab, which show the student's own selected
+// course(s) merged together (courses appear as sub-groups within each pool via
+// renderTop25Table()'s subRows(), not as separate top-level sections).
+function mergeTop50(courses){
+  const merged = { mhProcess:{}, mccProcess:{}, openStates:{} };
+  const mhKeys = ['MH Govt','MH Pvt'];
+  const mccKeys = ['AIIMS','JIPMER','Central','Deemed ₹10–20L/yr','Deemed ₹21–25L/yr',
+    'Deemed ₹26–35L/yr','MH & Karnataka Deemed','Other State Deemed'];
+  mhKeys.forEach(k=>merged.mhProcess[k]=[]);
+  mccKeys.forEach(k=>merged.mccProcess[k]=[]);
+
+  courses.forEach(course=>{
+    const r = getTop50ForCourse(course);
+    mhKeys.forEach(k=>{ merged.mhProcess[k]=merged.mhProcess[k].concat(r.mhProcess[k]||[]); });
+    mccKeys.forEach(k=>{ merged.mccProcess[k]=merged.mccProcess[k].concat(r.mccProcess[k]||[]); });
+    Object.entries(r.openStates).forEach(([state,cols])=>{
+      merged.openStates[state] = (merged.openStates[state]||[]).concat(cols);
+    });
+  });
+
+  mhKeys.forEach(k=>{ merged.mhProcess[k]=safeAndLikely(merged.mhProcess[k]); });
+  mccKeys.forEach(k=>{ merged.mccProcess[k]=safeAndLikely(merged.mccProcess[k]); });
+  Object.keys(merged.openStates).forEach(state=>{
+    merged.openStates[state]=safeAndLikely(merged.openStates[state]);
+  });
+
+  return merged;
+}
+
+function getTop50(){
+  const sess   = getSess();
+  const selectedCourses = (sess.course||activeCourse()).split(',').map(c=>c.trim());
+  return mergeTop50(selectedCourses);
+}
+
+// Sheet-link entry point (?token=X&mode=counsel&download=1) — always ALL 4 courses in
+// fixed order MBBS, BDS, BAMS, BPTH, each kept as its own separate result (not merged),
+// so the PDF can render fully separate top-level sections per course. Courses with zero
+// results across every pool are omitted entirely (no empty section/header).
+function getTop50AllCourses(){
+  const COURSE_ORDER = ['MBBS','BDS','BAMS','BPTH'];
+  return COURSE_ORDER.map(course=>({course, data:getTop50ForCourse(course)}))
+    .filter(({data})=>{
+      const anyMh  = Object.values(data.mhProcess).some(a=>a.length);
+      const anyMcc = Object.values(data.mccProcess).some(a=>a.length);
+      const anyOpen= Object.values(data.openStates).some(a=>a.length);
+      return anyMh || anyMcc || anyOpen;
+    });
+}
+
 
 // ── INIT ─────────────────────────────────────────────────────────
 async function init(){
@@ -2674,7 +2946,7 @@ async function init(){
       renderTable(rows);
     }
 
-    if(params.get('download')==='1' && !isCounsel){
+    if(params.get('download')==='1'){
       document.querySelector('.slide-nav').style.display='none';
       document.getElementById('loadingOverlay').innerHTML=
         `<div style="text-align:center;padding:40px">
@@ -2684,7 +2956,9 @@ async function init(){
          </div>`;
       setTimeout(async()=>{
         try{
-          await downloadPDF();
+          // Sheet-link entry point: Counsel Mode always generates all 4 courses
+          // (MBBS/BDS/BAMS/BPTH); Dashboard Mode keeps its existing single PDF.
+          await (isCounsel ? downloadAllCoursesTop50PDF() : downloadPDF());
           document.getElementById('loadingOverlay').innerHTML=
             `<div style="text-align:center;padding:40px">
                <div style="font-size:2rem;margin-bottom:12px">✅</div>

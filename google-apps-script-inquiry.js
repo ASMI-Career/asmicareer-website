@@ -395,7 +395,7 @@ function addDownloadLink(sheet, rowNum, token) {
       sheet.setColumnWidth(COL_DOWNLOAD_LINK, 165);
     }
 
-    var url     = "https://asmicareer.in/slide4_recommended.html?token=" + encodeURIComponent(token) + "&download=1";
+    var url     = "https://asmicareer.in/slide4_recommended.html?token=" + encodeURIComponent(token) + "&mode=counsel&download=1";
     var formula = '=HYPERLINK("' + url + '","⬇ Download PDF")';
     var cell    = sheet.getRange(rowNum, COL_DOWNLOAD_LINK);
     cell.setFormula(formula);
@@ -536,7 +536,7 @@ function backfillDashboardLinks() {
       cellN.setHorizontalAlignment("center");
 
       // Download link (Q)
-      var dlUrl     = "https://asmicareer.in/slide4_recommended.html?token=" + encodeURIComponent(token) + "&download=1";
+      var dlUrl     = "https://asmicareer.in/slide4_recommended.html?token=" + encodeURIComponent(token) + "&mode=counsel&download=1";
       var dlFormula = '=HYPERLINK("' + dlUrl + '","⬇ Download PDF")';
       var cellQ     = sheet.getRange(rowNum, COL_DOWNLOAD_LINK);
       cellQ.setFormula(dlFormula);
