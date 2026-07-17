@@ -1959,7 +1959,7 @@ function buildPDFHTML(title, subtitle, sections, studentData){
     const colspanVal = showCat ? 6 : 5;
     if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
     return cols.map((c,i)=>{
-      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : c.c;
       const actualStr = actual!==null ? actual : '—';
       const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
       const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
@@ -2156,7 +2156,7 @@ function buildPDFHTMLMultiCourse(title, subtitle, courseSections, studentData){
     const colspanVal = showCat ? 6 : 5;
     if(!cols||!cols.length) return `<tr><td colspan="${colspanVal}" style="text-align:center;color:#aaa;padding:8px;font-size:10px;">No options in this range</td></tr>`;
     return cols.map((c,i)=>{
-      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+      const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : c.c;
       const actualStr = actual!==null ? actual : '—';
       const feeVal    = FEE&&FEE[c.n]?`₹${Number(FEE[c.n]).toFixed(2)}L/yr`:'—';
       const statusColor = c.prob.key==='safe'?'#15803d':c.prob.key==='likely'?'#0369a1':'#b91c1c';
