@@ -375,7 +375,20 @@ function catKeys(cat){
 }
 
 // ── PROBABILITY vs PROJECTED ─────────────────────────────────────
+// RANK_MODE: delegate to probRank() (already correct — lower rank = better,
+// same 0.88/1.0/1.12 bands used everywhere else) instead of reimplementing
+// the comparison here. Its key/cls are remapped to this function's existing
+// naming ('reach'/'status-reach' instead of 'out_of_reach'/'out_of_reach')
+// so every existing call site's rendering (class="status ${x.cls}") keeps
+// working unchanged.
+// Legacy (RANK_MODE false, no rank submitted yet): unchanged score+20-gap
+// formula, kept exactly as before.
 function getStatus(score, lastCutoff){
+  if(RANK_MODE){
+    const p=probRank(score, lastCutoff);
+    const key=p.key==='out_of_reach' ? 'reach' : p.key;
+    return {key, label:p.label, cls:'status-'+key};
+  }
   const proj=lastCutoff+20, gap=score-proj;
   if(gap>=15)  return{key:'safe',      label:'Safe',       cls:'status-safe'};
   if(gap>=0)   return{key:'likely',    label:'Likely',     cls:'status-likely'};
@@ -463,7 +476,7 @@ function mccInstType(stateKey, courseKey){
   if(stateKey==='DEEMED')  return 'DEEMED_'+course;
   return null;
 }
-function getCollegesRank(stateKey, courseKey, keys){
+function getCollegesMCCRank(stateKey, courseKey, keys){
   const instType = mccInstType(stateKey, courseKey);
   if(!instType || !RANKS) return [];
   const rank = activeRank();
@@ -495,8 +508,78 @@ function getCollegesRank(stateKey, courseKey, keys){
   return cols;
 }
 
+// RANK-based MH lookup — ported from slide3_options.html's getMHDualRank(), adapted to
+// return a flat array (slide4's getColleges() callers — addWithProb()/buildPoolRows() —
+// consume a flat array directly, unlike slide3's {cols,total} shape; slide4 has no separate
+// "total available" concept, callers just use the returned array's length).
+function mhQuotaFromListType(listType){ return listType==='mh_pvt' ? 'PRIVATE_MBBS' : 'GOVT_MBBS'; }
+function getCollegesMHRank(courseKey, listType){
+  const rank=activeRank(), userCat=activeCategory();
+  if(courseKey!=='MBBS' || !RANKS) return []; // closing_ranks MH data is MBBS-only
+  const quota=mhQuotaFromListType(listType);
+  const records=(RANKS.MH||[]).filter(r=>r.quota===quota);
+  const openMap=new Map(records.filter(r=>r.category==='OPEN').map(r=>[r.name,r.closing_rank]));
+  const catMap=new Map((userCat!=='General'?records.filter(r=>r.category===userCat):[]).map(r=>[r.name,r.closing_rank]));
+  const allNames=new Set([...openMap.keys(),...catMap.keys()]);
+  const cols=[];
+  allNames.forEach(name=>{
+    const openC=openMap.has(name)?openMap.get(name):null;
+    const catC=catMap.has(name)?catMap.get(name):null;
+    const bestC=Math.max(openC??-Infinity,catC??-Infinity); // rank: larger = easier = "best"
+    if(bestC===-Infinity) return;
+    cols.push({n:name,openCutoff:openC,catCutoff:catC,c:bestC,s:'Maharashtra',prob:prob(rank,bestC)});
+  });
+  return cols;
+}
+
+// RANK-based Open-State lookup — ported from slide3_options.html's getOSCollegesRank(),
+// same category-aware handling for HP/TR, rank-only dedupe for every other state.
+function getCollegesOpenRank(stateKey, courseKey){
+  if(courseKey!=='MBBS' || !RANKS) return []; // closing_ranks OPEN data is MBBS-only
+  const rank=activeRank();
+  const stateName=OPEN_STATE_NAME_MAP[stateKey]||stateKey;
+  const isCatState=(stateKey==='HP'||stateKey==='TR');
+  const records=(RANKS.OPEN||[]).filter(r=>r.state===stateName);
+
+  if(isCatState){
+    const keys=catKeys(activeCategory());
+    const userCatKey=keys.find(k=>k!=='OPEN');
+    const openMap=new Map(records.filter(r=>r.category&&r.category.toUpperCase()==='OPEN').map(r=>[r.name,r.closing_rank]));
+    const catMap=new Map((userCatKey?records.filter(r=>r.category&&r.category.toUpperCase()===userCatKey.toUpperCase()):[]).map(r=>[r.name,r.closing_rank]));
+    const best=new Map();
+    keys.forEach(k=>{
+      records.filter(r=>r.category&&r.category.toUpperCase()===k.toUpperCase()).forEach(r=>{
+        const ex=best.get(r.name);
+        if(!ex||r.closing_rank>ex.closing_rank) best.set(r.name,r);
+      });
+    });
+    const cols=[];
+    best.forEach((rec,name)=>{
+      cols.push({n:name,openCutoff:openMap.has(name)?openMap.get(name):null,catCutoff:catMap.has(name)?catMap.get(name):null,c:rec.closing_rank,s:rec.state||stateName,prob:prob(rank,rec.closing_rank)});
+    });
+    return cols;
+  }
+
+  const best=new Map();
+  records.forEach(r=>{
+    const ex=best.get(r.name);
+    if(!ex||r.closing_rank>ex.closing_rank) best.set(r.name,r);
+  });
+  const cols=[];
+  best.forEach((rec,name)=>{
+    cols.push({n:name,openCutoff:null,catCutoff:null,c:rec.closing_rank,s:rec.state||stateName,prob:prob(rank,rec.closing_rank)});
+  });
+  return cols;
+}
+
+function getCollegesRank(stateKey, courseKey, keys, listType){
+  if(stateKey==='MH') return getCollegesMHRank(courseKey, listType);
+  if(OPEN_STATE_NAME_MAP[stateKey]) return getCollegesOpenRank(stateKey, courseKey);
+  return getCollegesMCCRank(stateKey, courseKey, keys);
+}
+
 function getColleges(stateKey,courseKey,keys,listType){
-  return RANK_MODE ? getCollegesRank(stateKey,courseKey,keys) : getCollegesLegacy(stateKey,courseKey,keys,listType);
+  return RANK_MODE ? getCollegesRank(stateKey,courseKey,keys,listType) : getCollegesLegacy(stateKey,courseKey,keys,listType);
 }
 
 const POOL_TO_STATE = {
@@ -2170,12 +2253,15 @@ const CENTRAL_STATE_MAP = {
   'Faculty of Medicine, Jamia Millia Islamia':    'Delhi',
 };
 
+// NOTE: CG/PY spellings must match closing_ranks_2025.json's actual `state`
+// values exactly ('Chattisgarh' single-h, 'Pondicherry' not 'Puducherry') —
+// same mismatch found and fixed in slide3_options.html's STATE_LABELS.
 const OPEN_STATE_NAME_MAP = {
   KA:'Karnataka', KL:'Kerala', TS:'Telangana', TN:'Tamil Nadu',
   UP:'Uttar Pradesh', AP:'Andhra Pradesh', HR:'Haryana',
-  WB:'West Bengal', BR:'Bihar', UK:'Uttarakhand', CG:'Chhattisgarh',
-  PY:'Puducherry', JH:'Jharkhand', TR:'Tripura', MN:'Manipur',
-  ML:'Meghalaya', HP:'Himachal Pradesh',
+  WB:'West Bengal', BR:'Bihar', UK:'Uttarakhand', CG:'Chattisgarh',
+  PY:'Pondicherry', JH:'Jharkhand', TR:'Tripura', MN:'Manipur',
+  ML:'Meghalaya', HP:'Himachal Pradesh', SK:'Sikkim',
 };
 
 function getStateForCollege(name, pool, stKey){
@@ -2279,7 +2365,7 @@ function getTop25(){
   const DEEMED_BANDS={'₹10–20L/yr':[],'₹21–25L/yr':[],'₹26–35L/yr':[]};
   const MH_KA_DEEMED=[], OTHER_STATE_DEEMED=[];
   const OPEN_PRIORITY=['KA','TS','AP','UP'];
-  const OPEN_OTHERS=['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
+  const OPEN_OTHERS=['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP','TN','SK'];
   const OPEN_COLS={};
 
   function addWithProb(arr, cols, pool, stKey, course){
@@ -2377,7 +2463,7 @@ function getTop50(){
   const DEEMED_BANDS = {'₹10–20L/yr':[], '₹21–25L/yr':[], '₹26–35L/yr':[]};
   const MH_KA_DEEMED = [], OTHER_STATE_DEEMED = [];
   const OPEN_PRIORITY = ['KA','TS','AP','UP'];
-  const OPEN_OTHERS   = ['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP'];
+  const OPEN_OTHERS   = ['KL','HR','WB','BR','UK','CG','PY','JH','TR','MN','ML','HP','TN','SK'];
   const OPEN_COLS     = {};
 
   function addWithProb(arr, cols, pool, stKey){

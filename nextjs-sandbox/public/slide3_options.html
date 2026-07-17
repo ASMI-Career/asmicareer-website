@@ -425,7 +425,7 @@ const KA_MGMT_ONLY=[];
 const OPEN_STATES=['KA','TS','TN','UP','KL','AP','HR','WB','BR','UK','CG','JH','HP','PY','TR','MN','ML','SK'];
 const STATE_LABELS={KA:'Karnataka',TS:'Telangana',TN:'Tamil Nadu',UP:'Uttar Pradesh',
   UK:'Uttarakhand',PY:'Pondicherry',WB:'West Bengal',MN:'Manipur',ML:'Meghalaya',
-  AP:'Andhra Pradesh',BR:'Bihar',HR:'Haryana',JH:'Jharkhand',CG:'Chhattisgarh',
+  AP:'Andhra Pradesh',BR:'Bihar',HR:'Haryana',JH:'Jharkhand',CG:'Chattisgarh',
   KL:'Kerala',HP:'Himachal Pradesh',TR:'Tripura',SK:'Sikkim'};
 
 let DB=null,RANKS=null,FEE={},STUDENT={},currentPane=null,mhTab='govt',mhCourse='MBBS',aiimsOpen=false,osExpanded=null;
@@ -781,6 +781,8 @@ function renderOSTable(stKey,cols){
   const score=activeScore();
   const byClosest=(arr)=>[...arr].sort((a,b)=>
     Math.abs(score-a.c)-Math.abs(score-b.c));
+  const showCat = (stKey==='HP'||stKey==='TR') && activeCategory()!=='General' && activeCategory()!=='OPEN';
+  const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
 
   const safePool  = byClosest(cols.filter(c=>c.prob.key==='safe'||c.prob.key==='likely'));
   const borderPool= byClosest(cols.filter(c=>c.prob.key==='borderline'));
@@ -794,13 +796,17 @@ function renderOSTable(stKey,cols){
   if(preview.length<5) preview.push(...reachPool.slice(0, 5-preview.length));
   const rest=cols.filter(c=>!preview.includes(c));
   function row(c){
-    return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val" style="text-align:center">${c.c}</td><td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
+    const catActual = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
+    const catCell = showCat && catActual!==null
+      ? `<td style="text-align:center"><span class="cutoff-val" style="color:var(--purple)">${catActual}</span></td>`
+      : showCat ? '<td style="text-align:center;color:rgba(26,0,64,0.3)">—</td>' : '';
+    return`<tr><td class="college-name">${c.n}</td><td class="cutoff-val" style="text-align:center">${c.c}</td>${catCell}<td class="fee-val">${feeStr(c.n)}</td><td style="text-align:center"><span class="prob ${c.prob.cls}">${c.prob.label}</span></td></tr>`;
   }
-  const thead=`<thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th></tr></thead>`;
+  const thead=`<thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th></tr></thead>`;
   const ph=`<table class="ctable">${thead}<tbody>${preview.map(row).join('')}</tbody></table>`;
   if(isCounselMode()){
-    const allRows=sorted.map(c=>rowWithStar(c, STATE_LABELS[stKey]||stKey, 'Open States')).join('');
-    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff (AIR)</th><th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
+    const allRows=sorted.map(c=>rowWithStar(c, STATE_LABELS[stKey]||stKey, 'Open States', showCat)).join('');
+    return`<table class="ctable"><thead><tr><th>College</th><th>Cutoff (AIR)</th>${dh}<th>Fee/yr</th><th>Chance</th><th>★</th></tr></thead><tbody>${allRows}</tbody></table>`;
   }
   if(!rest.length) return ph;
   return`${ph}<div class="blur-section"><div class="blur-overlay" style="width:100%;box-sizing:border-box;"><div class="blur-overlay-inner">🔒 Register with ASMI — your counsellor will guide you through all ${cols.length} options</div></div></div>`;
@@ -1280,6 +1286,10 @@ const aiqRest = aiqTotal.filter(c => !new Set(aiqPrev.map(c => c.n)).has(c.n));
       const centralPreviewHtml = !isCounselMode() ? `
         <table class="ctable" style="width:100%;margin-top:8px;">
           <thead><tr>
+            <th>College</th><th>Cutoff (AIR)</th>
+            ${dh}
+            <th>Fee/yr</th><th>Chance</th>
+          </tr></thead>
           <tbody>${cenPrev.map(c=>row(c)).join('')}</tbody>
         </table>
         ${cenRest.length?`<div class="blur-section" style="margin-top:0;">
