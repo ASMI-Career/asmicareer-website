@@ -342,6 +342,10 @@ table.stable td:not(:first-child):not(:nth-child(2)){text-align:center;}
 
 <script>
 const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
+// Student Dashboard script — separate deployment/sheet from APPS_SCRIPT_URL above, used for
+// ASMI-XXX-NNN format tokens (vs APPS_SCRIPT_URL's YY-XXX-NNN inquiry-flow tokens). Same
+// constant name/value as dashboard.html's STUDENT_APPS_SCRIPT -- copied verbatim, not retyped.
+const STUDENT_APPS_SCRIPT='https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
 const DB_URL='/ASMI_DB_Final.json'; // LEGACY (FALLBACK) score-based source — kept in place, still used when a student has no rank yet (see RANK_MODE)
 const RANKS_URL='/data/closing_ranks_2025.json';
 const FEE_URL='/fee_map.json';
@@ -2883,12 +2887,21 @@ async function init(){
   }
   document.getElementById('nextBtn').href='slide5_problems.html?token='+encodeURIComponent(token);
 
+  // Route to the correct Apps Script by token format: YY-XXX-NNN (inquiry-flow tokens,
+  // e.g. 26-ONL-1568) -> APPS_SCRIPT_URL, unchanged. ASMI-XXX-NNN (Student Dashboard
+  // tokens, e.g. ASMI-MUM-001) -> STUDENT_APPS_SCRIPT, which requires action=getStudent
+  // (APPS_SCRIPT_URL's doGet takes a bare ?token= with no action param).
+  const isStudentDashboardToken = /^ASMI-[A-Z]+-\d+$/.test(token);
+  const studentFetchUrl = isStudentDashboardToken
+    ? STUDENT_APPS_SCRIPT+'?action=getStudent&token='+encodeURIComponent(token)+'&_t='+Date.now()
+    : APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)+'&_t='+Date.now();
+
   try{
     const[dbRes,ranksRes,feeRes,studentRes]=await Promise.all([
       fetch(DB_URL).then(r=>r.json()),      // LEGACY fallback source — see RANK_MODE below
       fetch(RANKS_URL).then(r=>r.json()),
       fetch(FEE_URL).then(r=>r.json()),
-      token?fetch(APPS_SCRIPT_URL+'?token='+encodeURIComponent(token)+'&_t='+Date.now()).then(r=>r.json()):Promise.resolve({demo:true})
+      token?fetch(studentFetchUrl).then(r=>r.json()):Promise.resolve({demo:true})
     ]);
     DB=dbRes; RANKS=ranksRes; FEE=feeRes;
     STUDENT=studentRes.success?studentRes.data:{score:520,category:'OBC',courses:'MBBS',name:'Demo Student',token:'DEMO'};
