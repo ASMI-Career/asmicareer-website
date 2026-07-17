@@ -704,7 +704,7 @@ function renderTable(cols,showState=false){
 function rowWithStar(c, pool, poolGroup, showCatCutoff=false, stackCutoff=true, course=mhCourse||activeCourse()){
   const starred   = isShortlisted(c.n);
   const feeVal    = feeStr(c.n);
-  const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+  const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : c.c;
   const actualStr = actual!==null ? actual : '—';
 
   // "+20 projected cutoff" removed — rank comparison is a direct value, no projection concept applies.
@@ -1053,7 +1053,7 @@ function renderAIIMSList(cols){
     ${isCounselMode()?'<th>★</th>':''}
   </tr></thead>`;
   const row=c=>{
-    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : c.c;
     const actualStr = actual!==null ? actual : '—';
 
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
@@ -1107,7 +1107,7 @@ function renderMCCExpanded(){
   const dh = showCat ? `<th>${activeCategory()} CUTOFF</th>` : '';
   
   const row=(c, stackCutoff = true, forceHideCat = false)=>{
-    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : (c.openCutoff===undefined ? c.c : null);
+    const actual    = (c.openCutoff!==undefined && c.openCutoff!==null) ? c.openCutoff : c.c;
     const actualStr = actual!==null ? actual : '—';
 
     const catActual  = c.catCutoff!==undefined && c.catCutoff!==null ? c.catCutoff : null;
