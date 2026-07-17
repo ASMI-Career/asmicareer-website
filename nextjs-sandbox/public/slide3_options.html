@@ -1598,6 +1598,7 @@ async function init(){
   document.getElementById('editBar').classList.add('visible');
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
+  if(params.get('mode')==='counsel' && getSess().mode!=='counsel') setSess('mode','counsel');
   const isCounsel=getSess().mode==='counsel';
   const modeParam=isCounsel?'&mode=counsel':'';
   document.getElementById('navPrev').href='slide2_profile.html?token='+encodeURIComponent(token)+modeParam;

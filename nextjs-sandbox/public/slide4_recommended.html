@@ -2566,6 +2566,9 @@ function getTop50(){
 async function init(){
   const params=new URLSearchParams(location.search);
   const token=params.get('token')||'';
+  if(params.get('mode')==='counsel' && getSess().mode!=='counsel'){
+    const s=getSess();s.mode='counsel';sessionStorage.setItem('asmi',JSON.stringify(s));
+  }
 
   const isCounsel=getSess().mode==='counsel';
   const modeParam=isCounsel?'&mode=counsel':'';

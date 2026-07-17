@@ -420,6 +420,9 @@ function populate(data) {
 // ── MAIN: fetch by token ────────────────────────────────────────
 const params = new URLSearchParams(window.location.search);
 const token  = params.get('token') || '';
+if(params.get('mode')==='counsel' && getSess().mode!=='counsel'){
+  const s=getSess();s.mode='counsel';sessionStorage.setItem('asmi',JSON.stringify(s));
+}
 
 const isCounsel = getSess().mode === 'counsel';
 document.getElementById('navPrev').href = isCounsel
