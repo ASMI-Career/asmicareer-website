@@ -581,8 +581,20 @@ function getCollegesOpenRank(stateKey, courseKey){
   // separate colleges) -- that needs a source-data fix (distinguishing name),
   // not a generalized dedup-key change, since generalizing it broke every
   // other state's quota-variant collapsing.
+  //
+  // Exclude NRI-quota rows (quota values MQ NRI/NRI/UR NRI/UR FEM NRI) from
+  // the candidate pool before dedup: NRI seats have deliberately inflated
+  // closing ranks (foreign-quota, $ fees, far weaker merit admitted), so
+  // "keep the largest closing_rank" was always picking the NRI record over
+  // the real domestic quota's cutoff -- e.g. Chhattisgarh colleges were
+  // showing their NRI quota's ~1,050,000+ rank and $35,000 fee instead of
+  // the actual UR quota's ~100,000 rank. Falls back to the full record set
+  // only if a college has ONLY NRI rows (nothing domestic to show at all).
+  const nonNri = records.filter(r=>!/NRI/i.test(r.quota||''));
+  const namesWithDomestic = new Set(nonNri.map(r=>r.name));
+  const candidates = records.filter(r=>!/NRI/i.test(r.quota||'') || !namesWithDomestic.has(r.name));
   const best=new Map();
-  records.forEach(r=>{
+  candidates.forEach(r=>{
     const ex=best.get(r.name);
     if(!ex||r.closing_rank>ex.closing_rank) best.set(r.name,r);
   });
