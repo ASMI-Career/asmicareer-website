@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Admin — Cutoff Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <style>
+    .step-pill {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(26,0,64,0.06);
+      color: #1a0040;
+    }
+    .step-pill.active { background: #1a0040; color: #FFD700; }
+    .step-pill.done { background: rgba(21,128,61,0.12); color: #15803d; }
+    .unmapped-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid rgba(220,38,38,0.25);
+      background: rgba(220,38,38,0.04);
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="bg-brand-navy px-6 py-4">
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-white font-black text-lg" style="font-family:'Montserrat',sans-serif;">ASMI Admin</h1>
+      <div class="flex gap-2">
+        <span id="step-1" class="step-pill active">1. Select</span>
+        <span id="step-2" class="step-pill">2. Review</span>
+        <span id="step-3" class="step-pill">3. Output</span>
+      </div>
+    </div>
+    <nav class="tool-nav">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/selection-lists/">Selection List Parser</a>
+      <a href="/admin/seat-matrices/">Seat Matrix Parser</a>
+      <a href="/admin/merit-lists/">Merit List Parser</a>
+      <a href="/admin/cutoff-generator/" class="active">Cutoff Generator</a>
+    </nav>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+
+    <section id="screen-select">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Cutoff Generator</h2>
+      <p class="text-sm brand-purple mb-6">Pick already-approved outputs from the other tools. Nothing is written until you approve on the review screen.</p>
+
+      <form id="select-form" class="card space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">State / Exam</label>
+            <select id="state-exam" class="w-full">
+              <option value="AYUSH_MH">AYUSH — Maharashtra</option>
+              <option value="RAJASTHAN">Rajasthan</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Round</label>
+            <input type="text" id="round-label" class="w-full" placeholder="e.g. Stray Round 4" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Selection list (approved only) — required</label>
+          <select id="selection-list-id" class="w-full" required></select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Merit list — optional, needed for SML</label>
+          <select id="merit-list-id" class="w-full">
+            <option value="">— none —</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Score / marks-band reference (.xlsx) — optional, needed for Score</label>
+          <input type="file" id="score-reference-file" accept=".xlsx" class="w-full text-xs">
+        </div>
+
+        <label class="flex items-center gap-2 text-xs brand-navy">
+          <input type="checkbox" id="replace-mode">
+          Replace mode (overwrite existing cell values — default is fill-blanks-only)
+        </label>
+
+        <div class="flex items-center gap-3">
+          <button type="submit" id="process-btn" class="btn-primary">Process</button>
+          <span id="upload-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+    </section>
+
+    <section id="screen-review" class="hidden">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Review</h2>
+      <p class="text-sm brand-purple mb-6">Resolve every unmapped quota string before approving.</p>
+
+      <div id="unmapped-block" class="card mb-5 hidden">
+        <h3 class="font-black text-sm brand-navy mb-2">⚠ Unmapped quota strings (blocks approval)</h3>
+        <div id="unmapped-list"></div>
+        <button id="rerun-btn" class="btn-secondary mt-2">Re-run with updated mappings</button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-total-rows">–</div><div class="text-xs brand-purple">Rows parsed</div></div>
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-unmapped">–</div><div class="text-xs brand-purple">Unmapped quotas</div></div>
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-unresolved-codes">–</div><div class="text-xs brand-purple">Unresolvable college codes</div></div>
+      </div>
+
+      <div class="card mb-5">
+        <h3 class="font-black text-sm brand-navy mb-3">Match counts per file / sheet</h3>
+        <div id="match-counts" class="text-xs space-y-1"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="card"><h3 class="font-black text-sm brand-navy mb-2">SML resolution</h3><div id="sml-stats" class="text-xs"></div></div>
+        <div class="card"><h3 class="font-black text-sm brand-navy mb-2">Score resolution</h3><div id="score-stats" class="text-xs"></div></div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="approve-btn" class="btn-primary" disabled>Approve &amp; Generate</button>
+        <button id="back-to-select-btn" class="btn-secondary">Back</button>
+        <span id="approve-status" class="text-xs brand-purple"></span>
+      </div>
+    </section>
+
+    <section id="screen-output" class="hidden">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Done</h2>
+      <div class="card mb-6">
+        <p class="text-sm brand-navy mb-4">Run #<span id="output-run-id"></span> — <span id="output-round"></span></p>
+        <button id="download-btn" class="btn-primary">Download all files (.zip)</button>
+      </div>
+      <button id="new-run-btn" class="btn-secondary">Start another run</button>
+    </section>
+
+  </main>
+
+  <script>
+    const API_BASE = "https://asmi-cutoff-engine-backend.onrender.com";
+    let currentRunId = null;
+
+    function setStep(n) {
+      for (const i of [1, 2, 3]) {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'done');
+        if (i < n) el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      }
+      document.getElementById('screen-select').classList.toggle('hidden', n !== 1);
+      document.getElementById('screen-review').classList.toggle('hidden', n !== 2);
+      document.getElementById('screen-output').classList.toggle('hidden', n !== 3);
+    }
+
+    async function loadDropdowns() {
+      const stateExam = document.getElementById('state-exam').value;
+      const selSelect = document.getElementById('selection-list-id');
+      const meritSelect = document.getElementById('merit-list-id');
+
+      const [selRes, meritRes] = await Promise.all([
+        fetch(`${API_BASE}/api/parsed-selection-lists?state_exam=${encodeURIComponent(stateExam)}&status=approved`),
+        fetch(`${API_BASE}/api/parsed-merit-lists?state_exam=${encodeURIComponent(stateExam)}`),
+      ]);
+      const selRows = await selRes.json();
+      const meritRows = await meritRes.json();
+
+      selSelect.innerHTML = selRows.length
+        ? selRows.map(r => `<option value="${r.id}">#${r.id} — ${r.uploaded_filename} (${r.round_label}, ${r.row_count} rows)</option>`).join('')
+        : '<option value="">No approved selection lists — approve one in the Selection List Parser tool first</option>';
+
+      meritSelect.innerHTML = '<option value="">— none —</option>' +
+        meritRows.map(r => `<option value="${r.id}">#${r.id} — ${r.uploaded_filename} (${r.round_label}, ${r.row_count} rows)</option>`).join('');
+    }
+
+    function buildFormData() {
+      const fd = new FormData();
+      fd.append('state_exam', document.getElementById('state-exam').value);
+      fd.append('round_label', document.getElementById('round-label').value);
+      fd.append('parsed_selection_list_id', document.getElementById('selection-list-id').value);
+      const meritId = document.getElementById('merit-list-id').value;
+      if (meritId) fd.append('parsed_merit_list_id', meritId);
+      fd.append('replace_mode', document.getElementById('replace-mode').checked);
+      const scoreFile = document.getElementById('score-reference-file').files[0];
+      if (scoreFile) fd.append('score_reference_file', scoreFile);
+      return fd;
+    }
+
+    async function submitRun() {
+      const statusEl = document.getElementById('upload-status');
+      const btn = document.getElementById('process-btn');
+      btn.disabled = true;
+      statusEl.textContent = 'Processing…';
+      try {
+        const res = await fetch(`${API_BASE}/api/runs`, { method: 'POST', body: buildFormData() });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || 'Request failed');
+        }
+        const data = await res.json();
+        currentRunId = data.run_id;
+        renderReview(data);
+        setStep(2);
+        statusEl.textContent = '';
+      } catch (e) {
+        statusEl.textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderReview(data) {
+      const s = data.summary;
+      document.getElementById('stat-total-rows').textContent = s.total_rows ?? '–';
+      document.getElementById('stat-unmapped').textContent = (s.unmapped_quotas || []).length;
+      document.getElementById('stat-unresolved-codes').textContent = s.unresolvable_college_code_count ?? 0;
+
+      const unmappedBlock = document.getElementById('unmapped-block');
+      const unmappedList = document.getElementById('unmapped-list');
+      unmappedList.innerHTML = '';
+      const unmapped = s.unmapped_quotas || [];
+      if (unmapped.length) {
+        unmappedBlock.classList.remove('hidden');
+        for (const q of unmapped) {
+          const row = document.createElement('div');
+          row.className = 'unmapped-row';
+          row.innerHTML = `
+            <span class="text-xs font-bold brand-navy flex-1">"${q}"</span>
+            <input type="text" placeholder="target_file" data-role="tf" class="w-28">
+            <input type="text" placeholder="target_sheet" data-role="ts" class="w-28">
+            <select data-role="conf" class="w-24">
+              <option value="high">high</option><option value="medium">medium</option>
+              <option value="low">low</option><option value="skip">skip</option>
+            </select>
+            <button class="btn-secondary" data-role="save">Save</button>
+          `;
+          row.querySelector('[data-role=save]').addEventListener('click', async () => {
+            const tf = row.querySelector('[data-role=tf]').value.trim() || null;
+            const ts = row.querySelector('[data-role=ts]').value.trim() || null;
+            const conf = row.querySelector('[data-role=conf]').value;
+            await fetch(`${API_BASE}/api/quota-mapping`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                state_exam: document.getElementById('state-exam').value,
+                quota_text: q,
+                target_file: conf === 'skip' ? null : tf,
+                target_sheet: conf === 'skip' ? null : ts,
+                confidence: conf,
+              }),
+            });
+            row.style.opacity = '0.4';
+            row.querySelector('[data-role=save]').textContent = 'Saved';
+          });
+          unmappedList.appendChild(row);
+        }
+      } else {
+        unmappedBlock.classList.add('hidden');
+      }
+
+      const matchCounts = document.getElementById('match-counts');
+      const counts = Object.entries(s.match_counts_per_file_sheet || {});
+      matchCounts.innerHTML = counts.length
+        ? counts.map(([k, v]) => `<div class="flex justify-between"><span class="brand-navy">${k}</span><span class="font-bold">${v}</span></div>`).join('')
+        : '<span class="brand-purple">No matches yet.</span>';
+
+      const smlStats = s.sml_stats || { resolved: 0, unresolved: 0 };
+      document.getElementById('sml-stats').innerHTML =
+        `<div class="flex justify-between"><span>Resolved</span><span class="font-bold">${smlStats.resolved}</span></div>
+         <div class="flex justify-between"><span>Unresolved (—)</span><span class="font-bold">${smlStats.unresolved}</span></div>`;
+
+      const scoreStats = s.score_stats || { resolved: 0, unresolved: 0 };
+      document.getElementById('score-stats').innerHTML =
+        `<div class="flex justify-between"><span>Resolved</span><span class="font-bold">${scoreStats.resolved}</span></div>
+         <div class="flex justify-between"><span>Unresolved (—)</span><span class="font-bold">${scoreStats.unresolved}</span></div>`;
+
+      document.getElementById('approve-btn').disabled = !data.can_approve;
+    }
+
+    async function rerunReview() {
+      const res = await fetch(`${API_BASE}/api/runs/${currentRunId}`);
+      renderReview(await res.json());
+    }
+
+    async function approveRun() {
+      const statusEl = document.getElementById('approve-status');
+      const btn = document.getElementById('approve-btn');
+      btn.disabled = true;
+      statusEl.textContent = 'Generating…';
+      try {
+        const res = await fetch(`${API_BASE}/api/runs/${currentRunId}/approve`, { method: 'POST' });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || 'Approve failed');
+        }
+        const data = await res.json();
+        document.getElementById('output-run-id').textContent = data.run_id;
+        document.getElementById('output-round').textContent = data.round_label;
+        setStep(3);
+      } catch (e) {
+        statusEl.textContent = `Error: ${e.message}`;
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('select-form').addEventListener('submit', (e) => { e.preventDefault(); submitRun(); });
+    document.getElementById('rerun-btn').addEventListener('click', rerunReview);
+    document.getElementById('approve-btn').addEventListener('click', approveRun);
+    document.getElementById('back-to-select-btn').addEventListener('click', () => setStep(1));
+    document.getElementById('download-btn').addEventListener('click', () => {
+      window.location.href = `${API_BASE}/api/runs/${currentRunId}/download`;
+    });
+    document.getElementById('new-run-btn').addEventListener('click', () => {
+      document.getElementById('select-form').reset();
+      currentRunId = null;
+      setStep(1);
+      loadDropdowns();
+    });
+    document.getElementById('state-exam').addEventListener('change', loadDropdowns);
+
+    loadDropdowns();
+  </script>
+</body>
+</html>

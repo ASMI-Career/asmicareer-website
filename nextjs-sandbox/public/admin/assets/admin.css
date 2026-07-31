@@ -1,0 +1,101 @@
+body { background: #fdfbf6; }
+.brand-navy { color: #1a0040; }
+.brand-gold { color: #FFD700; }
+.brand-purple { color: #6a0dad; }
+.bg-brand-navy { background: #1a0040; }
+.bg-brand-gold { background: #FFD700; }
+.bg-brand-purple { background: #6a0dad; }
+
+.btn-primary {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px 22px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #FFD700;
+  color: #1a0040;
+  transition: 0.15s;
+}
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary:not(:disabled):hover { transform: translateY(-1px); }
+
+.btn-secondary {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(106,13,173,0.25);
+  background: #fff;
+  color: #6a0dad;
+  cursor: pointer;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(106,13,173,0.12);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.stat-tile {
+  border: 1px solid rgba(106,13,173,0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.stat-num { font-size: 22px; font-weight: 900; font-family: 'Montserrat', sans-serif; }
+
+.status-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.status-draft { background: rgba(106,13,173,0.1); color: #6a0dad; }
+.status-approved { background: rgba(21,128,61,0.12); color: #15803d; }
+.status-needs_schema { background: rgba(220,38,38,0.1); color: #dc2626; }
+.status-rejected { background: rgba(220,38,38,0.1); color: #dc2626; }
+
+.tool-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tool-nav a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: #FFD700;
+  text-decoration: none;
+}
+.tool-nav a.active { background: #FFD700; color: #1a0040; border-color: #FFD700; }
+
+table.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.data-table th {
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  color: #1a0040;
+  padding: 6px 8px;
+  border-bottom: 2px solid rgba(106,13,173,0.15);
+}
+table.data-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(106,13,173,0.08);
+  color: #333;
+}
+
+select, input[type=text], input[type=number] {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(106,13,173,0.25);
+}

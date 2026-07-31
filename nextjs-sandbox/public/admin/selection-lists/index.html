@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Admin — Selection List Parser</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+</head>
+<body class="min-h-screen">
+  <header class="bg-brand-navy px-6 py-4">
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-white font-black text-lg" style="font-family:'Montserrat',sans-serif;">ASMI Admin</h1>
+    </div>
+    <nav class="tool-nav">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/selection-lists/" class="active">Selection List Parser</a>
+      <a href="/admin/seat-matrices/">Seat Matrix Parser</a>
+      <a href="/admin/merit-lists/">Merit List Parser</a>
+      <a href="/admin/cutoff-generator/">Cutoff Generator</a>
+    </nav>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+    <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Selection List Parser</h2>
+    <p class="text-sm brand-purple mb-6">Parses a Selection List Excel into the standard structure (Sr.No, AIR, Roll No, Form No, Name, Gender, Category, Quota, College Code, College Name). State-agnostic.</p>
+
+    <form id="upload-form" class="card space-y-4 mb-8">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">State / Exam</label>
+          <select id="state-exam" class="w-full">
+            <option value="AYUSH_MH">AYUSH — Maharashtra</option>
+            <option value="RAJASTHAN">Rajasthan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Round label</label>
+          <input type="text" id="round-label" class="w-full" placeholder="e.g. Stray Round 4" required>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold brand-navy mb-1">Selection list file (.xlsx)</label>
+        <input type="file" id="file" accept=".xlsx" required class="w-full text-xs">
+        <input type="text" id="sheet-name" placeholder="Sheet name (optional — auto-detected if blank)" class="w-full mt-2">
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="submit" id="submit-btn" class="btn-primary">Parse</button>
+        <span id="status" class="text-xs brand-purple"></span>
+      </div>
+    </form>
+
+    <div class="card">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-black text-sm brand-navy">Parsed records</h3>
+        <button id="refresh-btn" class="btn-secondary">Refresh</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>File</th><th>Round</th><th>Rows</th><th>Status</th><th>Created</th><th></th></tr></thead>
+          <tbody id="records-body"><tr><td colspan="7" class="text-center brand-purple py-4">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "https://asmi-cutoff-engine-backend.onrender.com";
+
+    async function loadRecords() {
+      const stateExam = document.getElementById('state-exam').value;
+      const tbody = document.getElementById('records-body');
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center brand-purple py-4">Loading…</td></tr>';
+      try {
+        const res = await fetch(`${API_BASE}/api/parsed-selection-lists?state_exam=${encodeURIComponent(stateExam)}`);
+        const rows = await res.json();
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center brand-purple py-4">None yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.id}</td>
+            <td>${r.uploaded_filename}</td>
+            <td>${r.round_label}</td>
+            <td>${r.row_count}</td>
+            <td><span class="status-pill status-${r.status}">${r.status}</span></td>
+            <td>${new Date(r.created_at).toLocaleString()}</td>
+            <td>${r.status === 'draft' ? `<button class="btn-secondary" data-approve="${r.id}">Approve</button>` : ''}</td>
+          </tr>
+        `).join('');
+        tbody.querySelectorAll('[data-approve]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            await fetch(`${API_BASE}/api/parsed-selection-lists/${btn.dataset.approve}/approve`, { method: 'POST' });
+            loadRecords();
+          });
+        });
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-red-600 py-4">Error: ${e.message}</td></tr>`;
+      }
+    }
+
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const statusEl = document.getElementById('status');
+      btn.disabled = true;
+      statusEl.textContent = 'Parsing…';
+      try {
+        const fd = new FormData();
+        fd.append('state_exam', document.getElementById('state-exam').value);
+        fd.append('round_label', document.getElementById('round-label').value);
+        const sheetName = document.getElementById('sheet-name').value.trim();
+        if (sheetName) fd.append('sheet_name', sheetName);
+        fd.append('file', document.getElementById('file').files[0]);
+
+        const res = await fetch(`${API_BASE}/api/parsed-selection-lists`, { method: 'POST', body: fd });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || 'Failed');
+        }
+        const data = await res.json();
+        statusEl.textContent = `Parsed ${data.row_count} rows (#${data.id}).`;
+        document.getElementById('upload-form').reset();
+        loadRecords();
+      } catch (e) {
+        statusEl.textContent = `Error: ${e.message}`;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('state-exam').addEventListener('change', loadRecords);
+    document.getElementById('refresh-btn').addEventListener('click', loadRecords);
+    loadRecords();
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+</head>
+<body class="min-h-screen">
+  <header class="bg-brand-navy px-6 py-4">
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-white font-black text-lg" style="font-family:'Montserrat',sans-serif;">ASMI Admin</h1>
+    </div>
+    <nav class="tool-nav">
+      <a href="/admin/" class="active">Dashboard</a>
+      <a href="/admin/selection-lists/">Selection List Parser</a>
+      <a href="/admin/seat-matrices/">Seat Matrix Parser</a>
+      <a href="/admin/merit-lists/">Merit List Parser</a>
+      <a href="/admin/cutoff-generator/">Cutoff Generator</a>
+    </nav>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-6 py-8">
+    <div class="mb-6">
+      <label class="block text-xs font-bold brand-navy mb-1">State / Exam</label>
+      <select id="state-exam" class="w-64">
+        <option value="AYUSH_MH">AYUSH — Maharashtra</option>
+        <option value="RAJASTHAN">Rajasthan (coming soon)</option>
+      </select>
+    </div>
+
+    <div class="grid grid-cols-4 gap-4 mb-8">
+      <a href="/admin/selection-lists/" class="card hover:shadow-md transition">
+        <h3 class="font-black text-sm brand-navy mb-1">Selection List Parser</h3>
+        <p class="text-xs brand-purple">PDF/Excel → structured rows</p>
+      </a>
+      <a href="/admin/seat-matrices/" class="card hover:shadow-md transition">
+        <h3 class="font-black text-sm brand-navy mb-1">Seat Matrix Parser</h3>
+        <p class="text-xs brand-purple">Upload only — no schema yet</p>
+      </a>
+      <a href="/admin/merit-lists/" class="card hover:shadow-md transition">
+        <h3 class="font-black text-sm brand-navy mb-1">Merit List Parser</h3>
+        <p class="text-xs brand-purple">PDF/Excel → AIR → SML map</p>
+      </a>
+      <a href="/admin/cutoff-generator/" class="card hover:shadow-md transition">
+        <h3 class="font-black text-sm brand-navy mb-1">Cutoff Generator</h3>
+        <p class="text-xs brand-purple">Picks approved inputs, writes files</p>
+      </a>
+    </div>
+
+    <div class="card">
+      <h3 class="font-black text-sm brand-navy mb-3">Recent activity</h3>
+      <div id="recent-runs-wrap" class="overflow-x-auto">
+        <table class="data-table">
+          <thead>
+            <tr><th>Tool</th><th>File</th><th>Round</th><th>Status</th><th>Created</th></tr>
+          </thead>
+          <tbody id="recent-runs-body">
+            <tr><td colspan="5" class="text-center brand-purple py-4">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "https://asmi-cutoff-engine-backend.onrender.com";
+    const TOOL_LABELS = {
+      selection_list: "Selection List Parser",
+      seat_matrix: "Seat Matrix Parser",
+      merit_list: "Merit List Parser",
+      cutoff_generator: "Cutoff Generator",
+    };
+
+    async function loadRecent() {
+      const stateExam = document.getElementById('state-exam').value;
+      const tbody = document.getElementById('recent-runs-body');
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/recent-runs?state_exam=${encodeURIComponent(stateExam)}`);
+        if (!res.ok) throw new Error(res.statusText);
+        const rows = await res.json();
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center brand-purple py-4">No activity yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${TOOL_LABELS[r.tool] || r.tool}</td>
+            <td>${r.label || '–'}</td>
+            <td>${r.round_label || '–'}</td>
+            <td><span class="status-pill status-${r.status}">${r.status}</span></td>
+            <td>${r.created_at ? new Date(r.created_at).toLocaleString() : '–'}</td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-red-600 py-4">Error: ${e.message}</td></tr>`;
+      }
+    }
+
+    document.getElementById('state-exam').addEventListener('change', loadRecent);
+    loadRecent();
+  </script>
+</body>
+</html>
