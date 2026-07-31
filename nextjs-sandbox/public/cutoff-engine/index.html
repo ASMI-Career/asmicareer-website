@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Cutoff Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <style>
+    body { background: #fdfbf6; }
+    .brand-navy { color: #1a0040; }
+    .brand-gold { color: #FFD700; }
+    .brand-purple { color: #6a0dad; }
+    .bg-brand-navy { background: #1a0040; }
+    .bg-brand-gold { background: #FFD700; }
+    .bg-brand-purple { background: #6a0dad; }
+
+    .btn-primary {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 10px 22px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      background: #FFD700;
+      color: #1a0040;
+      transition: 0.15s;
+    }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary:not(:disabled):hover { transform: translateY(-1px); }
+
+    .btn-secondary {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(106,13,173,0.25);
+      background: #fff;
+      color: #6a0dad;
+      cursor: pointer;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid rgba(106,13,173,0.12);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .step-pill {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(26,0,64,0.06);
+      color: #1a0040;
+    }
+    .step-pill.active { background: #1a0040; color: #FFD700; }
+    .step-pill.done { background: rgba(21,128,61,0.12); color: #15803d; }
+
+    .stat-tile {
+      border: 1px solid rgba(106,13,173,0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .stat-num { font-size: 22px; font-weight: 900; font-family: 'Montserrat', sans-serif; }
+
+    .unmapped-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid rgba(220,38,38,0.25);
+      background: rgba(220,38,38,0.04);
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+    select, input[type=text] {
+      font-size: 12px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(106,13,173,0.25);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="bg-brand-navy px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <img src="/asmi-logo.png" alt="ASMI" class="h-8" onerror="this.style.display='none'">
+      <h1 class="text-white font-black text-lg" style="font-family:'Montserrat',sans-serif;">
+        ASMI Cutoff Engine
+      </h1>
+    </div>
+    <div class="flex gap-2">
+      <span id="step-1" class="step-pill active">1. Upload</span>
+      <span id="step-2" class="step-pill">2. Review</span>
+      <span id="step-3" class="step-pill">3. Output</span>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+
+    <!-- ── Config: API base ─────────────────────────────────── -->
+    <div id="config-banner" class="hidden card mb-4 text-xs brand-navy">
+      Backend URL not reachable at <code id="api-base-display"></code>.
+      Check the API_BASE constant at the top of this file's script.
+    </div>
+
+    <!-- ══════════════════ SCREEN 1: UPLOAD ══════════════════ -->
+    <section id="screen-upload">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">
+        Process a round
+      </h2>
+      <p class="text-sm brand-purple mb-6">Upload the selection list for a single round. Nothing is written to the cutoff files until you approve on the review screen.</p>
+
+      <form id="upload-form" class="card space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">State / Exam</label>
+            <select id="state-exam" class="w-full" required>
+              <option value="AYUSH_MH">AYUSH — Maharashtra</option>
+              <option value="MEDICAL_MH" disabled>Medical — Maharashtra (coming soon)</option>
+              <option value="MEDICAL_MCC" disabled>Medical — MCC / All-India (coming soon)</option>
+              <option value="ENGINEERING_MH" disabled>Engineering — Maharashtra (coming soon)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Round</label>
+            <select id="round-label" class="w-full" required>
+              <option>Round 1</option>
+              <option>Round 2</option>
+              <option>Round 3</option>
+              <option>Round 4</option>
+              <option>Stray Round 1</option>
+              <option>Stray Round 2</option>
+              <option>Stray Round 3</option>
+              <option>Stray Round 4</option>
+              <option>Stray Round 5</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Selection list file (.xlsx) — required</label>
+          <input type="file" id="selection-list-file" accept=".xlsx" required class="w-full text-xs">
+          <input type="text" id="sheet-name" placeholder="Sheet name (optional — auto-detected if blank)"
+                 class="w-full mt-2">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Merit list file (.xlsx or .pdf) — optional, needed for SML</label>
+          <input type="file" id="merit-list-file" accept=".xlsx,.pdf" class="w-full text-xs">
+          <p id="merit-list-bucket-hint" class="text-xs mt-1 font-bold"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Score / marks-band reference (.xlsx) — optional, needed for Score</label>
+          <input type="file" id="score-reference-file" accept=".xlsx" class="w-full text-xs">
+        </div>
+
+        <label class="flex items-center gap-2 text-xs brand-navy">
+          <input type="checkbox" id="replace-mode">
+          Replace mode (overwrite existing cell values — default is fill-blanks-only)
+        </label>
+
+        <div class="flex items-center gap-3">
+          <button type="submit" id="process-btn" class="btn-primary">Process</button>
+          <span id="upload-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- ══════════════════ SCREEN 2: REVIEW ══════════════════ -->
+    <section id="screen-review" class="hidden">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">
+        Review
+      </h2>
+      <p class="text-sm brand-purple mb-6">Resolve every unmapped quota string before approving. Nothing is written until you approve.</p>
+
+      <div id="unmapped-block" class="card mb-5 hidden">
+        <h3 class="font-black text-sm brand-navy mb-2">⚠ Unmapped quota strings (blocks approval)</h3>
+        <div id="unmapped-list"></div>
+        <p class="text-xs brand-purple mt-2">Add a mapping below, then click "Re-run" to refresh this review.</p>
+        <div class="flex gap-2 mt-3">
+          <button id="rerun-btn" class="btn-secondary">Re-run with updated mappings</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-total-rows">–</div><div class="text-xs brand-purple">Rows parsed</div></div>
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-unmapped">–</div><div class="text-xs brand-purple">Unmapped quotas</div></div>
+        <div class="stat-tile"><div class="stat-num brand-navy" id="stat-unresolved-codes">–</div><div class="text-xs brand-purple">Unresolvable college codes</div></div>
+      </div>
+
+      <div class="card mb-5">
+        <h3 class="font-black text-sm brand-navy mb-3">Match counts per file / sheet</h3>
+        <div id="match-counts" class="text-xs space-y-1"></div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="card">
+          <h3 class="font-black text-sm brand-navy mb-2">SML resolution</h3>
+          <div id="sml-stats" class="text-xs"></div>
+        </div>
+        <div class="card">
+          <h3 class="font-black text-sm brand-navy mb-2">Score resolution</h3>
+          <div id="score-stats" class="text-xs"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="approve-btn" class="btn-primary" disabled>Approve &amp; Generate</button>
+        <button id="back-to-upload-btn" class="btn-secondary">Back</button>
+        <span id="approve-status" class="text-xs brand-purple"></span>
+      </div>
+    </section>
+
+    <!-- ══════════════════ SCREEN 3: OUTPUT ══════════════════ -->
+    <section id="screen-output" class="hidden">
+      <h2 class="text-2xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">
+        Done
+      </h2>
+      <p class="text-sm brand-purple mb-6">Run approved and target files updated.</p>
+
+      <div class="card mb-6">
+        <p class="text-sm brand-navy mb-4">Run #<span id="output-run-id"></span> — <span id="output-round"></span></p>
+        <button id="download-btn" class="btn-primary">Download all files (.zip)</button>
+      </div>
+
+      <button id="new-run-btn" class="btn-secondary">Start another run</button>
+    </section>
+
+  </main>
+
+  <script>
+    // Set this to your deployed Render service URL.
+    const API_BASE = "https://asmi-cutoff-engine-backend.onrender.com";
+
+    let currentRunId = null;
+
+    function setStep(n) {
+      for (const i of [1, 2, 3]) {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'done');
+        if (i < n) el.classList.add('done');
+        if (i === n) el.classList.add('active');
+      }
+      document.getElementById('screen-upload').classList.toggle('hidden', n !== 1);
+      document.getElementById('screen-review').classList.toggle('hidden', n !== 2);
+      document.getElementById('screen-output').classList.toggle('hidden', n !== 3);
+    }
+
+    function buildFormData() {
+      const fd = new FormData();
+      fd.append('state_exam', document.getElementById('state-exam').value);
+      fd.append('round_label', document.getElementById('round-label').value);
+      const sheetName = document.getElementById('sheet-name').value.trim();
+      if (sheetName) fd.append('sheet_name', sheetName);
+      fd.append('replace_mode', document.getElementById('replace-mode').checked);
+
+      const selFile = document.getElementById('selection-list-file').files[0];
+      fd.append('selection_list_file', selFile);
+
+      const meritFile = document.getElementById('merit-list-file').files[0];
+      if (meritFile) fd.append('merit_list_file', meritFile);
+
+      const scoreFile = document.getElementById('score-reference-file').files[0];
+      if (scoreFile) fd.append('score_reference_file', scoreFile);
+
+      return fd;
+    }
+
+    async function submitRun() {
+      const statusEl = document.getElementById('upload-status');
+      const btn = document.getElementById('process-btn');
+      btn.disabled = true;
+      statusEl.textContent = 'Processing…';
+      try {
+        const res = await fetch(`${API_BASE}/api/runs`, { method: 'POST', body: buildFormData() });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || 'Request failed');
+        }
+        const data = await res.json();
+        currentRunId = data.run_id;
+        renderReview(data);
+        setStep(2);
+      } catch (e) {
+        statusEl.textContent = `Error: ${e.message}`;
+        document.getElementById('config-banner').classList.remove('hidden');
+        document.getElementById('api-base-display').textContent = API_BASE;
+      } finally {
+        btn.disabled = false;
+        statusEl.textContent = statusEl.textContent === 'Processing…' ? '' : statusEl.textContent;
+      }
+    }
+
+    function renderReview(data) {
+      const s = data.summary;
+      document.getElementById('stat-total-rows').textContent = s.total_rows ?? '–';
+      document.getElementById('stat-unmapped').textContent = (s.unmapped_quotas || []).length;
+      document.getElementById('stat-unresolved-codes').textContent = s.unresolvable_college_code_count ?? 0;
+
+      const unmappedBlock = document.getElementById('unmapped-block');
+      const unmappedList = document.getElementById('unmapped-list');
+      unmappedList.innerHTML = '';
+      const unmapped = s.unmapped_quotas || [];
+      if (unmapped.length) {
+        unmappedBlock.classList.remove('hidden');
+        for (const q of unmapped) {
+          const row = document.createElement('div');
+          row.className = 'unmapped-row';
+          row.innerHTML = `
+            <span class="text-xs font-bold brand-navy flex-1">"${q}"</span>
+            <input type="text" placeholder="target_file (e.g. OPEN_)" data-role="tf" class="w-32">
+            <input type="text" placeholder="target_sheet (e.g. GENERAL)" data-role="ts" class="w-32">
+            <select data-role="conf" class="w-24">
+              <option value="high">high</option>
+              <option value="medium">medium</option>
+              <option value="low">low</option>
+              <option value="skip">skip</option>
+            </select>
+            <button class="btn-secondary" data-role="save">Save</button>
+          `;
+          row.querySelector('[data-role=save]').addEventListener('click', async () => {
+            const tf = row.querySelector('[data-role=tf]').value.trim() || null;
+            const ts = row.querySelector('[data-role=ts]').value.trim() || null;
+            const conf = row.querySelector('[data-role=conf]').value;
+            await fetch(`${API_BASE}/api/quota-mapping`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                state_exam: document.getElementById('state-exam').value,
+                quota_text: q,
+                target_file: conf === 'skip' ? null : tf,
+                target_sheet: conf === 'skip' ? null : ts,
+                confidence: conf,
+              }),
+            });
+            row.style.opacity = '0.4';
+            row.querySelector('[data-role=save]').textContent = 'Saved';
+          });
+          unmappedList.appendChild(row);
+        }
+      } else {
+        unmappedBlock.classList.add('hidden');
+      }
+
+      const matchCounts = document.getElementById('match-counts');
+      matchCounts.innerHTML = '';
+      const counts = s.match_counts_per_file_sheet || {};
+      const entries = Object.entries(counts);
+      if (!entries.length) {
+        matchCounts.innerHTML = '<span class="brand-purple">No matches yet.</span>';
+      } else {
+        for (const [k, v] of entries) {
+          const row = document.createElement('div');
+          row.className = 'flex justify-between';
+          row.innerHTML = `<span class="brand-navy">${k}</span><span class="font-bold">${v}</span>`;
+          matchCounts.appendChild(row);
+        }
+      }
+
+      const smlStats = s.sml_stats || { resolved: 0, unresolved: 0 };
+      document.getElementById('sml-stats').innerHTML =
+        `<div class="flex justify-between"><span>Resolved</span><span class="font-bold">${smlStats.resolved}</span></div>
+         <div class="flex justify-between"><span>Unresolved (—)</span><span class="font-bold">${smlStats.unresolved}</span></div>`;
+
+      const scoreStats = s.score_stats || { resolved: 0, unresolved: 0 };
+      document.getElementById('score-stats').innerHTML =
+        `<div class="flex justify-between"><span>Resolved</span><span class="font-bold">${scoreStats.resolved}</span></div>
+         <div class="flex justify-between"><span>Unresolved (—)</span><span class="font-bold">${scoreStats.unresolved}</span></div>`;
+
+      document.getElementById('approve-btn').disabled = !data.can_approve;
+    }
+
+    async function rerunReview() {
+      const res = await fetch(`${API_BASE}/api/runs/${currentRunId}`);
+      const data = await res.json();
+      renderReview(data);
+    }
+
+    async function approveRun() {
+      const statusEl = document.getElementById('approve-status');
+      const btn = document.getElementById('approve-btn');
+      btn.disabled = true;
+      statusEl.textContent = 'Generating…';
+      try {
+        const res = await fetch(`${API_BASE}/api/runs/${currentRunId}/approve`, { method: 'POST' });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || 'Approve failed');
+        }
+        const data = await res.json();
+        document.getElementById('output-run-id').textContent = data.run_id;
+        document.getElementById('output-round').textContent = data.round_label;
+        setStep(3);
+      } catch (e) {
+        statusEl.textContent = `Error: ${e.message}`;
+        btn.disabled = false;
+      }
+    }
+
+    async function downloadRun() {
+      window.location.href = `${API_BASE}/api/runs/${currentRunId}/download`;
+    }
+
+    // Round 1 & 2 use the "combined" merit list; Round 3+ and every Stray
+    // round use "post-R3" (falls back to combined if an AIR isn't found
+    // there). Only one merit list file is uploaded per run, so make it
+    // explicit which one the backend expects for the selected round.
+    function updateMeritListBucketHint() {
+      const round = document.getElementById('round-label').value;
+      const isCombined = round === 'Round 1' || round === 'Round 2';
+      const hint = document.getElementById('merit-list-bucket-hint');
+      hint.textContent = isCombined
+        ? `Upload the "combined" merit list for ${round} — that's the one this round uses.`
+        : `Upload the "post-R3" merit list for ${round} — that's the one this round uses.`;
+      hint.className = isCombined ? 'text-xs mt-1 font-bold brand-purple' : 'text-xs mt-1 font-bold brand-navy';
+    }
+    document.getElementById('round-label').addEventListener('change', updateMeritListBucketHint);
+    updateMeritListBucketHint();
+
+    document.getElementById('upload-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      submitRun();
+    });
+    document.getElementById('rerun-btn').addEventListener('click', rerunReview);
+    document.getElementById('approve-btn').addEventListener('click', approveRun);
+    document.getElementById('back-to-upload-btn').addEventListener('click', () => setStep(1));
+    document.getElementById('download-btn').addEventListener('click', downloadRun);
+    document.getElementById('new-run-btn').addEventListener('click', () => {
+      document.getElementById('upload-form').reset();
+      currentRunId = null;
+      setStep(1);
+    });
+  </script>
+</body>
+</html>
