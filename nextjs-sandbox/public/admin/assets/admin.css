@@ -58,8 +58,48 @@ body { background: #fdfbf6; }
 }
 .status-draft { background: rgba(106,13,173,0.1); color: #6a0dad; }
 .status-approved { background: rgba(21,128,61,0.12); color: #15803d; }
+.status-computed { background: rgba(106,13,173,0.1); color: #6a0dad; }
+.status-generated { background: rgba(21,128,61,0.12); color: #15803d; }
+.status-parsed { background: rgba(21,128,61,0.12); color: #15803d; }
+.status-pending { background: rgba(220,38,38,0.1); color: #dc2626; }
+.status-approved_new { background: rgba(21,128,61,0.12); color: #15803d; }
+.status-approved_mapped { background: rgba(21,128,61,0.12); color: #15803d; }
 .status-needs_schema { background: rgba(220,38,38,0.1); color: #dc2626; }
 .status-rejected { background: rgba(220,38,38,0.1); color: #dc2626; }
+
+.step-track {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.step-node {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(26,0,64,0.06);
+  color: #1a0040;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+}
+.step-node.active { background: #1a0040; color: #FFD700; }
+.step-node.done { background: rgba(21,128,61,0.12); color: #15803d; }
+.step-node.locked { opacity: 0.4; cursor: not-allowed; }
+.step-arrow { color: rgba(106,13,173,0.3); font-size: 14px; }
+
+.review-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(220,38,38,0.25);
+  background: rgba(220,38,38,0.04);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
 
 .tool-nav {
   display: flex;
