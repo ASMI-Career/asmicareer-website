@@ -162,7 +162,7 @@
           <div class="stat-tile"><div class="stat-num brand-navy" id="s3-bds">–</div><div class="text-xs brand-purple">Other course (out of scope)</div></div>
           <div class="stat-tile"><div class="stat-num brand-navy" id="s3-pwd">–</div><div class="text-xs brand-purple">Horizontal quota (PwD/EXS/WPP — excluded from general)</div></div>
         </div>
-        <h4 class="font-black text-xs brand-navy mb-2">Match counts per file/sheet</h4>
+        <h4 class="font-black text-xs brand-navy mb-2">Match counts per category/seat-type</h4>
         <div id="s3-match-counts" class="text-xs space-y-1"></div>
       </div>
 
@@ -172,39 +172,50 @@
       </div>
     </section>
 
-    <!-- ══════════════════ STEP 4: OUTPUT FILTERS ══════════════════ -->
+    <!-- ══════════════════ STEP 4: UPLOAD TARGET FILE ══════════════════ -->
     <section id="screen-step-4" class="hidden">
-      <h2 class="text-xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Step 4 — Output Filters</h2>
-      <p class="text-sm brand-purple mb-4">Pick which target files to generate from the computed run above — no recomputation. Re-runnable any time for just one category (e.g. once a new mapping is added).</p>
+      <h2 class="text-xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Step 4 — Upload Target File</h2>
+      <p class="text-sm brand-purple mb-4">Pick a computed run, upload a target file (e.g. OBC.xlsx). Confirm which category/seat-type each sheet maps to — remembered for next time. Colleges get matched by name; resolve any unmatched below, then the SAME file comes back populated for download.</p>
 
-      <form id="step4-form" class="card space-y-4 mb-6">
+      <form id="step4-upload-form" class="card space-y-4 mb-6">
         <div>
           <label class="block text-xs font-bold brand-navy mb-1">Computed run</label>
           <select id="s4-run-id" class="w-full"></select>
         </div>
         <div>
-          <label class="block text-xs font-bold brand-navy mb-1">Target files (leave all unchecked = generate everything computed)</label>
-          <div id="s4-target-files" class="flex gap-4 flex-wrap text-xs brand-navy"></div>
+          <label class="block text-xs font-bold brand-navy mb-1">Target file to upload (.xlsx)</label>
+          <input type="file" id="s4-file" accept=".xlsx" required class="w-full text-xs">
         </div>
-        <label class="flex items-center gap-2 text-xs brand-navy">
+        <div class="flex items-center gap-3">
+          <button type="submit" id="s4-upload-submit" class="btn-primary">Upload &amp; Detect Sheets</button>
+          <span id="s4-upload-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+
+      <div id="s4-mapping-card" class="card mb-6 hidden">
+        <h3 class="font-black text-sm brand-navy mb-2">Confirm sheet mapping</h3>
+        <p class="text-xs brand-purple mb-3">Remembered mappings are pre-filled from a prior upload of this same file — override if wrong.</p>
+        <div id="s4-sheet-rows" class="space-y-3"></div>
+        <label class="flex items-center gap-2 text-xs brand-navy mt-3">
           <input type="checkbox" id="s4-replace-mode">
           Replace mode (overwrite existing values — default is fill-blanks-only)
         </label>
-        <div class="flex items-center gap-3">
-          <button type="submit" id="s4-submit" class="btn-primary">Generate Outputs</button>
-          <span id="s4-status" class="text-xs brand-purple"></span>
+        <div class="flex items-center gap-3 mt-3">
+          <button id="s4-confirm-submit" class="btn-primary" onclick="confirmStep4()">Confirm &amp; Write</button>
+          <span id="s4-confirm-status" class="text-xs brand-purple"></span>
         </div>
-      </form>
+      </div>
 
       <div id="s4-pending-block" class="card mb-5 hidden">
         <h3 class="font-black text-sm brand-navy mb-2">⚠ College names pending resolution</h3>
         <div id="s4-pending-list"></div>
-        <p class="text-xs brand-purple mt-2">Resolve in the College Matches API, then re-submit Generate Outputs.</p>
+        <button class="btn-secondary mt-2" onclick="confirmStep4()">Retry Confirm &amp; Write</button>
       </div>
 
       <div id="s4-result-card" class="card hidden">
-        <p class="text-sm brand-navy mb-4">Run #<span id="s4-result-run-id"></span> — status: <span id="s4-result-status" class="status-pill"></span></p>
-        <button class="btn-primary" onclick="downloadStep4()">Download generated files (.zip)</button>
+        <p class="text-sm brand-navy mb-2">"<span id="s4-result-filename"></span>" written for run #<span id="s4-result-run-id"></span>.</p>
+        <p class="text-xs brand-purple mb-4" id="s4-result-stats"></p>
+        <button class="btn-primary" onclick="downloadStep4()">Download populated file</button>
       </div>
 
       <div class="flex justify-between mt-6">
@@ -244,7 +255,10 @@
         <tr>
           <td>${r.id}</td><td>${r.uploaded_filename}</td><td>${r.round_label}</td><td>${r.row_count}</td>
           <td><span class="status-pill status-${r.status}">${r.status}</span></td>
-          <td>${r.status === 'draft' ? `<button class="btn-secondary" data-approve-s1="${r.id}">Approve</button>` : ''}</td>
+          <td class="flex gap-2">
+            ${r.status === 'draft' ? `<button class="btn-secondary" data-approve-s1="${r.id}">Approve</button>` : ''}
+            <button class="btn-secondary" onclick="downloadStep1(${r.id})">Download</button>
+          </td>
         </tr>
       `).join('') : '<tr><td colspan="6" class="text-center brand-purple py-4">None yet.</td></tr>';
       tbody.querySelectorAll('[data-approve-s1]').forEach(btn => {
@@ -273,6 +287,10 @@
         statusEl.textContent = `Error: ${err.message}`;
       } finally { btn.disabled = false; }
     });
+
+    function downloadStep1(id) {
+      window.location.href = `${API_BASE}/api/parsed-selection-lists/${id}/download`;
+    }
 
     // ---- Step 2 ----
     async function loadStep2Dropdowns() {
@@ -399,6 +417,11 @@
       const data = await res.json();
       if (!res.ok) { alert(data.detail || 'Failed to approve'); return; }
       renderStep2Merge(data);
+      if (data.intake_write_stats) {
+        const s = data.intake_write_stats;
+        document.getElementById('s2-merge-status-card').insertAdjacentHTML('beforeend',
+          `<p class="text-xs brand-purple mt-2">Intake written: ${s.intake_rows_written} row(s)${s.skipped_rejected_colleges ? `, ${s.skipped_rejected_colleges} rejected college(s) skipped` : ''}.</p>`);
+      }
     }
 
     // ---- Step 3 ----
@@ -451,14 +474,14 @@
       document.getElementById('s3-nri').textContent = s.nri_out_of_scope_count ?? '–';
       document.getElementById('s3-bds').textContent = s.other_course_out_of_scope_count ?? '–';
       document.getElementById('s3-pwd').textContent = s.qualifier_out_of_scope_count ?? '–';
-      const counts = Object.entries(s.match_counts_per_file_sheet || {});
+      const counts = Object.entries(s.match_counts_per_category_seat_type || {});
       document.getElementById('s3-match-counts').innerHTML = counts.length
         ? counts.map(([k, v]) => `<div class="flex justify-between"><span class="brand-navy">${k}</span><span class="font-bold">${v}</span></div>`).join('')
         : '<span class="brand-purple">No matches.</span>';
     }
 
     // ---- Step 4 ----
-    const KNOWN_TARGET_FILES = ["UR_", "UR"]; // extend as more categories get mapped
+    let currentUploadId = null;
 
     async function loadStep4Dropdown() {
       const res = await fetch(`${API_BASE}/api/admin/recent-runs?state_exam=${STATE_EXAM}&limit=20`);
@@ -467,24 +490,74 @@
       sel.innerHTML = rows.length
         ? rows.map(r => `<option value="${r.id}" ${r.id === currentRunId ? 'selected' : ''}>#${r.id} — ${r.round_label} (${r.status})</option>`).join('')
         : (currentRunId ? `<option value="${currentRunId}">#${currentRunId}</option>` : '<option value="">No computed runs yet</option>');
-
-      const tfContainer = document.getElementById('s4-target-files');
-      tfContainer.innerHTML = KNOWN_TARGET_FILES.map(tf => `
-        <label class="flex items-center gap-1"><input type="checkbox" value="${tf}" class="s4-tf-checkbox"> ${tf}</label>
-      `).join('');
     }
 
-    document.getElementById('step4-form').addEventListener('submit', async (e) => {
+    document.getElementById('step4-upload-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('s4-submit');
-      const statusEl = document.getElementById('s4-status');
-      btn.disabled = true; statusEl.textContent = 'Generating…';
+      const btn = document.getElementById('s4-upload-submit');
+      const statusEl = document.getElementById('s4-upload-status');
+      document.getElementById('s4-mapping-card').classList.add('hidden');
       document.getElementById('s4-pending-block').classList.add('hidden');
+      document.getElementById('s4-result-card').classList.add('hidden');
+      btn.disabled = true; statusEl.textContent = 'Uploading & detecting sheets…';
       try {
         const runId = document.getElementById('s4-run-id').value;
-        const checked = Array.from(document.querySelectorAll('.s4-tf-checkbox:checked')).map(c => c.value);
-        const body = { target_files: checked.length ? checked : null, replace_mode: document.getElementById('s4-replace-mode').checked };
-        const res = await fetch(`${API_BASE}/api/runs/${runId}/generate-outputs`, {
+        if (!runId) throw new Error('No computed run selected');
+        currentRunId = runId;
+        const fd = new FormData();
+        fd.append('file', document.getElementById('s4-file').files[0]);
+        const res = await fetch(`${API_BASE}/api/runs/${runId}/step4/inspect`, { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Failed');
+        currentUploadId = data.upload_id;
+        statusEl.textContent = `Detected ${data.sheets.length} sheet(s).`;
+        renderStep4Mapping(data);
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+      } finally { btn.disabled = false; }
+    });
+
+    function renderStep4Mapping(data) {
+      const card = document.getElementById('s4-mapping-card');
+      card.classList.remove('hidden');
+      document.getElementById('s4-sheet-rows').innerHTML = data.sheets.map((s, i) => `
+        <div class="review-row" data-sheet-name="${s.sheet_name}">
+          <span class="text-xs font-bold brand-navy w-40">${s.sheet_name}</span>
+          <span class="text-xs brand-purple">rounds: ${s.rounds_detected.join(', ') || 'none detected'}</span>
+          <input type="text" placeholder="Category Allotted e.g. GEN URB" data-role="category" class="w-56" value="${s.remembered_mapping?.category_allotted || ''}">
+          <select data-role="seat-type" class="w-32">
+            <option value="Govt.">Govt.</option>
+            <option value="Gen.">Gen.</option>
+            <option value="Mgmt.">Mgmt.</option>
+          </select>
+          ${s.remembered_mapping ? '<span class="text-xs brand-purple">(remembered)</span>' : '<span class="text-xs" style="color:#b45309">(new — confirm)</span>'}
+        </div>
+      `).join('');
+      data.sheets.forEach(s => {
+        if (!s.remembered_mapping) return;
+        const row = document.querySelector(`#s4-sheet-rows [data-sheet-name="${CSS.escape(s.sheet_name)}"]`);
+        const sel = row.querySelector('[data-role=seat-type]');
+        sel.value = s.remembered_mapping.seat_type;
+      });
+    }
+
+    async function confirmStep4() {
+      const statusEl = document.getElementById('s4-confirm-status');
+      const btn = document.getElementById('s4-confirm-submit');
+      document.getElementById('s4-pending-block').classList.add('hidden');
+      btn.disabled = true; statusEl.textContent = 'Matching colleges & writing…';
+      try {
+        const sheet_mappings = Array.from(document.querySelectorAll('#s4-sheet-rows .review-row')).map(row => ({
+          sheet_name: row.dataset.sheetName,
+          category_allotted: row.querySelector('[data-role=category]').value.trim(),
+          seat_type: row.querySelector('[data-role=seat-type]').value,
+        }));
+        const body = {
+          upload_id: currentUploadId,
+          sheet_mappings,
+          replace_mode: document.getElementById('s4-replace-mode').checked,
+        };
+        const res = await fetch(`${API_BASE}/api/runs/${currentRunId}/step4/confirm`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
         });
         const data = await res.json();
@@ -495,17 +568,19 @@
           }
           throw new Error(data.detail || 'Failed');
         }
-        currentRunId = runId;
         statusEl.textContent = '';
         document.getElementById('s4-result-card').classList.remove('hidden');
+        document.getElementById('s4-result-filename').textContent = data.uploaded_filename;
         document.getElementById('s4-result-run-id').textContent = data.run_id;
-        const pill = document.getElementById('s4-result-status');
-        pill.textContent = data.status;
-        pill.className = `status-pill status-${data.status}`;
+        const statsLines = Object.entries(data.write_stats_per_sheet || {}).map(([sheet, s]) =>
+          `${sheet}: matched ${s.matched}, no admission ${s.no_admission}, appended new ${s.appended_new || 0}, skipped (existing) ${s.skipped_existing}`
+        );
+        document.getElementById('s4-result-stats').innerHTML = statsLines.join('<br>') +
+          (data.rejected_college_matches_count ? `<br>${data.rejected_college_matches_count} rejected college match(es) skipped.` : '');
       } catch (err) {
         statusEl.textContent = `Error: ${err.message}`;
       } finally { btn.disabled = false; }
-    });
+    }
 
     async function loadStep4PendingList() {
       const res = await fetch(`${API_BASE}/api/college-matches?state_exam=${STATE_EXAM}&status=pending`);
