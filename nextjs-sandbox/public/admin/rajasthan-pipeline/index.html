@@ -160,7 +160,7 @@
         <div class="grid grid-cols-3 gap-3 mb-3">
           <div class="stat-tile"><div class="stat-num brand-navy" id="s3-nri">–</div><div class="text-xs brand-purple">NRI (out of scope)</div></div>
           <div class="stat-tile"><div class="stat-num brand-navy" id="s3-bds">–</div><div class="text-xs brand-purple">Other course (out of scope)</div></div>
-          <div class="stat-tile"><div class="stat-num brand-navy" id="s3-pwd">–</div><div class="text-xs brand-purple">PWD (excluded from general)</div></div>
+          <div class="stat-tile"><div class="stat-num brand-navy" id="s3-pwd">–</div><div class="text-xs brand-purple">Horizontal quota (PwD/EXS/WPP — excluded from general)</div></div>
         </div>
         <h4 class="font-black text-xs brand-navy mb-2">Match counts per file/sheet</h4>
         <div id="s3-match-counts" class="text-xs space-y-1"></div>
@@ -450,7 +450,7 @@
       document.getElementById('s3-unmapped-count').textContent = (s.unmapped_category_seat_keys || []).length;
       document.getElementById('s3-nri').textContent = s.nri_out_of_scope_count ?? '–';
       document.getElementById('s3-bds').textContent = s.other_course_out_of_scope_count ?? '–';
-      document.getElementById('s3-pwd').textContent = s.pwd_out_of_scope_count ?? '–';
+      document.getElementById('s3-pwd').textContent = s.qualifier_out_of_scope_count ?? '–';
       const counts = Object.entries(s.match_counts_per_file_sheet || {});
       document.getElementById('s3-match-counts').innerHTML = counts.length
         ? counts.map(([k, v]) => `<div class="flex justify-between"><span class="brand-navy">${k}</span><span class="font-bold">${v}</span></div>`).join('')
