@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Admin — MCC Pipeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/dashboard.css">
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+</head>
+<body class="min-h-screen">
+  <header class="bg-brand-navy px-6 py-4">
+    <div class="flex items-center justify-between mb-3">
+      <h1 class="text-white font-black text-lg" style="font-family:'Montserrat',sans-serif;">ASMI Admin</h1>
+    </div>
+    <nav class="tool-nav mb-3">
+      <a href="/admin/">Dashboard</a>
+      <a href="/admin/selection-lists/">Selection List Parser</a>
+      <a href="/admin/seat-matrices/">Seat Matrix Parser</a>
+      <a href="/admin/merit-lists/">Merit List Parser</a>
+      <a href="/admin/cutoff-generator/">Cutoff Generator (AYUSH)</a>
+      <a href="/admin/rajasthan-pipeline/">Rajasthan Pipeline</a>
+      <a href="/admin/mcc-pipeline/" class="active">MCC Pipeline</a>
+    </nav>
+    <div class="step-track">
+      <span class="step-node" id="nav-step-1" data-step="1">1. Selection List</span>
+      <span class="step-arrow">&rarr;</span>
+      <span class="step-node" id="nav-step-2" data-step="2">2. Seat Matrix</span>
+      <span class="step-arrow">&rarr;</span>
+      <span class="step-node" id="nav-step-3" data-step="3">3. Review &amp; Approve</span>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+    <p class="text-sm brand-purple mb-6">MCC (national). College routing is Code-based, not quota-text-based: the Allotment PDF's institute name is fuzzy-matched against the Seat Matrix's Code-anchored names, then the exact Code is looked up in the 8 seeded target files (AIIMS/JIPMER/CENTRAL/GOVERNMENT/DEEMED &times; MBBS/BDS). Anything that can't be code-matched is flagged below — never guessed.</p>
+
+    <!-- ══════════════════ STEP 1: SELECTION LIST ══════════════════ -->
+    <section id="screen-step-1">
+      <h2 class="text-xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Step 1 — Selection List Parser (Allotment PDF)</h2>
+      <p class="text-sm brand-purple mb-4">Upload the MCC Allotment Result PDF. Approve it below before proceeding.</p>
+
+      <form id="step1-form" class="card space-y-4 mb-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Round label</label>
+            <input type="text" id="s1-round-label" placeholder="e.g. Round 1" required class="w-full">
+          </div>
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Allotment PDF</label>
+            <input type="file" id="s1-file" accept=".pdf" required class="w-full text-xs">
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button type="submit" id="s1-submit" class="btn-primary">Parse</button>
+          <span id="s1-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-black text-sm brand-navy">Parsed selection lists</h3>
+          <button class="btn-secondary" onclick="loadStep1List()">Refresh</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>File</th><th>Round</th><th>Rows</th><th>Status</th><th></th></tr></thead>
+            <tbody id="s1-list-body"><tr><td colspan="6" class="text-center brand-purple py-4">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-6">
+        <button class="btn-primary" onclick="goToStep(2)">Next: Seat Matrix →</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ STEP 2: SEAT MATRIX ══════════════════ -->
+    <section id="screen-step-2" class="hidden">
+      <h2 class="text-xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Step 2 — Seat Matrix (Code anchor)</h2>
+      <p class="text-sm brand-purple mb-4">Upload the Seat Matrix PDF. It's used purely as a Code+name anchor for matching — not for Intake or bucket classification (Seat Matrix's InstituteType label is unreliable for that).</p>
+
+      <form id="step2-form" class="card space-y-4 mb-6">
+        <label class="block text-xs font-bold brand-navy mb-1">Seat Matrix PDF</label>
+        <input type="file" id="s2-file" accept=".pdf" required class="w-full text-xs">
+        <div class="flex items-center gap-3">
+          <button type="submit" id="s2-submit" class="btn-primary">Upload &amp; Parse</button>
+          <span id="s2-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-black text-sm brand-navy">Parsed seat matrices</h3>
+          <button class="btn-secondary" onclick="loadStep2List()">Refresh</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>File</th><th>Round</th><th>Anchors</th><th>Status</th></tr></thead>
+            <tbody id="s2-list-body"><tr><td colspan="5" class="text-center brand-purple py-4">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="flex justify-between mt-6">
+        <button class="btn-secondary" onclick="goToStep(1)">← Back</button>
+        <button class="btn-primary" onclick="goToStep(3)">Next: Review &amp; Approve →</button>
+      </div>
+    </section>
+
+    <!-- ══════════════════ STEP 3: REVIEW & APPROVE ══════════════════ -->
+    <section id="screen-step-3" class="hidden">
+      <h2 class="text-xl font-black brand-navy mb-1" style="font-family:'Montserrat',sans-serif;">Step 3 — Review &amp; Approve</h2>
+      <p class="text-sm brand-purple mb-4">Pick an approved Selection List + parsed Seat Matrix, run the match, resolve anything flagged, then approve to write directly into the 8 seeded target files.</p>
+
+      <form id="step3-form" class="card space-y-4 mb-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Approved selection list</label>
+            <select id="s3-selection-list-id" class="w-full"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold brand-navy mb-1">Parsed seat matrix</label>
+            <select id="s3-seat-matrix-id" class="w-full"></select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold brand-navy mb-1">Round label</label>
+          <input type="text" id="s3-round-label" placeholder="e.g. Round 1" required class="w-full">
+        </div>
+        <label class="flex items-center gap-2 text-xs brand-navy">
+          <input type="checkbox" id="s3-replace-mode">
+          Replace mode (overwrite existing AIR values — default is fill-blanks-only)
+        </label>
+        <div class="flex items-center gap-3">
+          <button type="submit" id="s3-submit" class="btn-primary">Run Match</button>
+          <span id="s3-status" class="text-xs brand-purple"></span>
+        </div>
+      </form>
+
+      <div id="s3-result-card" class="card mb-6 hidden">
+        <p class="text-sm brand-navy mb-3">Run #<span id="s3-run-id"></span> — status: <span id="s3-run-status" class="status-pill"></span></p>
+        <div class="grid grid-cols-3 gap-3 mb-3">
+          <div class="stat-tile"><div class="stat-num brand-navy" id="s3-total-rows">–</div><div class="text-xs brand-purple">Rows parsed</div></div>
+          <div class="stat-tile"><div class="stat-num brand-navy" id="s3-pending">–</div><div class="text-xs brand-purple">Pending college matches</div></div>
+          <div class="stat-tile"><div class="stat-num brand-navy" id="s3-rejected">–</div><div class="text-xs brand-purple">Rejected (skipped)</div></div>
+        </div>
+        <button id="s3-approve-btn" class="btn-primary" disabled onclick="approveStep3()">Approve &amp; Write Target Files</button>
+        <span id="s3-approve-status" class="text-xs brand-purple ml-2"></span>
+      </div>
+
+      <div id="s3-pending-block" class="card mb-5 hidden">
+        <h3 class="font-black text-sm brand-navy mb-2">⚠ College matches pending resolution</h3>
+        <div id="s3-pending-list"></div>
+        <button class="btn-secondary mt-2" onclick="refreshStep3()">Refresh</button>
+      </div>
+
+      <div id="s3-done-card" class="card hidden">
+        <p class="text-sm brand-navy mb-4">Written successfully.</p>
+        <button class="btn-primary" onclick="downloadStep3()">Download populated target files (.zip)</button>
+      </div>
+
+      <div class="flex justify-between mt-6">
+        <button class="btn-secondary" onclick="goToStep(2)">← Back</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = "https://asmi-cutoff-engine-backend.onrender.com";
+    const STATE_EXAM = "MCC";
+    let currentRunId = null;
+    let targetFileOptions = [];
+
+    function goToStep(n) {
+      for (const i of [1, 2, 3]) {
+        document.getElementById(`screen-step-${i}`).classList.toggle('hidden', i !== n);
+        const nav = document.getElementById(`nav-step-${i}`);
+        nav.classList.remove('active', 'done');
+        if (i < n) nav.classList.add('done');
+        if (i === n) nav.classList.add('active');
+      }
+      if (n === 3) { loadStep3Dropdowns(); loadTargetFileOptions(); }
+    }
+    document.querySelectorAll('.step-node').forEach(el => {
+      el.addEventListener('click', () => goToStep(parseInt(el.dataset.step)));
+    });
+
+    // ---- Step 1 ----
+    async function loadStep1List() {
+      const res = await fetch(`${API_BASE}/api/parsed-selection-lists?state_exam=${STATE_EXAM}`);
+      const rows = await res.json();
+      const tbody = document.getElementById('s1-list-body');
+      tbody.innerHTML = rows.length ? rows.map(r => `
+        <tr>
+          <td>${r.id}</td><td>${r.uploaded_filename}</td><td>${r.round_label}</td><td>${r.row_count}</td>
+          <td><span class="status-pill status-${r.status}">${r.status}</span></td>
+          <td class="flex gap-2">
+            ${r.status === 'draft' ? `<button class="btn-secondary" data-approve-s1="${r.id}">Approve</button>` : ''}
+            <button class="btn-secondary" onclick="downloadStep1(${r.id})">Download</button>
+          </td>
+        </tr>
+      `).join('') : '<tr><td colspan="6" class="text-center brand-purple py-4">None yet.</td></tr>';
+      tbody.querySelectorAll('[data-approve-s1]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await fetch(`${API_BASE}/api/parsed-selection-lists/${btn.dataset.approveS1}/approve`, { method: 'POST' });
+          loadStep1List();
+        });
+      });
+    }
+    function downloadStep1(id) {
+      window.location.href = `${API_BASE}/api/parsed-selection-lists/${id}/download`;
+    }
+    document.getElementById('step1-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('s1-submit');
+      const statusEl = document.getElementById('s1-status');
+      btn.disabled = true; statusEl.textContent = 'Parsing… (1000+ page PDFs take a few minutes)';
+      try {
+        const fd = new FormData();
+        fd.append('state_exam', STATE_EXAM);
+        fd.append('round_label', document.getElementById('s1-round-label').value);
+        fd.append('file', document.getElementById('s1-file').files[0]);
+        const res = await fetch(`${API_BASE}/api/parsed-selection-lists`, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Failed');
+        const data = await res.json();
+        statusEl.textContent = `Parsed ${data.row_count} rows (#${data.id}). Nursing (out of scope): ${data.nursing_out_of_scope_count ?? 0}, unparseable: ${data.unparseable_line_count ?? 0}.`;
+        loadStep1List();
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+      } finally { btn.disabled = false; }
+    });
+
+    // ---- Step 2 ----
+    async function loadStep2List() {
+      const res = await fetch(`${API_BASE}/api/parsed-seat-matrices?state_exam=${STATE_EXAM}`);
+      const rows = await res.json();
+      const tbody = document.getElementById('s2-list-body');
+      tbody.innerHTML = rows.length ? rows.map(r => `
+        <tr>
+          <td>${r.id}</td><td>${r.uploaded_filename}</td><td>${r.round_label}</td><td>${r.row_count ?? '–'}</td>
+          <td><span class="status-pill status-${r.status}">${r.status}</span></td>
+        </tr>
+      `).join('') : '<tr><td colspan="5" class="text-center brand-purple py-4">None yet.</td></tr>';
+    }
+    document.getElementById('step2-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('s2-submit');
+      const statusEl = document.getElementById('s2-status');
+      btn.disabled = true; statusEl.textContent = 'Uploading & parsing…';
+      try {
+        const fd = new FormData();
+        fd.append('state_exam', STATE_EXAM);
+        fd.append('round_label', document.getElementById('s3-round-label').value || 'Round 1');
+        fd.append('file', document.getElementById('s2-file').files[0]);
+        const res = await fetch(`${API_BASE}/api/parsed-seat-matrices`, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Failed');
+        const data = await res.json();
+        statusEl.textContent = `Parsed ${data.row_count ?? '?'} distinct institute anchors (#${data.id}).`;
+        loadStep2List();
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+      } finally { btn.disabled = false; }
+    });
+
+    // ---- Step 3 ----
+    async function loadStep3Dropdowns() {
+      const [selRes, smRes] = await Promise.all([
+        fetch(`${API_BASE}/api/parsed-selection-lists?state_exam=${STATE_EXAM}&status=approved`),
+        fetch(`${API_BASE}/api/parsed-seat-matrices?state_exam=${STATE_EXAM}`),
+      ]);
+      const selRows = await selRes.json();
+      const smRows = await smRes.json();
+      document.getElementById('s3-selection-list-id').innerHTML = selRows.length
+        ? selRows.map(r => `<option value="${r.id}">#${r.id} — ${r.uploaded_filename} (${r.round_label})</option>`).join('')
+        : '<option value="">No approved selection lists yet</option>';
+      document.getElementById('s3-seat-matrix-id').innerHTML = smRows.length
+        ? smRows.map(r => `<option value="${r.id}">#${r.id} — ${r.uploaded_filename}</option>`).join('')
+        : '<option value="">Upload one in Step 2 first</option>';
+    }
+
+    async function loadTargetFileOptions() {
+      const res = await fetch(`${API_BASE}/api/mcc-college-matches/target-file-options`);
+      targetFileOptions = await res.json();
+    }
+
+    document.getElementById('step3-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('s3-submit');
+      const statusEl = document.getElementById('s3-status');
+      btn.disabled = true; statusEl.textContent = 'Matching… (large PDFs take a few minutes)';
+      try {
+        const fd = new FormData();
+        fd.append('state_exam', STATE_EXAM);
+        fd.append('round_label', document.getElementById('s3-round-label').value);
+        fd.append('parsed_selection_list_id', document.getElementById('s3-selection-list-id').value);
+        fd.append('parsed_seat_matrix_id', document.getElementById('s3-seat-matrix-id').value);
+        fd.append('replace_mode', document.getElementById('s3-replace-mode').checked);
+        const res = await fetch(`${API_BASE}/api/runs`, { method: 'POST', body: fd });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Failed');
+        const data = await res.json();
+        currentRunId = data.run_id;
+        statusEl.textContent = '';
+        renderStep3Result(data);
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+      } finally { btn.disabled = false; }
+    });
+
+    function renderStep3Result(data) {
+      document.getElementById('s3-result-card').classList.remove('hidden');
+      document.getElementById('s3-run-id').textContent = data.run_id;
+      const pill = document.getElementById('s3-run-status');
+      pill.textContent = data.status;
+      pill.className = `status-pill status-${data.status}`;
+      const s = data.summary;
+      document.getElementById('s3-total-rows').textContent = s.total_rows ?? '–';
+      document.getElementById('s3-pending').textContent = s.pending_college_matches_count ?? 0;
+      document.getElementById('s3-rejected').textContent = s.rejected_college_matches_count ?? 0;
+      document.getElementById('s3-approve-btn').disabled = !data.can_approve;
+
+      const pendingBlock = document.getElementById('s3-pending-block');
+      if ((s.pending_college_matches_count || 0) > 0) {
+        pendingBlock.classList.remove('hidden');
+        loadStep3PendingList();
+      } else {
+        pendingBlock.classList.add('hidden');
+      }
+    }
+
+    async function loadStep3PendingList() {
+      const res = await fetch(`${API_BASE}/api/mcc-college-matches?state_exam=${STATE_EXAM}&status=pending`);
+      const rows = await res.json();
+      const container = document.getElementById('s3-pending-list');
+      container.innerHTML = rows.map(r => {
+        const tfOptions = targetFileOptions.map(tf => `<option value="${tf}">${tf}</option>`).join('');
+        return `
+        <div class="review-row" data-id="${r.id}">
+          <span class="text-xs font-bold brand-navy flex-1">"${r.parsed_college_name.slice(0,90)}" <span class="brand-purple">(${r.course}, ${r.reason})</span></span>
+          <span class="text-xs brand-purple">${r.suggestions?.[0] ? (r.suggestions[0].name ? `top: ${r.suggestions[0].name} (${r.suggestions[0].score?.toFixed?.(0) ?? ''})` : `code: ${r.suggestions[0].code}`) : 'no suggestions'}</span>
+          <input type="number" placeholder="existing code" data-role="code" class="w-28">
+          <button class="btn-secondary" data-role="map">Map to Code</button>
+          <select data-role="new-target-file" class="w-40"><option value="">— pick bucket+course —</option>${tfOptions}</select>
+          <button class="btn-secondary" data-role="new">New College</button>
+          <button class="btn-secondary" data-role="reject">Reject</button>
+        </div>`;
+      }).join('') || '<span class="text-xs brand-purple">None pending.</span>';
+
+      container.querySelectorAll('[data-role=map]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const row = btn.closest('.review-row');
+          const code = row.querySelector('[data-role=code]').value.trim();
+          if (!code) return;
+          await resolveMccMatch(row.dataset.id, 'approved_mapped', { resolved_code: parseInt(code) });
+        });
+      });
+      container.querySelectorAll('[data-role=new]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const row = btn.closest('.review-row');
+          const targetFile = row.querySelector('[data-role=new-target-file]').value;
+          if (!targetFile) { alert('Pick a bucket+course target file first.'); return; }
+          const code = row.querySelector('[data-role=code]').value.trim();
+          await resolveMccMatch(row.dataset.id, 'approved_new', { target_file: targetFile, resolved_code: code ? parseInt(code) : null });
+        });
+      });
+      container.querySelectorAll('[data-role=reject]').forEach(btn => {
+        btn.addEventListener('click', () => resolveMccMatch(btn.closest('.review-row').dataset.id, 'rejected', {}));
+      });
+    }
+
+    async function resolveMccMatch(id, decision, extra) {
+      await fetch(`${API_BASE}/api/mcc-college-matches/${id}/resolve`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision, ...extra }),
+      });
+      loadStep3PendingList();
+    }
+
+    async function refreshStep3() {
+      if (!currentRunId) return;
+      const res = await fetch(`${API_BASE}/api/runs/${currentRunId}`);
+      renderStep3Result(await res.json());
+    }
+
+    async function approveStep3() {
+      const statusEl = document.getElementById('s3-approve-status');
+      const btn = document.getElementById('s3-approve-btn');
+      btn.disabled = true; statusEl.textContent = 'Writing target files…';
+      try {
+        const res = await fetch(`${API_BASE}/api/runs/${currentRunId}/approve`, { method: 'POST' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Failed');
+        statusEl.textContent = '';
+        document.getElementById('s3-done-card').classList.remove('hidden');
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+        btn.disabled = false;
+      }
+    }
+
+    function downloadStep3() {
+      window.location.href = `${API_BASE}/api/runs/${currentRunId}/download`;
+    }
+
+    // init
+    loadStep1List();
+    loadStep2List();
+    goToStep(1);
+  </script>
+</body>
+</html>
