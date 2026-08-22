@@ -100,10 +100,11 @@
               </div>
 
               <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow">
-                <button class="px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold">2025</button>
-                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2024</button>
-                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2023</button>
-                <button class="px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all">2022</button>
+                <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025" onclick="setYear('2025')">2025</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 hover:text-gray-900 hover:bg-gray-50 text-sm font-bold transition-all" data-year="2026" onclick="setYear('2026')">2026</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2024" disabled title="Data coming soon">2024</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2023" disabled title="Data coming soon">2023</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2022" disabled title="Data coming soon">2022</button>
               </div>
 
               <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold">SM</div>
@@ -285,6 +286,7 @@
     let RANK = null;
     let strayVisible = false;
     let currentData = null;
+    let currentYear = '2025';
     let selectedCounselling = 'MCC';
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
@@ -684,17 +686,17 @@
       let url = '';
       let errMsg = 'data';
       if (selectedCounselling === 'MCC') {
-         url = `/data/cutoffs/MCC/2025/${selectedInstType}/${selectedCategory}.json`;
+         url = `/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
          errMsg = selectedCategory;
       } else if (selectedCounselling === 'OPEN') {
          const folder = selectedState.replace(/ /g, '_');
-         url = `/data/cutoffs/OPEN/2025/${folder}/${selectedCategory}.json`;
+         url = `/data/cutoffs/OPEN/${currentYear}/${folder}/${selectedCategory}.json`;
          errMsg = selectedState;
       } else if (selectedCounselling === 'MH') {
-         url = `/data/cutoffs/MH/2025/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+         url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
          errMsg = `${mhCategory} - ${mhSubType}`;
       }
-      
+
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error('Data not found');
@@ -702,9 +704,20 @@
         currentData = data;
         renderTable();
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-red-500">No data available for this selection.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No ${currentYear} data yet for this selection. Data is added as it becomes available.</td></tr>`;
         updateCounts(0, 0, 0);
       }
+    }
+
+    function setYear(year) {
+      currentYear = year;
+      document.querySelectorAll('.year-btn').forEach(b => {
+        const isActive = b.dataset.year === year;
+        b.classList.toggle('bg-[#1A0040]', isActive);
+        b.classList.toggle('text-white', isActive);
+        b.classList.toggle('text-gray-400', !isActive);
+      });
+      loadData();
     }
 
     function renderTable() {
