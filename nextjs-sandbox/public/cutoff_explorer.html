@@ -330,7 +330,7 @@
       'Bihar': ['MGT', 'MINORITY', 'NRI'],
       'Chhattisgarh': ['UR', 'UR_FEM', 'UR_NRI', 'UR_FEM_NRI'],
       'Haryana': ['MQ', 'MQ_MINORITY'],
-      'Himachal_Pradesh': ['MQ_NRI'],
+      'Himachal_Pradesh': ['MQ_NRI', 'HP_QUOTA', 'MANAGEMENT_QUOTA', 'NRI_QUOTA'],
       'Jharkhand': ['MQ', 'NRI'],
       'Karnataka': ['MQ', 'NRI', 'OTH', 'RC8'],
       'Kerala': ['MQ'],
@@ -632,12 +632,10 @@
       // Categories for MCC and OPEN
       if (selectedCounselling !== 'MH') {
           const folder = selectedState.replace(/ /g, '_');
-          const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
-          
-          if (!isHP) {
+          {
              html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
              html += `<div class="flex flex-wrap gap-2">`;
-             
+
              let cats = [];
              if (selectedCounselling === 'MCC') {
                 if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
