@@ -1,0 +1,50 @@
+{
+  "counselling": "OPEN",
+  "state": "Uttarakhand",
+  "year": 2026,
+  "quota": "AIQ",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Himalayan Institute of Medical Sciences, Jolly Grant",
+      "establishment": 1995,
+      "fees": "2400000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 107,
+          "AIR": 233456,
+          "SML": 1184
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Shri Guru Ram Rai Institute of Medical & Health Sciences, Dehradun",
+      "establishment": 2006,
+      "fees": "2400000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 107,
+          "AIR": 447050,
+          "SML": 1800
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Gautam Buddha Chikitsa Mahavidyalaya, Dehradun",
+      "establishment": 2022,
+      "fees": "2100000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 64,
+          "AIR": 577052,
+          "SML": 2101
+        }
+      }
+    }
+  ]
+}
