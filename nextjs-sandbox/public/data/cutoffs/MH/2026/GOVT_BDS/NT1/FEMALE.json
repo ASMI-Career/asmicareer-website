@@ -1,0 +1,33 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BDS",
+  "category": "NT1",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "2101",
+      "name": "GOVERNMENT DENTAL COLLEGE MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 136736
+        }
+      }
+    },
+    {
+      "code": "2102",
+      "name": "NAIR HOSPITAL DENTAL COLLEGE",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 153218
+        }
+      }
+    }
+  ]
+}

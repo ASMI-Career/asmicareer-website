@@ -1,0 +1,33 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BDS",
+  "category": "NT3",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "2136",
+      "name": "GOVERNMENT DENTAL COLLEGE JALGAON",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 138910
+        }
+      }
+    },
+    {
+      "code": "2101",
+      "name": "GOVERNMENT DENTAL COLLEGE MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 114960
+        }
+      }
+    }
+  ]
+}
