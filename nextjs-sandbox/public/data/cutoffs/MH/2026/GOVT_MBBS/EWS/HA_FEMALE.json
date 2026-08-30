@@ -7,14 +7,15 @@
   "colleges": [
     {
       "code": "1153",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Alibaug",
       "establishment": 2021,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 71108,
-          "SML": 5381
+          "SML": 5381,
+          "CSML": "EWS-484"
         }
       }
     },
@@ -27,33 +28,36 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 63620,
-          "SML": 4792
+          "SML": 4792,
+          "CSML": "EWS-424"
         }
       }
     },
     {
       "code": "1327",
-      "name": "GOVT. MEDICAL COLLEGE CH.",
+      "name": "Government Medical College, Aurangabad",
       "establishment": 1956,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 70156,
-          "SML": 5307
+          "SML": 5307,
+          "CSML": "EWS-477"
         }
       }
     },
     {
       "code": "1226",
-      "name": "SHRI V.N. GOVT. MEDICAL COLLEGE",
+      "name": "Vasantrao Naik Medical College, Yavatmal",
       "establishment": 1989,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 92402,
-          "SML": 7095
+          "SML": 7095,
+          "CSML": "EWS-650"
         }
       }
     }

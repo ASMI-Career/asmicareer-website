@@ -7,53 +7,57 @@
   "colleges": [
     {
       "code": "1114",
-      "name": "DR. V.M. MEDICAL COLLEGE SOLAPUR",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
       "establishment": 1963,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 116311,
-          "SML": 8772
+          "SML": 8772,
+          "CSML": "SC-452"
         }
       }
     },
     {
       "code": "1166",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Ambernath",
       "establishment": 2024,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 150253,
-          "SML": 10965
+          "SML": 10965,
+          "CSML": "SC-731"
         }
       }
     },
     {
       "code": "1151",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Nandurbar",
       "establishment": 2020,
       "fees": "12,600",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 166940,
-          "SML": 11924
+          "SML": 11924,
+          "CSML": "SC-873"
         }
       }
     },
     {
       "code": "1358",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Osmanabad",
       "establishment": 2022,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 168308,
-          "SML": 11986
+          "SML": 11986,
+          "CSML": "SC-882"
         }
       }
     },
@@ -66,20 +70,22 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 57410,
-          "SML": 4296
+          "SML": 4296,
+          "CSML": "SC-139"
         }
       }
     },
     {
       "code": "1222",
-      "name": "INDIRA GANDHI MEDICAL COLLEGE",
+      "name": "Indira Gandhi Medical College, Nagpur",
       "establishment": 1968,
       "fees": "16,950",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 106068,
-          "SML": 8102
+          "SML": 8102,
+          "CSML": "SC-394"
         }
       }
     }

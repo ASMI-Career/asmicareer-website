@@ -7,7 +7,7 @@
   "colleges": [
     {
       "code": "1267",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Amravati",
       "establishment": 2024,
       "fees": "1,67,300",
       "rounds": {
@@ -20,7 +20,7 @@
     },
     {
       "code": "1149",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Jalgaon",
       "establishment": 2018,
       "fees": "1,38,300",
       "rounds": {
@@ -33,7 +33,7 @@
     },
     {
       "code": "1360",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Parbhani",
       "establishment": 2023,
       "fees": "1,67,300",
       "rounds": {
@@ -46,14 +46,15 @@
     },
     {
       "code": "1269",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Buldhana",
       "establishment": 2024,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 113935,
-          "SML": 8615
+          "SML": 8615,
+          "CSML": "OBC-2402"
         }
       }
     },
@@ -66,39 +67,42 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 111566,
-          "SML": 8465
+          "SML": 8465,
+          "CSML": "SEBC-1214"
         }
       }
     },
     {
       "code": "1234",
-      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "name": "Government Medical College, Akola",
       "establishment": 2002,
       "fees": "1,38,300",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 78977,
-          "SML": 6062
+          "SML": 6062,
+          "CSML": "SEBC-875"
         }
       }
     },
     {
       "code": "1115",
-      "name": "GOVT. MEDICAL COLLEGE MIRAJ",
+      "name": "Government Medical College, Miraj",
       "establishment": 1962,
       "fees": "1,38,300",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 69181,
-          "SML": 5224
+          "SML": 5224,
+          "CSML": "OBC-1467"
         }
       }
     },
     {
       "code": "1221",
-      "name": "GOVT. MEDICAL COLLEGE NAGPUR",
+      "name": "Government Medical College, Nagpur",
       "establishment": 1947,
       "fees": "1,38,300",
       "rounds": {
@@ -111,7 +115,7 @@
     },
     {
       "code": "1222",
-      "name": "INDIRA GANDHI MEDICAL COLLEGE",
+      "name": "Indira Gandhi Medical College, Nagpur",
       "establishment": 1968,
       "fees": "1,39,300",
       "rounds": {
@@ -124,40 +128,43 @@
     },
     {
       "code": "1102",
-      "name": "L. T. MEDICAL COLLEGE MUMBAI",
+      "name": "Lokmanya Tilak Medical College, Mumbai",
       "establishment": 1964,
       "fees": "1,38,300",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 39228,
-          "SML": 2859
+          "SML": 2859,
+          "CSML": "OBC-770"
         }
       }
     },
     {
       "code": "1329",
-      "name": "S.R.T.R. MEDICAL COLLEGE",
+      "name": "Swami Ramanand Tirth Medical College, Ambejogai",
       "establishment": 1974,
       "fees": "1,38,300",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 79657,
-          "SML": 6112
+          "SML": 6112,
+          "CSML": "NT(D)-228"
         }
       }
     },
     {
       "code": "1119",
-      "name": "SHREE BHAUSAHEB HIRE MEDICAL",
+      "name": "Bhausaheb Hire Medical College, Dhule",
       "establishment": 1988,
       "fees": "1,67,300",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 82246,
-          "SML": 6323
+          "SML": 6323,
+          "CSML": "NT(C)-280"
         }
       }
     }

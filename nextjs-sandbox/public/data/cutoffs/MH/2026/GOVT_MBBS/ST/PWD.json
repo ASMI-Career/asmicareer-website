@@ -7,66 +7,71 @@
   "colleges": [
     {
       "code": "1110",
-      "name": "B. J. MEDICAL COLLEGE PUNE",
+      "name": "B.J. Government Medical College, Pune",
       "establishment": 1964,
       "fees": "14,607",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 900605,
-          "SML": 32886
+          "SML": 32886,
+          "CSML": "ST-1856"
         }
       }
     },
     {
       "code": "1103",
-      "name": "G. S. MEDICAL COLLEGE MUMBAI",
+      "name": "Seth G.S. Medical College, Mumbai",
       "establishment": 1925,
       "fees": "8,900",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 578987,
-          "SML": 27072
+          "SML": 27072,
+          "CSML": "ST-1298"
         }
       }
     },
     {
       "code": "1149",
-      "name": "GOVERNMENT MEDICAL COLLEGE",
+      "name": "Government Medical College, Jalgaon",
       "establishment": 2018,
       "fees": "12,100",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 1094644,
-          "SML": 34686
+          "SML": 34686,
+          "CSML": "ST-2048"
         }
       }
     },
     {
       "code": "1234",
-      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "name": "Government Medical College, Akola",
       "establishment": 2002,
       "fees": "8,000",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 1176835,
-          "SML": 35165
+          "SML": 35165,
+          "CSML": "ST-2098"
         }
       }
     },
     {
       "code": "1221",
-      "name": "GOVT. MEDICAL COLLEGE NAGPUR",
+      "name": "Government Medical College, Nagpur",
       "establishment": 1947,
       "fees": "13,000",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 1157168,
-          "SML": 35068
+          "SML": 35068,
+          "CSML": "ST-2089"
         }
       }
     },
@@ -79,20 +84,22 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 451144,
-          "SML": 23382
+          "SML": 23382,
+          "CSML": "ST-880"
         }
       }
     },
     {
       "code": "1104",
-      "name": "T. N. MEDICAL COLLEGE MUMBAI",
+      "name": "Topiwala Nair Medical College, Mumbai",
       "establishment": 1964,
       "fees": "8,900",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 988094,
-          "SML": 33904
+          "SML": 33904,
+          "CSML": "ST-1946"
         }
       }
     }

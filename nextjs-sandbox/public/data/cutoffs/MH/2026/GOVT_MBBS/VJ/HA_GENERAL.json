@@ -7,14 +7,15 @@
   "colleges": [
     {
       "code": "1114",
-      "name": "DR. V.M. MEDICAL COLLEGE SOLAPUR",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
       "establishment": 1963,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 54121,
-          "SML": 4039
+          "SML": 4039,
+          "CSML": "DT-VJ(A)-78"
         }
       }
     },
@@ -27,33 +28,36 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 103071,
-          "SML": 7882
+          "SML": 7882,
+          "CSML": "DT-VJ(A)-196"
         }
       }
     },
     {
       "code": "1241",
-      "name": "KARMVIR M.S. KANNAMWAR GOVT.",
+      "name": "Government Medical College, Chandrapur",
       "establishment": 2015,
       "fees": "15,840",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 61699,
-          "SML": 4646
+          "SML": 4646,
+          "CSML": "DT-VJ(A)-93"
         }
       }
     },
     {
       "code": "1226",
-      "name": "SHRI V.N. GOVT. MEDICAL COLLEGE",
+      "name": "Vasantrao Naik Medical College, Yavatmal",
       "establishment": 1989,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 87043,
-          "SML": 6702
+          "SML": 6702,
+          "CSML": "DT-VJ(A)-149"
         }
       }
     }

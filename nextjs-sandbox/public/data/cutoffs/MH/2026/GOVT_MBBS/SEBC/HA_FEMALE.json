@@ -7,14 +7,15 @@
   "colleges": [
     {
       "code": "1114",
-      "name": "DR. V.M. MEDICAL COLLEGE SOLAPUR",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
       "establishment": 1963,
       "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 31985,
-          "SML": 2283
+          "SML": 2283,
+          "CSML": "SEBC-333"
         }
       }
     },
@@ -27,33 +28,36 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 30503,
-          "SML": 2176
+          "SML": 2176,
+          "CSML": "SEBC-314"
         }
       }
     },
     {
       "code": "1234",
-      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "name": "Government Medical College, Akola",
       "establishment": 2002,
       "fees": "8,000",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 38387,
-          "SML": 2795
+          "SML": 2795,
+          "CSML": "SEBC-394"
         }
       }
     },
     {
       "code": "1140",
-      "name": "HBT & DR. R. N. COOPER MEDICAL",
+      "name": "HBT & Cooper Government Medical College, Mumbai",
       "establishment": 2015,
       "fees": "8,900",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 19389,
-          "SML": 1337
+          "SML": 1337,
+          "CSML": "SEBC-185"
         }
       }
     }

@@ -7,40 +7,43 @@
   "colleges": [
     {
       "code": "1234",
-      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "name": "Government Medical College, Akola",
       "establishment": 2002,
       "fees": "8,000",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 297395,
-          "SML": 17949
+          "SML": 17949,
+          "CSML": "ST-304"
         }
       }
     },
     {
       "code": "1104",
-      "name": "T. N. MEDICAL COLLEGE MUMBAI",
+      "name": "Topiwala Nair Medical College, Mumbai",
       "establishment": 1964,
       "fees": "8,900",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 213451,
-          "SML": 14307
+          "SML": 14307,
+          "CSML": "ST-129"
         }
       }
     },
     {
       "code": "1333",
-      "name": "VILASRAO DESHMUKH GOVT MEDICAL",
+      "name": "Government Medical College, Latur",
       "establishment": 2002,
       "fees": "11,530",
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 284243,
-          "SML": 17407
+          "SML": 17407,
+          "CSML": "ST-263"
         }
       }
     }
