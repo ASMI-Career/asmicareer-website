@@ -1,0 +1,38 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Bihar",
+    "year": 2026,
+    "quota": "MM",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Katihar Medical College, Katihar",
+        "establishment": null,
+        "fees": "NA",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 100,
+            "AIR": 237429,
+            "SML": 5588
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Madhubani Medical College, Madhubani",
+        "establishment": null,
+        "fees": "1400000",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 125,
+            "AIR": 608466,
+            "SML": 8484
+          }
+        }
+      }
+    ]
+  }
+]
