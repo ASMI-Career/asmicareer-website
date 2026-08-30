@@ -1,0 +1,45 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "NT2",
+  "sub_type": "HA_GENERAL",
+  "colleges": [
+    {
+      "code": "1234",
+      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 51152
+        }
+      }
+    },
+    {
+      "code": "1327",
+      "name": "GOVT. MEDICAL COLLEGE CH.",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 38456
+        }
+      }
+    },
+    {
+      "code": "1101",
+      "name": "GRANT MEDICAL COLLEGE MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 35211
+        }
+      }
+    }
+  ]
+}

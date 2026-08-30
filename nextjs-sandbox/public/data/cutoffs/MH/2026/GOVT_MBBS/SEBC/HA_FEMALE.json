@@ -1,0 +1,57 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "SEBC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1114",
+      "name": "DR. V.M. MEDICAL COLLEGE SOLAPUR",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 31985
+        }
+      }
+    },
+    {
+      "code": "1155",
+      "name": "GOVERNMENT MEDICAL COLLEGE SATARA",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 30503
+        }
+      }
+    },
+    {
+      "code": "1234",
+      "name": "GOVT MEDICAL COLLEGE AKOLA",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 38387
+        }
+      }
+    },
+    {
+      "code": "1140",
+      "name": "HBT & DR. R. N. COOPER MEDICAL",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 19389
+        }
+      }
+    }
+  ]
+}

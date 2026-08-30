@@ -1,0 +1,33 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "MKB",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "1101",
+      "name": "GRANT MEDICAL COLLEGE MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 27749
+        }
+      }
+    },
+    {
+      "code": "1132",
+      "name": "R.C.S.M. GOVT MEDICAL COLLEGE",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 51019
+        }
+      }
+    }
+  ]
+}
