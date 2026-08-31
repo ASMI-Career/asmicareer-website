@@ -3,19 +3,19 @@
     "counselling": "OPEN",
     "state": "Chhattisgarh",
     "year": 2026,
-    "quota": "NRI",
+    "quota": "MGMT_UR_FEM",
     "colleges": [
       {
         "code": null,
         "name": "Abhishek I Mishra Memorial Medical College & Research, Junwani - Bhilai, Durg",
-        "establishment": null,
-        "fees": null,
+        "establishment": 2024,
+        "fees": "745187",
         "type": "Private",
         "rounds": {
           "Round 1": {
-            "Intake": 1,
-            "AIR": 600698,
-            "SML": 7292
+            "Intake": 13,
+            "AIR": 121204,
+            "SML": 1463
           }
         }
       },
@@ -27,51 +27,65 @@
         "type": "Private",
         "rounds": {
           "Round 1": {
-            "Intake": 1,
-            "AIR": 992149,
-            "SML": 8955
+            "Intake": 8,
+            "AIR": 129569,
+            "SML": 1641
+          }
+        }
+      },
+      {
+        "code": null,
+        "name": "Raipur Institute of Medical Sciences, Raipur",
+        "establishment": 2016,
+        "fees": "745187",
+        "type": "Private",
+        "rounds": {
+          "Round 1": {
+            "Intake": 13,
+            "AIR": 99267,
+            "SML": 1047
           }
         }
       },
       {
         "code": null,
         "name": "Shri Balaji Institute Of Medical Science, Mowa Raipur",
-        "establishment": null,
-        "fees": null,
+        "establishment": 2022,
+        "fees": "802700",
         "type": "Private",
         "rounds": {
           "Round 1": {
-            "Intake": 16,
-            "AIR": 972594,
-            "SML": 8911
+            "Intake": 13,
+            "AIR": 79618,
+            "SML": 714
           }
         }
       },
       {
         "code": null,
         "name": "Shri Rawatpura Sarkar Institute of Medical Sciences and Research, Nava Raipur",
-        "establishment": null,
-        "fees": null,
+        "establishment": 2025,
+        "fees": "745187",
         "type": "Private",
         "rounds": {
           "Round 1": {
-            "Intake": 1,
-            "AIR": 795817,
-            "SML": 8305
+            "Intake": 8,
+            "AIR": 123190,
+            "SML": 1509
           }
         }
       },
       {
         "code": null,
         "name": "Shri Shankaracharya Institute of Medical Science, Junwani Bhilai",
-        "establishment": null,
-        "fees": null,
+        "establishment": 2016,
+        "fees": "799187",
         "type": "Private",
         "rounds": {
           "Round 1": {
-            "Intake": 6,
-            "AIR": 996319,
-            "SML": 8971
+            "Intake": 13,
+            "AIR": 91536,
+            "SML": 896
           }
         }
       }

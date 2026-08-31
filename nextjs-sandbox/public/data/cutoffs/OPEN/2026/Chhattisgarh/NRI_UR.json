@@ -2,36 +2,8 @@
   "counselling": "OPEN",
   "state": "Chhattisgarh",
   "year": 2026,
-  "quota": "NRI",
+  "quota": "NRI_UR",
   "colleges": [
-    {
-      "code": null,
-      "name": "Abhishek I Mishra Memorial Medical College & Research, Junwani - Bhilai, Durg",
-      "establishment": 2024,
-      "fees": "$ 35,000",
-      "type": "Private",
-      "rounds": {
-        "Round 1": {
-          "Intake": 1,
-          "AIR": 600698,
-          "SML": 7292
-        }
-      }
-    },
-    {
-      "code": null,
-      "name": "Maa Padmawati Institute of Medical Sciences Pacheda, Raipur",
-      "establishment": null,
-      "fees": null,
-      "type": "Private",
-      "rounds": {
-        "Round 1": {
-          "Intake": 1,
-          "AIR": 992149,
-          "SML": 8955
-        }
-      }
-    },
     {
       "code": null,
       "name": "Shri Balaji Institute Of Medical Science, Mowa Raipur",
@@ -40,7 +12,7 @@
       "type": "Private",
       "rounds": {
         "Round 1": {
-          "Intake": 16,
+          "Intake": 11,
           "AIR": 972594,
           "SML": 8911
         }
@@ -68,9 +40,9 @@
       "type": "Private",
       "rounds": {
         "Round 1": {
-          "Intake": 6,
-          "AIR": 996319,
-          "SML": 8971
+          "Intake": 2,
+          "AIR": 967733,
+          "SML": 8896
         }
       }
     }
