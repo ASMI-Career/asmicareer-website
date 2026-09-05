@@ -1,0 +1,121 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "OBC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1110",
+      "name": "B.J. Government Medical College, Pune",
+      "establishment": 1964,
+      "fees": "14,607",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 8849,
+          "SML": 600,
+          "CSML": "OBC-141"
+        }
+      }
+    },
+    {
+      "code": "1103",
+      "name": "Seth G.S. Medical College, Mumbai",
+      "establishment": 1925,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 6804,
+          "SML": 450,
+          "CSML": "OBC-103"
+        }
+      }
+    },
+    {
+      "code": "1149",
+      "name": "Government Medical College, Jalgaon",
+      "establishment": 2018,
+      "fees": "12,100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 37929,
+          "SML": 2755,
+          "CSML": "OBC-743"
+        }
+      }
+    },
+    {
+      "code": "1115",
+      "name": "Government Medical College, Miraj",
+      "establishment": 1962,
+      "fees": "12,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 27697,
+          "SML": 1963,
+          "CSML": "OBC-509"
+        }
+      }
+    },
+    {
+      "code": "1221",
+      "name": "Government Medical College, Nagpur",
+      "establishment": 1947,
+      "fees": "13,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 27478,
+          "SML": 1939,
+          "CSML": "OBC-504"
+        }
+      }
+    },
+    {
+      "code": "1102",
+      "name": "Lokmanya Tilak Medical College, Mumbai",
+      "establishment": 1964,
+      "fees": "9,400",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 25913,
+          "SML": 1819,
+          "CSML": "OBC-468"
+        }
+      }
+    },
+    {
+      "code": "1132",
+      "name": "R.C.S.M. Medical College, Kolhapur",
+      "establishment": 2001,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 27421,
+          "SML": 1932,
+          "CSML": "OBC-502"
+        }
+      }
+    },
+    {
+      "code": "1329",
+      "name": "Swami Ramanand Tirth Medical College, Ambejogai",
+      "establishment": 1974,
+      "fees": "19,250",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 35759,
+          "SML": 2597,
+          "CSML": "OBC-702"
+        }
+      }
+    }
+  ]
+}

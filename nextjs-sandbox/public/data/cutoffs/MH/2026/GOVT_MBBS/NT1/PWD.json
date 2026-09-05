@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "NT1",
+  "sub_type": "PWD",
+  "colleges": [
+    {
+      "code": "1115",
+      "name": "Government Medical College, Miraj",
+      "establishment": 1962,
+      "fees": "12,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 920534,
+          "SML": 33124,
+          "CSML": "NT(B)-718"
+        }
+      }
+    },
+    {
+      "code": "1101",
+      "name": "Grant Medical College, Mumbai",
+      "establishment": 1845,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 842690,
+          "SML": 32021,
+          "CSML": "NT(B)-687"
+        }
+      }
+    },
+    {
+      "code": "1140",
+      "name": "HBT & Cooper Government Medical College, Mumbai",
+      "establishment": 2015,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1107308,
+          "SML": 34763,
+          "CSML": "NT(B)-775"
+        }
+      }
+    },
+    {
+      "code": "1333",
+      "name": "Government Medical College, Latur",
+      "establishment": 2002,
+      "fees": "11,530",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 852548,
+          "SML": 32194,
+          "CSML": "NT(B)-693"
+        }
+      }
+    }
+  ]
+}

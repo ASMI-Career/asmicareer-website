@@ -1,0 +1,583 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "SC",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "1110",
+      "name": "B.J. Government Medical College, Pune",
+      "establishment": 1964,
+      "fees": "14,607",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 51475,
+          "SML": 3814,
+          "CSML": "SC-120"
+        }
+      }
+    },
+    {
+      "code": "1328",
+      "name": "Government Medical College, Nanded",
+      "establishment": 1988,
+      "fees": "8,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 96241,
+          "SML": 7356,
+          "CSML": "SC-340"
+        }
+      }
+    },
+    {
+      "code": "1114",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
+      "establishment": 1963,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 88962,
+          "SML": 6837,
+          "CSML": "SC-299"
+        }
+      }
+    },
+    {
+      "code": "1174",
+      "name": "ESIC Medical College, Andheri",
+      "establishment": 2025,
+      "fees": "1,00,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 87654,
+          "SML": 6745,
+          "CSML": "SC-294"
+        }
+      }
+    },
+    {
+      "code": "1103",
+      "name": "Seth G.S. Medical College, Mumbai",
+      "establishment": 1925,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 21969,
+          "SML": 1535,
+          "CSML": "SC-41"
+        }
+      }
+    },
+    {
+      "code": "1150",
+      "name": "Government Medical College, Baramati",
+      "establishment": 2019,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 85192,
+          "SML": 6553,
+          "CSML": "SC-278"
+        }
+      }
+    },
+    {
+      "code": "1149",
+      "name": "Government Medical College, Jalgaon",
+      "establishment": 2018,
+      "fees": "12,100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 127936,
+          "SML": 9517,
+          "CSML": "SC-537"
+        }
+      }
+    },
+    {
+      "code": "1267",
+      "name": "Government Medical College, Amravati",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 123283,
+          "SML": 9210,
+          "CSML": "SC-502"
+        }
+      }
+    },
+    {
+      "code": "1153",
+      "name": "Government Medical College, Alibaug",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 123833,
+          "SML": 9249,
+          "CSML": "SC-508"
+        }
+      }
+    },
+    {
+      "code": "1358",
+      "name": "Government Medical College, Osmanabad",
+      "establishment": 2022,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 120308,
+          "SML": 9031,
+          "CSML": "SC-481"
+        }
+      }
+    },
+    {
+      "code": "1159",
+      "name": "Government Medical College, Ratnagiri",
+      "establishment": 2023,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 124871,
+          "SML": 9314,
+          "CSML": "SC-513"
+        }
+      }
+    },
+    {
+      "code": "1360",
+      "name": "Government Medical College, Parbhani",
+      "establishment": 2023,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 134486,
+          "SML": 9974,
+          "CSML": "SC-593"
+        }
+      }
+    },
+    {
+      "code": "1166",
+      "name": "Government Medical College, Ambernath",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 131535,
+          "SML": 9752,
+          "CSML": "SC-558"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 143523,
+          "SML": 10540,
+          "CSML": "SC-674"
+        }
+      }
+    },
+    {
+      "code": "1154",
+      "name": "Government Medical College, Sindhudurg",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 133544,
+          "SML": 9902,
+          "CSML": "SC-581"
+        }
+      }
+    },
+    {
+      "code": "1151",
+      "name": "Government Medical College, Nandurbar",
+      "establishment": 2020,
+      "fees": "12,600",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 136762,
+          "SML": 10128,
+          "CSML": "SC-618"
+        }
+      }
+    },
+    {
+      "code": "1268",
+      "name": "Government Medical College, Bhandara",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 141957,
+          "SML": 10450,
+          "CSML": "SC-660"
+        }
+      }
+    },
+    {
+      "code": "1269",
+      "name": "Government Medical College, Buldhana",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 140561,
+          "SML": 10364,
+          "CSML": "SC-650"
+        }
+      }
+    },
+    {
+      "code": "1371",
+      "name": "Government Medical College, Hingoli",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 141515,
+          "SML": 10429,
+          "CSML": "SC-657"
+        }
+      }
+    },
+    {
+      "code": "1163",
+      "name": "Government Medical College, Mumbai & GT Hospital",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 80412,
+          "SML": 6167,
+          "CSML": "SC-239"
+        }
+      }
+    },
+    {
+      "code": "1372",
+      "name": "Government Medical College, Jalna",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 136080,
+          "SML": 10084,
+          "CSML": "SC-612"
+        }
+      }
+    },
+    {
+      "code": "1164",
+      "name": "Government Medical College, Nashik",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 109642,
+          "SML": 8337,
+          "CSML": "SC-411"
+        }
+      }
+    },
+    {
+      "code": "1155",
+      "name": "Government Medical College, Satara",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 105683,
+          "SML": 8068,
+          "CSML": "SC-389"
+        }
+      }
+    },
+    {
+      "code": "1270",
+      "name": "Government Medical College, Washim",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 139263,
+          "SML": 10283,
+          "CSML": "SC-641"
+        }
+      }
+    },
+    {
+      "code": "1234",
+      "name": "Government Medical College, Akola",
+      "establishment": 2002,
+      "fees": "8,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 98961,
+          "SML": 7572,
+          "CSML": "SC-349"
+        }
+      }
+    },
+    {
+      "code": "1327",
+      "name": "Government Medical College, Aurangabad",
+      "establishment": 1956,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 80667,
+          "SML": 6185,
+          "CSML": "SC-241"
+        }
+      }
+    },
+    {
+      "code": "1242",
+      "name": "Government Medical College, Gondia",
+      "establishment": 2016,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 136183,
+          "SML": 10091,
+          "CSML": "SC-614"
+        }
+      }
+    },
+    {
+      "code": "1115",
+      "name": "Government Medical College, Miraj",
+      "establishment": 1962,
+      "fees": "12,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 98518,
+          "SML": 7544,
+          "CSML": "SC-347"
+        }
+      }
+    },
+    {
+      "code": "1221",
+      "name": "Government Medical College, Nagpur",
+      "establishment": 1947,
+      "fees": "13,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 54709,
+          "SML": 4087,
+          "CSML": "SC-132"
+        }
+      }
+    },
+    {
+      "code": "1101",
+      "name": "Grant Medical College, Mumbai",
+      "establishment": 1845,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 39118,
+          "SML": 2855,
+          "CSML": "SC-83"
+        }
+      }
+    },
+    {
+      "code": "1140",
+      "name": "HBT & Cooper Government Medical College, Mumbai",
+      "establishment": 2015,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 73856,
+          "SML": 5609,
+          "CSML": "SC-202"
+        }
+      }
+    },
+    {
+      "code": "1222",
+      "name": "Indira Gandhi Medical College, Nagpur",
+      "establishment": 1968,
+      "fees": "16,950",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 70152,
+          "SML": 5305,
+          "CSML": "SC-189"
+        }
+      }
+    },
+    {
+      "code": "1241",
+      "name": "Government Medical College, Chandrapur",
+      "establishment": 2015,
+      "fees": "15,840",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 115240,
+          "SML": 8698,
+          "CSML": "SC-445"
+        }
+      }
+    },
+    {
+      "code": "1102",
+      "name": "Lokmanya Tilak Medical College, Mumbai",
+      "establishment": 1964,
+      "fees": "9,400",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 62403,
+          "SML": 4695,
+          "CSML": "SC-160"
+        }
+      }
+    },
+    {
+      "code": "1132",
+      "name": "R.C.S.M. Medical College, Kolhapur",
+      "establishment": 2001,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 82038,
+          "SML": 6301,
+          "CSML": "SC-255"
+        }
+      }
+    },
+    {
+      "code": "1109",
+      "name": "Rajiv Gandhi Medical College, Kalwa, Thane",
+      "establishment": 1992,
+      "fees": "13,760",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 81130,
+          "SML": 6236,
+          "CSML": "SC-245"
+        }
+      }
+    },
+    {
+      "code": "1329",
+      "name": "Swami Ramanand Tirth Medical College, Ambejogai",
+      "establishment": 1974,
+      "fees": "19,250",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 119426,
+          "SML": 8975,
+          "CSML": "SC-475"
+        }
+      }
+    },
+    {
+      "code": "1119",
+      "name": "Bhausaheb Hire Medical College, Dhule",
+      "establishment": 1988,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 124283,
+          "SML": 9277,
+          "CSML": "SC-512"
+        }
+      }
+    },
+    {
+      "code": "1226",
+      "name": "Vasantrao Naik Medical College, Yavatmal",
+      "establishment": 1989,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 126987,
+          "SML": 9461,
+          "CSML": "SC-532"
+        }
+      }
+    },
+    {
+      "code": "1104",
+      "name": "Topiwala Nair Medical College, Mumbai",
+      "establishment": 1964,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 72747,
+          "SML": 5519,
+          "CSML": "SC-197"
+        }
+      }
+    },
+    {
+      "code": "1333",
+      "name": "Government Medical College, Latur",
+      "establishment": 2002,
+      "fees": "11,530",
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 107226,
+          "SML": 8183,
+          "CSML": "SC-402"
+        }
+      }
+    }
+  ]
+}

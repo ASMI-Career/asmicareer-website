@@ -1,0 +1,47 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Himachal Pradesh",
+    "year": 2026,
+    "quota": "MANAGEMENT_QUOTA",
+    "colleges": [
+      {
+        "code": null,
+        "name": "Maharishi Markandeshwar Medical College & Hospital, Solan",
+        "establishment": 2013,
+        "fees": "1597000",
+        "type": "Private",
+        "categories": {
+          "General": {
+            "Round 1": {
+              "Intake": 56,
+              "AIR": 362133,
+              "SML": 1673
+            }
+          },
+          "ST": {
+            "Round 1": {
+              "Intake": 8,
+              "AIR": 529018,
+              "SML": 2018
+            }
+          },
+          "OBC": {
+            "Round 1": {
+              "Intake": 5,
+              "AIR": 446361,
+              "SML": 1854
+            }
+          },
+          "SC": {
+            "Round 1": {
+              "Intake": 16,
+              "AIR": 664567,
+              "SML": 2263
+            }
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "NT1",
+  "sub_type": "HA_GENERAL",
+  "colleges": [
+    {
+      "code": "1110",
+      "name": "B.J. Government Medical College, Pune",
+      "establishment": 1964,
+      "fees": "14,607",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 58106,
+          "SML": 4354,
+          "CSML": "NT(B)-45"
+        }
+      }
+    },
+    {
+      "code": "1328",
+      "name": "Government Medical College, Nanded",
+      "establishment": 1988,
+      "fees": "8,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 98134,
+          "SML": 7503,
+          "CSML": "NT(B)-98"
+        }
+      }
+    },
+    {
+      "code": "1115",
+      "name": "Government Medical College, Miraj",
+      "establishment": 1962,
+      "fees": "12,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 80766,
+          "SML": 6195,
+          "CSML": "NT(B)-79"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BDS",
+  "category": "VJ",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "2136",
+      "name": "Government Dental College, Jalgaon",
+      "establishment": 2025,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 150194,
+          "SML": 10961,
+          "CSML": "DT-VJ(A)-306"
+        }
+      }
+    },
+    {
+      "code": "2101",
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 122319,
+          "SML": 9140,
+          "CSML": "DT-VJ(A)-244"
+        }
+      }
+    },
+    {
+      "code": "2313",
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 141062,
+          "SML": 10402,
+          "CSML": "DT-VJ(A)-286"
+        }
+      }
+    },
+    {
+      "code": "2207",
+      "name": "Government Dental College, Nagpur",
+      "establishment": 1968,
+      "fees": "11,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 137767,
+          "SML": 10179,
+          "CSML": "DT-VJ(A)-282"
+        }
+      }
+    },
+    {
+      "code": "2102",
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 133413,
+          "SML": 9887,
+          "CSML": "DT-VJ(A)-270"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "ST",
+  "sub_type": "HA_GENERAL",
+  "colleges": [
+    {
+      "code": "1328",
+      "name": "Government Medical College, Nanded",
+      "establishment": 1988,
+      "fees": "8,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 234734,
+          "SML": 15264,
+          "CSML": "ST-165"
+        }
+      }
+    },
+    {
+      "code": "1103",
+      "name": "Seth G.S. Medical College, Mumbai",
+      "establishment": 1925,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 95435,
+          "SML": 7310,
+          "CSML": "ST-29"
+        }
+      }
+    },
+    {
+      "code": "1149",
+      "name": "Government Medical College, Jalgaon",
+      "establishment": 2018,
+      "fees": "12,100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 215979,
+          "SML": 14407,
+          "CSML": "ST-133"
+        }
+      }
+    },
+    {
+      "code": "1153",
+      "name": "Government Medical College, Alibaug",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 303322,
+          "SML": 18194,
+          "CSML": "ST-319"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 313025,
+          "SML": 18546,
+          "CSML": "ST-341"
+        }
+      }
+    },
+    {
+      "code": "1221",
+      "name": "Government Medical College, Nagpur",
+      "establishment": 1947,
+      "fees": "13,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 184890,
+          "SML": 12877,
+          "CSML": "ST-85"
+        }
+      }
+    },
+    {
+      "code": "1132",
+      "name": "R.C.S.M. Medical College, Kolhapur",
+      "establishment": 2001,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 197404,
+          "SML": 13526,
+          "CSML": "ST-102"
+        }
+      }
+    }
+  ]
+}

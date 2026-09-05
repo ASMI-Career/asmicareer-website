@@ -478,6 +478,10 @@
                     <iconify-icon icon="lucide:chevron-down"></iconify-icon>
                     Show stray rounds
                   </button>
+                  <button onclick="exportCutoffTableExcel()" class="px-4 py-2 rounded-full bg-[#FFD700] text-[#1A0040] text-sm font-bold hover:brightness-95 transition-all inline-flex items-center gap-1.5">
+                    <iconify-icon icon="lucide:download"></iconify-icon>
+                    Export Excel
+                  </button>
                 </div>
               </div>
             </div>
@@ -574,8 +578,12 @@
       // BDS quotas — subtype file is named "OPEN" here (not "GENERAL" like the MBBS quotas
       // above); folder names use NT_1/NT_2/NT_3 (underscored), unlike MBBS's NT1/NT2/NT3.
       // Both confirmed against the actual delivered files, not assumed.
-      "GOVT_BDS": {"DEF_1": ["FEMALE", "OPEN"], "DEF_2": ["FEMALE", "OPEN"], "DEF_3": ["FEMALE", "OPEN"], "EWS": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "OPEN"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "OPEN", "ORPHAN", "PWD"]},
-      "PRIVATE_BDS": {"NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "OPEN"], "OPEN": ["FEMALE", "OPEN"], "SC": ["FEMALE", "OPEN"], "SEBC": ["FEMALE", "OPEN"], "ST": ["FEMALE", "OPEN"], "VJ": ["FEMALE", "OPEN"]},
+      // 2026 additions (Round 1 CAP allotment) use GENERAL (matching the MBBS
+      // convention) and NT1/NT2/NT3 (no underscore) instead of 2025's OPEN/NT_1
+      // naming. Both are kept side by side below so neither year's files
+      // become unreachable through this map.
+      "GOVT_BDS": {"DEF_1": ["FEMALE", "GENERAL", "OPEN"], "DEF_2": ["FEMALE", "GENERAL", "OPEN"], "DEF_3": ["FEMALE", "GENERAL", "OPEN"], "EWS": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL", "OPEN"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"]},
+      "PRIVATE_BDS": {"IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "GENERAL", "OPEN"], "OPEN": ["FEMALE", "GENERAL", "OPEN"], "SC": ["FEMALE", "GENERAL", "OPEN"], "SEBC": ["FEMALE", "GENERAL", "OPEN"], "ST": ["FEMALE", "GENERAL", "OPEN"], "VJ": ["FEMALE", "GENERAL", "OPEN"]},
       "IQ_BDS": {"IQ": ["IQ"]},
       "GOVT_BAMS": {"EWS": ["FEMALE", "GENERAL", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL", "PWD"], "NTC": ["FEMALE", "GENERAL", "PWD"], "NTD": ["FEMALE", "GENERAL", "PWD"], "OBC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "PWD"], "SC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "PWD"], "ST": ["FEMALE", "GENERAL", "PWD"], "VJ": ["FEMALE", "GENERAL", "PWD"]},
       "PRIVATE_BAMS": {"NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
@@ -591,10 +599,10 @@
     ];
     const OPEN_STATE_CATS = {
       'Andhra_Pradesh': ['COUNSELOR', 'NRI', 'GOV_NRI'],
-      'Bihar': ['MGT', 'MINORITY', 'NRI'],
-      'Chhattisgarh': ['UR', 'UR_FEM', 'UR_NRI', 'UR_FEM_NRI'],
-      'Haryana': ['MQ', 'MQ_MINORITY'],
-      'Himachal_Pradesh': ['MQ_NRI'],
+      'Bihar': ['UR_PVT', 'MM', 'SM', 'NRI'],
+      'Chhattisgarh': ['UR', 'UR_FEM', 'UR_NRI', 'UR_FEM_NRI', 'MGMT_UR', 'MGMT_UR_FEM', 'NRI_UR', 'NRI_UR_FEM'],
+      'Haryana': ['MQ', 'MQ_MINORITY', 'MGT'],
+      'Himachal_Pradesh': ['MQ_NRI', 'MANAGEMENT_QUOTA', 'NRI_QUOTA'],
       'Jharkhand': ['MQ', 'NRI'],
       'Karnataka': ['MQ', 'NRI', 'OTH', 'RC8'],
       'Kerala': ['MQ'],
@@ -605,7 +613,7 @@
       'Tamil_Nadu': ['OPEN', 'NRI'],
       'Telangana': ['MQ', 'NRI'],
       'Uttar_Pradesh': ['MQ', 'MINORITY'],
-      'Uttarakhand': ['MQ', 'NRI'],
+      'Uttarakhand': ['MQ', 'NRI', 'AIQ'],
       'West_Bengal': ['MQ', 'NRI']
     };
 
@@ -945,9 +953,7 @@
 
       if (selectedCounselling !== 'MH') {
           const folder = selectedState.replace(/ /g, '_');
-          const isHP = (selectedCounselling === 'OPEN' && folder === 'Himachal_Pradesh');
-
-          if (!isHP) {
+          {
              html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
              html += `<div class="flex flex-wrap gap-2">`;
 
@@ -1777,6 +1783,127 @@
       document.getElementById('prefCount').textContent = count;
       renderPrefTabs();
       updatePrefBadge();
+    }
+
+    // ══════════════════ CUTOFF EXPLORER EXCEL EXPORT (Counsellor mode only) ══════════════════
+    // Mirrors the exact admin pipeline format: 2-row header (round labels
+    // forward-filled across Intake/AIR/SML/Score sub-columns), one sheet for
+    // the currently-viewed category/subtype, bucket label in A1.
+    function exportCutoffTableExcel() {
+      if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
+        alert('Load some cutoff data first.');
+        return;
+      }
+
+      let workingColleges = getSortedColleges(currentData.colleges);
+      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+        workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
+      }
+      if (workingColleges.length === 0) {
+        alert('No colleges match the current filters.');
+        return;
+      }
+
+      const isMH = currentData.counselling === 'MH';
+      const isMCC = currentData.counselling === 'MCC';
+      const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
+      const isOPEN = currentData.counselling === 'OPEN';
+      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
+      const showSML = isMH || (isOPEN && !isKarnataka);
+      const showCSML = isMH && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showPWD = isMCC && !isDeemed;
+
+      let roundKeys = [];
+      if (isHP) {
+        const cats = Object.keys(workingColleges[0].categories || {});
+        if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
+      } else {
+        roundKeys = Object.keys(workingColleges[0].rounds || {});
+      }
+      if (!strayVisible) {
+        roundKeys = roundKeys.filter(r => {
+          const rl = r.toLowerCase();
+          return !(rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended') || rl.includes('round 4') || rl.includes('round4'));
+        });
+      }
+
+      // Sub-columns per round, matching admin format order: Intake, AIR, [SML/CSML/AIR(PWD)], Score
+      const subCols = (() => {
+        if (showPWD) return ['Intake', 'AIR', 'AIR (PWD)', 'Score'];
+        if (showCSML) return ['Intake', 'AIR', 'SML', 'CSML', 'Score'];
+        if (showSML) return ['Intake', 'AIR', 'SML', 'Score'];
+        return ['Intake', 'AIR', 'Score'];
+      })();
+
+      // Row 1: bucket label + forward-filled round labels; Row 2: Sr/Code/Institute/Establishment/Fees + sub-column labels
+      const bucketLabel = isMH
+        ? (mhQuota.startsWith('GOVT_') ? 'Government Colleges' : mhQuota.startsWith('IQ_') ? 'Institutional Quota' : 'Private Colleges')
+        : (currentData.state ? `${currentData.state} — ${currentData.quota || currentData.category || ''}` : (currentData.counselling || 'Cutoff Data'));
+
+      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', 'Establishment', 'Fees'];
+      const headerRow1 = [bucketLabel, ...staticCols.slice(1).map(() => null)];
+      const headerRow2 = [...staticCols];
+      const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: staticCols.length - 1 } }];
+      let col = staticCols.length;
+      roundKeys.forEach(round => {
+        headerRow1[col] = round;
+        subCols.forEach((label, i) => { headerRow1[col + i] = i === 0 ? round : null; headerRow2[col + i] = label; });
+        merges.push({ s: { r: 0, c: col }, e: { r: 0, c: col + subCols.length - 1 } });
+        col += subCols.length;
+      });
+
+      const aoa = [headerRow1, headerRow2];
+      workingColleges.forEach((college, i) => {
+        const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
+        const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
+        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', college.establishment || '-', college.fees || '-'];
+        roundKeys.forEach(round => {
+          const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
+          row.push(rd.Intake ?? '-');
+          row.push(rd.AIR ?? '-');
+          if (showPWD) row.push(rd.AIR_PWD ?? '-');
+          else if (showCSML) { row.push(rd.SML ?? '-'); row.push(rd.CSML ?? '-'); }
+          else if (showSML) row.push(rd.SML ?? '-');
+          row.push(rd.Score ?? '-');
+        });
+        aoa.push(row);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!merges'] = merges;
+
+      // Matches the admin pipeline workbook exactly: Cambria 14, gold FFC000
+      // header fill, black bold centered headers, thin borders throughout,
+      // centered data cells.
+      const thinBorder = { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } };
+      const baseFont = { name: 'Cambria', sz: 14, color: { rgb: 'FF000000' } };
+      const centerAlign = { horizontal: 'center', vertical: 'center' };
+      const headerStyle = { font: { ...baseFont, bold: true }, fill: { fgColor: { rgb: 'FFFFC000' } }, alignment: centerAlign, border: thinBorder };
+      const dataStyle = { font: baseFont, alignment: centerAlign, border: thinBorder };
+
+      const totalCols = col;
+      const totalRows = aoa.length;
+      for (let r = 0; r < totalRows; r++) {
+        for (let c = 0; c < totalCols; c++) {
+          const addr = XLSX.utils.encode_cell({ r, c });
+          if (!ws[addr]) ws[addr] = { t: 's', v: '' };
+          ws[addr].s = r <= 1 ? headerStyle : dataStyle;
+        }
+      }
+      ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: totalRows - 1, c: totalCols - 1 } });
+
+      ws['!cols'] = staticCols.map((label, i) => ({ wch: i === 2 ? 45 : i === 3 ? 14 : 12 }))
+        .concat(roundKeys.flatMap(() => subCols.map(() => ({ wch: 10 }))));
+
+      const wb = XLSX.utils.book_new();
+      const sheetName = (currentData.category || selectedCategory || mhSubType || 'Sheet1').replace(/[\\/*?:\[\]]/g, ' ').slice(0, 31);
+      XLSX.utils.book_append_sheet(wb, ws, sheetName || 'Sheet1');
+
+      const date = new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }).replace(/ /g,'');
+      const contextBits = [currentData.counselling, isOPEN ? currentData.state : null, isMH ? mhQuota : null, currentData.category || selectedCategory || mhCategory || ''].filter(Boolean).join('_');
+      const safeCtx = contextBits.replace(/[^a-zA-Z0-9_]/g, '');
+      XLSX.writeFile(wb, `ASMI_CutoffData_${safeCtx}_${date}.xlsx`);
     }
 
     // ══════════════════ EXCEL EXPORT ══════════════════

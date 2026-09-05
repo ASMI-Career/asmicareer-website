@@ -1,0 +1,51 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BDS",
+  "category": "VJ",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "2136",
+      "name": "Government Dental College, Jalgaon",
+      "establishment": 2025,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 144753,
+          "SML": 10612,
+          "CSML": "DT-VJ(A)-295"
+        }
+      }
+    },
+    {
+      "code": "2101",
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 112309,
+          "SML": 8515,
+          "CSML": "DT-VJ(A)-221"
+        }
+      }
+    },
+    {
+      "code": "2102",
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 124125,
+          "SML": 9267,
+          "CSML": "DT-VJ(A)-250"
+        }
+      }
+    }
+  ]
+}

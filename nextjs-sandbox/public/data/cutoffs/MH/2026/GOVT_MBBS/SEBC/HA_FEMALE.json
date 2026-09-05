@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "SEBC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1114",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
+      "establishment": 1963,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 31985,
+          "SML": 2283,
+          "CSML": "SEBC-333"
+        }
+      }
+    },
+    {
+      "code": "1155",
+      "name": "Government Medical College, Satara",
+      "establishment": 2021,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 30503,
+          "SML": 2176,
+          "CSML": "SEBC-314"
+        }
+      }
+    },
+    {
+      "code": "1234",
+      "name": "Government Medical College, Akola",
+      "establishment": 2002,
+      "fees": "8,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 38387,
+          "SML": 2795,
+          "CSML": "SEBC-394"
+        }
+      }
+    },
+    {
+      "code": "1140",
+      "name": "HBT & Cooper Government Medical College, Mumbai",
+      "establishment": 2015,
+      "fees": "8,900",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 19389,
+          "SML": 1337,
+          "CSML": "SEBC-185"
+        }
+      }
+    }
+  ]
+}

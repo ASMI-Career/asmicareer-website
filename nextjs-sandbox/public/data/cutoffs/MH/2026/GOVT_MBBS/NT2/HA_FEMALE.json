@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "NT2",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1371",
+      "name": "Government Medical College, Hingoli",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 69718,
+          "SML": 5271,
+          "CSML": "NT(C)-219"
+        }
+      }
+    },
+    {
+      "code": "1242",
+      "name": "Government Medical College, Gondia",
+      "establishment": 2016,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 80408,
+          "SML": 6166,
+          "CSML": "NT(C)-278"
+        }
+      }
+    }
+  ]
+}

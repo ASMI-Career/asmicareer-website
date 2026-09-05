@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "VJ",
+  "sub_type": "HA_GENERAL",
+  "colleges": [
+    {
+      "code": "1114",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
+      "establishment": 1963,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 54121,
+          "SML": 4039,
+          "CSML": "DT-VJ(A)-78"
+        }
+      }
+    },
+    {
+      "code": "1270",
+      "name": "Government Medical College, Washim",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 103071,
+          "SML": 7882,
+          "CSML": "DT-VJ(A)-196"
+        }
+      }
+    },
+    {
+      "code": "1241",
+      "name": "Government Medical College, Chandrapur",
+      "establishment": 2015,
+      "fees": "15,840",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 61699,
+          "SML": 4646,
+          "CSML": "DT-VJ(A)-93"
+        }
+      }
+    },
+    {
+      "code": "1226",
+      "name": "Vasantrao Naik Medical College, Yavatmal",
+      "establishment": 1989,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 87043,
+          "SML": 6702,
+          "CSML": "DT-VJ(A)-149"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "OPEN",
+  "sub_type": "ORPHAN",
+  "colleges": [
+    {
+      "code": "1164",
+      "name": "Government Medical College, Nashik",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 624002,
+          "SML": 28157
+        }
+      }
+    },
+    {
+      "code": "1221",
+      "name": "Government Medical College, Nagpur",
+      "establishment": 1947,
+      "fees": "1,52,100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 978495,
+          "SML": 33810
+        }
+      }
+    },
+    {
+      "code": "1132",
+      "name": "R.C.S.M. Medical College, Kolhapur",
+      "establishment": 2001,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 346399,
+          "SML": 19787
+        }
+      }
+    },
+    {
+      "code": "1104",
+      "name": "Topiwala Nair Medical College, Mumbai",
+      "establishment": 1964,
+      "fees": "1,76,200",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 49574,
+          "SML": 3657
+        }
+      }
+    }
+  ]
+}

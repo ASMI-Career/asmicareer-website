@@ -1,0 +1,93 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "SC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1114",
+      "name": "Dr. Vaishampayan Government Medical College, Solapur",
+      "establishment": 1963,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 116311,
+          "SML": 8772,
+          "CSML": "SC-452"
+        }
+      }
+    },
+    {
+      "code": "1166",
+      "name": "Government Medical College, Ambernath",
+      "establishment": 2024,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 150253,
+          "SML": 10965,
+          "CSML": "SC-731"
+        }
+      }
+    },
+    {
+      "code": "1151",
+      "name": "Government Medical College, Nandurbar",
+      "establishment": 2020,
+      "fees": "12,600",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 166940,
+          "SML": 11924,
+          "CSML": "SC-873"
+        }
+      }
+    },
+    {
+      "code": "1358",
+      "name": "Government Medical College, Osmanabad",
+      "establishment": 2022,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 168308,
+          "SML": 11986,
+          "CSML": "SC-882"
+        }
+      }
+    },
+    {
+      "code": "1101",
+      "name": "Grant Medical College, Mumbai",
+      "establishment": 1845,
+      "fees": "0",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 57410,
+          "SML": 4296,
+          "CSML": "SC-139"
+        }
+      }
+    },
+    {
+      "code": "1222",
+      "name": "Indira Gandhi Medical College, Nagpur",
+      "establishment": 1968,
+      "fees": "16,950",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 106068,
+          "SML": 8102,
+          "CSML": "SC-394"
+        }
+      }
+    }
+  ]
+}

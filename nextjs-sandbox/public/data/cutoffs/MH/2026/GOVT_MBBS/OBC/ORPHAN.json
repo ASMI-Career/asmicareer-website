@@ -1,0 +1,79 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_MBBS",
+  "category": "OBC",
+  "sub_type": "ORPHAN",
+  "colleges": [
+    {
+      "code": "1110",
+      "name": "B.J. Government Medical College, Pune",
+      "establishment": 1964,
+      "fees": "14,607",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 59801,
+          "SML": 4480,
+          "CSML": "OBC-1268"
+        }
+      }
+    },
+    {
+      "code": "1328",
+      "name": "Government Medical College, Nanded",
+      "establishment": 1988,
+      "fees": "8,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 735049,
+          "SML": 30339,
+          "CSML": "OBC-7488"
+        }
+      }
+    },
+    {
+      "code": "1149",
+      "name": "Government Medical College, Jalgaon",
+      "establishment": 2018,
+      "fees": "12,100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1050999,
+          "SML": 34405,
+          "CSML": "OBC-8425"
+        }
+      }
+    },
+    {
+      "code": "1155",
+      "name": "Government Medical College, Satara",
+      "establishment": 2021,
+      "fees": "83,650",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 672167,
+          "SML": 29153,
+          "CSML": "OBC-7243"
+        }
+      }
+    },
+    {
+      "code": "1222",
+      "name": "Indira Gandhi Medical College, Nagpur",
+      "establishment": 1968,
+      "fees": "16,950",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 223167,
+          "SML": 14739,
+          "CSML": "OBC-3961"
+        }
+      }
+    }
+  ]
+}
