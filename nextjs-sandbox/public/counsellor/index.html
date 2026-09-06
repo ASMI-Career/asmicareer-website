@@ -6,7 +6,7 @@
   <title>ASMI Counsellor — Preference List Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="/dashboard.css">
@@ -363,8 +363,8 @@
 
             <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
               <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
-                <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025" onclick="setYear('2025')">2025</button>
-                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2026" onclick="setYear('2026')">2026</button>
+                <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2026" onclick="setYear('2026')">2026</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2025" onclick="setYear('2025')">2025</button>
                 <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2024" disabled title="Data coming soon">2024</button>
                 <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2023" disabled title="Data coming soon">2023</button>
                 <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold transition-all" data-year="2022" disabled title="Data coming soon">2022</button>
@@ -544,7 +544,7 @@
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
     let strayVisible = false;
     let currentData = null;
-    let currentYear = '2025';
+    let currentYear = '2026';
     let selectedCounselling = 'MCC';
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
