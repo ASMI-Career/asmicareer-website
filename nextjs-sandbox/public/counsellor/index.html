@@ -1177,15 +1177,15 @@
       if (isHP) {
         headerRow1 += `
           <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Category</th>
-          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[90px] w-[90px] whitespace-nowrap">Est.</th>
+          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[2px_0_6px_rgba(0,0,0,0.04)]">College Name</th>
+          <th rowspan="2" class="pl-6 pr-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px] whitespace-nowrap">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
       } else {
         headerRow1 += `
-          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-20">Code</th>
-          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">College Name</th>
-          <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[90px] w-[90px] whitespace-nowrap">Est.</th>
+          <th rowspan="2" class="sticky left-[48px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide w-[120px]">Code</th>
+          <th rowspan="2" class="sticky left-[168px] z-20 bg-gray-50 px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-200 shadow-[2px_0_6px_rgba(0,0,0,0.04)]">College Name</th>
+          <th rowspan="2" class="pl-6 pr-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px] whitespace-nowrap">Est.</th>
           <th rowspan="2" class="px-4 py-4 text-left font-bold uppercase text-xs tracking-wide min-w-[100px] w-[100px]">Fees</th>
         `;
         if (isKeralaMQ) {
@@ -1293,11 +1293,11 @@
               let html = `
                 <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12">${addBtnHtml}</td>
                 <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-bold text-[#1A0040] uppercase whitespace-nowrap w-[120px]">${cat}</td>
-                <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+                <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[2px_0_6px_rgba(0,0,0,0.04)]">
                   <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
                   <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
                 </td>
-                <td class="px-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
+                <td class="pl-6 pr-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
                 <td class="px-4 py-4 font-medium">${feesDisplay}</td>
               `;
 
@@ -1349,12 +1349,12 @@
 
         let html = `
           <td class="sticky left-0 z-10 bg-white px-4 py-4 w-12">${addBtnHtml}</td>
-          <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-medium text-gray-600 w-20">${college.code || ''}</td>
-          <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[4px_0_12px_rgba(0,0,0,0.03)]">
+          <td class="sticky left-[48px] z-10 bg-white px-4 py-4 font-medium text-gray-600 w-[120px]">${college.code || ''}</td>
+          <td class="sticky left-[168px] z-10 bg-white px-4 py-4 min-w-[220px] max-w-[260px] whitespace-normal border-r border-gray-100 shadow-[2px_0_6px_rgba(0,0,0,0.04)]">
             <a href="#" class="font-bold text-[#1078cb] hover:text-[#1A0040] hover:underline">${college.name}</a>
             <span class="ml-2 px-2 py-0.5 rounded-md ${typeBadgeClass} text-[10px] font-bold">${college.type || ''}</span>
           </td>
-          <td class="px-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
+          <td class="pl-6 pr-4 py-4 text-gray-700 whitespace-nowrap">${college.establishment || '-'}</td>
           <td class="px-4 py-4 font-medium">${feesDisplay}</td>
         `;
         if (isKeralaMQ) {
