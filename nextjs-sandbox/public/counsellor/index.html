@@ -1041,7 +1041,7 @@
 
     function getSortedColleges(colleges) {
       const list = [...colleges];
-      const isHP = currentData && currentData.counselling === 'OPEN' && currentData.state === 'Himachal Pradesh';
+      const isHP = !!(currentData && currentData.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
 
       function airFor(college, roundName) {
         if (isHP) {
@@ -1154,7 +1154,7 @@
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
 
-      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
 
@@ -1809,7 +1809,7 @@
       const isMCC = currentData.counselling === 'MCC';
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
-      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       const showSML = isMH || (isOPEN && !isKarnataka);
       const showCSML = isMH && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');

@@ -749,7 +749,7 @@
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
       
-      const isHP = (isOPEN && currentData.state === 'Himachal Pradesh');
+      const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       
