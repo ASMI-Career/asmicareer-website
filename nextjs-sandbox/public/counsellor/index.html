@@ -1790,11 +1790,40 @@
     // Mirrors the exact admin pipeline format: 2-row header (round labels
     // forward-filled across Intake/AIR/SML/Score sub-columns), one sheet for
     // the currently-viewed category/subtype, bucket label in A1.
-    function exportCutoffTableExcel() {
+    // NEET Rank -> Score lookup, Excel export only (never shown in the live table).
+    // Table is a compact list of [rank, score] transition points sorted ascending
+    // by rank (score only changes at these boundaries, otherwise stays constant) -
+    // built from the 2026 consolidated rank-score sheet supplied by the user.
+    let _scoreLookupTable = null;
+    async function loadScoreLookupTable() {
+      if (_scoreLookupTable) return _scoreLookupTable;
+      try {
+        const res = await fetch('/data/neet_2026_rank_score.json', { cache: 'force-cache' });
+        _scoreLookupTable = res.ok ? await res.json() : [];
+      } catch (e) {
+        _scoreLookupTable = [];
+      }
+      return _scoreLookupTable;
+    }
+    function lookupScoreForRank(air) {
+      const table = _scoreLookupTable;
+      if (!table || !table.length) return null;
+      const rank = parseInt(air, 10);
+      if (!rank || isNaN(rank) || rank < table[0][0]) return null;
+      let lo = 0, hi = table.length - 1;
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        if (table[mid][0] <= rank) lo = mid; else hi = mid - 1;
+      }
+      return table[lo][1];
+    }
+
+    async function exportCutoffTableExcel() {
       if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
         alert('Load some cutoff data first.');
         return;
       }
+      await loadScoreLookupTable();
 
       let workingColleges = getSortedColleges(currentData.colleges);
       if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
@@ -1866,7 +1895,7 @@
           if (showPWD) row.push(rd.AIR_PWD ?? '-');
           else if (showCSML) { row.push(rd.SML ?? '-'); row.push(rd.CSML ?? '-'); }
           else if (showSML) row.push(rd.SML ?? '-');
-          row.push(rd.Score ?? '-');
+          row.push(lookupScoreForRank(rd.AIR) ?? '-');
         });
         aoa.push(row);
       });
