@@ -1,0 +1,74 @@
+{
+  "counselling": "OPEN",
+  "state": "Tripura",
+  "year": 2026,
+  "quota": "AIQ",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Tripura Medical College & Dr. BRAM Teaching Hospital, Hapania, Agartala",
+      "establishment": null,
+      "fees": "1500000",
+      "type": "Private",
+      "categories": {
+        "General": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 207949
+          }
+        },
+        "ST": {
+          "Round 1": {
+            "Intake": 2,
+            "AIR": 300490
+          }
+        },
+        "OBC": {
+          "Round 1": {
+            "Intake": 8,
+            "AIR": 327768
+          }
+        },
+        "SC": {
+          "Round 1": {
+            "Intake": 5,
+            "AIR": 416374
+          }
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "Tripura Santiniketan Medical College",
+      "establishment": null,
+      "fees": "1972000",
+      "type": "Private",
+      "categories": {
+        "General": {
+          "Round 1": {
+            "Intake": 38,
+            "AIR": 987677
+          }
+        },
+        "ST": {
+          "Round 1": {
+            "Intake": 6,
+            "AIR": 1179319
+          }
+        },
+        "OBC": {
+          "Round 1": {
+            "Intake": 20,
+            "AIR": 1189963
+          }
+        },
+        "SC": {
+          "Round 1": {
+            "Intake": 11,
+            "AIR": 1156173
+          }
+        }
+      }
+    }
+  ]
+}
