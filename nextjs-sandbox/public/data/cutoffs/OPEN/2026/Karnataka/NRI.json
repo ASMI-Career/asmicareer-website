@@ -5,271 +5,24 @@
   "quota": "NRI",
   "colleges": [
     {
-      "code": "M010",
-      "name": "A J Institute of Medical Sciences & Research Centre, Mangalore",
-      "establishment": 2002,
-      "fees": "4011950",
-      "type": "MINORITY (L,R)",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 946133
-        }
-      }
-    },
-    {
-      "code": "M098",
-      "name": "Alva's Institute of Medical Sciences and Research Centre, Mangalore",
-      "establishment": 2026,
-      "fees": "2511950",
-      "type": "MINORITY (L,R)",
-      "rounds": {
-        "Round 1": {
-          "Intake": 22,
-          "AIR": 939261
-        }
-      }
-    },
-    {
-      "code": "M068",
-      "name": "BGS Global Institute of Medical Sciences, Bangalore",
-      "establishment": 2013,
-      "fees": "4211950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 1096984
-        }
-      }
-    },
-    {
-      "code": "M037",
-      "name": "Belagavi Institute of Medical Sciences, Belagavi",
-      "establishment": 2006,
+      "code": "M082",
+      "name": "Shri Atal Bihari Vajapayee Medical College and Research Institute,",
+      "establishment": 2019,
       "fees": "2509350",
-      "type": "GOVERNME NT",
+      "type": "Private",
       "rounds": {
         "Round 1": {
           "Intake": 7,
-          "AIR": 369590
-        }
-      }
-    },
-    {
-      "code": "M044",
-      "name": "Bidar Institute of Medical Sciences, Bidar",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 7,
-          "AIR": 800760
-        }
-      }
-    },
-    {
-      "code": "M002",
-      "name": "Dr BR Ambedkar Medical College, Bangalore",
-      "establishment": 1980,
-      "fees": "3511950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 23,
-          "AIR": 1045362
-        }
-      }
-    },
-    {
-      "code": "M097",
-      "name": "Farookh Academy of Medical Education Hospital and Research Institute,Mysore",
-      "establishment": 2025,
-      "fees": "3311950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 23,
-          "AIR": 745718
-        }
-      }
-    },
-    {
-      "code": "M050",
-      "name": "Father Mullers Medical College, Mangalore",
-      "establishment": 1999,
-      "fees": "3611950",
-      "type": "MINORITY (L,R)",
-      "rounds": {
-        "Round 1": {
-          "Intake": 23,
-          "AIR": 1122845
-        }
-      }
-    },
-    {
-      "code": "M072",
-      "name": "Gulbarga Institute of Medical Sciences, Gulbarga",
-      "establishment": 2016,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 7,
-          "AIR": 501054
-        }
-      }
-    },
-    {
-      "code": "M025",
-      "name": "Hassan Institute of Medical Sciences, Hassan",
-      "establishment": 2006,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 7,
-          "AIR": 455113
-        }
-      }
-    },
-    {
-      "code": "M074",
-      "name": "K.H. Patil Institute of Medical Sciences (previously Gadag Institute of Medical Sciences, Mallasamudra, Mulgund Road, Gadag)",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 8,
-          "AIR": 787738
-        }
-      }
-    },
-    {
-      "code": "M054",
-      "name": "K V G Medical College, Sullia",
-      "establishment": 1999,
-      "fees": "2634214",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 23,
-          "AIR": 1053090
-        }
-      }
-    },
-    {
-      "code": "M079",
-      "name": "Kanachur Institute of Medical Sciences, Mangalore",
-      "establishment": 2016,
-      "fees": "2861950",
-      "type": "MINORITY (L,R)",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 936996
-        }
-      }
-    },
-    {
-      "code": "M031",
-      "name": "Karnataka Medical College and Research Institute, Hubballi, Karnataka",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 8,
-          "AIR": 291973
-        }
-      }
-    },
-    {
-      "code": "M076",
-      "name": "Karwar Institute of Medical Sciences, Karwar",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 8,
-          "AIR": 718852
-        }
-      }
-    },
-    {
-      "code": "M003",
-      "name": "Kempegowda Institute of Medical Sciences, Bangalore",
-      "establishment": 1985,
-      "fees": "4311950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 1155793
-        }
-      }
-    },
-    {
-      "code": "M073",
-      "name": "Koppal Institute of Medical Sciences, Koppal",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 8,
-          "AIR": 861268
-        }
-      }
-    },
-    {
-      "code": "M004",
-      "name": "M S Ramaiah Medical College, Bangalore",
-      "establishment": 1979,
-      "fees": "4500000",
-      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 30,
-          "AIR": 777954
-        }
-      }
-    },
-    {
-      "code": "M042",
-      "name": "Mahadevappa Rampure Medical College, Kalaburagi, Gulbarga",
-      "establishment": 1963,
-      "fees": "3911950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 936324
-        }
-      }
-    },
-    {
-      "code": "M024",
-      "name": "Mandya Institute of Medical Sciences, Mandya",
-      "establishment": null,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 8,
-          "AIR": 317314
+          "AIR": 205738
         }
       }
     },
     {
       "code": "M021",
-      "name": "Mysore Medical College and Research Instt. (Prev.name Government Medical College), Mysore",
+      "name": "Mysore Medical College and Research Institute, Mysore",
       "establishment": 1924,
       "fees": "2509350",
-      "type": "GOVERNME NT",
+      "type": "Private",
       "rounds": {
         "Round 1": {
           "Intake": 8,
@@ -278,80 +31,80 @@
       }
     },
     {
+      "code": "M031",
+      "name": "Karnataka Medical College and Research Institute, Hubballi",
+      "establishment": 1965,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 291973
+        }
+      }
+    },
+    {
+      "code": "M024",
+      "name": "Mandya Institute of Medical Sciences, Mandya",
+      "establishment": 2006,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 317314
+        }
+      }
+    },
+    {
+      "code": "M037",
+      "name": "Belagavi Institute of Medical Sciences, Belagavi",
+      "establishment": 2006,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 369590
+        }
+      }
+    },
+    {
+      "code": "M025",
+      "name": "Hassan Institute of Medical Sciences, Hassan",
+      "establishment": 2006,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 455113
+        }
+      }
+    },
+    {
+      "code": "M041",
+      "name": "Vijaynagar Institute of Medical Sciences, Bellary",
+      "establishment": 1961,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 491247
+        }
+      }
+    },
+    {
       "code": "M084",
-      "name": "Nandi Medical College and Research Institute Chikkaballapura (Chikkaballapura Institute of Medical Sciences Chikkaballapura )",
+      "name": "Nandi Medical College and Research Institute Chikkaballapura",
       "establishment": 2021,
       "fees": "2509350",
-      "type": "GOVERNME NT",
+      "type": "Private",
       "rounds": {
         "Round 1": {
           "Intake": 7,
           "AIR": 491578
-        }
-      }
-    },
-    {
-      "code": "M094",
-      "name": "PES University Institute of Medical Sciences and Reseach Bangalore",
-      "establishment": 2024,
-      "fees": "3915000",
-      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 661820
-        }
-      }
-    },
-    {
-      "code": "M045",
-      "name": "Raichur Institute of Medical Sciences, Raichur",
-      "establishment": 2007,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
-      "rounds": {
-        "Round 1": {
-          "Intake": 7,
-          "AIR": 747039
-        }
-      }
-    },
-    {
-      "code": "M035",
-      "name": "S. Nijalingappa Medical College & Research Centre, Bagalkot",
-      "establishment": 2002,
-      "fees": "3361950",
-      "type": "PRIVATE UNAIDED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 38,
-          "AIR": 915878
-        }
-      }
-    },
-    {
-      "code": "M036",
-      "name": "SDM College of Medical Sciences & Hospital, Dharwad",
-      "establishment": 2003,
-      "fees": "3615000",
-      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
-      "rounds": {
-        "Round 1": {
-          "Intake": 23,
-          "AIR": 1074451
-        }
-      }
-    },
-    {
-      "code": "M091",
-      "name": "Sri Chamundeshwari Medical College Hospital & Research Institute, Channapatna",
-      "establishment": 2023,
-      "fees": "3101950",
-      "type": "MINORITY (L,R)",
-      "rounds": {
-        "Round 1": {
-          "Intake": 7,
-          "AIR": 936852
         }
       }
     },
@@ -369,28 +122,119 @@
       }
     },
     {
-      "code": "M082",
-      "name": "Shri Atal Bihari Vajapayee Medical College and Research Institute,",
-      "establishment": 2019,
+      "code": "M072",
+      "name": "Gulbarga Institute of Medical Sciences, Gulbarga",
+      "establishment": 2016,
       "fees": "2509350",
-      "type": "GOVERNME NT",
+      "type": "Private",
       "rounds": {
         "Round 1": {
           "Intake": 7,
-          "AIR": 205738
+          "AIR": 501054
         }
       }
     },
     {
-      "code": "M069",
-      "name": "Shridevi Institute of Medical Sciences & Research Hospital, Tumkur",
-      "establishment": 2013,
-      "fees": "3341950",
-      "type": "PRIVATE UNAIDED",
+      "code": "M094",
+      "name": "PES University Institute of Medical Sciences and Reseach Bangalore",
+      "establishment": 2024,
+      "fees": "3915000",
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
       "rounds": {
         "Round 1": {
           "Intake": 38,
-          "AIR": 1166654
+          "AIR": 661820
+        }
+      }
+    },
+    {
+      "code": "M076",
+      "name": "Karwar Institute of Medical Sciences, Karwar",
+      "establishment": 2016,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 718852
+        }
+      }
+    },
+    {
+      "code": "M097",
+      "name": "Farookh Academy of Medical Education Hospital and Research Institute, Mysore",
+      "establishment": 2025,
+      "fees": "3311950",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 745718
+        }
+      }
+    },
+    {
+      "code": "M045",
+      "name": "Raichur Institute of Medical Sciences, Raichur",
+      "establishment": 2007,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 747039
+        }
+      }
+    },
+    {
+      "code": "M004",
+      "name": "M S Ramaiah Medical College, Bangalore",
+      "establishment": 1979,
+      "fees": "4500000",
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 777954
+        }
+      }
+    },
+    {
+      "code": "M074",
+      "name": "K.H. Patil Institute of Medical Sciences, Gadag",
+      "establishment": 2015,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 787738
+        }
+      }
+    },
+    {
+      "code": "M044",
+      "name": "Bidar Institute of Medical Sciences, Bidar",
+      "establishment": 2007,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 800760
+        }
+      }
+    },
+    {
+      "code": "M073",
+      "name": "Koppal Institute of Medical Sciences, Koppal",
+      "establishment": 2015,
+      "fees": "2509350",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 861268
         }
       }
     },
@@ -408,28 +252,80 @@
       }
     },
     {
-      "code": "M067",
-      "name": "Subbaiah Institute of Medical Sciences, Shimoga",
-      "establishment": 2012,
-      "fees": "2711950",
-      "type": "MINORITY (L,R)",
+      "code": "M035",
+      "name": "S. Nijalingappa Medical College & Research Centre, Bagalkot",
+      "establishment": 2002,
+      "fees": "3361950",
+      "type": "PRIVATE UNAIDED",
       "rounds": {
         "Round 1": {
           "Intake": 38,
-          "AIR": 1077419
+          "AIR": 915878
         }
       }
     },
     {
-      "code": "M041",
-      "name": "Vijaynagar Institute of Medical Sciences, Bellary",
-      "establishment": 1961,
-      "fees": "2509350",
-      "type": "GOVERNME NT",
+      "code": "M042",
+      "name": "Mahadevappa Rampure Medical College, Kalaburagi, Gulbarga",
+      "establishment": 1963,
+      "fees": "3911950",
+      "type": "PRIVATE UNAIDED",
       "rounds": {
         "Round 1": {
-          "Intake": 8,
-          "AIR": 491247
+          "Intake": 38,
+          "AIR": 936324
+        }
+      }
+    },
+    {
+      "code": "M091",
+      "name": "Sri Chamundeshwari Medical College Hospital & Research Institute, Channapatna",
+      "establishment": 2023,
+      "fees": "3101950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 936852
+        }
+      }
+    },
+    {
+      "code": "M079",
+      "name": "Kanachur Institute of Medical Sciences, Mangalore",
+      "establishment": 2016,
+      "fees": "2861950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 936996
+        }
+      }
+    },
+    {
+      "code": "M098",
+      "name": "Alva's Institute of Medical Sciences and Research Centre, Mangalore",
+      "establishment": 2026,
+      "fees": "2511950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": 939261
+        }
+      }
+    },
+    {
+      "code": "M010",
+      "name": "A J Institute of Medical Sciences & Research Centre, Mangalore",
+      "establishment": 2002,
+      "fees": "4011950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 946133
         }
       }
     },
@@ -443,6 +339,318 @@
         "Round 1": {
           "Intake": 38,
           "AIR": 991879
+        }
+      }
+    },
+    {
+      "code": "M002",
+      "name": "Dr BR Ambedkar Medical College, Bangalore",
+      "establishment": 1980,
+      "fees": "3511950",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1045362
+        }
+      }
+    },
+    {
+      "code": "M054",
+      "name": "K V G Medical College, Sullia",
+      "establishment": 1999,
+      "fees": "2634214",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1053090
+        }
+      }
+    },
+    {
+      "code": "M036",
+      "name": "SDM College of Medical Sciences & Hospital, Dharwad",
+      "establishment": 2003,
+      "fees": "3615000",
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1074451
+        }
+      }
+    },
+    {
+      "code": "M067",
+      "name": "Subbaiah Institute of Medical Sciences, Shimoga",
+      "establishment": 2012,
+      "fees": "2711950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 1077419
+        }
+      }
+    },
+    {
+      "code": "M068",
+      "name": "BGS Global Institute of Medical Sciences, Bangalore",
+      "establishment": 2013,
+      "fees": "4211950",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 1096984
+        }
+      }
+    },
+    {
+      "code": "M050",
+      "name": "Father Mullers Medical College, Mangalore",
+      "establishment": 1999,
+      "fees": "3611950",
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": 1122845
+        }
+      }
+    },
+    {
+      "code": "M003",
+      "name": "Kempegowda Institute of Medical Sciences, Bangalore",
+      "establishment": 1985,
+      "fees": "4311950",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 1155793
+        }
+      }
+    },
+    {
+      "code": "M069",
+      "name": "Shridevi Institute of Medical Sciences & Research Hospital, Tumkur",
+      "establishment": 2013,
+      "fees": "3341950",
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": 1166654
+        }
+      }
+    },
+    {
+      "code": "M005",
+      "name": "Khaja Bandanawaz University - Faculty of Medical Sciences, Gulbarga",
+      "establishment": 2000,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M008",
+      "name": "MVJ Medical College and Research Hospital, Bangalore",
+      "establishment": 1997,
+      "fees": null,
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M020",
+      "name": "Basaveswara Medical College and Hospital, Chitradurga",
+      "establishment": 1999,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M023",
+      "name": "Adichunchanagiri Institute of Medical Sciences, Mandya",
+      "establishment": 1985,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 37,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M043",
+      "name": "Navodaya Medical College, Raichur",
+      "establishment": 2002,
+      "fees": null,
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M061",
+      "name": "JJM Medical College, Davangere",
+      "establishment": 1965,
+      "fees": null,
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 37,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M062",
+      "name": "S S Institute of Medical Sciences& Research Centre, Davangere",
+      "establishment": 2006,
+      "fees": null,
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M065",
+      "name": "Srinivas Institute of Medical Research Centre, Mangalore",
+      "establishment": 2011,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M071",
+      "name": "The Oxford Medical College, Hospital & Research Centre, Bangalore",
+      "establishment": 2014,
+      "fees": null,
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M078",
+      "name": "Akash Institute of Medical Sciences & Research Centre, Devanhalli",
+      "establishment": 2016,
+      "fees": null,
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M081",
+      "name": "East Point College of Medical Sciences & Research Centre, Bangalore",
+      "establishment": 2017,
+      "fees": null,
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M083",
+      "name": "Dr. Chandramma Dayananda Sagar Instt. of Medical Education & Research, Harohalli",
+      "establishment": 2020,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M088",
+      "name": "G R Medical College Hospital & Research Centre, Mangalore",
+      "establishment": 2016,
+      "fees": null,
+      "type": "MINORITY (L,R)",
+      "rounds": {
+        "Round 1": {
+          "Intake": 23,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M093",
+      "name": "Sri Madhusudan Sai Institute of Medical Sciences & Research, Chikballapur",
+      "establishment": 2023,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M095",
+      "name": "BGS Medical College and Hospital, Bengaluru",
+      "establishment": 2013,
+      "fees": null,
+      "type": "DEEMED/PR IVATE UNIVERSITY / AFFILIATED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 38,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "M096",
+      "name": "SR Patil Medical College and Hospital, Bagalkot",
+      "establishment": 2024,
+      "fees": null,
+      "type": "PRIVATE UNAIDED",
+      "rounds": {
+        "Round 1": {
+          "Intake": 15,
+          "AIR": null
         }
       }
     }
