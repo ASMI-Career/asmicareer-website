@@ -524,33 +524,45 @@
         }
       },
       {
-        "code": null,
-        "name": "Fulan Singh Medical College, Shikohabad",
+        "code": "127",
+        "name": "Fulan Singh Medical College, FS University, Shikohabad",
         "establishment": null,
         "fees": "1599973",
         "type": "Private",
         "rounds": {
-          "Round 1": {}
+          "Round 1": {
+            "Intake": 150,
+            "AIR": 656060,
+            "SML": 25364
+          }
         }
       },
       {
         "code": null,
-        "name": "Sardar Patel Institute of Medical Sciences, Lucknow",
+        "name": "Sardar Patel Institute of Medical Education and Health Sciences, Lucknow",
         "establishment": null,
         "fees": "1599973",
         "type": "Private",
         "rounds": {
-          "Round 1": {}
+          "Round 1": {
+            "Intake": 99,
+            "AIR": 539958,
+            "SML": 22507
+          }
         }
       },
       {
-        "code": null,
-        "name": "Dr. B.S. Kushwah Medical College & Hospital, Kanpur",
+        "code": "086",
+        "name": "Dr. B.S. Kushwah Institute of Medical College, Kanpur",
         "establishment": null,
         "fees": "1604740",
         "type": "Private",
         "rounds": {
-          "Round 1": {}
+          "Round 1": {
+            "Intake": 150,
+            "AIR": 542238,
+            "SML": 22562
+          }
         }
       }
     ]
