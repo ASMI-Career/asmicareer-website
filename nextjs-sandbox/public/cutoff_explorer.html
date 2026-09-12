@@ -754,7 +754,7 @@
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showCSML = isMH && (currentData.category ? !['OPEN', 'AIQ'].includes(currentData.category) : !['OPEN', 'AIQ'].includes(mhCategory));
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
