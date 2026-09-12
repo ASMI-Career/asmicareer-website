@@ -36,7 +36,7 @@
           "CSML": "NT(C)-1022"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": 1,
           "AIR": 474055
         }
       }
@@ -54,7 +54,7 @@
           "CSML": "NT(C)-708"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 247133
         }
       }
@@ -144,7 +144,7 @@
           "CSML": "NT(C)-836"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 337608
         }
       }
@@ -360,7 +360,7 @@
           "CSML": "NT(C)-930"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": 1,
           "AIR": 387066
         }
       }
@@ -398,6 +398,23 @@
         "Round 2": {
           "Intake": 1,
           "AIR": 413341
+        }
+      }
+    },
+    {
+      "code": "2212",
+      "name": "Ranjeet Deshmukh Dental College, Nagpur",
+      "establishment": 1996,
+      "fees": "495000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 441949
         }
       }
     }

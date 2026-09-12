@@ -36,7 +36,7 @@
           "CSML": "OBC-1474"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 71641
         }
       }
@@ -54,7 +54,7 @@
           "CSML": "OBC-1629"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 77287
         }
       }
@@ -108,7 +108,7 @@
           "CSML": "OBC-1763"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 85133
         }
       }
@@ -144,7 +144,7 @@
           "CSML": "OBC-1555"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 76104
         }
       }
@@ -180,7 +180,7 @@
           "CSML": "OBC-888"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 31093
         }
       }
@@ -198,7 +198,7 @@
           "CSML": "OBC-1847"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 87772
         }
       }
@@ -252,7 +252,7 @@
           "CSML": "OBC-1826"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 82009
         }
       }
@@ -270,7 +270,7 @@
           "CSML": "OBC-1983"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 98195
         }
       }
@@ -288,7 +288,7 @@
           "CSML": "OBC-1293"
         },
         "Round 2": {
-          "Intake": 5,
+          "Intake": null,
           "AIR": 60737
         }
       }
@@ -306,7 +306,7 @@
           "CSML": "OBC-1882"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 89542
         }
       }
@@ -324,7 +324,7 @@
           "CSML": "OBC-1573"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 73893
         }
       }
@@ -342,7 +342,7 @@
           "CSML": "OBC-1782"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 82847
         }
       }
@@ -360,7 +360,7 @@
           "CSML": "OBC-1867"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 87315
         }
       }
@@ -378,7 +378,7 @@
           "CSML": "OBC-1130"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 56299
         }
       }
@@ -396,8 +396,42 @@
           "CSML": "OBC-2481"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 146768
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 110049
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 174992
         }
       }
     }

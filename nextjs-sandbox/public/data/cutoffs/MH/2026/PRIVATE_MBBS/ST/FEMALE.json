@@ -108,7 +108,7 @@
           "CSML": "ST-457"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 344019
         }
       }
@@ -198,7 +198,7 @@
           "CSML": "ST-445"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 321925
         }
       }
@@ -252,7 +252,7 @@
           "CSML": "ST-433"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 338060
         }
       }
@@ -270,7 +270,7 @@
           "CSML": "ST-518"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 361252
         }
       }
@@ -288,7 +288,7 @@
           "CSML": "ST-399"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 329603
         }
       }
@@ -306,7 +306,7 @@
           "CSML": "ST-446"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 346415
         }
       }
@@ -338,7 +338,7 @@
           "CSML": "ST-340"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 319020
         }
       }
@@ -356,7 +356,7 @@
           "CSML": "ST-440"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 340841
         }
       }
@@ -374,7 +374,7 @@
           "CSML": "ST-390"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 327080
         }
       }
@@ -392,8 +392,42 @@
           "CSML": "ST-635"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 405188
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 431594
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 432344
         }
       }
     }

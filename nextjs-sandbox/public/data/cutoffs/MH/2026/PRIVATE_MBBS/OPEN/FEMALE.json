@@ -17,7 +17,7 @@
           "SML": 5550
         },
         "Round 2": {
-          "Intake": 12,
+          "Intake": null,
           "AIR": 75912
         }
       }
@@ -34,7 +34,7 @@
           "SML": 5040
         },
         "Round 2": {
-          "Intake": 6,
+          "Intake": null,
           "AIR": 71600
         }
       }
@@ -51,7 +51,7 @@
           "SML": 5515
         },
         "Round 2": {
-          "Intake": 5,
+          "Intake": null,
           "AIR": 66856
         }
       }
@@ -85,7 +85,7 @@
           "SML": 5787
         },
         "Round 2": {
-          "Intake": 10,
+          "Intake": null,
           "AIR": 76637
         }
       }
@@ -102,7 +102,7 @@
           "SML": 5933
         },
         "Round 2": {
-          "Intake": 16,
+          "Intake": null,
           "AIR": 83407
         }
       }
@@ -119,7 +119,7 @@
           "SML": 4837
         },
         "Round 2": {
-          "Intake": 8,
+          "Intake": null,
           "AIR": 69469
         }
       }
@@ -136,7 +136,7 @@
           "SML": 5260
         },
         "Round 2": {
-          "Intake": 13,
+          "Intake": null,
           "AIR": 72338
         }
       }
@@ -153,7 +153,7 @@
           "SML": 4343
         },
         "Round 2": {
-          "Intake": 11,
+          "Intake": null,
           "AIR": 64139
         }
       }
@@ -171,7 +171,7 @@
           "CSML": "EWS-550"
         },
         "Round 2": {
-          "Intake": 5,
+          "Intake": null,
           "AIR": 77302
         }
       }
@@ -188,7 +188,7 @@
           "SML": 1717
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 13949
         }
       }
@@ -205,7 +205,7 @@
           "SML": 6309
         },
         "Round 2": {
-          "Intake": 8,
+          "Intake": null,
           "AIR": 85742
         }
       }
@@ -222,7 +222,7 @@
           "SML": 4040
         },
         "Round 2": {
-          "Intake": 8,
+          "Intake": null,
           "AIR": 57053
         }
       }
@@ -239,7 +239,7 @@
           "SML": 4778
         },
         "Round 2": {
-          "Intake": 7,
+          "Intake": null,
           "AIR": 62314
         }
       }
@@ -256,7 +256,7 @@
           "SML": 6206
         },
         "Round 2": {
-          "Intake": 6,
+          "Intake": null,
           "AIR": 78534
         }
       }
@@ -273,7 +273,7 @@
           "SML": 6961
         },
         "Round 2": {
-          "Intake": 23,
+          "Intake": null,
           "AIR": 93308
         }
       }
@@ -290,7 +290,7 @@
           "SML": 4145
         },
         "Round 2": {
-          "Intake": 23,
+          "Intake": null,
           "AIR": 55491
         }
       }
@@ -307,7 +307,7 @@
           "SML": 6496
         },
         "Round 2": {
-          "Intake": 18,
+          "Intake": null,
           "AIR": 88558
         }
       }
@@ -324,7 +324,7 @@
           "SML": 4949
         },
         "Round 2": {
-          "Intake": 19,
+          "Intake": null,
           "AIR": 69203
         }
       }
@@ -341,7 +341,7 @@
           "SML": 6069
         },
         "Round 2": {
-          "Intake": 14,
+          "Intake": null,
           "AIR": 78937
         }
       }
@@ -358,7 +358,7 @@
           "SML": 6574
         },
         "Round 2": {
-          "Intake": 21,
+          "Intake": null,
           "AIR": 85571
         }
       }
@@ -375,7 +375,7 @@
           "SML": 3512
         },
         "Round 2": {
-          "Intake": 18,
+          "Intake": null,
           "AIR": 52958
         }
       }
@@ -392,8 +392,42 @@
           "SML": 8012
         },
         "Round 2": {
-          "Intake": 20,
+          "Intake": null,
           "AIR": 126529
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 91585
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 122414
         }
       }
     }

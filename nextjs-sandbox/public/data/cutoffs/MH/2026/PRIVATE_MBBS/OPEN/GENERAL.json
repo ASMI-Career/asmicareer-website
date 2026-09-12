@@ -17,7 +17,7 @@
           "SML": 5576
         },
         "Round 2": {
-          "Intake": 13,
+          "Intake": 5,
           "AIR": 74592
         }
       }
@@ -35,7 +35,7 @@
           "CSML": "NT(C)-217"
         },
         "Round 2": {
-          "Intake": 6,
+          "Intake": 1,
           "AIR": 71537
         }
       }
@@ -52,7 +52,7 @@
           "SML": 5751
         },
         "Round 2": {
-          "Intake": 16,
+          "Intake": 9,
           "AIR": 73841
         }
       }
@@ -86,7 +86,7 @@
           "SML": 5881
         },
         "Round 2": {
-          "Intake": 13,
+          "Intake": 8,
           "AIR": 77523
         }
       }
@@ -103,7 +103,7 @@
           "SML": 6180
         },
         "Round 2": {
-          "Intake": 33,
+          "Intake": 16,
           "AIR": 84421
         }
       }
@@ -120,7 +120,7 @@
           "SML": 5352
         },
         "Round 2": {
-          "Intake": 10,
+          "Intake": 6,
           "AIR": 70887
         }
       }
@@ -137,7 +137,7 @@
           "SML": 5150
         },
         "Round 2": {
-          "Intake": 14,
+          "Intake": 10,
           "AIR": 63697
         }
       }
@@ -154,7 +154,7 @@
           "SML": 4636
         },
         "Round 2": {
-          "Intake": 16,
+          "Intake": 7,
           "AIR": 66220
         }
       }
@@ -172,7 +172,7 @@
           "CSML": "EWS-619"
         },
         "Round 2": {
-          "Intake": 5,
+          "Intake": 3,
           "AIR": 70930
         }
       }
@@ -206,7 +206,7 @@
           "SML": 6433
         },
         "Round 2": {
-          "Intake": 17,
+          "Intake": 11,
           "AIR": 87378
         }
       }
@@ -223,7 +223,7 @@
           "SML": 4269
         },
         "Round 2": {
-          "Intake": 8,
+          "Intake": 4,
           "AIR": 57934
         }
       }
@@ -240,7 +240,7 @@
           "SML": 4882
         },
         "Round 2": {
-          "Intake": 9,
+          "Intake": 3,
           "AIR": 60099
         }
       }
@@ -257,7 +257,7 @@
           "SML": 6318
         },
         "Round 2": {
-          "Intake": 13,
+          "Intake": 8,
           "AIR": 80730
         }
       }
@@ -274,7 +274,7 @@
           "SML": 7054
         },
         "Round 2": {
-          "Intake": 54,
+          "Intake": 33,
           "AIR": 96813
         }
       }
@@ -292,7 +292,7 @@
           "CSML": "SEBC-627"
         },
         "Round 2": {
-          "Intake": 53,
+          "Intake": 4,
           "AIR": 57909
         }
       }
@@ -309,7 +309,7 @@
           "SML": 6673
         },
         "Round 2": {
-          "Intake": 52,
+          "Intake": 19,
           "AIR": 89060
         }
       }
@@ -326,7 +326,7 @@
           "SML": 5377
         },
         "Round 2": {
-          "Intake": 45,
+          "Intake": 4,
           "AIR": 72386
         }
       }
@@ -343,7 +343,7 @@
           "SML": 6285
         },
         "Round 2": {
-          "Intake": 32,
+          "Intake": 7,
           "AIR": 82188
         }
       }
@@ -360,7 +360,7 @@
           "SML": 6632
         },
         "Round 2": {
-          "Intake": 53,
+          "Intake": 8,
           "AIR": 86150
         }
       }
@@ -377,7 +377,7 @@
           "SML": 3921
         },
         "Round 2": {
-          "Intake": 50,
+          "Intake": 8,
           "AIR": 53673
         }
       }
@@ -394,8 +394,42 @@
           "SML": 8637
         },
         "Round 2": {
-          "Intake": 49,
+          "Intake": 51,
           "AIR": 137558
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 22,
+          "AIR": 100792
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 28,
+          "AIR": 140700
         }
       }
     }

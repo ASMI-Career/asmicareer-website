@@ -108,7 +108,7 @@
           "CSML": "SC-800"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 159328
         }
       }
@@ -126,7 +126,7 @@
           "CSML": "SC-718"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 153165
         }
       }
@@ -198,7 +198,7 @@
           "CSML": "SC-810"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 153455
         }
       }
@@ -252,7 +252,7 @@
           "CSML": "SC-811"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 159929
         }
       }
@@ -270,7 +270,7 @@
           "CSML": "SC-901"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 181279
         }
       }
@@ -288,7 +288,7 @@
           "CSML": "SC-705"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 147177
         }
       }
@@ -306,7 +306,7 @@
           "CSML": "SC-857"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 160645
         }
       }
@@ -324,7 +324,7 @@
           "CSML": "SC-756"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 151149
         }
       }
@@ -342,7 +342,7 @@
           "CSML": "SC-830"
         },
         "Round 2": {
-          "Intake": 2,
+          "Intake": null,
           "AIR": 162382
         }
       }
@@ -360,7 +360,7 @@
           "CSML": "SC-837"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 162298
         }
       }
@@ -378,7 +378,7 @@
           "CSML": "SC-649"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 140491
         }
       }
@@ -396,8 +396,42 @@
           "CSML": "SC-993"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 213259
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 193965
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": 218259
         }
       }
     }

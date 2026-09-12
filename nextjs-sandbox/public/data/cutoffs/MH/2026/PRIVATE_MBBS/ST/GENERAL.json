@@ -108,7 +108,7 @@
           "CSML": "ST-453"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": 1,
           "AIR": 342366
         }
       }
@@ -198,7 +198,7 @@
           "CSML": "ST-441"
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": null,
           "AIR": 340922
         }
       }
@@ -288,7 +288,7 @@
           "CSML": "ST-405"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": null,
           "AIR": 332253
         }
       }
@@ -324,7 +324,7 @@
           "CSML": "ST-422"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": null,
           "AIR": 335753
         }
       }
@@ -342,7 +342,7 @@
           "CSML": "ST-434"
         },
         "Round 2": {
-          "Intake": 3,
+          "Intake": 2,
           "AIR": 338313
         }
       }
@@ -360,7 +360,7 @@
           "CSML": "ST-463"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": 1,
           "AIR": 346461
         }
       }
@@ -378,7 +378,7 @@
           "CSML": "ST-402"
         },
         "Round 2": {
-          "Intake": 4,
+          "Intake": 2,
           "AIR": 321936
         }
       }
@@ -398,6 +398,40 @@
         "Round 2": {
           "Intake": 3,
           "AIR": 412314
+        }
+      }
+    },
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 413967
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 5,
+          "AIR": 461321
         }
       }
     }
