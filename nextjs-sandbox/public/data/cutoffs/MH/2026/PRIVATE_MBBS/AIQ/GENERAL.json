@@ -1,0 +1,43 @@
+{
+  "counselling": "MH",
+  "quota_type": "PRIVATE_MBBS",
+  "year": 2026,
+  "category": "AIQ",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "1135",
+      "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
+      "establishment": 2003,
+      "fees": "1795000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 90,
+          "AIR": 158116
+        }
+      }
+    },
+    {
+      "code": "1223",
+      "name": "N.K.P. Salve Medical College, Nagpur",
+      "establishment": 1990,
+      "fees": "2075000",
+      "type": "Private",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Round 2": {
+          "Intake": 112,
+          "AIR": 364169
+        }
+      }
+    }
+  ]
+}
