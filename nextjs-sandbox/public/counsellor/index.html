@@ -1159,7 +1159,7 @@
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
 
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && (currentData.category ? !['OPEN', 'AIQ'].includes(currentData.category) : !['OPEN', 'AIQ'].includes(mhCategory));
+      const showCSML = isMH && (currentData.category ? !['OPEN', 'AIQ', 'IQ'].includes(currentData.category) : !['OPEN', 'AIQ', 'IQ'].includes(mhCategory));
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
@@ -1841,7 +1841,7 @@
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && (currentData.category ? !['OPEN', 'AIQ'].includes(currentData.category) : !['OPEN', 'AIQ'].includes(mhCategory));
+      const showCSML = isMH && (currentData.category ? !['OPEN', 'AIQ', 'IQ'].includes(currentData.category) : !['OPEN', 'AIQ', 'IQ'].includes(mhCategory));
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
