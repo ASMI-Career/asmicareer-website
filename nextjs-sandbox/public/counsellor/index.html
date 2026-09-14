@@ -2015,8 +2015,7 @@
       }
       if (roundKeys.length === 0) return null;
 
-      // Sr No, Institute Name, then AIR (+ SML where the site actually tracks it) per round,
-      // plus a personalized Chance column judged off the latest round with data.
+      // Sr No, Institute Name, then AIR (+ SML where the site actually tracks it) per round.
       const headRow1 = [
         { content: 'Sr. No', rowSpan: 2, styles: { valign: 'middle' } },
         { content: 'Institute Name', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
@@ -2028,24 +2027,16 @@
         headRow2.push('AIR');
         if (showSML) headRow2.push('SML');
       });
-      const showChance = typeof RANK === 'number' && RANK > 0;
-      if (showChance) headRow1.push({ content: 'Chance', rowSpan: 2, styles: { valign: 'middle' } });
 
       const body = workingColleges.map((college, i) => {
         const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
         const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
         const row = [i + 1, college.name || ''];
-        let latestAir = null;
         roundKeys.forEach(round => {
           const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
           row.push(rd.AIR ?? '-');
           if (showSML) row.push(rd.SML ?? '-');
-          if (rd.AIR) latestAir = rd.AIR;
         });
-        if (showChance) {
-          const chance = latestAir ? getChance(String(latestAir)) : null;
-          row.push(chance ? chance.label : '-');
-        }
         return row;
       });
 
@@ -2054,7 +2045,7 @@
         : (data.state ? `${data.state} — ${data.quota || data.category || ''}` : (data.counselling || 'Cutoff Data'));
 
       const title = `${bucketLabel} — ${labelOverride || data.category || selectedCategory || mhCategory || ''} ${data.year || currentYear} Cutoffs`.replace(/\s+/g, ' ').trim();
-      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * colsPerRound, colsPerRound, showChance };
+      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * colsPerRound, colsPerRound };
     }
 
     // ── Export-scope picker modal ──────────────────────────────────────
@@ -2324,22 +2315,13 @@
         // Institute Name column keeps enough room to stay on one line, and
         // size Institute Name to whatever's left so the table never looks
         // stretched (too wide) or squeezed (too narrow) against the page.
-        const SR_W = 28, VAL_W = 46, CHANCE_W = 66;
-        const chanceColIdx = 2 + section.valueColCount;
+        const SR_W = 28, VAL_W = 46;
         const valueColStyles = {};
         for (let c = 0; c < section.valueColCount; c++) valueColStyles[c + 2] = { cellWidth: VAL_W };
-        if (section.showChance) valueColStyles[chanceColIdx] = { cellWidth: CHANCE_W, fontStyle: 'bold', fontSize: 7 };
-        const chanceW = section.showChance ? CHANCE_W : 0;
         const usableWidth = pageWidth - PAGE_MARGIN * 2;
-        const instituteW = Math.max(190, Math.min(320, usableWidth - SR_W - section.valueColCount * VAL_W - chanceW));
-        const totalTableWidth = SR_W + instituteW + section.valueColCount * VAL_W + chanceW;
+        const instituteW = Math.max(190, Math.min(320, usableWidth - SR_W - section.valueColCount * VAL_W));
+        const totalTableWidth = SR_W + instituteW + section.valueColCount * VAL_W;
         const sideMargin = Math.max(PAGE_MARGIN, (pageWidth - totalTableWidth) / 2);
-        const CHANCE_COLORS = {
-          Safe: { fill: [220, 252, 231], text: [22, 101, 52] },
-          Likely: { fill: [219, 234, 254], text: [30, 64, 175] },
-          Borderline: { fill: [254, 243, 199], text: [146, 64, 14] },
-          'Out of Reach': { fill: [243, 244, 246], text: [107, 114, 128] },
-        };
 
         doc.autoTable({
           head: [section.headRow1, section.headRow2],
@@ -2376,15 +2358,6 @@
             if (isAirCol) {
               data.cell.styles.fontStyle = 'bold';
               data.cell.styles.textColor = PURPLE;
-            }
-            // Chance column — color-coded pill-style cell matching this
-            // student's Safe/Likely/Borderline/Out of Reach standing.
-            if (section.showChance && data.column.index === chanceColIdx) {
-              const c = CHANCE_COLORS[data.cell.raw];
-              if (c) {
-                data.cell.styles.fillColor = c.fill;
-                data.cell.styles.textColor = c.text;
-              }
             }
           },
           didDrawPage: (data) => {
