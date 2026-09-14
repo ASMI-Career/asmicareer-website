@@ -2015,7 +2015,8 @@
       }
       if (roundKeys.length === 0) return null;
 
-      // Sr No, Institute Name, then AIR (+ SML where the site actually tracks it) per round.
+      // Sr No, Institute Name, then AIR (+ SML where the site actually tracks it) per round,
+      // plus a personalized Chance column judged off the latest round with data.
       const headRow1 = [
         { content: 'Sr. No', rowSpan: 2, styles: { valign: 'middle' } },
         { content: 'Institute Name', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
@@ -2027,16 +2028,24 @@
         headRow2.push('AIR');
         if (showSML) headRow2.push('SML');
       });
+      const showChance = typeof RANK === 'number' && RANK > 0;
+      if (showChance) headRow1.push({ content: 'Chance', rowSpan: 2, styles: { valign: 'middle' } });
 
       const body = workingColleges.map((college, i) => {
         const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
         const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
         const row = [i + 1, college.name || ''];
+        let latestAir = null;
         roundKeys.forEach(round => {
           const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
           row.push(rd.AIR ?? '-');
           if (showSML) row.push(rd.SML ?? '-');
+          if (rd.AIR) latestAir = rd.AIR;
         });
+        if (showChance) {
+          const chance = latestAir ? getChance(String(latestAir)) : null;
+          row.push(chance ? chance.label : '-');
+        }
         return row;
       });
 
@@ -2045,7 +2054,7 @@
         : (data.state ? `${data.state} — ${data.quota || data.category || ''}` : (data.counselling || 'Cutoff Data'));
 
       const title = `${bucketLabel} — ${labelOverride || data.category || selectedCategory || mhCategory || ''} ${data.year || currentYear} Cutoffs`.replace(/\s+/g, ' ').trim();
-      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * colsPerRound };
+      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * colsPerRound, colsPerRound, showChance };
     }
 
     // ── Export-scope picker modal ──────────────────────────────────────
@@ -2065,6 +2074,15 @@
     function openPdfExportModal() {
       if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
         alert('Load some cutoff data first.');
+        return;
+      }
+      // currentData updates asynchronously after a tab/counselling switch, but
+      // selectedCounselling flips the instant you click - if they're still out
+      // of sync here, the modal would build its picker off the PREVIOUS
+      // counselling's data (e.g. still showing MCC categories after switching
+      // to MH). Refuse rather than show a wrong/stale scope.
+      if (currentData.counselling !== selectedCounselling) {
+        alert('Still loading data for this selection - wait a moment and try again.');
         return;
       }
       const body = document.getElementById('pdfExportModalBody');
@@ -2306,13 +2324,22 @@
         // Institute Name column keeps enough room to stay on one line, and
         // size Institute Name to whatever's left so the table never looks
         // stretched (too wide) or squeezed (too narrow) against the page.
-        const SR_W = 28, VAL_W = 46;
+        const SR_W = 28, VAL_W = 46, CHANCE_W = 66;
+        const chanceColIdx = 2 + section.valueColCount;
         const valueColStyles = {};
         for (let c = 0; c < section.valueColCount; c++) valueColStyles[c + 2] = { cellWidth: VAL_W };
+        if (section.showChance) valueColStyles[chanceColIdx] = { cellWidth: CHANCE_W, fontStyle: 'bold', fontSize: 7 };
+        const chanceW = section.showChance ? CHANCE_W : 0;
         const usableWidth = pageWidth - PAGE_MARGIN * 2;
-        const instituteW = Math.max(190, Math.min(320, usableWidth - SR_W - section.valueColCount * VAL_W));
-        const totalTableWidth = SR_W + instituteW + section.valueColCount * VAL_W;
+        const instituteW = Math.max(190, Math.min(320, usableWidth - SR_W - section.valueColCount * VAL_W - chanceW));
+        const totalTableWidth = SR_W + instituteW + section.valueColCount * VAL_W + chanceW;
         const sideMargin = Math.max(PAGE_MARGIN, (pageWidth - totalTableWidth) / 2);
+        const CHANCE_COLORS = {
+          Safe: { fill: [220, 252, 231], text: [22, 101, 52] },
+          Likely: { fill: [219, 234, 254], text: [30, 64, 175] },
+          Borderline: { fill: [254, 243, 199], text: [146, 64, 14] },
+          'Out of Reach': { fill: [243, 244, 246], text: [107, 114, 128] },
+        };
 
         doc.autoTable({
           head: [section.headRow1, section.headRow2],
@@ -2329,16 +2356,35 @@
           tableWidth: 'wrap',
           margin: { left: sideMargin, right: sideMargin, bottom: 16 },
           didParseCell: (data) => {
-            if (data.section !== 'head') return;
-            // Row 0 = Sr/Institute + round labels, solid purple with gold text
-            // (matches the ASMI report's header-bar language); Row 1 = AIR/SML
-            // sub-labels on a soft lavender tint.
-            if (data.row.index === 0) {
-              data.cell.styles.fillColor = PURPLE;
-              data.cell.styles.textColor = GOLD;
-            } else {
-              data.cell.styles.fillColor = SOFT_LAVENDER;
+            if (data.section === 'head') {
+              // Row 0 = Sr/Institute + round labels, solid purple with gold text
+              // (matches the ASMI report's header-bar language); Row 1 = AIR/SML
+              // sub-labels on a soft lavender tint.
+              if (data.row.index === 0) {
+                data.cell.styles.fillColor = PURPLE;
+                data.cell.styles.textColor = GOLD;
+              } else {
+                data.cell.styles.fillColor = SOFT_LAVENDER;
+                data.cell.styles.textColor = PURPLE;
+              }
+              return;
+            }
+            if (data.section !== 'body') return;
+            // AIR values in bold purple, like the report's cutoff-number styling.
+            const isAirCol = data.column.index >= 2 && data.column.index < 2 + section.valueColCount
+              && (data.column.index - 2) % section.colsPerRound === 0;
+            if (isAirCol) {
+              data.cell.styles.fontStyle = 'bold';
               data.cell.styles.textColor = PURPLE;
+            }
+            // Chance column — color-coded pill-style cell matching this
+            // student's Safe/Likely/Borderline/Out of Reach standing.
+            if (section.showChance && data.column.index === chanceColIdx) {
+              const c = CHANCE_COLORS[data.cell.raw];
+              if (c) {
+                data.cell.styles.fillColor = c.fill;
+                data.cell.styles.textColor = c.text;
+              }
             }
           },
           didDrawPage: (data) => {
