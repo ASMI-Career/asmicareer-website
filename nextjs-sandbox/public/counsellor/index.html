@@ -1995,6 +1995,8 @@
       const isMH = data.counselling === 'MH';
       const isOPEN = data.counselling === 'OPEN';
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
+      const isKarnataka = (isOPEN && data.state === 'Karnataka');
+      const showSML = isMH || (isOPEN && !isKarnataka);
 
       let roundKeys = [];
       if (isHP) {
@@ -2010,15 +2012,17 @@
         });
       }
 
-      // Fixed column set per user request: Sr No, Institute Name, then AIR + SML per round only.
+      // Sr No, Institute Name, then AIR (+ SML where the site actually tracks it) per round.
       const headRow1 = [
         { content: 'Sr. No', rowSpan: 2, styles: { valign: 'middle' } },
         { content: 'Institute Name', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
       ];
       const headRow2 = [];
+      const colsPerRound = showSML ? 2 : 1;
       roundKeys.forEach(round => {
-        headRow1.push({ content: round, colSpan: 2, styles: { halign: 'center' } });
-        headRow2.push('AIR', 'SML');
+        headRow1.push({ content: round, colSpan: colsPerRound, styles: { halign: 'center' } });
+        headRow2.push('AIR');
+        if (showSML) headRow2.push('SML');
       });
 
       const body = workingColleges.map((college, i) => {
@@ -2027,7 +2031,8 @@
         const row = [i + 1, college.name || ''];
         roundKeys.forEach(round => {
           const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
-          row.push(rd.AIR ?? '-', rd.SML ?? '-');
+          row.push(rd.AIR ?? '-');
+          if (showSML) row.push(rd.SML ?? '-');
         });
         return row;
       });
@@ -2037,7 +2042,7 @@
         : (data.state ? `${data.state} — ${data.quota || data.category || ''}` : (data.counselling || 'Cutoff Data'));
 
       const title = `${bucketLabel} — ${labelOverride || data.category || selectedCategory || mhCategory || ''} ${data.year || currentYear} Cutoffs`.replace(/\s+/g, ' ').trim();
-      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * 2 };
+      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * colsPerRound };
     }
 
     // ── Export-scope picker modal ──────────────────────────────────────
@@ -2266,7 +2271,8 @@
           },
           headStyles: { font: 'Cambria', fontStyle: 'bold', fontSize: 7.5, halign: 'center', valign: 'middle', lineColor: [222, 218, 240], lineWidth: 0.4, cellPadding: { top: 2.2, bottom: 2.2, left: 4, right: 4 } },
           alternateRowStyles: { fillColor: ZEBRA },
-          columnStyles: { 0: { cellWidth: 26 }, 1: { cellWidth: 'auto', minCellWidth: 160 }, ...valueColStyles },
+          columnStyles: { 0: { cellWidth: 26 }, 1: { cellWidth: 230 }, ...valueColStyles },
+          tableWidth: 'wrap',
           margin: { left: 30, right: 30, bottom: 18 },
           didParseCell: (data) => {
             if (data.section !== 'head') return;
