@@ -1204,16 +1204,14 @@
 
         let cols = 2;
         if (isKarnataka) cols = 2;
-        else if (isKeralaMQ) cols = 2;
+        else if (isKeralaMQ) cols = 3;
         else if (showPWD) cols = 3;
         else if (showCSML) cols = 4;
         else if (showSML) cols = 3;
 
         headerRow1 += `<th colspan="${cols}" class="px-4 py-3 text-center font-bold text-[#1A0040] bg-[#EDE9FF] border-l border-r border-[#C4B5FD] ${strayClass}" ${displayStyle}>${round}</th>`;
 
-        if (!isKeralaMQ) {
-           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
-        }
+        headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
 
         const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
         headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">AIR</th>`;
@@ -1382,9 +1380,7 @@
           const strayClass = isStray ? 'stray-col' : '';
           const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
-          if (!isKeralaMQ) {
-             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
-          }
+          html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
 
           html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
 
