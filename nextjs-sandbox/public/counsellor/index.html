@@ -483,7 +483,7 @@
                     <iconify-icon icon="lucide:download"></iconify-icon>
                     Export Excel
                   </button>
-                  <button onclick="exportCutoffTablePDF()" class="px-4 py-2 rounded-full bg-[#1A0040] text-white text-sm font-bold hover:brightness-110 transition-all inline-flex items-center gap-1.5">
+                  <button onclick="openPdfExportModal()" class="px-4 py-2 rounded-full bg-[#1A0040] text-white text-sm font-bold hover:brightness-110 transition-all inline-flex items-center gap-1.5">
                     <iconify-icon icon="lucide:file-text"></iconify-icon>
                     Export PDF
                   </button>
@@ -540,6 +540,20 @@
     </div>
 
     <div id="pdfTemplate" style="display:none;"></div>
+  </div>
+
+  <div id="pdfExportModal" class="hidden fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white rounded-t-2xl">
+        <h3 class="text-lg font-bold text-[#1A0040]">Export PDF — Choose Scope</h3>
+        <button onclick="closePdfExportModal()" class="text-gray-400 hover:text-gray-700"><iconify-icon icon="lucide:x" width="20"></iconify-icon></button>
+      </div>
+      <div id="pdfExportModalBody" class="px-6 py-5"></div>
+      <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2 sticky bottom-0 bg-white rounded-b-2xl">
+        <button onclick="closePdfExportModal()" class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-bold hover:bg-gray-200">Cancel</button>
+        <button onclick="confirmPdfExport()" class="px-5 py-2 rounded-full bg-[#1A0040] text-white text-sm font-bold hover:brightness-110">Export PDF</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1999,7 +2013,7 @@
       // Fixed column set per user request: Sr No, Institute Name, then AIR + SML per round only.
       const headRow1 = [
         { content: 'Sr. No', rowSpan: 2, styles: { valign: 'middle' } },
-        { content: 'Institute Name', rowSpan: 2, styles: { valign: 'middle', halign: 'left' } },
+        { content: 'Institute Name', rowSpan: 2, styles: { valign: 'middle', halign: 'center' } },
       ];
       const headRow2 = [];
       roundKeys.forEach(round => {
@@ -2023,40 +2037,159 @@
         : (data.state ? `${data.state} — ${data.quota || data.category || ''}` : (data.counselling || 'Cutoff Data'));
 
       const title = `${bucketLabel} — ${labelOverride || data.category || selectedCategory || mhCategory || ''} ${data.year || currentYear} Cutoffs`.replace(/\s+/g, ' ').trim();
-      return { title, headRow1, headRow2, body };
+      return { title, headRow1, headRow2, body, valueColCount: roundKeys.length * 2 };
     }
 
-    async function exportCutoffTablePDF() {
+    // ── Export-scope picker modal ──────────────────────────────────────
+    const MH_QUOTA_OPTIONS = [
+      { id: 'GOVT_MBBS', label: 'Govt MBBS' },
+      { id: 'PRIVATE_MBBS', label: 'Private MBBS' },
+      { id: 'GOVT_BDS', label: 'Govt BDS' },
+      { id: 'PRIVATE_BDS', label: 'Private BDS' },
+      { id: 'IQ_BDS', label: 'IQ BDS' },
+      { id: 'GOVT_BAMS', label: 'Govt BAMS' },
+      { id: 'PRIVATE_BAMS', label: 'Private BAMS' },
+      { id: 'IQ_BAMS', label: 'IQ BAMS' },
+      { id: 'GOVT_BPTH', label: 'Govt BPTH' },
+      { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
+    ];
+
+    function openPdfExportModal() {
       if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
         alert('Load some cutoff data first.');
         return;
       }
+      const body = document.getElementById('pdfExportModalBody');
+      const isMH = currentData.counselling === 'MH';
+      const isMCC = currentData.counselling === 'MCC';
+      const isOPEN = currentData.counselling === 'OPEN';
+      const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
+      const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
+
+      let html = '';
+      if (isMH) {
+        html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Quota / Institution Type</p>
+          <select id="pdfMhQuota" onchange="onPdfMhQuotaChange()" class="w-full mb-4 px-3 py-2 rounded-lg border border-gray-200 text-sm font-bold text-[#1A0040]">
+            ${MH_QUOTA_OPTIONS.map(q => `<option value="${q.id}" ${q.id === mhQuota ? 'selected' : ''}>${q.label}</option>`).join('')}
+          </select>
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Sub-Type</p>
+          <select id="pdfMhSubType" class="w-full mb-4 px-3 py-2 rounded-lg border border-gray-200 text-sm font-bold text-[#1A0040]">
+            <option value="GENERAL" ${mhSubType === 'GENERAL' ? 'selected' : ''}>General</option>
+            <option value="FEMALE" ${mhSubType === 'FEMALE' ? 'selected' : ''}>Female</option>
+          </select>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Categories</p>
+            <button type="button" onclick="togglePdfAllCategories(true)" class="text-xs font-bold text-[#1A0040] hover:underline">All</button>
+          </div>
+          <div id="pdfMhCategories" class="grid grid-cols-3 gap-2"></div>`;
+      } else if (isMCC && !isDeemed) {
+        html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institution Type</p>
+          <p class="mb-4 px-3 py-2 rounded-lg bg-gray-50 text-sm font-bold text-[#1A0040]">${selectedInstType}</p>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Categories</p>
+            <button type="button" onclick="togglePdfAllCategories(true)" class="text-xs font-bold text-[#1A0040] hover:underline">All</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            ${MCC_STD_CATS.map(c => `<label class="flex items-center gap-1.5 text-sm"><input type="checkbox" class="pdf-cat-check" value="${c}" checked> ${c}</label>`).join('')}
+          </div>`;
+      } else if (isOPEN && !isHP) {
+        const folder = (currentData.state || selectedState).replace(/ /g, '_');
+        const cats = OPEN_STATE_CATS[folder] || [currentData.quota || selectedCategory];
+        html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">${currentData.state || selectedState}</p>
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quota</p>
+            <button type="button" onclick="togglePdfAllCategories(true)" class="text-xs font-bold text-[#1A0040] hover:underline">All</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            ${cats.map(c => `<label class="flex items-center gap-1.5 text-sm"><input type="checkbox" class="pdf-cat-check" value="${c}" checked> ${c}</label>`).join('')}
+          </div>`;
+      } else {
+        html += `<p class="text-sm text-gray-600">This dataset doesn't have selectable quota/category scope — the export will use exactly what's currently loaded.</p>`;
+      }
+      body.innerHTML = html;
+      if (isMH) renderPdfMhCategories();
+      document.getElementById('pdfExportModal').classList.remove('hidden');
+    }
+
+    function renderPdfMhCategories() {
+      const quota = document.getElementById('pdfMhQuota').value;
+      const cats = Object.keys(MH_DATA_MAP[quota] || {}).sort();
+      const wrap = document.getElementById('pdfMhCategories');
+      wrap.innerHTML = cats.map(c => `<label class="flex items-center gap-1.5 text-sm"><input type="checkbox" class="pdf-cat-check" value="${c}" checked> ${c}</label>`).join('');
+    }
+
+    function onPdfMhQuotaChange() { renderPdfMhCategories(); }
+
+    function togglePdfAllCategories(checkAll) {
+      document.querySelectorAll('.pdf-cat-check').forEach(cb => { cb.checked = checkAll; });
+    }
+
+    function closePdfExportModal() {
+      document.getElementById('pdfExportModal').classList.add('hidden');
+    }
+
+    function confirmPdfExport() {
+      const isMH = currentData.counselling === 'MH';
+      const isMCC = currentData.counselling === 'MCC';
+      const isOPEN = currentData.counselling === 'OPEN';
+      const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
+      const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
+
+      const checked = [...document.querySelectorAll('.pdf-cat-check:checked')].map(cb => cb.value);
+
+      let scope = { mode: 'single' };
+      if (isMH) {
+        const quota = document.getElementById('pdfMhQuota').value;
+        const subType = document.getElementById('pdfMhSubType').value;
+        if (checked.length === 0) { alert('Select at least one category.'); return; }
+        scope = { mode: 'mh', quota, subType, categories: checked };
+      } else if (isMCC && !isDeemed) {
+        if (checked.length === 0) { alert('Select at least one category.'); return; }
+        scope = { mode: 'mcc', categories: checked };
+      } else if (isOPEN && !isHP) {
+        if (checked.length === 0) { alert('Select at least one quota.'); return; }
+        scope = { mode: 'open-state', categories: checked };
+      }
+
+      closePdfExportModal();
+      exportCutoffTablePDF(scope);
+    }
+
+    // ══════════════════ CUTOFF TABLE PDF GENERATION ══════════════════
+    async function exportCutoffTablePDF(scope) {
+      scope = scope || { mode: 'single' };
       await loadScoreLookupTable();
       const assets = await loadPdfAssets();
 
-      const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
-
-      // Category-wise: gather one section per category available for the current quota/institution type.
       const sections = [];
-      if (isMH) {
-        const cats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
-        for (const cat of cats) {
-          const subs = MH_DATA_MAP[mhQuota][cat] || [];
-          const sub = subs.includes(mhSubType) ? mhSubType : subs[0];
+      if (scope.mode === 'mh') {
+        for (const cat of scope.categories) {
+          const subs = MH_DATA_MAP[scope.quota][cat] || [];
+          const sub = subs.includes(scope.subType) ? scope.subType : subs[0];
           if (!sub) continue;
           try {
-            const res = await fetch(`/data/cutoffs/MH/${currentYear}/${mhQuota}/${cat}/${sub}.json`);
+            const res = await fetch(`/data/cutoffs/MH/${currentYear}/${scope.quota}/${cat}/${sub}.json`);
             if (!res.ok) continue;
             const data = await res.json();
             const section = pdfSectionForData(data, cat);
             if (section) sections.push(section);
           } catch (e) { /* skip categories with no data */ }
         }
-      } else if (isMCC && !(currentData.institution_type || '').includes('DEEMED')) {
-        for (const cat of MCC_STD_CATS) {
+      } else if (scope.mode === 'mcc') {
+        for (const cat of scope.categories) {
           try {
             const res = await fetch(`/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${cat}.json`);
+            if (!res.ok) continue;
+            const data = await res.json();
+            const section = pdfSectionForData(data, cat);
+            if (section) sections.push(section);
+          } catch (e) { /* skip categories with no data */ }
+        }
+      } else if (scope.mode === 'open-state') {
+        const folder = (currentData.state || selectedState).replace(/ /g, '_');
+        for (const cat of scope.categories) {
+          try {
+            const res = await fetch(`/data/cutoffs/OPEN/${currentYear}/${folder}/${cat}.json`);
             if (!res.ok) continue;
             const data = await res.json();
             const section = pdfSectionForData(data, cat);
@@ -2083,36 +2216,69 @@
 
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
+      const NAVY = [26, 0, 64];
+      const GOLD = [255, 215, 0];
+      const SOFT_GOLD = [255, 249, 227];
+      const SOFT_LAVENDER = [237, 233, 255];
+      const ZEBRA = [250, 249, 255];
 
       const drawHeader = (title) => {
+        // Slim navy band across the top of every page — a classier anchor than plain white.
+        doc.setFillColor(...NAVY);
+        doc.rect(0, 0, pageWidth, 5, 'F');
+
         doc.setFont('Cambria', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(90, 90, 90);
-        doc.text('Helpline: 7410019074', 40, 30);
+        doc.setFontSize(8.5);
+        doc.setTextColor(110, 110, 110);
+        doc.text('Helpline: 7410019074', 40, 26);
 
         doc.setFont('Cambria', 'bold');
         doc.setFontSize(16);
-        doc.setTextColor(26, 0, 64);
-        doc.text('ASMI Career', pageWidth / 2, 32, { align: 'center' });
+        doc.setTextColor(...NAVY);
+        doc.text('ASMI Career', pageWidth / 2, 27, { align: 'center' });
 
         doc.setFont('Cambria', 'normal');
-        doc.setFontSize(11);
-        doc.setTextColor(40, 40, 40);
-        doc.text(title, pageWidth / 2, 50, { align: 'center' });
+        doc.setFontSize(10);
+        doc.setTextColor(70, 70, 70);
+        doc.text(title, pageWidth / 2, 42, { align: 'center' });
+
+        // Thin gold rule under the title — separates header from the table.
+        doc.setDrawColor(...GOLD);
+        doc.setLineWidth(1.1);
+        doc.line(pageWidth / 2 - 90, 48, pageWidth / 2 + 90, 48);
       };
 
       sections.forEach((section, idx) => {
         if (idx > 0) doc.addPage();
         drawHeader(section.title);
+        // Value columns (AIR/SML) hold short numbers — pin them narrow so the
+        // Institute Name column keeps enough room to stay on one line.
+        const valueColStyles = {};
+        for (let c = 0; c < section.valueColCount; c++) valueColStyles[c + 2] = { cellWidth: 44 };
         doc.autoTable({
           head: [section.headRow1, section.headRow2],
           body: section.body,
-          startY: 65,
+          startY: 54,
           theme: 'grid',
-          styles: { font: 'Cambria', fontSize: 8, cellPadding: 3, halign: 'center', valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.5 },
-          headStyles: { fillColor: [255, 215, 0], textColor: [26, 0, 64], font: 'Cambria', fontStyle: 'bold' },
-          columnStyles: { 1: { halign: 'left', cellWidth: 220 } },
-          margin: { left: 30, right: 30, bottom: 30 },
+          styles: {
+            font: 'Cambria', fontSize: 7, cellPadding: { top: 0.6, bottom: 0.6, left: 4, right: 4 },
+            halign: 'center', valign: 'middle', lineColor: [222, 218, 240], lineWidth: 0.4, textColor: [40, 35, 55],
+          },
+          headStyles: { font: 'Cambria', fontStyle: 'bold', fontSize: 7.5, halign: 'center', valign: 'middle', lineColor: [222, 218, 240], lineWidth: 0.4, cellPadding: { top: 2.2, bottom: 2.2, left: 4, right: 4 } },
+          alternateRowStyles: { fillColor: ZEBRA },
+          columnStyles: { 0: { cellWidth: 26 }, 1: { cellWidth: 'auto', minCellWidth: 160 }, ...valueColStyles },
+          margin: { left: 30, right: 30, bottom: 18 },
+          didParseCell: (data) => {
+            if (data.section !== 'head') return;
+            // Row 0 = round labels (deep navy/gold), Row 1 = AIR/SML sub-labels (soft lavender).
+            if (data.row.index === 0) {
+              data.cell.styles.fillColor = data.column.index < 2 ? NAVY : SOFT_GOLD;
+              data.cell.styles.textColor = data.column.index < 2 ? GOLD : NAVY;
+            } else {
+              data.cell.styles.fillColor = SOFT_LAVENDER;
+              data.cell.styles.textColor = NAVY;
+            }
+          },
         });
       });
 
@@ -2124,19 +2290,23 @@
         doc.setPage(p);
 
         doc.saveGraphicsState();
-        doc.setGState(new doc.GState({ opacity: 0.09 }));
+        doc.setGState(new doc.GState({ opacity: 0.08 }));
         doc.addImage(assets.logoDataUrl, 'PNG', (pageWidth - wmSize) / 2, (pageHeight - wmSize) / 2, wmSize, wmSize);
         doc.restoreGraphicsState();
 
+        doc.setDrawColor(...GOLD);
+        doc.setLineWidth(0.8);
+        doc.line(30, pageHeight - 18, pageWidth - 30, pageHeight - 18);
+
         doc.setFont('Cambria', 'normal');
-        doc.setFontSize(8);
+        doc.setFontSize(7.5);
         doc.setTextColor(140, 140, 140);
-        doc.text('Generated by ASMI Career | asmicareer.com', 30, pageHeight - 15);
-        doc.text(`Page ${p} of ${pageCount}`, pageWidth - 30, pageHeight - 15, { align: 'right' });
+        doc.text('Generated by ASMI Career | asmicareer.com', 30, pageHeight - 8);
+        doc.text(`Page ${p} of ${pageCount}`, pageWidth - 30, pageHeight - 8, { align: 'right' });
       }
 
       const date = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '');
-      const contextBits = [currentData.counselling, currentData.state, isMH ? mhQuota : selectedInstType].filter(Boolean).join('_');
+      const contextBits = [currentData.counselling, currentData.state, scope.mode === 'mh' ? scope.quota : selectedInstType].filter(Boolean).join('_');
       const safeCtxPdf = contextBits.replace(/[^a-zA-Z0-9_]/g, '');
       doc.save(`ASMI_CutoffData_${safeCtxPdf}_${date}.pdf`);
     }
