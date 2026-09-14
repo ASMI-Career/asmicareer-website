@@ -8,6 +8,7 @@
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="/dashboard.css">
   <style>
@@ -481,6 +482,10 @@
                   <button onclick="exportCutoffTableExcel()" class="px-4 py-2 rounded-full bg-[#FFD700] text-[#1A0040] text-sm font-bold hover:brightness-95 transition-all inline-flex items-center gap-1.5">
                     <iconify-icon icon="lucide:download"></iconify-icon>
                     Export Excel
+                  </button>
+                  <button onclick="exportCutoffTablePDF()" class="px-4 py-2 rounded-full bg-[#1A0040] text-white text-sm font-bold hover:brightness-110 transition-all inline-flex items-center gap-1.5">
+                    <iconify-icon icon="lucide:file-text"></iconify-icon>
+                    Export PDF
                   </button>
                 </div>
               </div>
@@ -1932,6 +1937,131 @@
       const contextBits = [currentData.counselling, isOPEN ? currentData.state : null, isMH ? mhQuota : null, currentData.category || selectedCategory || mhCategory || ''].filter(Boolean).join('_');
       const safeCtx = contextBits.replace(/[^a-zA-Z0-9_]/g, '');
       XLSX.writeFile(wb, `ASMI_CutoffData_${safeCtx}_${date}.xlsx`);
+    }
+
+    // ══════════════════ CUTOFF TABLE PDF EXPORT (multi-round) ══════════════════
+    async function exportCutoffTablePDF() {
+      if (!currentData || !currentData.colleges || currentData.colleges.length === 0) {
+        alert('Load some cutoff data first.');
+        return;
+      }
+      await loadScoreLookupTable();
+
+      let workingColleges = getSortedColleges(currentData.colleges);
+      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+        workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
+      }
+      if (workingColleges.length === 0) {
+        alert('No colleges match the current filters.');
+        return;
+      }
+
+      const isMH = currentData.counselling === 'MH';
+      const isMCC = currentData.counselling === 'MCC';
+      const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
+      const isOPEN = currentData.counselling === 'OPEN';
+      const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
+      const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
+      const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ'].includes(currentData.category) : ['AIQ', 'IQ'].includes(mhCategory));
+      const showSML = isMH || (isOPEN && !isKarnataka);
+      const showCSML = isMH && !isMHNoMerit && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showPWD = isMCC && !isDeemed;
+
+      let roundKeys = [];
+      if (isHP) {
+        const cats = Object.keys(workingColleges[0].categories || {});
+        if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
+      } else {
+        roundKeys = Object.keys(workingColleges[0].rounds || {});
+      }
+      if (!strayVisible) {
+        roundKeys = roundKeys.filter(r => {
+          const rl = r.toLowerCase();
+          return !(rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended') || rl.includes('round 4') || rl.includes('round4'));
+        });
+      }
+
+      const subCols = (() => {
+        if (showPWD) return ['Intake', 'AIR', 'AIR (PWD)'];
+        if (showCSML) return ['Intake', 'AIR', 'SML', 'CSML'];
+        if (showSML) return ['Intake', 'AIR', 'SML'];
+        return ['Intake', 'AIR'];
+      })();
+
+      const bucketLabel = isMH
+        ? (mhQuota.startsWith('GOVT_') ? 'Government Colleges' : mhQuota.startsWith('IQ_') ? 'Institutional Quota' : 'Private Colleges')
+        : (currentData.state ? `${currentData.state} — ${currentData.quota || currentData.category || ''}` : (currentData.counselling || 'Cutoff Data'));
+
+      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', 'Establishment', 'Fees'];
+
+      // jspdf-autotable head: row1 = static col spans (rowSpan 2) + round labels (colSpan subCols.length),
+      // row2 = sub-column labels under each round.
+      const headRow1 = staticCols.map(label => ({ content: label, rowSpan: 2, styles: { valign: 'middle' } }));
+      const headRow2 = [];
+      roundKeys.forEach(round => {
+        headRow1.push({ content: round, colSpan: subCols.length, styles: { halign: 'center' } });
+        subCols.forEach(label => headRow2.push(label));
+      });
+
+      const body = workingColleges.map((college, i) => {
+        const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
+        const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
+        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', college.establishment || '-', college.fees || '-'];
+        roundKeys.forEach(round => {
+          const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
+          row.push(rd.Intake ?? '-');
+          row.push(rd.AIR ?? '-');
+          if (showPWD) row.push(rd.AIR_PWD ?? '-');
+          else if (showCSML) { row.push(rd.SML ?? '-'); row.push(rd.CSML ?? '-'); }
+          else if (showSML) row.push(rd.SML ?? '-');
+        });
+        return row;
+      });
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+
+      doc.setFontSize(9);
+      doc.setTextColor(90, 90, 90);
+      doc.text('Helpline: 7410019074', 40, 30);
+
+      doc.setFontSize(16);
+      doc.setFont(undefined, 'bold');
+      doc.setTextColor(26, 0, 64);
+      doc.text('ASMI Career', pageWidth / 2, 32, { align: 'center' });
+
+      doc.setFontSize(11);
+      doc.setFont(undefined, 'normal');
+      doc.setTextColor(40, 40, 40);
+      const titleLine = `${bucketLabel} — ${currentData.category || selectedCategory || mhCategory || ''} ${currentData.year || currentYear} Cutoffs`.replace(/\s+/g, ' ').trim();
+      doc.text(titleLine, pageWidth / 2, 50, { align: 'center' });
+
+      doc.autoTable({
+        head: [headRow1, headRow2],
+        body,
+        startY: 65,
+        theme: 'grid',
+        styles: { font: 'helvetica', fontSize: 7.5, cellPadding: 3, halign: 'center', valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.5 },
+        headStyles: { fillColor: [255, 215, 0], textColor: [26, 0, 64], fontStyle: 'bold' },
+        columnStyles: { 2: { halign: 'left', cellWidth: 150 } },
+        margin: { left: 30, right: 30, bottom: 30 },
+      });
+
+      const pageCount = doc.internal.getNumberOfPages();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      for (let p = 1; p <= pageCount; p++) {
+        doc.setPage(p);
+        doc.setFontSize(8);
+        doc.setTextColor(140, 140, 140);
+        doc.text('Generated by ASMI Career | asmicareer.com', 30, pageHeight - 15);
+        doc.text(`Page ${p} of ${pageCount}`, pageWidth - 30, pageHeight - 15, { align: 'right' });
+      }
+
+      const date = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '');
+      const contextBits = [currentData.counselling, isOPEN ? currentData.state : null, isMH ? mhQuota : null, currentData.category || selectedCategory || mhCategory || ''].filter(Boolean).join('_');
+      const safeCtxPdf = contextBits.replace(/[^a-zA-Z0-9_]/g, '');
+      doc.save(`ASMI_CutoffData_${safeCtxPdf}_${date}.pdf`);
     }
 
     // ══════════════════ EXCEL EXPORT ══════════════════
