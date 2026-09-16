@@ -3,1934 +3,1928 @@
   "institution_type": "DEEMED_MBBS",
   "year": 2026,
   "categories": {
-    "OPEN": {
-      "counselling": "MCC",
-      "institution_type": "DEEMED_MBBS",
-      "year": 2026,
-      "category": "OPEN",
-      "colleges": [
-        {
-          "code": "200340",
-          "name": "Kasturba Medical College, Manipal University, Manipal",
-          "state": "Karnataka",
-          "establishment": 1953,
-          "fees": "1790000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 42815
-            },
-            "Round 2": {
-              "Intake": 39,
-              "AIR": 43819
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200527",
-          "name": "Symbiosis Medical College for Women, Pune",
-          "state": "Maharashtra",
-          "establishment": 2023,
-          "fees": "1050000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 128,
-              "AIR": 56144
-            },
-            "Round 2": {
-              "Intake": 31,
-              "AIR": 57741
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200339",
-          "name": "Kasturba Medical College, Manipal University, Mangalore",
-          "state": "Karnataka",
-          "establishment": 1955,
-          "fees": "1790000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 160,
-              "AIR": 59030
-            },
-            "Round 2": {
-              "Intake": 18,
-              "AIR": 60163
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200528",
-          "name": "Manipal Tata Medical College, Jamshedpur",
-          "state": "Jharkhand",
-          "establishment": 2020,
-          "fees": "1629000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 210,
-              "AIR": 90912
-            },
-            "Round 2": {
-              "Intake": 35,
-              "AIR": 91820
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200338",
-          "name": "K.S Hegde Medical Academy, Mangaluru",
-          "state": "Karnataka",
-          "establishment": 1999,
-          "fees": "1784500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 174,
-              "AIR": 165856
-            },
-            "Round 2": {
-              "Intake": 58,
-              "AIR": 200214
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200337",
-          "name": "Jagadguru Sri Shivarathreeshwara (JSS) Medical College, Mysore",
-          "state": "Karnataka",
-          "establishment": 1984,
-          "fees": "2195100",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 199,
-              "AIR": 154521
-            },
-            "Round 2": {
-              "Intake": 63,
-              "AIR": 187715
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200370",
-          "name": "Rural Medical College and Pravara Institute of Medical College, Loni",
-          "state": "Maharashtra",
-          "establishment": 1984,
-          "fees": "1905000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 170,
-              "AIR": 142869
-            },
-            "Round 2": {
-              "Intake": 36,
-              "AIR": 149197
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200376",
-          "name": "Kalinga Institute of Medical Sciences, Bhubaneswar",
-          "state": "Odisha",
-          "establishment": 2007,
-          "fees": "1925000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 257176
-            },
-            "Round 2": {
-              "Intake": 40,
-              "AIR": 276780
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200368",
-          "name": "MGM Medical College, Navi Mumbai",
-          "state": "Maharashtra",
-          "establishment": 1989,
-          "fees": "2625500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 240367
-            },
-            "Round 2": {
-              "Intake": 21,
-              "AIR": 243680
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200347",
-          "name": "Sri Devaraj University Medical College (SDU), Kolar",
-          "state": "Karnataka",
-          "establishment": 1986,
-          "fees": "1940000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 292821
-            },
-            "Round 2": {
-              "Intake": 58,
-              "AIR": 334068
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902806",
-          "name": "Institute of Medical Sciences and SUM Hospital, Campus II, Bhubaneswar",
-          "state": "Odisha",
-          "establishment": 2024,
-          "fees": "1800000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 240,
-              "AIR": 332063
-            },
-            "Round 2": {
-              "Intake": 31,
-              "AIR": 344194
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200536",
-          "name": "Jagadguru Gangadhar Mahaswamigalu Moorusavirmath Medical College, Hubballi",
-          "state": "Karnataka",
-          "establishment": 2021,
-          "fees": "1920000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 176,
-              "AIR": 419036
-            },
-            "Round 2": {
-              "Intake": 45,
-              "AIR": 484567
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200346",
-          "name": "Shri B. M. Patil Medical College & Hospital (BLDE University), Bijapur",
-          "state": "Karnataka",
-          "establishment": 1986,
-          "fees": "1915000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 230,
-              "AIR": 294456
-            },
-            "Round 2": {
-              "Intake": 40,
-              "AIR": 292582
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200367",
-          "name": "MGM Medical College, Aurangabad",
-          "state": "Maharashtra",
-          "establishment": 1989,
-          "fees": "2625500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 333154
-            },
-            "Round 2": {
-              "Intake": 24,
-              "AIR": 341480
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200349",
-          "name": "Sri Siddhartha Medical College, Tumkur",
-          "state": "Karnataka",
-          "establishment": 1988,
-          "fees": "1990000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 353346
-            },
-            "Round 2": {
-              "Intake": 62,
-              "AIR": 379645
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200654",
-          "name": "Mahatma Gandi Mission Medical College Vashi, Navi Mumbai",
-          "state": "Maharashtra",
-          "establishment": 2023,
-          "fees": "2625500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 85,
-              "AIR": 307390
-            },
-            "Round 2": {
-              "Intake": 7,
-              "AIR": 292771
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200374",
-          "name": "Institute of Medical Sciences and SUM Hospital, Bhubaneswar",
-          "state": "Odisha",
-          "establishment": 2007,
-          "fees": "2200000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 245,
-              "AIR": 349173
-            },
-            "Round 2": {
-              "Intake": 28,
-              "AIR": 366935
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200352",
-          "name": "Amrita Institute of Medical Science, Kochi",
-          "state": "Kerala",
-          "establishment": 2000,
-          "fees": "2590500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 126,
-              "AIR": 257880
-            },
-            "Round 2": {
-              "Intake": 32,
-              "AIR": 289975
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902807",
-          "name": "MGM Medical College, Nerul",
-          "state": "Maharashtra",
-          "establishment": 2024,
-          "fees": "2625500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 43,
-              "AIR": 368433
-            },
-            "Round 2": {
-              "Intake": 8,
-              "AIR": 377222
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200472",
-          "name": "Sri Siddhartha Academy, T Begur",
-          "state": "Karnataka",
-          "establishment": 2019,
-          "fees": "1930000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 419640
-            },
-            "Round 2": {
-              "Intake": 74,
-              "AIR": 507813
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200396",
-          "name": "Sri Ramachandra Medical College and Research Institute, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 1985,
-          "fees": "3063000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 329861
-            },
-            "Round 2": {
-              "Intake": 43,
-              "AIR": 395940
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200332",
-          "name": "Maharishi Markandeshwar Institute Medical and Research, Mullana",
-          "state": "Haryana",
-          "establishment": 2003,
-          "fees": "1883300",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 366214
-            },
-            "Round 2": {
-              "Intake": 81,
-              "AIR": 426378
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200351",
-          "name": "Yenepoya Medical College, Mangalore",
-          "state": "Karnataka",
-          "establishment": 1999,
-          "fees": "2300000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 110,
-              "AIR": 375767
-            },
-            "Round 2": {
-              "Intake": 26,
-              "AIR": 400278
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200646",
-          "name": "Amrita School of Medicine Faridabad, Faridabad",
-          "state": "Haryana",
-          "establishment": 2023,
-          "fees": "2604800",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 135,
-              "AIR": 255782
-            },
-            "Round 2": {
-              "Intake": 27,
-              "AIR": 261464
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200540",
-          "name": "Sri Lalithambigai Medical College and Hospital, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2021,
-          "fees": "2100000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 622017
-            },
-            "Round 2": {
-              "Intake": 53,
-              "AIR": 736600
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200469",
-          "name": "Raja Rajeswari Medical College, Bengaluru",
-          "state": "Karnataka",
-          "establishment": 2005,
-          "fees": "2540000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 460645
-            },
-            "Round 2": {
-              "Intake": 62,
-              "AIR": 505316
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200363",
-          "name": "Dr. D. Y. Patil Education Society, Deemed University, Kolhapur",
-          "state": "Maharashtra",
-          "establishment": 1989,
-          "fees": "2410000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 170,
-              "AIR": 466435
-            },
-            "Round 2": {
-              "Intake": 20,
-              "AIR": 436712
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902856",
-          "name": "Malla Reddy Institute of Medical Sciences, Hyderabad",
-          "state": "Telangana",
-          "establishment": 2012,
-          "fees": "2200000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 467647
-            },
-            "Round 2": {
-              "Intake": 42,
-              "AIR": 477007
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200330",
-          "name": "Smt. B. K. Shah Medical Institute & Research Centre, Sumandeep Vidyapeeth, Vadodara",
-          "state": "Gujarat",
-          "establishment": 2002,
-          "fees": "2300000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 107,
-              "AIR": 528721
-            },
-            "Round 2": {
-              "Intake": 33,
-              "AIR": 581974
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902855",
-          "name": "Malla Reddy Medical College for Women, Hyderabad",
-          "state": "Telangana",
-          "establishment": 2013,
-          "fees": "2100000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 225,
-              "AIR": 542056
-            },
-            "Round 2": {
-              "Intake": 48,
-              "AIR": 570969
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200356",
-          "name": "Bharati Vidyapeeth Deemed University Medical College, Pune",
-          "state": "Maharashtra",
-          "establishment": 1989,
-          "fees": "2855600",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 501263
-            },
-            "Round 2": {
-              "Intake": 30,
-              "AIR": 521496
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200525",
-          "name": "Datta Meghe Medical College, Wanadongri Hingna, Nagpur",
-          "state": "Maharashtra",
-          "establishment": 2020,
-          "fees": "2475000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 213,
-              "AIR": 648817
-            },
-            "Round 2": {
-              "Intake": 42,
-              "AIR": 723728
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200361",
-          "name": "Dr. D. Y. Patil Medical College and Hospital, Pune",
-          "state": "Maharashtra",
-          "establishment": 1995,
-          "fees": "2950000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 459613
-            },
-            "Round 2": {
-              "Intake": 31,
-              "AIR": 461934
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200365",
-          "name": "Krishna Institute of Medical Sciences, Karad",
-          "state": "Maharashtra",
-          "establishment": 1984,
-          "fees": "2600000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 555690
-            },
-            "Round 2": {
-              "Intake": 23,
-              "AIR": 579307
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200364",
-          "name": "Jawahar Lal Nehru Medical College, Datta Meghe, Wardha",
-          "state": "Maharashtra",
-          "establishment": 1990,
-          "fees": "2475000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 645866
-            },
-            "Round 2": {
-              "Intake": 56,
-              "AIR": 717407
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904758",
-          "name": "Dr. D. Y. Patil Medical College, Navi Mumbai",
-          "state": "Maharashtra",
-          "establishment": 1989,
-          "fees": "2984000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 510432
-            },
-            "Round 2": {
-              "Intake": 17,
-              "AIR": 504964
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200537",
-          "name": "VELS Medical College and Hospital, Tiruvallur",
-          "state": "Tamil Nadu",
-          "establishment": 2021,
-          "fees": "2222000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 909875
-            },
-            "Round 2": {
-              "Intake": 81,
-              "AIR": 1190153
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200389",
-          "name": "Saveetha Medical College, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2008,
-          "fees": "2700000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 249,
-              "AIR": 599305
-            },
-            "Round 2": {
-              "Intake": 45,
-              "AIR": 676697
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200324",
-          "name": "Gitam Institute of Medical Sciences, Visakhapatnam",
-          "state": "Andhra Pradesh",
-          "establishment": 2015,
-          "fees": "2537000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 127,
-              "AIR": 604120
-            },
-            "Round 2": {
-              "Intake": 32,
-              "AIR": 666201
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200355",
-          "name": "Bharati Vidyapeeth Deemed University Medical College and Hospital, Sangli",
-          "state": "Maharashtra",
-          "establishment": 2005,
-          "fees": "2552000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 600808
-            },
-            "Round 2": {
-              "Intake": 33,
-              "AIR": 637703
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902812",
-          "name": "Graphic Era Institute of Medical Sciences, Dehradun",
-          "state": "Uttarakhand",
-          "establishment": 2024,
-          "fees": "2450000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 170,
-              "AIR": 564667
-            },
-            "Round 2": {
-              "Intake": 95,
-              "AIR": 660911
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200381",
-          "name": "Vinayaka Missions Medical College and Hospital, Karaikal",
-          "state": "Puducherry",
-          "establishment": 1997,
-          "fees": "2188000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 200,
-              "AIR": 805761
-            },
-            "Round 2": {
-              "Intake": 81,
-              "AIR": 991201
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200399",
-          "name": "SRM Medical College and Hospital, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2005,
-          "fees": "2810000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 247,
-              "AIR": 700830
-            },
-            "Round 2": {
-              "Intake": 49,
-              "AIR": 762139
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200408",
-          "name": "Santosh Medical College and Hospital, Ghaziabad",
-          "state": "Uttar Pradesh",
-          "establishment": 1996,
-          "fees": "2400000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 127,
-              "AIR": 582133
-            },
-            "Round 2": {
-              "Intake": 48,
-              "AIR": 651748
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200401",
-          "name": "VMKV Medical College and Hospital, Salem",
-          "state": "Tamil Nadu",
-          "establishment": 1996,
-          "fees": "2386000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 200,
-              "AIR": 987550
-            },
-            "Round 2": {
-              "Intake": 66,
-              "AIR": 1189764
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200386",
-          "name": "Meenakshi Medical College Hospital and Research Institute, Kancheepuram",
-          "state": "Tamil Nadu",
-          "establishment": 2003,
-          "fees": "2440000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 250,
-              "AIR": 992101
-            },
-            "Round 2": {
-              "Intake": 79,
-              "AIR": 1168293
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200379",
-          "name": "Mahatma Gandhi Medical College, Puducherry",
-          "state": "Puducherry",
-          "establishment": 2002,
-          "fees": "2825000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 235,
-              "AIR": 834236
-            },
-            "Round 2": {
-              "Intake": 99,
-              "AIR": 1186813
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200383",
-          "name": "ACS Medical College and Hospital, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2008,
-          "fees": "2500000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 212,
-              "AIR": 927573
-            },
-            "Round 2": {
-              "Intake": 59,
-              "AIR": 1088217
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200377",
-          "name": "Aarupadai Veedu Medical College and Hospital, Puducherry",
-          "state": "Puducherry",
-          "establishment": 1999,
-          "fees": "2388000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 150,
-              "AIR": 918859
-            },
-            "Round 2": {
-              "Intake": 105,
-              "AIR": 1182026
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200384",
-          "name": "Chettinad Hospital and Research Institute, Kancheepuram",
-          "state": "Tamil Nadu",
-          "establishment": 2006,
-          "fees": "2818320",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 250,
-              "AIR": 738420
-            },
-            "Round 2": {
-              "Intake": 45,
-              "AIR": 823772
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200390",
-          "name": "Shri Sathya Sai Medical College and Research Institute, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2008,
-          "fees": "2525000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 240,
-              "AIR": 1194233
-            },
-            "Round 2": {
-              "Intake": 82,
-              "AIR": 1184637
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200532",
-          "name": "Bhaarath Medical College and Hospital, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2020,
-          "fees": "2875000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 245,
-              "AIR": 1163131
-            },
-            "Round 2": {
-              "Intake": 110,
-              "AIR": 1167643
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200393",
-          "name": "Sree Balaji Medical College and Hospital, Chennai",
-          "state": "Tamil Nadu",
-          "establishment": 2003,
-          "fees": "3135000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 245,
-              "AIR": 997115
-            },
-            "Round 2": {
-              "Intake": 63,
-              "AIR": 1190129
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200380",
-          "name": "Sri Lakshmi Narayana Institute of Medical Sciences, Puducherry",
-          "state": "Puducherry",
-          "establishment": 2006,
-          "fees": "2725000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 250,
-              "AIR": 1187171
-            },
-            "Round 2": {
-              "Intake": 192,
-              "AIR": 1181535
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "902804",
-          "name": "J R Medical College, Villupuram",
-          "state": "Tamil Nadu",
-          "establishment": 2024,
-          "fees": "2670000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 200,
-              "AIR": 1194131
-            },
-            "Round 2": {
-              "Intake": 213,
-              "AIR": 1110106
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200335",
-          "name": "Jawahar Lal Nehru Medical College (KLE), Belagavi",
-          "state": "Karnataka",
-          "establishment": 1963,
-          "fees": "1950000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 201,
-              "AIR": 181223
-            },
-            "Round 2": {
-              "Intake": 39,
-              "AIR": 203613
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904369",
-          "name": "DY Patil Medical College, Maval, Pune",
-          "state": "Maharashtra",
-          "establishment": 2025,
-          "fees": "2500000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 85,
-              "AIR": 559501
-            },
-            "Round 2": {
-              "Intake": 23,
-              "AIR": 592448
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904553",
-          "name": "MGM Medical College, Panvel",
-          "state": "Maharashtra",
-          "establishment": 2025,
-          "fees": "2625500",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 85,
-              "AIR": 446811
-            },
-            "Round 2": {
-              "Intake": 13,
-              "AIR": 476251
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "200326",
-          "name": "Hamdard Institute of Medical Sciences & Research, New Delhi",
-          "state": null,
-          "establishment": 2012,
-          "fees": "16,00,000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 52,
-              "AIR": 70072
-            },
-            "Round 2": {
-              "Intake": 15,
-              "AIR": 73637
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904745",
-          "name": "Dhanalakshmi Srinivasan Institute of Medical Sciences and Hospital, Perambalur",
-          "state": "Tamil Nadu",
-          "establishment": 2023,
-          "fees": "24,00,000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 175,
-              "AIR": 1009363
-            },
-            "Round 2": {
-              "Intake": 112,
-              "AIR": 1187466
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904746",
-          "name": "St Peters Medical College, Hospital & Research Institute, Hosur",
-          "state": "Tamil Nadu",
-          "establishment": 2021,
-          "fees": "27,00,000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 230,
-              "AIR": 874702
-            },
-            "Round 2": {
-              "Intake": 85,
-              "AIR": 1034185
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904743",
-          "name": "Chettinad Institute of Medical Education and Research, KGF",
-          "state": null,
-          "establishment": 2026,
-          "fees": "22,22,222",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 100,
-              "AIR": 524239
-            },
-            "Round 2": {
-              "Intake": 45,
-              "AIR": 627750
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904747",
-          "name": "Srinivasan Medical College and Hospital, Samayapuram",
-          "state": "Tamil Nadu",
-          "establishment": 2021,
-          "fees": "25,00,000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": 225,
-              "AIR": 1194179
-            },
-            "Round 2": {
-              "Intake": 87,
-              "AIR": 1153926
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
-          }
-        },
-        {
-          "code": "904766",
-          "name": "Karpaga Vinayaga Institute of Medical Sciences, Maduranthagam",
-          "state": "Tamil Nadu",
-          "establishment": 2009,
-          "fees": "2100000",
-          "type": "Deemed",
-          "rounds": {
-            "Round 1": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Round 2": {
-              "Intake": 150,
-              "AIR": 653339
-            },
-            "Round 3": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            },
-            "Special Stray Vacancy Round": {
-              "Intake": null,
-              "AIR": null
-            }
+    "OPEN": [
+      {
+        "code": "200340",
+        "name": "Kasturba Medical College, Manipal University, Manipal",
+        "state": "Karnataka",
+        "establishment": 1953,
+        "fees": "1790000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 42815
+          },
+          "Round 2": {
+            "Intake": 39,
+            "AIR": 43819
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
           }
         }
-      ]
-    },
+      },
+      {
+        "code": "200527",
+        "name": "Symbiosis Medical College for Women, Pune",
+        "state": "Maharashtra",
+        "establishment": 2023,
+        "fees": "1050000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 128,
+            "AIR": 56144
+          },
+          "Round 2": {
+            "Intake": 31,
+            "AIR": 57741
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200339",
+        "name": "Kasturba Medical College, Manipal University, Mangalore",
+        "state": "Karnataka",
+        "establishment": 1955,
+        "fees": "1790000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 160,
+            "AIR": 59030
+          },
+          "Round 2": {
+            "Intake": 18,
+            "AIR": 60163
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200528",
+        "name": "Manipal Tata Medical College, Jamshedpur",
+        "state": "Jharkhand",
+        "establishment": 2020,
+        "fees": "1629000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 210,
+            "AIR": 90912
+          },
+          "Round 2": {
+            "Intake": 35,
+            "AIR": 91820
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200338",
+        "name": "K.S Hegde Medical Academy, Mangaluru",
+        "state": "Karnataka",
+        "establishment": 1999,
+        "fees": "1784500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 174,
+            "AIR": 165856
+          },
+          "Round 2": {
+            "Intake": 58,
+            "AIR": 200214
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200337",
+        "name": "Jagadguru Sri Shivarathreeshwara (JSS) Medical College, Mysore",
+        "state": "Karnataka",
+        "establishment": 1984,
+        "fees": "2195100",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 199,
+            "AIR": 154521
+          },
+          "Round 2": {
+            "Intake": 63,
+            "AIR": 187715
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200370",
+        "name": "Rural Medical College and Pravara Institute of Medical College, Loni",
+        "state": "Maharashtra",
+        "establishment": 1984,
+        "fees": "1905000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 170,
+            "AIR": 142869
+          },
+          "Round 2": {
+            "Intake": 36,
+            "AIR": 149197
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200376",
+        "name": "Kalinga Institute of Medical Sciences, Bhubaneswar",
+        "state": "Odisha",
+        "establishment": 2007,
+        "fees": "1925000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 257176
+          },
+          "Round 2": {
+            "Intake": 40,
+            "AIR": 276780
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200368",
+        "name": "MGM Medical College, Navi Mumbai",
+        "state": "Maharashtra",
+        "establishment": 1989,
+        "fees": "2625500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 240367
+          },
+          "Round 2": {
+            "Intake": 21,
+            "AIR": 243680
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200347",
+        "name": "Sri Devaraj University Medical College (SDU), Kolar",
+        "state": "Karnataka",
+        "establishment": 1986,
+        "fees": "1940000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 292821
+          },
+          "Round 2": {
+            "Intake": 58,
+            "AIR": 334068
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902806",
+        "name": "Institute of Medical Sciences and SUM Hospital, Campus II, Bhubaneswar",
+        "state": "Odisha",
+        "establishment": 2024,
+        "fees": "1800000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 240,
+            "AIR": 332063
+          },
+          "Round 2": {
+            "Intake": 31,
+            "AIR": 344194
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200536",
+        "name": "Jagadguru Gangadhar Mahaswamigalu Moorusavirmath Medical College, Hubballi",
+        "state": "Karnataka",
+        "establishment": 2021,
+        "fees": "1920000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 176,
+            "AIR": 419036
+          },
+          "Round 2": {
+            "Intake": 45,
+            "AIR": 484567
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200346",
+        "name": "Shri B. M. Patil Medical College & Hospital (BLDE University), Bijapur",
+        "state": "Karnataka",
+        "establishment": 1986,
+        "fees": "1915000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 230,
+            "AIR": 294456
+          },
+          "Round 2": {
+            "Intake": 40,
+            "AIR": 292582
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200367",
+        "name": "MGM Medical College, Aurangabad",
+        "state": "Maharashtra",
+        "establishment": 1989,
+        "fees": "2625500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 333154
+          },
+          "Round 2": {
+            "Intake": 24,
+            "AIR": 341480
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200349",
+        "name": "Sri Siddhartha Medical College, Tumkur",
+        "state": "Karnataka",
+        "establishment": 1988,
+        "fees": "1990000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 353346
+          },
+          "Round 2": {
+            "Intake": 62,
+            "AIR": 379645
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200654",
+        "name": "Mahatma Gandi Mission Medical College Vashi, Navi Mumbai",
+        "state": "Maharashtra",
+        "establishment": 2023,
+        "fees": "2625500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 85,
+            "AIR": 307390
+          },
+          "Round 2": {
+            "Intake": 7,
+            "AIR": 292771
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200374",
+        "name": "Institute of Medical Sciences and SUM Hospital, Bhubaneswar",
+        "state": "Odisha",
+        "establishment": 2007,
+        "fees": "2200000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 245,
+            "AIR": 349173
+          },
+          "Round 2": {
+            "Intake": 28,
+            "AIR": 366935
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200352",
+        "name": "Amrita Institute of Medical Science, Kochi",
+        "state": "Kerala",
+        "establishment": 2000,
+        "fees": "2590500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 126,
+            "AIR": 257880
+          },
+          "Round 2": {
+            "Intake": 32,
+            "AIR": 289975
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902807",
+        "name": "MGM Medical College, Nerul",
+        "state": "Maharashtra",
+        "establishment": 2024,
+        "fees": "2625500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 43,
+            "AIR": 368433
+          },
+          "Round 2": {
+            "Intake": 8,
+            "AIR": 377222
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200472",
+        "name": "Sri Siddhartha Academy, T Begur",
+        "state": "Karnataka",
+        "establishment": 2019,
+        "fees": "1930000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 419640
+          },
+          "Round 2": {
+            "Intake": 74,
+            "AIR": 507813
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200396",
+        "name": "Sri Ramachandra Medical College and Research Institute, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 1985,
+        "fees": "3063000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 329861
+          },
+          "Round 2": {
+            "Intake": 43,
+            "AIR": 395940
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200332",
+        "name": "Maharishi Markandeshwar Institute Medical and Research, Mullana",
+        "state": "Haryana",
+        "establishment": 2003,
+        "fees": "1883300",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 366214
+          },
+          "Round 2": {
+            "Intake": 81,
+            "AIR": 426378
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200351",
+        "name": "Yenepoya Medical College, Mangalore",
+        "state": "Karnataka",
+        "establishment": 1999,
+        "fees": "2300000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 110,
+            "AIR": 375767
+          },
+          "Round 2": {
+            "Intake": 26,
+            "AIR": 400278
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200646",
+        "name": "Amrita School of Medicine Faridabad, Faridabad",
+        "state": "Haryana",
+        "establishment": 2023,
+        "fees": "2604800",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 135,
+            "AIR": 255782
+          },
+          "Round 2": {
+            "Intake": 27,
+            "AIR": 261464
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200540",
+        "name": "Sri Lalithambigai Medical College and Hospital, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2021,
+        "fees": "2100000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 622017
+          },
+          "Round 2": {
+            "Intake": 53,
+            "AIR": 736600
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200469",
+        "name": "Raja Rajeswari Medical College, Bengaluru",
+        "state": "Karnataka",
+        "establishment": 2005,
+        "fees": "2540000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 460645
+          },
+          "Round 2": {
+            "Intake": 62,
+            "AIR": 505316
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200363",
+        "name": "Dr. D. Y. Patil Education Society, Deemed University, Kolhapur",
+        "state": "Maharashtra",
+        "establishment": 1989,
+        "fees": "2410000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 170,
+            "AIR": 466435
+          },
+          "Round 2": {
+            "Intake": 20,
+            "AIR": 436712
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902856",
+        "name": "Malla Reddy Institute of Medical Sciences, Hyderabad",
+        "state": "Telangana",
+        "establishment": 2012,
+        "fees": "2200000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 467647
+          },
+          "Round 2": {
+            "Intake": 42,
+            "AIR": 477007
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200330",
+        "name": "Smt. B. K. Shah Medical Institute & Research Centre, Sumandeep Vidyapeeth, Vadodara",
+        "state": "Gujarat",
+        "establishment": 2002,
+        "fees": "2300000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 107,
+            "AIR": 528721
+          },
+          "Round 2": {
+            "Intake": 33,
+            "AIR": 581974
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902855",
+        "name": "Malla Reddy Medical College for Women, Hyderabad",
+        "state": "Telangana",
+        "establishment": 2013,
+        "fees": "2100000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 225,
+            "AIR": 542056
+          },
+          "Round 2": {
+            "Intake": 48,
+            "AIR": 570969
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200356",
+        "name": "Bharati Vidyapeeth Deemed University Medical College, Pune",
+        "state": "Maharashtra",
+        "establishment": 1989,
+        "fees": "2855600",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 501263
+          },
+          "Round 2": {
+            "Intake": 30,
+            "AIR": 521496
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200525",
+        "name": "Datta Meghe Medical College, Wanadongri Hingna, Nagpur",
+        "state": "Maharashtra",
+        "establishment": 2020,
+        "fees": "2475000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 213,
+            "AIR": 648817
+          },
+          "Round 2": {
+            "Intake": 42,
+            "AIR": 723728
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200361",
+        "name": "Dr. D. Y. Patil Medical College and Hospital, Pune",
+        "state": "Maharashtra",
+        "establishment": 1995,
+        "fees": "2950000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 459613
+          },
+          "Round 2": {
+            "Intake": 31,
+            "AIR": 461934
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200365",
+        "name": "Krishna Institute of Medical Sciences, Karad",
+        "state": "Maharashtra",
+        "establishment": 1984,
+        "fees": "2600000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 555690
+          },
+          "Round 2": {
+            "Intake": 23,
+            "AIR": 579307
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200364",
+        "name": "Jawahar Lal Nehru Medical College, Datta Meghe, Wardha",
+        "state": "Maharashtra",
+        "establishment": 1990,
+        "fees": "2475000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 645866
+          },
+          "Round 2": {
+            "Intake": 56,
+            "AIR": 717407
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904758",
+        "name": "Dr. D. Y. Patil Medical College, Navi Mumbai",
+        "state": "Maharashtra",
+        "establishment": 1989,
+        "fees": "2984000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 510432
+          },
+          "Round 2": {
+            "Intake": 17,
+            "AIR": 504964
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200537",
+        "name": "VELS Medical College and Hospital, Tiruvallur",
+        "state": "Tamil Nadu",
+        "establishment": 2021,
+        "fees": "2222000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 909875
+          },
+          "Round 2": {
+            "Intake": 81,
+            "AIR": 1190153
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200389",
+        "name": "Saveetha Medical College, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2008,
+        "fees": "2700000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 249,
+            "AIR": 599305
+          },
+          "Round 2": {
+            "Intake": 45,
+            "AIR": 676697
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200324",
+        "name": "Gitam Institute of Medical Sciences, Visakhapatnam",
+        "state": "Andhra Pradesh",
+        "establishment": 2015,
+        "fees": "2537000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 127,
+            "AIR": 604120
+          },
+          "Round 2": {
+            "Intake": 32,
+            "AIR": 666201
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200355",
+        "name": "Bharati Vidyapeeth Deemed University Medical College and Hospital, Sangli",
+        "state": "Maharashtra",
+        "establishment": 2005,
+        "fees": "2552000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 600808
+          },
+          "Round 2": {
+            "Intake": 33,
+            "AIR": 637703
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902812",
+        "name": "Graphic Era Institute of Medical Sciences, Dehradun",
+        "state": "Uttarakhand",
+        "establishment": 2024,
+        "fees": "2450000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 170,
+            "AIR": 564667
+          },
+          "Round 2": {
+            "Intake": 95,
+            "AIR": 660911
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200381",
+        "name": "Vinayaka Missions Medical College and Hospital, Karaikal",
+        "state": "Puducherry",
+        "establishment": 1997,
+        "fees": "2188000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 200,
+            "AIR": 805761
+          },
+          "Round 2": {
+            "Intake": 81,
+            "AIR": 991201
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200399",
+        "name": "SRM Medical College and Hospital, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2005,
+        "fees": "2810000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 247,
+            "AIR": 700830
+          },
+          "Round 2": {
+            "Intake": 49,
+            "AIR": 762139
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200408",
+        "name": "Santosh Medical College and Hospital, Ghaziabad",
+        "state": "Uttar Pradesh",
+        "establishment": 1996,
+        "fees": "2400000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 127,
+            "AIR": 582133
+          },
+          "Round 2": {
+            "Intake": 48,
+            "AIR": 651748
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200401",
+        "name": "VMKV Medical College and Hospital, Salem",
+        "state": "Tamil Nadu",
+        "establishment": 1996,
+        "fees": "2386000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 200,
+            "AIR": 987550
+          },
+          "Round 2": {
+            "Intake": 66,
+            "AIR": 1189764
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200386",
+        "name": "Meenakshi Medical College Hospital and Research Institute, Kancheepuram",
+        "state": "Tamil Nadu",
+        "establishment": 2003,
+        "fees": "2440000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 250,
+            "AIR": 992101
+          },
+          "Round 2": {
+            "Intake": 79,
+            "AIR": 1168293
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200379",
+        "name": "Mahatma Gandhi Medical College, Puducherry",
+        "state": "Puducherry",
+        "establishment": 2002,
+        "fees": "2825000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 235,
+            "AIR": 834236
+          },
+          "Round 2": {
+            "Intake": 99,
+            "AIR": 1186813
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200383",
+        "name": "ACS Medical College and Hospital, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2008,
+        "fees": "2500000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 212,
+            "AIR": 927573
+          },
+          "Round 2": {
+            "Intake": 59,
+            "AIR": 1088217
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200377",
+        "name": "Aarupadai Veedu Medical College and Hospital, Puducherry",
+        "state": "Puducherry",
+        "establishment": 1999,
+        "fees": "2388000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 150,
+            "AIR": 918859
+          },
+          "Round 2": {
+            "Intake": 105,
+            "AIR": 1182026
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200384",
+        "name": "Chettinad Hospital and Research Institute, Kancheepuram",
+        "state": "Tamil Nadu",
+        "establishment": 2006,
+        "fees": "2818320",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 250,
+            "AIR": 738420
+          },
+          "Round 2": {
+            "Intake": 45,
+            "AIR": 823772
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200390",
+        "name": "Shri Sathya Sai Medical College and Research Institute, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2008,
+        "fees": "2525000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 240,
+            "AIR": 1194233
+          },
+          "Round 2": {
+            "Intake": 82,
+            "AIR": 1184637
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200532",
+        "name": "Bhaarath Medical College and Hospital, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2020,
+        "fees": "2875000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 245,
+            "AIR": 1163131
+          },
+          "Round 2": {
+            "Intake": 110,
+            "AIR": 1167643
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200393",
+        "name": "Sree Balaji Medical College and Hospital, Chennai",
+        "state": "Tamil Nadu",
+        "establishment": 2003,
+        "fees": "3135000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 245,
+            "AIR": 997115
+          },
+          "Round 2": {
+            "Intake": 63,
+            "AIR": 1190129
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200380",
+        "name": "Sri Lakshmi Narayana Institute of Medical Sciences, Puducherry",
+        "state": "Puducherry",
+        "establishment": 2006,
+        "fees": "2725000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 250,
+            "AIR": 1187171
+          },
+          "Round 2": {
+            "Intake": 192,
+            "AIR": 1181535
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "902804",
+        "name": "J R Medical College, Villupuram",
+        "state": "Tamil Nadu",
+        "establishment": 2024,
+        "fees": "2670000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 200,
+            "AIR": 1194131
+          },
+          "Round 2": {
+            "Intake": 213,
+            "AIR": 1110106
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200335",
+        "name": "Jawahar Lal Nehru Medical College (KLE), Belagavi",
+        "state": "Karnataka",
+        "establishment": 1963,
+        "fees": "1950000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 201,
+            "AIR": 181223
+          },
+          "Round 2": {
+            "Intake": 39,
+            "AIR": 203613
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904369",
+        "name": "DY Patil Medical College, Maval, Pune",
+        "state": "Maharashtra",
+        "establishment": 2025,
+        "fees": "2500000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 85,
+            "AIR": 559501
+          },
+          "Round 2": {
+            "Intake": 23,
+            "AIR": 592448
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904553",
+        "name": "MGM Medical College, Panvel",
+        "state": "Maharashtra",
+        "establishment": 2025,
+        "fees": "2625500",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 85,
+            "AIR": 446811
+          },
+          "Round 2": {
+            "Intake": 13,
+            "AIR": 476251
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "200326",
+        "name": "Hamdard Institute of Medical Sciences & Research, New Delhi",
+        "state": null,
+        "establishment": 2012,
+        "fees": "16,00,000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 52,
+            "AIR": 70072
+          },
+          "Round 2": {
+            "Intake": 15,
+            "AIR": 73637
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904745",
+        "name": "Dhanalakshmi Srinivasan Institute of Medical Sciences and Hospital, Perambalur",
+        "state": "Tamil Nadu",
+        "establishment": 2023,
+        "fees": "24,00,000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 175,
+            "AIR": 1009363
+          },
+          "Round 2": {
+            "Intake": 112,
+            "AIR": 1187466
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904746",
+        "name": "St Peters Medical College, Hospital & Research Institute, Hosur",
+        "state": "Tamil Nadu",
+        "establishment": 2021,
+        "fees": "27,00,000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 230,
+            "AIR": 874702
+          },
+          "Round 2": {
+            "Intake": 85,
+            "AIR": 1034185
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904743",
+        "name": "Chettinad Institute of Medical Education and Research, KGF",
+        "state": null,
+        "establishment": 2026,
+        "fees": "22,22,222",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 100,
+            "AIR": 524239
+          },
+          "Round 2": {
+            "Intake": 45,
+            "AIR": 627750
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904747",
+        "name": "Srinivasan Medical College and Hospital, Samayapuram",
+        "state": "Tamil Nadu",
+        "establishment": 2021,
+        "fees": "25,00,000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": 225,
+            "AIR": 1194179
+          },
+          "Round 2": {
+            "Intake": 87,
+            "AIR": 1153926
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      },
+      {
+        "code": "904766",
+        "name": "Karpaga Vinayaga Institute of Medical Sciences, Maduranthagam",
+        "state": "Tamil Nadu",
+        "establishment": 2009,
+        "fees": "2100000",
+        "type": "Deemed",
+        "rounds": {
+          "Round 1": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Round 2": {
+            "Intake": 150,
+            "AIR": 653339
+          },
+          "Round 3": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          },
+          "Special Stray Vacancy Round": {
+            "Intake": null,
+            "AIR": null
+          }
+        }
+      }
+    ],
     "NRI_P-I": [
       {
         "code": "200324",
