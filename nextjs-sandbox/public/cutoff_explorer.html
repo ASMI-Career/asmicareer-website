@@ -348,12 +348,12 @@
       'Telangana': ['MQ', 'NRI'],
       'Tripura': ['AIQ'],
       'Uttar_Pradesh': ['MQ', 'MINORITY', 'GOVT_BC', 'GOVT_SC_OP', 'GOVT_SC_GL'],
-      'Uttarakhand': ['MQ', 'NRI', 'AIQ'],
+      'Uttarakhand': ['AIQ'],
       'West_Bengal': ['MQ', 'NRI']
     };
     
     function getDeemedCats(inst) {
-       if (inst === 'DEEMED_MBBS') return ['OPEN', 'NRI_P-I', 'NRI_P-II', 'MINORITY'];
+       if (inst === 'DEEMED_MBBS') return ['OPEN', 'NRI_P-I', 'MINORITY'];
        if (inst === 'DEEMED_BDS') return ['OPEN', 'NRI_P1', 'NRI_P2', 'MINORITY'];
        return [];
     }
