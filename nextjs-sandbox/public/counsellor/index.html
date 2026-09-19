@@ -1273,10 +1273,8 @@
         let feesDisplay = '-';
         if (college.fees && college.fees !== '-') {
           let f = String(college.fees).trim();
-          if (f.includes('/-')) {
-             f = f.replace('/-', '');
-             feesDisplay = `₹${f}`;
-          } else if (f.includes(',')) {
+          f = f.replace(/^Rs\.?\s*/i, '').replace(/\/-$/, '').trim();
+          if (f.includes(',')) {
              feesDisplay = `₹${f}`;
           } else {
              const parsed = parseInt(f, 10);
