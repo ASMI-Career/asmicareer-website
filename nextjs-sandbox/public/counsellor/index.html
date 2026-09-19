@@ -985,10 +985,13 @@
                 cats = OPEN_STATE_CATS[folder] || [];
              }
 
+             const isDeemed = selectedCounselling === 'MCC' && selectedInstType.includes('DEEMED');
+             const DEEMED_CAT_LABELS = { 'OPEN': 'Self Financed Merit' };
              cats.forEach(cat => {
                 const isSel = selectedCategory === cat;
                 const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
-                html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat.replace(/_/g, ' ')}</button>`;
+                const label = (isDeemed && DEEMED_CAT_LABELS[cat]) ? DEEMED_CAT_LABELS[cat] : cat.replace(/_/g, ' ');
+                html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${label}</button>`;
              });
              html += `</div>`;
           }
