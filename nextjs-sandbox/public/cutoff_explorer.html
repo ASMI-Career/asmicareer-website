@@ -323,7 +323,8 @@
       // NT1/NT2/NT3 (no underscore) to match the MBBS convention. Both kept
       // side by side so neither year's files become unreachable.
       "GOVT_BDS": {"DEF_1": ["FEMALE", "GENERAL", "OPEN"], "DEF_2": ["FEMALE", "GENERAL", "OPEN"], "DEF_3": ["FEMALE", "GENERAL", "OPEN"], "EWS": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL", "OPEN"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"]},
-      "PRIVATE_BDS": {"AIQ": ["GENERAL"], "IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "GENERAL", "OPEN"], "OPEN": ["FEMALE", "GENERAL", "OPEN"], "SC": ["FEMALE", "GENERAL", "OPEN"], "SEBC": ["FEMALE", "GENERAL", "OPEN"], "ST": ["FEMALE", "GENERAL", "OPEN"], "VJ": ["FEMALE", "GENERAL", "OPEN"]}
+      "PRIVATE_BDS": {"AIQ": ["GENERAL"], "IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "GENERAL", "OPEN"], "OPEN": ["FEMALE", "GENERAL", "OPEN"], "SC": ["FEMALE", "GENERAL", "OPEN"], "SEBC": ["FEMALE", "GENERAL", "OPEN"], "ST": ["FEMALE", "GENERAL", "OPEN"], "VJ": ["FEMALE", "GENERAL", "OPEN"]},
+      "AYUSH_AIQ": {"BAMS": ["GENERAL"], "BHMS": ["GENERAL"], "BUMS": ["GENERAL"]}
     };
 
     const OPEN_STATES = [
@@ -608,7 +609,8 @@
            { id: 'GOVT_MBBS', label: 'Govt MBBS' },
            { id: 'PRIVATE_MBBS', label: 'Private MBBS' },
            { id: 'GOVT_BDS', label: 'Govt BDS' },
-           { id: 'PRIVATE_BDS', label: 'Private BDS' }
+           { id: 'PRIVATE_BDS', label: 'Private BDS' },
+           { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
          quotas.forEach(q => {
             const isSel = mhQuota === q.id;

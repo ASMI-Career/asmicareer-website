@@ -1,0 +1,95 @@
+{
+  "counselling": "MH",
+  "quota_type": "AYUSH_AIQ",
+  "category": "BUMS",
+  "year": 2025,
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": 5104,
+      "name": "A G Unani Medical College, Akkalkuwa, Nandurbar",
+      "establishment": 1997,
+      "fees": "118,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 516445,
+          "SML": 1751,
+          "Score": 275
+        },
+        "Round 2": {
+          "Intake": 6,
+          "AIR": 635582,
+          "SML": 2901,
+          "Score": 240
+        }
+      }
+    },
+    {
+      "code": 5106,
+      "name": "Iqra Education Society's Unani Medical College, Jalgaon",
+      "establishment": 2008,
+      "fees": "92,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 512876,
+          "SML": 1725,
+          "Score": 277
+        },
+        "Round 2": {
+          "Intake": 7,
+          "AIR": 599788,
+          "SML": 2694,
+          "Score": 250
+        }
+      }
+    },
+    {
+      "code": 5109,
+      "name": "Al-Ameen Unani Medical College, Malegaon",
+      "establishment": 1990,
+      "fees": "154,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 566822,
+          "SML": 2066,
+          "Score": 260
+        },
+        "Round 2": {
+          "Intake": 5,
+          "AIR": 628958,
+          "SML": 2866,
+          "Score": 242
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 566041,
+          "SML": 2794,
+          "Score": 260
+        }
+      }
+    },
+    {
+      "code": 5307,
+      "name": "Yunus Fazlani Unani Medical College, Kannad",
+      "establishment": 2022,
+      "fees": "108,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 586161,
+          "SML": 2157,
+          "Score": 254
+        },
+        "Round 2": {
+          "Intake": 4,
+          "AIR": 618838,
+          "SML": 2813,
+          "Score": 245
+        }
+      }
+    }
+  ]
+}

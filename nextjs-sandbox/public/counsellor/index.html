@@ -608,7 +608,8 @@
       "PRIVATE_BAMS": {"NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
       "IQ_BAMS": {"IQ": ["IQ"]},
       "GOVT_BPTH": {"D1": ["FEMALE", "GENERAL"], "D2": ["FEMALE", "GENERAL"], "D3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
-      "PRIVATE_BPTH": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]}
+      "PRIVATE_BPTH": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "AYUSH_AIQ": {"BAMS": ["GENERAL"], "BHMS": ["GENERAL"], "BUMS": ["GENERAL"]}
     };
 
     const OPEN_STATES = [
@@ -941,7 +942,8 @@
            { id: 'PRIVATE_BAMS', label: 'Private BAMS' },
            { id: 'IQ_BAMS', label: 'IQ BAMS' },
            { id: 'GOVT_BPTH', label: 'Govt BPTH' },
-           { id: 'PRIVATE_BPTH', label: 'Private BPTH' }
+           { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
+           { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
          quotas.forEach(q => {
             const isSel = mhQuota === q.id;
@@ -2061,6 +2063,7 @@
       { id: 'IQ_BAMS', label: 'IQ BAMS' },
       { id: 'GOVT_BPTH', label: 'Govt BPTH' },
       { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
+      { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' },
     ];
 
     function openPdfExportModal() {
