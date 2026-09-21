@@ -317,8 +317,8 @@ export default function CollegesDirectory() {
                     <div
                       className="col-card-img"
                       style={
-                        college.photo !== null
-                          ? { backgroundImage: `url(/images/colleges/${college.slug}.jpg)` }
+                        college.photo
+                          ? { backgroundImage: `url(${college.photo})` }
                           : { background: college.photo_placeholder_color || '#1a0040' }
                       }
                     >

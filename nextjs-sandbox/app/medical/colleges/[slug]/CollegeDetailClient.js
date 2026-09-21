@@ -45,18 +45,18 @@ export default function CollegeDetailClient({ college, slug }) {
     );
   }
 
-  const hasPhoto = college.photo !== null;
+  const hasPhoto = Boolean(college.photo);
   const initials = getInitials(college.name);
 
   return (
     <div className="college-page">
-      
+
       {/* 1. HEADER BANNER */}
       <div
         className="detail-banner"
         style={
           hasPhoto
-            ? { backgroundImage: `url(/images/colleges/${college.slug}.jpg)` }
+            ? { backgroundImage: `url(${college.photo})` }
             : { background: college.photo_placeholder_color || 'linear-gradient(135deg, #1a0040, #6a0dad)' }
         }
       >
