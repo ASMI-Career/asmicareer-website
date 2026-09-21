@@ -324,6 +324,10 @@
       // side by side so neither year's files become unreachable.
       "GOVT_BDS": {"DEF_1": ["FEMALE", "GENERAL", "OPEN"], "DEF_2": ["FEMALE", "GENERAL", "OPEN"], "DEF_3": ["FEMALE", "GENERAL", "OPEN"], "EWS": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL", "OPEN"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_2": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "NT_3": ["FEMALE", "OPEN", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "OPEN", "ORPHAN", "PWD"]},
       "PRIVATE_BDS": {"AIQ": ["GENERAL"], "IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "NT_1": ["FEMALE", "OPEN"], "NT_2": ["FEMALE", "OPEN"], "NT_3": ["FEMALE", "OPEN"], "OBC": ["FEMALE", "GENERAL", "OPEN"], "OPEN": ["FEMALE", "GENERAL", "OPEN"], "SC": ["FEMALE", "GENERAL", "OPEN"], "SEBC": ["FEMALE", "GENERAL", "OPEN"], "ST": ["FEMALE", "GENERAL", "OPEN"], "VJ": ["FEMALE", "GENERAL", "OPEN"]},
+      "GOVT_BAMS": {"EWS": ["FEMALE", "GENERAL", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL", "PWD"], "NTC": ["FEMALE", "GENERAL", "PWD"], "NTD": ["FEMALE", "GENERAL", "PWD"], "OBC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "PWD"], "SC": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "PWD"], "ST": ["FEMALE", "GENERAL", "PWD"], "VJ": ["FEMALE", "GENERAL", "PWD"]},
+      "PRIVATE_BAMS": {"IQ": ["GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "GOVT_BPTH": {"D1": ["FEMALE", "GENERAL"], "D2": ["FEMALE", "GENERAL"], "D3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "PRIVATE_BPTH": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
       "AYUSH_AIQ": {"BAMS": ["GENERAL"], "BHMS": ["GENERAL"], "BUMS": ["GENERAL"]}
     };
 
@@ -610,6 +614,10 @@
            { id: 'PRIVATE_MBBS', label: 'Private MBBS' },
            { id: 'GOVT_BDS', label: 'Govt BDS' },
            { id: 'PRIVATE_BDS', label: 'Private BDS' },
+           { id: 'GOVT_BAMS', label: 'Govt BAMS' },
+           { id: 'PRIVATE_BAMS', label: 'Private BAMS' },
+           { id: 'GOVT_BPTH', label: 'Govt BPTH' },
+           { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
            { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
          quotas.forEach(q => {
@@ -621,7 +629,10 @@
 
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
-         const availCats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
+         let availCats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
+         if (currentYear === '2025' && (mhQuota === 'PRIVATE_MBBS' || mhQuota === 'PRIVATE_BDS')) {
+            availCats = availCats.filter(cat => cat !== 'AIQ'); // AIQ only started in 2026
+         }
          availCats.forEach(cat => {
             const isSel = mhCategory === cat;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
@@ -729,6 +740,11 @@
         b.classList.toggle('text-white', isActive);
         b.classList.toggle('text-gray-400', !isActive);
       });
+      if (selectedCounselling === 'MH' && currentYear === '2025' && mhCategory === 'AIQ' && (mhQuota === 'PRIVATE_MBBS' || mhQuota === 'PRIVATE_BDS')) {
+        mhCategory = 'OPEN' in (MH_DATA_MAP[mhQuota] || {}) ? 'OPEN' : Object.keys(MH_DATA_MAP[mhQuota] || {})[0];
+        mhSubType = (MH_DATA_MAP[mhQuota][mhCategory] || [])[0] || 'GENERAL';
+      }
+      renderFilters();
       loadData();
     }
 
