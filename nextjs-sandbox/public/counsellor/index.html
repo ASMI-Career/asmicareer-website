@@ -1183,8 +1183,9 @@
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
 
       const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ'].includes(currentData.category) : ['AIQ', 'IQ'].includes(mhCategory));
+      const isAyushAIQ = isMH && (currentData.quota_type === 'AYUSH_AIQ' || mhQuota === 'AYUSH_AIQ');
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && !isMHNoMerit && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showCSML = isMH && !isMHNoMerit && !isAyushAIQ && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
@@ -1192,7 +1193,15 @@
          const cats = Object.keys(workingColleges[0].categories || {});
          if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
       } else {
-         roundKeys = Object.keys(workingColleges[0].rounds || {});
+         {
+
+           const seen = new Set();
+
+           roundKeys = [];
+
+           (workingColleges || []).forEach(c => Object.keys(c.rounds || {}).forEach(r => { if (!seen.has(r)) { seen.add(r); roundKeys.push(r); } }));
+
+         }
       }
 
       const thead = document.querySelector('thead');
@@ -1860,8 +1869,9 @@
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
       const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ'].includes(currentData.category) : ['AIQ', 'IQ'].includes(mhCategory));
+      const isAyushAIQ = isMH && (currentData.quota_type === 'AYUSH_AIQ' || mhQuota === 'AYUSH_AIQ');
       const showSML = isMH || (isOPEN && !isKarnataka);
-      const showCSML = isMH && !isMHNoMerit && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
+      const showCSML = isMH && !isMHNoMerit && !isAyushAIQ && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
       const showPWD = isMCC && !isDeemed;
 
       let roundKeys = [];
@@ -1869,7 +1879,15 @@
         const cats = Object.keys(workingColleges[0].categories || {});
         if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
       } else {
-        roundKeys = Object.keys(workingColleges[0].rounds || {});
+        {
+
+          const seen = new Set();
+
+          roundKeys = [];
+
+          (workingColleges || []).forEach(c => Object.keys(c.rounds || {}).forEach(r => { if (!seen.has(r)) { seen.add(r); roundKeys.push(r); } }));
+
+        }
       }
       if (!strayVisible) {
         roundKeys = roundKeys.filter(r => {
@@ -2006,7 +2024,15 @@
         const cats = Object.keys(workingColleges[0].categories || {});
         if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
       } else {
-        roundKeys = Object.keys(workingColleges[0].rounds || {});
+        {
+
+          const seen = new Set();
+
+          roundKeys = [];
+
+          (workingColleges || []).forEach(c => Object.keys(c.rounds || {}).forEach(r => { if (!seen.has(r)) { seen.add(r); roundKeys.push(r); } }));
+
+        }
       }
       if (selectedRounds && selectedRounds.length > 0) {
         roundKeys = roundKeys.filter(r => selectedRounds.includes(r));
@@ -2134,7 +2160,15 @@
         const cats = Object.keys(currentData.colleges[0].categories || {});
         if (cats.length > 0) roundKeys = Object.keys(currentData.colleges[0].categories[cats[0]] || {});
       } else {
-        roundKeys = Object.keys(currentData.colleges[0].rounds || {});
+        {
+
+          const seen = new Set();
+
+          roundKeys = [];
+
+          (currentData.colleges || []).forEach(c => Object.keys(c.rounds || {}).forEach(r => { if (!seen.has(r)) { seen.add(r); roundKeys.push(r); } }));
+
+        }
       }
       const isStrayRound = (r) => {
         const rl = r.toLowerCase();
