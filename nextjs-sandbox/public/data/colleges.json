@@ -1,5 +1,141 @@
 [
   {
+    "name": "Maulana Azad Medical College, New Delhi",
+    "slug": "maulana-azad-medical-college-new-delhi",
+    "type": "Government",
+    "state": "Delhi",
+    "city": "New Delhi",
+    "seats": 250,
+    "annual_fees": 2745,
+    "closing_rank_open": null,
+    "nirf_rank": 26,
+    "asmi_recommended": true,
+    "course": "MBBS",
+    "established_year": 1958,
+    "hospital_beds": 2053,
+    "photo": null,
+    "photo_placeholder_color": "#15803d",
+    "contact_phone": "9811161617",
+    "contact_email": "mamcregistrar@gmail.com",
+    "website": "http://www.mamc.ac.in/",
+    "address": "2, Bahadur Shah Zafar Marg, Near Delhi Darwaza, Balmiki Basti, New Delhi, Delhi, 110002",
+    "affiliated_university": "University of Delhi",
+    "opd_daily": 7000,
+    "bond_years": 1,
+    "bond_penalty": 1500000,
+    "hostel_available": "Yes",
+    "asmi_pulse_score": 10.0,
+    "asmi_verdict": null,
+    "description": null,
+    "attached_hospital": "Lok Nayak Hospital, GB Pant Hospital, Guru Nanak Eye Centre",
+    "nearby_airport": "Indira Gandhi Airport (17 KM)",
+    "nearby_railway_station": "Delhi Junction (5.6 KM)",
+    "google_location": "https://maps.app.goo.gl/BMJt6GpnxJSBdDeE9",
+    "pg_courses_availability": "Yes"
+  },
+  {
+    "name": "Symbiosis Medical College For Women, Pune",
+    "slug": "symbiosis-medical-college-for-women-pune",
+    "type": "Deemed",
+    "state": "Maharashtra",
+    "city": "Pune",
+    "seats": 150,
+    "annual_fees": 100000,
+    "closing_rank_open": null,
+    "nirf_rank": null,
+    "asmi_recommended": false,
+    "course": "MBBS",
+    "established_year": 2020,
+    "hospital_beds": 1885,
+    "photo": null,
+    "photo_placeholder_color": "#c2410c",
+    "contact_phone": "9112299167",
+    "contact_email": "admissions@smcw.siu.edu.in",
+    "website": "https://smcw.edu.in/",
+    "address": "Mulshi Road, Lavale, Pune, Maharashtra 412115",
+    "affiliated_university": "Symbiosis International (Deemed University)",
+    "opd_daily": 1500,
+    "bond_years": "No Bond",
+    "bond_penalty": "Not Applicable",
+    "hostel_available": "Yes",
+    "asmi_pulse_score": 9.0,
+    "asmi_verdict": null,
+    "description": null,
+    "attached_hospital": "Symbiosis University Hospital and Research Centre",
+    "nearby_airport": "Pune Airport (25.6 KM)",
+    "nearby_railway_station": "Shivajinagar (16.9 KM)",
+    "google_location": "https://maps.app.goo.gl/8jdASK7jLJSfzKyq5",
+    "pg_courses_availability": "No"
+  },
+  {
+    "name": "Grant Medical College, Mumbai",
+    "slug": "grant-medical-college-mumbai",
+    "type": "Government",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "seats": 250,
+    "annual_fees": 167300,
+    "closing_rank_open": null,
+    "nirf_rank": null,
+    "asmi_recommended": true,
+    "course": "MBBS",
+    "established_year": 1845,
+    "hospital_beds": 605,
+    "photo": null,
+    "photo_placeholder_color": "#15803d",
+    "contact_phone": "9850251351",
+    "contact_email": "gmcacad@gmail.com",
+    "website": "https://gmcjjh.edu.in/",
+    "address": "J.J. Marg, Nagpada, Mumbai, Maharashtra 400008",
+    "affiliated_university": "Maharshtra University of Health Sciences, Nashik",
+    "opd_daily": 4000,
+    "bond_years": "No Bond",
+    "bond_penalty": "Not Applicable",
+    "hostel_available": "Yes",
+    "asmi_pulse_score": 9.0,
+    "asmi_verdict": null,
+    "description": null,
+    "attached_hospital": "JJ Hospital",
+    "nearby_airport": "Domestic Airport (21 KM)",
+    "nearby_railway_station": "Byculla (1.9 KM)",
+    "google_location": "https://maps.app.goo.gl/u5deGtkPEK3uTXVw7",
+    "pg_courses_availability": "Yes"
+  },
+  {
+    "name": "Kasturba Medical College, Manipal",
+    "slug": "kasturba-medical-college-manipal",
+    "type": "Deemed",
+    "state": "Karnataka",
+    "city": "Manipal",
+    "seats": 250,
+    "annual_fees": 1773000,
+    "closing_rank_open": null,
+    "nirf_rank": 10,
+    "asmi_recommended": true,
+    "course": "MBBS",
+    "established_year": 1953,
+    "hospital_beds": 1577,
+    "photo": null,
+    "photo_placeholder_color": "#c2410c",
+    "contact_phone": "9606456069",
+    "contact_email": "dradm@manipal.edu",
+    "website": "https://www.manipal.edu/kmc-manipal.html",
+    "address": "Tiger Circle Road, Madhav Nagar, Eshwar Nagar, Udupi, Karnataka 576104",
+    "affiliated_university": "Manipal Academy of Higher Education, Manipal",
+    "opd_daily": 3000,
+    "bond_years": "No Bond",
+    "bond_penalty": "Not Applicable",
+    "hostel_available": "Yes",
+    "asmi_pulse_score": 10.0,
+    "asmi_verdict": null,
+    "description": null,
+    "attached_hospital": "Kasturba Hospital",
+    "nearby_airport": "Mangalore Airport (60.5 KM)",
+    "nearby_railway_station": "Udupi (4.4 KM)",
+    "google_location": "https://maps.app.goo.gl/GaycyCjcSVQRvd7y9",
+    "pg_courses_availability": "Yes"
+  },
+  {
     "name": "Jawaharlal Institute of Postgraduate Medical Education & Research, Karaikal",
     "slug": "jawaharlal-institute-of-postgraduate-medical-education-research-karaikal",
     "type": "JIPMER",
@@ -68,74 +204,6 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Grant Medical College, Mumbai",
-    "slug": "grant-medical-college-mumbai",
-    "type": "Government",
-    "state": "Maharashtra",
-    "city": "Mumbai",
-    "seats": 250,
-    "annual_fees": null,
-    "closing_rank_open": null,
-    "nirf_rank": null,
-    "asmi_recommended": true,
-    "course": "MBBS",
-    "established_year": null,
-    "hospital_beds": null,
-    "photo": null,
-    "photo_placeholder_color": "#15803d",
-    "contact_phone": null,
-    "contact_email": null,
-    "website": null,
-    "address": null,
-    "affiliated_university": null,
-    "opd_daily": null,
-    "bond_years": null,
-    "bond_penalty": null,
-    "hostel_available": null,
-    "asmi_pulse_score": null,
-    "asmi_verdict": null,
-    "description": null,
-    "attached_hospital": null,
-    "nearby_airport": null,
-    "nearby_railway_station": null,
-    "google_location": null,
-    "pg_courses_availability": null
-  },
-  {
-    "name": "Maulana Azad Medical College, New Delhi",
-    "slug": "maulana-azad-medical-college-new-delhi",
-    "type": "Government",
-    "state": "Delhi",
-    "city": "New Delhi",
-    "seats": 250,
-    "annual_fees": null,
-    "closing_rank_open": null,
-    "nirf_rank": null,
-    "asmi_recommended": true,
-    "course": "MBBS",
-    "established_year": null,
-    "hospital_beds": null,
-    "photo": null,
-    "photo_placeholder_color": "#15803d",
-    "contact_phone": null,
-    "contact_email": null,
-    "website": null,
-    "address": null,
-    "affiliated_university": null,
-    "opd_daily": null,
-    "bond_years": null,
-    "bond_penalty": null,
-    "hostel_available": null,
-    "asmi_pulse_score": null,
-    "asmi_verdict": null,
-    "description": null,
-    "attached_hospital": null,
-    "nearby_airport": null,
-    "nearby_railway_station": null,
-    "google_location": null,
-    "pg_courses_availability": null
-  },
-  {
     "name": "Seth GS Medical College and KEM Hospital, Mumbai",
     "slug": "seth-gs-medical-college-and-kem-hospital-mumbai",
     "type": "Government",
@@ -170,45 +238,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Kasturba Medical College, Manipal",
-    "slug": "kasturba-medical-college-manipal",
-    "type": "Deemed",
-    "state": "Karnataka",
-    "city": "Manipal",
-    "seats": 250,
-    "annual_fees": null,
-    "closing_rank_open": null,
-    "nirf_rank": null,
-    "asmi_recommended": true,
-    "course": "MBBS",
-    "established_year": null,
-    "hospital_beds": null,
-    "photo": null,
-    "photo_placeholder_color": "#c2410c",
-    "contact_phone": null,
-    "contact_email": null,
-    "website": null,
-    "address": null,
-    "affiliated_university": null,
-    "opd_daily": null,
-    "bond_years": null,
-    "bond_penalty": null,
-    "hostel_available": null,
-    "asmi_pulse_score": null,
-    "asmi_verdict": null,
-    "description": null,
-    "attached_hospital": null,
-    "nearby_airport": null,
-    "nearby_railway_station": null,
-    "google_location": null,
-    "pg_courses_availability": null
-  },
-  {
-    "name": "Manipal Tata Medical College,Baridih Jameshedpur",
+    "name": "Manipal Tata Medical College, Jameshedpur",
     "slug": "manipal-tata-medical-college-baridih-jameshedpur",
     "type": "Deemed",
     "state": "Jharkhand",
-    "city": "Baridih Jameshedpur",
+    "city": "Jameshedpur",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -238,11 +272,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "M S RAMAIAH MEDICAL COLLEGE",
+    "name": "M S Ramaiah Medical College, Bangalore",
     "slug": "m-s-ramaiah-medical-college",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "Bengaluru",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -612,11 +646,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "All India Institute of Medical Sciences, Kalyani, Nadia",
+    "name": "All India Institute of Medical Sciences, Kalyani",
     "slug": "all-india-institute-of-medical-sciences-kalyani-nadia",
     "type": "AIIMS",
     "state": "West Bengal",
-    "city": "Nadia",
+    "city": "Kalyani",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -680,11 +714,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "All India Institute of Medical Sciences, Mangalagiri, Vijayawada",
+    "name": "All India Institute of Medical Sciences, Mangalagiri",
     "slug": "all-india-institute-of-medical-sciences-mangalagiri-vijayawada",
     "type": "AIIMS",
-    "state": "Andhra Pradesh",
-    "city": "Vijayawada",
+    "state": "andhra Pradesh",
+    "city": "Mangalagiri",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -714,7 +748,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "All India Institute of Medical Sciences, Nagpur",
+    "name": "All India Institute of Medical Sciences Nagpur",
     "slug": "all-india-institute-of-medical-sciences-nagpur",
     "type": "AIIMS",
     "state": "Maharashtra",
@@ -952,11 +986,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "All India Institute of Medical Sciences, Vijaypur",
-    "slug": "all-india-institute-of-medical-sciences-vijaypur",
+    "name": "All India Institute of Medical Sciences, Jammu",
+    "slug": "all-india-institute-of-medical-sciences-jammu",
     "type": "AIIMS",
     "state": "Jammu & Kashmir",
-    "city": "Vijaypur",
+    "city": "Jammu",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -988,7 +1022,7 @@
   {
     "name": "Institute of Medical Sciences, BHU, Varansi",
     "slug": "institute-of-medical-sciences-bhu-varansi",
-    "type": "Central",
+    "type": "Central University",
     "state": "Uttar Pradesh",
     "city": "Varansi",
     "seats": 100,
@@ -1020,9 +1054,9 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Jawaharlal Nehru Medical College, Aligarh",
+    "name": "Jawaharlal Nehru Medical College, AMU, Aligarh",
     "slug": "jawaharlal-nehru-medical-college-aligarh",
-    "type": "Central",
+    "type": "Central University",
     "state": "Uttar Pradesh",
     "city": "Aligarh",
     "seats": 150,
@@ -1088,11 +1122,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ACSR Govt Medical COllege Nellore",
+    "name": "ACSR Government Medical College, Nellore",
     "slug": "acsr-govt-medical-college-nellore",
     "type": "Government",
-    "state": "Andhra Pradesh",
-    "city": null,
+    "state": "andhra Pradesh",
+    "city": "Nellore",
     "seats": 175,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1122,11 +1156,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ASMC Sonebhadra",
+    "name": "Autonomous State Medical College, Sonebhadra",
     "slug": "asmc-sonebhadra",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Sonebhadra",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1156,11 +1190,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ASSAM MEDICAL COLLEGE",
+    "name": "Assam Medical College, Dibrugarh",
     "slug": "assam-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1190,11 +1224,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AUTONOMOUS STATE MEDICAL COLLEGE AURAIYA",
+    "name": "Autonomous State Medical College, Auraiya",
     "slug": "autonomous-state-medical-college-auraiya",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Auraiya",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1224,11 +1258,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AUTONOMOUS STATE MEDICAL COLLEGE Amethi",
+    "name": "Autonomous State Medical College, Amethi",
     "slug": "autonomous-state-medical-college-amethi",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Amethi",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1258,11 +1292,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AUTONOMOUS STATE MEDICAL COLLEGE KUSHINAGAR UTTAR PRADESH",
+    "name": "Autonomous State Medical College, Kushinagar",
     "slug": "autonomous-state-medical-college-kushinagar-uttar-pradesh",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Kushinagar",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1292,11 +1326,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AUTONOMOUS STATE MEDICAL COLLEGE, KANPUR DEHAT",
+    "name": "Autonomous State Medical College, Kanpur Dehat",
     "slug": "autonomous-state-medical-college-kanpur-dehat",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": "KANPUR DEHAT",
+    "city": "Kanpur Dehat",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1326,11 +1360,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Agartala Government Medical College & GBP Hospital",
+    "name": "Agartala Government Medical College",
     "slug": "agartala-government-medical-college-gbp-hospital",
     "type": "Government",
     "state": "Tripura",
-    "city": null,
+    "city": "Agartala",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1360,10 +1394,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Andaman & Nicobar Islands Institute of Medical Sciences, Port Blair",
+    "name": "andaman & Nicobar Islands Institute of Medical Sciences, Port Blair",
     "slug": "andaman-nicobar-islands-institute-of-medical-sciences-port-blair",
     "type": "Government",
-    "state": "Andaman & Nicobar",
+    "state": "andaman & Nicobar",
     "city": "Port Blair",
     "seats": 114,
     "annual_fees": null,
@@ -1394,10 +1428,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Andhra Medical College, Visakhapatnam",
+    "name": "andhra Medical College, Visakhapatnam",
     "slug": "andhra-medical-college-visakhapatnam",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Visakhapatnam",
     "seats": 250,
     "annual_fees": null,
@@ -1462,11 +1496,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Atal Bihari Vajpayee Institute of Medical Sciences & Dr. Ram Manohar Lohia Hospi",
+    "name": "Atal Bihari Vajpayee Institute of Medical Sciences & Dr. RML Hospital",
     "slug": "atal-bihari-vajpayee-institute-of-medical-sciences-dr-ram-manohar-lohia-hospi",
     "type": "Government",
     "state": "Delhi",
-    "city": null,
+    "city": "New Delhi",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1496,11 +1530,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College Pratapgarh",
+    "name": "Autonomous State Medical College, Pratapgarh",
     "slug": "autonomous-state-medical-college-pratapgarh",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Pratapgarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1530,11 +1564,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College Society Ghazipur",
+    "name": "Autonomous State Medical College, Ghazipur",
     "slug": "autonomous-state-medical-college-society-ghazipur",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Ghazipur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1564,11 +1598,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College Society, Etah, Uttar Pradesh",
+    "name": "Autonomous State Medical College, Etah",
     "slug": "autonomous-state-medical-college-society-etah-uttar-pradesh",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": "Uttar Pradesh",
+    "city": "Etah",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1598,7 +1632,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College Society, Fatehpur",
+    "name": "Autonomous State Medical College, Fatehpur",
     "slug": "autonomous-state-medical-college-society-fatehpur",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -1632,7 +1666,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College Society, Hardoi",
+    "name": "Autonomous State Medical College, Hardoi",
     "slug": "autonomous-state-medical-college-society-hardoi",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -1666,11 +1700,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College kheri UP",
+    "name": "Autonomous State Medical College, Lakhimpur Kheri",
     "slug": "autonomous-state-medical-college-kheri-up",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Lakhimpur Kheri",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1802,11 +1836,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Medical College, Sultanpur, UP",
+    "name": "Autonomous State Medical College, Sultanpur",
     "slug": "autonomous-state-medical-college-sultanpur-up",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": "UP",
+    "city": "Sultanpur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1836,11 +1870,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous State Society Medical College Mirzapur",
+    "name": "Autonomous State Society Medical College, Mirzapur",
     "slug": "autonomous-state-society-medical-college-mirzapur",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Mirzapur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1870,11 +1904,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous state Medical College Lalitpur",
+    "name": "Autonomous State Medical College Lalitpur",
     "slug": "autonomous-state-medical-college-lalitpur",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Lalitpur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1904,11 +1938,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Autonomous state medical College, pilibhit, u.p.",
+    "name": "Autonomous State Medical College, Pilibhit",
     "slug": "autonomous-state-medical-college-pilibhit-u-p",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": "u.p.",
+    "city": "Pilibhit",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -1938,7 +1972,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "B. J. Govt. Medical College, Pune",
+    "name": "B. J. Medical College, Pune",
     "slug": "b-j-govt-medical-college-pune",
     "type": "Government",
     "state": "Maharashtra",
@@ -1972,11 +2006,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "B.J. MEDICAL COLLEGE, AHMEDABAD",
+    "name": "B.J. Medical College, Ahmedabad",
     "slug": "b-j-medical-college-ahmedabad",
     "type": "Government",
     "state": "Gujarat",
-    "city": "AHMEDABAD",
+    "city": "Ahmedabad",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2006,7 +2040,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "BPS Government Medical College for Women, Sonepat",
+    "name": "Bps Government Medical College For Women, Sonepat",
     "slug": "bps-government-medical-college-for-women-sonepat",
     "type": "Government",
     "state": "Haryana",
@@ -2040,7 +2074,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "BRD Medical College, Gorakhpur",
+    "name": "Brd Medical College, Gorakhpur",
     "slug": "brd-medical-college-gorakhpur",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -2074,11 +2108,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Baba Kinaram Autonomous State Medical College",
+    "name": "Baba Kinaram Autonomous State Medical College, Chandauli",
     "slug": "baba-kinaram-autonomous-state-medical-college",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Chandauli",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2108,11 +2142,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Bangalore Medical College and Research Institute Bangalore",
+    "name": "Bangalore Medical College and Research Institute, Bangalore",
     "slug": "bangalore-medical-college-and-research-institute-bangalore",
     "type": "Government",
     "state": "Karnataka",
-    "city": null,
+    "city": "Bengaluru",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2176,11 +2210,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Barasat Government Medical College and Hospital, Banamalipur, West Bengal",
+    "name": "Barasat Government Medical College and Hospital, Banamalipur",
     "slug": "barasat-government-medical-college-and-hospital-banamalipur-west-bengal",
     "type": "Government",
     "state": "West Bengal",
-    "city": "West Bengal",
+    "city": "Banamalipur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2210,11 +2244,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Belagavi Institute of Medical Sciences,Belagavi, Karnataka",
+    "name": "Belagavi Institute of Medical Sciences, Belagavi",
     "slug": "belagavi-institute-of-medical-sciences-belagavi-karnataka",
     "type": "Government",
     "state": "Karnataka",
-    "city": "Karnataka",
+    "city": "Belagavi",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2244,7 +2278,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Bhagwan Mahavir Institute of Medical Sciences, Pawapuri, Nalanda",
+    "name": "Bhagwan Mahavir Institute of Medical Sciences, Nalanda",
     "slug": "bhagwan-mahavir-institute-of-medical-sciences-pawapuri-nalanda",
     "type": "Government",
     "state": "Bihar",
@@ -2278,7 +2312,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Bidar Institute of Medical Sciences,Bidar",
+    "name": "Bidar Institute of Medical Sciences, Bidar",
     "slug": "bidar-institute-of-medical-sciences-bidar",
     "type": "Government",
     "state": "Karnataka",
@@ -2380,11 +2414,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "CHIKKABALLAPUR INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Chikkaballapur Institute of Medical Sciences",
     "slug": "chikkaballapur-institute-of-medical-sciences",
     "type": "Government",
     "state": "Karnataka",
-    "city": null,
+    "city": "Chikkaballapur",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2414,11 +2448,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "CHIKKAMAGALURU INSTITUTE OF MEDICAL SCIENCES, KARNATAKA",
+    "name": "Chikkamagaluru Institute of Medical Sciences",
     "slug": "chikkamagaluru-institute-of-medical-sciences-karnataka",
     "type": "Government",
     "state": "Karnataka",
-    "city": "KARNATAKA",
+    "city": "Chikkamagaluru",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2482,7 +2516,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Chamarajanagar Institute of Medical sciences, Chamarajanagar",
+    "name": "Chamarajanagar Institute of Medical Sciences",
     "slug": "chamarajanagar-institute-of-medical-sciences-chamarajanagar",
     "type": "Government",
     "state": "Karnataka",
@@ -2618,11 +2652,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Chitradurga Medical College and Research Institute, Karnataka",
+    "name": "Chitradurga Medical College and Research Institute",
     "slug": "chitradurga-medical-college-and-research-institute-karnataka",
     "type": "Government",
     "state": "Karnataka",
-    "city": "Karnataka",
+    "city": "Chitradurga",
     "seats": 149,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2652,11 +2686,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Churachandpur Medical College, Manipur",
+    "name": "Churachandpur Medical College",
     "slug": "churachandpur-medical-college-manipur",
     "type": "Government",
     "state": "Manipur",
-    "city": "Manipur",
+    "city": "Churachandpur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2720,7 +2754,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "College of Medicine and JNM Hospital,Kalyani,Nadia",
+    "name": "College of Medicine and Jnm Hospital, Kalyani, Nadia",
     "slug": "college-of-medicine-and-jnm-hospital-kalyani-nadia",
     "type": "Government",
     "state": "West Bengal",
@@ -2788,11 +2822,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Coochbehar Government Medical College & Hospital, Coochbehar, WB",
+    "name": "Coochbehar Government Medical College & Hospital, Coochbehar",
     "slug": "coochbehar-government-medical-college-hospital-coochbehar-wb",
     "type": "Government",
     "state": "West Bengal",
-    "city": "WB",
+    "city": "Coochbehar",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2928,7 +2962,7 @@
     "slug": "diphu-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -2992,11 +3026,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr B R Ambedkar State Institute of Medical Sciences",
+    "name": "Dr B R Ambedkar State Institute of Medical Sciences, Mohali",
     "slug": "dr-b-r-ambedkar-state-institute-of-medical-sciences",
     "type": "Government",
     "state": "Punjab",
-    "city": null,
+    "city": "Mohali",
     "seats": 99,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3128,11 +3162,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr. Radhakrishnan Government Medical College, Hamirpur, H.P",
+    "name": "Dr. Radhakrishnan Government Medical College, Hamirpur",
     "slug": "dr-radhakrishnan-government-medical-college-hamirpur-h-p",
     "type": "Government",
     "state": "Himachal Pradesh",
-    "city": "H.P",
+    "city": "Hamirpur",
     "seats": 120,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3162,11 +3196,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr. Rajendar Prasad Government Medical College, Tanda, H.P",
+    "name": "Dr. Rajendar Prasad Government Medical College, Tanda",
     "slug": "dr-rajendar-prasad-government-medical-college-tanda-h-p",
     "type": "Government",
     "state": "Himachal Pradesh",
-    "city": "H.P",
+    "city": "Tanda",
     "seats": 120,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3298,11 +3332,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC MEDICAL COLLEGE AND HOSPITAL, Andheri",
-    "slug": "esic-medical-college-and-hospital-andheri",
+    "name": "ESIC Medical College and Hospital, Andheri",
+    "slug": "ESIC-medical-college-and-hospital-andheri",
     "type": "Government",
     "state": "Maharashtra",
-    "city": "Andheri",
+    "city": "Mumbai",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3332,11 +3366,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC MEDICAL COLLEGE AND HOSPITAL, FARIDABAD",
-    "slug": "esic-medical-college-and-hospital-faridabad",
+    "name": "ESIC Medical College and Hospital, Faridabad",
+    "slug": "ESIC-medical-college-and-hospital-faridabad",
     "type": "Government",
     "state": "Haryana",
-    "city": "FARIDABAD",
+    "city": "Faridabad",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3366,8 +3400,8 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC MEDICAL COLLEGE AND HOSPITAL, Noida",
-    "slug": "esic-medical-college-and-hospital-noida",
+    "name": "ESIC Medical College and Hospital, Noida",
+    "slug": "ESIC-medical-college-and-hospital-noida",
     "type": "Government",
     "state": "Uttar Pradesh",
     "city": "Noida",
@@ -3400,11 +3434,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC MEDICAL COLLEGE NARODA BAPUNAGAR, AHMEDABAD",
-    "slug": "esic-medical-college-naroda-bapunagar-ahmedabad",
+    "name": "ESIC Medical College, Ahmedabad",
+    "slug": "ESIC-medical-college-naroda-bapunagar-ahmedabad",
     "type": "Government",
     "state": "Gujarat",
-    "city": "AHMEDABAD",
+    "city": "Ahmedabad",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3435,7 +3469,7 @@
   },
   {
     "name": "ESIC Medical College & Hospital, Basaidarapur, New Delhi",
-    "slug": "esic-medical-college-hospital-basaidarapur-new-delhi",
+    "slug": "ESIC-medical-college-hospital-basaidarapur-new-delhi",
     "type": "Government",
     "state": "Delhi",
     "city": "New Delhi",
@@ -3469,7 +3503,7 @@
   },
   {
     "name": "ESIC Medical College & Hospital, Jaipur (Rajasthan)",
-    "slug": "esic-medical-college-hospital-jaipur-rajasthan",
+    "slug": "ESIC-medical-college-hospital-jaipur-rajasthan",
     "type": "Government",
     "state": "Rajasthan",
     "city": "Jaipur (Rajasthan)",
@@ -3503,7 +3537,7 @@
   },
   {
     "name": "ESIC Medical College & Hospital, K.K.Nagar, Chennai",
-    "slug": "esic-medical-college-hospital-k-k-nagar-chennai",
+    "slug": "ESIC-medical-college-hospital-k-k-nagar-chennai",
     "type": "Government",
     "state": "Tamil Nadu",
     "city": "Chennai",
@@ -3536,11 +3570,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC Medical College Ludhiana",
-    "slug": "esic-medical-college-ludhiana",
+    "name": "ESIC Medical College, Ludhiana",
+    "slug": "ESIC-medical-college-ludhiana",
     "type": "Government",
     "state": "Punjab",
-    "city": null,
+    "city": "Ludhiana",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3571,7 +3605,7 @@
   },
   {
     "name": "ESIC Medical College and Hospital, Alwar, Rajasthan",
-    "slug": "esic-medical-college-and-hospital-alwar-rajasthan",
+    "slug": "ESIC-medical-college-and-hospital-alwar-rajasthan",
     "type": "Government",
     "state": "Rajasthan",
     "city": "Rajasthan",
@@ -3605,7 +3639,7 @@
   },
   {
     "name": "ESIC Medical College and Hospital, Beltola",
-    "slug": "esic-medical-college-and-hospital-beltola",
+    "slug": "ESIC-medical-college-and-hospital-beltola",
     "type": "Government",
     "state": "Assam",
     "city": "Beltola",
@@ -3639,7 +3673,7 @@
   },
   {
     "name": "ESIC Medical College and Hospital, Indore, M.P.",
-    "slug": "esic-medical-college-and-hospital-indore-m-p",
+    "slug": "ESIC-medical-college-and-hospital-indore-m-p",
     "type": "Government",
     "state": "Madhya Pradesh",
     "city": "M.P.",
@@ -3672,8 +3706,8 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ESIC Medical College and Hospital, varanasi",
-    "slug": "esic-medical-college-and-hospital-varanasi",
+    "name": "ESIC Medical College and Hospital, Varanasi",
+    "slug": "ESIC-medical-college-and-hospital-varanasi",
     "type": "Government",
     "state": "Uttar Pradesh",
     "city": "varanasi",
@@ -3880,7 +3914,7 @@
     "slug": "fakhruddin-ali-ahmed-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "College",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -3910,7 +3944,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS MEDICAL COLLEGE, NAVSARI",
+    "name": "Gmers Medical College, Navsari",
     "slug": "gmers-medical-college-navsari",
     "type": "Government",
     "state": "Gujarat",
@@ -3944,7 +3978,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College Morbi",
+    "name": "Gmers Medical College Morbi",
     "slug": "gmers-medical-college-morbi",
     "type": "Government",
     "state": "Gujarat",
@@ -3978,11 +4012,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College Panchmahal Godhra",
+    "name": "Gmers Medical College Panchmahal Godhra",
     "slug": "gmers-medical-college-panchmahal-godhra",
     "type": "Government",
     "state": "Gujarat",
-    "city": null,
+    "city": "Godhra",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -4012,7 +4046,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Porbandar",
+    "name": "Gmers Medical College, Porbandar",
     "slug": "gmers-medical-college-porbandar",
     "type": "Government",
     "state": "Gujarat",
@@ -4046,7 +4080,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Rajpipla",
+    "name": "Gmers Medical College, Rajpipla",
     "slug": "gmers-medical-college-rajpipla",
     "type": "Government",
     "state": "Gujarat",
@@ -4080,7 +4114,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERMENT MEDICAL COLLEGE, SHEOPUR",
+    "name": "Goverment Medical College, Sheopur",
     "slug": "goverment-medical-college-sheopur",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -4114,11 +4148,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE & HOSPITAL AMRAVATI",
+    "name": "Government Medical College & Hospital Amravati",
     "slug": "government-medical-college-hospital-amravati",
     "type": "Government",
     "state": "Maharashtra",
-    "city": null,
+    "city": "Hospital Amravati",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -4148,7 +4182,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE AND DISTRICT GENERAL HOSPITAL,RATNAGIRI, MAHARASHTRA",
+    "name": "Government Medical College and District General Hospital,Ratnagiri, Maharashtra",
     "slug": "government-medical-college-and-district-general-hospital-ratnagiri-maharashtra",
     "type": "Government",
     "state": "Maharashtra",
@@ -4182,11 +4216,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE AND HOSPITAL  SUNDARGARH",
+    "name": "Government Medical College and Hospital  Sundargarh",
     "slug": "government-medical-college-and-hospital-sundargarh",
     "type": "Government",
     "state": "Odisha",
-    "city": null,
+    "city": "Hospital  Sundargarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -4216,7 +4250,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE DAUSA",
+    "name": "Government Medical College Dausa",
     "slug": "government-medical-college-dausa",
     "type": "Government",
     "state": "Rajasthan",
@@ -4250,7 +4284,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE HANDWARA",
+    "name": "Government Medical College Handwara",
     "slug": "government-medical-college-handwara",
     "type": "Government",
     "state": "Jammu & Kashmir",
@@ -4284,7 +4318,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE JHUNJHUNU",
+    "name": "Government Medical College Jhunjhunu",
     "slug": "government-medical-college-jhunjhunu",
     "type": "Government",
     "state": "Rajasthan",
@@ -4318,7 +4352,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE KHAMMAM, TELANGANA",
+    "name": "Government Medical College Khammam, Telangana",
     "slug": "government-medical-college-khammam-telangana",
     "type": "Government",
     "state": "Telangana",
@@ -4352,7 +4386,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE KONNI, PATHANAMTHITTA",
+    "name": "Government Medical College Konni, Pathanamthitta",
     "slug": "government-medical-college-konni-pathanamthitta",
     "type": "Government",
     "state": "Kerala",
@@ -4386,10 +4420,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE MACHILIPATNAM",
+    "name": "Government Medical College Machilipatnam",
     "slug": "government-medical-college-machilipatnam",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": null,
     "seats": 150,
     "annual_fees": null,
@@ -4420,7 +4454,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE MANCHERIAL",
+    "name": "Government Medical College Mancherial",
     "slug": "government-medical-college-mancherial",
     "type": "Government",
     "state": "Telangana",
@@ -4454,11 +4488,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE RAJAMAHENDRAVARAM ANDHRA PRADESH",
+    "name": "Government Medical College Rajamahendravaram andhra Pradesh",
     "slug": "government-medical-college-rajamahendravaram-andhra-pradesh",
     "type": "Government",
-    "state": "Andhra Pradesh",
-    "city": null,
+    "state": "andhra Pradesh",
+    "city": "andhra Pradesh",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -4488,7 +4522,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE SINGRAULI",
+    "name": "Government Medical College Singrauli",
     "slug": "government-medical-college-singrauli",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -4522,11 +4556,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE SRI GANGANAGAR",
+    "name": "Government Medical College Sri Ganganagar",
     "slug": "government-medical-college-sri-ganganagar",
     "type": "Government",
     "state": "Rajasthan",
-    "city": null,
+    "city": "Ganganagar",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -4556,7 +4590,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, ALWAR",
+    "name": "Government Medical College, Alwar",
     "slug": "government-medical-college-alwar",
     "type": "Government",
     "state": "Rajasthan",
@@ -4590,10 +4624,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, ELURU, AP",
+    "name": "Government Medical College, Eluru, Ap",
     "slug": "government-medical-college-eluru-ap",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "AP",
     "seats": 150,
     "annual_fees": null,
@@ -4624,7 +4658,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, HANUMANGARH, RAJASTHAN",
+    "name": "Government Medical College, Hanumangarh, Rajasthan",
     "slug": "government-medical-college-hanumangarh-rajasthan",
     "type": "Government",
     "state": "Rajasthan",
@@ -4658,7 +4692,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, KAMAREDDY, TELANGANA",
+    "name": "Government Medical College, Kamareddy, Telangana",
     "slug": "government-medical-college-kamareddy-telangana",
     "type": "Government",
     "state": "Telangana",
@@ -4692,7 +4726,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, KODANGAL, TELANGANA",
+    "name": "Government Medical College, Kodangal, Telangana",
     "slug": "government-medical-college-kodangal-telangana",
     "type": "Government",
     "state": "Telangana",
@@ -4726,7 +4760,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, KUMURAM BHEEM ASIFABAD, TELANGANA",
+    "name": "Government Medical College, Kumuram Bheem Asifabad, Telangana",
     "slug": "government-medical-college-kumuram-bheem-asifabad-telangana",
     "type": "Government",
     "state": "Telangana",
@@ -4760,7 +4794,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, MAHABUBNAGAR",
+    "name": "Government Medical College, Mahabubnagar",
     "slug": "government-medical-college-mahabubnagar",
     "type": "Government",
     "state": "Telangana",
@@ -4794,7 +4828,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, NAGARKURNOOL",
+    "name": "Government Medical College, Nagarkurnool",
     "slug": "government-medical-college-nagarkurnool",
     "type": "Government",
     "state": "Telangana",
@@ -4828,7 +4862,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, NIRMAL",
+    "name": "Government Medical College, Nirmal",
     "slug": "government-medical-college-nirmal",
     "type": "Government",
     "state": "Telangana",
@@ -4862,7 +4896,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, PARBHANI",
+    "name": "Government Medical College, Parbhani",
     "slug": "government-medical-college-parbhani",
     "type": "Government",
     "state": "Maharashtra",
@@ -4896,7 +4930,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, RAJANNA SIRCILLA, TELANGANA",
+    "name": "Government Medical College, Rajanna Sircilla, Telangana",
     "slug": "government-medical-college-rajanna-sircilla-telangana",
     "type": "Government",
     "state": "Telangana",
@@ -4930,7 +4964,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE, SINDHUDURG",
+    "name": "Government Medical College, Sindhudurg",
     "slug": "government-medical-college-sindhudurg",
     "type": "Government",
     "state": "Maharashtra",
@@ -4964,10 +4998,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVERNMENT MEDICAL COLLEGE- VIZIANAGARAM",
+    "name": "Government Medical College- Vizianagaram",
     "slug": "government-medical-college-vizianagaram",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": null,
     "seats": 150,
     "annual_fees": null,
@@ -4998,7 +5032,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVT MEDICAL COLLEGE, NAGAUR",
+    "name": "Govt Medical College, Nagaur",
     "slug": "govt-medical-college-nagaur",
     "type": "Government",
     "state": "Rajasthan",
@@ -5032,7 +5066,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GOVT. MEDICAL COLLEGE KATHUA",
+    "name": "Govt. Medical College Kathua",
     "slug": "govt-medical-college-kathua",
     "type": "Government",
     "state": "Jammu & Kashmir",
@@ -5066,7 +5100,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GSVM Medical College, Kanpur",
+    "name": "Gsvm Medical College, Kanpur",
     "slug": "gsvm-medical-college-kanpur",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -5307,7 +5341,7 @@
     "name": "Goverment Medical College, Kadapa",
     "slug": "goverment-medical-college-kadapa",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Kadapa",
     "seats": 175,
     "annual_fees": null,
@@ -5338,7 +5372,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Allopathic Medical College, Banda, UP",
+    "name": "Government Allopathic Medical College, Banda, Up",
     "slug": "government-allopathic-medical-college-banda-up",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -5406,7 +5440,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Erode Medical College & Hospital, Perundurai (Formerly IRT Perundurai",
+    "name": "Government Erode Medical College & Hospital, Perundurai (Formerly Irt Perundurai",
     "slug": "government-erode-medical-college-hospital-perundurai-formerly-irt-perundurai",
     "type": "Government",
     "state": "Tamil Nadu",
@@ -5474,8 +5508,8 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College & ESIC Hospital, Coimbatore, TamilNadu",
-    "slug": "government-medical-college-esic-hospital-coimbatore-tamilnadu",
+    "name": "Government Medical College & ESIC Hospital, Coimbatore, Tamilnadu",
+    "slug": "government-medical-college-ESIC-hospital-coimbatore-tamilnadu",
     "type": "Government",
     "state": "Tamil Nadu",
     "city": "TamilNadu",
@@ -5508,11 +5542,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College & Hospital (Renamed as Bhima Bhoi Medical College & H",
+    "name": "Government Medical College & Hospital (Renamed As Bhima Bhoi Medical College & H",
     "slug": "government-medical-college-hospital-renamed-as-bhima-bhoi-medical-college-h",
     "type": "Government",
     "state": "Odisha",
-    "city": null,
+    "city": "College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -5542,11 +5576,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College & Hospital (Renamed as Fakir Mohan Medical College &",
+    "name": "Government Medical College & Hospital (Renamed As Fakir Mohan Medical College &",
     "slug": "government-medical-college-hospital-renamed-as-fakir-mohan-medical-college",
     "type": "Government",
     "state": "Odisha",
-    "city": null,
+    "city": "Medical",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -5610,7 +5644,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College & Super facility Hospital, Azamgarh",
+    "name": "Government Medical College & Super Facility Hospital, Azamgarh",
     "slug": "government-medical-college-super-facility-hospital-azamgarh",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -5648,7 +5682,7 @@
     "slug": "government-medical-college-bharat-ratna-shri-atal-bihari-vajpyee-memorial-med",
     "type": "Government",
     "state": "Chattisgarh",
-    "city": null,
+    "city": "Vajpyee",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -5682,7 +5716,7 @@
     "slug": "government-medical-college-institute-of-integrated-medical-sciences-yakkara",
     "type": "Government",
     "state": "Kerala",
-    "city": null,
+    "city": "Medical",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -5886,7 +5920,7 @@
     "slug": "government-medical-college-bhadradri-kothagudem",
     "type": "Government",
     "state": "Telangana",
-    "city": null,
+    "city": "Kothagudem",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -6328,7 +6362,7 @@
     "slug": "government-medical-college-sangareddy-telangana",
     "type": "Government",
     "state": "Telangana",
-    "city": null,
+    "city": "Telangana",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -6429,7 +6463,7 @@
     "name": "Government Medical College Srikakulam",
     "slug": "government-medical-college-srikakulam",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": null,
     "seats": 200,
     "annual_fees": null,
@@ -6528,7 +6562,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College and Hospital, Satara, 467, Sadar Bazar Camp, Satara p",
+    "name": "Government Medical College and Hospital, Satara, 467, Sadar Bazar Camp, Satara P",
     "slug": "government-medical-college-and-hospital-satara-467-sadar-bazar-camp-satara-p",
     "type": "Government",
     "state": "Maharashtra",
@@ -6735,7 +6769,7 @@
     "name": "Government Medical College, Anantapuramu",
     "slug": "government-medical-college-anantapuramu",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Anantapuramu",
     "seats": 200,
     "annual_fees": null,
@@ -7208,7 +7242,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Chhindwara, MP",
+    "name": "Government Medical College, Chhindwara, Mp",
     "slug": "government-medical-college-chhindwara-mp",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -7276,7 +7310,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Datia, MP",
+    "name": "Government Medical College, Datia, Mp",
     "slug": "government-medical-college-datia-mp",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -7990,7 +8024,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Khandwa, MP",
+    "name": "Government Medical College, Khandwa, Mp",
     "slug": "government-medical-college-khandwa-mp",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -8704,10 +8738,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Paderu, Visakhapatnam, AP",
+    "name": "Government Medical College, Paderu, Visakhapatnam, Ap",
     "slug": "government-medical-college-paderu-visakhapatnam-ap",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "AP",
     "seats": 50,
     "annual_fees": null,
@@ -9010,7 +9044,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Shahdol, MP",
+    "name": "Government Medical College, Shahdol, Mp",
     "slug": "government-medical-college-shahdol-mp",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -9044,7 +9078,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Shahjahanpur, UP",
+    "name": "Government Medical College, Shahjahanpur, Up",
     "slug": "government-medical-college-shahjahanpur-up",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -9350,7 +9384,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical College, Vidisha, MP",
+    "name": "Government Medical College, Vidisha, Mp",
     "slug": "government-medical-college-vidisha-mp",
     "type": "Government",
     "state": "Madhya Pradesh",
@@ -9622,7 +9656,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical college Haridwar",
+    "name": "Government Medical College Haridwar",
     "slug": "government-medical-college-haridwar",
     "type": "Government",
     "state": "Uttarakhand",
@@ -9656,11 +9690,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical college Sawai Madhopur",
+    "name": "Government Medical College Sawai Madhopur",
     "slug": "government-medical-college-sawai-madhopur",
     "type": "Government",
     "state": "Rajasthan",
-    "city": null,
+    "city": "Madhopur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -9690,7 +9724,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical college, Jajpur (JKMC), Odisha",
+    "name": "Government Medical College, Jajpur (Jkmc), Odisha",
     "slug": "government-medical-college-jajpur-jkmc-odisha",
     "type": "Government",
     "state": "Odisha",
@@ -9724,7 +9758,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government Medical college, Sirohi, Rajasthan",
+    "name": "Government Medical College, Sirohi, Rajasthan",
     "slug": "government-medical-college-sirohi-rajasthan",
     "type": "Government",
     "state": "Rajasthan",
@@ -9761,7 +9795,7 @@
     "name": "Government Siddhartha Medical College, Vijayawada",
     "slug": "government-siddhartha-medical-college-vijayawada",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Vijayawada",
     "seats": 175,
     "annual_fees": null,
@@ -9928,11 +9962,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government medical college, Nandyal, Andhra Pradesh",
+    "name": "Government Medical College, Nandyal, andhra Pradesh",
     "slug": "government-medical-college-nandyal-andhra-pradesh",
     "type": "Government",
-    "state": "Andhra Pradesh",
-    "city": "Andhra Pradesh",
+    "state": "andhra Pradesh",
+    "city": "andhra Pradesh",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -9962,7 +9996,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Government medical college, Tonk",
+    "name": "Government Medical College, Tonk",
     "slug": "government-medical-college-tonk",
     "type": "Government",
     "state": "Rajasthan",
@@ -9996,10 +10030,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Governmet Medical College, Ongole (previously, Rajiv Gandhi Institute of Medical Sciences,Ongole, AP)",
+    "name": "Governmet Medical College, Ongole (Previously, Rajiv Gandhi Institute of Medical Sciences,Ongole, Ap)",
     "slug": "governmet-medical-college-ongole-previously-rajiv-gandhi-institute-of-medical-sc",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "AP)",
     "seats": 150,
     "annual_fees": null,
@@ -10271,7 +10305,7 @@
     "name": "Guntur Medical College, Guntur",
     "slug": "guntur-medical-college-guntur",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Guntur",
     "seats": 250,
     "annual_fees": null,
@@ -10370,7 +10404,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "HASSAN INSTITUTE OF MEDICAL SCIENCES, HASSAN",
+    "name": "Hassan Institute of Medical Sciences, Hassan",
     "slug": "hassan-institute-of-medical-sciences-hassan",
     "type": "Government",
     "state": "Karnataka",
@@ -10404,11 +10438,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "HAVERI INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Haveri Institute of Medical Sciences",
     "slug": "haveri-institute-of-medical-sciences",
     "type": "Government",
     "state": "Karnataka",
-    "city": null,
+    "city": "Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -10438,7 +10472,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "HAZARIBAGH MEDICAL COLLEGE HAZARIBAGH",
+    "name": "Hazaribagh Medical College Hazaribagh",
     "slug": "hazaribagh-medical-college-hazaribagh",
     "type": "Government",
     "state": "Jharkhand",
@@ -10642,7 +10676,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JANNAYAK KARPOORI THAKUR MEDICAL COLLEGE AND HOSPITAL, MADHEPURA, BIHAR",
+    "name": "Jannayak Karpoori Thakur Medical College and Hospital, Madhepura, Bihar",
     "slug": "jannayak-karpoori-thakur-medical-college-and-hospital-madhepura-bihar",
     "type": "Government",
     "state": "Bihar",
@@ -10714,7 +10748,7 @@
     "slug": "jawaharlal-nehru-institute-of-medical-sciences",
     "type": "Government",
     "state": "Manipur",
-    "city": null,
+    "city": "Medical Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -10846,7 +10880,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Jhargram Government Medical College And Hospital, WB",
+    "name": "Jhargram Government Medical College and Hospital, Wb",
     "slug": "jhargram-government-medical-college-and-hospital-wb",
     "type": "Government",
     "state": "West Bengal",
@@ -10884,7 +10918,7 @@
     "slug": "jorhat-medical-college-and-hospital",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Hospital",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -11016,7 +11050,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Kalyan Singh Government medical college, Bulandshahr, UP",
+    "name": "Kalyan Singh Government Medical College, Bulandshahr, Up",
     "slug": "kalyan-singh-government-medical-college-bulandshahr-up",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -11050,7 +11084,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KanyaKumari Government Medical College, Asaripallam",
+    "name": "Kanyakumari Government Medical College, Asaripallam",
     "slug": "kanyakumari-government-medical-college-asaripallam",
     "type": "Government",
     "state": "Tamil Nadu",
@@ -11325,7 +11359,7 @@
     "name": "Kurnool Medical College, Kurnool",
     "slug": "kurnool-medical-college-kurnool",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Kurnool",
     "seats": 250,
     "annual_fees": null,
@@ -11356,11 +11390,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "LAKHIMPUR MEDICAL COLLEGE",
+    "name": "Lakhimpur Medical College",
     "slug": "lakhimpur-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -11390,7 +11424,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "LLRM Medical College, Meerut",
+    "name": "Llrm Medical College, Meerut",
     "slug": "llrm-medical-college-meerut",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -11458,7 +11492,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Late Shri Baliram Kashyap Memorial NDMC Govt. Medical College, Jagdalpur",
+    "name": "Late Shri Baliram Kashyap Memorial Ndmc Govt. Medical College, Jagdalpur",
     "slug": "late-shri-baliram-kashyap-memorial-ndmc-govt-medical-college-jagdalpur",
     "type": "Government",
     "state": "Chattisgarh",
@@ -11530,7 +11564,7 @@
     "slug": "late-bisahu-das-mahant-memorial-medical-college-korba-c-g",
     "type": "Government",
     "state": "Chattisgarh",
-    "city": null,
+    "city": "Korba",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -11662,11 +11696,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MAHATMA VIDUR AUTONOMOUS STATE MEDICAL COLLEGE BIJNOR  UP",
+    "name": "Mahatma Vidur Autonomous State Medical College Bijnor  Up",
     "slug": "mahatma-vidur-autonomous-state-medical-college-bijnor-up",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -11696,7 +11730,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MEDICAL COLLEGE, BARODA",
+    "name": "Medical College, Baroda",
     "slug": "medical-college-baroda",
     "type": "Government",
     "state": "Gujarat",
@@ -11730,7 +11764,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MKCG Medical College, Berhampur",
+    "name": "Mkcg Medical College, Berhampur",
     "slug": "mkcg-medical-college-berhampur",
     "type": "Government",
     "state": "Odisha",
@@ -11764,7 +11798,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MP SHAH MEDICAL COLLEGE, JAMNAGAR",
+    "name": "Mp Shah Medical College, Jamnagar",
     "slug": "mp-shah-medical-college-jamnagar",
     "type": "Government",
     "state": "Gujarat",
@@ -11798,7 +11832,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MYSORE MEDICAL COLLEGE AND RESEARCH INSTITUTE, MYSURU",
+    "name": "Mysore Medical College and Research Institute, Mysuru",
     "slug": "mysore-medical-college-and-research-institute-mysuru",
     "type": "Government",
     "state": "Karnataka",
@@ -12308,7 +12342,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "NAMO Medical Education and Research Institute, Silvassa",
+    "name": "Namo Medical Education and Research Institute, Silvassa",
     "slug": "namo-medical-education-and-research-institute-silvassa",
     "type": "Government",
     "state": "Dadra and Nagar Haveli",
@@ -12380,7 +12414,7 @@
     "slug": "nagaon-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -12682,7 +12716,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PABITRA MOHAN PRADHAN MEDICAL COLLEGE, TALCHER",
+    "name": "Pabitra Mohan Pradhan Medical College, Talcher",
     "slug": "pabitra-mohan-pradhan-medical-college-talcher",
     "type": "Government",
     "state": "Odisha",
@@ -12716,7 +12750,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PT NEKI RAM SHARMA GOVERNMENT MEDICAL COLLEGE, BHIWANI",
+    "name": "Pt Neki Ram Sharma Government Medical College, Bhiwani",
     "slug": "pt-neki-ram-sharma-government-medical-college-bhiwani",
     "type": "Government",
     "state": "Haryana",
@@ -12750,7 +12784,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Pandit deendayal Upadhyay Medical College, Rajkot",
+    "name": "Pandit Deendayal Upadhyay Medical College, Rajkot",
     "slug": "pandit-deendayal-upadhyay-medical-college-rajkot",
     "type": "Government",
     "state": "Gujarat",
@@ -12856,7 +12890,7 @@
     "slug": "prafulla-chandra-sen-government-medical-college-and-hospital",
     "type": "Government",
     "state": "West Bengal",
-    "city": null,
+    "city": "College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -12890,7 +12924,7 @@
     "slug": "pragjyotishpur-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -13060,7 +13094,7 @@
     "slug": "purulia-government-medical-college-hospital",
     "type": "Government",
     "state": "West Bengal",
-    "city": null,
+    "city": "& Hospital",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -13124,10 +13158,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RANGARAYA MEDICAL COLLEGE, KAKINADA",
+    "name": "Rangaraya Medical College, Kakinada",
     "slug": "rangaraya-medical-college-kakinada",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "KAKINADA",
     "seats": 250,
     "annual_fees": null,
@@ -13158,7 +13192,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RG Kar Medical College, Kolkata",
+    "name": "Rg Kar Medical College, Kolkata",
     "slug": "rg-kar-medical-college-kolkata",
     "type": "Government",
     "state": "West Bengal",
@@ -13192,7 +13226,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RUHS College of Medical Sciences, Jaipur",
+    "name": "Ruhs College of Medical Sciences, Jaipur",
     "slug": "ruhs-college-of-medical-sciences-jaipur",
     "type": "Government",
     "state": "Rajasthan",
@@ -13226,7 +13260,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Raichur Institute Of Medical Science, Raichur",
+    "name": "Raichur Institute of Medical Science, Raichur",
     "slug": "raichur-institute-of-medical-science-raichur",
     "type": "Government",
     "state": "Karnataka",
@@ -13396,7 +13430,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Rajiv Gandhi Institute of Medical Sciences, adilabad",
+    "name": "Rajiv Gandhi Institute of Medical Sciences, Adilabad",
     "slug": "rajiv-gandhi-institute-of-medical-sciences-adilabad",
     "type": "Government",
     "state": "Telangana",
@@ -13464,7 +13498,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Rajkiya Allopathic Medical College, Bahraich, UP",
+    "name": "Rajkiya Allopathic Medical College, Bahraich, Up",
     "slug": "rajkiya-allopathic-medical-college-bahraich-up",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -13570,7 +13604,7 @@
     "slug": "regional-institute-of-medical-sciences",
     "type": "Government",
     "state": "Manipur",
-    "city": null,
+    "city": "Sciences",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -13637,7 +13671,7 @@
     "name": "S V Medical College, Tirupati",
     "slug": "s-v-medical-college-tirupati",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Tirupati",
     "seats": 240,
     "annual_fees": null,
@@ -13668,7 +13702,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SCB Medical College, Cuttack",
+    "name": "Scb Medical College, Cuttack",
     "slug": "scb-medical-college-cuttack",
     "type": "Government",
     "state": "Odisha",
@@ -13702,7 +13736,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SMS Medical College, Jaipur",
+    "name": "Sms Medical College, Jaipur",
     "slug": "sms-medical-college-jaipur",
     "type": "Government",
     "state": "Rajasthan",
@@ -13736,7 +13770,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SRTR Medical College, Ambajogai",
+    "name": "Srtr Medical College, Ambajogai",
     "slug": "srtr-medical-college-ambajogai",
     "type": "Government",
     "state": "Maharashtra",
@@ -13770,10 +13804,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SVIMS-SRI PADMAVATHI MEDICAL COLLEGE FOR WOMEN, SVIMS CAMPUS, ALIPIRI ROAD, TIRU",
+    "name": "Svims-Sri Padmavathi Medical College For Women, Svims Campus, Alipiri Road, Tiru",
     "slug": "svims-sri-padmavathi-medical-college-for-women-svims-campus-alipiri-road-tiru",
     "type": "Government",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "TIRU",
     "seats": 175,
     "annual_fees": null,
@@ -13974,7 +14008,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Shaikh-UL-Hind Maulana Mahmood Hasan Medical College, Saharanpur",
+    "name": "Shaikh-Ul-Hind Maulana Mahmood Hasan Medical College, Saharanpur",
     "slug": "shaikh-ul-hind-maulana-mahmood-hasan-medical-college-saharanpur",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -14008,7 +14042,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Sher-I-Kashmir Instt. Of Medical Sciences, Srinagar",
+    "name": "Sher-I-Kashmir Instt. of Medical Sciences, Srinagar",
     "slug": "sher-i-kashmir-instt-of-medical-sciences-srinagar",
     "type": "Government",
     "state": "Jammu & Kashmir",
@@ -14046,7 +14080,7 @@
     "slug": "shillong-medical-college",
     "type": "Government",
     "state": "Meghalaya",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14114,7 +14148,7 @@
     "slug": "shri-atal-bihari-vajapayee-medical-college-and-research-institute-bengaluru",
     "type": "Government",
     "state": "Karnataka",
-    "city": null,
+    "city": "Research",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14246,7 +14280,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Shri Lal Bahadur Shastri Government Medical College, Mandi, HP",
+    "name": "Shri Lal Bahadur Shastri Government Medical College, Mandi, Hp",
     "slug": "shri-lal-bahadur-shastri-government-medical-college-mandi-hp",
     "type": "Government",
     "state": "Himachal Pradesh",
@@ -14382,7 +14416,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Soban Singh jeena Government institute of Medical science & Research, Almora",
+    "name": "Soban Singh Jeena Government Institute of Medical Science & Research, Almora",
     "slug": "soban-singh-jeena-government-institute-of-medical-science-research-almora",
     "type": "Government",
     "state": "Uttarakhand",
@@ -14590,7 +14624,7 @@
     "slug": "tamralipto-government-medical-college-hospital",
     "type": "Government",
     "state": "West Bengal",
-    "city": null,
+    "city": "& Hospital",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14624,7 +14658,7 @@
     "slug": "tezpur-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 125,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14794,7 +14828,7 @@
     "slug": "tinsukia-medical-college",
     "type": "Government",
     "state": "Assam",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14930,7 +14964,7 @@
     "slug": "uma-nath-singh-autonomous-state-medical-college-society-jaunpur",
     "type": "Government",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -14960,7 +14994,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "University College of Medical Sciences & GTB Hospital, New Delhi",
+    "name": "University College of Medical Sciences & Gtb Hospital, New Delhi",
     "slug": "university-college-of-medical-sciences-gtb-hospital-new-delhi",
     "type": "Government",
     "state": "Delhi",
@@ -14994,7 +15028,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Uttar Pradesh University of Medical Sciences, (Prev. UP Rural Inst.of Med.Sc&R)",
+    "name": "Uttar Pradesh University of Medical Sciences, (Prev. Up Rural Inst.of Med.Sc&R)",
     "slug": "uttar-pradesh-university-of-medical-sciences-prev-up-rural-inst-of-med-sc-r",
     "type": "Government",
     "state": "Uttar Pradesh",
@@ -15168,7 +15202,7 @@
     "slug": "virendra-kumar-sakhlecha-government-medical-college",
     "type": "Government",
     "state": "Madhya Pradesh",
-    "city": null,
+    "city": "Medical College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -15198,11 +15232,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "YADGIRI INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Yadgiri Institute of Medical Sciences",
     "slug": "yadgiri-institute-of-medical-sciences",
     "type": "Government",
     "state": "Karnataka",
-    "city": null,
+    "city": "Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -15232,11 +15266,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ZORAM MEDICAL COLLEGE",
+    "name": "Zoram Medical College",
     "slug": "zoram-medical-college",
     "type": "Government",
     "state": "Mizoram",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -15266,7 +15300,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "government medical college,wanaparthy",
+    "name": "Government Medical College,Wanaparthy",
     "slug": "government-medical-college-wanaparthy",
     "type": "Government",
     "state": "Telangana",
@@ -15300,7 +15334,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS MEDICAL COLLEGE GANDHINAGAR",
+    "name": "Gmers Medical College Gandhinagar",
     "slug": "gmers-medical-college-gandhinagar",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15334,11 +15368,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS MEDICAL COLLEGE GOTRI VADODARA",
+    "name": "Gmers Medical College Gotri Vadodara",
     "slug": "gmers-medical-college-gotri-vadodara",
     "type": "Govt. Society",
     "state": "Gujarat",
-    "city": null,
+    "city": "Vadodara",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -15368,7 +15402,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS MEDICAL COLLEGE, VALSAD",
+    "name": "Gmers Medical College, Valsad",
     "slug": "gmers-medical-college-valsad",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15402,7 +15436,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Dharpur Patan",
+    "name": "Gmers Medical College, Dharpur Patan",
     "slug": "gmers-medical-college-dharpur-patan",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15436,7 +15470,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Hadiyol, Himmatnagar",
+    "name": "Gmers Medical College, Hadiyol, Himmatnagar",
     "slug": "gmers-medical-college-hadiyol-himmatnagar",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15470,7 +15504,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Junagadh",
+    "name": "Gmers Medical College, Junagadh",
     "slug": "gmers-medical-college-junagadh",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15504,7 +15538,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Sola, Ahmedabad",
+    "name": "Gmers Medical College, Sola, Ahmedabad",
     "slug": "gmers-medical-college-sola-ahmedabad",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15538,7 +15572,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GMERS Medical College, Vadnagar, Mehsana",
+    "name": "Gmers Medical College, Vadnagar, Mehsana",
     "slug": "gmers-medical-college-vadnagar-mehsana",
     "type": "Govt. Society",
     "state": "Gujarat",
@@ -15708,7 +15742,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ACS Medical College and Hospital, Chennai",
+    "name": "Acs Medical College and Hospital, Chennai",
     "slug": "acs-medical-college-and-hospital-chennai",
     "type": "Deemed",
     "state": "Tamil Nadu",
@@ -15742,7 +15776,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AMRITA SCHOOL OF MEDICINE, FARIDABAD",
+    "name": "Amrita School of Medicine, Faridabad",
     "slug": "amrita-school-of-medicine-faridabad",
     "type": "Deemed",
     "state": "Haryana",
@@ -15848,7 +15882,7 @@
     "slug": "bhaarat-medical-college-hospital",
     "type": "Deemed",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "Hospital",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -16048,11 +16082,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr D Y Patil Medical College Hospital and Research Centre Pimpri pune",
+    "name": "Dr D Y Patil Medical College Hospital and Research Centre Pimpri Pune",
     "slug": "dr-d-y-patil-medical-college-hospital-and-research-centre-pimpri-pune",
     "type": "Deemed",
     "state": "Maharashtra",
-    "city": null,
+    "city": "Centre",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -16150,10 +16184,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GITAM Institute of Medical Sciences and Research, Visakhapatnam",
+    "name": "Gitam Institute of Medical Sciences and Research, Visakhapatnam",
     "slug": "gitam-institute-of-medical-sciences-and-research-visakhapatnam",
     "type": "Deemed",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Visakhapatnam",
     "seats": 150,
     "annual_fees": null,
@@ -16218,7 +16252,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Hamdard Institute of Medical Sciences & Research, Guru Ravidas marg, Hamdard Nag",
+    "name": "Hamdard Institute of Medical Sciences & Research, Guru Ravidas Marg, Hamdard Nag",
     "slug": "hamdard-institute-of-medical-sciences-research-guru-ravidas-marg-hamdard-nag",
     "type": "Deemed",
     "state": "Delhi",
@@ -16252,11 +16286,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Institute of Medical Sciences and SUM Hospital Campus II",
+    "name": "Institute of Medical Sciences and Sum Hospital Campus Ii",
     "slug": "institute-of-medical-sciences-and-sum-hospital-campus-ii",
     "type": "Deemed",
     "state": "Odisha",
-    "city": null,
+    "city": "Hospital",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -16286,7 +16320,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Instt. of Medical Sciences and SUM Hospital",
+    "name": "Instt. of Medical Sciences and Sum Hospital",
     "slug": "instt-of-medical-sciences-and-sum-hospital",
     "type": "Deemed",
     "state": "Odisha",
@@ -16320,7 +16354,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "J R Medical College And Hospital, Villupuram, Tamil Nadu",
+    "name": "J R Medical College and Hospital, Villupuram, Tamil Nadu",
     "slug": "j-r-medical-college-and-hospital-villupuram-tamil-nadu",
     "type": "Deemed",
     "state": "Tamil Nadu",
@@ -16354,7 +16388,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JSS Medical College, Mysore",
+    "name": "Jss Medical College, Mysore",
     "slug": "jss-medical-college-mysore",
     "type": "Deemed",
     "state": "Karnataka",
@@ -16388,11 +16422,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Jagadguru Gangadhar Mahaswamigalu Moorusavirmath Medical College JGMMMC",
+    "name": "Jagadguru Gangadhar Mahaswamigalu Moorusavirmath Medical College Jgmmmc",
     "slug": "jagadguru-gangadhar-mahaswamigalu-moorusavirmath-medical-college-jgmmmc",
     "type": "Deemed",
     "state": "Karnataka",
-    "city": null,
+    "city": "Medical",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -16490,7 +16524,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "K.S.HEGDE MEDICAL ACADEMY",
+    "name": "K.S.Hegde Medical Academy",
     "slug": "k-s-hegde-medical-academy",
     "type": "Deemed",
     "state": "Karnataka",
@@ -16524,7 +16558,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KASTURBA MEDICAL COLLEGE MANGALORE",
+    "name": "Kasturba Medical College Mangalore",
     "slug": "kasturba-medical-college-mangalore",
     "type": "Deemed",
     "state": "Karnataka",
@@ -16626,7 +16660,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MAHATMA GANDHI MISSIONS MEDICAL COLLEGE, KAMOTHE",
+    "name": "Mahatma Gandhi Missions Medical College, Kamothe",
     "slug": "mahatma-gandhi-missions-medical-college-kamothe",
     "type": "Deemed",
     "state": "Maharashtra",
@@ -16660,7 +16694,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MGM Medical College, Vashi, Navi Mumbai",
+    "name": "Mgm Medical College, Vashi, Navi Mumbai",
     "slug": "mgm-medical-college-vashi-navi-mumbai",
     "type": "Deemed",
     "state": "Maharashtra",
@@ -16694,7 +16728,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MGM Medical College,Nerul,Navi Mumbai",
+    "name": "Mgm Medical College,Nerul,Navi Mumbai",
     "slug": "mgm-medical-college-nerul-navi-mumbai",
     "type": "Deemed",
     "state": "Maharashtra",
@@ -16728,7 +16762,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Maharishi Markandeshwar Institute Of Medical Sciences & Research, Mullana, Ambala",
+    "name": "Maharishi Markandeshwar Institute of Medical Sciences & Research, Mullana, Ambala",
     "slug": "maharishi-markandeshwar-institute-of-medical-sciences-research-mullana-ambala",
     "type": "Deemed",
     "state": "Haryana",
@@ -16898,7 +16932,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Mallareddy Medical College for Women, Hyderabad",
+    "name": "Mallareddy Medical College For Women, Hyderabad",
     "slug": "mallareddy-medical-college-for-women-hyderabad",
     "type": "Deemed",
     "state": "Telangana",
@@ -17004,7 +17038,7 @@
     "slug": "rajarajeswari-medical-college-hospital",
     "type": "Deemed",
     "state": "Karnataka",
-    "city": null,
+    "city": "Hospital",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -17068,7 +17102,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SBKS Medical Instt. & Research Centre, Vadodra",
+    "name": "Sbks Medical Instt. & Research Centre, Vadodra",
     "slug": "sbks-medical-instt-research-centre-vadodra",
     "type": "Deemed",
     "state": "Gujarat",
@@ -17102,7 +17136,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SRM Medical College Hospital and Research Centre",
+    "name": "Srm Medical College Hospital and Research Centre",
     "slug": "srm-medical-college-hospital-and-research-centre",
     "type": "Deemed",
     "state": "Tamil Nadu",
@@ -17310,7 +17344,7 @@
     "slug": "sri-devaraj-urs-medical-college",
     "type": "Deemed",
     "state": "Karnataka",
-    "city": null,
+    "city": "College",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -17442,7 +17476,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Sri siddhartha Institute of Medical Sciences & Research Centre, Bangalore",
+    "name": "Sri Siddhartha Institute of Medical Sciences & Research Centre, Bangalore",
     "slug": "sri-siddhartha-institute-of-medical-sciences-research-centre-bangalore",
     "type": "Deemed",
     "state": "Karnataka",
@@ -17476,45 +17510,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Symbiosis Medical College for Women, Pune",
-    "slug": "symbiosis-medical-college-for-women-pune",
-    "type": "Deemed",
-    "state": "Maharashtra",
-    "city": "Pune",
-    "seats": 150,
-    "annual_fees": null,
-    "closing_rank_open": null,
-    "nirf_rank": null,
-    "asmi_recommended": false,
-    "course": "MBBS",
-    "established_year": null,
-    "hospital_beds": null,
-    "photo": null,
-    "photo_placeholder_color": "#c2410c",
-    "contact_phone": null,
-    "contact_email": null,
-    "website": null,
-    "address": null,
-    "affiliated_university": null,
-    "opd_daily": null,
-    "bond_years": null,
-    "bond_penalty": null,
-    "hostel_available": null,
-    "asmi_pulse_score": null,
-    "asmi_verdict": null,
-    "description": null,
-    "attached_hospital": null,
-    "nearby_airport": null,
-    "nearby_railway_station": null,
-    "google_location": null,
-    "pg_courses_availability": null
-  },
-  {
-    "name": "VELS Medical College & Hospital",
+    "name": "Vels Medical College & Hospital",
     "slug": "vels-medical-college-hospital",
     "type": "Deemed",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "Hospital",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -17680,7 +17680,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ABHISHEK I MISHRA MEMORIAL MEDICAL COLLEGE AND RESEARCH, DURG, CHHATTISGARH",
+    "name": "Abhishek I Mishra Memorial Medical College and Research, Durg, Chhattisgarh",
     "slug": "abhishek-i-mishra-memorial-medical-college-and-research-durg-chhattisgarh",
     "type": "Private",
     "state": "Chattisgarh",
@@ -17714,7 +17714,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ACPM Medical College, Dhule",
+    "name": "Acpm Medical College, Dhule",
     "slug": "acpm-medical-college-dhule",
     "type": "Private",
     "state": "Maharashtra",
@@ -17748,11 +17748,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "AJAY SANGAAL INSTITUTE OF MEDICAL SCIENCES & RESEARCH AND AYUSHMAAN HOSPITAL",
+    "name": "Ajay Sangaal Institute of Medical Sciences & Research and Ayushmaan Hospital",
     "slug": "ajay-sangaal-institute-of-medical-sciences-research-and-ayushmaan-hospital",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "and",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -17782,7 +17782,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ARUNDATHI INSTITUTE OF MEDICAL SCIENCES, MALKAJGIRI, TELANGANA",
+    "name": "Arundathi Institute of Medical Sciences, Malkajgiri, Telangana",
     "slug": "arundathi-institute-of-medical-sciences-malkajgiri-telangana",
     "type": "Private",
     "state": "Telangana",
@@ -17922,7 +17922,7 @@
     "slug": "adichunchanagiri-institute-of-medical-sciences-bellur",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "Sciences Bellur",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -18091,7 +18091,7 @@
     "name": "Alluri Sitaram Raju Academy of Medical Sciences, Eluru",
     "slug": "alluri-sitaram-raju-academy-of-medical-sciences-eluru",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Eluru",
     "seats": 250,
     "annual_fees": null,
@@ -18295,8 +18295,8 @@
     "name": "Anna Gowri Medical College and Hospital",
     "slug": "anna-gowri-medical-college-and-hospital",
     "type": "Private",
-    "state": "Andhra Pradesh",
-    "city": null,
+    "state": "andhra Pradesh",
+    "city": "and Hospital",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -18397,7 +18397,7 @@
     "name": "Apollo Institute of Medical Sciences and Research, Chittoor",
     "slug": "apollo-institute-of-medical-sciences-and-research-chittoor",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Chittoor",
     "seats": 150,
     "annual_fees": null,
@@ -18500,7 +18500,7 @@
     "slug": "arunai-medical-college-and-hospital",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "Hospital",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -18530,7 +18530,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Arya Medical College & Hospital (AMCH), Omaxe City, Jaipur",
+    "name": "Arya Medical College & Hospital (Amch), Omaxe City, Jaipur",
     "slug": "arya-medical-college-hospital-amch-omaxe-city-jaipur",
     "type": "Private",
     "state": "Rajasthan",
@@ -18700,7 +18700,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "BGS Global Institute of Medical Sciences, Bangalore",
+    "name": "Bgs Global Institute of Medical Sciences, Bangalore",
     "slug": "bgs-global-institute-of-medical-sciences-bangalore",
     "type": "Private",
     "state": "Karnataka",
@@ -18734,7 +18734,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "BGS Medical College and Hospital, Nagarur, Bengaluru",
+    "name": "Bgs Medical College and Hospital, Nagarur, Bengaluru",
     "slug": "bgs-medical-college-and-hospital-nagarur-bengaluru",
     "type": "Private",
     "state": "Karnataka",
@@ -18772,7 +18772,7 @@
     "slug": "balvir-singh-tomar-institute-of-medical-sciences-and-research",
     "type": "Private",
     "state": "Rajasthan",
-    "city": null,
+    "city": "Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -18802,7 +18802,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Banas Medical college and research institute, Palanpur, Gujarat",
+    "name": "Banas Medical College and Research Institute, Palanpur, Gujarat",
     "slug": "banas-medical-college-and-research-institute-palanpur-gujarat",
     "type": "Private",
     "state": "Gujarat",
@@ -18874,7 +18874,7 @@
     "slug": "believers-church-medical-college-hospital",
     "type": "Private",
     "state": "Kerala",
-    "city": null,
+    "city": "Hospital",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -18908,7 +18908,7 @@
     "slug": "bhagyoday-medical-college",
     "type": "Private",
     "state": "Gujarat",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19010,7 +19010,7 @@
     "slug": "c-u-shah-medical-college",
     "type": "Private",
     "state": "Gujarat",
-    "city": null,
+    "city": "College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19040,11 +19040,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "CAREER INSTITUTE OF MEDICAL SCIENCES AND HOSPITAL",
+    "name": "Career Institute of Medical Sciences and Hospital",
     "slug": "career-institute-of-medical-sciences-and-hospital",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19074,7 +19074,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "CMR Institute of Medical Sciences, Telangana",
+    "name": "Cmr Institute of Medical Sciences, Telangana",
     "slug": "cmr-institute-of-medical-sciences-telangana",
     "type": "Private",
     "state": "Telangana",
@@ -19108,7 +19108,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Chalmeda Anand Rao Insttitute Of Medical Sciences, Karimnagar",
+    "name": "Chalmeda Anand Rao Insttitute of Medical Sciences, Karimnagar",
     "slug": "chalmeda-anand-rao-insttitute-of-medical-sciences-karimnagar",
     "type": "Private",
     "state": "Telangana",
@@ -19244,11 +19244,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "DR B S KUSHWAH INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Dr B S Kushwah Institute of Medical Sciences",
     "slug": "dr-b-s-kushwah-institute-of-medical-sciences",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "of",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19278,11 +19278,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "DRIEMS INSTITUTE OF HEALTH SCIENCES AND HOSPITAL",
+    "name": "Driems Institute of Health Sciences and Hospital",
     "slug": "driems-institute-of-health-sciences-and-hospital",
     "type": "Private",
     "state": "Odisha",
-    "city": null,
+    "city": "Sciences",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19384,7 +19384,7 @@
     "slug": "dhanalakshmi-srinivasan-institute-of-medical-sciences-and-hospital-perambalur",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "and",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19448,7 +19448,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr BR Ambedkar Medical College, Bangalore",
+    "name": "Dr Br Ambedkar Medical College, Bangalore",
     "slug": "dr-br-ambedkar-medical-college-bangalore",
     "type": "Private",
     "state": "Karnataka",
@@ -19486,7 +19486,7 @@
     "slug": "dr-s-s-tantia-medical-college-hospital-research-centre",
     "type": "Private",
     "state": "Rajasthan",
-    "city": null,
+    "city": "&",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19584,7 +19584,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr. Moopen s Medical College, Wayanad, Kerala",
+    "name": "Dr. Moopen S Medical College, Wayanad, Kerala",
     "slug": "dr-moopen-s-medical-college-wayanad-kerala",
     "type": "Private",
     "state": "Kerala",
@@ -19622,7 +19622,7 @@
     "slug": "dr-n-d-desai-faculty-of-medical-science-research",
     "type": "Private",
     "state": "Gujarat",
-    "city": null,
+    "city": "Science",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19656,7 +19656,7 @@
     "slug": "dr-n-y-tasgaonkar-institute-of-medical-science",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "of",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19689,7 +19689,7 @@
     "name": "Dr. P.S.I. Medical College , Chinoutpalli",
     "slug": "dr-p-s-i-medical-college-chinoutpalli",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Chinoutpalli",
     "seats": 150,
     "annual_fees": null,
@@ -19822,11 +19822,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr. Somervell Memorial CSI Medical College & Hospital",
+    "name": "Dr. Somervell Memorial Csi Medical College & Hospital",
     "slug": "dr-somervell-memorial-csi-medical-college-hospital",
     "type": "Private",
     "state": "Kerala",
-    "city": null,
+    "city": "College",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19890,7 +19890,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr. VRK Womens Medical College, Aziznagar",
+    "name": "Dr. Vrk Womens Medical College, Aziznagar",
     "slug": "dr-vrk-womens-medical-college-aziznagar",
     "type": "Private",
     "state": "Telangana",
@@ -19962,7 +19962,7 @@
     "slug": "dr-kiran-c-patel-medical-college-and-research-institute",
     "type": "Private",
     "state": "Gujarat",
-    "city": null,
+    "city": "and",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -19992,7 +19992,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Dr.Vasantrao Pawar Med. Col. Hosp. & Research Centre,Nasik (Prev. NDMVP Samaj Me",
+    "name": "Dr.Vasantrao Pawar Med. Col. Hosp. & Research Centre,Nasik (Prev. Ndmvp Samaj Me",
     "slug": "dr-vasantrao-pawar-med-col-hosp-research-centre-nasik-prev-ndmvp-samaj-me",
     "type": "Private",
     "state": "Maharashtra",
@@ -20026,11 +20026,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "EAST WEST INSTITUTE OF MEDICAL SCIENCES AND RESEARCH",
+    "name": "East West Institute of Medical Sciences and Research",
     "slug": "east-west-institute-of-medical-sciences-and-research",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "Sciences",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -20162,11 +20162,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "FAROOKH ACADEMY OF MEDICAL EDUCATION HOSPITAL AND RESEARCH INSTITUTE",
+    "name": "Farookh Academy of Medical Education Hospital and Research Institute",
     "slug": "farookh-academy-of-medical-education-hospital-and-research-institute",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "and",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -20196,7 +20196,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "FATHER COLOMBO INSTITUTE OF MEDICAL SCIENCES, WARANGAL",
+    "name": "Father Colombo Institute of Medical Sciences, Warangal",
     "slug": "father-colombo-institute-of-medical-sciences-warangal",
     "type": "Private",
     "state": "Telangana",
@@ -20230,7 +20230,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Faculty of Medicine and Health Sciences, Gurgaon (Formarly SGGST Medical College",
+    "name": "Faculty of Medicine and Health Sciences, Gurgaon (Formarly Sggst Medical College",
     "slug": "faculty-of-medicine-and-health-sciences-gurgaon-formarly-sggst-medical-college",
     "type": "Private",
     "state": "Haryana",
@@ -20301,7 +20301,7 @@
     "name": "Fathima Instt. of Medical Sciences,Kadapa",
     "slug": "fathima-instt-of-medical-sciences-kadapa",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Kadapa",
     "seats": 100,
     "annual_fees": null,
@@ -20332,7 +20332,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "G.S. Medical College & Hospital, Hapur, UP",
+    "name": "G.S. Medical College & Hospital, Hapur, Up",
     "slug": "g-s-medical-college-hospital-hapur-up",
     "type": "Private",
     "state": "Uttar Pradesh",
@@ -20366,7 +20366,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GCS Medical College, Ahmedabad",
+    "name": "Gcs Medical College, Ahmedabad",
     "slug": "gcs-medical-college-ahmedabad",
     "type": "Private",
     "state": "Gujarat",
@@ -20400,7 +20400,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GEETANJALI INSTITUTE OF MEDICAL SCIENCES, Jaipur",
+    "name": "Geetanjali Institute of Medical Sciences, Jaipur",
     "slug": "geetanjali-institute-of-medical-sciences-jaipur",
     "type": "Private",
     "state": "Rajasthan",
@@ -20434,7 +20434,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GIAN SAGAR MEDICAL COLLEGE",
+    "name": "Gian Sagar Medical College",
     "slug": "gian-sagar-medical-college",
     "type": "Private",
     "state": "Punjab",
@@ -20468,10 +20468,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "GSL Medical College, Rajahmundry",
+    "name": "Gsl Medical College, Rajahmundry",
     "slug": "gsl-medical-college-rajahmundry",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Rajahmundry",
     "seats": 250,
     "annual_fees": null,
@@ -20539,7 +20539,7 @@
     "name": "Gayathri Vidya Parishad Institute of Health Care & Medical Technology, Visakhapa",
     "slug": "gayathri-vidya-parishad-institute-of-health-care-medical-technology-visakhapa",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Visakhapa",
     "seats": 200,
     "annual_fees": null,
@@ -20641,7 +20641,7 @@
     "name": "Great Eastern Medical School and Hospital,Srikakulam",
     "slug": "great-eastern-medical-school-and-hospital-srikakulam",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Srikakulam",
     "seats": 150,
     "annual_fees": null,
@@ -20944,7 +20944,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ICARE Institute of Medical Sciences & Research, Haldia, Purba Midanpore",
+    "name": "Icare Institute of Medical Sciences & Research, Haldia, Purba Midanpore",
     "slug": "icare-institute-of-medical-sciences-research-haldia-purba-midanpore",
     "type": "Private",
     "state": "West Bengal",
@@ -20978,7 +20978,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "IQ-City Medical College, Burdwan",
+    "name": "Iq-City Medical College, Burdwan",
     "slug": "iq-city-medical-college-burdwan",
     "type": "Private",
     "state": "West Bengal",
@@ -21148,11 +21148,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JAGANNATH GUPTA INSTITUTE OF MEDICAL SCIENCES AND HOSPITAL",
+    "name": "Jagannath Gupta Institute of Medical Sciences and Hospital",
     "slug": "jagannath-gupta-institute-of-medical-sciences-and-hospital",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "Sciences",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21182,11 +21182,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JAKIR HOSSAIN MEDICAL COLLEGE AND RESEARCH INSTITUTE",
+    "name": "Jakir Hossain Medical College and Research Institute",
     "slug": "jakir-hossain-medical-college-and-research-institute",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "and",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21216,7 +21216,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JIET Medical College and Hospital, Jodhpur, Rajasthan",
+    "name": "Jiet Medical College and Hospital, Jodhpur, Rajasthan",
     "slug": "jiet-medical-college-and-hospital-jodhpur-rajasthan",
     "type": "Private",
     "state": "Rajasthan",
@@ -21250,7 +21250,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JIS School Medical Science and Research, Howrah, WB",
+    "name": "Jis School Medical Science and Research, Howrah, Wb",
     "slug": "jis-school-medical-science-and-research-howrah-wb",
     "type": "Private",
     "state": "West Bengal",
@@ -21284,11 +21284,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JJM Medical college",
+    "name": "Jjm Medical College",
     "slug": "jjm-medical-college",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 245,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21318,7 +21318,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "JMN Medical College, Nadia, West Bengal",
+    "name": "Jmn Medical College, Nadia, West Bengal",
     "slug": "jmn-medical-college-nadia-west-bengal",
     "type": "Private",
     "state": "West Bengal",
@@ -21454,11 +21454,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "K J SOMAIYYA MEDICAL COLLEGE AND RESEARCH CENTRE  MUMBAI",
+    "name": "K J Somaiyya Medical College and Research Centre  Mumbai",
     "slug": "k-j-somaiyya-medical-college-and-research-centre-mumbai",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "Research",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21556,11 +21556,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KAMINENI ACADEMY OF MEDICAL SCIENCES AND RESEARCH CENTRE",
+    "name": "Kamineni Academy of Medical Sciences and Research Centre",
     "slug": "kamineni-academy-of-medical-sciences-and-research-centre",
     "type": "Private",
     "state": "Telangana",
-    "city": null,
+    "city": "and",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21590,11 +21590,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KANYAKUMARI MEDICAL MISSION RESEARCH CENTRE",
+    "name": "Kanyakumari Medical Mission Research Centre",
     "slug": "kanyakumari-medical-mission-research-centre",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "Centre",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -21624,7 +21624,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KIRAN MEDICAL COLLEGE, SURAT, GUJARAT",
+    "name": "Kiran Medical College, Surat, Gujarat",
     "slug": "kiran-medical-college-surat-gujarat",
     "type": "Private",
     "state": "Gujarat",
@@ -21658,7 +21658,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KMC Medical College and Hospital Maharajganj UP",
+    "name": "Kmc Medical College and Hospital Maharajganj Up",
     "slug": "kmc-medical-college-and-hospital-maharajganj-up",
     "type": "Private",
     "state": "Uttar Pradesh",
@@ -21692,7 +21692,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KMCH Institute of Health Sciences and Research",
+    "name": "Kmch Institute of Health Sciences and Research",
     "slug": "kmch-institute-of-health-sciences-and-research",
     "type": "Private",
     "state": "Tamil Nadu",
@@ -21726,7 +21726,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KMCT Medical College,Kozhikode, Calicut",
+    "name": "Kmct Medical College,Kozhikode, Calicut",
     "slug": "kmct-medical-college-kozhikode-calicut",
     "type": "Private",
     "state": "Kerala",
@@ -21760,7 +21760,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "KPC Medical College,Jadavpur,Kolkata",
+    "name": "Kpc Medical College,Jadavpur,Kolkata",
     "slug": "kpc-medical-college-jadavpur-kolkata",
     "type": "Private",
     "state": "West Bengal",
@@ -22001,7 +22001,7 @@
     "name": "Katuri Medical College, Guntur",
     "slug": "katuri-medical-college-guntur",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Guntur",
     "seats": 150,
     "annual_fees": null,
@@ -22036,7 +22036,7 @@
     "slug": "kempegowda-institute-of-medical-sciences",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "Sciences",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22137,7 +22137,7 @@
     "name": "Konaseema Institute of Medical Sciences & Research Foundation, Amalapuram",
     "slug": "konaseema-institute-of-medical-sciences-research-foundation-amalapuram",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Amalapuram",
     "seats": 200,
     "annual_fees": null,
@@ -22270,7 +22270,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "LNCT Medical College & Sewakunj Hospital, Indore",
+    "name": "Lnct Medical College & Sewakunj Hospital, Indore",
     "slug": "lnct-medical-college-sewakunj-hospital-indore",
     "type": "Private",
     "state": "Madhya Pradesh",
@@ -22308,7 +22308,7 @@
     "slug": "laxmi-chandravansi-medical-college-hospital",
     "type": "Private",
     "state": "Jharkhand",
-    "city": null,
+    "city": "& Hospital",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22406,7 +22406,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "M.M. COLLEGE OF MEDICAL SCIENCES & RESEARCH, AMBALA",
+    "name": "M.M. College of Medical Sciences & Research, Ambala",
     "slug": "m-m-college-of-medical-sciences-research-ambala",
     "type": "Private",
     "state": "Haryana",
@@ -22440,11 +22440,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MAHABODHI MEDICAL COLLEGE & HOSPITAL",
+    "name": "Mahabodhi Medical College & Hospital",
     "slug": "mahabodhi-medical-college-hospital",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "Hospital",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22474,11 +22474,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MAHARISHI MARKANDESHWAR MEDICAL COLLEGE & HOSPITAL",
+    "name": "Maharishi Markandeshwar Medical College & Hospital",
     "slug": "maharishi-markandeshwar-medical-college-hospital",
     "type": "Private",
     "state": "Himachal Pradesh",
-    "city": null,
+    "city": "& Hospital",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22508,11 +22508,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MALATI MULTISPECIALITY HOSPITAL AND MEDICAL COLLEGE",
+    "name": "Malati Multispeciality Hospital and Medical College",
     "slug": "malati-multispeciality-hospital-and-medical-college",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "Medical College",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22542,11 +22542,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MANSAROVAR MEDICAL COLLEGE AND MGU HOSPITAL",
+    "name": "Mansarovar Medical College and Mgu Hospital",
     "slug": "mansarovar-medical-college-and-mgu-hospital",
     "type": "Private",
     "state": "Madhya Pradesh",
-    "city": null,
+    "city": "Mgu Hospital",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -22576,7 +22576,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MNR Medical College & Hospital, Sangareddy",
+    "name": "Mnr Medical College & Hospital, Sangareddy",
     "slug": "mnr-medical-college-hospital-sangareddy",
     "type": "Private",
     "state": "Telangana",
@@ -22610,7 +22610,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "MVJ Medical College and Research Hospital, Bangalore",
+    "name": "Mvj Medical College and Research Hospital, Bangalore",
     "slug": "mvj-medical-college-and-research-hospital-bangalore",
     "type": "Private",
     "state": "Karnataka",
@@ -22749,7 +22749,7 @@
     "name": "Maharajah Institute of Medical Sciences, Vizianagaram",
     "slug": "maharajah-institute-of-medical-sciences-vizianagaram",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Vizianagaram",
     "seats": 200,
     "annual_fees": null,
@@ -23022,7 +23022,7 @@
     "slug": "malankara-orthodox-syrian-church-medical-college",
     "type": "Private",
     "state": "Kerala",
-    "city": null,
+    "city": "Medical College",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23120,11 +23120,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Mata Gujri Memorial Medical College KISHANGANJ",
+    "name": "Mata Gujri Memorial Medical College Kishanganj",
     "slug": "mata-gujri-memorial-medical-college-kishanganj",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "College Kishanganj",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23154,7 +23154,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Matushri prabhaben khodabhai boghara medical college & research centre",
+    "name": "Matushri Prabhaben Khodabhai Boghara Medical College & Research Centre",
     "slug": "matushri-prabhaben-khodabhai-boghara-medical-college-research-centre",
     "type": "Private",
     "state": "Gujarat",
@@ -23222,7 +23222,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Mediciti Institute Of Medical Sciences, Ghanpur",
+    "name": "Mediciti Institute of Medical Sciences, Ghanpur",
     "slug": "mediciti-institute-of-medical-sciences-ghanpur",
     "type": "Private",
     "state": "Telangana",
@@ -23362,7 +23362,7 @@
     "slug": "n-k-p-salve-instt-of-medical-sciences-and-research-centre-and-lata-mangeshka",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "and",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23426,11 +23426,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "NOVA INSTITUTE OF MEDICAL SCIENCES AND RESEARCH CENTRE",
+    "name": "Nova Institute of Medical Sciences and Research Centre",
     "slug": "nova-institute-of-medical-sciences-and-research-centre",
     "type": "Private",
     "state": "Telangana",
-    "city": null,
+    "city": "and",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23460,10 +23460,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "NRI Institute of Medical Sciences, Visakhapatnam",
+    "name": "Nri Institute of Medical Sciences, Visakhapatnam",
     "slug": "nri-institute-of-medical-sciences-visakhapatnam",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Visakhapatnam",
     "seats": 250,
     "annual_fees": null,
@@ -23494,10 +23494,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "NRI Medical College, Guntur",
+    "name": "Nri Medical College, Guntur",
     "slug": "nri-medical-college-guntur",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Guntur",
     "seats": 200,
     "annual_fees": null,
@@ -23566,7 +23566,7 @@
     "slug": "naraina-medical-college-and-research-centre",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Research Centre",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23633,7 +23633,7 @@
     "name": "Narayana Medical College, Nellore",
     "slug": "narayana-medical-college-nellore",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Nellore",
     "seats": 250,
     "annual_fees": null,
@@ -23871,7 +23871,7 @@
     "name": "Nimra Institute of Medical Sciences, Krishna Dist., A.P.",
     "slug": "nimra-institute-of-medical-sciences-krishna-dist-a-p",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "A.P.",
     "seats": 200,
     "annual_fees": null,
@@ -23902,11 +23902,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Noida International Institute Of Medical Sciences",
+    "name": "Noida International Institute of Medical Sciences",
     "slug": "noida-international-institute-of-medical-sciences",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "Medical Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -23970,10 +23970,10 @@
     "pg_courses_availability": null
   },
   {
-    "name": "P E S Institute Of Medical Sciences and Research, Kuppam",
+    "name": "P E S Institute of Medical Sciences and Research, Kuppam",
     "slug": "p-e-s-institute-of-medical-sciences-and-research-kuppam",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Kuppam",
     "seats": 150,
     "annual_fees": null,
@@ -24038,11 +24038,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PA Sangma International Medical College & Hospital",
+    "name": "Pa Sangma International Medical College & Hospital",
     "slug": "pa-sangma-international-medical-college-hospital",
     "type": "Private",
     "state": "Meghalaya",
-    "city": null,
+    "city": "College & Hospital",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24072,11 +24072,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PACIFIC INSTITUTE OF MEDICAL SCIENCES Umarda",
+    "name": "Pacific Institute of Medical Sciences Umarda",
     "slug": "pacific-institute-of-medical-sciences-umarda",
     "type": "Private",
     "state": "Rajasthan",
-    "city": null,
+    "city": "Umarda",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24106,11 +24106,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PALAKKAD INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Palakkad Institute of Medical Sciences",
     "slug": "palakkad-institute-of-medical-sciences",
     "type": "Private",
     "state": "Kerala",
-    "city": null,
+    "city": "Sciences",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24140,7 +24140,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PARBHANI MEDICAL COLLEGE, PARBHANI",
+    "name": "Parbhani Medical College, Parbhani",
     "slug": "parbhani-medical-college-parbhani",
     "type": "Private",
     "state": "Maharashtra",
@@ -24174,7 +24174,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PES University Institute of Medical Sciences & Research, Bangalore",
+    "name": "Pes University Institute of Medical Sciences & Research, Bangalore",
     "slug": "pes-university-institute-of-medical-sciences-research-bangalore",
     "type": "Private",
     "state": "Karnataka",
@@ -24208,11 +24208,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PKG MEDICAL COLLEGE",
+    "name": "Pkg Medical College",
     "slug": "pkg-medical-college",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24242,7 +24242,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PSG Institute of Medical Sciences, Coimbatore",
+    "name": "Psg Institute of Medical Sciences, Coimbatore",
     "slug": "psg-institute-of-medical-sciences-coimbatore",
     "type": "Private",
     "state": "Tamil Nadu",
@@ -24276,7 +24276,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "PSP MEDICAL COLLEGE HOSPITAL AND RESEARCH INSTITUTE, Tamil Nadu",
+    "name": "Psp Medical College Hospital and Research Institute, Tamil Nadu",
     "slug": "psp-medical-college-hospital-and-research-institute-tamil-nadu",
     "type": "Private",
     "state": "Tamil Nadu",
@@ -24348,7 +24348,7 @@
     "slug": "panimalar-medical-college-hospital-research-institute",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "& Research Institute",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24484,7 +24484,7 @@
     "slug": "pramukhswami-medical-college",
     "type": "Private",
     "state": "Gujarat",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24548,7 +24548,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Prathima Institute Of Medical Sciences, Karimnagar",
+    "name": "Prathima Institute of Medical Sciences, Karimnagar",
     "slug": "prathima-institute-of-medical-sciences-karimnagar",
     "type": "Private",
     "state": "Telangana",
@@ -24684,7 +24684,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Pushpagiri Institute Of Medical Sciences and Research Centre, Tiruvalla",
+    "name": "Pushpagiri Institute of Medical Sciences and Research Centre, Tiruvalla",
     "slug": "pushpagiri-institute-of-medical-sciences-and-research-centre-tiruvalla",
     "type": "Private",
     "state": "Kerala",
@@ -24752,7 +24752,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RAM KRISHNA MEDICAL COLLEGE HOSPITAL AND RESEARCH CENTRE, BHOPAL",
+    "name": "Ram Krishna Medical College Hospital and Research Centre, Bhopal",
     "slug": "ram-krishna-medical-college-hospital-and-research-centre-bhopal",
     "type": "Private",
     "state": "Madhya Pradesh",
@@ -24786,11 +24786,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RANIGANJ INSTITUTE OF MEDICAL SCIENCE",
+    "name": "Raniganj Institute of Medical Science",
     "slug": "raniganj-institute-of-medical-science",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "Science",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24820,7 +24820,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RIMT Medical College and Hospital Fatehgarh, Sahib, Punjab",
+    "name": "Rimt Medical College and Hospital Fatehgarh, Sahib, Punjab",
     "slug": "rimt-medical-college-and-hospital-fatehgarh-sahib-punjab",
     "type": "Private",
     "state": "Punjab",
@@ -24854,7 +24854,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "RKDF Medical College Hospital & Research Centre, Jatkhedi, Bhopal",
+    "name": "Rkdf Medical College Hospital & Research Centre, Jatkhedi, Bhopal",
     "slug": "rkdf-medical-college-hospital-research-centre-jatkhedi-bhopal",
     "type": "Private",
     "state": "Madhya Pradesh",
@@ -24892,7 +24892,7 @@
     "slug": "radha-devi-jageshwari-memorial-medical-college-and-hospital",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "College",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -24922,7 +24922,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Raipur Institute of Medical Sciences (RIMS), Raipur",
+    "name": "Raipur Institute of Medical Sciences (Rims), Raipur",
     "slug": "raipur-institute-of-medical-sciences-rims-raipur",
     "type": "Private",
     "state": "Chattisgarh",
@@ -25126,7 +25126,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "S R PATIL MEDICAL COLLEGE, HOSPITAL & RESEARCH CENTRE, BADAGANDI, Bagalkot, Karn",
+    "name": "S R Patil Medical College, Hospital & Research Centre, Badagandi, Bagalkot, Karn",
     "slug": "s-r-patil-medical-college-hospital-research-centre-badagandi-bagalkot-karn",
     "type": "Private",
     "state": "Karnataka",
@@ -25228,7 +25228,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "S. Nijalingappa Medical College & HSK Hospital & Research Centre, Bagalkot",
+    "name": "S. Nijalingappa Medical College & Hsk Hospital & Research Centre, Bagalkot",
     "slug": "s-nijalingappa-medical-college-hsk-hospital-research-centre-bagalkot",
     "type": "Private",
     "state": "Karnataka",
@@ -25262,7 +25262,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SAL Institute of Medical Sciences, Ahmadabad",
+    "name": "Sal Institute of Medical Sciences, Ahmadabad",
     "slug": "sal-institute-of-medical-sciences-ahmadabad",
     "type": "Private",
     "state": "Gujarat",
@@ -25296,11 +25296,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SANTINIKETAN MEDICAL COLLEGE",
+    "name": "Santiniketan Medical College",
     "slug": "santiniketan-medical-college",
     "type": "Private",
     "state": "West Bengal",
-    "city": null,
+    "city": "Dibrugarh",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25330,11 +25330,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SCHOOL OF MEDICAL SCIENCES SRI SATYA SAI UNIVERSITY OF TECHNOLOGY AND MEDICAL SC",
+    "name": "School of Medical Sciences Sri Satya Sai University of Technology and Medical Sc",
     "slug": "school-of-medical-sciences-sri-satya-sai-university-of-technology-and-medical-sc",
     "type": "Private",
     "state": "Madhya Pradesh",
-    "city": null,
+    "city": "and",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25364,7 +25364,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SDM College of Medical Sciences & Hospital, Sattur, Dharwad",
+    "name": "Sdm College of Medical Sciences & Hospital, Sattur, Dharwad",
     "slug": "sdm-college-of-medical-sciences-hospital-sattur-dharwad",
     "type": "Private",
     "state": "Karnataka",
@@ -25398,11 +25398,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SHRI GORAKSHNATH MEDICAL COLLEGE HOSPITAL and RESEARCH CENTRE",
+    "name": "Shri Gorakshnath Medical College Hospital and Research Centre",
     "slug": "shri-gorakshnath-medical-college-hospital-and-research-centre",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "CENTRE",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25432,11 +25432,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SHRI MATA VAISHNO DEVI INSTITUTE OF MEDICAL EXCELLENCE",
+    "name": "Shri Mata Vaishno Devi Institute of Medical Excellence",
     "slug": "shri-mata-vaishno-devi-institute-of-medical-excellence",
     "type": "Private",
     "state": "Jammu & Kashmir",
-    "city": null,
+    "city": "of",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25466,7 +25466,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SHRI RAWATPURA SARKAR INSTITUTE OF MEDICAL SCIENCES AND RESEARCH, RAIPUR, CHHATT",
+    "name": "Shri Rawatpura Sarkar Institute of Medical Sciences and Research, Raipur, Chhatt",
     "slug": "shri-rawatpura-sarkar-institute-of-medical-sciences-and-research-raipur-chhatt",
     "type": "Private",
     "state": "Chattisgarh",
@@ -25500,11 +25500,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SHRI SHANKARACHARYA INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Shri Shankaracharya Institute of Medical Sciences",
     "slug": "shri-shankaracharya-institute-of-medical-sciences",
     "type": "Private",
     "state": "Chattisgarh",
-    "city": null,
+    "city": "Medical Sciences",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25534,11 +25534,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SHYAMLAL CHANDRASHEKHAR MEDICAL COLLEGE & S P N M HOPSITAL",
+    "name": "Shyamlal Chandrashekhar Medical College & S P N M Hopsital",
     "slug": "shyamlal-chandrashekhar-medical-college-s-p-n-m-hopsital",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "N",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25568,7 +25568,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SKS HOSPITAL MEDICAL COLLEGE AND RESEARCH CENTRE, UP",
+    "name": "Sks Hospital Medical College and Research Centre, Up",
     "slug": "sks-hospital-medical-college-and-research-centre-up",
     "type": "Private",
     "state": "Uttar Pradesh",
@@ -25602,7 +25602,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SMBT Institute of Medical Sciences & Research Centre, Nandihills, Nashik",
+    "name": "Smbt Institute of Medical Sciences & Research Centre, Nandihills, Nashik",
     "slug": "smbt-institute-of-medical-sciences-research-centre-nandihills-nashik",
     "type": "Private",
     "state": "Maharashtra",
@@ -25636,7 +25636,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "ST Peters Medical College, Hospital & Research Institute",
+    "name": "St Peters Medical College, Hospital & Research Institute",
     "slug": "st-peters-medical-college-hospital-research-institute",
     "type": "Private",
     "state": "Tamil Nadu",
@@ -25670,7 +25670,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "SUDHA MEDICAL COLLEGE, JHALAWAR, KOTA",
+    "name": "Sudha Medical College, Jhalawar, Kota",
     "slug": "sudha-medical-college-jhalawar-kota",
     "type": "Private",
     "state": "Rajasthan",
@@ -25707,7 +25707,7 @@
     "name": "Santhiram Medical College, Nandyal",
     "slug": "santhiram-medical-college-nandyal",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Nandyal",
     "seats": 250,
     "annual_fees": null,
@@ -25946,7 +25946,7 @@
     "slug": "shija-academy-of-health-sciences",
     "type": "Private",
     "state": "Manipur",
-    "city": null,
+    "city": "Sciences",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -25980,7 +25980,7 @@
     "slug": "shree-narayan-medical-institute-and-hospital",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "and Hospital",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26014,7 +26014,7 @@
     "slug": "shri-balaji-institute-of-medical-science",
     "type": "Private",
     "state": "Chattisgarh",
-    "city": null,
+    "city": "Medical Science",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26146,7 +26146,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Shri Siddhi Vinayak Medical College and Hospital, Sambhal, UP",
+    "name": "Shri Siddhi Vinayak Medical College and Hospital, Sambhal, Up",
     "slug": "shri-siddhi-vinayak-medical-college-and-hospital-sambhal-up",
     "type": "Private",
     "state": "Uttar Pradesh",
@@ -26248,11 +26248,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Sindhudurg Shikshan Prasarak Mandal (SSPM) Medical College & Lifetime Hospital,",
+    "name": "Sindhudurg Shikshan Prasarak Mandal (Sspm) Medical College & Lifetime Hospital,",
     "slug": "sindhudurg-shikshan-prasarak-mandal-sspm-medical-college-lifetime-hospital",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "&",
     "seats": 149,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26286,7 +26286,7 @@
     "slug": "smt-sakhubai-narayanrao-katkade-medical-college-and-research-center",
     "type": "Private",
     "state": "Maharashtra",
-    "city": null,
+    "city": "and",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26523,8 +26523,8 @@
     "name": "Sri Balaji Medical College Hospital and Research Institute Tirupati",
     "slug": "sri-balaji-medical-college-hospital-and-research-institute-tirupati",
     "type": "Private",
-    "state": "Andhra Pradesh",
-    "city": null,
+    "state": "andhra Pradesh",
+    "city": "Research",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26626,7 +26626,7 @@
     "slug": "sri-madhusudan-sai-institute-of-medical-sciences-and-research",
     "type": "Private",
     "state": "Karnataka",
-    "city": null,
+    "city": "Sciences",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -26826,7 +26826,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Srinivas Institute of Medical Research Centre, Srinivasnagar, mangalore",
+    "name": "Srinivas Institute of Medical Research Centre, Srinivasnagar, Mangalore",
     "slug": "srinivas-institute-of-medical-research-centre-srinivasnagar-mangalore",
     "type": "Private",
     "state": "Karnataka",
@@ -26864,7 +26864,7 @@
     "slug": "srinivasan-medical-college-and-hospital",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "Hospital",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27098,11 +27098,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Swamy Vivekanandha Medical College Hospital And Research Institute",
+    "name": "Swamy Vivekanandha Medical College Hospital and Research Institute",
     "slug": "swamy-vivekanandha-medical-college-hospital-and-research-institute",
     "type": "Private",
     "state": "Tamil Nadu",
-    "city": null,
+    "city": "and",
     "seats": 200,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27166,7 +27166,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "TRR Institute of Medical Sciences, Patancheru",
+    "name": "Trr Institute of Medical Sciences, Patancheru",
     "slug": "trr-institute-of-medical-sciences-patancheru",
     "type": "Private",
     "state": "Telangana",
@@ -27272,7 +27272,7 @@
     "slug": "teerthanker-mahaveer-medical-college-research-center",
     "type": "Private",
     "state": "Uttar Pradesh",
-    "city": null,
+    "city": "& Research Center",
     "seats": 250,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27404,7 +27404,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Trichy SRM Medical College Hospital & Research Centre, Trichy",
+    "name": "Trichy Srm Medical College Hospital & Research Centre, Trichy",
     "slug": "trichy-srm-medical-college-hospital-research-centre-trichy",
     "type": "Private",
     "state": "Tamil Nadu",
@@ -27438,11 +27438,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Tripura Medical College And Dr. BRAM Teaching Hospital",
+    "name": "Tripura Medical College and Dr. Bram Teaching Hospital",
     "slug": "tripura-medical-college-and-dr-bram-teaching-hospital",
     "type": "Private",
     "state": "Tripura",
-    "city": null,
+    "city": "Bram",
     "seats": 150,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27540,11 +27540,11 @@
     "pg_courses_availability": null
   },
   {
-    "name": "VIRAAT RAMAYAN INSTITUTE OF MEDICAL SCIENCES",
+    "name": "Viraat Ramayan Institute of Medical Sciences",
     "slug": "viraat-ramayan-institute-of-medical-sciences",
     "type": "Private",
     "state": "Bihar",
-    "city": null,
+    "city": "Medical Sciences",
     "seats": 50,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27713,7 +27713,7 @@
     "name": "Viswabharathi Medical College, Kurnool",
     "slug": "viswabharathi-medical-college-kurnool",
     "type": "Private",
-    "state": "Andhra Pradesh",
+    "state": "andhra Pradesh",
     "city": "Kurnool",
     "seats": 250,
     "annual_fees": null,
@@ -27748,7 +27748,7 @@
     "slug": "vyas-medical-college-and-hospital-jodhpur",
     "type": "Private",
     "state": "Rajasthan",
-    "city": null,
+    "city": "Hospital Jodhpur",
     "seats": 100,
     "annual_fees": null,
     "closing_rank_open": null,
@@ -27778,7 +27778,7 @@
     "pg_courses_availability": null
   },
   {
-    "name": "Vydehi Institute Of Medical Sciences & Research Centre, Bangalore",
+    "name": "Vydehi Institute of Medical Sciences & Research Centre, Bangalore",
     "slug": "vydehi-institute-of-medical-sciences-research-centre-bangalore",
     "type": "Private",
     "state": "Karnataka",
