@@ -315,6 +315,23 @@
   font-size: 14px;
 }
 
+/* CATEGORY GROUP */
+.np-category-group {
+  margin-bottom: 40px;
+}
+.np-category-group:last-child {
+  margin-bottom: 0;
+}
+.np-category-heading {
+  font-family: var(--font-syne, inherit);
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a0040;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(123,65,179,0.15);
+}
+
 /* GRID */
 .np-grid {
   display: grid;

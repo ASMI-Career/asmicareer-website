@@ -32,15 +32,77 @@ function daysUntil(dateStr) {
 }
 
 const TAG_CFG = {
-  'URGENT':      { bg: '#fff0f0', color: '#c0131b', border: '#fca5a5' },
-  'EXAM DATE':   { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
-  'ADMIT CARD':  { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
-  'ASMI SEMINAR':{ bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
-  'RESULT':      { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
-  'NOTICE':      { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
-  'COUNSELLING': { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
+  'URGENT':               { bg: '#fff0f0', color: '#c0131b', border: '#fca5a5' },
+  'APPLICATION DEADLINE': { bg: '#fff0f0', color: '#c0131b', border: '#fca5a5' },
+  'CORRECTION WINDOW':    { bg: '#fff7ed', color: '#c2410c', border: '#fdba74' },
+  'EXAM DATE':            { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
+  'ADMIT CARD':           { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
+  'ASMI SEMINAR':         { bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
+  'RESULT':               { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
+  'MERIT LIST':           { bg: '#f0fdf4', color: '#166534', border: '#86efac' },
+  'NOTICE':               { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
+  'COUNSELLING':          { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
+  'REGISTRATION DEADLINE':{ bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
+  'SEAT MATRIX':          { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
+  'ALLOTMENT':            { bg: '#fdf2f8', color: '#9d174d', border: '#f9a8d4' },
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
+
+const CATEGORY_CFG = {
+  exam:        { label: 'Exam',           icon: '📋' },
+  counselling: { label: 'Counselling',    icon: '🎯' },
+  asmi:        { label: 'ASMI Seminars',  icon: '🎓' },
+};
+const CATEGORY_ORDER = ['exam', 'counselling', 'asmi'];
+
+function EventCard({ e }) {
+  const cfg = getCfg(e.tag);
+  const d   = daysUntil(e.date);
+  const isUrgent = ['URGENT', 'APPLICATION DEADLINE', 'REGISTRATION DEADLINE', 'CORRECTION WINDOW'].includes(e.tag);
+  return (
+    <div className={`np-card ${isUrgent ? 'np-card-urgent' : ''}`}>
+      <div className="np-card-top">
+        <div className="np-card-datebox">
+          <span className="np-cd-day">{new Date(e.date).getDate()}</span>
+          <span className="np-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
+          <span className="np-cd-yr">{new Date(e.date).getFullYear()}</span>
+        </div>
+        {d >= 0 && d <= 7 && (
+          <span className={`np-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
+            {d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : `${d}d left`}
+          </span>
+        )}
+      </div>
+
+      <div className="np-card-body">
+        <span
+          className="np-card-tag"
+          style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
+        >
+          {e.tag}
+        </span>
+        <h3 className="np-card-title">{e.title}</h3>
+        <p className="np-card-date-display">{e.display_date}</p>
+      </div>
+
+      <div className="np-card-footer">
+        {e.link && (
+          <a href={e.link} target="_blank" rel="noopener noreferrer" className="np-card-btn-primary">
+            {e.cta || 'Apply Now'}
+          </a>
+        )}
+        {e.pdf && (
+          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="np-card-btn-sec">
+            📄 View Notice
+          </a>
+        )}
+        {!e.link && !e.pdf && (
+          <span className="np-card-nolink">Date noted — no action needed</span>
+        )}
+      </div>
+    </div>
+  );
+}
 
 /* ─── main component ──────────────────────────────────────── */
 export default function NewsPage() {
@@ -61,11 +123,8 @@ export default function NewsPage() {
   }, []);
 
   const filterEvents = () => {
-    if (filter === 'all')       return events;
-    if (filter === 'deadlines') return events.filter(e => e.type === 'deadline' || e.tag === 'URGENT');
-    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || e.tag === 'EXAM DATE' || e.tag === 'ADMIT CARD');
-    if (filter === 'seminars')  return events.filter(e => e.type === 'asmi' || e.tag === 'ASMI SEMINAR');
-    return events;
+    if (filter === 'all') return events;
+    return events.filter(e => e.category === filter);
   };
 
   const filtered   = filterEvents();
@@ -157,10 +216,10 @@ export default function NewsPage() {
             {/* FILTER TABS */}
             <div className="np-filters">
               {[
-                { id: 'all',       label: 'All' },
-                { id: 'deadlines', label: '🔴 Deadlines' },
-                { id: 'exams',     label: '📋 Exam Dates' },
-                { id: 'seminars',  label: '🎓 ASMI Seminars' },
+                { id: 'all',         label: 'All' },
+                { id: 'exam',        label: '📋 Exam' },
+                { id: 'counselling', label: '🎯 Counselling' },
+                { id: 'asmi',        label: '🎓 ASMI Seminars' },
               ].map(f => (
                 <button
                   key={f.id}
@@ -181,60 +240,26 @@ export default function NewsPage() {
               </div>
             )}
 
-            {/* CARDS GRID */}
-            {!loading && filtered.length > 0 && (
-              <div className="np-grid">
-                {filtered.map((e, i) => {
-                  const cfg = getCfg(e.tag);
-                  const d   = daysUntil(e.date);
-                  const isUrgent = e.type === 'deadline' || e.tag === 'URGENT';
-                  return (
-                    <div className={`np-card ${isUrgent ? 'np-card-urgent' : ''}`} key={i}>
-                      {/* top date strip */}
-                      <div className="np-card-top">
-                        <div className="np-card-datebox">
-                          <span className="np-cd-day">{new Date(e.date).getDate()}</span>
-                          <span className="np-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
-                          <span className="np-cd-yr">{new Date(e.date).getFullYear()}</span>
-                        </div>
-                        {d >= 0 && d <= 7 && (
-                          <span className={`np-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
-                            {d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : `${d}d left`}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* body */}
-                      <div className="np-card-body">
-                        <span
-                          className="np-card-tag"
-                          style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
-                        >
-                          {e.tag}
-                        </span>
-                        <h3 className="np-card-title">{e.title}</h3>
-                        <p className="np-card-date-display">{e.display_date}</p>
-                      </div>
-
-                      {/* footer */}
-                      <div className="np-card-footer">
-                        {e.link && (
-                          <a href={e.link} target="_blank" rel="noopener noreferrer" className="np-card-btn-primary">
-                            {e.cta || 'Apply Now'}
-                          </a>
-                        )}
-                        {e.pdf && (
-                          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="np-card-btn-sec">
-                            📄 View Notice
-                          </a>
-                        )}
-                        {!e.link && !e.pdf && (
-                          <span className="np-card-nolink">Date noted — no action needed</span>
-                        )}
-                      </div>
+            {/* CARDS: grouped into 3 sections on "All", flat grid on a single filter */}
+            {!loading && filtered.length > 0 && filter === 'all' && (
+              CATEGORY_ORDER.map(cat => {
+                const group = filtered.filter(e => e.category === cat);
+                if (group.length === 0) return null;
+                const c = CATEGORY_CFG[cat];
+                return (
+                  <div className="np-category-group" key={cat}>
+                    <h3 className="np-category-heading">{c.icon} {c.label}</h3>
+                    <div className="np-grid">
+                      {group.map((e, i) => <EventCard e={e} key={i} />)}
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })
+            )}
+
+            {!loading && filtered.length > 0 && filter !== 'all' && (
+              <div className="np-grid">
+                {filtered.map((e, i) => <EventCard e={e} key={i} />)}
               </div>
             )}
           </div>
