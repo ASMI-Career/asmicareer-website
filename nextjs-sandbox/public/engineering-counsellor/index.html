@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASMI Counsellor — Engineering Preference List Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+  <style>
+    body { font-family: 'Montserrat', 'Segoe UI', sans-serif; }
+    .custom-shadow { box-shadow: 0 2px 12px rgba(26,0,64,0.06); }
+    .tool-layout { display: flex; height: calc(100vh - 89px); overflow: hidden; }
+    .left-col { flex: 1 1 0%; min-width: 0; overflow-y: auto; border-right: 1px solid rgba(106,13,173,0.12); }
+    .right-col { flex: 0 0 32%; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+
+    .add-btn {
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800;
+      padding: 4px 10px; border-radius: 20px; border: none; cursor: pointer;
+      background: #FFD700; color: #1a0040; transition: 0.15s; white-space: nowrap;
+    }
+    .add-btn.added { background: rgba(21,128,61,0.1); color: #15803d; border: 1px solid rgba(21,128,61,0.25); }
+    tr.added-row { border-left: 3px solid #15803d; }
+
+    .pref-header { padding: 14px 16px; border-bottom: 1px solid rgba(106,13,173,0.12); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .pref-title { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:900; color:#1a0040; }
+    .pref-count { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; background:#1a0040; color:#FFD700; padding:2px 8px; border-radius:20px; }
+    .pref-list { flex:1; overflow-y:auto; padding:8px; }
+    .pref-empty { padding:32px 16px; text-align:center; color:#9ca3af; font-size:13px; }
+    .pref-item { display:flex; align-items:flex-start; gap:8px; padding:10px 10px; border-radius:14px; margin-bottom:6px; background:#F8F9FB; border:1px solid #eee; }
+    .pref-item .rank-badge { flex-shrink:0; width:22px; height:22px; border-radius:8px; background:#1a0040; color:#FFD700; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+    .pref-item .pref-name { font-size:12.5px; font-weight:700; color:#212529; line-height:1.3; }
+    .pref-item .pref-sub { font-size:11px; color:#6b7280; margin-top:2px; }
+    .pref-remove { margin-left:auto; color:#d1d5db; cursor:pointer; flex-shrink:0; }
+    .pref-remove:hover { color:#ef4444; }
+
+    .chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; border:1px solid #e5e7eb; background:#fff; color:#6b7280; white-space:nowrap; transition:.12s; }
+    .chip.active { background:#1A0040; color:#fff; border-color:#1A0040; }
+    .chip:hover:not(.active) { border-color:#1A0040; color:#1A0040; }
+
+    .badge-safe { background:rgba(21,128,61,0.1); color:#15803d; }
+    .badge-likely { background:rgba(202,138,4,0.12); color:#a16207; }
+    .badge-borderline { background:rgba(234,88,12,0.12); color:#c2410c; }
+    .badge-out_of_reach { background:rgba(220,38,38,0.1); color:#dc2626; }
+    .chance-pill { font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:20px; text-transform:uppercase; letter-spacing:.02em; }
+
+    table.data-table thead th { position:sticky; top:0; background:#1A0040; color:#fff; z-index:5; }
+    table.data-table tbody tr:hover { background:#FAF7FF; }
+    table.data-table td, table.data-table th { border-bottom:1px solid #F0EEF5; }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-[#F8F9FB] text-[#212529]">
+    <header class="sticky top-0 z-40 bg-[#F8F9FB] border-b border-gray-100">
+      <div class="px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <img src="/asmi-logo.png" alt="ASMI Logo" class="h-9 w-auto">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight text-gray-950">Counsellor — Engineering Preference List Builder</h1>
+              <p class="text-sm text-gray-500 mt-1">JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-3">
+            <div class="relative w-full sm:w-80 xl:w-96">
+              <span class="absolute inset-y-0 left-3 flex items-center text-gray-400"><iconify-icon icon="lucide:search"></iconify-icon></span>
+              <input id="collegeSearch" type="text" placeholder="Search institute, branch..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20 focus:border-[#1A0040]/40 transition-all text-sm custom-shadow">
+            </div>
+            <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
+                <button class="year-btn px-3 py-2 rounded-xl bg-[#1A0040] text-white text-sm font-bold" data-year="2025">2025</button>
+                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold" disabled title="Data coming soon">2024</button>
+              </div>
+              <div class="h-11 w-11 rounded-full bg-[#6A0DAD] text-white flex items-center justify-center font-bold flex-shrink-0">CN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="tool-layout">
+      <!-- ══════════════ LEFT COLUMN ══════════════ -->
+      <div class="left-col">
+        <main class="px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative">
+
+          <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            <div class="xl:col-span-8 bg-white rounded-3xl border border-gray-100 custom-shadow p-6">
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Counselling</p>
+              <h2 class="text-xl font-bold text-gray-950 mt-1">JoSAA — Joint Seat Allocation Authority</h2>
+              <p class="text-sm text-gray-500 mt-1">IITs · NITs · IIITs · GFTIs &middot; B.Tech / B.Arch programs</p>
+            </div>
+
+            <div class="xl:col-span-4 bg-gradient-to-br from-[#212529] to-[#2d2d2d] rounded-3xl custom-shadow p-6 text-white overflow-hidden relative">
+              <div class="relative z-10">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-white/50" id="rank-label">JEE RANK</p>
+                    <div class="flex items-end gap-3 mt-2">
+                      <p class="text-4xl font-bold tracking-tight" id="rank-value">—</p>
+                      <span id="rank-sync-badge" class="mb-2 px-2.5 py-1 rounded-lg bg-[#559822] text-white text-[10px] font-bold uppercase hidden">Synced</span>
+                    </div>
+                    <p class="text-sm text-white/60 mt-2">Pre-loaded from student token. Per-round chances shown below.</p>
+                  </div>
+                  <div class="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                    <iconify-icon icon="lucide:target" class="text-2xl text-[#6A0DAD]"></iconify-icon>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <input id="manualRank" type="number" placeholder="Enter CRL rank manually" class="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/15 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FFD700]/60">
+                </div>
+                <div class="mt-4 grid grid-cols-4 gap-2">
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3"><p id="count-safe" class="text-lg font-bold text-[#86efac]">0</p><p class="text-[9px] text-white/50 font-bold uppercase">Safe</p></div>
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3"><p id="count-likely" class="text-lg font-bold text-[#fde047]">0</p><p class="text-[9px] text-white/50 font-bold uppercase">Likely</p></div>
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3"><p id="count-border" class="text-lg font-bold text-[#fdba74]">0</p><p class="text-[9px] text-white/50 font-bold uppercase">Border</p></div>
+                  <div class="rounded-2xl bg-white/8 border border-white/10 p-3"><p id="count-out" class="text-lg font-bold text-[#fca5a5]">0</p><p class="text-[9px] text-white/50 font-bold uppercase">Out</p></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Filters -->
+          <section class="bg-white rounded-3xl border border-gray-100 custom-shadow p-6 space-y-4">
+            <div>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Quota</p>
+              <div class="flex flex-wrap gap-2" id="quota-chips"></div>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category</p>
+              <div class="flex flex-wrap gap-2" id="category-chips"></div>
+            </div>
+            <div class="flex flex-wrap gap-8">
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Gender</p>
+                <div class="flex flex-wrap gap-2" id="gender-chips"></div>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institute type</p>
+                <div class="flex flex-wrap gap-2" id="itype-chips"></div>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">PwD</p>
+                <div class="flex flex-wrap gap-2" id="pwd-chips"></div>
+              </div>
+              <div class="ml-auto">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Chance-basis round</p>
+                <select id="roundSelect" class="px-3 py-2 rounded-xl border border-gray-200 text-sm font-bold text-[#1A0040] focus:outline-none"></select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Table -->
+          <section class="bg-white rounded-3xl border border-gray-100 custom-shadow overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+              <p class="text-sm font-bold text-gray-700"><span id="rowCount">0</span> programs</p>
+              <div class="flex items-center gap-2 text-xs text-gray-400 font-semibold">Sort by
+                <select id="sortSelect" class="px-2 py-1 rounded-lg border border-gray-200 text-xs font-bold text-[#1A0040]">
+                  <option value="rank_asc">Closing rank (best first)</option>
+                  <option value="rank_desc">Closing rank (worst first)</option>
+                  <option value="name">Institute name</option>
+                </select>
+              </div>
+            </div>
+            <div style="max-height:60vh; overflow:auto;">
+              <table class="data-table w-full text-sm" id="dataTable">
+                <thead>
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Institute</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Type</th>
+                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Program</th>
+                    <th class="px-4 py-3 text-right text-xs font-bold uppercase">Opening</th>
+                    <th class="px-4 py-3 text-right text-xs font-bold uppercase">Closing</th>
+                    <th class="px-4 py-3 text-center text-xs font-bold uppercase">Chance</th>
+                    <th class="px-4 py-3 text-center text-xs font-bold uppercase"></th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <!-- ══════════════ RIGHT COLUMN — Preference list ══════════════ -->
+      <div class="right-col">
+        <div class="pref-header">
+          <span class="pref-title">PREFERENCE LIST</span>
+          <span class="pref-count" id="prefCount">0</span>
+        </div>
+        <div class="pref-list" id="prefList">
+          <div class="pref-empty">No colleges added yet.<br>Click "Add" in the table to build the preference list.</div>
+        </div>
+        <div class="p-4 border-t border-gray-100 flex flex-col gap-2">
+          <button id="exportBtn" class="w-full py-3 rounded-2xl bg-[#FFD700] text-[#1a0040] text-sm font-extrabold hover:brightness-95 transition flex items-center justify-center gap-2">
+            <iconify-icon icon="lucide:download"></iconify-icon> Export preference list (Excel)
+          </button>
+          <button id="saveBtn" class="w-full py-3 rounded-2xl bg-[#1A0040] text-white text-sm font-extrabold hover:brightness-110 transition flex items-center justify-center gap-2">
+            <iconify-icon icon="lucide:save"></iconify-icon> Save to student record
+          </button>
+          <p id="saveStatus" class="text-xs text-center text-gray-400"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
+  const YEAR = 2025;
+
+  const QUOTAS = [
+    { key: 'all-india',   label: 'All India' },
+    { key: 'home-state',  label: 'Home State' },
+    { key: 'other-state', label: 'Other State' },
+    { key: 'goa',         label: 'Goa' },
+    { key: 'jk',          label: 'J&K' },
+    { key: 'ladakh',      label: 'Ladakh' },
+  ];
+  const CATEGORIES = [
+    { key: 'OPEN',    label: 'Open' },
+    { key: 'EWS',     label: 'EWS' },
+    { key: 'OBC-NCL', label: 'OBC-NCL' },
+    { key: 'SC',      label: 'SC' },
+    { key: 'ST',      label: 'ST' },
+  ];
+  const GENDERS = [
+    { key: 'all',         label: 'Gender-Neutral' },
+    { key: 'female-only', label: 'Female-Only' },
+  ];
+  const ITYPES = [
+    { key: 'ALL',  label: 'All' },
+    { key: 'IIT',  label: 'IIT' },
+    { key: 'NIT',  label: 'NIT' },
+    { key: 'IIIT', label: 'IIIT' },
+    { key: 'GFTI', label: 'GFTI' },
+  ];
+  const ROUNDS = ['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'];
+
+  let state = {
+    quota: 'all-india',
+    category: 'OPEN',
+    gender: 'all',
+    itype: 'ALL',
+    pwd: false,
+    round: 'Round 6',
+    sort: 'rank_asc',
+    search: '',
+  };
+  let RANK = null;
+  let PAGE_TOKEN = null;
+  let currentColleges = [];
+  let preferenceList = [];
+
+  function renderChips(containerId, items, activeKey, onClick) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = items.map(it =>
+      `<button class="chip ${it.key === activeKey ? 'active' : ''}" data-key="${it.key}">${it.label}</button>`
+    ).join('');
+    el.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => onClick(btn.dataset.key));
+    });
+  }
+
+  function renderAllChips() {
+    renderChips('quota-chips', QUOTAS, state.quota, k => { state.quota = k; loadData(); renderAllChips(); });
+    renderChips('category-chips', CATEGORIES, state.category, k => { state.category = k; loadData(); renderAllChips(); });
+    renderChips('gender-chips', GENDERS, state.gender, k => { state.gender = k; loadData(); renderAllChips(); });
+    renderChips('itype-chips', ITYPES, state.itype, k => { state.itype = k; renderTable(); renderAllChips(); });
+    renderChips('pwd-chips', [{key:'no',label:'No'},{key:'yes',label:'Yes'}], state.pwd ? 'yes' : 'no', k => { state.pwd = (k === 'yes'); renderTable(); renderAllChips(); });
+  }
+
+  function populateRoundSelect() {
+    const sel = document.getElementById('roundSelect');
+    sel.innerHTML = ROUNDS.map(r => `<option value="${r}" ${r === state.round ? 'selected' : ''}>${r}</option>`).join('');
+    sel.addEventListener('change', () => { state.round = sel.value; renderTable(); });
+  }
+
+  async function loadData() {
+    const url = `/data/cutoffs/JOSAA/${YEAR}/${state.quota}/${state.category}/${state.gender}.json`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) { currentColleges = []; renderTable(); return; }
+      const json = await res.json();
+      currentColleges = json.colleges || [];
+    } catch (e) {
+      console.warn('Failed to load cutoff data', url, e);
+      currentColleges = [];
+    }
+    renderTable();
+  }
+
+  function getRankForRound(entry, round) {
+    const r = entry && entry.rounds ? entry.rounds[round] : null;
+    if (!r) return { open: null, close: null, prep: false };
+    const closeKey = state.pwd ? 'AIR_PWD' : 'AIR';
+    const openKey = state.pwd ? 'Opening_PWD' : 'Opening';
+    return { open: r[openKey] ?? null, close: r[closeKey] ?? null, prep: !!r.prep };
+  }
+
+  function getChance(closingRank) {
+    if (RANK == null || closingRank == null) return null;
+    if (RANK <= closingRank * 0.88) return { key: 'safe', label: 'Safe' };
+    if (RANK <= closingRank)        return { key: 'likely', label: 'Likely' };
+    if (RANK <= closingRank * 1.12) return { key: 'borderline', label: 'Borderline' };
+    return { key: 'out_of_reach', label: 'Out of Reach' };
+  }
+
+  function renderTable() {
+    let rows = currentColleges.filter(c => state.itype === 'ALL' || c.type === state.itype);
+
+    const q = state.search.trim().toLowerCase();
+    if (q) {
+      rows = rows.filter(c =>
+        c.name.toLowerCase().includes(q) || c.program.toLowerCase().includes(q)
+      );
+    }
+
+    rows = rows.map(c => {
+      const { open, close, prep } = getRankForRound(c, state.round);
+      return { c, open, close, prep, chance: getChance(close) };
+    });
+
+    if (state.sort === 'rank_asc') rows.sort((a,b) => (a.close ?? Infinity) - (b.close ?? Infinity));
+    else if (state.sort === 'rank_desc') rows.sort((a,b) => (b.close ?? -Infinity) - (a.close ?? -Infinity));
+    else rows.sort((a,b) => a.c.name.localeCompare(b.c.name));
+
+    const counts = { safe:0, likely:0, borderline:0, out_of_reach:0 };
+    rows.forEach(r => { if (r.chance) counts[r.chance.key]++; });
+    document.getElementById('count-safe').textContent = counts.safe;
+    document.getElementById('count-likely').textContent = counts.likely;
+    document.getElementById('count-border').textContent = counts.borderline;
+    document.getElementById('count-out').textContent = counts.out_of_reach;
+
+    document.getElementById('rowCount').textContent = rows.length;
+
+    const tbody = document.getElementById('tableBody');
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the 2025 JoSAA data.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map(({c, open, close, prep, chance}) => {
+      const id = prefId(c);
+      const added = preferenceList.some(p => p.id === id);
+      return `
+        <tr class="${added ? 'added-row' : ''}">
+          <td class="px-4 py-3 font-semibold text-gray-800">${c.name}</td>
+          <td class="px-4 py-3 text-gray-500">${c.type}</td>
+          <td class="px-4 py-3 text-gray-600">${c.program}${prep ? ' <span class="text-[10px] text-amber-600 font-bold">(Prep)</span>' : ''}</td>
+          <td class="px-4 py-3 text-right text-gray-500">${open != null ? open.toLocaleString('en-IN') : '—'}</td>
+          <td class="px-4 py-3 text-right font-bold text-gray-800">${close != null ? close.toLocaleString('en-IN') : '—'}</td>
+          <td class="px-4 py-3 text-center">${chance ? `<span class="chance-pill badge-${chance.key}">${chance.label}</span>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
+          <td class="px-4 py-3 text-center">
+            <button class="add-btn ${added ? 'added' : ''}" data-id="${id}">${added ? '✓ Added' : '+ Add'}</button>
+          </td>
+        </tr>`;
+    }).join('');
+
+    tbody.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => toggleAdd(btn.dataset.id, rows));
+    });
+  }
+
+  function prefId(c) { return `${c.name}__${c.program}`; }
+
+  function toggleAdd(id, rows) {
+    const idx = preferenceList.findIndex(p => p.id === id);
+    if (idx >= 0) {
+      preferenceList.splice(idx, 1);
+    } else {
+      const found = rows.find(r => prefId(r.c) === id);
+      if (found) {
+        preferenceList.push({
+          id,
+          name: found.c.name,
+          type: found.c.type,
+          program: found.c.program,
+          close: found.close,
+          chance: found.chance ? found.chance.label : '—',
+        });
+      }
+    }
+    renderTable();
+    renderPrefList();
+  }
+
+  function renderPrefList() {
+    document.getElementById('prefCount').textContent = preferenceList.length;
+    const el = document.getElementById('prefList');
+    if (preferenceList.length === 0) {
+      el.innerHTML = `<div class="pref-empty">No colleges added yet.<br>Click "Add" in the table to build the preference list.</div>`;
+      return;
+    }
+    el.innerHTML = preferenceList.map((p, i) => `
+      <div class="pref-item" data-id="${p.id}">
+        <div class="rank-badge">${i+1}</div>
+        <div class="flex-1">
+          <div class="pref-name">${p.name}</div>
+          <div class="pref-sub">${p.program} &middot; ${p.type} &middot; Closing ${p.close != null ? p.close.toLocaleString('en-IN') : '—'} &middot; ${p.chance}</div>
+        </div>
+        <iconify-icon icon="lucide:x" class="pref-remove" data-id="${p.id}"></iconify-icon>
+      </div>
+    `).join('');
+    el.querySelectorAll('.pref-remove').forEach(x => {
+      x.addEventListener('click', () => {
+        preferenceList = preferenceList.filter(p => p.id !== x.dataset.id);
+        renderPrefList();
+        renderTable();
+      });
+    });
+  }
+
+  function exportExcel() {
+    if (preferenceList.length === 0) { alert('Add at least one college to the preference list first.'); return; }
+    const rows = preferenceList.map((p, i) => ({
+      'Pref No.': i + 1,
+      'Institute': p.name,
+      'Type': p.type,
+      'Program': p.program,
+      [`Closing Rank (2025, ${state.round})`]: p.close,
+      'Chance': p.chance,
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Preference List');
+    XLSX.writeFile(wb, `ASMI_Engineering_Preference_List_${PAGE_TOKEN || 'student'}.xlsx`);
+  }
+
+  async function saveToStudent() {
+    const statusEl = document.getElementById('saveStatus');
+    if (!PAGE_TOKEN) { statusEl.textContent = 'Save failed — no student token in URL'; return; }
+    statusEl.textContent = 'Saving...';
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges: preferenceList, track: 'engineering' }),
+      });
+      const json = await res.json();
+      statusEl.textContent = json.success ? 'Saved to student record.' : 'Save failed — please retry.';
+    } catch (e) {
+      statusEl.textContent = 'Save failed — network error.';
+    }
+  }
+
+  async function initUI() {
+    const params = new URLSearchParams(window.location.search);
+    PAGE_TOKEN = params.get('token');
+
+    if (PAGE_TOKEN) {
+      try {
+        const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(PAGE_TOKEN)}`);
+        const json = await res.json();
+        if (json.success && json.data) {
+          const rawRank = json.data.rank || json.data.jee_rank || json.data.crl_rank;
+          if (rawRank && rawRank !== 0) {
+            RANK = parseInt(rawRank, 10);
+            document.getElementById('rank-value').textContent = `#${RANK.toLocaleString('en-IN')}`;
+            document.getElementById('rank-sync-badge').classList.remove('hidden');
+            document.getElementById('manualRank').value = RANK;
+          }
+        }
+      } catch (e) { console.warn('Rank fetch failed:', e); }
+    }
+
+    document.getElementById('manualRank').addEventListener('input', (e) => {
+      const v = parseInt(e.target.value, 10);
+      RANK = isNaN(v) ? null : v;
+      document.getElementById('rank-value').textContent = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
+      renderTable();
+    });
+
+    document.getElementById('collegeSearch').addEventListener('input', (e) => { state.search = e.target.value; renderTable(); });
+    document.getElementById('sortSelect').addEventListener('change', (e) => { state.sort = e.target.value; renderTable(); });
+    document.getElementById('exportBtn').addEventListener('click', exportExcel);
+    document.getElementById('saveBtn').addEventListener('click', saveToStudent);
+
+    renderAllChips();
+    populateRoundSelect();
+    await loadData();
+  }
+
+  initUI();
+</script>
+</body>
+</html>
