@@ -6,6 +6,19 @@
   "sub_type": "FEMALE",
   "colleges": [
     {
+      "code": 3109,
+      "name": "B.S.D.Trust’s Ayurved College, Wagholi, Pune",
+      "establishment": 3109,
+      "fees": 442500,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": 172645,
+          "SML": null
+        }
+      }
+    },
+    {
       "code": 3114,
       "name": "Yeshwant Ayurvedic College Post Graduate Training & Research Centre, Kodoli, Kolhapur",
       "establishment": 3114,
@@ -53,6 +66,19 @@
         "Round 1": {
           "Intake": null,
           "AIR": 257987,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3112,
+      "name": "Ayurvedic Medical College, Peth Vadgaon, Kolhapur",
+      "establishment": 3112,
+      "fees": 660000,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": 261181,
           "SML": null
         }
       }
