@@ -153,6 +153,21 @@
                 <select id="roundSelect" class="px-3 py-2 rounded-xl border border-gray-200 text-sm font-bold text-[#0a1628] focus:outline-none"></select>
               </div>
             </div>
+            <div class="relative" id="branch-filter-wrap">
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Branch</p>
+              <button id="branchDropdownBtn" class="w-full sm:w-80 flex items-center justify-between px-3 py-2 rounded-xl border border-gray-200 text-sm font-bold text-[#0a1628] bg-white">
+                <span id="branchDropdownLabel">All Branches</span>
+                <iconify-icon icon="lucide:chevron-down" class="text-gray-400"></iconify-icon>
+              </button>
+              <div id="branchDropdownPanel" class="hidden absolute z-20 mt-2 w-full sm:w-96 bg-white border border-gray-200 rounded-2xl custom-shadow p-3">
+                <input id="branchSearch" type="text" placeholder="Search branch..." class="w-full px-3 py-2 mb-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#00A896]/50">
+                <div class="flex items-center justify-between mb-2">
+                  <button id="branchClearBtn" class="text-xs font-bold text-[#00A896]">Clear all</button>
+                  <span id="branchSelectedCount" class="text-xs text-gray-400"></span>
+                </div>
+                <div id="branchOptionList" class="max-h-64 overflow-y-auto space-y-1"></div>
+              </div>
+            </div>
           </section>
 
           <!-- Table -->
@@ -250,11 +265,14 @@
     round: 'Round 6',
     sort: 'rank_asc',
     search: '',
+    branches: [],
   };
   let RANK = null;
   let PAGE_TOKEN = null;
   let currentColleges = [];
   let preferenceList = [];
+  let branchOptions = [];
+  let branchSearch = '';
 
   function renderChips(containerId, items, activeKey, onClick) {
     const el = document.getElementById(containerId);
@@ -280,17 +298,72 @@
     sel.addEventListener('change', () => { state.round = sel.value; renderTable(); });
   }
 
+  function updateBranchOptions() {
+    branchOptions = [...new Set(currentColleges.map(c => c.program))].sort();
+    state.branches = state.branches.filter(b => branchOptions.includes(b));
+    renderBranchDropdown();
+  }
+
+  function renderBranchDropdown() {
+    const label = document.getElementById('branchDropdownLabel');
+    label.textContent = state.branches.length === 0 ? 'All Branches' : `${state.branches.length} branch${state.branches.length > 1 ? 'es' : ''} selected`;
+
+    const q = branchSearch.trim().toLowerCase();
+    const filtered = q ? branchOptions.filter(b => b.toLowerCase().includes(q)) : branchOptions;
+
+    document.getElementById('branchSelectedCount').textContent = state.branches.length ? `${state.branches.length} selected` : '';
+
+    const listEl = document.getElementById('branchOptionList');
+    if (filtered.length === 0) {
+      listEl.innerHTML = `<div class="text-xs text-gray-400 px-2 py-4 text-center">No branches match.</div>`;
+      return;
+    }
+    listEl.innerHTML = filtered.map(b => {
+      const checked = state.branches.includes(b);
+      return `<label class="flex items-start gap-2 px-2 py-1.5 rounded-lg hover:bg-[#F1FBFA] cursor-pointer text-xs text-gray-700">
+        <input type="checkbox" class="branch-opt mt-0.5" data-branch="${b.replace(/"/g,'&quot;')}" ${checked ? 'checked' : ''}>
+        <span>${b}</span>
+      </label>`;
+    }).join('');
+    listEl.querySelectorAll('.branch-opt').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const b = cb.dataset.branch;
+        if (cb.checked) state.branches.push(b);
+        else state.branches = state.branches.filter(x => x !== b);
+        renderBranchDropdown();
+        renderTable();
+      });
+    });
+  }
+
+  function initBranchDropdown() {
+    const btn = document.getElementById('branchDropdownBtn');
+    const panel = document.getElementById('branchDropdownPanel');
+    const searchInput = document.getElementById('branchSearch');
+    btn.addEventListener('click', () => panel.classList.toggle('hidden'));
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('branch-filter-wrap').contains(e.target)) panel.classList.add('hidden');
+    });
+    searchInput.addEventListener('input', (e) => { branchSearch = e.target.value; renderBranchDropdown(); });
+    document.getElementById('branchClearBtn').addEventListener('click', () => {
+      state.branches = [];
+      renderBranchDropdown();
+      renderTable();
+    });
+  }
+
   async function loadData() {
     const url = `/data/cutoffs/JOSAA/${YEAR}/${state.quota}/${state.category}/${state.gender}.json`;
     try {
       const res = await fetch(url);
-      if (!res.ok) { currentColleges = []; renderTable(); return; }
+      if (!res.ok) { currentColleges = []; updateBranchOptions(); renderTable(); return; }
       const json = await res.json();
       currentColleges = json.colleges || [];
     } catch (e) {
       console.warn('Failed to load cutoff data', url, e);
       currentColleges = [];
     }
+    updateBranchOptions();
     renderTable();
   }
 
@@ -312,6 +385,7 @@
 
   function renderTable() {
     let rows = currentColleges.filter(c => state.itype === 'ALL' || c.type === state.itype);
+    if (state.branches.length > 0) rows = rows.filter(c => state.branches.includes(c.program));
 
     const q = state.search.trim().toLowerCase();
     if (q) {
@@ -482,6 +556,7 @@
 
     renderAllChips();
     populateRoundSelect();
+    initBranchDropdown();
     await loadData();
   }
 
