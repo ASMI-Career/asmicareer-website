@@ -12,7 +12,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 406704,
           "SML": 11178,
           "CSML": "SC-1248"
@@ -26,7 +26,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 660139,
           "SML": 21052,
           "CSML": "SC-2749"
@@ -54,7 +54,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1052107,
           "SML": 31230,
           "CSML": "SC-4408"
@@ -68,10 +68,62 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1176248,
           "SML": 32911,
           "CSML": "SC-4827"
+        }
+      }
+    },
+    {
+      "code": 3116,
+      "name": "SCM Aryangla Vaidyak Mahavidyalaya, Satara",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3125,
+      "name": "Ayurved Mahavidyalaya, Nashik",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3343,
+      "name": "Government Ayurvedic Mahavidyalaya, Nanded",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3344,
+      "name": "Government Ayurved College, Osmanabad",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": null,
+          "SML": null
         }
       }
     }

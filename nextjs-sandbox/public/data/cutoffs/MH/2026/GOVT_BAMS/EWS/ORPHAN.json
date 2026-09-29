@@ -2,32 +2,19 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BAMS",
-  "category": "MKB",
-  "sub_type": "FEMALE",
+  "category": "EWS",
+  "sub_type": "ORPHAN",
   "colleges": [
     {
-      "code": 3182,
-      "name": "Government Ayurvedic Mahavidyalaya, Jalgaon",
+      "code": 3117,
+      "name": "Vasantdada Patil Ayurvedic Mahavidyalaya, Sangli",
       "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 204673,
-          "SML": 3706
-        }
-      }
-    },
-    {
-      "code": 3232,
-      "name": "Government Ayurvedic Mahavidyalaya, Nagpur",
-      "establishment": 1965,
-      "fees": null,
-      "rounds": {
-        "Round 1": {
-          "Intake": 1,
-          "AIR": 330467,
-          "SML": 8072
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -38,7 +25,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": 2,
+          "Intake": 1,
           "AIR": null,
           "SML": null
         }

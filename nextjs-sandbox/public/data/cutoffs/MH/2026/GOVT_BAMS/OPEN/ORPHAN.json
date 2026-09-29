@@ -12,10 +12,49 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 826557,
           "SML": 26158,
           "CSML": "SC-3515"
+        }
+      }
+    },
+    {
+      "code": 3103,
+      "name": "A.V.P Mandal's Ayurved Mahavidyalaya, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3191,
+      "name": "Government Ayurvedic Mahavidyalaya, Baramati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3344,
+      "name": "Government Ayurved College, Osmanabad",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }

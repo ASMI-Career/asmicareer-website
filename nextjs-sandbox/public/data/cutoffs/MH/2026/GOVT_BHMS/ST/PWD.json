@@ -2,8 +2,8 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BHMS",
-  "category": "SEBC",
-  "sub_type": "FEMALE",
+  "category": "ST",
+  "sub_type": "PWD",
   "colleges": [
     {
       "code": 4164,
@@ -12,10 +12,9 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": 2,
-          "AIR": 341672,
-          "SML": 8517,
-          "CSML": "SEBC-1240"
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -26,10 +25,9 @@
       "fees": "63100",
       "rounds": {
         "Round 1": {
-          "Intake": 4,
-          "AIR": 401976,
-          "SML": 10983,
-          "CSML": "SEBC-1537"
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }

@@ -12,7 +12,7 @@
       "fees": "-",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 336666,
           "SML": 8326,
           "CSML": "EWS-718"
@@ -26,10 +26,75 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 858185,
           "SML": 27046,
           "CSML": "EWS-2421"
+        }
+      }
+    },
+    {
+      "code": 3129,
+      "name": "KVT Randhir Ayurvedic Mahavidyalaya, Dhule",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3182,
+      "name": "Government Ayurvedic Mahavidyalaya, Jalgaon",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3232,
+      "name": "Government Ayurvedic Mahavidyalaya, Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3239,
+      "name": "DMM Ayurved Mahavidyalaya, Yavatmal",
+      "establishment": "-",
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3344,
+      "name": "Government Ayurved College, Osmanabad",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": null,
+          "SML": null
         }
       }
     }

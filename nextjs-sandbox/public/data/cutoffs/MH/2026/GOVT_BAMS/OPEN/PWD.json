@@ -12,7 +12,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 415881,
           "SML": 11538,
           "CSML": "PWD"
@@ -26,7 +26,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 428705,
           "SML": 12080,
           "CSML": "SEBC-1678"
@@ -40,7 +40,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 504499,
           "SML": 15200,
           "CSML": "SEBC-2035"
@@ -54,7 +54,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 662464,
           "SML": 21141,
           "CSML": "PWD"
@@ -68,7 +68,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 677756,
           "SML": 21668,
           "CSML": "PWD"
@@ -82,10 +82,140 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1003811,
           "SML": 30472,
           "CSML": "PWD"
+        }
+      }
+    },
+    {
+      "code": 3101,
+      "name": "R. A. Podar Ayurved Mahavidyalaya, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3103,
+      "name": "A.V.P Mandal's Ayurved Mahavidyalaya, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3108,
+      "name": "Rashtriya Shikshan Mandal's Tilak Ayurved Mahavidyalaya, Pune",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3125,
+      "name": "Ayurved Mahavidyalaya, Nashik",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3232,
+      "name": "Government Ayurvedic Mahavidyalaya, Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3235,
+      "name": "Shri. Gurudeo Ayurvedic College, Amravati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3237,
+      "name": "R.T. Ayurved Mahavidyalaya, Akola",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3239,
+      "name": "DMM Ayurved Mahavidyalaya, Yavatmal",
+      "establishment": "-",
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3343,
+      "name": "Government Ayurvedic Mahavidyalaya, Nanded",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3344,
+      "name": "Government Ayurved College, Osmanabad",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 17,
+          "AIR": null,
+          "SML": null
         }
       }
     }

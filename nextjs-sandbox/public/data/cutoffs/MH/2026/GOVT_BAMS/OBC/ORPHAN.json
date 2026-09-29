@@ -2,34 +2,32 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BAMS",
-  "category": "NTC",
-  "sub_type": "PWD",
+  "category": "OBC",
+  "sub_type": "ORPHAN",
   "colleges": [
     {
       "code": 3101,
       "name": "R. A. Podar Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1941,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 242155,
-          "SML": 4956,
-          "CSML": "NTC-343"
+          "AIR": null,
+          "SML": null
         }
       }
     },
     {
-      "code": 3103,
-      "name": "A.V.P Mandal's Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1954,
+      "code": 3108,
+      "name": "Rashtriya Shikshan Mandal's Tilak Ayurved Mahavidyalaya, Pune",
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
-          "AIR": 437593,
-          "SML": 12423,
-          "CSML": "NTC-812"
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -53,7 +51,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": 3,
+          "Intake": 2,
           "AIR": null,
           "SML": null
         }

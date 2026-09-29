@@ -2,40 +2,51 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BAMS",
-  "category": "NTC",
+  "category": "SEBC",
   "sub_type": "PWD",
   "colleges": [
     {
       "code": 3101,
       "name": "R. A. Podar Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1941,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 242155,
-          "SML": 4956,
-          "CSML": "NTC-343"
+          "AIR": null,
+          "SML": null
         }
       }
     },
     {
-      "code": 3103,
-      "name": "A.V.P Mandal's Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1954,
+      "code": 3116,
+      "name": "SCM Aryangla Vaidyak Mahavidyalaya, Satara",
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
-          "AIR": 437593,
-          "SML": 12423,
-          "CSML": "NTC-812"
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
     {
-      "code": 3182,
-      "name": "Government Ayurvedic Mahavidyalaya, Jalgaon",
+      "code": 3117,
+      "name": "Vasantdada Patil Ayurvedic Mahavidyalaya, Sangli",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3125,
+      "name": "Ayurved Mahavidyalaya, Nashik",
       "establishment": null,
       "fees": null,
       "rounds": {
@@ -53,7 +64,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": 3,
+          "Intake": 5,
           "AIR": null,
           "SML": null
         }

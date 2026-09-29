@@ -12,7 +12,7 @@
       "fees": 62500,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 11,
           "AIR": 671951,
           "SML": 21441,
           "CSML": "OBC-6090"
@@ -26,7 +26,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 778524,
           "SML": 24771,
           "CSML": "OBC-7001"
@@ -40,7 +40,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1108978,
           "SML": 32028,
           "CSML": "OBC-9152"
@@ -54,7 +54,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1124064,
           "SML": 32231,
           "CSML": "OBC-9241"
@@ -68,10 +68,101 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1134097,
           "SML": 32378,
           "CSML": "OBC-9287"
+        }
+      }
+    },
+    {
+      "code": 3117,
+      "name": "Vasantdada Patil Ayurvedic Mahavidyalaya, Sangli",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3182,
+      "name": "Government Ayurvedic Mahavidyalaya, Jalgaon",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3191,
+      "name": "Government Ayurvedic Mahavidyalaya, Baramati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3235,
+      "name": "Shri. Gurudeo Ayurvedic College, Amravati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3237,
+      "name": "R.T. Ayurved Mahavidyalaya, Akola",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3239,
+      "name": "DMM Ayurved Mahavidyalaya, Yavatmal",
+      "establishment": "-",
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3343,
+      "name": "Government Ayurvedic Mahavidyalaya, Nanded",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }

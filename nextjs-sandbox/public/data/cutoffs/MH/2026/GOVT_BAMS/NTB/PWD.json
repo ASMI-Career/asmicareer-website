@@ -12,10 +12,36 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1164083,
           "SML": 32746,
           "CSML": "NTB-838"
+        }
+      }
+    },
+    {
+      "code": 3235,
+      "name": "Shri. Gurudeo Ayurvedic College, Amravati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3344,
+      "name": "Government Ayurved College, Osmanabad",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null
         }
       }
     }

@@ -12,10 +12,23 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 971407,
           "SML": 29823,
           "CSML": "PWD"
+        }
+      }
+    },
+    {
+      "code": 4172,
+      "name": "Government Homeopathy College, Kolhapur",
+      "establishment": 2026,
+      "fees": "63100",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null
         }
       }
     }

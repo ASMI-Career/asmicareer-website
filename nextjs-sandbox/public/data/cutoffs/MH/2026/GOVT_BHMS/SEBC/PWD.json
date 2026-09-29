@@ -2,7 +2,7 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BHMS",
-  "category": "OBC",
+  "category": "SEBC",
   "sub_type": "PWD",
   "colleges": [
     {
@@ -13,9 +13,8 @@
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 1189781,
-          "SML": 33079,
-          "CSML": "OBC-9585"
+          "AIR": null,
+          "SML": null
         }
       }
     }

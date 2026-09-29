@@ -2,8 +2,8 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BHMS",
-  "category": "OBC",
-  "sub_type": "PWD",
+  "category": "OPEN",
+  "sub_type": "ORPHAN",
   "colleges": [
     {
       "code": 4172,
@@ -13,9 +13,8 @@
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 1189781,
-          "SML": 33079,
-          "CSML": "OBC-9585"
+          "AIR": null,
+          "SML": null
         }
       }
     }
