@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="NEET-PG cutoff explorer by ASMI Youth Career Advisor. Pick All India or a state to see closing ranks for MD, MS and Diploma seats.">
+<title>NEET-PG Cutoff Explorer | ASMI Career</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f4f1ff;--surface:#ffffff;--fg:#1d1a3b;--muted:#6a6689;--line:#e4def7;--accent:#5b21b6;--accent-fg:#ffffff;--good:#0f7a43;--good-bg:#d9f5e5;--soon:#6a6689;--soon-bg:#efeaff;--hero1:#3b0f8c;--hero2:#7c3aed;--yellow:#ffd60a;--ink:#2e1065;
+--sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a49fc7;--soon-bg:#2a2158;--hero1:#2a0c66;--hero2:#5b2bc4;--ink:#ffe27a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a49fc7;--soon-bg:#2a2158;--hero1:#2a0c66;--hero2:#5b2bc4;--ink:#ffe27a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:20px 40px}
+.wrap{max-width:960px;margin-inline:auto}
+.brand{display:flex;gap:16px;align-items:center;background:linear-gradient(120deg,var(--hero1),var(--hero2) 70%,#c026d3);color:#fff;border-radius:16px;padding:18px 22px;box-shadow:0 10px 30px rgba(91,33,182,.28)}
+.brand img{width:56px;height:56px;border-radius:12px;background:#fff;padding:4px;object-fit:contain;flex:none}
+.brand h1{margin:0;font-size:22px;line-height:1.2}
+.brand p{margin:4px 0 0;opacity:.9;font-size:14px}
+h2{font-size:17px;margin:28px 0 4px}
+.lead{margin:0 0 14px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px}
+.card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:18px;text-decoration:none;color:inherit;min-height:150px;position:relative}
+.card .nm{font-size:19px;font-weight:700;color:var(--ink)}
+.card .ds{color:var(--muted);font-size:13.5px;flex:1}
+.tag{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+.live .tag{background:var(--good-bg);color:var(--good)}
+.soon .tag{background:var(--soon-bg);color:var(--soon)}
+.live{cursor:pointer;border-color:var(--accent)}
+.live:hover,.live:focus-visible{box-shadow:0 8px 24px rgba(91,33,182,.22);transform:translateY(-2px)}
+.live .go{font-weight:600;color:var(--accent)}
+.soon{opacity:.8;border-style:dashed}
+.live{transition:transform .12s,box-shadow .12s}
+.note{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--muted);font-size:13.5px}
+.note b{color:var(--fg)}
+.note a{color:var(--accent);font-weight:600}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.live{transition:none}.live:hover{transform:none}}
+</style></head><body>
+<div class="wrap">
+<header class="brand"><img alt="ASMI Youth Career Advisor" src="/asmi-logo.png">
+<div><h1>NEET-PG Cutoff Explorer</h1><p>Closing ranks for MD, MS and Diploma seats, round by round.</p></div></header>
+
+<h2>Step 1: Choose where you want to look</h2>
+<p class="lead">Pick All India or a state. The cutoff explorer opens with that region's data.</p>
+<div class="grid" id="grid"></div>
+
+<div class="note"><b>Adding more regions.</b> We publish a region only after its official seat allotment lists have been checked. Regions marked "Coming soon" are in the queue. Need one urgently? Call our helpline on <a href="tel:7410019075">7410019075</a>.</div>
+</div>
+<script>
+/* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
+var REGIONS=[
+ {name:'All India',desc:'MCC all India counselling: AIQ and deemed universities.',status:'soon'},
+ {name:'Maharashtra',desc:'State CET Cell selection lists, Rounds 1 to 5 (2025). State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
+ {name:'Karnataka',desc:'KEA PG counselling cutoffs.',status:'soon'},
+ {name:'Uttar Pradesh',desc:'UP PG counselling cutoffs.',status:'soon'}
+];
+var g=document.getElementById('grid');
+REGIONS.forEach(function(r){
+ var live=r.status==='live',el=document.createElement(live?'a':'div');
+ el.className='card '+(live?'live':'soon');
+ if(live)el.href=r.url;
+ el.innerHTML='<span class="tag">'+(live?'Data available':'Coming soon')+'</span><span class="nm"></span><span class="ds"></span>'+(live?'<span class="go">Open cutoff explorer &rarr;</span>':'');
+ el.querySelector('.nm').textContent=r.name;
+ el.querySelector('.ds').textContent=r.desc;
+ g.appendChild(el);
+});
+</script>
+</body></html>
