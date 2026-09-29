@@ -26,7 +26,7 @@
       "fees": "190,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 210468,
           "SML": 3911,
           "CSML": "NTD-191"
@@ -40,7 +40,7 @@
       "fees": "222,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 230276,
           "SML": 4548,
           "CSML": "NTD-206"
@@ -54,7 +54,7 @@
       "fees": "242,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 244856,
           "SML": 5058,
           "CSML": "NTD-224"
@@ -68,7 +68,7 @@
       "fees": 195500,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 252323,
           "SML": 5300,
           "CSML": "NTD-231"
@@ -82,7 +82,7 @@
       "fees": "186,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 267507,
           "SML": 5838,
           "CSML": "NTD-247"
@@ -96,7 +96,7 @@
       "fees": "165,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 282676,
           "SML": 6337,
           "CSML": "NTD-264"
@@ -110,7 +110,7 @@
       "fees": "176,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 283013,
           "SML": 6352,
           "CSML": "NTD-265"
@@ -124,7 +124,7 @@
       "fees": "186,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 317140,
           "SML": 7603,
           "CSML": "NTD-317"
@@ -138,7 +138,7 @@
       "fees": "244,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 333406,
           "SML": 8206,
           "CSML": "NTD-341"
@@ -152,7 +152,7 @@
       "fees": 136000,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 335660,
           "SML": 8292,
           "CSML": "NTD-346"
@@ -166,7 +166,7 @@
       "fees": "175,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 335922,
           "SML": 8302,
           "CSML": "NTD-347"
@@ -180,7 +180,7 @@
       "fees": "220,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 352205,
           "SML": 8912,
           "CSML": "NTD-368"
@@ -194,7 +194,7 @@
       "fees": "205,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 357960,
           "SML": 9151,
           "CSML": "NTD-375"
@@ -208,7 +208,7 @@
       "fees": "186,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 366456,
           "SML": 9504,
           "CSML": "NTD-388"
@@ -222,7 +222,7 @@
       "fees": "166,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 367790,
           "SML": 9557,
           "CSML": "NTD-390"
@@ -236,7 +236,7 @@
       "fees": "185000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 367969,
           "SML": 9572,
           "CSML": "NTD-391"
@@ -250,7 +250,7 @@
       "fees": "185000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 390328,
           "SML": 10511,
           "CSML": "NTD-421"
@@ -264,10 +264,595 @@
       "fees": "175,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 400355,
           "SML": 10914,
           "CSML": "NTD-433"
+        }
+      }
+    },
+    {
+      "code": 3104,
+      "name": "Yerala Medical Trust Ayurved College, Navi Mumbai",
+      "establishment": 1991,
+      "fees": "297,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3109,
+      "name": "B.S.D.Trust’s Ayurved College, Wagholi, Pune",
+      "establishment": 1998,
+      "fees": "147,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3110,
+      "name": "P.D.E.A’S College of Ayurved and Research Centre, Pune",
+      "establishment": 1990,
+      "fees": "231,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3111,
+      "name": "Sumatibhai Shah Ayurved College, Hadpsar, Pune",
+      "establishment": 1990,
+      "fees": "198,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3114,
+      "name": "Yeshwant Ayurvedic College Post Graduate Training & Research Centre, Kodoli, Kolhapur",
+      "establishment": 1989,
+      "fees": "270,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3118,
+      "name": "Shri Annasaheb Dange Ayurved Medical College, Walwa, Sangli",
+      "establishment": 1999,
+      "fees": "220,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3121,
+      "name": "Sangam Sevabhavi Trust’s Ayurved College, Sangamner, Ahemadnagar",
+      "establishment": 1992,
+      "fees": "222,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3123,
+      "name": "Pravara Medical Trust’s Ayurved College & Shri Sant Eknath Rugnalaya, Shevgaon, Ahemadnagar",
+      "establishment": 1999,
+      "fees": "202,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3126,
+      "name": "Shree Saptashrungi Ayurved Mahavidyalaya & Hospital, Panchavati, Nashik",
+      "establishment": 1999,
+      "fees": "200,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3130,
+      "name": "KDMG’s Ayurvedic Medical College & Hospital, Chalisgaon, Jalgaon",
+      "establishment": 1998,
+      "fees": "150,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3131,
+      "name": "Chaitanya Ayurved College, Bhusawal",
+      "establishment": 1989,
+      "fees": "257,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3132,
+      "name": "Sawkar Ayurvedic Medical College Satara",
+      "establishment": 1989,
+      "fees": "178,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3135,
+      "name": "Rukhmini Ayurvedic Medical College, Ahmednagar",
+      "establishment": 2023,
+      "fees": "171,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3136,
+      "name": "Pradip Patil Ayurvedic Medical College, Kolhapur",
+      "establishment": 2023,
+      "fees": "165,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3139,
+      "name": "Ahinsa Instiute of Ayurveda, Dhule",
+      "establishment": 2023,
+      "fees": "178,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3140,
+      "name": "P. V. Belhekar Ayurvedic College, Ahmednagar",
+      "establishment": 2023,
+      "fees": "176,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3142,
+      "name": "Jaywant Institute of Medical Science, Walwa, Sangli",
+      "establishment": 2023,
+      "fees": "175,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3143,
+      "name": "Shri Shantibai Otarmal Jain Ayurveda College & Hospital, Nagothane, Raigad",
+      "establishment": 2024,
+      "fees": "185,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3147,
+      "name": "Ashvin Rural Ayurved College, Ahemadnagar",
+      "establishment": 2000,
+      "fees": "243,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3149,
+      "name": "Dr Bhanudas Dhere College of Ayurved, Sangamner",
+      "establishment": 2024,
+      "fees": "267,780",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3158,
+      "name": "Loknete Rajarambapu Patil Ayurvedic Medical College, Walwa, Sangli",
+      "establishment": 2002,
+      "fees": "242,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3173,
+      "name": "ASPM Ayurved Medical College & Hospital, Sindhudurg",
+      "establishment": 2025,
+      "fees": "185000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3178,
+      "name": "Santoshimata Bahuddeshiya Shaikshanik Seva Sanstha Ayurveda College Yeola, Nashik",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3183,
+      "name": "B.R Harne Ayurved Mahavidyalalya, Thane",
+      "establishment": 2019,
+      "fees": "238,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3184,
+      "name": "Rashtrasant Janardhan Swami Ayurved Medical College & Research Centre, Kopargaon, Ahmednagar",
+      "establishment": 2019,
+      "fees": "152,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3185,
+      "name": "Ideal College Of Ayurved, Palghar",
+      "establishment": 2020,
+      "fees": "196,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3186,
+      "name": "Shri Eknathrao Khadse Ayurved College, Muktainagar, Jalgaon",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3190,
+      "name": "P. G. Ayurved Medical College, Nandurbar",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3193,
+      "name": "S. Shivshankar Ayurved College Jath Sangli",
+      "establishment": 2016,
+      "fees": "165,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3238,
+      "name": "Gramin Ayurvedic College, Patur, Akola",
+      "establishment": 1989,
+      "fees": "166,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3241,
+      "name": "Mahadeorao Shivankar Ayurvedic Medical College, Kudwa, Gondia",
+      "establishment": 1998,
+      "fees": "236,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3263,
+      "name": "K.R.Pandav Ayurved College & Hospital, Nagpur",
+      "establishment": 2007,
+      "fees": "162,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3265,
+      "name": "Smt. Vimladevi Ayurved Medical College & Hospital, Chandrapur",
+      "establishment": 2010,
+      "fees": "273,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3273,
+      "name": "Dr. Rajendra Gode Ayurved Hospital And College, Amravati",
+      "establishment": 2017,
+      "fees": "202,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3288,
+      "name": "Shivpriya Ayurvedic College Hospital & Research Centre, Nagpur",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3289,
+      "name": "Shri Samarth Ayurved Medical College, Akola",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3299,
+      "name": "Indutai Gaikwad-Patil Ayurvedic College & Research Centre, Dhuti, Nagpur",
+      "establishment": 2024,
+      "fees": "175,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3342,
+      "name": "C.S.M.S.S. Ayurved College, Aurangabad",
+      "establishment": 1989,
+      "fees": "233,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3366,
+      "name": "Dr Prafulla Patil Ayurvedic College & Research Centre, Parbhani",
+      "establishment": 2025,
+      "fees": "186,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3387,
+      "name": "Mauli Ayurved Medical College & Research Institute, Udgir, Latur",
+      "establishment": 2025,
+      "fees": "185000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3388,
+      "name": "Dharati Ayurved Medical College & Research Institute, Parbhani",
+      "establishment": 2025,
+      "fees": "185000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3390,
+      "name": "Dhaneshwari Ayurved Medical College & Research Institute, Aurangabad",
+      "establishment": 2016,
+      "fees": "167,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3392,
+      "name": "Shreeyash Ayurvedic College & Hospital, Aurangabad",
+      "establishment": 2024,
+      "fees": "175,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3393,
+      "name": "Guru Mishri Ayurvedic Medical College & Hospital, Jalna",
+      "establishment": 2024,
+      "fees": "175,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 3395,
+      "name": "Shree Goraksha Ayurved College Khamgaon Aurangabad",
+      "establishment": 2020,
+      "fees": "191,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }

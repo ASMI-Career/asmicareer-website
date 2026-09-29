@@ -26,7 +26,7 @@
       "fees": "102,500",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 767846,
           "SML": 24463,
           "CSML": "NTD-807"
@@ -40,7 +40,7 @@
       "fees": "115,500",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 778215,
           "SML": 24756,
           "CSML": "NTD-814"
@@ -54,7 +54,7 @@
       "fees": "75,500",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 786558,
           "SML": 25005,
           "CSML": "NTD-821"
@@ -68,7 +68,7 @@
       "fees": "84,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 788408,
           "SML": 25066,
           "CSML": "NTD-825"
@@ -82,7 +82,7 @@
       "fees": "68,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 797082,
           "SML": 25312,
           "CSML": "NTD-831"
@@ -96,7 +96,7 @@
       "fees": "95,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 797336,
           "SML": 25322,
           "CSML": "NTD-832"
@@ -110,7 +110,7 @@
       "fees": "101,500",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 801212,
           "SML": 25425,
           "CSML": "NTD-836"
@@ -124,10 +124,270 @@
       "fees": "95,000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 810161,
           "SML": 25690,
           "CSML": "NTD-840"
+        }
+      }
+    },
+    {
+      "code": 4101,
+      "name": "Chandaben M. Patel Homeopathy College, Mumbai",
+      "establishment": 1957,
+      "fees": "163,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4102,
+      "name": "Y.M.T. Homoeopathic Medical College & Hospital, Navi Mumbai",
+      "establishment": 1989,
+      "fees": "144,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4105,
+      "name": "Chandrakant Hari Keluskar Homeopathy Medical College, Raigad",
+      "establishment": 1989,
+      "fees": "98,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4107,
+      "name": "Dapoli Homeopathy Medical College, Ratnagiri",
+      "establishment": 1984,
+      "fees": "93,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4109,
+      "name": "LFPEF's Pradhikaran Homoeopathic Medical College, Pune",
+      "establishment": 1984,
+      "fees": "154,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4110,
+      "name": "Dr. J.J. Magdum Homoeopathy Medical College, Jaysingpur, Kolhapur",
+      "establishment": 1990,
+      "fees": "99,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4115,
+      "name": "Sawkar Homoeopathic Medical College, Satara",
+      "establishment": 1988,
+      "fees": "107,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4116,
+      "name": "Gulabrao Patil Homoeopathic Medical College, Sangli",
+      "establishment": 1991,
+      "fees": "113,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4118,
+      "name": "Ahmednagar Homoeopathic Medical College, Ahmednagar",
+      "establishment": 1988,
+      "fees": "99,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4121,
+      "name": "Motiwala Homoeopathy Medical College, Nashik",
+      "establishment": 1950,
+      "fees": "106,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4143,
+      "name": "Anantrao Kanse Homoeopathic Medical College, Pune",
+      "establishment": 2000,
+      "fees": "107,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4147,
+      "name": "Dr. Ulhas Patil Homoeopathy Medical College & Hospital, Jalgaon",
+      "establishment": 1998,
+      "fees": "106,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4148,
+      "name": "Sharadchandraji Pawar Homoeopathic Medical College, Ahmednagar",
+      "establishment": 2017,
+      "fees": "102,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4171,
+      "name": "Ashokrao Mane Homoeopathic Medical College & Hospital, Vadgaon, Kolhapur",
+      "establishment": 2025,
+      "fees": "90,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4231,
+      "name": "HES Homoeopathy Medical College, Akola",
+      "establishment": 2016,
+      "fees": "66,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4334,
+      "name": "Foster Development Homoeopathy Medical College, Aurangabad",
+      "establishment": 1997,
+      "fees": "77,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4336,
+      "name": "S M Padmashri Shamraoji Kadam Homoeopathic Medical College, Nanded",
+      "establishment": 1986,
+      "fees": "64,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4337,
+      "name": "Sonajirao Kshirsagar Homoeopathy Medical College, Beed",
+      "establishment": 1987,
+      "fees": "60,500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4338,
+      "name": "P D Jain Homoeopathic College, Parbhani",
+      "establishment": 1989,
+      "fees": "55,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4373,
+      "name": "Wellness Homoeopathy College & Research Centre, Dharashiv",
+      "establishment": 2026,
+      "fees": "90000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }
