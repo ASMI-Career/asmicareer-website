@@ -104,8 +104,6 @@ td.c{font-weight:600;font-size:13.5px}
 .pill{font-weight:600;padding:3px 10px}
 button{border-radius:10px;font-weight:600}
 .dl button{border-radius:99px;padding:9px 18px}
-#dlx{background:var(--yellow);color:#2e1065;border:1px solid var(--yellow)}
-#dlx:hover:not(:disabled){background:#ffe45c;color:#2e1065}
 #dlp{background:#2e1065;color:#fff;border:1px solid #2e1065}
 #dlp:hover:not(:disabled){background:#4c1d95;color:#fff}
 #more{background:var(--hero2);border-radius:99px;padding:9px 22px}
@@ -155,7 +153,6 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <div class="wrap">
@@ -180,7 +177,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlx" type="button">Download Excel</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">City</th><th rowspan="2">State</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th class="n rg r0" colspan="2">All Rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4 (Stray)</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r0">Seats</th><th class="n r0">Closing</th><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note">Source: MCC NEET-PG 2026 provisional allotment results. Each round's column shows <b>seats allotted</b> and <b>closing rank</b> (the highest/worst allotted rank) for that exact college + branch + category + quota combination; a round with no matching allotment shows <span style="opacity:.5">–</span>. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades. College names are re-cased from the source files' mixed/all-caps text into standard title case.</p>
@@ -269,7 +266,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
  $('legend').textContent='Sorted by closing rank in '+ROUND_LABELS[rd]+', lowest first';
  $('more').hidden=out.length<=shown;
- $('dlx').disabled=$('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;
  $('hint').hidden=true;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -300,29 +297,6 @@ function downloadBlob(filename,data){
 }
 var logoDataUrl=null;
 (function loadLogo(){fetch('/asmi-logo.png').then(function(r){return r.blob()}).then(function(b){var rd=new FileReader();rd.onload=function(){logoDataUrl=rd.result};rd.readAsDataURL(b)}).catch(function(){})})();
-
-$('dlx').addEventListener('click',function(){
- var Q=query();
- var header=['College','City','State','Branch','Quota','Category','All Rounds Seats','All Rounds Close'];
- ROUND_KEYS.forEach(function(rk){header.push(ROUND_LABELS[rk]+' Seats',ROUND_LABELS[rk]+' Close')});
- header.push('Status ('+ROUND_LABELS[Q.rd]+')');
- var rows=Q.out.map(function(g){
-  var allR=allRounds(g);
-  var row=[g[IDX.college],g[IDX.city]||'',g[IDX.state],g[IDX.course],g[IDX.quota],g[IDX.cat],allR?allR[2]:'',allR?allR[1]:''];
-  ROUND_KEYS.forEach(function(rk){var x=g[IDX[rk]];row.push(x?x[2]:'',x?x[1]:'')});
-  row.push(STXT[Q.stat(g)]||'');
-  return row;
- });
- var ws=XLSX.utils.aoa_to_sheet([header].concat(rows));
- ws['!cols']=header.map(function(h,i){return {wch:i===0?32:(i===3?26:14)}});
- var wb=XLSX.utils.book_new();
- XLSX.utils.book_append_sheet(wb,ws,'MCC Cutoffs');
- try{
-  var out=XLSX.write(wb,{bookType:'xlsx',type:'array'});
-  downloadBlob(fname('xlsx'),new Blob([out],{type:'application/octet-stream'}));
-  say('Excel file saved.');
- }catch(e){fail(e,'Excel file')}
-});
 
 $('dlp').addEventListener('click',function(){
  var Q=query();

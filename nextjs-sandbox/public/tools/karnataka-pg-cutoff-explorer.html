@@ -102,8 +102,6 @@ td.c{font-weight:600;font-size:13.5px}
 .pill{font-weight:600;padding:3px 10px}
 button{border-radius:10px;font-weight:600}
 .dl button{border-radius:99px;padding:9px 18px}
-#dlx{background:var(--yellow);color:#2e1065;border:1px solid var(--yellow)}
-#dlx:hover:not(:disabled){background:#ffe45c;color:#2e1065}
 #dlp{background:#2e1065;color:#fff;border:1px solid #2e1065}
 #dlp:hover:not(:disabled){background:#4c1d95;color:#fff}
 #more{background:var(--hero2);border-radius:99px;padding:9px 22px}
@@ -157,7 +155,6 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <div class="wrap">
@@ -238,7 +235,7 @@ th.n.s{border-left:1px solid var(--line)}
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlx" type="button">Download Excel</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">Branch</th><th rowspan="2">Code</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th class="n rg" colspan="2">All rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Stray round</th><th class="n rg r5" colspan="2">Stray extended</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s">Lowest AIR</th><th class="n">Closing AIR</th><th class="n s r1">Allotted</th><th class="n r1">Closing AIR</th><th class="n s r2">Allotted</th><th class="n r2">Closing AIR</th><th class="n s r3">Allotted</th><th class="n r3">Closing AIR</th><th class="n s r4">Allotted</th><th class="n r4">Closing AIR</th><th class="n s r5">Allotted</th><th class="n r5">Closing AIR</th></tr></thead><tbody id="body"></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 </div>
@@ -336,7 +333,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
  $('legend').textContent='Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first';
  $('more').hidden=out.length<=shown;
- $('dlx').disabled=$('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;
  var h=$('hint'),nc=Object.keys(Q.cs).length;if(ar&&nc!==1){h.hidden=false;h.textContent='Cutoffs differ by category. Pick your KEA category (for example GM) so the status reflects your own seat pool.'}else h.hidden=true;
 }
 /* ---------- downloads ---------- */
@@ -397,7 +394,6 @@ async function savePdf(){
  try{await DLS.save({filename:fname(Q,'pdf'),data:buf});say('PDF saved.')}catch(e){fail(e,'The PDF')}
 }
 DLS={save:function(o){return new Promise(function(res){var type=/\.pdf$/.test(o.filename)?'application/pdf':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';var b=new Blob([o.data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();res()},500)})}};
-$('dlx').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}saveXlsx()});
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
 $('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
