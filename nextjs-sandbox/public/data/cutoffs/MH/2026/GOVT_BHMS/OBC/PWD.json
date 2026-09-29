@@ -2,8 +2,8 @@
   "counselling": "MH",
   "year": 2026,
   "quota_type": "GOVT_BHMS",
-  "category": "NTD",
-  "sub_type": "FEMALE",
+  "category": "OBC",
+  "sub_type": "PWD",
   "colleges": [
     {
       "code": 4172,
@@ -12,10 +12,10 @@
       "fees": "63100",
       "rounds": {
         "Round 1": {
-          "Intake": 1,
-          "AIR": 394558,
-          "SML": 10685,
-          "CSML": "NTD-429"
+          "Intake": null,
+          "AIR": 1189781,
+          "SML": 33079,
+          "CSML": "OBC-9585"
         }
       }
     }

@@ -1,0 +1,50 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BUMS",
+  "category": "IQ",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "5106",
+      "name": "Iqra Education Society's Unani Medical College, Jalgaon",
+      "establishment": 2008,
+      "fees": "92,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 937485,
+          "SML": 29008
+        }
+      }
+    },
+    {
+      "code": "5104",
+      "name": "A G Unani Medical College, Akkalkuwa, Nandurbar",
+      "establishment": 1997,
+      "fees": "118,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 9,
+          "AIR": 1157968,
+          "SML": 32677,
+          "CSML": "OBC-9401"
+        }
+      }
+    },
+    {
+      "code": "5109",
+      "name": "Al-Ameen Unani Medical College, Malegaon",
+      "establishment": 1990,
+      "fees": "154,000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 1161253,
+          "SML": 32705,
+          "CSML": "OBC-9415"
+        }
+      }
+    }
+  ]
+}

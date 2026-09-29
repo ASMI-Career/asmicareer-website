@@ -1,0 +1,35 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BUMS",
+  "category": "OPEN",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "5101",
+      "name": "Anjuman Islamic Tibia College, Versova, Andheri, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 51,
+          "AIR": 274520,
+          "SML": 6049
+        }
+      }
+    },
+    {
+      "code": "5102",
+      "name": "ZVM's Unani Medical College, Pune",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 51,
+          "AIR": 346361,
+          "SML": 8682
+        }
+      }
+    }
+  ]
+}
