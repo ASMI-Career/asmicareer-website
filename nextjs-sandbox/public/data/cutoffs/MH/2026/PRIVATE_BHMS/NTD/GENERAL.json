@@ -40,7 +40,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 483329,
           "SML": 14367,
           "CSML": "NTD-535"
@@ -68,7 +68,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 569610,
           "SML": 17796,
           "CSML": "NTD-638"
@@ -96,7 +96,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 607255,
           "SML": 19206,
           "CSML": "NTD-686"
@@ -110,7 +110,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 615537,
           "SML": 19529,
           "CSML": "NTD-695"
@@ -124,7 +124,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 696620,
           "SML": 22264,
           "CSML": "NTD-761"
@@ -138,7 +138,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 700483,
           "SML": 22399,
           "CSML": "NTD-762"
@@ -152,7 +152,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 724051,
           "SML": null
         }
@@ -165,7 +165,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 724422,
           "SML": 23149,
           "CSML": "NTD-777"
@@ -179,7 +179,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 731312,
           "SML": null
         }
@@ -206,7 +206,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 740316,
           "SML": 23636,
           "CSML": "NTD-789"
@@ -220,7 +220,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 740515,
           "SML": 23640,
           "CSML": "NTD-790"
@@ -234,7 +234,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 740740,
           "SML": 23643,
           "CSML": "NTD-791"
@@ -248,7 +248,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 778706,
           "SML": 24777,
           "CSML": "NTD-816"
@@ -262,7 +262,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 779365,
           "SML": 24800,
           "CSML": "NTD-817"
@@ -276,7 +276,7 @@
       "fees": "90000",
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 824634,
           "SML": 26108,
           "CSML": "NTD-849"
@@ -290,7 +290,7 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 834055,
           "SML": 26411,
           "CSML": "NTD-854"
@@ -304,10 +304,127 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 834100,
           "SML": 26413,
           "CSML": "NTD-855"
+        }
+      }
+    },
+    {
+      "code": 4108,
+      "name": "Dhondumama Sathe Homoeopathy Medical College, Pune",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4112,
+      "name": "SJPES’s Homoeopathic Medical College, Kolhapur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4119,
+      "name": "MHF’s Homoeopathic Medical College& Hospital, Ahmednagar",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4123,
+      "name": "K.D.M.G.’s Homoeopathic Medical College, Dhule",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4141,
+      "name": "Vamanrao Ithape Homeopathic Medical College, Ahmednagar",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4145,
+      "name": "Shri Chamudamata Homeopathy Medical College, Jalgaon",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4149,
+      "name": "R. R. Patil College of Homoeopathy And Hospital, Sangli",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4262,
+      "name": "Shraddha Homeopathy Medical College, Zamre, Washim ",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4346,
+      "name": "Guru Mishri Homoeopathic Medical College & Hospital, Shelgaon, Jalna",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }
