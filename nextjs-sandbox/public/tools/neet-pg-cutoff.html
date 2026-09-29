@@ -24,7 +24,9 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .pick{margin-top:-40px}
 .pick h2{margin:0 0 4px;font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 .pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
+@media (min-width:880px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
 .card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
 .mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
 .nm{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
@@ -40,6 +42,13 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .soon .tag{background:var(--soon-bg);color:var(--soon)}
 .ask{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none}
 .ask:hover{text-decoration:underline}
+.updates{display:flex;align-items:center;gap:14px;margin-top:18px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px 18px;text-decoration:none;color:inherit;box-shadow:var(--shadow)}
+.updates:hover,.updates:focus-visible{border-color:var(--accent)}
+.updates .ui{width:44px;height:44px;border-radius:12px;background:var(--soon-bg);display:grid;place-items:center;font-size:22px;flex:none}
+.updates .ut{flex:1;display:flex;flex-direction:column}
+.updates .ut b{color:var(--ink);font-size:16px}
+.updates .ut span{color:var(--muted);font-size:13.5px}
+.updates .ug{font-weight:700;color:var(--accent);font-size:20px}
 /* how it works */
 .how{margin-top:36px}
 .how h3{font-size:17px;margin:0 0 12px}
@@ -68,6 +77,12 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
   <h2 id="pk"><b>1</b> Choose where you want to look</h2>
   <div class="grid" id="grid"></div>
  </section>
+
+ <a class="updates" href="/tools/neet-pg-updates">
+  <span class="ui" aria-hidden="true">&#128276;</span>
+  <span class="ut"><b>Important updates</b><span>Official notices and PDFs, date-wise.</span></span>
+  <span class="ug" aria-hidden="true">&rarr;</span>
+ </a>
 
  <section class="how" aria-labelledby="hw">
   <h3 id="hw">How it works</h3>
