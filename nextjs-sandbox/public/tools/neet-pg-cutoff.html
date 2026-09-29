@@ -4,63 +4,108 @@
 <title>NEET-PG Cutoff Explorer | ASMI Career</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
-:root{--bg:#f4f1ff;--surface:#ffffff;--fg:#1d1a3b;--muted:#6a6689;--line:#e4def7;--accent:#5b21b6;--accent-fg:#ffffff;--good:#0f7a43;--good-bg:#d9f5e5;--soon:#6a6689;--soon-bg:#efeaff;--hero1:#3b0f8c;--hero2:#7c3aed;--yellow:#ffd60a;--ink:#2e1065;
---sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a49fc7;--soon-bg:#2a2158;--hero1:#2a0c66;--hero2:#5b2bc4;--ink:#ffe27a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a49fc7;--soon-bg:#2a2158;--hero1:#2a0c66;--hero2:#5b2bc4;--ink:#ffe27a;color-scheme:dark}
+:root{--bg:#f4f1ff;--surface:#ffffff;--fg:#1d1a3b;--muted:#5f5a82;--line:#e4def7;--accent:#5b21b6;--accent-2:#7c3aed;--accent-fg:#ffffff;--good:#0f7a43;--good-bg:#d9f5e5;--soon:#5f5a82;--soon-bg:#efeaff;--hero1:#2a0a6b;--hero2:#6d28d9;--yellow:#ffd60a;--ink:#2e1065;--tile1:#5b21b6;--tile2:#c026d3;--shadow:0 10px 28px rgba(91,33,182,.14)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a9a4cc;--line:#372d66;--accent:#b79cff;--accent-2:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a9a4cc;--soon-bg:#2a2158;--hero1:#1c0850;--hero2:#4c1fa8;--ink:#ffe27a;--tile1:#7c3aed;--tile2:#c026d3;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a9a4cc;--line:#372d66;--accent:#b79cff;--accent-2:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a9a4cc;--soon-bg:#2a2158;--hero1:#1c0850;--hero2:#4c1fa8;--ink:#ffe27a;--tile1:#7c3aed;--tile2:#c026d3;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:20px 40px}
-.wrap{max-width:960px;margin-inline:auto}
-.brand{display:flex;gap:16px;align-items:center;background:linear-gradient(120deg,var(--hero1),var(--hero2) 70%,#c026d3);color:#fff;border-radius:16px;padding:18px 22px;box-shadow:0 10px 30px rgba(91,33,182,.28)}
-.brand img{width:56px;height:56px;border-radius:12px;background:#fff;padding:4px;object-fit:contain;flex:none}
-.brand h1{margin:0;font-size:22px;line-height:1.2}
-.brand p{margin:4px 0 0;opacity:.9;font-size:14px}
-h2{font-size:17px;margin:28px 0 4px}
-.lead{margin:0 0 14px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:14px}
-.card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:18px;text-decoration:none;color:inherit;min-height:150px;position:relative}
-.card .nm{font-size:19px;font-weight:700;color:var(--ink)}
-.card .ds{color:var(--muted);font-size:13.5px;flex:1}
-.tag{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:1000px;margin-inline:auto;padding-inline:16px}
+/* hero */
+.hero{background:radial-gradient(900px 300px at 85% -10%,rgba(192,38,211,.55),transparent 60%),linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding-block:22px 64px}
+.top{display:flex;align-items:center;gap:12px}
+.top img{width:44px;height:44px;border-radius:10px;background:#fff;padding:3px;object-fit:contain;flex:none}
+.top span{font-weight:600;font-size:14px;opacity:.95;line-height:1.25}
+.hero h1{margin:34px 0 10px;font-size:clamp(26px,5.2vw,40px);line-height:1.12;letter-spacing:-.01em;max-width:18ch}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero p{margin:0;max-width:52ch;font-size:16px;opacity:.92}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chips span{font-size:13px;font-weight:500;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+/* picker */
+.pick{margin-top:-40px}
+.pick h2{margin:0 0 4px;font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin-top:12px}
+.card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
+.mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
+.nm{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
+.ds{color:var(--muted);font-size:13.5px;flex:1}
+.tag{position:absolute;top:16px;right:16px;font-size:11.5px;font-weight:600;border-radius:999px;padding:3px 10px}
+.live{border-color:var(--accent);transition:transform .14s,box-shadow .14s}
 .live .tag{background:var(--good-bg);color:var(--good)}
+.live:hover,.live:focus-visible{transform:translateY(-3px);box-shadow:0 16px 36px rgba(91,33,182,.3)}
+.go{margin-top:2px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600;font-size:14px;background:var(--accent);color:var(--accent-fg);border-radius:10px;padding:10px 14px}
+.soon{border-style:dashed;box-shadow:none}
+.soon .mono{background:var(--soon-bg);color:var(--soon)}
+.soon .nm{color:var(--soon)}
 .soon .tag{background:var(--soon-bg);color:var(--soon)}
-.live{cursor:pointer;border-color:var(--accent)}
-.live:hover,.live:focus-visible{box-shadow:0 8px 24px rgba(91,33,182,.22);transform:translateY(-2px)}
-.live .go{font-weight:600;color:var(--accent)}
-.soon{opacity:.8;border-style:dashed}
-.live{transition:transform .12s,box-shadow .12s}
-.note{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--muted);font-size:13.5px}
-.note b{color:var(--fg)}
-.note a{color:var(--accent);font-weight:600}
+.ask{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none}
+.ask:hover{text-decoration:underline}
+/* how it works */
+.how{margin-top:36px}
+.how h3{font-size:17px;margin:0 0 12px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;padding:0;margin:0;list-style:none}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.steps i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--soon-bg);color:var(--accent);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:14px}
+.steps b{display:block;color:var(--ink)}
+.steps span{color:var(--muted);font-size:13.5px}
+/* help */
+.help{margin:28px 0 44px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.help p{margin:0;color:var(--muted);font-size:14px;max-width:56ch}
+.help p b{color:var(--fg)}
+.call{font-weight:700;text-decoration:none;color:var(--accent-fg);background:var(--accent);border-radius:10px;padding:10px 16px;white-space:nowrap}
 :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.live{transition:none}.live:hover{transform:none}}
 </style></head><body>
-<div class="wrap">
-<header class="brand"><img alt="ASMI Youth Career Advisor" src="/asmi-logo.png">
-<div><h1>NEET-PG Cutoff Explorer</h1><p>Closing ranks for MD, MS and Diploma seats, round by round.</p></div></header>
+<header class="hero"><div class="wrap">
+ <div class="top"><img alt="" src="/asmi-logo.png"><span>ASMI Youth Career Advisor</span></div>
+ <h1>NEET-PG <em>cutoff</em> explorer</h1>
+ <p>See where your rank can get you. Closing ranks for MD, MS and Diploma seats, round by round, with a quick check against your own rank.</p>
+ <div class="chips"><span>MD / MS / Diploma</span><span>Round-wise closing ranks</span><span>Download as Excel or PDF</span></div>
+</div></header>
 
-<h2>Step 1: Choose where you want to look</h2>
-<p class="lead">Pick All India or a state. The cutoff explorer opens with that region's data.</p>
-<div class="grid" id="grid"></div>
+<main class="wrap">
+ <section class="pick" aria-labelledby="pk">
+  <h2 id="pk"><b>1</b> Choose where you want to look</h2>
+  <div class="grid" id="grid"></div>
+ </section>
 
-<div class="note"><b>Adding more regions.</b> We publish a region only after its official seat allotment lists have been checked. Regions marked "Coming soon" are in the queue. Need one urgently? Call our helpline on <a href="tel:7410019075">7410019075</a>.</div>
-</div>
+ <section class="how" aria-labelledby="hw">
+  <h3 id="hw">How it works</h3>
+  <ol class="steps">
+   <li><i>1</i><div><b>Pick your region</b><span>All India or your state.</span></div></li>
+   <li><i>2</i><div><b>Enter your rank</b><span>Add your State rank and All India Rank to see which seats are within reach.</span></div></li>
+   <li><i>3</i><div><b>Shortlist and download</b><span>Filter by branch, college and category, then save the list.</span></div></li>
+  </ol>
+ </section>
+
+ <section class="help">
+  <p><b>Not sure which seats to target?</b> Our counsellors can help you build a realistic PG preference list.</p>
+  <a class="call" href="tel:7410019075">Call 7410019075</a>
+ </section>
+</main>
+
 <script>
 /* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
 var REGIONS=[
- {name:'All India',desc:'MCC all India counselling: AIQ and deemed universities.',status:'soon'},
- {name:'Maharashtra',desc:'State CET Cell selection lists, Rounds 1 to 5 (2025). State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
- {name:'Karnataka',desc:'KEA PG counselling cutoffs.',status:'soon'},
- {name:'Uttar Pradesh',desc:'UP PG counselling cutoffs.',status:'soon'}
+ {name:'All India',mono:'AI',desc:'MCC counselling: All India Quota and deemed universities.',status:'soon'},
+ {name:'Maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
+ {name:'Karnataka',mono:'KA',desc:'KEA PG counselling cutoffs.',status:'soon'},
+ {name:'Uttar Pradesh',mono:'UP',desc:'UP PG counselling cutoffs.',status:'soon'}
 ];
 var g=document.getElementById('grid');
 REGIONS.forEach(function(r){
  var live=r.status==='live',el=document.createElement(live?'a':'div');
  el.className='card '+(live?'live':'soon');
  if(live)el.href=r.url;
- el.innerHTML='<span class="tag">'+(live?'Data available':'Coming soon')+'</span><span class="nm"></span><span class="ds"></span>'+(live?'<span class="go">Open cutoff explorer &rarr;</span>':'');
+ el.innerHTML='<span class="tag"></span><span class="mono"></span><span class="nm"></span><span class="ds"></span>';
+ el.querySelector('.tag').textContent=live?'Data available':'Coming soon';
+ el.querySelector('.mono').textContent=r.mono;
  el.querySelector('.nm').textContent=r.name;
  el.querySelector('.ds').textContent=r.desc;
+ var x=document.createElement(live?'span':'a');
+ if(live){x.className='go';x.innerHTML='Open cutoff explorer <span aria-hidden="true">&rarr;</span>'}
+ else{x.className='ask';x.href='tel:7410019075';x.textContent='Ask us about '+r.name}
+ el.appendChild(x);
  g.appendChild(el);
 });
 </script>
