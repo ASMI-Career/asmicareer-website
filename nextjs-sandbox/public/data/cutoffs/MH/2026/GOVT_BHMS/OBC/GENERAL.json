@@ -12,10 +12,23 @@
       "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 7,
           "AIR": 379271,
           "SML": 10026,
           "CSML": "OBC-3029"
+        }
+      }
+    },
+    {
+      "code": 4172,
+      "name": "GHC Kagal Kolhapur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 10,
+          "AIR": null,
+          "SML": null
         }
       }
     }

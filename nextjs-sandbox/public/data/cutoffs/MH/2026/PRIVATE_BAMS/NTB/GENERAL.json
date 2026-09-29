@@ -12,7 +12,7 @@
       "fees": 442500,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 168076,
           "SML": 2581,
           "CSML": "NTB-46"
@@ -26,7 +26,7 @@
       "fees": 990000,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 181187,
           "SML": 2978,
           "CSML": "NTB-55"
@@ -40,7 +40,7 @@
       "fees": 891000,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 194452,
           "SML": 3384,
           "CSML": "NTB-65"
@@ -82,7 +82,7 @@
       "fees": 369000,
       "rounds": {
         "Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 200218,
           "SML": 3583,
           "CSML": "NTB-72"
@@ -133,7 +133,7 @@
     {
       "code": 3390,
       "name": "Dhaneshwari Ayurved Medical College & Research Institute, Aurangabad",
-      "establishment": null,
+      "establishment": 2016,
       "fees": 516000,
       "rounds": {
         "Round 1": {
@@ -161,7 +161,7 @@
     {
       "code": 3274,
       "name": "Bhausaheb Mulak Ayurved Mahavidyalaya, Nagpur",
-      "establishment": null,
+      "establishment": 2017,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -273,7 +273,7 @@
     {
       "code": 3299,
       "name": "Indutai Gaikwad-Patil Ayurvedic College & Research Centre, Dhuti, Nagpur",
-      "establishment": null,
+      "establishment": 2024,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -343,7 +343,7 @@
     {
       "code": 3389,
       "name": "Sai Ayurved Medical College & Research Institute, Aurangabad",
-      "establishment": null,
+      "establishment": 2018,
       "fees": 427500,
       "rounds": {
         "Round 1": {
@@ -385,7 +385,7 @@
     {
       "code": 3266,
       "name": "Anandi Shikshan Prasarak Mandal Nagpur’s Ayurved College, Buldhana",
-      "establishment": null,
+      "establishment": 2014,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -469,7 +469,7 @@
     {
       "code": 3271,
       "name": "Dr. R.N. Lahoti Ayurvedic College, Hospital & Research Institute, Lonar, Buldhana",
-      "establishment": null,
+      "establishment": 2022,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -497,7 +497,7 @@
     {
       "code": 3193,
       "name": "S. Shivshankar Ayurved College Jath Sangli",
-      "establishment": null,
+      "establishment": 2016,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -749,7 +749,7 @@
     {
       "code": 3190,
       "name": "P.G. Medical College (Ayurved), Nandurbar",
-      "establishment": null,
+      "establishment": 2025,
       "fees": null,
       "rounds": {
         "Round 1": {
@@ -757,6 +757,19 @@
           "AIR": 432845,
           "SML": 12247,
           "CSML": "NTB-276"
+        }
+      }
+    },
+    {
+      "code": 3114,
+      "name": "Yeshwant Ayurvedic College Post Graduate Training & Research Centre, Kodoli, Kolhapur",
+      "establishment": 3114,
+      "fees": 810000,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     }
