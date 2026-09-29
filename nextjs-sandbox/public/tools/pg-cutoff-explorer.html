@@ -103,8 +103,6 @@ td.c{font-weight:600;font-size:13.5px}
 .pill{font-weight:600;padding:3px 10px}
 button{border-radius:10px;font-weight:600}
 .dl button{border-radius:99px;padding:9px 18px}
-#dlx{background:var(--yellow);color:#2e1065;border:1px solid var(--yellow)}
-#dlx:hover:not(:disabled){background:#ffe45c;color:#2e1065}
 #dlp{background:#2e1065;color:#fff;border:1px solid #2e1065}
 #dlp:hover:not(:disabled){background:#4c1d95;color:#fff}
 #more{background:var(--hero2);border-radius:99px;padding:9px 22px}
@@ -191,7 +189,6 @@ td.sn.sel{color:var(--good)}
 .nil{color:var(--muted);opacity:.55;font-weight:400}
 td.sn{color:var(--muted)}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head><body>
@@ -220,7 +217,7 @@ td.sn{color:var(--muted)}
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlx" type="button">Download Excel</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">Branch</th><th rowspan="2">Code</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th class="n" rowspan="2">All rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4</th><th class="n rg r5" colspan="2">Round 5</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th><th class="n s r5">Seats</th><th class="n r5">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 </div>
@@ -305,7 +302,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+((rk||ar)?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
  $('legend').textContent='Sorted by closing '+(by==='air'?'AIR':'SML')+' in '+$('round').selectedOptions[0].text+', lowest first';
  $('more').hidden=out.length<=shown;
- $('dlx').disabled=$('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;
  var h=$('hint');if(rk&&Q.qs['In-Service']){h.hidden=false;h.textContent='In-Service SML is a separate list and is not comparable with State SML. Use your AIR to check In-Service seats.'}else h.hidden=true;
 }
 /* ---------- downloads ---------- */
@@ -366,7 +363,6 @@ async function savePdf(){
 }
 function browserSave(o){return new Promise(function(res){var b=new Blob([o.data],{type:/\.pdf$/.test(o.filename)?'application/pdf':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);res({status:'saved'})})}
 if(window.claude&&window.claude.use){window.claude.use('downloads').then(function(d){DLS=d;if(!d){DLS={save:browserSave}}}).catch(function(){DLS={save:browserSave}})}else{DLS={save:browserSave}}
-$('dlx').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}saveXlsx()});
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
 $('reset').addEventListener('click',function(){['rank','air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;$('sortby').value='air';Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
