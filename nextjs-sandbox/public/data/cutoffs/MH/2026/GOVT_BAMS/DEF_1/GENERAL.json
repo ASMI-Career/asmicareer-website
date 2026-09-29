@@ -8,65 +8,70 @@
     {
       "code": 3101,
       "name": "R. A. Podar Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1941,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 2,
           "AIR": 127292,
-          "SML": 1392
+          "SML": 1392,
+          "CSML": "NTD-80"
         }
       }
     },
     {
       "code": 3108,
       "name": "Rashtriya Shikshan Mandal's Tilak Ayurved Mahavidyalaya, Pune",
-      "establishment": 1933,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 2,
           "AIR": 131044,
-          "SML": 1486
+          "SML": 1486,
+          "CSML": "OBC-497"
         }
       }
     },
     {
       "code": 3232,
       "name": "Government Ayurvedic Mahavidyalaya, Nagpur",
-      "establishment": 1965,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 2,
           "AIR": 148912,
-          "SML": 1999
+          "SML": 1999,
+          "CSML": "D1"
         }
       }
     },
     {
       "code": 3343,
       "name": "Government Ayurvedic Mahavidyalaya, Nanded",
-      "establishment": 1956,
-      "fees": "-",
+      "establishment": null,
+      "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 2,
           "AIR": 158055,
-          "SML": 2274
+          "SML": 2274,
+          "CSML": "SEBC-399"
         }
       }
     },
     {
       "code": 3103,
       "name": "A.V.P Mandal's Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1954,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 162255,
-          "SML": 2398
+          "SML": 2398,
+          "CSML": "NTC-185"
         }
       }
     },
@@ -79,20 +84,22 @@
         "Round 1": {
           "Intake": 2,
           "AIR": 163065,
-          "SML": 2426
+          "SML": 2426,
+          "CSML": "SEBC-422"
         }
       }
     },
     {
       "code": 3239,
       "name": "DMM Ayurved Mahavidyalaya, Yavatmal",
-      "establishment": null,
+      "establishment": "-",
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 164682,
-          "SML": 2464
+          "SML": 2464,
+          "CSML": "OBC-802"
         }
       }
     },
@@ -105,7 +112,8 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 170411,
-          "SML": 2662
+          "SML": 2662,
+          "CSML": "OBC-867"
         }
       }
     },
@@ -118,7 +126,8 @@
         "Round 1": {
           "Intake": 2,
           "AIR": 175180,
-          "SML": 2796
+          "SML": 2796,
+          "CSML": "OBC-913"
         }
       }
     },
@@ -131,7 +140,8 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 177785,
-          "SML": 2871
+          "SML": 2871,
+          "CSML": "OBC-941"
         }
       }
     },
@@ -144,7 +154,8 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 181344,
-          "SML": 2986
+          "SML": 2986,
+          "CSML": "SEBC-502"
         }
       }
     },
@@ -152,12 +163,13 @@
       "code": 3344,
       "name": "Government Ayurved College, Osmanabad",
       "establishment": null,
-      "fees": 62500,
+      "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 184532,
-          "SML": 3084
+          "SML": 3084,
+          "CSML": "OBC-1005"
         }
       }
     },
@@ -170,7 +182,8 @@
         "Round 1": {
           "Intake": 2,
           "AIR": 189518,
-          "SML": 3236
+          "SML": 3236,
+          "CSML": "OBC-1040"
         }
       }
     },
@@ -183,7 +196,8 @@
         "Round 1": {
           "Intake": 2,
           "AIR": 193309,
-          "SML": 3345
+          "SML": 3345,
+          "CSML": "NTC-243"
         }
       }
     },
@@ -196,7 +210,8 @@
         "Round 1": {
           "Intake": 2,
           "AIR": 198071,
-          "SML": 3504
+          "SML": 3504,
+          "CSML": "OBC-1113"
         }
       }
     },
@@ -209,7 +224,8 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 200121,
-          "SML": 3579
+          "SML": 3579,
+          "CSML": "OBC-1135"
         }
       }
     }

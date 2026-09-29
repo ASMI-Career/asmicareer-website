@@ -1,8 +1,8 @@
 {
   "counselling": "MH",
   "year": 2026,
-  "quota_type": "GOVT_BHMS",
-  "category": "D3",
+  "quota_type": "PRIVATE_BHMS",
+  "category": "EWS",
   "sub_type": "GENERAL",
   "colleges": [
     {
@@ -12,9 +12,10 @@
       "fees": "63100",
       "rounds": {
         "Round 1": {
-          "Intake": 1,
-          "AIR": null,
-          "SML": null
+          "Intake": null,
+          "AIR": 497068,
+          "SML": 14909,
+          "CSML": "EWS-1285"
         }
       }
     }

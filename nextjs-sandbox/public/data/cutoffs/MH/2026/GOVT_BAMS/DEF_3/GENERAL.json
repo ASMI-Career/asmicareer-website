@@ -8,26 +8,28 @@
     {
       "code": 3101,
       "name": "R. A. Podar Ayurved Mahavidyalaya, Mumbai",
-      "establishment": 1941,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 0,
           "AIR": 106440,
-          "SML": 852
+          "SML": 852,
+          "CSML": "D3"
         }
       }
     },
     {
       "code": 3108,
       "name": "Rashtriya Shikshan Mandal's Tilak Ayurved Mahavidyalaya, Pune",
-      "establishment": 1933,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 161963,
-          "SML": 2389
+          "SML": 2389,
+          "CSML": "D3"
         }
       }
     },
@@ -40,33 +42,36 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 173146,
-          "SML": 2748
+          "SML": 2748,
+          "CSML": "D3"
         }
       }
     },
     {
       "code": 3232,
       "name": "Government Ayurvedic Mahavidyalaya, Nagpur",
-      "establishment": 1965,
+      "establishment": null,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
           "AIR": 208315,
-          "SML": 3836
+          "SML": 3836,
+          "CSML": "D3"
         }
       }
     },
     {
       "code": 3343,
       "name": "Government Ayurvedic Mahavidyalaya, Nanded",
-      "establishment": 1956,
-      "fees": "-",
+      "establishment": null,
+      "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 0,
           "AIR": 219819,
-          "SML": 4196
+          "SML": 4196,
+          "CSML": "D3"
         }
       }
     },
@@ -79,7 +84,8 @@
         "Round 1": {
           "Intake": 1,
           "AIR": 235874,
-          "SML": 4741
+          "SML": 4741,
+          "CSML": "D3"
         }
       }
     }

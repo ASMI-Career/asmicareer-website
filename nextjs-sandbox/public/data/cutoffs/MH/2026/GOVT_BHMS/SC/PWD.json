@@ -6,24 +6,23 @@
   "sub_type": "PWD",
   "colleges": [
     {
-      "code": 4172,
-      "name": "Government Homeopathy College, Kolhapur",
-      "establishment": 2026,
-      "fees": "63100",
-      "rounds": {
-        "Round 1": {
-          "Intake": 1,
-          "AIR": 1178585,
-          "SML": 32928,
-          "CSML": "SC-4831"
-        }
-      }
-    },
-    {
       "code": 4164,
       "name": "Govt Ayurved and Homeopathic College, Jalgaon",
       "establishment": 2023,
       "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 4172,
+      "name": "Government Homeopathy College, Kolhapur",
+      "establishment": 2026,
+      "fees": "63100",
       "rounds": {
         "Round 1": {
           "Intake": 1,

@@ -1,9 +1,9 @@
 {
   "counselling": "MH",
   "year": 2026,
-  "quota_type": "GOVT_BHMS",
-  "category": "D3",
-  "sub_type": "GENERAL",
+  "quota_type": "PRIVATE_BHMS",
+  "category": "EWS",
+  "sub_type": "FEMALE",
   "colleges": [
     {
       "code": 4172,
@@ -12,9 +12,10 @@
       "fees": "63100",
       "rounds": {
         "Round 1": {
-          "Intake": 1,
-          "AIR": null,
-          "SML": null
+          "Intake": null,
+          "AIR": 452372,
+          "SML": 13036,
+          "CSML": "EWS-1112"
         }
       }
     }
