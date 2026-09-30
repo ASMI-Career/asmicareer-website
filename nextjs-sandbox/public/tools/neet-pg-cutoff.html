@@ -25,7 +25,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .pick h2{margin:0 0 4px;font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 .pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
-@media (min-width:880px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:880px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:520px){.grid{grid-template-columns:1fr}}
 .card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
 .mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
@@ -128,7 +128,8 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 var REGIONS=[
  {name:'All India',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
  {name:'Maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
- {name:'Karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3 plus stray. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
+ {name:'Karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
+ {name:'Telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
  {name:'Uttar Pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'}
 ];
 var g=document.getElementById('grid');
@@ -149,9 +150,9 @@ REGIONS.forEach(function(r){
 });
 /* Important updates. Data lives in /tools/updates/updates.json. Entry:
    {"date":"2026-09-29","region":"all-india","title":"...","summary":"optional","source":"MCC","pdf":"/tools/updates/pdfs/file.pdf"}
-   region is one of: all-india, maharashtra, karnataka, uttar-pradesh */
+   region is one of: all-india, maharashtra, karnataka, telangana, uttar-pradesh */
 (function(){
- var UR=[['all','All'],['all-india','All India'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['uttar-pradesh','Uttar Pradesh']];
+ var UR=[['all','All'],['all-india','All India'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh']];
  var LAB={};UR.forEach(function(r){LAB[r[0]]=r[1]});
  var $=function(i){return document.getElementById(i)},DATA=[],region='all',term='';
  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
