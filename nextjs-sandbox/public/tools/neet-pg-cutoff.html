@@ -85,7 +85,20 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .call{font-weight:700;text-decoration:none;color:var(--accent-fg);background:var(--accent);border-radius:10px;padding:10px 16px;white-space:nowrap}
 :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.live{transition:none}.live:hover{transform:none}}
+/* explorer view: the chosen state's explorer opens inside this page */
+#home[hidden],#app[hidden]{display:none}
+#app{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--bg)}
+.appbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff}
+.appbar img{width:34px;height:34px;border-radius:8px;background:#fff;padding:2px;object-fit:contain;flex:none}
+.appbar .bk{color:#fff;font-weight:600;font-size:14px;text-decoration:none;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;white-space:nowrap}
+.appbar .bk:hover{background:rgba(255,255,255,.26)}
+.appbar .ttl{font-weight:700;font-size:15px;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.appbar .ttl small{display:block;font-weight:500;font-size:12px;opacity:.85}
+#appload{position:absolute;left:0;right:0;top:56px;text-align:center;padding:24px;color:var(--muted);font-size:14px;pointer-events:none}
+#efw{flex:1;min-height:0;display:flex}
+#efw iframe{flex:1;min-height:0;width:100%;border:0;background:var(--bg)}
 </style></head><body>
+<div id="home">
 <header class="hero"><div class="wrap">
  <div class="top"><img alt="" src="/asmi-logo.png"><span>ASMI Youth Career Advisor</span></div>
  <h1>NEET-PG <em>cutoff</em> explorer</h1>
@@ -122,21 +135,28 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
   <a class="call" href="tel:7410019075">Call 7410019075</a>
  </section>
 </main>
+</div>
+
+<div id="app" hidden>
+ <div class="appbar"><a class="bk" href="#" id="back">&larr; Change state</a><img alt="" src="/asmi-logo.png"><div class="ttl" id="appttl"></div></div>
+ <div id="appload" role="status">Loading the cutoff explorer&hellip;</div>
+ <div id="efw"></div>
+</div>
 
 <script>
 /* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
 var REGIONS=[
- {name:'All India',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
- {name:'Maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
- {name:'Karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
- {name:'Telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
- {name:'Uttar Pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'}
+ {name:'All India',slug:'all-india',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
+ {name:'Maharashtra',slug:'maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
+ {name:'Karnataka',slug:'karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
+ {name:'Telangana',slug:'telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
+ {name:'Uttar Pradesh',slug:'uttar-pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'}
 ];
 var g=document.getElementById('grid');
 REGIONS.forEach(function(r){
  var live=r.status==='live',el=document.createElement(live?'a':'div');
  el.className='card '+(live?'live':'soon');
- if(live)el.href=r.url;
+ if(live)el.href='#'+r.slug;
  el.innerHTML='<span class="tag"></span><span class="mono"></span><span class="nm"></span><span class="ds"></span>';
  el.querySelector('.tag').textContent=live?'Data available':'Coming soon';
  el.querySelector('.mono').textContent=r.mono;
@@ -184,6 +204,31 @@ REGIONS.forEach(function(r){
  fetch('/tools/updates/updates.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
   DATA=(j.updates||[]).filter(function(u){return u&&u.title}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')});render()
  }).catch(function(){var o=$('uout');o.innerHTML='';var e=el('div','u-empty');e.appendChild(el('b',null,'Could not load updates'));e.appendChild(document.createTextNode('Please refresh the page.'));o.appendChild(e)});
+})();
+/* Single-page hosting: choosing a state opens its explorer inside this page (address stays /tools/neet-pg-cutoff, with #state for direct links). */
+(function(){
+ var home=document.getElementById('home'),app=document.getElementById('app'),efw=document.getElementById('efw'),load=document.getElementById('appload'),ttl=document.getElementById('appttl');
+ var BASE=document.title;
+ var by={};REGIONS.forEach(function(r){if(r.status==='live')by[r.slug]=r});
+ var cur='';
+ /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
+ function openFrame(url,name){efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';f.addEventListener('load',function(){load.hidden=true});f.src=url;efw.appendChild(f)}
+ function route(){
+  var r=by[decodeURIComponent((location.hash||'').slice(1))];
+  if(r){
+   home.hidden=true;app.hidden=false;
+   ttl.innerHTML='';ttl.appendChild(document.createTextNode(r.name+' PG cutoff explorer'));var sm=document.createElement('small');sm.textContent='ASMI Youth Career Advisor';ttl.appendChild(sm);
+   document.title=r.name+' | '+BASE;
+   if(cur!==r.url){load.hidden=false;cur=r.url;openFrame(r.url,r.name)}
+   window.scrollTo(0,0);
+  }else{
+   app.hidden=true;home.hidden=false;
+   if(cur){cur='';efw.innerHTML=''}
+   document.title=BASE;
+  }
+ }
+ window.addEventListener('hashchange',route);
+ route();
 })();
 </script>
 </body></html>
