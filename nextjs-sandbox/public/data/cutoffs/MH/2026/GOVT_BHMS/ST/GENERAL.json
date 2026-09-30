@@ -9,7 +9,7 @@
       "code": 4164,
       "name": "Govt Ayurved and Homeopathic College, Jalgaon",
       "establishment": 2023,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 2,
@@ -23,12 +23,13 @@
       "code": 4172,
       "name": "Government Homeopathy College, Kolhapur",
       "establishment": 2026,
-      "fees": "63100",
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 4,
-          "AIR": null,
-          "SML": null
+          "AIR": 690122,
+          "SML": 22068,
+          "CSML": "ST-828"
         }
       }
     }

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="NEET-PG cutoff explorer by ASMI Youth Career Advisor. Pick All India or a state to see closing ranks for MD, MS and Diploma seats.">
+<title>NEET-PG Cutoff Explorer | ASMI Career</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f4f1ff;--surface:#ffffff;--fg:#1d1a3b;--muted:#5f5a82;--line:#e4def7;--accent:#5b21b6;--accent-2:#7c3aed;--accent-fg:#ffffff;--good:#0f7a43;--good-bg:#d9f5e5;--soon:#5f5a82;--soon-bg:#efeaff;--hero1:#2a0a6b;--hero2:#6d28d9;--yellow:#ffd60a;--ink:#2e1065;--tile1:#5b21b6;--tile2:#c026d3;--shadow:0 10px 28px rgba(91,33,182,.14)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a9a4cc;--line:#372d66;--accent:#b79cff;--accent-2:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a9a4cc;--soon-bg:#2a2158;--hero1:#1c0850;--hero2:#4c1fa8;--ink:#ffe27a;--tile1:#7c3aed;--tile2:#c026d3;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a9a4cc;--line:#372d66;--accent:#b79cff;--accent-2:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a9a4cc;--soon-bg:#2a2158;--hero1:#1c0850;--hero2:#4c1fa8;--ink:#ffe27a;--tile1:#7c3aed;--tile2:#c026d3;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:16px}
+/* hero */
+.hero{background:radial-gradient(900px 300px at 85% -10%,rgba(192,38,211,.55),transparent 60%),linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding-block:34px 64px}
+.hero h1{margin:0 0 10px;font-size:clamp(26px,5.2vw,40px);line-height:1.12;letter-spacing:-.01em;max-width:18ch}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero p{margin:0;max-width:52ch;font-size:16px;opacity:.92}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chips span{font-size:13px;font-weight:500;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+/* picker */
+.pick{margin-top:-40px}
+.pick h2{margin:0 0 4px;font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
+@media (min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1120px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:520px){.grid{grid-template-columns:1fr}}
+.card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
+.mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
+.nm{font-size:20px;font-weight:700;color:var(--ink);margin-top:2px}
+.ds{color:var(--muted);font-size:13.5px;flex:1}
+.tag{position:absolute;top:16px;right:16px;font-size:11.5px;font-weight:600;border-radius:999px;padding:3px 10px}
+.live{border-color:var(--accent);transition:transform .14s,box-shadow .14s}
+.live .tag{background:var(--good-bg);color:var(--good)}
+.live:hover,.live:focus-visible{transform:translateY(-3px);box-shadow:0 16px 36px rgba(91,33,182,.3)}
+.go{margin-top:2px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:600;font-size:14px;background:var(--accent);color:var(--accent-fg);border-radius:10px;padding:10px 14px}
+.soon{border-style:dashed;box-shadow:none}
+.soon .mono{background:var(--soon-bg);color:var(--soon)}
+.soon .nm{color:var(--soon)}
+.soon .tag{background:var(--soon-bg);color:var(--soon)}
+.ask{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none}
+.ask:hover{text-decoration:underline}
+/* important updates */
+.upd{margin-top:36px}
+.upd h3{font-size:17px;margin:0 0 4px}
+.upd .lead{margin:0 0 12px;color:var(--muted);font-size:14px}
+.u-panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.u-chips{display:flex;flex-wrap:wrap;gap:8px}
+.u-chip{font:inherit;font-size:13.5px;font-weight:600;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.u-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.u-search{margin-top:12px;width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--fg)}
+.u-count{margin:12px 2px 0;color:var(--muted);font-size:13.5px}
+.u-month{margin:18px 0 8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.u-list{display:flex;flex-direction:column;gap:10px;padding:0;margin:0;list-style:none}
+.u-item{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:64px 1fr;gap:4px 14px}
+.u-date{grid-row:span 2;text-align:center;background:var(--soon-bg);border-radius:12px;padding:8px 4px;align-self:start}
+.u-date b{display:block;font-size:22px;line-height:1.1;color:var(--ink)}
+.u-date span{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.u-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.u-tag{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--soon-bg);color:var(--accent)}
+.u-new{background:var(--good-bg);color:var(--good)}
+.u-src{font-size:12.5px;color:var(--muted)}
+.u-title{margin:2px 0 0;font-size:16px;font-weight:600;color:var(--ink);line-height:1.35}
+.u-sum{margin:2px 0 0;color:var(--muted);font-size:14px}
+.u-pdf{grid-column:2;justify-self:start;margin-top:8px;display:inline-flex;gap:8px;align-items:center;font-weight:600;font-size:14px;text-decoration:none;background:var(--accent);color:var(--accent-fg);border-radius:10px;padding:8px 14px}
+.u-pdf:hover{filter:brightness(1.1)}
+.u-empty{margin-top:12px;text-align:center;padding:28px 20px;background:var(--surface);border:1.5px dashed var(--line);border-radius:14px;color:var(--muted)}
+.u-empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.u-empty a{color:var(--accent);font-weight:700}
+@media (max-width:480px){.u-item{grid-template-columns:1fr}.u-date{grid-row:auto;display:flex;gap:8px;align-items:baseline;justify-content:flex-start;text-align:left;padding:6px 10px}.u-date b{font-size:16px}.u-pdf{grid-column:1}}
+/* how it works */
+.how{margin-top:36px}
+.how h3{font-size:17px;margin:0 0 12px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px;padding:0;margin:0;list-style:none}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.steps i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--soon-bg);color:var(--accent);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:14px}
+.steps b{display:block;color:var(--ink)}
+.steps span{color:var(--muted);font-size:13.5px}
+/* help */
+.help{margin:28px 0 44px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.help p{margin:0;color:var(--muted);font-size:14px;max-width:56ch}
+.help p b{color:var(--fg)}
+.call{font-weight:700;text-decoration:none;color:var(--accent-fg);background:var(--accent);border-radius:10px;padding:10px 16px;white-space:nowrap}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.live{transition:none}.live:hover{transform:none}}
+/* explorer view: the chosen state's explorer opens inside this page */
+#home[hidden],#app[hidden]{display:none}
+/* top navigation: one bar, every region one tap away */
+.nav{position:sticky;top:0;z-index:50;flex:none;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;box-shadow:0 2px 14px rgba(20,8,60,.28)}
+.navin{max-width:1280px;margin-inline:auto;padding:8px 16px;display:flex;align-items:center;gap:14px}
+.nbrand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;flex:none}
+.nbrand img{width:38px;height:38px;border-radius:10px;background:#fff;padding:3px;object-fit:contain}
+.nbrand b{display:block;font-size:15px;line-height:1.15}
+.nbrand small{display:block;font-size:11.5px;opacity:.85}
+.tabs{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:0;padding:3px 2px;scrollbar-width:none;justify-content:flex-end}
+.tabs::-webkit-scrollbar{display:none}
+.tab{color:#fff;text-decoration:none;font-weight:600;font-size:13.5px;padding:7px 14px;border-radius:999px;white-space:nowrap;border:1px solid rgba(255,255,255,.18)}
+.tab:hover{background:rgba(255,255,255,.16)}
+.tab[aria-current="page"]{background:#fff;color:var(--hero1);border-color:#fff}
+/* explorer view: info strip + the chosen explorer filling the rest of the screen */
+body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#app{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;background:var(--bg)}
+.strip{flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
+.stripin{max-width:1280px;margin-inline:auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.stripin .st{min-width:0}
+.stripin b{display:block;color:var(--ink);font-size:15px;line-height:1.25}
+.stripin span.ss{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stripin a.hl{flex:none;color:var(--accent);font-weight:700;font-size:13.5px;text-decoration:none;white-space:nowrap}
+#appload{position:absolute;left:0;right:0;top:70px;text-align:center;padding:24px;color:var(--muted);font-size:14px;pointer-events:none}
+#efw{flex:1;min-height:0;display:flex}
+#efw iframe{flex:1;min-height:0;width:100%;border:0;background:var(--bg);visibility:hidden}
+@media (max-width:720px){.nbrand span{display:none}.navin{gap:10px}.tabs{justify-content:flex-start}.stripin a.hl{display:none}}
+</style></head><body>
+<header class="nav"><div class="navin">
+ <a class="nbrand" href="#"><img alt="ASMI Youth Career Advisor" src="/asmi-logo.png"><span><b>NEET-PG Cutoff Explorer</b><small>ASMI Youth Career Advisor</small></span></a>
+ <nav class="tabs" id="tabs" aria-label="Regions"></nav>
+</div></header>
+<div id="home">
+<header class="hero"><div class="wrap">
+ <h1>NEET-PG <em>cutoff</em> explorer</h1>
+ <p>See where your rank can get you. Closing ranks for MD, MS and Diploma seats, round by round, with a quick check against your own rank.</p>
+ <div class="chips"><span>MD / MS / Diploma</span><span>Round-wise closing ranks</span><span>Download as PDF</span></div>
+</div></header>
+
+<main class="wrap">
+ <section class="pick" aria-labelledby="pk">
+  <h2 id="pk"><b>1</b> Choose where you want to look</h2>
+  <div class="grid" id="grid"></div>
+ </section>
+
+ <section class="upd" id="updates" aria-labelledby="uh">
+  <h3 id="uh">Important updates</h3>
+  <p class="lead">Official notices, date-wise, with the PDF so you can read the source yourself.</p>
+  <div class="u-panel"><div class="u-chips" id="uchips" role="group" aria-label="Region"></div>
+  <input class="u-search" id="uq" type="search" placeholder="Search updates, e.g. round 2 schedule" autocomplete="off" aria-label="Search updates"></div>
+  <div class="u-count" id="ucount" aria-live="polite"></div>
+  <div id="uout"></div>
+ </section>
+
+ <section class="how" aria-labelledby="hw">
+  <h3 id="hw">How it works</h3>
+  <ol class="steps">
+   <li><i>1</i><div><b>Pick your region</b><span>All India or your state.</span></div></li>
+   <li><i>2</i><div><b>Enter your rank</b><span>Add your State rank and All India Rank to see which seats are within reach.</span></div></li>
+   <li><i>3</i><div><b>Shortlist and download</b><span>Filter by branch, college and category, then save the list.</span></div></li>
+  </ol>
+ </section>
+
+ <section class="help">
+  <p><b>Not sure which seats to target?</b> Our counsellors can help you build a realistic PG preference list.</p>
+  <a class="call" href="tel:7410019075">Call 7410019075</a>
+ </section>
+</main>
+</div>
+
+<div id="app" hidden>
+ <div class="strip"><div class="stripin"><div class="st"><b id="st"></b><span class="ss" id="ss"></span></div><a class="hl" href="tel:7410019075">Helpline 7410019075</a></div></div>
+ <div id="appload" role="status">Loading the cutoff explorer&hellip;</div>
+ <div id="efw"></div>
+</div>
+
+<script>
+/* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
+var REGIONS=[
+ {name:'All India',slug:'all-india',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
+ {name:'Andhra Pradesh',slug:'andhra-pradesh',mono:'AP',desc:'2025-26 Dr. NTR UHS management quota: seat matrix and allotments for Phases 1 to 3 plus stray. All India Rank.',status:'live',url:'/tools/andhra-pradesh-pg-cutoff-explorer'},
+ {name:'Maharashtra',slug:'maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
+ {name:'Karnataka',slug:'karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
+ {name:'Telangana',slug:'telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
+ {name:'Uttar Pradesh',slug:'uttar-pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'},
+ {name:'West Bengal',slug:'west-bengal',mono:'WB',desc:'2025 WBMCC allotment lists, Rounds 1 to 3, stray and revised stray. All India Rank.',status:'live',url:'/tools/west-bengal-pg-cutoff-explorer'}
+];
+var g=document.getElementById('grid');
+REGIONS.forEach(function(r){
+ var live=r.status==='live',el=document.createElement(live?'a':'div');
+ el.className='card '+(live?'live':'soon');
+ if(live)el.href='#'+r.slug;
+ el.innerHTML='<span class="tag"></span><span class="mono"></span><span class="nm"></span><span class="ds"></span>';
+ el.querySelector('.tag').textContent=live?'Data available':'Coming soon';
+ el.querySelector('.mono').textContent=r.mono;
+ el.querySelector('.nm').textContent=r.name;
+ el.querySelector('.ds').textContent=r.desc;
+ var x=document.createElement(live?'span':'a');
+ if(live){x.className='go';x.innerHTML='Open cutoff explorer <span aria-hidden="true">&rarr;</span>'}
+ else{x.className='ask';x.href='tel:7410019075';x.textContent='Ask us about '+r.name}
+ el.appendChild(x);
+ g.appendChild(el);
+});
+/* Important updates. Data lives in /tools/updates/updates.json. Entry:
+   {"date":"2026-09-29","region":"all-india","title":"...","summary":"optional","source":"MCC","pdf":"/tools/updates/pdfs/file.pdf"}
+   region is one of: all-india, andhra-pradesh, maharashtra, karnataka, telangana, uttar-pradesh, west-bengal */
+(function(){
+ var UR=[['all','All'],['all-india','All India'],['andhra-pradesh','Andhra Pradesh'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh'],['west-bengal','West Bengal']];
+ var LAB={};UR.forEach(function(r){LAB[r[0]]=r[1]});
+ var $=function(i){return document.getElementById(i)},DATA=[],region='all',term='';
+ var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+ var MF=['January','February','March','April','May','June','July','August','September','October','November','December'];
+ function parse(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||'');return m?new Date(+m[1],+m[2]-1,+m[3]):null}
+ function safe(u){u=String(u||'').trim();return (/^https?:\/\//i.test(u)||(u.charAt(0)==='/'&&u.charAt(1)!=='/'))?u:''}
+ function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+ function chips(){var h=$('uchips');h.innerHTML='';UR.forEach(function(r){var b=el('button','u-chip',r[1]);b.type='button';b.setAttribute('aria-pressed',r[0]===region);b.onclick=function(){region=r[0];chips();render()};h.appendChild(b)})}
+ function render(){
+  var out=$('uout');out.innerHTML='';var t=term.toLowerCase(),now=new Date();now.setHours(0,0,0,0);
+  var rows=DATA.filter(function(u){return (region==='all'||u.region===region)&&(!t||(u.title+' '+(u.summary||'')+' '+(u.source||'')+' '+(LAB[u.region]||'')).toLowerCase().indexOf(t)>=0)});
+  $('ucount').textContent=DATA.length?(rows.length+' of '+DATA.length+' updates'):'';
+  if(!DATA.length){var e=el('div','u-empty');e.appendChild(el('b',null,'No updates published yet'));e.appendChild(document.createTextNode('We add official notices here as soon as they are released.'));out.appendChild(e);return}
+  if(!rows.length){var n=el('div','u-empty');n.appendChild(el('b',null,'No updates match'));n.appendChild(document.createTextNode('Try another region or a different search.'));out.appendChild(n);return}
+  var cur='',ul=null;
+  rows.forEach(function(u){
+   var d=parse(u.date),key=d?d.getFullYear()+'-'+d.getMonth():'x';
+   if(key!==cur){cur=key;out.appendChild(el('h4','u-month',d?MF[d.getMonth()]+' '+d.getFullYear():'Undated'));ul=el('ul','u-list');out.appendChild(ul)}
+   var li=el('li','u-item'),dt=el('div','u-date');dt.appendChild(el('b',null,d?String(d.getDate()):'-'));dt.appendChild(el('span',null,d?MON[d.getMonth()]:''));li.appendChild(dt);
+   var m=el('div','u-meta');m.appendChild(el('span','u-tag',LAB[u.region]||u.region||''));
+   if(d&&now>=d&&(now-d)/864e5<=7)m.appendChild(el('span','u-tag u-new','New'));
+   if(u.source)m.appendChild(el('span','u-src','Source: '+u.source));li.appendChild(m);
+   var body=el('div');body.appendChild(el('p','u-title',u.title));if(u.summary)body.appendChild(el('p','u-sum',u.summary));li.appendChild(body);
+   var url=safe(u.pdf);if(url){var a=el('a','u-pdf','Official PDF');a.href=url;a.target='_blank';a.rel='noopener';a.appendChild(document.createTextNode(' \u2197'));li.appendChild(a)}
+   ul.appendChild(li)});
+ }
+ $('uq').addEventListener('input',function(){term=this.value;render()});
+ chips();
+ fetch('/tools/updates/updates.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+  DATA=(j.updates||[]).filter(function(u){return u&&u.title}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')});render()
+ }).catch(function(){var o=$('uout');o.innerHTML='';var e=el('div','u-empty');e.appendChild(el('b',null,'Could not load updates'));e.appendChild(document.createTextNode('Please refresh the page.'));o.appendChild(e)});
+})();
+/* Single-page hosting: choosing a state opens its explorer inside this page (address stays /tools/neet-pg-cutoff, with #state for direct links).
+   Every explorer gets the same shared look from /tools/pg-theme.css so all regions feel like one product. */
+(function(){
+ var home=document.getElementById('home'),app=document.getElementById('app'),efw=document.getElementById('efw'),load=document.getElementById('appload'),tabs=document.getElementById('tabs');
+ var st=document.getElementById('st'),ss=document.getElementById('ss'),BASE=document.title,cur='';
+ var by={};REGIONS.forEach(function(r){if(r.status==='live')by[r.slug]=r});
+ function mkTab(label,href,on){var a=document.createElement('a');a.className='tab';a.href=href;a.textContent=label;if(on)a.setAttribute('aria-current','page');return a}
+ function drawTabs(active){tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
+  var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
+ /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
+ function openFrame(url,name){
+  efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
+  function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
+  f.addEventListener('load',function(){
+   try{var d=f.contentDocument;if(!d||!d.head||d.location.href==='about:blank'){reveal();return}
+    var l=d.createElement('link');l.rel='stylesheet';l.href='/tools/pg-theme.css';l.onload=reveal;l.onerror=reveal;d.head.appendChild(l);setTimeout(reveal,1500)}catch(e){reveal()}});
+  f.src=url;efw.appendChild(f)}
+ function route(){
+  var r=by[decodeURIComponent((location.hash||'').slice(1))];
+  drawTabs(r?r.slug:'');
+  document.body.classList.toggle('appmode',!!r);
+  if(r){
+   home.hidden=true;app.hidden=false;
+   st.textContent=r.name+' PG cutoff explorer';ss.textContent=r.desc;
+   document.title=r.name+' | '+BASE;
+   if(cur!==r.url){load.hidden=false;cur=r.url;openFrame(r.url,r.name)}
+   window.scrollTo(0,0);
+  }else{
+   app.hidden=true;home.hidden=false;
+   if(cur){cur='';efw.innerHTML=''}
+   document.title=BASE;
+  }
+ }
+ window.addEventListener('hashchange',route);
+ route();
+})();
+</script>
+</body></html>

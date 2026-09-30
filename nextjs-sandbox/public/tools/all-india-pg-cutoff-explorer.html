@@ -1,0 +1,381 @@
+<!doctype html><html><head><script data-hosted>(function(){try{if(window.top===window.self){location.replace("/tools/neet-pg-cutoff#all-india");return}}catch(e){}var st=document.createElement("style");st.textContent="#cs{display:none}";document.head.appendChild(st)})()</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>All India NEET-PG Cutoff Explorer | ASMI Career</title>
+<meta name="description" content="Filterable MCC NEET-PG Round 1-4 2026 closing ranks by college, branch, category and quota, by ASMI Youth Career Advisor">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky filter panel above a dense, scannable results table; closing ranks per round side by side */
+:root{--bg:#f4f1ff;--surface:#ffffff;--fg:#1d1a3b;--muted:#6a6689;--line:#e4def7;--accent:#5b21b6;--accent-fg:#ffffff;--good:#0f7a43;--good-bg:#d9f5e5;--warn:#8a5a00;--warn-bg:#fdefc7;--bad:#a12a3a;--bad-bg:#fde0e4;--head:#f0ebff;--yellow:#ffd60a;--ink:#2e1065;--selbg:#e9fbf0;--hero1:#3b0f8c;--hero2:#7c3aed;
+--sans:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--warn:#f0c46a;--warn-bg:#3d3013;--bad:#f5a3ae;--bad-bg:#45202a;--head:#2a2158;--ink:#ffe27a;--selbg:#12342a;--hero1:#2a0c66;--hero2:#5b2bc4;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a49fc7;--line:#372d66;--accent:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--warn:#f0c46a;--warn-bg:#3d3013;--bad:#f5a3ae;--bad-bg:#45202a;--head:#2a2158;--ink:#ffe27a;--selbg:#12342a;--hero1:#2a0c66;--hero2:#5b2bc4;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.45;padding-inline:16px;padding-block:20px 40px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-size:22px;margin:0;font-weight:600;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:75ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+label,.fld{display:flex;flex-direction:column;gap:4px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:0}
+select,input{font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px;min-width:0;width:100%}
+select:focus,input:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rank input{font-family:var(--mono);font-size:16px;font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:1350px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--head);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);position:sticky;top:0}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.sel{font-weight:600;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+td small{display:block;color:var(--muted);font-size:11px;line-height:1.35;font-family:var(--sans)}
+.big{font-size:14px;font-weight:500}
+td.c small{font-size:12px}
+td.c{white-space:normal;min-width:230px;max-width:300px}
+td.sn{padding-left:8px;padding-right:8px}
+.pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:500}
+.g{background:var(--good-bg);color:var(--good)}.w{background:var(--warn-bg);color:var(--warn)}.b{background:var(--bad-bg);color:var(--bad)}
+button{font:inherit;background:var(--accent);color:var(--accent-fg);border:0;border-radius:4px;padding:8px 14px;cursor:pointer}
+.note{font-size:12.5px;color:var(--muted);max-width:100ch}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+
+.ms{position:relative;min-width:0}
+.ms>summary{list-style:none;cursor:pointer;font:inherit;font-size:14px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px;display:flex;justify-content:space-between;gap:8px;text-transform:none;letter-spacing:0}
+.ms>summary::-webkit-details-marker{display:none}
+.ms>summary::after{content:"▾";color:var(--muted)}
+.ms>summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ms[open]>summary{border-color:var(--accent)}
+.menu{position:absolute;z-index:20;left:0;right:0;min-width:220px;max-height:300px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:4px;margin-top:4px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,.18);text-transform:none;letter-spacing:0}
+.menu .tools{display:flex;gap:8px;padding:2px 2px 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.menu .tools button{background:none;color:var(--accent);padding:2px 4px;font-size:12px}
+.menu label{flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--fg);padding:4px 2px;text-transform:none;letter-spacing:0;cursor:pointer}
+.menu input{width:auto;padding:0}
+.hint{font-size:12.5px;color:var(--warn);background:var(--warn-bg);border-radius:4px;padding:6px 10px}
+.sml{font-size:14px;font-weight:500}
+th.rg{text-align:center;border-left:1px solid var(--line);font-size:12px;letter-spacing:.08em}
+tr.h2 th{border-left:0}
+tr.h2 th.s{border-left:1px solid var(--line)}
+td.sn{color:var(--muted);border-left:1px solid var(--line);font-size:13px}
+td.sn.sel{color:var(--fg)}
+td.sn b{font-weight:600}
+td.n small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+
+.dl{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.dl button{background:var(--surface);color:var(--accent);border:1px solid var(--accent);font-weight:500}
+.dl button:hover:not(:disabled){background:var(--accent);color:var(--accent-fg)}
+.dl button:disabled{opacity:.45;cursor:not-allowed}
+#dlmsg{font-size:12.5px;color:var(--muted)}
+
+.brand{display:flex;gap:16px;align-items:center}
+.brand>div{min-width:0}
+.logo{height:73px;width:96px;max-width:100%;flex:none}
+.help{margin:2px 0 0;font-weight:600;color:var(--accent);font-size:13.5px}
+.help a{color:inherit}
+@media (max-width:520px){.logo{width:64px;height:49px}}
+
+/* ---- colourful skin ---- */
+body{background:radial-gradient(1200px 380px at 50% -120px,color-mix(in srgb,var(--hero2) 22%,transparent),transparent 70%),var(--bg)}
+.brand{background:linear-gradient(120deg,var(--hero1),var(--hero2) 70%,#c026d3);color:#fff;border-radius:16px;padding:18px 22px;box-shadow:0 10px 30px rgba(91,33,182,.28);position:relative;overflow:hidden}
+.brand::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,214,10,.22)}
+.brand h1{color:#fff;font-size:26px;letter-spacing:-.01em}
+.brand .sub{color:rgba(255,255,255,.86)}
+.brand .help,.brand .help a{color:var(--yellow)}
+.brand .help{font-weight:600}
+.logo{background:#fff;border-radius:14px;padding:6px;height:85px;width:108px;object-fit:contain;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.panel{border-radius:16px;border:1px solid var(--line);border-top:4px solid var(--hero2);box-shadow:0 6px 20px rgba(91,33,182,.08)}
+select,input,.ms>summary{border-radius:10px;background:var(--surface)}
+select:hover,input:hover,.ms>summary:hover{border-color:var(--hero2)}
+label,.fld{color:var(--accent);font-weight:600}
+.tw{border-radius:16px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(91,33,182,.08)}
+th{background:var(--head);color:var(--ink);font-weight:600}
+th.r0{background:#ede7ff;color:#3b0f8c}th.r1{background:#e7ddff;color:#3b0f8c}th.r2{background:#d7ecff;color:#0b4a8a}th.r3{background:#d3f5ea;color:#0a6248}th.r4{background:#fff0c2;color:#7a5200}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) th.r0{background:#332764;color:#ede7ff}:root:not([data-theme="light"]) th.r1{background:#3a2a7a;color:#e7ddff}:root:not([data-theme="light"]) th.r2{background:#1f3f66;color:#d7ecff}:root:not([data-theme="light"]) th.r3{background:#164b3d;color:#d3f5ea}:root:not([data-theme="light"]) th.r4{background:#544012;color:#fff0c2}}
+:root[data-theme="dark"] th.r0{background:#332764;color:#ede7ff}:root[data-theme="dark"] th.r1{background:#3a2a7a;color:#e7ddff}:root[data-theme="dark"] th.r2{background:#1f3f66;color:#d7ecff}:root[data-theme="dark"] th.r3{background:#164b3d;color:#d3f5ea}:root[data-theme="dark"] th.r4{background:#544012;color:#fff0c2}
+tbody tr:hover td{background:color-mix(in srgb,var(--hero2) 6%,var(--surface))}
+td.sel{background:var(--selbg);color:var(--good);font-weight:600}
+td.sel small{color:var(--good);opacity:.85}
+td.sn.sel{color:var(--good)}
+.sml{font-size:13.5px;font-weight:500}
+td.n:not(.sel):not(.sn) .sml{color:var(--fg);opacity:.82}
+td.sel .sml{font-weight:600}
+td.c{font-weight:600;font-size:13.5px}
+.tag{display:inline-block;margin-top:3px;padding:1px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.tag.gv{background:#d9f5e5;color:#0f7a43}.tag.pv{background:#ffe4cc;color:#b4470a}
+.qp{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.qp.q0{background:#e7ddff;color:#4c1d95}.qp.q1{background:#d7ecff;color:#0b4a8a}.qp.q2{background:#ffe4cc;color:#b4470a}.qp.q3{background:#d3f5ea;color:#0a6248}
+.cp{display:inline-block;padding:2px 9px;border-radius:8px;font-size:12px;font-weight:600;background:var(--head);color:var(--ink)}
+.pill{font-weight:600;padding:3px 10px}
+button{border-radius:10px;font-weight:600}
+.dl button{border-radius:99px;padding:9px 18px}
+#dlp{background:#2e1065;color:#fff;border:1px solid #2e1065}
+#dlp:hover:not(:disabled){background:#4c1d95;color:#fff}
+#more{background:var(--hero2);border-radius:99px;padding:9px 22px}
+.meta #count{color:var(--ink);font-weight:700;font-size:15px}
+.hint{border-radius:10px}
+.note{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--yellow);border-radius:10px;padding:12px 14px}
+
+/* ---- final polish ---- */
+.panel{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.panel .wide{grid-column:1/-1}
+.panel .wide input{font-size:16px;padding:12px 14px 12px 42px;border-radius:12px;border:2px solid var(--line);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E") no-repeat 13px 50%}
+.panel .wide input:focus{border-color:var(--hero2);outline:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--hero2) 18%,transparent)}
+.panel .actions{display:flex;align-items:flex-end}
+#reset{background:transparent;color:var(--accent);border:1.5px solid var(--accent);border-radius:99px;padding:9px 18px;width:100%}
+#reset:hover{background:var(--accent);color:var(--accent-fg)}
+.tw{max-height:78vh;overflow:auto}
+th{position:sticky;top:0;z-index:3}
+tr.h2 th{top:var(--h1,34px)}
+th:first-child,td.c{position:sticky;left:0}
+th:first-child{z-index:5}
+td.c{z-index:2;background:var(--surface);box-shadow:1px 0 0 var(--line)}
+tbody tr:hover td.c{background:color-mix(in srgb,var(--hero2) 6%,var(--surface))}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tag.gv{background:#143a27;color:#7fe2a8}:root:not([data-theme="light"]) .tag.pv{background:#4a2c12;color:#ffc999}:root:not([data-theme="light"]) .qp{filter:brightness(.9)}}
+.menu label:hover{background:var(--head);border-radius:6px}
+@media (max-width:640px){
+ body{padding-inline:10px;padding-block:12px 30px}
+ .brand{padding:14px;gap:12px;border-radius:14px}.brand h1{font-size:20px}.logo{width:64px;height:49px;padding:4px}
+ .brand .sub{font-size:12.5px}
+ .panel{grid-template-columns:1fr 1fr;padding:12px;gap:10px}
+ .panel .wide,.panel .actions{grid-column:1/-1}
+ td.c{min-width:150px;max-width:170px;font-size:12.5px}
+ .dl button{flex:1}
+ #dlmsg{flex-basis:100%}
+}
+
+.fx{grid-column:1/-1}
+.fx>summary{list-style:none;cursor:pointer;font-weight:600;color:var(--accent);font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px;padding:2px 0}
+.fx>summary::-webkit-details-marker{display:none}
+.fx>summary::after{content:"▾";transition:transform .2s}
+.fx:not([open])>summary::after{transform:rotate(-90deg)}
+.fxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:12px}
+@media (max-width:640px){.fxg{grid-template-columns:1fr 1fr;gap:10px}.fxg .actions{grid-column:1/-1}}
+tr.h2 th{top:calc(var(--h1,34px) - 1px)}
+
+.menu .mtop{position:sticky;top:-6px;background:var(--surface);padding-top:6px;margin:-6px -6px 4px;padding-inline:6px;z-index:1}
+.menu input.msq{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:13px}
+.menu .mtop .tools{margin-bottom:0}
+.menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<div class="wrap">
+<p id="cs" style="margin:0 0 10px"><a href="/tools/neet-pg-cutoff" target="_top" style="color:var(--accent);font-weight:600;text-decoration:none">&larr; Change state</a></p>
+<header class="brand"><img class="logo" alt="ASMI Youth Career Advisor" src="/asmi-logo.png">
+<div><h1>MCC PG Cutoff Explorer</h1><p class="help">ASMI Youth Career Advisor &nbsp;|&nbsp; Helpline: <a href="tel:7410019075">7410019075</a></p>
+<p class="sub">MCC NEET-PG 2026 provisional allotment results, Round 1, Round 2, Round 3 and the Stray Vacancy round (shown as Round 4). Closing rank and seats allotted for each college + branch + category + quota combination, across all four rounds side by side.</p></div></header>
+<section class="panel" aria-label="Filters">
+<label class="wide">Search<input id="q" type="search" placeholder="College, city or branch, e.g. Pune Radiology" autocomplete="off"></label>
+<label class="rank">Your NEET-PG rank<input id="rank" type="number" min="1" inputmode="numeric" placeholder="e.g. 4500"></label>
+<details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
+<label>Round used for status and sorting<select id="round"></select></label>
+<label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
+<div class="fld">State<span id="ms-state"></span></div>
+<div class="fld">Branch<span id="ms-subj"></span></div>
+<div class="fld">Quota<span id="ms-qt"></span></div>
+<div class="fld">Category<span id="ms-cat"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">College<span id="ms-inst"></span></div>
+<div class="actions"><button id="reset" type="button">Reset filters</button></div>
+</div></details>
+</section>
+<div id="hint" class="hint" hidden></div>
+<div class="meta"><span id="count"></span><span id="legend"></span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">City</th><th rowspan="2">State</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th class="n rg r0" colspan="2">All Rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4 (Stray)</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r0">Seats</th><th class="n r0">Closing</th><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
+<div><button id="more" hidden>Show more</button></div>
+<p class="note">Source: MCC NEET-PG 2026 provisional allotment results. Each round's column shows <b>seats allotted</b> and <b>closing rank</b> (the highest/worst allotted rank) for that exact college + branch + category + quota combination; a round with no matching allotment shows <span style="opacity:.5">–</span>. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades. College names are re-cased from the source files' mixed/all-caps text into standard title case.</p>
+</div>
+<script>
+(function(){
+function $(id){return document.getElementById(id)}
+var IDX = {college:0, city:1, cityConf:2, state:3, course:4, quota:5, cat:6, r1:7, r2:8, r3:9, r4:10};
+var ROUND_KEYS = ['r1','r2','r3','r4'];
+var ROUND_LABELS = {r0:'All Rounds Combined', r1:'Round 1', r2:'Round 2', r3:'Round 3', r4:'Round 4 (Stray)'};
+var L = [], shown = 0, LIM = 500;
+var MS = {};
+
+function nf(v){return v==null?'–':Number(v).toLocaleString('en-IN')}
+
+function makeMS(id,items,defaults,noun){
+ var host=$('ms-'+id),sel={};(defaults||[]).forEach(function(d){sel[d]=1});
+ var d=document.createElement('details');d.className='ms';
+ var sm=document.createElement('summary');sm.innerHTML='<span></span>';d.appendChild(sm);
+ var menu=document.createElement('div');menu.className='menu';
+ var big=items.length>6;
+ menu.innerHTML='<div class="mtop">'+(big?'<input type="search" class="msq" placeholder="Type to search..." autocomplete="off" aria-label="Search options">':'')+'<div class="tools"><button type="button" data-a="all">'+(big?'Select shown':'Select all')+'</button><button type="button" data-a="none">Clear</button></div></div>'+items.map(function(x){return '<label><input type="checkbox" data-v="'+x.replace(/"/g,'&quot;')+'"'+(sel[x]?' checked':'')+'> '+x+'</label>'}).join('');
+ d.appendChild(menu);host.appendChild(d);
+ function label(){var n=Object.keys(sel).length;sm.firstChild.textContent=n===0?'All '+noun:(n===1?items.filter(function(x){return sel[x]})[0]:n+' selected')}
+ menu.addEventListener('change',function(e){var v=e.target.getAttribute('data-v');if(!v)return;if(e.target.checked)sel[v]=1;else delete sel[v];label();shown=LIM;render()});
+ menu.addEventListener('click',function(e){var a=e.target.getAttribute&&e.target.getAttribute('data-a');if(!a)return;if(a==='none')sel={};else menu.querySelectorAll('label').forEach(function(l){if(l.style.display==='none')return;var i=l.querySelector('input');sel[i.getAttribute('data-v')]=1});menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label();shown=LIM;render()});
+ function filt(){var q=(menu.querySelector('.msq')||{value:''}).value.trim().toLowerCase().split(/\s+/).filter(Boolean),n=0;menu.querySelectorAll('label').forEach(function(l){var s=l.textContent.toLowerCase(),ok=q.every(function(w){return s.indexOf(w)>=0});l.style.display=ok?'':'none';if(ok)n++});var e=menu.querySelector('.nomatch');if(!e){e=document.createElement('div');e.className='nomatch';e.textContent='No match';menu.appendChild(e)}e.style.display=n?'none':''}
+ var sq=menu.querySelector('.msq');if(sq){sq.addEventListener('input',filt);sq.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var f=Array.prototype.filter.call(menu.querySelectorAll('label'),function(l){return l.style.display!=='none'});if(f.length===1)f[0].querySelector('input').click()}})}
+ d.addEventListener('toggle',function(){if(d.open&&sq){sq.value='';filt();setTimeout(function(){sq.focus()},30)}});
+ label();MS[id]=function(){return sel};MS[id].reset=function(){sel={};(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x]})};
+}
+document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
+
+function pass(v,c){return v<=c?2:(v<=c*1.1?1:0)}
+var STXT={2:'Within cutoff',1:'Borderline',0:'Above cutoff','-1':''};
+
+function allRounds(g){
+ var bestClosing=null,lastSeats=null;
+ for(var i=0;i<ROUND_KEYS.length;i++){
+  var x=g[IDX[ROUND_KEYS[i]]];
+  if(!x)continue;
+  if(bestClosing===null||x[1]>bestClosing)bestClosing=x[1];
+  lastSeats=x[2];
+ }
+ if(bestClosing===null)return null;
+ return [null,bestClosing,lastSeats];
+}
+function getX(g,rd){return rd==='r0'?allRounds(g):g[IDX[rd]]}
+
+function query(){
+ var qts=MS.qt(),cs=MS.cat(),ss=MS.state(),js=MS.subj(),is=MS.inst(),ys=MS.city();
+ function has(o){return Object.keys(o).length>0}
+ var rd=$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),rk=parseInt($('rank').value,10)||0,show=$('show').value;
+ function stat(g){var x=getX(g,rd);if(!x)return -1;var s=3;if(rk)s=Math.min(s,pass(rk,x[1]));return s===3?-1:s}
+ var out=L.filter(function(g){
+  if(has(qts)&&!qts[g[IDX.quota]])return false;
+  if(has(cs)&&!cs[g[IDX.cat]])return false;
+  if(has(ss)&&!ss[g[IDX.state]])return false;
+  if(has(js)&&!js[g[IDX.course]])return false;
+  if(has(is)&&!is[g[IDX.college]])return false;
+  if(has(ys)&&!ys[g[IDX.city]])return false;
+  var hay=(g[IDX.college]+' '+(g[IDX.city]||'')+' '+g[IDX.state]+' '+g[IDX.course]+' '+g[IDX.quota]+' '+g[IDX.cat]).toLowerCase();
+  for(var ti=0;ti<t.length;ti++)if(hay.indexOf(t[ti])<0)return false;
+  if(rk&&show!=='all'){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
+  return true});
+ out.sort(function(a,b){var xa=getX(a,rd),xb=getX(b,rd);var va=xa?xa[1]:Infinity,vb=xb?xb[1]:Infinity;return va-vb});
+ return {out:out,stat:stat,rk:rk,rd:rd,show:show,text:$('q').value.trim()};
+}
+
+function cell(x,on){var c='n'+(on?' sel':'');if(!x)return '<td class="'+c+'">–</td>';return '<td class="'+c+'"><span class="sml">'+nf(x[1])+'</span></td>'}
+function scell(x,on){var c='n sn'+(on?' sel':'');if(!x)return '<td class="'+c+'">–</td>';return '<td class="'+c+'">'+(x[2]>0?x[2]:'0')+'</td>'}
+
+function render(){
+ var Q=query(),out=Q.out,rk=Q.rk,rd=Q.rd,stat=Q.stat;
+ var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
+ var html=out.slice(0,shown).map(function(g){
+  var sv=stat(g),st='';
+  if(rk){if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>'}
+  var qi=(['State','In-Service','NRI','Institute Quota (I.Q.)'].indexOf(g[IDX.quota])+4)%4;
+  var allR=allRounds(g),onAll=rd==='r0';
+  return '<tr><td class="c">'+esc(g[IDX.college])+'</td><td>'+esc(g[IDX.city]||'–')+'</td><td>'+esc(g[IDX.state]||'–')+'</td><td>'+esc(g[IDX.course])+'</td><td><span class="qp q'+qi+'">'+esc(g[IDX.quota])+'</span></td><td><span class="cp">'+esc(g[IDX.cat])+'</span></td>'+
+   scell(allR,onAll)+cell(allR,onAll)+
+   ROUND_KEYS.map(function(rk2){var on=rk2===rd;return scell(g[IDX[rk2]],on)+cell(g[IDX[rk2]],on)}).join('')+
+   '<td>'+st+'</td></tr>'});
+ $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters.</td></tr>';
+ $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('legend').textContent='Sorted by closing rank in '+ROUND_LABELS[rd]+', lowest first';
+ $('more').hidden=out.length<=shown;
+ $('dlp').disabled=!out.length;
+ $('hint').hidden=true;
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+$('round').innerHTML=['r0'].concat(ROUND_KEYS).map(function(rk){return '<option value="'+rk+'">'+ROUND_LABELS[rk]+'</option>'}).join('');
+$('round').value='r0';
+
+[$('q'),$('rank')].forEach(function(el){el.addEventListener('input',function(){shown=LIM;render()})});
+$('round').addEventListener('change',function(){shown=LIM;render()});
+$('show').addEventListener('change',function(){shown=LIM;render()});
+$('more').addEventListener('click',function(){shown+=LIM;render()});
+$('reset').addEventListener('click',function(){
+ $('q').value='';$('rank').value='';$('show').value='all';$('round').value='r0';
+ ['qt','cat','state','subj','inst','city'].forEach(function(id){if(MS[id])MS[id].reset()});
+ shown=LIM;render();
+});
+
+/* ---------- downloads ---------- */
+function say(m){$('dlmsg').textContent=m}
+function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function fname(ext){var Q=query();return 'ASMI_MCC_PG_Cutoffs'+(Q.rk?'_Rank'+Q.rk:'')+'_'+stamp()+'.'+ext}
+function fail(e,what){if(e&&e.code==='declined')say('Download cancelled.');else say(what+' could not be saved here ('+((e&&e.code)||'error')+').')}
+function downloadBlob(filename,data){
+ var blob=(data instanceof Blob)?data:new Blob([data]);
+ var url=URL.createObjectURL(blob);
+ var a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);
+ setTimeout(function(){URL.revokeObjectURL(url)},1000);
+}
+var logoDataUrl=null;
+(function loadLogo(){fetch('/asmi-logo.png').then(function(r){return r.blob()}).then(function(b){var rd=new FileReader();rd.onload=function(){logoDataUrl=rd.result};rd.readAsDataURL(b)}).catch(function(){})})();
+
+$('dlp').addEventListener('click',function(){
+ var Q=query();
+ try{
+  var jsPDFCtor=(window.jspdf&&window.jspdf.jsPDF)?window.jspdf.jsPDF:window.jsPDF;
+  var doc=new jsPDFCtor({orientation:'landscape',unit:'pt',format:'a4'});
+  var pageW=doc.internal.pageSize.getWidth(),marginX=30,bandH=64;
+  doc.setFillColor(91,33,182);doc.rect(0,0,pageW,bandH,'F');
+  doc.setFillColor(192,38,211);doc.rect(0,bandH,pageW,3,'F');
+  var logoBoxSize=44,logoX=marginX,logoY=(bandH-logoBoxSize)/2;
+  doc.setFillColor(255,255,255);
+  if(doc.roundedRect)doc.roundedRect(logoX,logoY,logoBoxSize,logoBoxSize,8,8,'F');else doc.rect(logoX,logoY,logoBoxSize,logoBoxSize,'F');
+  if(logoDataUrl){try{doc.addImage(logoDataUrl,'PNG',logoX+4,logoY+4,logoBoxSize-8,logoBoxSize-8)}catch(e){}}
+  var textX=logoX+logoBoxSize+14;
+  doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(255,255,255);
+  doc.text('ASMI Youth Career Advisor',textX,bandH/2-6);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(230,215,255);
+  doc.text("India's Trusted NEET Admission Counsellors  ·  Since 2016",textX,bandH/2+10);
+  doc.setFont('helvetica','bold');doc.setFontSize(10);
+  var ht='Helpline: 7410019075',htw=doc.getTextWidth(ht),pillW=htw+24,pillH=22,pillX=pageW-marginX-pillW,pillY=bandH/2-pillH/2;
+  doc.setDrawColor(255,255,255);doc.setLineWidth(1);
+  if(doc.roundedRect)doc.roundedRect(pillX,pillY,pillW,pillH,11,11,'S');
+  doc.setTextColor(255,255,255);doc.text(ht,pillX+pillW/2,pillY+pillH/2+3.5,{align:'center'});
+  var y=bandH+22;
+  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(29,26,59);
+  doc.text('MCC PG Cutoff Explorer',marginX,y);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(106,102,137);
+  doc.text('Generated '+new Date().toLocaleString('en-IN')+'  ·  '+Q.out.length.toLocaleString('en-IN')+' rows',pageW-marginX,y,{align:'right'});
+  var head=[['College','City','State','Branch','Quota','Category','All Rd Seats','All Rd Close']];
+  ROUND_KEYS.forEach(function(rk){head[0].push(ROUND_LABELS[rk]+' Seats',ROUND_LABELS[rk]+' Close')});
+  var body=Q.out.map(function(g){
+   var allR=allRounds(g);
+   var row=[g[IDX.college],g[IDX.city]||'–',g[IDX.state],g[IDX.course],g[IDX.quota],g[IDX.cat],allR?String(allR[2]):'–',allR?String(allR[1]):'–'];
+   ROUND_KEYS.forEach(function(rk){var x=g[IDX[rk]];row.push(x?String(x[2]):'–',x?String(x[1]):'–')});
+   return row;
+  });
+  doc.autoTable({head:head,body:body,startY:y+14,margin:{left:marginX,right:marginX,bottom:30},
+   styles:{fontSize:7,cellPadding:3,overflow:'linebreak'},
+   headStyles:{fillColor:[46,16,101],textColor:255,fontSize:7},
+   alternateRowStyles:{fillColor:[244,241,255]},
+   columnStyles:{0:{cellWidth:130},3:{cellWidth:90}},
+   didDrawPage:function(){
+    var pageH=doc.internal.pageSize.getHeight();
+    doc.setDrawColor(228,222,247);doc.setLineWidth(0.5);
+    doc.line(marginX,pageH-22,pageW-marginX,pageH-22);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(106,102,137);
+    doc.text('ASMI Youth Career Advisor · asmicareer.com · Helpline 7410019075',marginX,pageH-12);
+    doc.text('Page '+doc.internal.getNumberOfPages(),pageW-marginX,pageH-12,{align:'right'});
+   }
+  });
+  doc.save(fname('pdf'));
+  say('PDF saved.');
+ }catch(e){fail(e,'PDF')}
+});
+
+fetch('/data/cutoffs/MCC/pg-2026-all-india.json').then(function(r){return r.json()}).then(function(data){
+ L=data;
+ var states=Array.from(new Set(L.map(function(r){return r[IDX.state]}).filter(Boolean))).sort();
+ var courses=Array.from(new Set(L.map(function(r){return r[IDX.course]}).filter(Boolean))).sort();
+ var quotas=Array.from(new Set(L.map(function(r){return r[IDX.quota]}).filter(Boolean))).sort();
+ var cats=Array.from(new Set(L.map(function(r){return r[IDX.cat]}).filter(Boolean))).sort();
+ var cities=Array.from(new Set(L.map(function(r){return r[IDX.city]}).filter(Boolean))).sort();
+ var colleges=Array.from(new Set(L.map(function(r){return r[IDX.college]}).filter(Boolean))).sort();
+ makeMS('state',states,[],'states');
+ makeMS('subj',courses,[],'branches');
+ makeMS('qt',quotas,[],'quotas');
+ makeMS('cat',cats,[],'categories');
+ makeMS('city',cities,[],'cities');
+ makeMS('inst',colleges,[],'colleges');
+ shown=LIM;
+ render();
+ sticky();
+}).catch(function(err){
+ $('body').innerHTML='<tr><td colspan="15" class="empty">Could not load cutoff data.</td></tr>';
+});
+
+function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
+window.addEventListener('resize',sticky);
+})();
+</script>
+
+</body></html>
