@@ -237,6 +237,7 @@ thead tr:first-child th:nth-child(3){text-align:center}
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">College type<span id="ms-ctype"></span></div>
 <div class="fld">Course fee<span id="ms-fee"></span></div>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR (default)</option><option value="feeasc">Course fee: low to high</option><option value="feedesc">Course fee: high to low</option></select></label>
 <div class="fld">Seat type<span id="ms-pool"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
@@ -345,7 +346,10 @@ function query(){
   for(var ti=0;ti<t.length;ti++)if(g.hay.indexOf(t[ti])<0)return false;
   if(ar&&(show==='within'||show==='near')){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
- out.sort(function(a,b){var x=cv(a,rd),y=cv(b,rd);return (x==null?1e12:x)-(y==null?1e12:y)});
+ var sb=$('sortby').value;
+ out.sort(function(a,b){
+  if(sb!=='air'){var fa=a.fee||0,fb=b.fee||0;if(!fa!==!fb)return fa?-1:1;if(fa&&fb&&fa!==fb)return sb==='feeasc'?fa-fb:fb-fa}
+  var x=cv(a,rd),y=cv(b,rd);return (x==null?1e12:x)-(y==null?1e12:y)});
  return {out:out,stat:stat,ar:ar,rd:rd,show:show,text:$('q').value.trim(),qs:qs,cs:cs};
 }
 function render(){
@@ -358,7 +362,7 @@ function render(){
   return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="n fee">'+(g.fee?'₹'+g.fee.toLocaleString('en-IN'):'–')+'</td><td style="font-family:var(--mono)">'+g.code+'</td><td>'+(g.qt==='In-Service'?'<span class="qp q1">In-Service</span> ':'')+'<span class="cp">'+POOL[g.pool].replace(/ seats/,'').replace(/ college/,'')+'</span></td><td><span class="cp">'+g.cat+'</span></td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="18" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
- $('legend').textContent='Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first';
+ $('legend').textContent=$('sortby').value==='air'?'Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first':'Sorted by '+$('sortby').selectedOptions[0].text.toLowerCase()+', then closing AIR';
  $('more').hidden=out.length<=shown;
  $('dlp').disabled=!out.length;
  var h=$('hint'),nc=Object.keys(Q.cs).length;if(ar&&nc!==1){h.hidden=false;h.textContent='Cutoffs differ by category. Pick your KEA category (for example GM) so the status reflects your own seat pool.'}else h.hidden=true;
@@ -367,7 +371,7 @@ function render(){
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Roundwise',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by','Closing AIR'],
+ return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Roundwise',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by',$('sortby').value==='air'?'Closing AIR':$('sortby').selectedOptions[0].text],
   ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.qt.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Seat type',MS.pool.labels().join(', ')||'All'],
   ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['College type',MS.ctype.labels().join(', ')||'All'],['Course fee',MS.fee.labels().join(', ')||'All'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length]];
 }
@@ -423,10 +427,10 @@ async function savePdf(){
 }
 DLS={save:function(o){return new Promise(function(res){var type=/\.pdf$/.test(o.filename)?'application/pdf':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';var b=new Blob([o.data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();res()},500)})}};
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
-$('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;CM='new';document.querySelectorAll('#cm button').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-m')==='new'?'true':'false')});Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
+$('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('sortby').value='air';$('round').value=0;CM='new';document.querySelectorAll('#cm button').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-m')==='new'?'true':'false')});Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
 window.addEventListener('resize',sticky);
-['round','show'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});
+['round','show','sortby'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});
 ['q','air'].forEach(function(i){$(i).addEventListener('input',function(){shown=LIM;render()})});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 if(window.innerWidth<=640)$('fx').removeAttribute('open');
