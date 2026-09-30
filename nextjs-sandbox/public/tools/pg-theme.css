@@ -1,0 +1,10 @@
+/* Shared look for every state explorer when it is shown inside /tools/neet-pg-cutoff.
+   It is loaded on top of each explorer's own styles so all regions look and behave alike.
+   The title banner is hidden here because the page shows the region title and helpline above. */
+.brand{display:none!important}
+html{background:var(--bg)}
+body{margin:0!important;padding:14px 16px 40px!important;background:var(--bg)!important}
+.wrap{max-width:1280px!important;gap:14px!important}
+.tw{max-height:calc(100vh - 28px)!important}
+td{vertical-align:middle}
+thead th:not(.n):not(.rg):not([colspan]){text-align:left!important}
