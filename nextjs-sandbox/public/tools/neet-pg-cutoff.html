@@ -166,7 +166,8 @@ var REGIONS=[
  {name:'Maharashtra',slug:'maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
  {name:'Karnataka',slug:'karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
  {name:'Telangana',slug:'telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
- {name:'Uttar Pradesh',slug:'uttar-pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'}
+ {name:'Uttar Pradesh',slug:'uttar-pradesh',mono:'UP',desc:'2025 UP counselling lists, Rounds 1 to 3 plus stray. State rank and All India Rank.',status:'live',url:'/tools/up-pg-cutoff-explorer'},
+ {name:'West Bengal',slug:'west-bengal',mono:'WB',desc:'2025 WBMCC allotment lists, Rounds 1 to 3, stray and revised stray. All India Rank.',status:'live',url:'/tools/west-bengal-pg-cutoff-explorer'}
 ];
 var g=document.getElementById('grid');
 REGIONS.forEach(function(r){
@@ -186,9 +187,9 @@ REGIONS.forEach(function(r){
 });
 /* Important updates. Data lives in /tools/updates/updates.json. Entry:
    {"date":"2026-09-29","region":"all-india","title":"...","summary":"optional","source":"MCC","pdf":"/tools/updates/pdfs/file.pdf"}
-   region is one of: all-india, maharashtra, karnataka, telangana, uttar-pradesh */
+   region is one of: all-india, maharashtra, karnataka, telangana, uttar-pradesh, west-bengal */
 (function(){
- var UR=[['all','All'],['all-india','All India'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh']];
+ var UR=[['all','All'],['all-india','All India'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh'],['west-bengal','West Bengal']];
  var LAB={};UR.forEach(function(r){LAB[r[0]]=r[1]});
  var $=function(i){return document.getElementById(i)},DATA=[],region='all',term='';
  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
