@@ -9,13 +9,10 @@
 :root[data-theme="dark"]{--bg:#150f2b;--surface:#1e1740;--fg:#ece8ff;--muted:#a9a4cc;--line:#372d66;--accent:#b79cff;--accent-2:#b79cff;--accent-fg:#1a0f3d;--good:#7fe2a8;--good-bg:#143a27;--soon:#a9a4cc;--soon-bg:#2a2158;--hero1:#1c0850;--hero2:#4c1fa8;--ink:#ffe27a;--tile1:#7c3aed;--tile2:#c026d3;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.5}
-.wrap{max-width:1000px;margin-inline:auto;padding-inline:16px}
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:16px}
 /* hero */
-.hero{background:radial-gradient(900px 300px at 85% -10%,rgba(192,38,211,.55),transparent 60%),linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding-block:22px 64px}
-.top{display:flex;align-items:center;gap:12px}
-.top img{width:44px;height:44px;border-radius:10px;background:#fff;padding:3px;object-fit:contain;flex:none}
-.top span{font-weight:600;font-size:14px;opacity:.95;line-height:1.25}
-.hero h1{margin:34px 0 10px;font-size:clamp(26px,5.2vw,40px);line-height:1.12;letter-spacing:-.01em;max-width:18ch}
+.hero{background:radial-gradient(900px 300px at 85% -10%,rgba(192,38,211,.55),transparent 60%),linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding-block:34px 64px}
+.hero h1{margin:0 0 10px;font-size:clamp(26px,5.2vw,40px);line-height:1.12;letter-spacing:-.01em;max-width:18ch}
 .hero h1 em{font-style:normal;color:var(--yellow)}
 .hero p{margin:0;max-width:52ch;font-size:16px;opacity:.92}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
@@ -25,7 +22,8 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .pick h2{margin:0 0 4px;font-size:15px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,.25)}
 .pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
-@media (min-width:880px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1120px){.grid{grid-template-columns:repeat(5,1fr)}}
 @media (max-width:520px){.grid{grid-template-columns:1fr}}
 .card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
 .mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
@@ -87,20 +85,38 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 @media (prefers-reduced-motion:reduce){.live{transition:none}.live:hover{transform:none}}
 /* explorer view: the chosen state's explorer opens inside this page */
 #home[hidden],#app[hidden]{display:none}
-#app{position:relative;display:flex;flex-direction:column;height:100vh;height:100dvh;background:var(--bg)}
-.appbar{flex:none;display:flex;align-items:center;gap:12px;padding:10px 16px;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff}
-.appbar img{width:34px;height:34px;border-radius:8px;background:#fff;padding:2px;object-fit:contain;flex:none}
-.appbar .bk{color:#fff;font-weight:600;font-size:14px;text-decoration:none;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;white-space:nowrap}
-.appbar .bk:hover{background:rgba(255,255,255,.26)}
-.appbar .ttl{font-weight:700;font-size:15px;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.appbar .ttl small{display:block;font-weight:500;font-size:12px;opacity:.85}
-#appload{position:absolute;left:0;right:0;top:56px;text-align:center;padding:24px;color:var(--muted);font-size:14px;pointer-events:none}
+/* top navigation: one bar, every region one tap away */
+.nav{position:sticky;top:0;z-index:50;flex:none;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;box-shadow:0 2px 14px rgba(20,8,60,.28)}
+.navin{max-width:1280px;margin-inline:auto;padding:8px 16px;display:flex;align-items:center;gap:14px}
+.nbrand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;flex:none}
+.nbrand img{width:38px;height:38px;border-radius:10px;background:#fff;padding:3px;object-fit:contain}
+.nbrand b{display:block;font-size:15px;line-height:1.15}
+.nbrand small{display:block;font-size:11.5px;opacity:.85}
+.tabs{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:0;padding:3px 2px;scrollbar-width:none;justify-content:flex-end}
+.tabs::-webkit-scrollbar{display:none}
+.tab{color:#fff;text-decoration:none;font-weight:600;font-size:13.5px;padding:7px 14px;border-radius:999px;white-space:nowrap;border:1px solid rgba(255,255,255,.18)}
+.tab:hover{background:rgba(255,255,255,.16)}
+.tab[aria-current="page"]{background:#fff;color:var(--hero1);border-color:#fff}
+/* explorer view: info strip + the chosen explorer filling the rest of the screen */
+body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#app{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;background:var(--bg)}
+.strip{flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
+.stripin{max-width:1280px;margin-inline:auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.stripin .st{min-width:0}
+.stripin b{display:block;color:var(--ink);font-size:15px;line-height:1.25}
+.stripin span.ss{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stripin a.hl{flex:none;color:var(--accent);font-weight:700;font-size:13.5px;text-decoration:none;white-space:nowrap}
+#appload{position:absolute;left:0;right:0;top:70px;text-align:center;padding:24px;color:var(--muted);font-size:14px;pointer-events:none}
 #efw{flex:1;min-height:0;display:flex}
-#efw iframe{flex:1;min-height:0;width:100%;border:0;background:var(--bg)}
+#efw iframe{flex:1;min-height:0;width:100%;border:0;background:var(--bg);visibility:hidden}
+@media (max-width:720px){.nbrand span{display:none}.navin{gap:10px}.tabs{justify-content:flex-start}.stripin a.hl{display:none}}
 </style></head><body>
+<header class="nav"><div class="navin">
+ <a class="nbrand" href="#"><img alt="ASMI Youth Career Advisor" src="/asmi-logo.png"><span><b>NEET-PG Cutoff Explorer</b><small>ASMI Youth Career Advisor</small></span></a>
+ <nav class="tabs" id="tabs" aria-label="Regions"></nav>
+</div></header>
 <div id="home">
 <header class="hero"><div class="wrap">
- <div class="top"><img alt="" src="/asmi-logo.png"><span>ASMI Youth Career Advisor</span></div>
  <h1>NEET-PG <em>cutoff</em> explorer</h1>
  <p>See where your rank can get you. Closing ranks for MD, MS and Diploma seats, round by round, with a quick check against your own rank.</p>
  <div class="chips"><span>MD / MS / Diploma</span><span>Round-wise closing ranks</span><span>Download as PDF</span></div>
@@ -138,7 +154,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 </div>
 
 <div id="app" hidden>
- <div class="appbar"><a class="bk" href="#" id="back">&larr; Change state</a><img alt="" src="/asmi-logo.png"><div class="ttl" id="appttl"></div></div>
+ <div class="strip"><div class="stripin"><div class="st"><b id="st"></b><span class="ss" id="ss"></span></div><a class="hl" href="tel:7410019075">Helpline 7410019075</a></div></div>
  <div id="appload" role="status">Loading the cutoff explorer&hellip;</div>
  <div id="efw"></div>
 </div>
@@ -205,19 +221,30 @@ REGIONS.forEach(function(r){
   DATA=(j.updates||[]).filter(function(u){return u&&u.title}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')});render()
  }).catch(function(){var o=$('uout');o.innerHTML='';var e=el('div','u-empty');e.appendChild(el('b',null,'Could not load updates'));e.appendChild(document.createTextNode('Please refresh the page.'));o.appendChild(e)});
 })();
-/* Single-page hosting: choosing a state opens its explorer inside this page (address stays /tools/neet-pg-cutoff, with #state for direct links). */
+/* Single-page hosting: choosing a state opens its explorer inside this page (address stays /tools/neet-pg-cutoff, with #state for direct links).
+   Every explorer gets the same shared look from /tools/pg-theme.css so all regions feel like one product. */
 (function(){
- var home=document.getElementById('home'),app=document.getElementById('app'),efw=document.getElementById('efw'),load=document.getElementById('appload'),ttl=document.getElementById('appttl');
- var BASE=document.title;
+ var home=document.getElementById('home'),app=document.getElementById('app'),efw=document.getElementById('efw'),load=document.getElementById('appload'),tabs=document.getElementById('tabs');
+ var st=document.getElementById('st'),ss=document.getElementById('ss'),BASE=document.title,cur='';
  var by={};REGIONS.forEach(function(r){if(r.status==='live')by[r.slug]=r});
- var cur='';
+ function mkTab(label,href,on){var a=document.createElement('a');a.className='tab';a.href=href;a.textContent=label;if(on)a.setAttribute('aria-current','page');return a}
+ function drawTabs(active){tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
+  var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- function openFrame(url,name){efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';f.addEventListener('load',function(){load.hidden=true});f.src=url;efw.appendChild(f)}
+ function openFrame(url,name){
+  efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
+  function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
+  f.addEventListener('load',function(){
+   try{var d=f.contentDocument;if(!d||!d.head||d.location.href==='about:blank'){reveal();return}
+    var l=d.createElement('link');l.rel='stylesheet';l.href='/tools/pg-theme.css';l.onload=reveal;l.onerror=reveal;d.head.appendChild(l);setTimeout(reveal,1500)}catch(e){reveal()}});
+  f.src=url;efw.appendChild(f)}
  function route(){
   var r=by[decodeURIComponent((location.hash||'').slice(1))];
+  drawTabs(r?r.slug:'');
+  document.body.classList.toggle('appmode',!!r);
   if(r){
    home.hidden=true;app.hidden=false;
-   ttl.innerHTML='';ttl.appendChild(document.createTextNode(r.name+' PG cutoff explorer'));var sm=document.createElement('small');sm.textContent='ASMI Youth Career Advisor';ttl.appendChild(sm);
+   st.textContent=r.name+' PG cutoff explorer';ss.textContent=r.desc;
    document.title=r.name+' | '+BASE;
    if(cur!==r.url){load.hidden=false;cur=r.url;openFrame(r.url,r.name)}
    window.scrollTo(0,0);
