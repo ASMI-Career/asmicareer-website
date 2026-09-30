@@ -23,7 +23,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 .pick h2 b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--yellow);color:#2e1065;font-size:13px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
 @media (min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
-@media (min-width:1120px){.grid{grid-template-columns:repeat(5,1fr)}}
+@media (min-width:1120px){.grid{grid-template-columns:repeat(4,1fr)}}
 @media (max-width:520px){.grid{grid-template-columns:1fr}}
 .card{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px;text-decoration:none;color:inherit;min-height:190px;box-shadow:var(--shadow);position:relative}
 .mono{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;background:linear-gradient(135deg,var(--tile1),var(--tile2));letter-spacing:.02em}
@@ -163,6 +163,7 @@ body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overf
 /* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
 var REGIONS=[
  {name:'All India',slug:'all-india',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
+ {name:'Andhra Pradesh',slug:'andhra-pradesh',mono:'AP',desc:'2025-26 Dr. NTR UHS management quota lists, Phases 1 to 3 plus stray. All India Rank.',status:'live',url:'/tools/andhra-pradesh-pg-cutoff-explorer'},
  {name:'Maharashtra',slug:'maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
  {name:'Karnataka',slug:'karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
  {name:'Telangana',slug:'telangana',mono:'TG',desc:'2025 KNRUHS allotment lists, Rounds 1 to 6. State rank and All India Rank.',status:'live',url:'/tools/telangana-pg-cutoff-explorer'},
@@ -187,9 +188,9 @@ REGIONS.forEach(function(r){
 });
 /* Important updates. Data lives in /tools/updates/updates.json. Entry:
    {"date":"2026-09-29","region":"all-india","title":"...","summary":"optional","source":"MCC","pdf":"/tools/updates/pdfs/file.pdf"}
-   region is one of: all-india, maharashtra, karnataka, telangana, uttar-pradesh, west-bengal */
+   region is one of: all-india, andhra-pradesh, maharashtra, karnataka, telangana, uttar-pradesh, west-bengal */
 (function(){
- var UR=[['all','All'],['all-india','All India'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh'],['west-bengal','West Bengal']];
+ var UR=[['all','All'],['all-india','All India'],['andhra-pradesh','Andhra Pradesh'],['maharashtra','Maharashtra'],['karnataka','Karnataka'],['telangana','Telangana'],['uttar-pradesh','Uttar Pradesh'],['west-bengal','West Bengal']];
  var LAB={};UR.forEach(function(r){LAB[r[0]]=r[1]});
  var $=function(i){return document.getElementById(i)},DATA=[],region='all',term='';
  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
