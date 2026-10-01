@@ -49,3 +49,8 @@ td.allr{background:var(--selbg,#e9fbf0)!important}
 /* state rank under the closing AIR as a round-coloured pill */
 td.n small.smlp{display:table;margin:2px auto 0;padding:0 10px;border-radius:99px;font-size:11px;font-weight:500;line-height:1.6;font-family:var(--mono);background:color-mix(in srgb,var(--rc,#5b21b6) 11%,var(--surface));color:color-mix(in srgb,var(--rc,#5b21b6) 72%,var(--fg))}
 td.n.sel small.smlp,td.allr small.smlp{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
+
+/* sixth round (Open State tab) */
+:root:root:root table thead th.r6{--rc:#4f46e5;background:color-mix(in srgb,#4f46e5 7%,var(--surface));color:color-mix(in srgb,#4f46e5 75%,var(--fg))}
+:root:root:root table thead th.rg.r6{border-top:0;box-shadow:inset 0 3px 0 var(--rc);font-size:11px;letter-spacing:.1em;padding-block:7px}
+td.r6{--rc:#4f46e5}
