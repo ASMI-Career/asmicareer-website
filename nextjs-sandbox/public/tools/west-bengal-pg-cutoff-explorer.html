@@ -389,7 +389,7 @@ function render(){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4,5].map(function(n){return scell(g.r[n],n===rd)+cell(g.r[n],n===rd)}).join('');
-  return '<tr><td class="c"><b>'+g.college+'</b>'+(g.city&&g.city!=='Not stated'?'<small class="sub">'+g.city+'</small>':'')+'</td><td class="br" title="'+g.srcb.replace(/"/g,'&quot;')+'">'+g.subj+'<small class="sub">'+(g.bt==='Clinical'?'Clinical':'Non-clinical')+'</small></td><td class="q"><span class="qp q1">'+(QLONG[g.qt]||g.qt)+'</span> <span class="cp">'+g.cat+'</span></td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
+  return '<tr><td class="c"><b>'+g.college+'</b></td><td class="br" title="'+g.srcb.replace(/"/g,'&quot;')+'">'+g.subj+'</td><td class="q"><span class="qp q1">'+(QLONG[g.qt]||g.qt)+'</span> <span class="cp">'+g.cat+'</span></td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
  $('legend').textContent='Closing = last-ranked allotment (AIR). Final = the closing rank from the Revised Stray Vacancy Round if the seat group appears there, else the latest earlier round it appears in. Round wise: '+$('round').selectedOptions[0].text+', '+(CT==='all'?'All-round':'New allotment')+' cutoff.';
