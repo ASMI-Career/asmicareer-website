@@ -1,28 +1,50 @@
-/* Gives every state's results table the same round colours as the Maharashtra table.
-   It only adds CSS classes (r1..r5 per round column, r0 for the combined column); data and filters are untouched. */
+/* Results table: round colours, separate "SML No." columns, quota / category pills. It only adds classes and cells; data and filters are untouched.
+   Row numbers, round headers and pill colours are drawn by pg-theme.css. */
 (function(){
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false;
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
-    var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className);
+    var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
+    if(th.rowSpan>1&&cs===1){if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
-  var busy=false;
+  /* add an "SML No." header next to every closing-rank column that carries a state rank */
+  function headerSML(cols){
+   var rows=tbl.querySelectorAll('thead tr'),r1=rows[0],r2=rows[1],c=0,r2i=0,info=[];
+   [].forEach.call(r1.children,function(th){var cs=th.colSpan||1,two=th.rowSpan>1;
+    for(var k=0;k<cs;k++){info[c+k]={th:th,two:two,r2:(!two&&r2)?r2.children[r2i++]:null}}c+=cs});
+   cols.forEach(function(i){var x=info[i];if(!x)return;
+    var nh=d.createElement('th');nh.className='n smlh';nh.textContent='SML No.';
+    if(x.two){nh.rowSpan=x.th.rowSpan;x.th.parentNode.insertBefore(nh,x.th.nextSibling)}
+    else if(x.r2){var m=(x.r2.className||'').match(/\br[0-6]\b/);if(m)nh.className+=' '+m[0];x.r2.parentNode.insertBefore(nh,x.r2.nextSibling);x.th.colSpan=x.th.colSpan+1}})}
   function paint(){
    busy=false;if(!map)build();
-   [].forEach.call(tb.rows,function(tr){
-    if(tr.cells.length<3)return;
+   var rows=[].filter.call(tb.rows,function(tr){return tr.cells.length>=3&&!tr.getAttribute('data-pg')});
+   rows.forEach(function(tr){
     [].forEach.call(tr.cells,function(td,i){
-     var c=map[i];if(!c||/\br[0-6]\b/.test(td.className))return;
-     td.classList.add(c);if(c==='r0')td.classList.add('allr')});
-    [].forEach.call(tr.querySelectorAll('td.n small'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})})}
+     var c=map[i];
+     if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
+     if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
+      if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
+    [].forEach.call(tr.querySelectorAll('td.n small'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})});
+   if(smlCols===null&&rows.length){
+    var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('small.smlp'))seen[i]=1})});
+    smlCols=Object.keys(seen).map(Number).sort(function(a,b){return a-b});
+    if(smlCols.length)headerSML(smlCols)}
+   if(smlCols&&smlCols.length)rows.forEach(function(tr){
+    var cells=[].slice.call(tr.cells);
+    smlCols.slice().reverse().forEach(function(i){var td=cells[i];if(!td)return;
+     var sm=td.querySelector('small.smlp'),nd=d.createElement('td'),rc=(td.className.match(/\br[0-6]\b/)||[''])[0];
+     nd.className='n smlc'+(rc?' '+rc:'')+(/\bsel\b/.test(td.className)?' sel':'');
+     if(sm){var n=document.createElement('span');n.className='smlnum';n.textContent=sm.textContent.replace(/^\s*SML\s*/i,'');nd.appendChild(n);sm.remove()}else nd.textContent='\u2013';
+     td.parentNode.insertBefore(nd,td.nextSibling)})});
+   rows.forEach(function(tr){tr.setAttribute('data-pg','1')})}
   function sched(){if(busy)return;busy=true;requestAnimationFrame(paint)}
   new MutationObserver(sched).observe(tb,{childList:true});
-  window.addEventListener('resize',function(){map=null;sched()});
   paint();
  }catch(e){}
 })();
@@ -60,8 +82,12 @@
   name=name.replace(/\|.*$/,'').replace(/\s*(NEET-PG|PG|NEET PG)?\s*cutoff explorer\s*$/i,'').trim();
   var wrap=d.querySelector('.wrap')||d.body;
   var hero=d.createElement('section');hero.className='hero2';hero.setAttribute('aria-label','About this explorer');
-  var cards=[['target','1','Round-wise cutoffs','Closing AIR and SML'],['users','4','Every quota','State, NRI and more'],['check','3','Rank check','See what fits your rank'],['funnel','5','Easy filters','Find your options']];
-  hero.innerHTML='<div class="h2c"><span class="h2b">NEET-PG 2025</span><h1 class="h2t">'+(name?name.replace(/</g,'&lt;')+' ':'')+'<b>Cutoff</b> <em>Explorer</em></h1><a class="h2call" href="tel:7410019075">'+svg('phone')+' Helpline 7410019075</a></div>';
+  var esc=function(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')};
+  var words=(name||'Cutoff Explorer').split(/\s+/),last=words.pop(),first=words.join(' ');
+  var feats=[['chart','1','Round-wise','Analysis'],['building','4','All Colleges',name||'In this state'],['users','3','Quotas &amp;','Categories']];
+  hero.innerHTML='<div class="h2c"><span class="h2b">'+svg('cap')+' NEET-PG 2025</span><h1 class="h2t">'+(first?esc(first)+' ':'')+'<em>'+esc(last)+'</em></h1></div>'
+   +'<div class="h2f">'+feats.map(function(f){return '<div class="h2fi"><i class="ic" data-t="'+f[1]+'">'+svg(f[0])+'</i><span><b>'+f[2]+'</b>'+esc(f[3])+'</span></div>'}).join('')+'</div>'
+   +'<a class="h2call" href="tel:7410019075"><i>'+svg('phone')+'</i><span><small>Helpline</small><b>7410019075</b></span></a>';
   wrap.insertBefore(hero,wrap.firstChild);
   d.body.classList.add('pgui');
   /* panel head with Reset all */
@@ -106,5 +132,21 @@
    if(meta)meta.classList.add('gone');
    if(dlmsg){var def=dlmsg.textContent;dlp.title=def;
     var sync=function(){dlmsg.hidden=(dlmsg.textContent===def)};sync();new MutationObserver(sync).observe(dlmsg,{childList:true,characterData:true,subtree:true})}}
+ }catch(e){}
+})();
+
+/* ---- results footer: "Showing 1 to N of M results" with the Show more button ---- */
+(function(){
+ try{
+  var d=document,tw=d.querySelector('.tw'),count=d.getElementById('count'),more=d.getElementById('more');
+  if(!tw||!count)return;
+  var f=d.createElement('div');f.className='tfoot';var t=d.createElement('span');t.className='tf-t';f.appendChild(t);
+  var r=d.createElement('div');r.className='tf-r';f.appendChild(r);
+  var mw=more&&more.parentNode;if(more){r.appendChild(more);if(mw&&mw!==r&&!mw.children.length&&mw.tagName==='DIV')mw.style.display='none'}
+  tw.parentNode.insertBefore(f,tw.nextSibling);
+  function sync(){var s=count.textContent||'',m=s.match(/^\\s*([\\d,]+)/),sh=s.match(/showing\\s+([\\d,]+)/i);
+   if(!m){t.textContent='';return}
+   var total=m[1],shown=sh?sh[1]:total;t.textContent=(total==='0'?'No results':'Showing 1 to '+shown+' of '+total+' results')}
+  sync();new MutationObserver(sync).observe(count,{childList:true,characterData:true,subtree:true});
  }catch(e){}
 })();
