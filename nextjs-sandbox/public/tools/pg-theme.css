@@ -154,7 +154,7 @@ body.pgui .rbar .rb-sort .lb{display:inline;font-weight:600;font-size:13.5px;col
 .h2call{margin-top:14px}
 
 /* ---- compact: no search box, hero in one line, all filters in two rows so results show on the first screen ---- */
-body.pgui .panel>.wide{display:none!important}
+body.pgui .panel>label.wide{display:none!important}
 body.pgui .panel{padding:16px 20px!important;gap:12px 24px!important}
 .hero2{padding:12px 20px!important;border-radius:20px!important}
 .h2c{display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
