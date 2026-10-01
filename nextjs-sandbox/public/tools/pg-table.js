@@ -1,10 +1,12 @@
+/* font: loaded separately so a slow font server can never delay the page */
+try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';document.head.appendChild(fl)}catch(e){}
 /* Results table: round colours, separate "SML No." columns, quota / category pills. It only adds classes and cells; data and filters are untouched.
    Row numbers, round headers and pill colours are drawn by pg-theme.css. */
 (function(){
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null;
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
@@ -15,19 +17,31 @@
     i+=cs})}
   /* add an "SML No." header next to every closing-rank column that carries a state rank */
   function headerSML(cols){
-   var rows=tbl.querySelectorAll('thead tr'),r1=rows[0],r2=rows[1],c=0,r2i=0,info=[];
-   [].forEach.call(r1.children,function(th){var cs=th.colSpan||1,two=th.rowSpan>1;
-    for(var k=0;k<cs;k++){info[c+k]={th:th,two:two,r2:(!two&&r2)?r2.children[r2i++]:null}}c+=cs});
+   var rows=tbl.querySelectorAll('thead tr'),info=hdrInfo||[];
    cols.forEach(function(i){var x=info[i];if(!x)return;
     var nh=d.createElement('th');nh.className='n smlh';nh.textContent='SML No.';
     if(x.two){nh.rowSpan=x.th.rowSpan;x.th.parentNode.insertBefore(nh,x.th.nextSibling)}
     else if(x.r2){var m=(x.r2.className||'').match(/\br[0-6]\b/);if(m)nh.className+=' '+m[0];x.r2.parentNode.insertBefore(nh,x.r2.nextSibling);x.th.colSpan=x.th.colSpan+1}})}
+  /* the "Allotted" columns are not shown: where a round already has Seats the column is hidden, otherwise it is labelled Seats (seats allotted) */
+  function allotted(){
+   var rows=tbl.querySelectorAll('thead tr'),r1=rows[0],r2=rows[1];if(!r1||!r2)return;
+   var c=0,r2i=0,info=[];
+   [].forEach.call(r1.children,function(th){var cs=th.colSpan||1,two=th.rowSpan>1;for(var k=0;k<cs;k++)info[c+k]={th:th,two:two,r2:two?null:r2.children[r2i++]};c+=cs});
+   hdrInfo=info;
+   var groups=[];info.forEach(function(x,i){if(x.r2&&groups.indexOf(x.th)<0)groups.push(x.th)});
+   groups.forEach(function(g){
+    var cols=[];info.forEach(function(x,i){if(x.th===g&&x.r2)cols.push(i)});
+    var hasSeats=cols.some(function(i){return /^seats$/i.test(info[i].r2.textContent.trim())});
+    cols.forEach(function(i){var h=info[i].r2;if(!/^allotted$/i.test(h.textContent.trim()))return;
+     if(hasSeats){h.classList.add('pgx');g.colSpan=Math.max(1,g.colSpan-1);allotCols.push(i)}
+     else{h.textContent='Seats';h.title='Seats allotted in this round (no seat matrix available)'}})})}
   function paint(){
    busy=false;if(!map)build();
+   if(!aDone){aDone=true;allotted()}
    var rows=[].filter.call(tb.rows,function(tr){return tr.cells.length>=3&&!tr.getAttribute('data-pg')});
    rows.forEach(function(tr){
     [].forEach.call(tr.cells,function(td,i){
-     var c=map[i];
+     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');
      if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
      if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
       if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
