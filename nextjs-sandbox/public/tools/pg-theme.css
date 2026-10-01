@@ -290,3 +290,33 @@ th.srtable:hover .srt{background:color-mix(in srgb,var(--accent) 18%,transparent
 th.srtable.srt-on .srt{background:var(--accent);color:var(--accent-fg)}
 th.srtable.srt-on{color:var(--accent)}
 th.rg.r0 .srt,th.rg.r0.srtable .srt{display:none}
+
+/* =====================================================================
+   Better font + centred, cleaner result columns (Seats, Closing AIR, SML No.)
+   ===================================================================== */
+:root:root{--sans:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+:root:root body,:root:root button,:root:root input,:root:root select,:root:root textarea{font-family:var(--sans)}
+body.pgui table,body.pgui td,body.pgui th{font-variant-numeric:tabular-nums}
+.pgx{display:none!important}
+/* headings: all centred */
+:root:root:root:root table thead th,:root:root:root:root table thead th.n,:root:root:root:root table thead th.rg,:root:root:root:root table thead tr.h2 th{text-align:center!important}
+:root:root:root:root table thead th{font-size:13px;font-weight:700;letter-spacing:.01em;vertical-align:middle}
+:root:root:root:root table thead th.rg{font-size:15px;font-weight:800;letter-spacing:.01em;padding:13px 10px}
+:root:root:root:root table thead tr.h2 th{font-size:12.5px;font-weight:700;letter-spacing:.02em;padding:10px 8px;text-transform:none}
+/* result columns: even widths so the numbers line up under their headings */
+body.pgui th.srtable{white-space:nowrap}
+body.pgui td.n:not(.sn):not(.st):not(.smlc),body.pgui thead tr.h2 th.n:not(.smlh):not(.s){min-width:112px}
+body.pgui td.smlc,body.pgui thead th.smlh{min-width:92px}
+body.pgui td.sn,body.pgui td.st,body.pgui thead tr.h2 th.s{min-width:84px}
+body.pgui td.n,body.pgui td.sn,body.pgui td.st,body.pgui td.smlc{text-align:center!important;vertical-align:middle}
+/* a thin divider before every round, coloured like the round */
+body.pgui td.sn,body.pgui td.st{border-left:1px solid color-mix(in srgb,var(--rc,#7c3aed) 28%,var(--line))}
+body.pgui thead tr.h2 th.s{border-left:1px solid color-mix(in srgb,var(--rc,#7c3aed) 28%,var(--line))}
+body.pgui thead th.rg{border-left:1px solid var(--surface)}
+/* closing AIR big and bold, seats and SML as small pills */
+:root:root:root td.n:not(.sn):not(.st):not(.smlc) .sml{font-size:17px;font-weight:800;letter-spacing:0}
+:root:root td.sn b,:root:root td.st .sml{font-size:13px;font-weight:700;min-width:36px}
+td.smlc .smlnum{font-size:13.5px;font-weight:700;min-width:40px}
+/* quota / category pills centred */
+body.pgui td.pgq,body.pgui td.pgc{text-align:center}
+body.pgui td.pgc .cp+.cp{margin-left:4px}
