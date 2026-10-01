@@ -245,6 +245,7 @@ td.sn{width:64px}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <label>Roundwise<select id="round"></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Category<span id="ms-pool"></span></div>
 <div class="fld">College type<span id="ms-ctype"></span></div>
@@ -344,21 +345,23 @@ function query(){
   for(var ti=0;ti<t.length;ti++)if(g.hay.indexOf(t[ti])<0)return false;
   if(ar&&(show==='within'||show==='near')){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
- out.sort(function(a,b){var x=cv(a,rd),y=cv(b,rd);return (x==null?1e12:x)-(y==null?1e12:y)});
+ var so=$('sort').value;function vv(g){var x=cv(g,rd);return x==null?1e12:x}function sv(g){var x=cs(g,rd);return x==null?1e12:x}
+ out.sort(function(a,b){var d=vv(a)-vv(b);if(so==='sml'){d=sv(a)-sv(b);return d||vv(a)-vv(b)}
+  var k={branch:'subj',college:'college',city:'city'}[so];if(k&&a[k]!==b[k])return a[k]<b[k]?-1:1;return d});
  return {out:out,stat:stat,ar:ar,rd:rd,show:show,text:$('q').value.trim()};
 }
 function render(){
  var Q=query(),out=Q.out,ar=Q.ar,rd=Q.rd,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4].map(function(n){return scell(g,n,n===rd)+ccell(g,n,n===rd)}).join('');
   return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="qc"><span class="cp">'+POOL[g.pool]+'</span></td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="13" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first';
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  $('hint').hidden=true;
 }
@@ -407,10 +410,10 @@ async function savePdf(){
 }
 DLS={save:function(o){return new Promise(function(res){var b=new Blob([o.data],{type:'application/pdf'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();res()},500)})}};
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
-$('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;CM='new';document.querySelectorAll('#cm button').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-m')==='new'?'true':'false')});Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
+$('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('sort').value='air';$('round').value=0;CM='new';document.querySelectorAll('#cm button').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-m')==='new'?'true':'false')});Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
 window.addEventListener('resize',sticky);
-['round','show'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});
+['round','show','sort'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});
 ['q','air'].forEach(function(i){$(i).addEventListener('input',function(){shown=LIM;render()})});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 if(window.innerWidth<=640)$('fx').removeAttribute('open');

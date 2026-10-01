@@ -165,6 +165,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 <label class="rank">Your NEET-PG rank<input id="rank" type="number" min="1" inputmode="numeric" placeholder="e.g. 4500"></label>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Round used for status and sorting<select id="round"></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing rank</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <div class="fld">State<span id="ms-state"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
@@ -243,7 +244,7 @@ function query(){
   for(var ti=0;ti<t.length;ti++)if(hay.indexOf(t[ti])<0)return false;
   if(rk&&show!=='all'){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
- out.sort(function(a,b){var xa=getX(a,rd),xb=getX(b,rd);var va=xa?xa[1]:Infinity,vb=xb?xb[1]:Infinity;return va-vb});
+ var so=$('sort').value,ki={college:IDX.college,branch:IDX.course,city:IDX.city}[so];out.sort(function(a,b){if(ki!==undefined&&a[ki]!==b[ki])return a[ki]<b[ki]?-1:1;var xa=getX(a,rd),xb=getX(b,rd);var va=xa?xa[1]:Infinity,vb=xb?xb[1]:Infinity;return va-vb});
  return {out:out,stat:stat,rk:rk,rd:rd,show:show,text:$('q').value.trim()};
 }
 
@@ -253,7 +254,7 @@ function scell(x,on){var c='n sn'+(on?' sel':'');if(!x)return '<td class="'+c+'"
 function render(){
  var Q=query(),out=Q.out,rk=Q.rk,rd=Q.rd,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(rk){if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>'}
   var qi=(['State','In-Service','NRI','Institute Quota (I.Q.)'].indexOf(g[IDX.quota])+4)%4;
@@ -263,9 +264,9 @@ function render(){
    ROUND_KEYS.map(function(rk2){var on=rk2===rd;return scell(g[IDX[rk2]],on)+cell(g[IDX[rk2]],on)}).join('')+
    '<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters.</td></tr>';
- $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by closing rank in '+ROUND_LABELS[rd]+', lowest first';
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  $('hint').hidden=true;
 }
@@ -277,9 +278,10 @@ $('round').value='r0';
 [$('q'),$('rank')].forEach(function(el){el.addEventListener('input',function(){shown=LIM;render()})});
 $('round').addEventListener('change',function(){shown=LIM;render()});
 $('show').addEventListener('change',function(){shown=LIM;render()});
+$('sort').addEventListener('change',function(){shown=LIM;render()});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 $('reset').addEventListener('click',function(){
- $('q').value='';$('rank').value='';$('show').value='all';$('round').value='r0';
+ $('q').value='';$('rank').value='';$('show').value='all';$('sort').value='air';$('round').value='r0';
  ['qt','cat','state','subj','inst','city'].forEach(function(id){if(MS[id])MS[id].reset()});
  shown=LIM;render();
 });

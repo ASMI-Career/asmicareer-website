@@ -4,12 +4,13 @@
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null,qCols=[],cCols=[],smlCols=null,busy=false;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false;
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
     var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
+    if(th.rowSpan>1&&cs===1){if(/^college$/i.test(t)){cCol=i;thC=th}else if(/^branch$/i.test(t)){bCol=i;thB=th}}
     if(th.rowSpan>1&&cs===1){if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
   /* add an "SML No." header next to every closing-rank column that carries a state rank */
@@ -31,6 +32,8 @@
      if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
       if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
     [].forEach.call(tr.querySelectorAll('td.n small,td.n span.smlp'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})});
+   if(!frozen&&thC){frozen=true;thC.classList.add('pgc1');
+    if(thB){if(bCol>cCol+1)thC.parentNode.insertBefore(thB,thC.nextSibling);thB.classList.add('pgc2')}}
    if(smlCols===null&&rows.length){
     var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('.smlp'))seen[i]=1})});
     smlCols=Object.keys(seen).map(Number).sort(function(a,b){return a-b});
@@ -42,7 +45,11 @@
      nd.className='n smlc'+(rc?' '+rc:'')+(/\bsel\b/.test(td.className)?' sel':'');
      if(sm){var n=document.createElement('span');n.className='smlnum';n.textContent=sm.textContent.replace(/^\s*SML\s*/i,'');nd.appendChild(n);sm.remove()}else nd.textContent='\u2013';
      td.parentNode.insertBefore(nd,td.nextSibling)})});
-   rows.forEach(function(tr){tr.setAttribute('data-pg','1')})}
+   rows.forEach(function(tr){
+    var cells=[].slice.call(tr.cells);
+    if(cCol>=0&&cells[cCol]){cells[cCol].classList.add('pgc1');
+     if(bCol>=0&&cells[bCol]){cells[bCol].classList.add('pgc2');if(bCol>cCol+1)tr.insertBefore(cells[bCol],cells[cCol].nextSibling)}}
+    tr.setAttribute('data-pg','1')})}
   function sched(){if(busy)return;busy=true;requestAnimationFrame(paint)}
   new MutationObserver(sched).observe(tb,{childList:true});
   paint();
@@ -128,7 +135,7 @@
    dlp.classList.add('rb-dl');dlp.innerHTML=svg('download')+' Download PDF';r.appendChild(dlp);
    bar.appendChild(l);bar.appendChild(m);bar.appendChild(r);
    (meta||count.parentNode).parentNode.insertBefore(bar,meta||count.parentNode);
-   if(legend){legend.classList.add('rb-note');bar.parentNode.insertBefore(legend,bar.nextSibling)}
+   if(legend)legend.style.display='none';
    if(meta)meta.classList.add('gone');
    if(dlmsg){var def=dlmsg.textContent;dlp.title=def;
     var sync=function(){dlmsg.hidden=(dlmsg.textContent===def)};sync();new MutationObserver(sync).observe(dlmsg,{childList:true,characterData:true,subtree:true})}}
@@ -138,18 +145,33 @@
 /* ---- the "About this data" notes under the table are not shown ---- */
 (function(){try{[].forEach.call(document.querySelectorAll('.tw ~ .note'),function(e){e.remove()})}catch(e){}})();
 
-/* ---- results footer: "Showing 1 to N of M results" with the Show more button ---- */
+/* ---- results footer: "Showing 101 to 200 of 251 results" and page numbers, 100 results per page ---- */
 (function(){
  try{
-  var d=document,tw=d.querySelector('.tw'),count=d.getElementById('count'),more=d.getElementById('more');
+  var d=document,tw=d.querySelector('.tw'),count=d.getElementById('count'),more=d.getElementById('more'),tb=d.getElementById('body'),show=d.getElementById('show');
   if(!tw||!count)return;
-  var f=d.createElement('div');f.className='tfoot';var t=d.createElement('span');t.className='tf-t';f.appendChild(t);
-  var r=d.createElement('div');r.className='tf-r';f.appendChild(r);
-  var mw=more&&more.parentNode;if(more){r.appendChild(more);if(mw&&mw!==r&&!mw.children.length&&mw.tagName==='DIV')mw.style.display='none'}
+  var SZ=100,f=d.createElement('div');f.className='tfoot';var t=d.createElement('span');t.className='tf-t';f.appendChild(t);
+  var pg=d.createElement('nav');pg.className='pager';pg.setAttribute('aria-label','Pages');f.appendChild(pg);
+  if(more){more.hidden=true;more.style.display='none'}
   tw.parentNode.insertBefore(f,tw.nextSibling);
-  function sync(){var s=count.textContent||'',m=s.match(/^\s*([\d,]+)/),sh=s.match(/showing\s+([\d,]+)/i);
-   if(!m){t.textContent='';return}
-   var total=m[1],shown=sh?sh[1]:total;t.textContent=(total==='0'?'No results':'Showing 1 to '+shown+' of '+total+' results')}
+  function go(p){
+   window.PGS=(p-1)*SZ;window.PGKEEP=1;
+   if(show)show.dispatchEvent(new Event('change',{bubbles:true}));
+   var tgt=d.querySelector('.rbar')||tw;tgt.scrollIntoView({behavior:'smooth',block:'start'});tw.scrollTop=0}
+  function sync(){
+   var s=count.textContent||'',m=s.match(/^\s*([\d,]+)/);
+   if(!m){t.textContent='';pg.innerHTML='';return}
+   var total=parseInt(m[1].replace(/,/g,''),10)||0,start=window.PGS||0,cur=Math.floor(start/SZ)+1,pages=Math.max(1,Math.ceil(total/SZ));
+   if(tb)tb.style.setProperty('--pgo',String(start));
+   t.textContent=total?('Showing '+(start+1)+' to '+Math.min(start+SZ,total)+' of '+total+' results'):'No results';
+   pg.innerHTML='';if(pages<2)return;
+   function btn(label,p,cls,dis){var b=d.createElement('button');b.type='button';b.className='pgb'+(cls?' '+cls:'');b.innerHTML=label;if(dis)b.disabled=true;else b.addEventListener('click',function(){go(p)});if(p===cur&&!cls)b.setAttribute('aria-current','page');pg.appendChild(b)}
+   btn('&lsaquo;',cur-1,'nav',cur<=1);
+   var list=[],set={1:1};set[pages]=1;for(var k=cur-1;k<=cur+1;k++)if(k>1&&k<pages)set[k]=1;
+   Object.keys(set).map(Number).sort(function(a,b){return a-b}).forEach(function(n,i,arr){if(i&&n-arr[i-1]>1)list.push(0);list.push(n)});
+   list.forEach(function(n){if(!n){var e=d.createElement('span');e.className='pgd';e.textContent='\u2026';pg.appendChild(e)}else btn(String(n),n,'')});
+   btn('&rsaquo;',cur+1,'nav',cur>=pages)}
   sync();new MutationObserver(sync).observe(count,{childList:true,characterData:true,subtree:true});
+  if(tb)new MutationObserver(sync).observe(tb,{childList:true});
  }catch(e){}
 })();

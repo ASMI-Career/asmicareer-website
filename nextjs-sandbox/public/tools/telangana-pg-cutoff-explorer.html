@@ -259,7 +259,7 @@ td.n .sml+small{margin-top:4px}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <label>Round wise<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="all">All rounds</option><option value="air">AIR</option><option value="sml">SML</option><option value="branch">Branch</option><option value="college">College</option></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option></select></label>
 <div class="fld">Quota<span id="ms-quota"></span></div>
 <div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Sub-quota<span id="ms-pool"></span></div>
@@ -376,15 +376,15 @@ function query(){
 function render(){
  var Q=query(),out=Q.out,ar=Q.ar||Q.sm,rd=Q.rd,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4,5,6].map(function(n){return scell(g.r[n],n===rd)+cell(g.r[n],n===rd)}).join('');
   return '<tr><td class="c"><b>'+g.college+'</b></td><td class="br">'+g.subj+'</td><td class="q"><span class="qp q'+g.qt.charAt(2)+'">'+QL(g.qt)+'</span>'+(POOLS[g.pool]?' <span class="cp">'+POOLS[g.pool]+'</span>':'')+'</td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="18" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Closing = last-ranked allotment, AIR big and SML small. Seats = seat matrix (Round 1) or declared vacancies (Rounds 2 to 5). Round wise: '+$('round').selectedOptions[0].text+', '+(CT==='all'?'All-round':'New allotment')+' cutoff.';
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  var h=$('hint'),nc=1;if(false){h.hidden=false;h.hidden=true}else h.hidden=true;
 }

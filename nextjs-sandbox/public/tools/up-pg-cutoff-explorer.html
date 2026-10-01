@@ -212,7 +212,7 @@ td.q,td.ct{text-align:center}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option><option value="unf">Seats with no allotment</option></select></label>
 <label>Round wise<select id="round"></select></label>
-<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="city">City</option><option value="branch">Branch</option><option value="college">College</option></select></label>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="fld">Course<span id="ms-st"></span></div>
 <div class="fld">Quota<span id="ms-qt"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
@@ -332,15 +332,15 @@ function query(){
 function render(){
  var Q=query(),out=Q.out,rk=Q.rk,ar=Q.ar,rd=Q.rd,by=Q.by,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';else if(Q.show==='unf')st='<span class="pill" style="color:var(--muted)">No allotment</span>';
   var rc=[1,2,3,4].map(function(n){return scell(g,n,n===rd)+cell(g.r[n],n===rd,false,g.ra[n])}).join('');
   return '<tr><td class="c">'+g.college+(g.mino?' <span class="cp">Minority</span>':'')+'</td><td class="br">'+g.subj+'</td><td class="q"><span class="qp q'+g.qi+'">'+g.qt+'</span>'+(g.sub!=='Regular'?' <span class="cp">'+g.sub+'</span>':'')+'</td><td class="ct"><span class="cp">'+g.cat+'</span></td>'+allCells(g)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="14" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+((rk||ar)&&Q.show!=='unf'?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+((rk||ar)&&Q.show!=='unf'?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent=Q.show==='unf'?'Seats offered in '+$('round').selectedOptions[0].text+' that no one was allotted':({new:'New allotments only. ',all:'All-round (every allotment in the round). ',both:'New allotment, with all-round beneath where it differs. '}[Q.mode])+(TSL(by)?'Sorted by '+TSL(by)+', then closing AIR, in '+$('round').selectedOptions[0].text:'Sorted by closing '+(by==='air'?'AIR':'SML')+' in '+$('round').selectedOptions[0].text+', lowest first');
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  var h=$('hint'),ns=Object.keys(Q.st).length;if((rk)&&ns!==1){h.hidden=false;h.textContent='MD/MS and DNB (and Diploma) use different merit lists, so an SML is not comparable across them. Pick one course, or use your AIR.'}else h.hidden=true;
 }
