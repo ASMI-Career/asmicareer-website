@@ -238,7 +238,7 @@ REGIONS.forEach(function(r){
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
   f.addEventListener('load',function(){
    try{var d=f.contentDocument;if(!d||!d.head||d.location.href==='about:blank'){reveal();return}
-    var l=d.createElement('link');l.rel='stylesheet';l.href='/tools/pg-theme.css';l.onload=function(){try{var sc=d.createElement('script');sc.src='/tools/pg-enhance.js';d.body.appendChild(sc)}catch(e){}reveal()};l.onerror=reveal;d.head.appendChild(l);setTimeout(reveal,1500)}catch(e){reveal()}});
+    var l=d.createElement('link');l.rel='stylesheet';l.href='/tools/pg-theme.css';l.onload=reveal;l.onerror=reveal;d.head.appendChild(l);setTimeout(reveal,1500)}catch(e){reveal()}});
   f.src=url;efw.appendChild(f)}
  function route(){
   var r=by[decodeURIComponent((location.hash||'').slice(1))];
