@@ -30,15 +30,15 @@
      if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
      if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
       if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
-    [].forEach.call(tr.querySelectorAll('td.n small'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})});
+    [].forEach.call(tr.querySelectorAll('td.n small,td.n span.smlp'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})});
    if(smlCols===null&&rows.length){
-    var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('small.smlp'))seen[i]=1})});
+    var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('.smlp'))seen[i]=1})});
     smlCols=Object.keys(seen).map(Number).sort(function(a,b){return a-b});
     if(smlCols.length)headerSML(smlCols)}
    if(smlCols&&smlCols.length)rows.forEach(function(tr){
     var cells=[].slice.call(tr.cells);
     smlCols.slice().reverse().forEach(function(i){var td=cells[i];if(!td)return;
-     var sm=td.querySelector('small.smlp'),nd=d.createElement('td'),rc=(td.className.match(/\br[0-6]\b/)||[''])[0];
+     var sm=td.querySelector('.smlp'),nd=d.createElement('td'),rc=(td.className.match(/\br[0-6]\b/)||[''])[0];
      nd.className='n smlc'+(rc?' '+rc:'')+(/\bsel\b/.test(td.className)?' sel':'');
      if(sm){var n=document.createElement('span');n.className='smlnum';n.textContent=sm.textContent.replace(/^\s*SML\s*/i,'');nd.appendChild(n);sm.remove()}else nd.textContent='\u2013';
      td.parentNode.insertBefore(nd,td.nextSibling)})});
@@ -135,6 +135,9 @@
  }catch(e){}
 })();
 
+/* ---- the "About this data" notes under the table are not shown ---- */
+(function(){try{[].forEach.call(document.querySelectorAll('.tw ~ .note'),function(e){e.remove()})}catch(e){}})();
+
 /* ---- results footer: "Showing 1 to N of M results" with the Show more button ---- */
 (function(){
  try{
@@ -144,7 +147,7 @@
   var r=d.createElement('div');r.className='tf-r';f.appendChild(r);
   var mw=more&&more.parentNode;if(more){r.appendChild(more);if(mw&&mw!==r&&!mw.children.length&&mw.tagName==='DIV')mw.style.display='none'}
   tw.parentNode.insertBefore(f,tw.nextSibling);
-  function sync(){var s=count.textContent||'',m=s.match(/^\\s*([\\d,]+)/),sh=s.match(/showing\\s+([\\d,]+)/i);
+  function sync(){var s=count.textContent||'',m=s.match(/^\s*([\d,]+)/),sh=s.match(/showing\s+([\d,]+)/i);
    if(!m){t.textContent='';return}
    var total=m[1],shown=sh?sh[1]:total;t.textContent=(total==='0'?'No results':'Showing 1 to '+shown+' of '+total+' results')}
   sync();new MutationObserver(sync).observe(count,{childList:true,characterData:true,subtree:true});
