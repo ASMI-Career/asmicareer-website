@@ -175,3 +175,51 @@
   if(tb)new MutationObserver(sync).observe(tb,{childList:true});
  }catch(e){}
 })();
+
+/* ---- sort arrows in the table headings: College, Branch, Fees, Closing AIR and SML No. ---- */
+(function(){
+ try{
+  var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table'),sel=d.getElementById('sort')||d.getElementById('sortby'),rsel=d.getElementById('round');
+  if(!tbl||!sel)return;
+  var has=function(v){return [].some.call(sel.options,function(o){return o.value===v})};
+  var arrows='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M8 19l-3-3M8 19l3-3M16 19V5M16 5l-3 3M16 5l3 3"/></svg>';
+  var heads=[];
+  function roundValue(cls){
+   if(!rsel)return null;var m=cls.match(/\br(\d)\b/),n=m?parseInt(m[1],10):0,opts=[].slice.call(rsel.options),hit=null;
+   if(n===0)return opts.length?opts[0].value:null;
+   opts.forEach(function(o){if(o.value===String(n)||o.value==='r'+n)hit=o.value});
+   return hit}
+  function setup(){
+   var ths=[].slice.call(tbl.querySelectorAll('thead th'));
+   ths.forEach(function(th){
+    if(th.getAttribute('data-srt'))return;
+    var t=(th.textContent||'').trim().replace(/\s+/g,' '),cls=th.className||'',key=null,round=null;
+    if(/^college$/i.test(t))key='college';
+    else if(/^branch$/i.test(t))key='branch';
+    else if(/^fee$/i.test(t)&&has('feeasc'))key='fee';
+    else if(/^sml no\.?$/i.test(t)&&has('sml')){key='sml';round=roundValue(cls)}
+    else if((/closing/i.test(t)||/^final\b/i.test(t))&&!/^sml/i.test(t)){key='air';round=roundValue(cls);if(!round&&th.rowSpan>1)round=roundValue('r0')}
+    if(!key)return;
+    if((key==='college'||key==='branch')&&!has(key))return;
+    if(key==='air'&&!has('air'))return;
+    th.setAttribute('data-srt',key);th.classList.add('srtable');
+    if(round!==null)th.setAttribute('data-rd',round);
+    var b=d.createElement('span');b.className='srt';b.innerHTML=arrows;th.appendChild(b);
+    th.addEventListener('click',function(){
+     var k=th.getAttribute('data-srt'),v=k;
+     if(k==='fee')v=(sel.value==='feeasc')?'feedesc':'feeasc';
+     if(th.hasAttribute('data-rd')&&rsel)rsel.value=th.getAttribute('data-rd');
+     sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}))});
+    heads.push(th)})}
+  function mark(){
+   var v=sel.value,rv=rsel?rsel.value:null;
+   heads.forEach(function(th){var k=th.getAttribute('data-srt'),on=false;
+    if(k==='college'||k==='branch')on=(v===k);
+    else if(k==='fee')on=(v==='feeasc'||v==='feedesc');
+    else{var r=th.getAttribute('data-rd');on=(v===k)&&(r===null||rv===null||r===rv)}
+    th.classList.toggle('srt-on',on)})}
+  setup();mark();
+  new MutationObserver(function(){setup();mark()}).observe(tb,{childList:true});
+  sel.addEventListener('change',mark);if(rsel)rsel.addEventListener('change',mark);
+ }catch(e){}
+})();

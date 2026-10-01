@@ -282,3 +282,11 @@ body.pgui tbody tr:hover td.pgc1,body.pgui tbody tr:hover td.pgc2{background:col
  body.pgui thead th.pgc2{position:sticky!important;top:0}
  body.pgui #body td.c{padding-left:48px!important}
 }
+
+/* sort arrows in headings */
+th.srtable{cursor:pointer;user-select:none;white-space:nowrap}
+th.srtable .srt{display:inline-grid;place-items:center;margin-left:6px;width:22px;height:22px;border-radius:7px;vertical-align:middle;color:var(--muted);background:color-mix(in srgb,var(--accent) 8%,transparent);transition:background .15s,color .15s}
+th.srtable:hover .srt{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
+th.srtable.srt-on .srt{background:var(--accent);color:var(--accent-fg)}
+th.srtable.srt-on{color:var(--accent)}
+th.rg.r0 .srt,th.rg.r0.srtable .srt{display:none}
