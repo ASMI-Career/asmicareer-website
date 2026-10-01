@@ -100,7 +100,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'IBM Plex Sans',s
 /* explorer view: info strip + the chosen explorer filling the rest of the screen */
 body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 #app{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;background:var(--bg)}
-.strip{flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
+.strip{display:none!important;flex:none;background:var(--surface);border-bottom:1px solid var(--line)}
 .stripin{max-width:1280px;margin-inline:auto;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px}
 .stripin .st{min-width:0}
 .stripin b{display:block;color:var(--ink);font-size:15px;line-height:1.25}
@@ -237,7 +237,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261001c'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261001e'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
