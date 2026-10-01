@@ -8,3 +8,23 @@ body{margin:0!important;padding:14px 16px 40px!important;background:var(--bg)!im
 .tw{max-height:calc(100vh - 28px)!important}
 td{vertical-align:middle}
 thead th:not(.n):not(.rg):not([colspan]){text-align:left!important}
+
+/* ---- Colourful filter panel (colour only, layout unchanged) ---- */
+.panel{background:linear-gradient(90deg,#7c3aed,#2563eb,#0f9d6b,#f59e0b) top/100% 5px no-repeat,linear-gradient(180deg,#f3edff 0,#fff 140px)!important;border-radius:16px!important;border-top:1px solid var(--line)!important}
+.fxg select{padding-right:4px!important;text-overflow:ellipsis}
+.panel .wide input{border-color:#c4b5fd!important}
+/* groups: view = purple, seat = green, branch = blue, college = amber */
+.fxg>*{--c:#6d28d9;--t:#f3edff;--b:#d8c8fb}
+.fxg>:has(#ms-qt,#ms-quota,#ms-pool,#ms-cat,#ms-sub,#ms-st,#ms-fee){--c:#0b7a52;--t:#e6f8f0;--b:#a6e3cb}
+.fxg>:has(#ms-btype,#ms-subj){--c:#1d4ed8;--t:#e8f0ff;--b:#b6cbf8}
+.fxg>:has(#ms-ctype,#ms-city,#ms-inst,#ms-state,#ms-univ){--c:#b45309;--t:#fff2dc;--b:#f3cf94}
+.fxg>label,.fxg>.fld{color:var(--c)!important}
+.fxg select,.fxg .ms>summary{background:var(--t)!important;border:1.5px solid var(--b)!important;border-left:5px solid var(--c)!important;font-weight:600}
+.fxg select:hover,.fxg .ms>summary:hover,.fxg .ms[open]>summary{border-color:var(--c)!important;background:#fff!important}
+.fxg .ms>summary::after{color:var(--c)}
+.fxg .menu label:hover{background:var(--t)}
+.fx>summary{color:#6d28d9}
+.chips button,.chips .chip,.seg button{border:1.5px solid #c4b5fd}
+.chips [aria-pressed="true"],.seg [aria-pressed="true"]{background:linear-gradient(90deg,#6d28d9,#2563eb)!important;border-color:transparent!important;color:#fff!important}
+#reset{border-color:#6d28d9;color:#6d28d9;background:#fff}
+#reset:hover{background:linear-gradient(90deg,#6d28d9,#2563eb);color:#fff;border-color:transparent}
