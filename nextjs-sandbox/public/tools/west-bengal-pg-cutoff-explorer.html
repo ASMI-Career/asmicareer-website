@@ -154,6 +154,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu input.msq{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:13px}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
+small.sub{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:2px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -252,7 +253,7 @@ td.n .sml+small{margin-top:4px}
 <h1>West Bengal PG Cutoff Explorer</h1><p class="help">ASMI Youth Career Advisor &nbsp;|&nbsp; Helpline: <a href="tel:7410019075">7410019075</a></p>
 </div></header>
 <section class="panel" aria-label="Filters">
-<label class="wide">Search<input id="q" type="search" placeholder="College, code, city or branch, e.g. Kolkata Radiodiagnosis" autocomplete="off"></label>
+<label class="wide">Search<input id="q" type="search" placeholder="College, city or branch, e.g. Kolkata Radiodiagnosis" autocomplete="off"></label>
 <label class="rank">Your AIR (All India Rank)<input id="air" type="number" min="1" inputmode="numeric" placeholder="e.g. 20000"></label>
 <div class="fld chipw">Cutoff type<span class="chips seg" id="cchips"></span></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
@@ -262,6 +263,10 @@ td.n .sml+small{margin-top:4px}
 <div class="fld">Quota<span id="ms-quota"></span></div>
 <div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
+<div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
+<div class="fld">Branch<span id="ms-subj"></span></div>
+<div class="fld">College type<span id="ms-ctype"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
@@ -280,6 +285,15 @@ var QLONG={'Open':'Open Quota','In-Service':'In-Service','In-Service DNB':'In-Se
 var RN=['','Round 1','Round 2','Round 3','Stray Vacancy','Revised Stray Vacancy'];
 var NR=5;
 var CT='new';
+
+/* Derived fields: tidy names, specialty, clinical/non-clinical, college type and city (not in the source list; classified by ASMI) */
+var CM={0:['Kolkata','Government'],1:['Kolkata','Government'],2:['Kolkata','Government'],3:['Bardhaman','Government'],4:['Kolkata','Government'],5:['Kolkata','Private'],6:['Kolkata','Government'],7:['Kolkata','Government'],8:['Bankura','Government'],9:['Kolkata','Government'],10:['Berhampore','Government'],11:['Siliguri','Government'],12:['Kolkata','Government'],13:['Midnapore','Government'],14:['Kolkata','Government'],15:['Malda','Government'],16:['Kolkata','Private'],17:['Kolkata','Government'],18:['Kolkata','Government'],19:['Kolkata','Government'],20:['Durgapur','Private'],21:['Haldia','Private'],22:['Diamond Harbour','Government'],23:['Durgapur','Private'],24:['Durgapur','Private'],25:['Kalyani','Government'],26:['Budge Budge','Private'],27:['Kolkata','Government'],28:['Tamluk','Government'],29:['Barasat','Government'],30:['Howrah','Government'],31:['Krishnanagar','Government'],32:['Kolkata','Government'],33:['Kolkata','Government'],34:['Asansol','Government'],35:['Rampurhat','Government'],36:['Cooch Behar','Government'],37:['Alipurduar','Government'],38:['Kalna','Government'],39:['Howrah','Private'],40:['Jalpaiguri','Government'],41:['Chinsurah','Government'],42:['Raiganj','Government'],43:['Durgapur','Government'],44:['Kharagpur','Government'],45:['Arambagh','Government'],46:['Purulia','Government'],47:['Serampore','Government'],48:['Suri','Government'],49:['Siliguri','Government'],50:['Domkal','Government'],51:['Balurghat','Government'],52:['Chandannagar','Government'],53:['Darjeeling','Government'],54:['Ranaghat','Government'],55:['Not stated','Private'],56:['Bolpur','Government']};
+var KEEP={ESI:1,PGIMSR:1,ESIC:1,JNM:1,KPC:1,JIS:1,IQ:1,ICARE:1,RG:1,BC:1,SD:1,SS:1,DH:1,SSH:1,EC:1,SDH:1,MR:1,SRIMS:1,NBEMS:1,ENT:1,DNB:1};
+var SMALL={AND:1,OF:1,AT:1,THE:1,FOR:1};
+function tidy(n){return n.replace(/\s+/g,' ').trim().split(' ').map(function(w,i){var core=w.replace(/[^A-Za-z.&]/g,''),u=core.toUpperCase();if(KEEP[u]||/^([A-Z]\.){2,}$/.test(u)||(u.length<=1))return w.toUpperCase();if(SMALL[u]&&i>0)return w.toLowerCase();return w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()}).join(' ').replace(/\bGovt\b\.?/g,'Govt.').replace(/\bDr\b\.?/g,'Dr.')}
+var SPEC=[[/RADIO-?\s?DIAGNOSIS/,'Radiodiagnosis',1],[/DERM|VENEREOLOGY/,'Dermatology, Venereology & Leprosy',1],[/PAEDIATRIC SURGERY/,'Paediatric Surgery',1],[/OBST|GYNAE/,'Obstetrics & Gynaecology',1],[/PAEDIATRICS|CHILD HEALTH/,'Paediatrics',1],[/GENERAL MEDICINE/,'General Medicine',1],[/GENERAL SURGERY/,'General Surgery',1],[/CARDIO/,'Cardiothoracic Surgery',1],[/ORTHOPAEDICS/,'Orthopaedics',1],[/RADIOTHERAPY/,'Radiotherapy',1],[/TUBERCULOSIS|RESPIRATORY/,'Respiratory Medicine / TB & Chest',1],[/OPHTHALMOLOGY/,'Ophthalmology',1],[/PSYCHIATRY/,'Psychiatry',1],[/E\.N\.T\.|OTO/,'ENT (Otorhinolaryngology)',1],[/GERIATRICS/,'Geriatrics',1],[/ANAESTHESIOLOGY/,'Anaesthesiology',1],[/PHYSICAL MED/,'Physical Medicine & Rehabilitation',1],[/TROPICAL MEDICINE/,'Tropical Medicine',1],[/EMERGENCY/,'Emergency Medicine',1],[/PATHOLOGY/,'Pathology',0],[/TRANSFUSION/,'Transfusion Medicine',0],[/PREVENTIVE|COMMUNITY/,'Community Medicine',0],[/EPIDEMIOLOGY/,'Epidemiology',0],[/BIOCHEMISTRY/,'Biochemistry',0],[/MICROBIOLOGY/,'Microbiology',0],[/PHARMACOLOGY/,'Pharmacology',0],[/ANATOMY/,'Anatomy',0],[/FORENSIC/,'Forensic Medicine',0],[/PHYSIOLOGY/,'Physiology',0]];
+function specOf(n){var u=n.toUpperCase();for(var i=0;i<SPEC.length;i++)if(SPEC[i][0].test(u))return {n:SPEC[i][1],c:SPEC[i][2]};return {n:tidy(n),c:1}}
+function branchLabel(n,deg){var sp=specOf(n),u=n.toUpperCase();if(/MD\/MS \(ANATOMY\)/.test(u))return 'MD/MS Anatomy';if(/M\.P\.H\./.test(u))return 'MPH Epidemiology';return deg+' '+sp.n}
 var L=D.rows.map(function(r){
  var c=D.inst[r[0]],b=D.crs[r[1]],
  g={inst:r[0],college:c,city:'',deg:b[1],subj:b[0],cat:r[2],qt:r[3],r:{}};
@@ -289,7 +303,9 @@ var L=D.rows.map(function(r){
   g.r[k]={n:v[0],la:v[1],ca:v[2],na:v[3],lb:v[4],cb:v[5]};any=true;
   A.n+=v[0];A.la=mn(A.la,v[1]);A.ca=mx(A.ca,v[2]);A.na+=v[3];A.lb=mn(A.lb,v[4]);A.cb=mx(A.cb,v[5])}
  if(any)g.r[0]=A;
- g.hay=(c+' '+b[0]+' '+r[2]+' '+r[3]).toLowerCase();
+ var cm=CM[r[0]]||['Not stated','Government'],sp=specOf(b[0]);
+ g.college=tidy(c);g.city=cm[0];g.ctype=cm[1];g.srcb=b[0];g.subj=branchLabel(b[0],b[1]);g.bt=sp.c?'Clinical':'Non-Clinical';
+ g.hay=(c+' '+g.college+' '+b[0]+' '+g.subj+' '+g.city+' '+g.ctype+' '+g.bt+' '+r[2]+' '+r[3]).toLowerCase();
  return g});
 function nf(v){return v===null||v===undefined?'-':Number(v).toLocaleString('en-IN')}
 var LIM=150,shown=LIM;
@@ -318,7 +334,13 @@ makeMS('cat',[["UR", "UR"], ["EWS", "EWS"], ["SC", "SC"], ["ST", "ST"], ["OBC-A 
 (function(){
  var c=$('cchips');[['new','New allotment'],['all','All-round'],['both','Both']].forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.dataset.c=x[0];b.setAttribute('aria-pressed',x[0]===CT?'true':'false');c.appendChild(b)});
  c.addEventListener('click',function(e){var v=e.target.dataset&&e.target.dataset.c;if(!v)return;CT=v;c.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===CT?'true':'false')});shown=LIM;render()})})();
-var insts=D.inst.map(function(name,i){return [String(i),name]}).sort(function(a,b){return a[1]<b[1]?-1:1});
+var insts=D.inst.map(function(name,i){return [String(i),tidy(name)]}).sort(function(a,b){return a[1]<b[1]?-1:1});
+makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
+var subjs={};L.forEach(function(g){subjs[g.subj]=1});
+makeMS('subj',Object.keys(subjs).sort().map(function(x){return [x,x]}),[],'branches');
+makeMS('ctype',[['Government','Government'],['Private','Private']],[],'college types');
+var cities={};L.forEach(function(g){cities[g.city]=1});
+makeMS('city',Object.keys(cities).sort().map(function(x){return [x,x]}),[],'cities');
 makeMS('inst',insts,[],'colleges');
 $('round').innerHTML=[[0,'All rounds combined']].concat([1,2,3,4,5].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
@@ -338,7 +360,7 @@ function allcell(x){var td='<td class="n allr sel" title="Final closing rank: Re
 var STXT={2:'Within cutoff',1:'Borderline',0:'Above cutoff','-1':''};
 function finalRank(g){for(var k=5;k>=1;k--){var x=g.r[k];if(x&&x.ca!==null&&x.ca!==undefined)return {r:k,v:x.ca} }return null}
 function query(){
- var ss0=MS.st(),qs=MS.quota(),cs=MS.cat(),is_=MS.inst();
+ var ss0=MS.st(),qs=MS.quota(),cs=MS.cat(),is_=MS.inst(),bts=MS.btype(),sjs=MS.subj(),cts=MS.ctype(),cys=MS.city();
  function has(o){return Object.keys(o).length>0}
  var rd=+$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),ar=parseInt($('air').value,10)||0,show=$('show').value;
  function cvals(x){return vals(x,CT==='all'?'all':'new')}
@@ -349,6 +371,10 @@ function query(){
   if(has(qs)&&!qs[g.qt])return false;
   if(has(cs)&&!cs[g.cat])return false;
   if(has(is_)&&!is_[g.inst])return false;
+  if(has(bts)&&!bts[g.bt])return false;
+  if(has(sjs)&&!sjs[g.subj])return false;
+  if(has(cts)&&!cts[g.ctype])return false;
+  if(has(cys)&&!cys[g.city])return false;
   for(var ti=0;ti<t.length;ti++)if(g.hay.indexOf(t[ti])<0)return false;
   if(ar&&(show==='within'||show==='near')){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
@@ -362,7 +388,7 @@ function render(){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4,5].map(function(n){return scell(g.r[n],n===rd)+cell(g.r[n],n===rd)}).join('');
-  return '<tr><td class="c"><b>'+g.college+'</b></td><td class="br">'+g.subj+'</td><td class="q"><span class="qp q1">'+(QLONG[g.qt]||g.qt)+'</span> <span class="cp">'+g.cat+'</span></td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
+  return '<tr><td class="c"><b>'+g.college+'</b><small class="sub">'+g.city+' · '+g.ctype+'</small></td><td class="br" title="'+g.srcb.replace(/"/g,'&quot;')+'">'+g.subj+'<small class="sub">'+(g.bt==='Clinical'?'Clinical':'Non-clinical')+'</small></td><td class="q"><span class="qp q1">'+(QLONG[g.qt]||g.qt)+'</span> <span class="cp">'+g.cat+'</span></td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
  $('legend').textContent='Closing = last-ranked allotment (AIR). Final = the closing rank from the Revised Stray Vacancy Round if the seat group appears there, else the latest earlier round it appears in. Round wise: '+$('round').selectedOptions[0].text+', '+(CT==='all'?'All-round':'New allotment')+' cutoff.';
@@ -374,7 +400,7 @@ var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
  return [['Your AIR',Q.ar||'not entered'],['Round wise',$('round').selectedOptions[0].text],['Cutoff type',CT==='all'?'All-round':CT==='both'?'New allotment and All-round':'New allotment'],
-  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.quota.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Seat groups in this report',Q.out.length]];
+  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.quota.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Seat groups in this report',Q.out.length]];
 }
 function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function fname(Q,ext){return 'West_Bengal_PG_Cutoff_Report'+(Q.ar?'_AIR'+Q.ar:'')+'_'+stamp()+'.'+ext}
