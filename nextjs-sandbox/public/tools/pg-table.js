@@ -61,7 +61,7 @@
   var wrap=d.querySelector('.wrap')||d.body;
   var hero=d.createElement('section');hero.className='hero2';hero.setAttribute('aria-label','About this explorer');
   var cards=[['target','1','Round-wise cutoffs','Closing AIR and SML'],['users','4','Every quota','State, NRI and more'],['check','3','Rank check','See what fits your rank'],['funnel','5','Easy filters','Find your options']];
-  hero.innerHTML='<div class="h2c"><span class="h2b">NEET-PG 2025</span><h1 class="h2t">'+(name?name.replace(/</g,'&lt;')+' ':'')+'<b>Cutoff</b> <em>Explorer</em></h1><p class="h2p">Explore NEET-PG allotments and college-wise cutoffs'+(name?' for '+name.replace(/</g,'&lt;'):'')+'. Enter your rank, pick filters and see which seats are within your reach.</p><a class="h2call" href="tel:7410019075">'+svg('phone')+' Helpline 7410019075</a></div><div class="h2cards">'+cards.map(function(c){return '<div class="h2card" data-t="'+c[1]+'"><i class="ic" data-t="'+c[1]+'">'+svg(c[0])+'</i><b>'+c[2]+'</b><span>'+c[3]+'</span></div>'}).join('')+'</div>';
+  hero.innerHTML='<div class="h2c"><span class="h2b">NEET-PG 2025</span><h1 class="h2t">'+(name?name.replace(/</g,'&lt;')+' ':'')+'<b>Cutoff</b> <em>Explorer</em></h1><a class="h2call" href="tel:7410019075">'+svg('phone')+' Helpline 7410019075</a></div>';
   wrap.insertBefore(hero,wrap.firstChild);
   d.body.classList.add('pgui');
   /* panel head with Reset all */
@@ -72,13 +72,13 @@
   panel.insertBefore(head,panel.firstChild);
   /* search box */
   var wide=panel.querySelector('label.wide');
-  if(wide){var lb=lbl(wide);if(lb)lb.textContent='Search college, city or branch'}
+  if(wide){wide.style.display='none'}
   /* rank inputs side by side */
   var ranks=[].slice.call(panel.querySelectorAll(':scope>label.rank'));
   if(ranks.length){var rk=d.createElement('div');rk.className='rk';ranks[0].parentNode.insertBefore(rk,ranks[0]);
    ranks.forEach(function(r,i){lbl(r);r.insertBefore(ic(i?'doc':'user','1'),r.firstChild);rk.appendChild(r)})}
   var ctp=null;[].forEach.call(panel.children,function(c){if(!ctp&&!c.classList.contains('pp-head')&&/^\s*cutoff type/i.test(c.textContent||''))ctp=c});
-  if(ctp){ctp.classList.add('pp-ct');lbl(ctp)}
+  if(ctp){ctp.classList.add('pp-ct');lbl(ctp);var nx=ctp.nextElementSibling;if(nx&&!ctp.querySelector('button')&&nx.querySelector('button'))ctp.appendChild(nx)}
   /* filter tiles */
   var fx=d.getElementById('fx'),fxg=panel.querySelector('.fxg');
   if(fxg){[].slice.call(fxg.children).forEach(function(el){
@@ -87,9 +87,7 @@
     el.classList.add('tile');el.setAttribute('data-t',k[1]);el.insertBefore(ic(k[0],k[1]),el.firstChild)});
    var act=fxg.querySelector('.actions');
    if(!act){act=d.createElement('div');act.className='actions';fxg.appendChild(act)}
-   var go=d.createElement('button');go.type='button';go.className='pp-go';go.innerHTML='View results '+svg('down');
-   go.addEventListener('click',function(){var t=d.querySelector('.rbar')||d.querySelector('.tw');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
-   act.appendChild(go)}
+   act.style.display='none'}
   if(fx&&(window.innerWidth>640))fx.setAttribute('open','')
   /* results bar */
   var count=d.getElementById('count'),legend=d.getElementById('legend'),dlp=d.getElementById('dlp'),dlmsg=d.getElementById('dlmsg'),meta=d.querySelector('.meta');
