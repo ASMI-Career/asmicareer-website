@@ -47,5 +47,5 @@ td.r1{--rc:#7c3aed}td.r2{--rc:#2563eb}td.r3{--rc:#0d9488}td.r4{--rc:#d97706}td.r
 td.allr{background:var(--selbg,#e9fbf0)!important}
 :root:root td.allr .sml{color:var(--good)}
 /* state rank under the closing AIR as a round-coloured pill */
-td.n small.smlp{display:inline-block;margin-top:2px;padding:0 10px;border-radius:99px;font-size:11px;font-weight:500;line-height:1.6;font-family:var(--mono);background:color-mix(in srgb,var(--rc,#5b21b6) 11%,var(--surface));color:color-mix(in srgb,var(--rc,#5b21b6) 72%,var(--fg))}
+td.n small.smlp{display:table;margin:2px auto 0;padding:0 10px;border-radius:99px;font-size:11px;font-weight:500;line-height:1.6;font-family:var(--mono);background:color-mix(in srgb,var(--rc,#5b21b6) 11%,var(--surface));color:color-mix(in srgb,var(--rc,#5b21b6) 72%,var(--fg))}
 td.n.sel small.smlp,td.allr small.smlp{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
