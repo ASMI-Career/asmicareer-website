@@ -147,3 +147,35 @@ body.pgui .fxg>.actions{grid-column:1/-1;display:flex;justify-content:flex-end;a
  .rbar{padding:12px 14px;border-radius:18px}.rb-r{flex-direction:column;align-items:stretch}.rb-sort{justify-content:space-between}.rb-sort select{flex:1}.rb-dl{justify-content:center}.pp-go{width:100%;justify-content:center}body.pgui .fxg>.actions{justify-content:stretch}}
 body.pgui .rbar .rb-sort{display:flex!important;flex-direction:row!important;align-items:center;gap:8px!important;text-transform:none!important;letter-spacing:0!important;font-size:13.5px!important;color:var(--fg)!important}
 body.pgui .rbar .rb-sort .lb{display:inline;font-weight:600;font-size:13.5px;color:var(--fg);text-transform:none}
+
+/* hero: title only */
+.hero2{grid-template-columns:1fr!important;padding:20px 28px!important}
+.h2t{margin:10px 0 0!important}
+.h2call{margin-top:14px}
+
+/* ---- compact: no search box, hero in one line, all filters in two rows so results show on the first screen ---- */
+body.pgui .panel>.wide{display:none!important}
+body.pgui .panel{padding:16px 20px!important;gap:12px 24px!important}
+.hero2{padding:12px 20px!important;border-radius:20px!important}
+.h2c{display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.h2t{margin:0!important;font-size:clamp(22px,2.8vw,32px)!important}
+.h2call{margin:0 0 0 auto!important;padding:8px 16px!important}
+.pp-t span{display:none}
+body.pgui .rank input{padding:10px 12px 10px 58px!important}
+body.pgui .rank i.ic{bottom:3px}
+body.pgui .pp-ct .seg button,body.pgui .pp-ct .chips button{padding:10px 16px}
+@media (min-width:961px){
+ body.pgui .fxg{grid-template-columns:none!important;grid-template-rows:repeat(2,auto);grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:10px!important}
+ body.pgui .fxg>.tile{grid-template-columns:34px minmax(0,1fr);column-gap:9px;padding:8px 10px;min-height:56px;border-radius:14px}
+ body.pgui .tile>i.ic{width:34px;height:34px}
+ body.pgui .tile>i.ic svg{width:18px;height:18px}
+ body.pgui .tile>.lb{font-size:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.pgui .tile select,body.pgui .tile .ms>summary{font-size:12.5px!important}
+ body.pgui .tile .ms>summary span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+@media (max-width:960px){.h2call{margin-left:0!important}}
+body.pgui .panel .fldl{text-transform:none!important;letter-spacing:0!important;font-size:13px!important;color:var(--fg)!important}
+body.pgui .pp-ct .chips{display:flex;flex-wrap:wrap;gap:10px;margin:0}
+body.pgui .pp-ct button.on{background:linear-gradient(135deg,#6d28d9,#4f46e5)!important;border-color:transparent!important;color:#fff!important;box-shadow:0 6px 16px rgba(91,33,182,.3)}
+body.pgui .pp-ct .chips button:not(.on){background:var(--surface)!important;color:var(--fg)!important;border:1.5px solid var(--line)!important}
+body.pgui .pp-ct .chips button{flex:1 1 auto;border-radius:999px;font-size:14.5px;font-weight:700;cursor:pointer}
