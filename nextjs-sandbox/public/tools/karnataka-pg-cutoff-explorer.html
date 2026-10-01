@@ -237,7 +237,7 @@ thead tr:first-child th:nth-child(3){text-align:center}
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">College type<span id="ms-ctype"></span></div>
 <div class="fld">Course fee<span id="ms-fee"></span></div>
-<label>Sort by<select id="sortby"><option value="air">Closing AIR (default)</option><option value="feeasc">Course fee: low to high</option><option value="feedesc">Course fee: high to low</option></select></label>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="feeasc">Fees: low to high</option><option value="feedesc">Fees: high to low</option><option value="college">College</option><option value="branch">Branch</option></select></label>
 <div class="fld">Seat type<span id="ms-pool"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
@@ -348,22 +348,23 @@ function query(){
   return true});
  var sb=$('sortby').value;
  out.sort(function(a,b){
-  if(sb!=='air'){var fa=a.fee||0,fb=b.fee||0;if(!fa!==!fb)return fa?-1:1;if(fa&&fb&&fa!==fb)return sb==='feeasc'?fa-fb:fb-fa}
+  if(sb==='feeasc'||sb==='feedesc'){var fa=a.fee||0,fb=b.fee||0;if(!fa!==!fb)return fa?-1:1;if(fa&&fb&&fa!==fb)return sb==='feeasc'?fa-fb:fb-fa}
+  var k=sb==='college'?'college':(sb==='branch'?'subj':'');if(k&&a[k]!==b[k])return a[k]<b[k]?-1:1;
   var x=cv(a,rd),y=cv(b,rd);return (x==null?1e12:x)-(y==null?1e12:y)});
  return {out:out,stat:stat,ar:ar,rd:rd,show:show,text:$('q').value.trim(),qs:qs,cs:cs};
 }
 function render(){
  var Q=query(),out=Q.out,ar=Q.ar,rd=Q.rd,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4,5].map(function(n){return seat(g,n,n===rd)+ccell(g,n,n===rd)}).join('');
   return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="n fee">'+(g.fee?'₹'+g.fee.toLocaleString('en-IN'):'–')+'</td><td style="font-family:var(--mono)">'+g.code+'</td><td>'+(g.qt==='In-Service'?'<span class="qp q1">In-Service</span> ':'')+'<span class="cp">'+POOL[g.pool].replace(/ seats/,'').replace(/ college/,'')+'</span></td><td><span class="cp">'+g.cat+'</span></td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="18" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent=$('sortby').value==='air'?'Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first':'Sorted by '+$('sortby').selectedOptions[0].text.toLowerCase()+', then closing AIR';
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  var h=$('hint'),nc=Object.keys(Q.cs).length;if(ar&&nc!==1){h.hidden=false;h.textContent='Cutoffs differ by category. Pick your KEA category (for example GM) so the status reflects your own seat pool.'}else h.hidden=true;
 }

@@ -246,7 +246,7 @@ td.sn{width:64px}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <label>Roundwise<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="branch">Branch</option><option value="college">College</option><option value="city">City</option></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="fld">Course<span id="ms-st"></span></div>
 <div class="fld">Quota<span id="ms-pool"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
@@ -366,15 +366,15 @@ function query(){
 function render(){
  var Q=query(),out=Q.out,ar=Q.ar||Q.sm,rd=Q.rd,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4].map(function(n){return scell(g,n,n===rd)+ccell(g,n,n===rd)}).join('');
   return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="qc"><span class="cp">'+POOL[g.pool]+'</span></td><td class="qc"><span class="cp">'+g.cat+'</span>'+(g.sub!=='Open'?' <span class="cp">'+g.sub+'</span>':'')+'</td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="14" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by '+$('sort').selectedOptions[0].text.toLowerCase()+($('sort').value==='air'||$('sort').value==='sml'?' in '+$('round').selectedOptions[0].text+', lowest first':'');
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  $('hint').hidden=true;
 }
