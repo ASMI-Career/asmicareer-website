@@ -28,3 +28,24 @@ thead th:not(.n):not(.rg):not([colspan]){text-align:left!important}
 .chips [aria-pressed="true"],.seg [aria-pressed="true"]{background:linear-gradient(90deg,#6d28d9,#2563eb)!important;border-color:transparent!important;color:#fff!important}
 #reset{border-color:#6d28d9;color:#6d28d9;background:#fff}
 #reset:hover{background:linear-gradient(90deg,#6d28d9,#2563eb);color:#fff;border-color:transparent}
+
+/* ---- Round colours and pills, same as the Maharashtra results table ---- */
+:root:root:root table thead th.r1{--rc:#7c3aed;background:color-mix(in srgb,#7c3aed 7%,var(--surface));color:color-mix(in srgb,#7c3aed 75%,var(--fg))}
+:root:root:root table thead th.r2{--rc:#2563eb;background:color-mix(in srgb,#2563eb 7%,var(--surface));color:color-mix(in srgb,#2563eb 75%,var(--fg))}
+:root:root:root table thead th.r3{--rc:#0d9488;background:color-mix(in srgb,#0d9488 7%,var(--surface));color:color-mix(in srgb,#0d9488 75%,var(--fg))}
+:root:root:root table thead th.r4{--rc:#d97706;background:color-mix(in srgb,#d97706 7%,var(--surface));color:color-mix(in srgb,#d97706 75%,var(--fg))}
+:root:root:root table thead th.r5{--rc:#db2777;background:color-mix(in srgb,#db2777 7%,var(--surface));color:color-mix(in srgb,#db2777 75%,var(--fg))}
+:root:root:root table thead th.rg.r1,:root:root:root table thead th.rg.r2,:root:root:root table thead th.rg.r3,:root:root:root table thead th.rg.r4,:root:root:root table thead th.rg.r5{border-top:0;box-shadow:inset 0 3px 0 var(--rc);font-size:11px;letter-spacing:.1em;padding-block:7px}
+td.r1{--rc:#7c3aed}td.r2{--rc:#2563eb}td.r3{--rc:#0d9488}td.r4{--rc:#d97706}td.r5{--rc:#db2777}td.r0{--rc:#5b21b6}
+/* seats / allotted counts as round-coloured pills */
+:root:root td.sn b,:root:root td.st .sml{display:inline-block;min-width:32px;padding:1px 9px;border-radius:99px;font-family:var(--mono);font-size:12.5px;font-weight:600;line-height:1.5;text-align:center;background:color-mix(in srgb,var(--rc,#7c3aed) 11%,var(--surface));color:color-mix(in srgb,var(--rc,#7c3aed) 75%,var(--fg))}
+:root:root td.sn.sel b,:root:root td.st.sel .sml{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
+/* closing ranks: bold, dark; green when that round is selected */
+:root:root td.n:not(.sn):not(.st) .sml{font-size:14px;font-weight:600;color:var(--fg)}
+:root:root td.n.sel:not(.sn):not(.st) .sml{color:var(--good)}
+/* the combined / final column is always the green one */
+td.allr{background:var(--selbg,#e9fbf0)!important}
+:root:root td.allr .sml{color:var(--good)}
+/* state rank under the closing AIR as a round-coloured pill */
+td.n small.smlp{display:inline-block;margin-top:2px;padding:0 10px;border-radius:99px;font-size:11px;font-weight:500;line-height:1.6;font-family:var(--mono);background:color-mix(in srgb,var(--rc,#5b21b6) 11%,var(--surface));color:color-mix(in srgb,var(--rc,#5b21b6) 72%,var(--fg))}
+td.n.sel small.smlp,td.allr small.smlp{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
