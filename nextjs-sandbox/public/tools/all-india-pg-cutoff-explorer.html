@@ -354,7 +354,7 @@ $('dlp').addEventListener('click',function(){
  }catch(e){fail(e,'PDF')}
 });
 
-fetch('/data/cutoffs/MCC/pg-2026-all-india.json').then(function(r){return r.json()}).then(function(data){
+fetch('/data/cutoffs/MCC/pg-2026-all-india.json?v=20261002a').then(function(r){return r.json()}).then(function(data){
  L=data;
  var states=Array.from(new Set(L.map(function(r){return r[IDX.state]}).filter(Boolean))).sort();
  var courses=Array.from(new Set(L.map(function(r){return r[IDX.course]}).filter(Boolean))).sort();
