@@ -256,11 +256,12 @@ td.n .sml+small{margin-top:4px}
 <section class="panel" aria-label="Filters">
 <label class="wide">Search<input id="q" type="search" placeholder="College, city or branch, e.g. Kolkata Radiodiagnosis" autocomplete="off"></label>
 <label class="rank">Your AIR (All India Rank)<input id="air" type="number" min="1" inputmode="numeric" placeholder="e.g. 20000"></label>
+<label class="rank">Your SML (State Merit List no.)<input id="sml" type="number" min="1" inputmode="numeric" placeholder="e.g. 1500"></label>
 <div class="fld chipw">Cutoff type<span class="chips seg" id="cchips"></span></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <label>Round wise<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="fld">Quota<span id="ms-quota"></span></div>
 <div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
@@ -303,7 +304,7 @@ var L=D.rows.map(function(r){
  var A={n:0,la:null,ca:null,na:0,lb:null,cb:null},any=false;
  function mx(a,v){return v===null?a:(a===null||v>a?v:a)}function mn(a,v){return v===null?a:(a===null||v<a?v:a)}
  for(var k=1;k<=NR;k++){var v=r[4][String(k)];if(!v)continue;
-  g.r[k]={n:v[0],la:v[1],ca:v[2],na:v[3],lb:v[4],cb:v[5]};any=true;
+  g.r[k]={n:v[0],la:v[1],ca:v[2],na:v[3],lb:v[4],cb:v[5],sa:v[6],sb:v[7]};any=true;if(v[2]!==null&&v[2]!==undefined&&(A.ca===null||v[2]>A.ca))A.sa=v[6];if(v[5]!==null&&v[5]!==undefined&&(A.cb===null||v[5]>A.cb))A.sb=v[7];
   A.n+=v[0];A.la=mn(A.la,v[1]);A.ca=mx(A.ca,v[2]);A.na+=v[3];A.lb=mn(A.lb,v[4]);A.cb=mx(A.cb,v[5])}
  if(any)g.r[0]=A;
  var cm=CM[r[0]]||['Not stated','Government'],sp=specOf(b[0]);
@@ -349,16 +350,16 @@ makeMS('inst',insts,[],'colleges');
 $('round').innerHTML=[[0,'All rounds combined']].concat([1,2,3,4,5].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
 function pass(v,c){return v<=c?2:(v<=c*1.1?1:0)}
-function vals(x,t){if(!x)return null;var n=t==='all';var c=n?x.cb:x.ca;if(c===null||c===undefined)return null;return {c:c,l:n?x.lb:x.la,n:n?x.na:x.n}}
+function vals(x,t){if(!x)return null;var n=t==='all';var c=n?x.cb:x.ca;if(c===null||c===undefined)return null;return {c:c,l:n?x.lb:x.la,n:n?x.na:x.n,s:n?x.sb:x.sa}}
 function scell(x,on){var c='n sn'+(on?' sel':''),v=x?x.n:null;return '<td class="'+c+'">'+(v===null||v===undefined?'<span class="z">–</span>':(v?'<b>'+v+'</b>':'<span class="z">0</span>'))+'</td>'}
 function cell(x,on){var td='<td class="n'+(on?' sel':'')+'">';
  var a=vals(x,'new'),b=vals(x,'all');
- function blk(v){return '<span class="sml">'+nf(v.c)+'</span>'}
+ function blk(v){return '<span class="sml">'+nf(v.c)+'</span>'+(v.s!==null&&v.s!==undefined?'<small>SML '+nf(v.s)+'</small>':'')}
  if(CT==='new')return td+(a?blk(a):'–')+'</td>';
  if(CT==='all')return td+(b?blk(b):'–')+'</td>';
  return td+(a?blk(a):'<small>no new allotment</small>')+(b?'<small class="l2">All-round <b>'+nf(b.c)+'</b></small>':'')+'</td>'}
 function allcell(x){var td='<td class="n allr sel" title="Final closing rank: Revised Stray Vacancy if present, else the latest round it appears in">';var a=vals(x,'new'),b=vals(x,'all');
- function blk(v){return '<span class="sml">'+nf(v.c)+'</span>'}
+ function blk(v){return '<span class="sml">'+nf(v.c)+'</span>'+(v.s!==null&&v.s!==undefined?'<small>SML '+nf(v.s)+'</small>':'')}
  if(CT==='new')return td+(a?blk(a):'–')+'</td>';if(CT==='all')return td+(b?blk(b):'–')+'</td>';
  return td+(a?blk(a):'–')+(b?'<small class="l2">All-round <b>'+nf(b.c)+'</b></small>':'')+'</td>'}
 var STXT={2:'Within cutoff',1:'Borderline',0:'Above cutoff','-1':''};
@@ -366,9 +367,9 @@ function finalRank(g){for(var k=5;k>=1;k--){var x=g.r[k];if(x&&x.ca!==null&&x.ca
 function query(){
  var ss0=MS.st(),qs=MS.quota(),cs=MS.cat(),sbs=MS.sub(),is_=MS.inst(),bts=MS.btype(),sjs=MS.subj(),cts=MS.ctype(),cys=MS.city();
  function has(o){return Object.keys(o).length>0}
- var rd=+$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),ar=parseInt($('air').value,10)||0,show=$('show').value;
+ var rd=+$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),ar=parseInt($('air').value,10)||0,sm=parseInt($('sml').value,10)||0,show=$('show').value;
  function cvals(x){return vals(x,CT==='all'?'all':'new')}
- function stat(g){var v=cvals(g.r[rd]);if(!v)return -1;if(ar)return pass(ar,v.c);return -1}
+ function stat(g){var v=cvals(g.r[rd]);if(!v)return -1;if(ar)return pass(ar,v.c);if(sm)return v.s==null?-1:pass(sm,v.s);return -1}
  var out=L.filter(function(g){
   if(!cvals(g.r[rd]))return false;
   if(has(ss0)&&!ss0[g.deg])return false;
@@ -381,10 +382,10 @@ function query(){
   if(has(cts)&&!cts[g.ctype])return false;
   if(has(cys)&&!cys[g.city])return false;
   for(var ti=0;ti<t.length;ti++)if(g.hay.indexOf(t[ti])<0)return false;
-  if(ar&&(show==='within'||show==='near')){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
+  if((ar||sm)&&(show==='within'||show==='near')){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
- var so=$('sort').value;out.sort(function(a,b){var xa=cvals(a.r[(so==='air')?rd:0]),xb=cvals(b.r[(so==='air')?rd:0]),ka=xa?xa.c:1e12,kb=xb?xb.c:1e12;if(so==='city')return a.city<b.city?-1:a.city>b.city?1:(a.college<b.college?-1:a.college>b.college?1:ka-kb);if(so==='college')return a.college<b.college?-1:a.college>b.college?1:(a.subj<b.subj?-1:a.subj>b.subj?1:ka-kb);if(so==='branch')return a.subj<b.subj?-1:a.subj>b.subj?1:(a.college<b.college?-1:a.college>b.college?1:ka-kb);return ka-kb});
- return {out:out,stat:stat,ar:ar,rd:rd,show:show,text:$('q').value.trim(),qs:qs,cs:cs};
+ var so=$('sort').value;out.sort(function(a,b){var kf=so==='sml'?'s':'c',xa=cvals(a.r[(so==='air'||so==='sml')?rd:0]),xb=cvals(b.r[(so==='air'||so==='sml')?rd:0]),ka=xa&&xa[kf]!=null?xa[kf]:1e12,kb=xb&&xb[kf]!=null?xb[kf]:1e12;if(so==='city')return a.city<b.city?-1:a.city>b.city?1:(a.college<b.college?-1:a.college>b.college?1:ka-kb);if(so==='college')return a.college<b.college?-1:a.college>b.college?1:(a.subj<b.subj?-1:a.subj>b.subj?1:ka-kb);if(so==='branch')return a.subj<b.subj?-1:a.subj>b.subj?1:(a.college<b.college?-1:a.college>b.college?1:ka-kb);return ka-kb});
+ return {out:out,stat:stat,ar:ar||sm,rd:rd,show:show,text:$('q').value.trim(),qs:qs,cs:cs};
 }
 function render(){
  var Q=query(),out=Q.out,ar=Q.ar,rd=Q.rd,stat=Q.stat;
@@ -425,8 +426,8 @@ async function savePdf(){
  var line2='Degree: '+I[3][1]+'   |   Quota: '+I[4][1]+'   |   Category: '+I[5][1]+'   |   Sub quota: '+I.filter(function(x){return x[0]==='Sub quota'})[0][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
  var line3='College: '+I[6][1]+'   |   Search: '+I[7][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null||v===undefined?'-':Number(v).toLocaleString('en-IN')};
- var one=function(v){return v?'AIR '+fmt(v.c):'-'};
- var two=function(x){var a=vals(x,'new'),b=vals(x,'all');if(CT==='new')return one(a);if(CT==='all')return one(b);return (a?'New '+fmt(a.c):'New -')+'\n'+(b?'All '+fmt(b.c):'All -')};
+ var one=function(v){return v?'AIR '+fmt(v.c)+(v.s!==null&&v.s!==undefined?' (SML '+fmt(v.s)+')':''):'-'};
+ var two=function(x){var a=vals(x,'new'),b=vals(x,'all');if(CT==='new')return one(a);if(CT==='all')return one(b);return (a?'New '+fmt(a.c)+(a.s!=null?' (SML '+fmt(a.s)+')':''):'New -')+'\n'+(b?'All '+fmt(b.c)+(b.s!=null?' (SML '+fmt(b.s)+')':''):'All -')};
  var body=Q.out.map(function(g){return [asc(g.college),asc(g.subj),(QLONG[g.qt]||g.qt)+' / '+g.cat+(g.sub?' ('+g.sub+')':''),STXT[Q.stat(g)]||'',two(g.r[0])].concat([1,2,3,4,5].map(function(n){return two(g.r[n])}))});
  doc.autoTable({startY:y,head:[['College','Branch','Quota / Category','Status','Final\nAIR'].concat(['Round 1','Round 2','Round 3','Stray Vacancy','Revised Stray'].map(function(n){return n+'\nAIR'}))],body:body,
   styles:{fontSize:6,cellPadding:1,overflow:'linebreak',valign:'middle'},headStyles:{fillColor:[12,107,115],textColor:255,fontSize:6},alternateRowStyles:{fillColor:[241,246,246]},
@@ -438,11 +439,11 @@ async function savePdf(){
 }
 DLS={save:function(o){return new Promise(function(res){var type=/\.pdf$/.test(o.filename)?'application/pdf':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';var b=new Blob([o.data],{type:type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();res()},500)})}};
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
-$('reset').addEventListener('click',function(){['air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;$('sort').value='all';CT='new';document.querySelectorAll('#cchips button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===CT?'true':'false')});MS.quota.reset();document.querySelectorAll('#ms-quota input[data-v="Open"]').forEach(function(i){i.checked=true});Object.keys(MS).forEach(function(k){if(k!=='quota')MS[k].reset()});shown=LIM;render()});
+$('reset').addEventListener('click',function(){['air','sml','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;$('sort').value='air';CT='new';document.querySelectorAll('#cchips button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===CT?'true':'false')});MS.quota.reset();document.querySelectorAll('#ms-quota input[data-v="Open"]').forEach(function(i){i.checked=true});Object.keys(MS).forEach(function(k){if(k!=='quota')MS[k].reset()});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
 window.addEventListener('resize',sticky);
 ['round','show','sort'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});
-['q','air'].forEach(function(i){$(i).addEventListener('input',function(){shown=LIM;render()})});
+['q','air','sml'].forEach(function(i){$(i).addEventListener('input',function(){shown=LIM;render()})});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 if(window.innerWidth<=640)$('fx').removeAttribute('open');
 render();sticky();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sticky);
