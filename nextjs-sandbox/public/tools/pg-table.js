@@ -6,14 +6,14 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null,cenCols=[];
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
     var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
     if(th.rowSpan>1&&cs===1){if(/^college$/i.test(t)){cCol=i;thC=th}else if(/^branch$/i.test(t)){bCol=i;thB=th}}
-    if(th.rowSpan>1&&cs===1){if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
+    if(th.rowSpan>1&&cs===1){if(/^quota\s*\/\s*cat/i.test(t))cenCols.push(i);else if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
   /* add an "SML No." header next to every closing-rank column that carries a state rank */
   function headerSML(cols){
@@ -41,7 +41,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
    var rows=[].filter.call(tb.rows,function(tr){return tr.cells.length>=3&&!tr.getAttribute('data-pg')});
    rows.forEach(function(tr){
     [].forEach.call(tr.cells,function(td,i){
-     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');
+     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');if(cenCols.indexOf(i)>=0)td.classList.add('pgcen');
      if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
      if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
       if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
