@@ -277,7 +277,7 @@ body.pgui thead th:not(.pgc1):not(.pgc2){left:auto!important}
 body.pgui tbody td:not(.pgc1):not(.pgc2){position:static!important;left:auto!important}
 body.pgui tbody tr:hover td.pgc1,body.pgui tbody tr:hover td.pgc2{background:color-mix(in srgb,var(--accent) 5%,var(--surface))}
 @media (max-width:900px){
- body.pgui th.pgc1,body.pgui td.pgc1{width:190px!important;min-width:190px!important;max-width:190px!important;box-shadow:1px 0 0 var(--line),8px 0 10px -8px rgba(46,16,101,.3)}
+ body.pgui th.pgc1,body.pgui td.pgc1{width:214px!important;min-width:214px!important;max-width:214px!important;box-shadow:1px 0 0 var(--line),8px 0 10px -8px rgba(46,16,101,.3)}
  body.pgui th.pgc2,body.pgui td.pgc2{position:static!important;left:auto!important;width:150px!important;min-width:150px!important;max-width:150px!important;box-shadow:none}
  body.pgui thead th.pgc2{position:sticky!important;top:0}
  body.pgui #body td.c{padding-left:48px!important}
@@ -320,3 +320,9 @@ td.smlc .smlnum{font-size:13.5px;font-weight:700;min-width:40px}
 /* quota / category pills centred */
 body.pgui td.pgq,body.pgui td.pgc{text-align:center}
 body.pgui td.pgc .cp+.cp{margin-left:4px}
+
+/* more room between the row number and the college name; category cells centred in every state */
+body.pgui #body td.c{padding-left:68px!important}
+body.pgui #body td.c::before{left:16px!important;width:34px;min-width:34px!important;padding:0!important;justify-content:center}
+body.pgui td.pgq,body.pgui td.pgc,body.pgui td.pgcen,body.pgui td.catc,body.pgui td.ct{text-align:center!important}
+@media (max-width:900px){body.pgui #body td.c{padding-left:60px!important}body.pgui #body td.c::before{left:12px!important}}

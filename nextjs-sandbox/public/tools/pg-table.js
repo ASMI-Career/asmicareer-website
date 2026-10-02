@@ -6,14 +6,14 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null,cenCols=[];
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
     var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
     if(th.rowSpan>1&&cs===1){if(/^college$/i.test(t)){cCol=i;thC=th}else if(/^branch$/i.test(t)){bCol=i;thB=th}}
-    if(th.rowSpan>1&&cs===1){if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
+    if(th.rowSpan>1&&cs===1){if(/^quota\s*\/\s*cat/i.test(t))cenCols.push(i);else if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
   /* add an "SML No." header next to every closing-rank column that carries a state rank */
   function headerSML(cols){
@@ -41,7 +41,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
    var rows=[].filter.call(tb.rows,function(tr){return tr.cells.length>=3&&!tr.getAttribute('data-pg')});
    rows.forEach(function(tr){
     [].forEach.call(tr.cells,function(td,i){
-     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');
+     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');if(cenCols.indexOf(i)>=0)td.classList.add('pgcen');
      if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
      if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
       if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
@@ -132,6 +132,33 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
     if(el.classList.contains('actions'))return;
     var lb=lbl(el);if(!lb)return;var k=kind(lb.textContent);
     el.classList.add('tile');el.setAttribute('data-t',k[1]);el.insertBefore(ic(k[0],k[1]),el.firstChild)});
+   /* Show and Round wise use the same dropdown panel as the other filters (Degree, Quota ...) instead of the browser's own list */
+   var pgsels=[];
+   ['show','round'].forEach(function(id){
+    var sel=d.getElementById(id);if(!sel||!sel.closest('.tile'))return;
+    var host=d.createElement('span');host.className='pgsel-host';
+    var dt=d.createElement('details');dt.className='ms pgsel';
+    var sm=d.createElement('summary');sm.innerHTML='<span></span>';dt.appendChild(sm);
+    var menu=d.createElement('div');menu.className='menu';dt.appendChild(menu);host.appendChild(dt);
+    sel.parentNode.insertBefore(host,sel);sel.style.display='none';
+    function build(){
+     menu.innerHTML='';
+     [].forEach.call(sel.options,function(o){
+      var lab=d.createElement('label'),inp=d.createElement('input');inp.type='radio';inp.name='pgs-'+id;inp.value=o.value;
+      lab.appendChild(inp);lab.appendChild(d.createTextNode(' '+o.textContent));menu.appendChild(lab)})}
+    function sync(){
+     var o=sel.options[sel.selectedIndex];sm.firstChild.textContent=o?o.textContent:'';
+     [].forEach.call(menu.querySelectorAll('input'),function(i){i.checked=(i.value===sel.value)})}
+    menu.addEventListener('change',function(e){
+     var v=e.target.value;if(v===undefined)return;
+     sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}));sync();dt.removeAttribute('open')});
+    build();sync();pgsels.push(sync);
+    new MutationObserver(function(){build();sync()}).observe(sel,{childList:true})});
+   if(pgsels.length){
+    var all=function(){pgsels.forEach(function(f){f()})};
+    var tb2=d.getElementById('body');if(tb2)new MutationObserver(all).observe(tb2,{childList:true});
+    d.addEventListener('change',function(){setTimeout(all,0)});
+    var rs=d.getElementById('reset');if(rs)rs.addEventListener('click',function(){setTimeout(all,0)})}
    var act=fxg.querySelector('.actions');
    if(!act){act=d.createElement('div');act.className='actions';fxg.appendChild(act)}
    act.style.display='none'}
