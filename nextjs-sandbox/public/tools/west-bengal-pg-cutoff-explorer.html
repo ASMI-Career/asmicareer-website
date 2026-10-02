@@ -337,7 +337,7 @@ makeMS('cat',[["UR", "UR"], ["EWS", "EWS"], ["SC", "SC"], ["ST", "ST"], ["OBC-A"
 (function(){
  var c=$('cchips');[['new','New allotment'],['all','All-round'],['both','Both']].forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.dataset.c=x[0];b.setAttribute('aria-pressed',x[0]===CT?'true':'false');c.appendChild(b)});
  c.addEventListener('click',function(e){var v=e.target.dataset&&e.target.dataset.c;if(!v)return;CT=v;c.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===CT?'true':'false')});shown=LIM;render()})})();
-var insts=D.inst.map(function(name,i){return [String(i),tidy(name)]}).sort(function(a,b){return a[1]<b[1]?-1:1});
+var insts=D.inst.map(function(name,i){return [String(i),PN[i]||tidy(name)]}).sort(function(a,b){return a[1]<b[1]?-1:1});
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 var subjs={};L.forEach(function(g){subjs[g.subj]=1});
 makeMS('subj',Object.keys(subjs).sort().map(function(x){return [x,x]}),[],'branches');
