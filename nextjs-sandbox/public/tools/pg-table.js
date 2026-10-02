@@ -132,6 +132,33 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
     if(el.classList.contains('actions'))return;
     var lb=lbl(el);if(!lb)return;var k=kind(lb.textContent);
     el.classList.add('tile');el.setAttribute('data-t',k[1]);el.insertBefore(ic(k[0],k[1]),el.firstChild)});
+   /* Show and Round wise use the same dropdown panel as the other filters (Degree, Quota ...) instead of the browser's own list */
+   var pgsels=[];
+   ['show','round'].forEach(function(id){
+    var sel=d.getElementById(id);if(!sel||!sel.closest('.tile'))return;
+    var host=d.createElement('span');host.className='pgsel-host';
+    var dt=d.createElement('details');dt.className='ms pgsel';
+    var sm=d.createElement('summary');sm.innerHTML='<span></span>';dt.appendChild(sm);
+    var menu=d.createElement('div');menu.className='menu';dt.appendChild(menu);host.appendChild(dt);
+    sel.parentNode.insertBefore(host,sel);sel.style.display='none';
+    function build(){
+     menu.innerHTML='';
+     [].forEach.call(sel.options,function(o){
+      var lab=d.createElement('label'),inp=d.createElement('input');inp.type='radio';inp.name='pgs-'+id;inp.value=o.value;
+      lab.appendChild(inp);lab.appendChild(d.createTextNode(' '+o.textContent));menu.appendChild(lab)})}
+    function sync(){
+     var o=sel.options[sel.selectedIndex];sm.firstChild.textContent=o?o.textContent:'';
+     [].forEach.call(menu.querySelectorAll('input'),function(i){i.checked=(i.value===sel.value)})}
+    menu.addEventListener('change',function(e){
+     var v=e.target.value;if(v===undefined)return;
+     sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}));sync();dt.removeAttribute('open')});
+    build();sync();pgsels.push(sync);
+    new MutationObserver(function(){build();sync()}).observe(sel,{childList:true})});
+   if(pgsels.length){
+    var all=function(){pgsels.forEach(function(f){f()})};
+    var tb2=d.getElementById('body');if(tb2)new MutationObserver(all).observe(tb2,{childList:true});
+    d.addEventListener('change',function(){setTimeout(all,0)});
+    var rs=d.getElementById('reset');if(rs)rs.addEventListener('click',function(){setTimeout(all,0)})}
    var act=fxg.querySelector('.actions');
    if(!act){act=d.createElement('div');act.className='actions';fxg.appendChild(act)}
    act.style.display='none'}
