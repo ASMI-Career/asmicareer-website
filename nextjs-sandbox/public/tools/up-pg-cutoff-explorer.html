@@ -284,7 +284,7 @@ makeMS('sub',[['PH','PH (disability)']],[],'sub-quotas');
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 var subs={};D.br.forEach(function(b){subs[b[0]]=1});
 makeMS('subj',Object.keys(subs).sort().map(function(s){return [s,s]}),[],'branches');
-var insts=D.inst.map(function(c,i){return [String(i),c[2]+' ('+c[0]+' '+c[1]+')']}).sort(function(a,b){return a[1]<b[1]?-1:1});
+var CANON={},seenN={};D.inst.forEach(function(c,i){if(seenN[c[2]]===undefined)seenN[c[2]]=i;CANON[i]=String(seenN[c[2]])});var insts=D.inst.map(function(c,i){return [String(i),c[2]]}).filter(function(x){return CANON[x[0]]===x[0]}).sort(function(a,b){return a[1]<b[1]?-1:1});
 var cities={};D.inst.forEach(function(c){cities[c[5]]=1});
 var cats={'Government':1,'Private':1,'Private University':1},unis={};D.inst.forEach(function(c){unis[c[7]]=1});
 makeMS('ctype',Object.keys(cats).sort().map(function(c){return [c,c]}),[],'college statuses');
@@ -317,7 +317,7 @@ function query(){
   if(has(ss)&&!ss[g.sub])return false;
   if(has(js)&&!js[g.subj])return false;
   if(has(bs)&&!bs[g.bt])return false;
-  if(has(is)&&!is[g.inst])return false;
+  if(has(is)&&!is[CANON[g.inst]])return false;
   if(has(ts)&&!ts[g.ctype])return false;
   if(has(us)&&!us[g.univ])return false;
   if(has(ys)&&!ys[g.city])return false;

@@ -321,7 +321,7 @@ makeMS('ctype',uniq(function(g){return g.ct}).map(function(x){return [x,x]}),[],
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 makeMS('subj',uniq(function(g){return g.spec}).map(function(x){return [x,x]}),[],'branches');
 makeMS('city',uniq(function(g){return g.city}).map(function(x){return [x,x]}),[],'cities');
-var seenC={};makeMS('inst',L.filter(function(g){if(seenC[g.ck])return false;seenC[g.ck]=1;return true}).map(function(g){return [g.ck,g.college+' ('+g.state+')']}).sort(function(a,b){return a[1]<b[1]?-1:1}),[],'colleges');
+var seenC={};makeMS('inst',L.filter(function(g){if(seenC[g.ck])return false;seenC[g.ck]=1;return true}).map(function(g){return [g.ck,g.college]}).sort(function(a,b){return a[1]<b[1]?-1:1}),[],'colleges');
 $('round').innerHTML=[[0,'All rounds combined']].concat([1,2,3,4,5,6].map(function(n){return [n,'Round '+n]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
 function pass(v,c){return v<=c?2:(v<=c*1.1?1:0)}
