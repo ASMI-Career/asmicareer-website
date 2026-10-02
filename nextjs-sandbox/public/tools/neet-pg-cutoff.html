@@ -96,7 +96,8 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:'Plus Jakarta San
 .tabs::-webkit-scrollbar{display:none}
 .tab{color:#fff;text-decoration:none;font-weight:600;font-size:13.5px;padding:7px 14px;border-radius:999px;white-space:nowrap;border:1px solid rgba(255,255,255,.18)}
 .tab:hover{background:rgba(255,255,255,.16)}
-.smenu{position:relative;flex:none}
+.tabs{display:none!important}
+.smenu{position:relative;flex:none;margin-left:auto}
 #smbtn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:13.5px;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 14px;cursor:pointer}
 #smbtn:hover,#smbtn[aria-expanded="true"]{background:#fff;color:var(--hero1)}
 #smbtn .chev{transition:transform .15s}#smbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
@@ -259,7 +260,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){drawMenu(active);tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261001n'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261002a'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
