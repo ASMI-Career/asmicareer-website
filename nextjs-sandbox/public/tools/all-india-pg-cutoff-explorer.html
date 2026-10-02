@@ -208,7 +208,7 @@ function makeMS(id,items,defaults,noun){
  function filt(){var q=(menu.querySelector('.msq')||{value:''}).value.trim().toLowerCase().split(/\s+/).filter(Boolean),n=0;menu.querySelectorAll('label').forEach(function(l){var s=l.textContent.toLowerCase(),ok=q.every(function(w){return s.indexOf(w)>=0});l.style.display=ok?'':'none';if(ok)n++});var e=menu.querySelector('.nomatch');if(!e){e=document.createElement('div');e.className='nomatch';e.textContent='No match';menu.appendChild(e)}e.style.display=n?'none':''}
  var sq=menu.querySelector('.msq');if(sq){sq.addEventListener('input',filt);sq.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var f=Array.prototype.filter.call(menu.querySelectorAll('label'),function(l){return l.style.display!=='none'});if(f.length===1)f[0].querySelector('input').click()}})}
  d.addEventListener('toggle',function(){if(d.open&&sq){sq.value='';filt();setTimeout(function(){sq.focus()},30)}});
- label();MS[id]=function(){return sel};MS[id].reset=function(){sel={};(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x]})};
+ label();MS[id]=function(){return sel};MS[id].reset=function(clr){sel={};if(!clr)(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x]})};
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 
@@ -282,7 +282,7 @@ $('sort').addEventListener('change',function(){shown=LIM;render()});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 $('reset').addEventListener('click',function(){
  $('q').value='';$('rank').value='';$('show').value='all';$('sort').value='air';$('round').value='r0';
- ['qt','cat','state','subj','inst','city'].forEach(function(id){if(MS[id])MS[id].reset()});
+ ['qt','cat','state','subj','inst','city'].forEach(function(id){if(MS[id])MS[id].reset(true)});
  shown=LIM;render();
 });
 
