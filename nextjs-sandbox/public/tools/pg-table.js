@@ -13,7 +13,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
     var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
     if(th.rowSpan>1&&cs===1){if(/^college$/i.test(t)){cCol=i;thC=th}else if(/^branch$/i.test(t)){bCol=i;thB=th}}
-    if(th.rowSpan>1&&cs===1){if(/^quota\s*\/\s*cat/i.test(t))cenCols.push(i);else if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
+    if(th.rowSpan>1&&cs===1){if(/^(quota\s*\/\s*cat|minority)/i.test(t))cenCols.push(i);else if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
   /* add an "SML No." header next to every closing-rank column that carries a state rank */
   function headerSML(cols){
