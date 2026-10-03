@@ -285,7 +285,7 @@ var $=function(i){return document.getElementById(i)};
 var POOL={R:'Regular seats',M:'Muslim-minority (MSM) seats'},POOLS={R:'',M:'Muslim'},QLONG={MQ1:'MQ1 - Management',MQ2:'NRI (MQ2)',MQ3:'MQ3 - College-sponsored'};
 var RN=['','Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'];
 var NR=6;
-var QSEL={MQ1:1},CT='new';function QL(q){return {MQ1:'All India Quota',MQ2:'NRI',MQ3:'College Sponsored'}[q]||q}
+var QSEL={MQ1:1},CT='new';function QL(q){return {MQ1:'All India Quota',MQ2:'NRI',MQ3:'College Internal Quota'}[q]||q}
 var L=D.rows.map(function(r){
  var c=D.inst[r[0]],b=D.br[r[1]],code=c[0],
  g={inst:r[0],icode:c[0],college:c[1],city:c[2],deg:b[2],subj:b[0],bt:b[1],cat:r[2],code:code,pool:r[3],qt:r[4],r:{}};
@@ -322,7 +322,7 @@ document.addEventListener('click',function(e){document.querySelectorAll('details
 
 var DEGN={MD:'MD',MS:'MS',DNB:'DNB',Diploma:'Diploma'};
 makeMS('st',[['MD/MS','MD/MS']],[],'degrees');
-makeMS('quota',[['MQ1','All India Quota'],['MQ2','NRI'],['MQ3','College Sponsored']],['MQ1'],'quotas');
+makeMS('quota',[['MQ1','All India Quota'],['MQ2','NRI'],['MQ3','College Internal Quota']],['MQ1'],'quotas');
 (function(){
  var c=$('cchips');[['new','New allotment'],['all','All-round'],['both','Both']].forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.dataset.c=x[0];b.setAttribute('aria-pressed',x[0]===CT?'true':'false');c.appendChild(b)});
  c.addEventListener('click',function(e){var v=e.target.dataset&&e.target.dataset.c;if(!v)return;CT=v;c.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c===CT?'true':'false')});shown=LIM;render()})})();
