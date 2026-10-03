@@ -227,6 +227,7 @@ td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;color
 /* Haryana columns: College | Branch | Quota | All rounds | (Allotted, Closing AIR) x 4 | Your rank */
 thead tr:first-child th:nth-child(3),thead tr:first-child th:nth-child(4){text-align:left}
 td.ct{white-space:nowrap}
+td.ct .sp{font-weight:600;font-size:12.5px;color:var(--fg);margin-left:2px}
 td.qc{white-space:nowrap;min-width:170px;width:170px}
 table{min-width:1450px}
 td.n.st .sml{font-weight:600;color:var(--ink)}
@@ -276,7 +277,7 @@ var $=function(i){return document.getElementById(i)};
 var POOL={ST:'State Quota',MG:'All India Quota',NR:'NRI',MI:'Muslim Minority Quota'};
 var POOLORDER=['ST','MG','NR','MI'];
 var RN=['','Round 1','Round 2','Round 3','Round 4 (stray)'];
-var NR=4;function QS(g){return g.tg.join(' · ')}function QN(g){var x=QS(g);return POOL[g.pool]+(x?' ('+x+')':'')}
+var NR=4;function QS(g){return g.tg.join(' ')}function QN(g){return POOL[g.pool]}
 var L=D.rows.map(function(r){
  var c=D.inst[r[0]],b=D.br[r[1]],
  g={ct:c[4],inst:r[0],icode:c[0],college:c[1],city:c[2],deg:(b[2]==='Diploma'?'Diploma':'MD/MS'),subj:b[0],bt:b[1],pool:r[2],cat:r[7]||'',tg:r[8]||[],r:{},s:{},a:{},h:{},cf:{}};
@@ -369,7 +370,7 @@ function render(){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   var rc=[1,2,3,4].map(function(n){return seatc(g,n,n===rd)+scell(g,n,n===rd)+ccell(g,n,n===rd)}).join('');
-  return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="qc"><span class="cp">'+POOL[g.pool]+'</span>'+(QS(g)?'<span class="vac">'+QS(g)+'</span>':'')+'</td><td class="ct"><span class="cp">'+(g.cat||'\u2013')+'</span></td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
+  return '<tr><td class="c">'+g.college+'</td><td class="br">'+g.subj+'</td><td class="qc"><span class="cp">'+POOL[g.pool]+'</span></td><td class="ct"><span class="cp">'+(g.cat||'\u2013')+'</span>'+(QS(g)?' <span class="sp">'+QS(g)+'</span>':'')+'</td>'+ccell(g,0,false)+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="14" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by closing AIR in '+$('round').selectedOptions[0].text+', lowest first';
@@ -386,7 +387,7 @@ function info(Q){
   ['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College Type',MS.ctype.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length],['Your SML',Q.sm||'not entered']];
 }
 function rowsFor(Q){
- return Q.out.map(function(g){var r=[g.college,g.city,g.deg,g.subj,g.bt,QN(g),STXT[Q.stat(g)]||'',g.ct];r.cat=g.cat;
+ return Q.out.map(function(g){var r=[g.college,g.city,g.deg,g.subj,g.bt,QN(g),STXT[Q.stat(g)]||'',g.ct];r.cat=[g.cat].concat(g.tg).filter(Boolean).join(' ');
   r.push(cv(g,0,'new'),g.a[0]!=null?g.a[0]:cv(g,0,'new'));
   [1,2,3,4].forEach(function(n){r.push(g.s[n]!=null?g.s[n]:null,acount(g,n),cv(g,n,'new'),g.a[n]!=null?g.a[n]:cv(g,n,'new'))});r.push(cs(g,0,'new'),g.as[0]!=null?g.as[0]:cs(g,0,'new'));[1,2,3,4].forEach(function(n){r.push(cs(g,n,'new'),g.as[n]!=null?g.as[n]:cs(g,n,'new'))});return r})
 }
