@@ -262,7 +262,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){drawMenu(active);tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261003w'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261003x'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
