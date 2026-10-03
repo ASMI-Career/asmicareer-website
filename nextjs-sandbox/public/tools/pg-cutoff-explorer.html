@@ -236,6 +236,7 @@ th.st{text-align:center}
 .brand{align-items:center}
 .brand h1{margin:0}
 .brand .help{margin:4px 0 0;font-size:15px}
+@media (min-width:961px){body.pgui .fxg.fxg{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -249,17 +250,18 @@ th.st{text-align:center}
 <label class="rank">Your SML (State rank)<input id="rank" type="number" min="1" inputmode="numeric" placeholder="e.g. 1500"></label>
 <div class="fld wide">Cutoff type<div class="chips" id="chips" role="group" aria-label="Cutoff type"><button type="button" class="chip" data-v="new" aria-pressed="true">New allotment</button><button type="button" class="chip" data-v="all" aria-pressed="false">All-round</button><button type="button" class="chip" data-v="both" aria-pressed="false">Both</button></div><input type="hidden" id="cut" value="new"></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
-<label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
-<label>Round wise cutoff<select id="round"></select></label>
-<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option></select></label>
+<label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
 <div class="fld">Quota<span id="ms-qt"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
-<div class="fld">Sub-quota<span id="ms-sub"></span></div>
+<div class="fld">Special Reservation<span id="ms-sub"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
+<div class="fld">Course<span id="ms-crs"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
-<div class="fld">College type<span id="ms-ctype"></span></div>
-<div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">College Type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
+<label>Round<select id="round"></select></label>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
 </section>
@@ -277,7 +279,7 @@ var $=function(i){return document.getElementById(i)};
 var G={};
 D.rows.forEach(function(r){var k=r[1]+'|'+r[3]+'|'+r[4]+'|'+r[5];var g=G[k];if(!g){g={inst:r[0],code:r[1],subj:D.subs[r[2]],qt:D.qt[r[3]],cat:D.cats[r[4]],sub:D.sb[r[5]],qi:r[3],ci:r[4],bi:r[5],bt:D.stype[r[2]],cet:D.scet[r[2]],r:{}};G[k]=g}g.r[r[6]]={c:r[7],a:r[8],ac:r[9],aa:r[10]}});
 var SEAT=D.seats||{};
-var L=Object.keys(G).map(function(k){var g=G[k],c=D.colls[g.inst];g.college=c[0];g.city=c[1];g.ctype=c[2];g.s=SEAT[g.code+'|'+g.qi+'|'+g.ci+'|'+g.bi]||[];g.hay=(c[0]+' '+c[1]+' '+g.code+' '+g.subj+' '+g.cet+' '+g.bt+' '+c[2]).toLowerCase();return g});
+var L=Object.keys(G).map(function(k){var g=G[k],c=D.colls[g.inst];g.college=c[0];g.city=c[1];g.ctype=c[2];g.s=SEAT[g.code+'|'+g.qi+'|'+g.ci+'|'+g.bi]||[];g.crs=/^Diploma/.test(g.subj)?'Diploma':'MD/MS';g.hay=(c[0]+' '+c[1]+' '+g.code+' '+g.subj+' '+g.cet+' '+g.bt+' '+c[2]).toLowerCase();return g});
 function nf(v){var r=Math.round(v*1000)/1000;return Number.isInteger(r)?r.toLocaleString('en-IN'):String(r)}
 var LIM=150,shown=LIM;
 /* multi-select dropdowns; empty selection means no filter */
@@ -299,11 +301,14 @@ function makeMS(id,items,defaults,noun){
  label();MS[id]=function(){return sel};MS[id].reset=function(clr){sel={};if(!clr)(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x[0]]}).map(function(x){return x[1]})};
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
-var QT=[['State','State quota'],['In-Service','In-Service quota'],['NRI','NRI quota'],['Institute Quota (I.Q.)','Institute quota (I.Q.)']];
+var QT=[['State','State Quota'],['In-Service','In Service'],['Institute Quota (I.Q.)','Institute Quota'],['NRI','NRI']];
+function QL(q){return {'State':'State Quota','In-Service':'In Service','Institute Quota (I.Q.)':'Institute Quota','NRI':'NRI'}[q]||q}
+function SUBL(x){return {PH:'PwD',Minority:'Muslim Minority'}[x]||x}
 var CO=['OPEN','OBC','EWS','SC','ST','SEBC','VJA','NTB','NTC','NTD'];
 makeMS('qt',QT,['State'],'quotas');
 makeMS('cat',CO.filter(function(c){return D.cats.indexOf(c)>=0}).map(function(c){return [c,c]}),['OBC'],'categories');
-makeMS('sub',[['Regular','Regular seats'],['PH','PH (disability)'],['Orphan','Orphan'],['Minority','Minority']],['Regular'],'seat types');
+makeMS('sub',[['PH','PwD'],['Orphan','Orphan'],['Minority','Muslim Minority']],[],'special reservations');
+makeMS('crs',[['MD/MS','MD/MS'],['Diploma','Diploma']],[],'courses');
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 makeMS('subj',D.subs.map(function(s){return [s,s]}).sort(function(a,b){return a[0]<b[0]?-1:1}),[],'branches');
 var insts=Object.keys(D.colls).map(function(i){var c=D.colls[i];return [i,c[0]]}).sort(function(a,b){return a[1]<b[1]?-1:1});
@@ -311,7 +316,7 @@ var cities={};Object.keys(D.colls).forEach(function(i){cities[D.colls[i][1]]=1})
 makeMS('ctype',[['Government','Government'],['Private','Private']],[],'college types');
 makeMS('city',Object.keys(cities).sort().map(function(c){return [c,c]}),[],'cities');
 makeMS('inst',insts,[],'colleges');
-$('round').innerHTML=[[0,'All rounds combined'],[1,'Round 1'],[2,'Round 2'],[3,'Round 3'],[4,'Round 4 (stray 1)'],[5,'Round 5 (stray 2)']].map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
+$('round').innerHTML=[[0,'All Rounds'],[1,'Round 1'],[2,'Round 2'],[3,'Round 3'],[4,'Round 4 (stray 1)'],[5,'Round 5 (stray 2)']].map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
 function pass(v,c){return c==null?-1:(v<=c?2:(v<=c*1.1?1:0))}
 var CT='new',CUTL={new:'New allotment',all:'All-round',both:'Both (New + All-round)'};
@@ -328,7 +333,7 @@ function cell2(x,on,n){return cell1(x,on,n)}
 function scell(v,on,n){var c='sn k r'+n+(on?' sel':'');if(v===null||v===undefined)return '<td class="'+c+'" title="Seat matrix for this round does not cover this college"><span class="nil">–</span></td>';return '<td class="'+c+'"><span class="seat'+(v>0?'':' z')+'">'+v+'</span></td>'}
 var STXT={2:'Within cutoff',1:'Borderline',0:'Above cutoff','-1':''};
 function query(){
- var qs=MS.qt(),cs=MS.cat(),ss=MS.sub(),js=MS.subj(),is=MS.inst(),ts=MS.ctype(),ys=MS.city(),bs=MS.btype();
+ var qs=MS.qt(),cs=MS.cat(),ss=MS.sub(),crs=MS.crs(),js=MS.subj(),is=MS.inst(),ts=MS.ctype(),ys=MS.city(),bs=MS.btype();
  function has(o){return Object.keys(o).length>0}
  CT=$('cut').value;var rd=+$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),rk=parseInt($('rank').value,10)||0,ar=parseInt($('air').value,10)||0,show=$('show').value,by=$('sortby').value;
  function stat(g){var x=eff(g.r[rd]),s=3;if(!x)return -1;if(rk)s=Math.min(s,pass(rk,x.c));if(ar)s=Math.min(s,pass(ar,x.a));return s===3?-1:s}
@@ -337,6 +342,7 @@ function query(){
   if(has(qs)&&!qs[g.qt])return false;
   if(has(cs)&&g.cat!=='All'&&!cs[g.cat])return false;
   if(has(ss)&&!ss[g.sub])return false;
+  if(has(crs)&&!crs[g.crs])return false;
   if(has(js)&&!js[g.subj])return false;
   if(has(bs)&&!bs[g.bt])return false;
   if(has(is)&&!is[g.inst])return false;
@@ -355,7 +361,7 @@ function render(){
  var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
-  return '<tr><td class="c"><span class="nm">'+g.college+'</span></td><td class="br"><span class="nm">'+g.subj+'</span></td><td style="font-family:var(--mono)">'+g.code+'</td><td><span class="qp q'+g.qi+'">'+g.qt.replace(' (I.Q.)','')+'</span>'+(g.sub!=='Regular'?' <span class="cp">'+g.sub+'</span>':'')+'</td><td>'+(g.cat==='All'?'–':'<span class="cp">'+g.cat+'</span>')+'</td>'+cell2(g.r[0],rd===0,0)+[1,2,3,4,5].map(function(n){return scell(g.s[n-1],n===rd,n)+cell2(g.r[n],n===rd,n)}).join('')+'<td class="st">'+st+'</td></tr>'});
+  return '<tr><td class="c"><span class="nm">'+g.college+'</span></td><td class="br"><span class="nm">'+g.subj+'</span></td><td style="font-family:var(--mono)">'+g.code+'</td><td><span class="qp q'+g.qi+'">'+QL(g.qt)+'</span>'+(g.sub!=='Regular'?' <span class="cp">'+SUBL(g.sub)+'</span>':'')+'</td><td>'+(g.cat==='All'?'–':'<span class="cp">'+g.cat+'</span>')+'</td>'+cell2(g.r[0],rd===0,0)+[1,2,3,4,5].map(function(n){return scell(g.s[n-1],n===rd,n)+cell2(g.r[n],n===rd,n)}).join('')+'<td class="st">'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="17" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+((rk||ar)?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent=CUTL[CT]+' cutoff | sorted by closing '+(by==='air'?'AIR':'SML')+' in '+$('round').selectedOptions[0].text+', lowest first'+(CT==='both'?' | grey "all" line shows the All cutoff when it differs':'');
@@ -368,14 +374,14 @@ function browserSave(o){return new Promise(function(res){var b=new Blob([o.data]
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- var f=[['Your SML (State rank)',Q.rk||'not entered'],['Your AIR (All India Rank)',Q.ar||'not entered'],['Round wise cutoff',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],
-  ['Sorted by','Closing '+(Q.by==='air'?'AIR':'SML')],['Quota',MS.qt.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Sub-quota',MS.sub.labels().join(', ')||'All'],
-  ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['College type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Seat groups in this report',Q.out.length]];
+ var f=[['Your SML (State rank)',Q.rk||'not entered'],['Your AIR (All India Rank)',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],
+  ['Sorted by','Closing '+(Q.by==='air'?'AIR':'SML')],['Quota',MS.qt.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Special Reservation',MS.sub.labels().join(', ')||'All'],['Course',MS.crs.labels().join(', ')||'All'],
+  ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['College Type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Seat groups in this report',Q.out.length]];
  f.push(['Cutoff type',CUTL[$('cut').value]]);
  return f;
 }
 function rowsFor(Q){
- return Q.out.map(function(g){var r=[g.college,g.ctype,g.city,g.code,g.subj,g.bt,g.qt.replace(' (I.Q.)',''),g.cat==='All'?'-':g.cat,g.sub,STXT[Q.stat(g)]||''];
+ return Q.out.map(function(g){var r=[g.college,g.ctype,g.city,g.code,g.subj,g.bt,QL(g.qt),g.cat==='All'?'-':g.cat,SUBL(g.sub),STXT[Q.stat(g)]||''];
   function g4(x){return x?[x.c==null?null:x.c,x.c==null?null:x.a,x.ac==null?null:x.ac,x.ac==null?null:x.aa]:[null,null,null,null]}
   r=r.concat(g4(g.r[0]));[1,2,3,4,5].forEach(function(n){var s=g.s[n-1];r.push(s===undefined?null:s);r=r.concat(g4(g.r[n]))});return r})
 }
@@ -388,7 +394,7 @@ async function saveXlsx(){
  var wb=XLSX.utils.book_new();
  var ws0=XLSX.utils.aoa_to_sheet([['Maharashtra NEET-PG 2025 cutoff report',''],[BRAND,HELP],['Prepared',stamp()]].concat(info(Q),[['',''],['Notes','New-allotment cutoff = closing SML and AIR of the last-ranked fresh allotment in each round (from Round 2, Retained / No Change / No Preference candidates are not counted). All cutoff = last-ranked candidate among everyone allotted on that round\'s list, including Retained / No Change / No Preference. Round 1 has no such candidates, so both are the same there. The status and sorting follow the Cutoff type you selected (Both uses New allotment, or All where a round had no fresh allotment). In-Service SML is a separate list; compare In-Service seats by AIR. Borderline means up to 10% above the closing figure. 2025 data; verify with the current CET Cell notice.']]));
  ws0['!cols']=[{wch:36},{wch:90}];XLSX.utils.book_append_sheet(wb,ws0,'Report Info');
- var H=['College Name','Gov/Private','City','Course Code','Branch','Clinical / Non-Clinical','Quota','Category','Sub-quota','Status'];
+ var H=['College Name','Gov/Private','City','Course Code','Branch','Clinical / Non-Clinical','Quota','Category','Special Reservation','Status'];
  H.push('All rounds New-allotment SML','All rounds New-allotment AIR','All rounds All-cutoff SML','All rounds All-cutoff AIR');['Round 1','Round 2','Round 3','Round 4','Round 5'].forEach(function(n){H.push(n+' Available Seats',n+' New-allotment SML',n+' New-allotment AIR',n+' All-cutoff SML',n+' All-cutoff AIR')});
  var ws=XLSX.utils.aoa_to_sheet([H].concat(rowsFor(Q).map(function(r){return r.map(function(v){return v===null?'':v})})));
  ws['!cols']=[{wch:60},{wch:12},{wch:18},{wch:11},{wch:36},{wch:16},{wch:14},{wch:11},{wch:11},{wch:14}].concat(H.slice(10).map(function(){return {wch:13}}));
@@ -410,8 +416,8 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[1],I[2],I[3]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(asc(line1),10,y);y+=4.5;
- var line2='Cutoff type: '+I[I.length-1][1]+'   |   Quota: '+I[5][1]+'   |   Category: '+I[6][1]+'   |   Sub-quota: '+I[7][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
- var line3='Branch: '+I[8][1]+'   |   Type: '+I[9][1]+'   |   College type: '+I[10][1]+'   |   City: '+I[11][1]+'   |   College: '+I[12][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
+ var line2='Cutoff type: '+I[I.length-1][1]+'   |   Quota: '+I[5][1]+'   |   Category: '+I[6][1]+'   |   Special Reservation: '+I[7][1]+'   |   Course: '+I[8][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
+ var line3='Branch: '+I[9][1]+'   |   Type: '+I[10][1]+'   |   College Type: '+I[11][1]+'   |   City: '+I[12][1]+'   |   College: '+I[13][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null?'-':Number(v).toLocaleString('en-IN')};
  function pk(r,i){var n=[r[i],r[i+1]],al=[r[i+2],r[i+3]];if(Q.ct==='new')return {v:n,x:null};if(Q.ct==='all')return {v:al,x:null};var use=n[0]!==null?n:al;return {v:use,fb:n[0]===null&&al[0]!==null,x:(n[0]!==null&&al[0]!==null&&al[0]!==n[0])?al:null}}
  function cellTxt(p){if(p.v[0]===null)return '-';return fmt(p.v[0])+' / '+fmt(p.v[1])+(p.fb?' (all)':'')+(p.x?'\nall: '+fmt(p.x[0])+' / '+fmt(p.x[1]):'')}
