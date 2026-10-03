@@ -249,6 +249,7 @@ td.sn{width:64px}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
 <div class="fld">Quota<span id="ms-pool"></span></div>
+<div class="fld">Minority<span id="ms-min"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">Special Reservation<span id="ms-sub"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
@@ -316,7 +317,8 @@ function makeMS(id,items,defaults,noun){
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 
 makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB'],['Diploma','Diploma']],[],'degrees');
-makeMS('pool',POOLORDER.map(function(p){return [p,POOL[p]]}),[],'quotas');
+makeMS('pool',POOLORDER.filter(function(p){return p!=='MI'}).map(function(p){return [p,POOL[p]]}),[],'quotas');
+makeMS('min',[['MI','Muslim']],[],'minorities');
 makeMS('cat',['UR','EWS','SC','SCD','BCA','BCB'].map(function(c){return [c,c]}),[],'categories');makeMS('sub',[['IP','IP'],['IS','IS'],['PwD','PwD'],['ESM FF','ESM FF']],[],'special reservations');makeMS('ctype',[['Government','Government'],['Private','Private'],['Private University','Private University']],[],'college types');
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 var subs={};D.br.forEach(function(b){subs[b[0]]=1});
@@ -340,7 +342,7 @@ function acount(g,n){return CM==='all'?(g.h[n]||0):(g.r[n]?g.r[n].n:0)}
 function scell(g,n,on){var c='n sn'+(on?' sel':''),al=acount(g,n);return '<td class="'+c+'" title="'+(CM==='all'?'candidates on this round\u2019s list':'newly allotted in this round')+'">'+(al?'<b>'+al+'</b>':'\u2013')+'</td>'}
 var STXT={2:'Within cutoff',1:'Borderline',0:'Above cutoff','-1':''};
 function query(){
- var ss0=MS.st(),ps=MS.pool(),cs0=MS.cat(),sbs=MS.sub(),cts=MS.ctype(),js=MS.subj(),is=MS.inst(),ys=MS.city(),bs=MS.btype();
+ var ss0=MS.st(),ps=MS.pool(),mnz=MS.min(),cs0=MS.cat(),sbs=MS.sub(),cts=MS.ctype(),js=MS.subj(),is=MS.inst(),ys=MS.city(),bs=MS.btype();
  function has(o){return Object.keys(o).length>0}
  var rd=+$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),ar=parseInt($('air').value,10)||0,sm=parseInt($('sml').value,10)||0,show=$('show').value;
  function stat(g){var v=cv(g,rd);if(v==null)return -1;if(ar)return pass(ar,v);if(sm){var w=cs(g,rd);return w==null?-1:pass(sm,w)}return -1}
@@ -348,6 +350,7 @@ function query(){
   if(CM==='all'?(rd?!(g.a[rd]!=null||g.r[rd]):!(g.a[0]!=null||g.r[0]||g.any)):(rd?!(g.r[rd]):!(g.r[0])))return false;
   if(has(ss0)&&!ss0[g.deg])return false;
   if(has(ps)&&!ps[g.pool])return false;
+  if(has(mnz)&&!mnz[g.pool])return false;
   if(has(cs0)&&!cs0[g.cat])return false;
   if(has(sbs)&&!g.tg.some(function(t){return sbs[t]}))return false;
   if(has(cts)&&!cts[g.ct])return false;
@@ -384,7 +387,7 @@ function say(m){$('dlmsg').textContent=m}
 function info(Q){
  return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by','Closing AIR'],
   ['Quota',MS.pool.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Special Reservation',MS.sub.labels().join(', ')||'All'],['Degree',MS.st.labels().join(', ')||'All'],
-  ['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College Type',MS.ctype.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length],['Your SML',Q.sm||'not entered']];
+  ['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College Type',MS.ctype.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length],['Your SML',Q.sm||'not entered'],['Minority',MS.min.labels().join(', ')||'All']];
 }
 function rowsFor(Q){
  return Q.out.map(function(g){var r=[g.college,g.city,g.deg,g.subj,g.bt,QN(g),STXT[Q.stat(g)]||'',g.ct];r.cat=[g.cat].concat(g.tg).filter(Boolean).join(' ');
@@ -407,7 +410,7 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[16],I[1],I[2]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(asc(line1),10,y);y+=4.5;
- var line2='Quota: '+I[4][1]+'   |   Category: '+I[5][1]+'   |   Special Reservation: '+I[6][1]+'   |   Degree: '+I[7][1]+'   |   Cutoff type: '+I[14][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5*doc.splitTextToSize(asc(line2),277).length;
+ var line2='Quota: '+I[4][1]+'   |   Minority: '+I[17][1]+'   |   Category: '+I[5][1]+'   |   Special Reservation: '+I[6][1]+'   |   Degree: '+I[7][1]+'   |   Cutoff type: '+I[14][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5*doc.splitTextToSize(asc(line2),277).length;
  var line3='Branch: '+I[9][1]+'   |   Type: '+I[8][1]+'   |   College Type: '+I[10][1]+'   |   City: '+I[12][1]+'   |   College: '+I[11][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null?'-':Number(v).toLocaleString('en-IN')};
  var body=rowsFor(Q).map(function(r){var o=[asc(r[0]),asc(r[3]),asc(r[5]),r.cat||'-',r[6]];
