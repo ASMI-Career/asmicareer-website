@@ -263,11 +263,11 @@ td.n .sml+small{margin-top:4px}
 <label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
 <div class="fld">Quota<span id="ms-quota"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
-<div class="fld">Sub quota<span id="ms-sub"></span></div>
+<div class="fld">Special Reservation<span id="ms-sub"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
 <div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
-<div class="fld">College type<span id="ms-ctype"></span></div>
+<div class="fld">College Type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
 <div class="fld">City<span id="ms-city"></span></div>
 <label>Round<select id="round"></select></label>
@@ -346,7 +346,7 @@ makeMS('subj',Object.keys(subjs).sort().map(function(x){return [x,x]}),[],'branc
 makeMS('ctype',[['Government','Government'],['Private','Private']],[],'college types');
 var cities={};L.forEach(function(g){cities[g.city]=1});
 makeMS('city',Object.keys(cities).sort().map(function(x){return [x,x]}),[],'cities');
-makeMS('sub',[['PwD','Pwd']],[],'sub quotas');
+makeMS('sub',[['PwD','Pwd']],[],'special reservations');
 makeMS('inst',insts,[],'colleges');
 $('round').innerHTML=[[0,'All Rounds']].concat([1,2,3,4,5].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
@@ -407,7 +407,7 @@ var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
  return [['Your AIR',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Cutoff type',CT==='all'?'All-round':CT==='both'?'New allotment and All-round':'New allotment'],
-  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.quota.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Sub quota',MS.sub.labels().join(', ')||'All'],['Seat groups in this report',Q.out.length]];
+  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.quota.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College Type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Special Reservation',MS.sub.labels().join(', ')||'All'],['Seat groups in this report',Q.out.length]];
 }
 function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function fname(Q,ext){return 'West_Bengal_PG_Cutoff_Report'+(Q.ar?'_AIR'+Q.ar:'')+'_'+stamp()+'.'+ext}
@@ -424,7 +424,7 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[1],I[2]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(doc.splitTextToSize(asc(line1),277),10,y);y+=4.5;
- var line2='Degree: '+I[3][1]+'   |   Quota: '+I[4][1]+'   |   Category: '+I[5][1]+'   |   Sub quota: '+I.filter(function(x){return x[0]==='Sub quota'})[0][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
+ var line2='Degree: '+I[3][1]+'   |   Quota: '+I[4][1]+'   |   Category: '+I[5][1]+'   |   Special Reservation: '+I.filter(function(x){return x[0]==='Special Reservation'})[0][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
  var line3='College: '+I[6][1]+'   |   Search: '+I[7][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null||v===undefined?'-':Number(v).toLocaleString('en-IN')};
  var one=function(v){return v?'AIR '+fmt(v.c)+(v.s!==null&&v.s!==undefined?' (SML '+fmt(v.s)+')':''):'-'};
