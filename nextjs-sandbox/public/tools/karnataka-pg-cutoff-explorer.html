@@ -154,6 +154,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu input.msq{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:13px}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
+@media (min-width:961px){body.pgui .fxg.fxg{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -230,19 +231,18 @@ thead tr:first-child th:nth-child(3){text-align:center}
 <label class="rank">Your AIR (All India Rank)<input id="air" type="number" min="1" inputmode="numeric" placeholder="e.g. 20000"></label>
 <div class="fld ctp">Cutoff type<div id="cm" class="seg" role="group"><button type="button" data-m="new" aria-pressed="true">New allotment</button><button type="button" data-m="all" aria-pressed="false">All-round</button><button type="button" data-m="both" aria-pressed="false">Both</button></div></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
-<label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
-<label>Roundwise<select id="round"></select></label>
-<div class="fld">Degree<span id="ms-st"></span></div>
+<label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
 <div class="fld">Quota<span id="ms-qt"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
-<div class="fld">College type<span id="ms-ctype"></span></div>
-<div class="fld">Course fee<span id="ms-fee"></span></div>
-<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="feeasc">Fees: low to high</option><option value="feedesc">Fees: high to low</option><option value="college">College</option><option value="branch">Branch</option></select></label>
-<div class="fld">Seat type<span id="ms-pool"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
+<div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
-<div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">College Type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">Fees<span id="ms-fee"></span></div>
+<label>Round<select id="round"></select></label>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="feeasc">Fees: low to high</option><option value="feedesc">Fees: high to low</option><option value="college">College</option><option value="branch">Branch</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
 </section>
@@ -298,12 +298,12 @@ document.addEventListener('click',function(e){document.querySelectorAll('details
 
 
 var DEGN={MD:'MD',MS:'MS',DNB:'DNB',Diploma:'Diploma'};
-makeMS('st',[['MD','MD'],['MS','MS'],['DNB','DNB (district hospitals)'],['Diploma','Diploma (district hospitals)']],[],'degrees');
+makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB (district hospitals)'],['Diploma','Diploma (district hospitals)']],[],'degrees');
 makeMS('qt',[['State Quota','State Quota'],['All India Quota','All India Quota'],['Management Quota','Management Quota'],['NRI Quota','NRI Quota'],['In Service Quota','In Service Quota']],['State Quota'],'quotas');
 var cats={};D.rows.forEach(function(r){if(r[2]==='OPN'||r[2]==='MNG'||r[2]==='NRI')return;cats[r[2]]=(cats[r[2]]||0)+1});
 var catList=Object.keys(cats).sort(function(a,b){return cats[b]-cats[a]});
 makeMS('cat',catList.map(function(c){return [c,c]}),['GM'],'categories');
-makeMS('pool',['G','P','Q','N'].map(function(p){return [p,POOL[p]]}),[],'seat types');
+MS.pool=function(){return {}};MS.pool.labels=function(){return []};MS.pool.reset=function(){};
 makeMS('ctype',[['Government','Government'],['Private','Private'],['Private University','Private University'],['Deemed University','Deemed University']],[],'college types');
 var FEEB=[['f1','Up to \u20b92 lakh'],['f2','\u20b92 to 10 lakh'],['f3','\u20b910 to 20 lakh'],['f4','\u20b920 to 50 lakh'],['f5','Above \u20b950 lakh'],['fna','Fee not listed']];
 function feeBand(f){if(!f)return 'fna';return f<=200000?'f1':(f<=1000000?'f2':(f<=2000000?'f3':(f<=5000000?'f4':'f5')))}
@@ -315,7 +315,7 @@ var insts=D.inst.map(function(c,i){return [String(i),c[1]]}).sort(function(a,b){
 var cities={};D.inst.forEach(function(c){cities[c[2]]=1});
 makeMS('city',Object.keys(cities).sort().map(function(c){return [c,c]}),[],'cities');
 makeMS('inst',insts,[],'colleges');
-$('round').innerHTML=[[0,'All rounds combined']].concat([1,2,3,4,5].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
+$('round').innerHTML=[[0,'All Rounds']].concat([1,2,3,4,5].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
 function pass(v,c){return v<=c?2:(v<=c*1.1?1:0)}
 function ccell(g,n,on){var c='n'+(on?' sel':''),x=g.r[n],a=g.a[n];
@@ -335,7 +335,7 @@ function query(){
  function stat(g){var v=cv(g,rd);if(v==null)return -1;if(!ar)return -1;return pass(ar,v)}
  var out=L.filter(function(g){
   if(CM==='all'?(rd?!(g.a[rd]!=null||g.r[rd]||g.s[rd]):!(g.a[0]!=null||g.r[0]||g.any)):(rd?!(g.r[rd]||g.s[rd]):!(g.r[0]||g.any)))return false;
-  if(has(ss0)&&!ss0[g.deg])return false;
+  if(has(ss0)&&!ss0[(g.deg==='MD'||g.deg==='MS')?'MD/MS':g.deg])return false;
   if(has(qs)&&!qs[g.q])return false;
   if(has(cs)&&!cs[g.cat])return false;
   if(has(ps)&&!ps[g.pool])return false;
@@ -374,9 +374,9 @@ function render(){
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Roundwise',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by',$('sortby').value==='air'?'Closing AIR':$('sortby').selectedOptions[0].text],
-  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.qt.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Seat type',MS.pool.labels().join(', ')||'All'],
-  ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['College type',MS.ctype.labels().join(', ')||'All'],['Course fee',MS.fee.labels().join(', ')||'All'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length]];
+ return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by',$('sortby').value==='air'?'Closing AIR':$('sortby').selectedOptions[0].text],
+  ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.qt.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],
+  ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['College Type',MS.ctype.labels().join(', ')||'All'],['Fees',MS.fee.labels().join(', ')||'All'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length]];
 }
 function rowsFor(Q){
  return Q.out.map(function(g){var x0=g.r[0],r=[g.college,g.city,g.deg,g.code,g.subj,g.bt,g.q,POOL[g.pool],g.cat||'-',STXT[Q.stat(g)]||'',g.ct];
@@ -414,8 +414,8 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[1],I[2]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(asc(line1),10,y);y+=4.5;
- var line2='Degree: '+I[4][1]+'   |   Quota: '+I[5][1]+'   |   Category: '+I[6][1]+'   |   Seat type: '+I[7][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
- var line3='Branch: '+I[8][1]+'   |   Type: '+I[9][1]+'   |   City: '+I[10][1]+'   |   College: '+I[11][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
+ var line2='Degree: '+I[4][1]+'   |   Quota: '+I[5][1]+'   |   Category: '+I[6][1]+'';doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
+ var line3='Branch: '+I[7][1]+'   |   Type: '+I[8][1]+'   |   City: '+I[9][1]+'   |   College: '+I[10][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null?'-':Number(v).toLocaleString('en-IN')};
  var body=rowsFor(Q).map(function(r){var o=[asc(r[0]),asc(r[4]+'\n'+(r[r.length-1]?'Fee Rs '+r[r.length-1].toLocaleString('en-IN'):'Fee -')),r[3],asc(r[6]+' / '+r[8]),r[9]];
   var pc=function(a,b){return CM==='all'?a:(CM==='both'&&a!==null&&a!==b?fmt(a)+' / '+fmt(b):(a===null?'-':fmt(a)))};
