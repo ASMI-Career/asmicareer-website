@@ -251,7 +251,7 @@ th.st{text-align:center}
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <label>Round wise cutoff<select id="round"></select></label>
-<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option></select></label>
+<label>Sort by<select id="sortby"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option></select></label>
 <div class="fld">Quota<span id="ms-qt"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">Sub-quota<span id="ms-sub"></span></div>
@@ -296,7 +296,7 @@ function makeMS(id,items,defaults,noun){
  function filt(){var q=(menu.querySelector('.msq')||{value:''}).value.trim().toLowerCase().split(/\s+/).filter(Boolean),n=0;menu.querySelectorAll('label').forEach(function(l){var s=l.textContent.toLowerCase(),ok=q.every(function(w){return s.indexOf(w)>=0});l.style.display=ok?'':'none';if(ok)n++});var e=menu.querySelector('.nomatch');if(!e){e=document.createElement('div');e.className='nomatch';e.textContent='No match';menu.appendChild(e)}e.style.display=n?'none':''}
  var sq=menu.querySelector('.msq');if(sq){sq.addEventListener('input',filt);sq.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var f=Array.prototype.filter.call(menu.querySelectorAll('label'),function(l){return l.style.display!=='none'});if(f.length===1)f[0].querySelector('input').click()}})}
  d.addEventListener('toggle',function(){if(d.open&&sq){sq.value='';filt();setTimeout(function(){sq.focus()},30)}});
- label();MS[id]=function(){return sel};MS[id].reset=function(){sel={};(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x[0]]}).map(function(x){return x[1]})};
+ label();MS[id]=function(){return sel};MS[id].reset=function(clr){sel={};if(!clr)(defaults||[]).forEach(function(d){sel[d]=1});var q=menu.querySelector('.msq');if(q){q.value='';filt()}menu.querySelectorAll('input[data-v]').forEach(function(i){i.checked=!!sel[i.getAttribute('data-v')]});label()};MS[id].labels=function(){return items.filter(function(x){return sel[x[0]]}).map(function(x){return x[1]})};
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 var QT=[['State','State quota'],['In-Service','In-Service quota'],['NRI','NRI quota'],['Institute Quota (I.Q.)','Institute quota (I.Q.)']];
@@ -346,20 +346,20 @@ function query(){
   if((rk||ar)&&show!=='all'){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
  var key=by==='air'?'a':'c';
- out.sort(function(a,b){return eff(a.r[rd])[key]-eff(b.r[rd])[key]});
+ if(by==='college'||by==='branch'){var nm=function(g){return by==='branch'?g.subj:D.colls[g.inst][0]};out.sort(function(a,b){var x=nm(a),y=nm(b);return x<y?-1:x>y?1:eff(a.r[rd])['a']-eff(b.r[rd])['a']})}else out.sort(function(a,b){return eff(a.r[rd])[key]-eff(b.r[rd])[key]});
  return {out:out,stat:stat,ct:CT,rk:rk,ar:ar,rd:rd,by:by,show:show,text:$('q').value.trim(),qs:qs};
 }
 function render(){
  var Q=query(),out=Q.out,rk=Q.rk,ar=Q.ar,rd=Q.rd,by=Q.by,stat=Q.stat;
  var nOk=0;out.forEach(function(g){if(stat(g)===2)nOk++});
- var html=out.slice(0,shown).map(function(g){
+ var html=(window.PGS=window.PGKEEP?(window.PGS||0):0,window.PGKEEP=0,out.slice(window.PGS,window.PGS+100)).map(function(g){
   var sv=stat(g),st='';
   if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>';
   return '<tr><td class="c"><span class="nm">'+g.college+'</span></td><td class="br"><span class="nm">'+g.subj+'</span></td><td style="font-family:var(--mono)">'+g.code+'</td><td><span class="qp q'+g.qi+'">'+g.qt.replace(' (I.Q.)','')+'</span>'+(g.sub!=='Regular'?' <span class="cp">'+g.sub+'</span>':'')+'</td><td>'+(g.cat==='All'?'–':'<span class="cp">'+g.cat+'</span>')+'</td>'+cell2(g.r[0],rd===0,0)+[1,2,3,4,5].map(function(n){return scell(g.s[n-1],n===rd,n)+cell2(g.r[n],n===rd,n)}).join('')+'<td class="st">'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="17" class="empty">No seat groups match these filters in this round.</td></tr>';
- $('count').textContent=out.length+' seat groups'+((rk||ar)?' , '+nOk+' within your rank':'')+(out.length>shown?' (showing '+shown+')':'');
+ $('count').textContent=out.length+' seat groups'+((rk||ar)?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent=CUTL[CT]+' cutoff | sorted by closing '+(by==='air'?'AIR':'SML')+' in '+$('round').selectedOptions[0].text+', lowest first'+(CT==='both'?' | grey "all" line shows the All cutoff when it differs':'');
- $('more').hidden=out.length<=shown;
+ $('more').hidden=true;
  $('dlp').disabled=!out.length;
  var h=$('hint');if(rk&&Q.qs['In-Service']){h.hidden=false;h.textContent='In-Service SML is a separate list and is not comparable with State SML. Use your AIR to check In-Service seats.'}else h.hidden=true;
 }
@@ -426,7 +426,7 @@ async function savePdf(){
 }
 if(window.claude&&window.claude.use){window.claude.use('downloads').then(function(d){DLS=d;if(!d){DLS={save:browserSave}}}).catch(function(){DLS={save:browserSave}})}else{DLS={save:browserSave}}
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
-$('reset').addEventListener('click',function(){['rank','air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;setCut('new');$('sortby').value='air';Object.keys(MS).forEach(function(k){MS[k].reset()});shown=LIM;render()});
+$('reset').addEventListener('click',function(){['rank','air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;setCut('new');$('sortby').value='air';Object.keys(MS).forEach(function(k){MS[k].reset(true)});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
 window.addEventListener('resize',sticky);
 ['round','sortby','show'].forEach(function(i){$(i).addEventListener('change',function(){shown=LIM;render()})});

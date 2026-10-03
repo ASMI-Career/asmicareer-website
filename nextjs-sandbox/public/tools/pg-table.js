@@ -1,28 +1,266 @@
-/* Gives every state's results table the same round colours as the Maharashtra table.
-   It only adds CSS classes (r1..r5 per round column, r0 for the combined column); data and filters are untouched. */
+/* font: loaded separately so a slow font server can never delay the page */
+try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';document.head.appendChild(fl)}catch(e){}
+/* Results table: round colours, separate "SML No." columns, quota / category pills. It only adds classes and cells; data and filters are untouched.
+   Row numbers, round headers and pill colours are drawn by pg-theme.css. */
 (function(){
  try{
   var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table');
   if(!tb||!tbl)return;
-  var map=null;
+  var map=null,qCols=[],cCols=[],smlCols=null,busy=false,cCol=-1,bCol=-1,thC=null,thB=null,frozen=false,aDone=false,allotCols=[],hdrInfo=null,cenCols=[];
   function build(){
    map=[];var row=tbl.querySelector('thead tr');if(!row)return;
    var i=0;[].forEach.call(row.children,function(th){
-    var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className);
+    var m=(th.className||'').match(/\br([1-6])\b/),cs=th.colSpan||1,isRg=/\brg\b/.test(th.className),t=(th.textContent||'').trim();
     for(var k=0;k<cs;k++){map[i+k]=m?'r'+m[1]:(isRg?'r0':null)}
+    if(th.rowSpan>1&&cs===1){if(/^college$/i.test(t)){cCol=i;thC=th}else if(/^branch$/i.test(t)){bCol=i;thB=th}}
+    if(th.rowSpan>1&&cs===1){if(/^(quota\s*\/\s*cat|minority)/i.test(t))cenCols.push(i);else if(/^quota\b/i.test(t)&&!/category/i.test(t))qCols.push(i);else if(/^(category|cat\.)/i.test(t))cCols.push(i)}
     i+=cs})}
-  var busy=false;
+  /* add an "SML No." header next to every closing-rank column that carries a state rank */
+  function headerSML(cols){
+   var rows=tbl.querySelectorAll('thead tr'),info=hdrInfo||[];
+   cols.forEach(function(i){var x=info[i];if(!x)return;
+    var nh=d.createElement('th');nh.className='n smlh';nh.textContent='SML No.';
+    if(x.two){nh.rowSpan=x.th.rowSpan;x.th.parentNode.insertBefore(nh,x.th.nextSibling)}
+    else if(x.r2){var m=(x.r2.className||'').match(/\br[0-6]\b/);if(m)nh.className+=' '+m[0];x.r2.parentNode.insertBefore(nh,x.r2.nextSibling);x.th.colSpan=x.th.colSpan+1}})}
+  /* the "Allotted" columns are not shown: where a round already has Seats the column is hidden, otherwise it is labelled Seats (seats allotted) */
+  function allotted(){
+   var rows=tbl.querySelectorAll('thead tr'),r1=rows[0],r2=rows[1];if(!r1||!r2)return;
+   var c=0,r2i=0,info=[];
+   [].forEach.call(r1.children,function(th){var cs=th.colSpan||1,two=th.rowSpan>1;for(var k=0;k<cs;k++)info[c+k]={th:th,two:two,r2:two?null:r2.children[r2i++]};c+=cs});
+   hdrInfo=info;
+   var groups=[];info.forEach(function(x,i){if(x.r2&&groups.indexOf(x.th)<0)groups.push(x.th)});
+   groups.forEach(function(g){
+    var cols=[];info.forEach(function(x,i){if(x.th===g&&x.r2)cols.push(i)});
+    var hasSeats=cols.some(function(i){return /^seats$/i.test(info[i].r2.textContent.trim())});
+    cols.forEach(function(i){var h=info[i].r2;if(!/^allotted$/i.test(h.textContent.trim()))return;
+     if(hasSeats){h.classList.add('pgx');g.colSpan=Math.max(1,g.colSpan-1);allotCols.push(i)}
+     else{h.textContent='Seats';h.title='Seats allotted in this round (no seat matrix available)'}})})}
   function paint(){
    busy=false;if(!map)build();
-   [].forEach.call(tb.rows,function(tr){
-    if(tr.cells.length<3)return;
+   if(!aDone){aDone=true;allotted()}
+   var rows=[].filter.call(tb.rows,function(tr){return tr.cells.length>=3&&!tr.getAttribute('data-pg')});
+   rows.forEach(function(tr){
     [].forEach.call(tr.cells,function(td,i){
-     var c=map[i];if(!c||/\br[0-6]\b/.test(td.className))return;
-     td.classList.add(c);if(c==='r0')td.classList.add('allr')});
-    [].forEach.call(tr.querySelectorAll('td.n small'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})})}
+     var c=map[i];if(allotCols.indexOf(i)>=0)td.classList.add('pgx');if(cenCols.indexOf(i)>=0)td.classList.add('pgcen');
+     if(c&&!/\br[0-6]\b/.test(td.className)){td.classList.add(c);if(c==='r0')td.classList.add('allr')}
+     if(qCols.indexOf(i)>=0||cCols.indexOf(i)>=0){td.classList.add(qCols.indexOf(i)>=0?'pgq':'pgc');
+      if(!td.children.length&&td.textContent.trim()){var t=td.textContent.trim();td.innerHTML='<span class="pgp"></span>';td.firstChild.textContent=t}}});
+    [].forEach.call(tr.querySelectorAll('td.n small,td.n span.smlp'),function(s){if(/^\s*SML\b/.test(s.textContent))s.classList.add('smlp')})});
+   if(!frozen&&thC){frozen=true;thC.classList.add('pgc1');
+    if(thB){if(bCol>cCol+1)thC.parentNode.insertBefore(thB,thC.nextSibling);thB.classList.add('pgc2')}}
+   if(smlCols===null&&rows.length){
+    var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('.smlp'))seen[i]=1})});
+    smlCols=Object.keys(seen).map(Number).sort(function(a,b){return a-b});
+    if(smlCols.length)headerSML(smlCols)}
+   if(smlCols&&smlCols.length)rows.forEach(function(tr){
+    var cells=[].slice.call(tr.cells);
+    smlCols.slice().reverse().forEach(function(i){var td=cells[i];if(!td)return;
+     var sm=td.querySelector('.smlp'),nd=d.createElement('td'),rc=(td.className.match(/\br[0-6]\b/)||[''])[0];
+     nd.className='n smlc'+(rc?' '+rc:'')+(/\bsel\b/.test(td.className)?' sel':'');
+     if(sm){var n=document.createElement('span');n.className='smlnum';n.textContent=sm.textContent.replace(/^\s*SML\s*/i,'');nd.appendChild(n);sm.remove()}else nd.textContent='\u2013';
+     td.parentNode.insertBefore(nd,td.nextSibling)})});
+   rows.forEach(function(tr){
+    var cells=[].slice.call(tr.cells);
+    if(cCol>=0&&cells[cCol]){cells[cCol].classList.add('pgc1');
+     if(bCol>=0&&cells[bCol]){cells[bCol].classList.add('pgc2');if(bCol>cCol+1)tr.insertBefore(cells[bCol],cells[cCol].nextSibling)}}
+    tr.setAttribute('data-pg','1')})}
   function sched(){if(busy)return;busy=true;requestAnimationFrame(paint)}
   new MutationObserver(sched).observe(tb,{childList:true});
-  window.addEventListener('resize',function(){map=null;sched()});
   paint();
+ }catch(e){}
+})();
+
+/* ---- Student-friendly layout: hero, icon filter tiles, results bar. Moves existing controls only; filters and data are untouched. ---- */
+(function(){
+ try{
+  var d=document,panel=d.querySelector('section.panel');
+  if(!panel||d.body.classList.contains('pgui'))return;
+  var P={
+   funnel:'<path d="M3 4h18l-7 8v6l-4 2v-8z"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/>',doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+   chart:'<path d="M5 20V11M12 20V4M19 20v-6M3 20h18"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+   target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>',sort:'<path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/>',
+   cap:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c3 0 5 1.5 5 4.5"/>',
+   tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>',bank:'<path d="M3 10l9-6 9 6M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 21h18"/>',
+   steth:'<path d="M6 3v6a4 4 0 0 0 8 0V3M10 13v2a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="11" r="2"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+   pin:'<path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',building:'<path d="M4 21V5l8-2v18M12 8h8v13M4 21h16M8 9h1M8 13h1M8 17h1M16 12h1M16 16h1"/>',
+   download:'<path d="M12 3v12M7 11l5 5 5-5M4 21h16"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',reset:'<path d="M4 4v6h6M4.5 14a8 8 0 1 0 2-7.5L4 10"/>',
+   list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',down:'<path d="M12 5v14M6 13l6 6 6-6"/>',check:'<path d="M20 6L9 17l-5-5"/>',rupee:'<path d="M6 4h12M6 9h12M9 4c4 0 6 2 6 5s-2 5-6 5l7 7"/>',flag:'<path d="M5 22V4M5 4h13l-2 4 2 4H5"/>',phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>'
+  };
+  function svg(k){return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[k]||P.list)+'</svg>'}
+  function ic(k,t){var i=d.createElement('i');i.className='ic';i.setAttribute('data-t',t);i.innerHTML=svg(k);return i}
+  /* label text -> icon + colour */
+  var KM=[[/fee/,'rupee',4],[/^state/,'flag',1],[/^show/,'eye',1],[/^round/,'target',2],[/^sort/,'sort',1],[/^(degree|course|stream)/,'cap',3],[/^(quota|category|pool)/,'users',4],
+   [/^sub/,'tag',5],[/^college type/,'bank',6],[/^clinical/,'steth',7],[/^(branch|specialty|subject)/,'star',2],[/^city/,'pin',5],[/^college/,'building',6]];
+  function kind(txt){txt=txt.toLowerCase();if(/^category/.test(txt))return ['tag',5];for(var i=0;i<KM.length;i++)if(KM[i][0].test(txt))return [KM[i][1],KM[i][2]];return ['list',1]}
+  function lbl(el){ /* wrap the leading text node in <b class=lb> */
+   for(var n=el.firstChild;n;n=n.nextSibling){if(n.nodeType===3&&n.nodeValue.trim()){var b=d.createElement('b');b.className='lb';b.textContent=n.nodeValue.trim();el.replaceChild(b,n);return b}}
+   return el.querySelector('.lb')}
+  /* state name for the hero, from the page the explorer sits in */
+  var name='';
+  try{name=(parent.document.getElementById('st').textContent||'')}catch(e){}
+  if(!name)name=d.title||'';
+  name=name.replace(/\|.*$/,'').replace(/\s*(NEET-PG|PG|NEET PG)?\s*cutoff explorer\s*$/i,'').trim();
+  var wrap=d.querySelector('.wrap')||d.body;
+  var hero=d.createElement('section');hero.className='hero2';hero.setAttribute('aria-label','About this explorer');
+  var esc=function(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')};
+  var words=(name||'Cutoff Explorer').split(/\s+/),last=words.pop(),first=words.join(' ');
+  var feats=[['chart','1','Round-wise','Analysis'],['building','4','All Colleges',name||'In this state'],['users','3','Quotas &amp;','Categories']];
+  hero.innerHTML='<div class="h2c"><span class="h2b">'+svg('cap')+' NEET-PG 2025</span><h1 class="h2t">'+(first?esc(first)+' ':'')+'<em>'+esc(last)+'</em></h1></div>'
+   +'<div class="h2f">'+feats.map(function(f){return '<div class="h2fi"><i class="ic" data-t="'+f[1]+'">'+svg(f[0])+'</i><span><b>'+f[2]+'</b>'+esc(f[3])+'</span></div>'}).join('')+'</div>'
+   +'<a class="h2call" href="tel:7410019075"><i>'+svg('phone')+'</i><span><small>Helpline</small><b>7410019075</b></span></a>';
+  wrap.insertBefore(hero,wrap.firstChild);
+  d.body.classList.add('pgui');
+  /* panel head with Reset all */
+  var head=d.createElement('div');head.className='pp-head';
+  head.innerHTML='<i class="ic big" data-t="1">'+svg('funnel')+'</i><div class="pp-t"><b>Search &amp; Filter</b><span>Set your preferences to find the best matching results</span></div>';
+  var reset=d.getElementById('reset');
+  if(reset){reset.classList.add('pp-reset');reset.innerHTML=svg('reset')+' Reset all';head.appendChild(reset)}
+  panel.insertBefore(head,panel.firstChild);
+  /* search box */
+  var wide=panel.querySelector('label.wide');
+  if(wide){wide.style.display='none'}
+  /* rank inputs side by side */
+  var ranks=[].slice.call(panel.querySelectorAll(':scope>label.rank'));
+  if(ranks.length){var rk=d.createElement('div');rk.className='rk';ranks[0].parentNode.insertBefore(rk,ranks[0]);
+   ranks.forEach(function(r,i){lbl(r);r.insertBefore(ic(i?'doc':'user','1'),r.firstChild);rk.appendChild(r)})}
+  var ctp=null;[].forEach.call(panel.children,function(c){if(!ctp&&!c.classList.contains('pp-head')&&/^\s*cutoff type/i.test(c.textContent||''))ctp=c});
+  if(ctp){ctp.classList.add('pp-ct');lbl(ctp);var nx=ctp.nextElementSibling;if(nx&&!ctp.querySelector('button')&&nx.querySelector('button'))ctp.appendChild(nx)}
+  /* filter tiles */
+  var fx=d.getElementById('fx'),fxg=panel.querySelector('.fxg');
+  if(fxg){[].slice.call(fxg.children).forEach(function(el){
+    if(el.classList.contains('actions'))return;
+    var lb=lbl(el);if(!lb)return;var k=kind(lb.textContent);
+    el.classList.add('tile');el.setAttribute('data-t',k[1]);el.insertBefore(ic(k[0],k[1]),el.firstChild)});
+   /* Show and Round wise use the same dropdown panel as the other filters (Degree, Quota ...) instead of the browser's own list */
+   var pgsels=[];
+   ['show','round'].forEach(function(id){
+    var sel=d.getElementById(id);if(!sel||!sel.closest('.tile'))return;
+    var host=d.createElement('span');host.className='pgsel-host';
+    var dt=d.createElement('details');dt.className='ms pgsel';
+    var sm=d.createElement('summary');sm.innerHTML='<span></span>';dt.appendChild(sm);
+    var menu=d.createElement('div');menu.className='menu';dt.appendChild(menu);host.appendChild(dt);
+    sel.parentNode.insertBefore(host,sel);sel.style.display='none';
+    function build(){
+     menu.innerHTML='';
+     [].forEach.call(sel.options,function(o){
+      var lab=d.createElement('label'),inp=d.createElement('input');inp.type='radio';inp.name='pgs-'+id;inp.value=o.value;
+      lab.appendChild(inp);lab.appendChild(d.createTextNode(' '+o.textContent));menu.appendChild(lab)})}
+    function sync(){
+     var o=sel.options[sel.selectedIndex];sm.firstChild.textContent=o?o.textContent:'';
+     [].forEach.call(menu.querySelectorAll('input'),function(i){i.checked=(i.value===sel.value)})}
+    menu.addEventListener('change',function(e){
+     var v=e.target.value;if(v===undefined)return;
+     sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}));sync();dt.removeAttribute('open')});
+    build();sync();pgsels.push(sync);
+    new MutationObserver(function(){build();sync()}).observe(sel,{childList:true})});
+   if(pgsels.length){
+    var all=function(){pgsels.forEach(function(f){f()})};
+    var tb2=d.getElementById('body');if(tb2)new MutationObserver(all).observe(tb2,{childList:true});
+    d.addEventListener('change',function(){setTimeout(all,0)});
+    var rs=d.getElementById('reset');if(rs)rs.addEventListener('click',function(){setTimeout(all,0)})}
+   var act=fxg.querySelector('.actions');
+   if(!act){act=d.createElement('div');act.className='actions';fxg.appendChild(act)}
+   act.style.display='none'}
+  if(fx&&(window.innerWidth>640))fx.setAttribute('open','')
+  /* results bar */
+  var count=d.getElementById('count'),legend=d.getElementById('legend'),dlp=d.getElementById('dlp'),dlmsg=d.getElementById('dlmsg'),meta=d.querySelector('.meta');
+  if(count&&dlp){
+   var bar=d.createElement('section');bar.className='rbar';bar.setAttribute('aria-label','Results');
+   var l=d.createElement('div');l.className='rb-l';l.innerHTML='<i class="ic big" data-t="1">'+svg('users')+'</i>';
+   var tx=d.createElement('div');tx.className='rb-t';tx.appendChild(count);l.appendChild(tx);
+   var m=d.createElement('div');m.className='rb-m';m.innerHTML=svg('info')+'<span>Includes results matching your ranks and filters.</span>';
+   var r=d.createElement('div');r.className='rb-r';
+   var so=d.getElementById('sort')||d.getElementById('sortby'),sl=so&&so.closest('label');
+   if(sl){sl.classList.remove('tile');sl.removeAttribute('data-t');var si=sl.querySelector(':scope>i.ic');if(si)si.remove();sl.classList.add('rb-sort');var sb=lbl(sl);if(sb)sb.textContent='Sort by:';r.appendChild(sl)}
+   dlp.classList.add('rb-dl');dlp.innerHTML=svg('download')+' Download PDF';r.appendChild(dlp);
+   bar.appendChild(l);bar.appendChild(m);bar.appendChild(r);
+   (meta||count.parentNode).parentNode.insertBefore(bar,meta||count.parentNode);
+   if(legend)legend.style.display='none';
+   if(meta)meta.classList.add('gone');
+   if(dlmsg){var def=dlmsg.textContent;dlp.title=def;
+    var sync=function(){dlmsg.hidden=(dlmsg.textContent===def)};sync();new MutationObserver(sync).observe(dlmsg,{childList:true,characterData:true,subtree:true})}}
+ }catch(e){}
+})();
+
+/* ---- the "About this data" notes under the table are not shown ---- */
+(function(){try{[].forEach.call(document.querySelectorAll('.tw ~ .note'),function(e){e.remove()})}catch(e){}})();
+
+/* ---- results footer: "Showing 101 to 200 of 251 results" and page numbers, 100 results per page ---- */
+(function(){
+ try{
+  var d=document,tw=d.querySelector('.tw'),count=d.getElementById('count'),more=d.getElementById('more'),tb=d.getElementById('body'),show=d.getElementById('show');
+  if(!tw||!count)return;
+  var SZ=100,f=d.createElement('div');f.className='tfoot';var t=d.createElement('span');t.className='tf-t';f.appendChild(t);
+  var pg=d.createElement('nav');pg.className='pager';pg.setAttribute('aria-label','Pages');f.appendChild(pg);
+  if(more){more.hidden=true;more.style.display='none'}
+  tw.parentNode.insertBefore(f,tw.nextSibling);
+  function go(p){
+   window.PGS=(p-1)*SZ;window.PGKEEP=1;
+   if(show)show.dispatchEvent(new Event('change',{bubbles:true}));
+   var tgt=d.querySelector('.rbar')||tw;tgt.scrollIntoView({behavior:'smooth',block:'start'});tw.scrollTop=0}
+  function sync(){
+   var s=count.textContent||'',m=s.match(/^\s*([\d,]+)/);
+   if(!m){t.textContent='';pg.innerHTML='';return}
+   var total=parseInt(m[1].replace(/,/g,''),10)||0,start=window.PGS||0,cur=Math.floor(start/SZ)+1,pages=Math.max(1,Math.ceil(total/SZ));
+   if(tb)tb.style.setProperty('--pgo',String(start));
+   t.textContent=total?('Showing '+(start+1)+' to '+Math.min(start+SZ,total)+' of '+total+' results'):'No results';
+   pg.innerHTML='';if(pages<2)return;
+   function btn(label,p,cls,dis){var b=d.createElement('button');b.type='button';b.className='pgb'+(cls?' '+cls:'');b.innerHTML=label;if(dis)b.disabled=true;else b.addEventListener('click',function(){go(p)});if(p===cur&&!cls)b.setAttribute('aria-current','page');pg.appendChild(b)}
+   btn('&lsaquo;',cur-1,'nav',cur<=1);
+   var list=[],set={1:1};set[pages]=1;for(var k=cur-1;k<=cur+1;k++)if(k>1&&k<pages)set[k]=1;
+   Object.keys(set).map(Number).sort(function(a,b){return a-b}).forEach(function(n,i,arr){if(i&&n-arr[i-1]>1)list.push(0);list.push(n)});
+   list.forEach(function(n){if(!n){var e=d.createElement('span');e.className='pgd';e.textContent='\u2026';pg.appendChild(e)}else btn(String(n),n,'')});
+   btn('&rsaquo;',cur+1,'nav',cur>=pages)}
+  sync();new MutationObserver(sync).observe(count,{childList:true,characterData:true,subtree:true});
+  if(tb)new MutationObserver(sync).observe(tb,{childList:true});
+ }catch(e){}
+})();
+
+/* ---- sort arrows in the table headings: College, Branch, Fees, Closing AIR and SML No. ---- */
+(function(){
+ try{
+  var d=document,tb=d.getElementById('body'),tbl=tb&&tb.closest('table'),sel=d.getElementById('sort')||d.getElementById('sortby'),rsel=d.getElementById('round');
+  if(!tbl||!sel)return;
+  var has=function(v){return [].some.call(sel.options,function(o){return o.value===v})};
+  var arrows='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M8 19l-3-3M8 19l3-3M16 19V5M16 5l-3 3M16 5l3 3"/></svg>';
+  var heads=[];
+  function roundValue(cls){
+   if(!rsel)return null;var m=cls.match(/\br(\d)\b/),n=m?parseInt(m[1],10):0,opts=[].slice.call(rsel.options),hit=null;
+   if(n===0)return opts.length?opts[0].value:null;
+   opts.forEach(function(o){if(o.value===String(n)||o.value==='r'+n)hit=o.value});
+   return hit}
+  function setup(){
+   var ths=[].slice.call(tbl.querySelectorAll('thead th'));
+   ths.forEach(function(th){
+    if(th.getAttribute('data-srt'))return;
+    var t=(th.textContent||'').trim().replace(/\s+/g,' '),cls=th.className||'',key=null,round=null;
+    if(/^college$/i.test(t))key='college';
+    else if(/^branch$/i.test(t))key='branch';
+    else if(/^fee$/i.test(t)&&has('feeasc'))key='fee';
+    else if(/^sml no\.?$/i.test(t)&&has('sml')){key='sml';round=roundValue(cls)}
+    else if((/closing/i.test(t)||/^final\b/i.test(t))&&!/^sml/i.test(t)){key='air';round=roundValue(cls);if(!round&&th.rowSpan>1)round=roundValue('r0')}
+    if(!key)return;
+    if((key==='college'||key==='branch')&&!has(key))return;
+    if(key==='air'&&!has('air'))return;
+    th.setAttribute('data-srt',key);th.classList.add('srtable');
+    if(round!==null)th.setAttribute('data-rd',round);
+    var b=d.createElement('span');b.className='srt';b.innerHTML=arrows;th.appendChild(b);
+    th.addEventListener('click',function(){
+     var k=th.getAttribute('data-srt'),v=k;
+     if(k==='fee')v=(sel.value==='feeasc')?'feedesc':'feeasc';
+     if(th.hasAttribute('data-rd')&&rsel)rsel.value=th.getAttribute('data-rd');
+     sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}))});
+    heads.push(th)})}
+  function mark(){
+   var v=sel.value,rv=rsel?rsel.value:null;
+   heads.forEach(function(th){var k=th.getAttribute('data-srt'),on=false;
+    if(k==='college'||k==='branch')on=(v===k);
+    else if(k==='fee')on=(v==='feeasc'||v==='feedesc');
+    else{var r=th.getAttribute('data-rd');on=(v===k)&&(r===null||rv===null||r===rv)}
+    th.classList.toggle('srt-on',on)})}
+  setup();mark();
+  new MutationObserver(function(){setup();mark()}).observe(tb,{childList:true});
+  sel.addEventListener('change',mark);if(rsel)rsel.addEventListener('change',mark);
  }catch(e){}
 })();
