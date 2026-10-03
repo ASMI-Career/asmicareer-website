@@ -151,6 +151,7 @@ td.br{font-weight:600;white-space:normal;min-width:150px}
 .fx>summary::after{content:"▾";transition:transform .2s}
 .fx:not([open])>summary::after{transform:rotate(-90deg)}
 .fxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:12px}
+@media (min-width:961px){body.pgui .fxg.fxg{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important}}
 @media (max-width:640px){.fxg{grid-template-columns:1fr 1fr;gap:10px}.fxg .actions{grid-column:1/-1}}
 tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 
@@ -244,19 +245,19 @@ td.sn{width:64px}
 <label class="rank">Your AIR (All India Rank)<input id="air" type="number" min="1" inputmode="numeric" placeholder="e.g. 20000"></label>
 <div class="fld ctp">Cutoff type<div id="cm" class="seg" role="group"><button type="button" data-m="new" aria-pressed="true">New allotment</button><button type="button" data-m="all" aria-pressed="false">All-round</button><button type="button" data-m="both" aria-pressed="false">Both</button></div></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
-<label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
-<label>Roundwise<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
-<div class="fld">Degree<span id="ms-st"></span></div>
+<label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
 <div class="fld">Quota<span id="ms-qt"></span></div>
 <div class="fld">Category<span id="ms-pool"></span></div>
-<div class="fld">Minority<span id="ms-min"></span></div>
 <div class="fld">Gender<span id="ms-gen"></span></div>
-<div class="fld">College type<span id="ms-ctype"></span></div>
+<div class="fld">Minority<span id="ms-min"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
+<div class="fld">Course<span id="ms-st"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
-<div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">College Type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
+<label>Round<select id="round"></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
 </section>
@@ -310,11 +311,11 @@ function makeMS(id,items,defaults,noun){
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 
-makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB'],['Diploma','Diploma'],['DNB Diploma','DNB Diploma']],[],'degrees');
+makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB'],['Diploma','Diploma'],['DNB Diploma','DNB Diploma']],[],'courses');
 makeMS('qt',[['State Quota','State Quota'],['All India Quota','All India Quota'],['NRI','NRI']],[],'quotas');
 makeMS('pool',POOLORDER.filter(function(p){return p!=='MM'&&p!=='SM'&&p!=='NRI'}).map(function(p){return [p,POOL[p]]}),[],'categories');
 makeMS('min',[['MM','Muslim'],['SM','Sikh']],[],'minorities');
-makeMS('gen',[['F','Female'],['O','General (Male and Female)']],[],'genders');
+makeMS('gen',[['O','Male'],['F','Female']],[],'genders');
 makeMS('ctype',[['Government','Government'],['Private','Private']],[],'college types');
 makeMS('btype',[['Clinical','Clinical'],['Non-Clinical','Non-clinical']],[],'branch types');
 var subs={};D.br.forEach(function(b){subs[b[0]]=1});
@@ -323,7 +324,7 @@ var insts=D.inst.map(function(c,i){return [String(i),c[0]]}).sort(function(a,b){
 var cities={};D.inst.forEach(function(c){cities[c[1]]=1});
 makeMS('city',Object.keys(cities).sort().map(function(c){return [c,c]}),[],'cities');
 makeMS('inst',insts,[],'colleges');
-$('round').innerHTML=[[0,'All rounds combined']].concat([1,2,3,4].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
+$('round').innerHTML=[[0,'All Rounds']].concat([1,2,3,4].map(function(n){return [n,RN[n]]})).map(function(x){return '<option value="'+x[0]+'">'+x[1]+'</option>'}).join('');
 $('round').value=0;
 function pass(v,c){return v<=c?2:(v<=c*1.1?1:0)}
 function ccell(g,n,on){var c='n'+(on?' sel':''),x=g.r[n],a=g.a[n];
@@ -379,8 +380,8 @@ function render(){
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Roundwise',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by','Closing AIR'],
-  ['Degree',MS.st.labels().join(', ')||'All'],['Category',MS.pool.labels().join(', ')||'All'],
+ return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by','Closing AIR'],
+  ['Course',MS.st.labels().join(', ')||'All'],['Category',MS.pool.labels().join(', ')||'All'],
   ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['College type',MS.ctype.labels().join(', ')||'All'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length],['Minority',MS.min.labels().join(', ')||'All'],['Quota',MS.qt.labels().join(', ')||'All'],['Gender',MS.gen.labels().join(', ')||'All']];
 }
 function rowsFor(Q){
@@ -404,7 +405,7 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[1],I[2]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(asc(line1),10,y);y+=4.5;
- var line2='Degree: '+I[4][1]+'   |   Quota: '+I[14][1]+'   |   Gender: '+I[15][1]+'   |   Category: '+I[5][1]+'   |   Minority: '+I[13][1]+'   |   Cutoff type: '+I[12][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
+ var line2='Course: '+I[4][1]+'   |   Quota: '+I[14][1]+'   |   Gender: '+I[15][1]+'   |   Category: '+I[5][1]+'   |   Minority: '+I[13][1]+'   |   Cutoff type: '+I[12][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
  var line3='Branch: '+I[6][1]+'   |   Type: '+I[7][1]+'   |   City: '+I[8][1]+'   |   College: '+I[9][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null?'-':Number(v).toLocaleString('en-IN')};
  var body=rowsFor(Q).map(function(r){var o=[asc(r[0]),asc(r[3]),r.qt,asc(r[5]),r[6]];
