@@ -256,7 +256,7 @@ td.sn{width:64px}
 <div class="fld">College type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
 <div class="fld">City<span id="ms-city"></span></div>
-<label>Roundwise<select id="round"></select></label>
+<label>Round<select id="round"></select></label>
 <label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
@@ -315,7 +315,7 @@ function makeMS(id,items,defaults,noun){
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 
-makeMS('st',[['MD','MD'],['MS','MS'],['DNB','DNB'],['Diploma','PG Diploma / Post-MBBS Diploma']],[],'degrees');
+makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB'],['Diploma','PG Diploma / Post-MBBS Diploma']],[],'degrees');
 makeMS('pool',POOLORDER.map(function(p){return [p,POOL[p]]}),[],'quotas');
 makeMS('cat',CATS.map(function(c){return [c,c]}),[],'categories');
 makeMS('gen',[['Male','Male'],['Female','Female']],[],'genders');
@@ -349,7 +349,7 @@ function query(){
  function stat(g){var v=cv(g,rd);if(v==null)return -1;if(ar)return pass(ar,v);if(sm){var w=cs(g,rd);return w==null?-1:pass(sm,w)}return -1}
  var out=L.filter(function(g){
   if(CM==='all'?(rd?!(g.a[rd]!=null||g.r[rd]):!(g.a[0]!=null||g.r[0]||g.any)):(rd?!(g.r[rd]):!(g.r[0])))return false;
-  if(has(ss0)&&!ss0[g.deg])return false;
+  if(has(ss0)&&!ss0[(g.deg==='MD'||g.deg==='MS')?'MD/MS':g.deg])return false;
   if(has(ps)&&!ps[g.pool])return false;
   if(has(cas)&&!cas[g.cat])return false;
   if(has(sbs)&&!sbs[g.sub])return false;
@@ -386,7 +386,7 @@ function render(){
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Your SML',Q.sm||'not entered'],['Roundwise',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by',$('sort').selectedOptions[0].text],
+ return [['Your AIR (All India Rank)',Q.ar||'not entered'],['Your SML',Q.sm||'not entered'],['Round',$('round').selectedOptions[0].text],['Show',$('show').selectedOptions[0].text],['Sorted by',$('sort').selectedOptions[0].text],
   ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.pool.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Gender',MS.gen.labels().join(', ')||'All'],['Sub quota',MS.sub.labels().join(', ')||'All'],
   ['Branch',MS.subj.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['College type',MS.ctype.labels().join(', ')||'All'],['Cutoff type',{new:'New allotment',all:'All-round',both:'Both'}[CM]],['Seat groups in this report',Q.out.length]];
 }

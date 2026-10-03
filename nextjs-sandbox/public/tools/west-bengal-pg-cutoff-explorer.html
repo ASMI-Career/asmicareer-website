@@ -270,7 +270,7 @@ td.n .sml+small{margin-top:4px}
 <div class="fld">College type<span id="ms-ctype"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
 <div class="fld">City<span id="ms-city"></span></div>
-<label>Round wise<select id="round"></select></label>
+<label>Round<select id="round"></select></label>
 <label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
@@ -333,7 +333,7 @@ function makeMS(id,items,defaults,noun){
 }
 document.addEventListener('click',function(e){document.querySelectorAll('details.ms[open]').forEach(function(d){if(!d.contains(e.target))d.removeAttribute('open')})});
 
-makeMS('st',[['MD','MD'],['MS','MS'],['DNB','DNB'],['Diploma','Diploma']],[],'degrees');
+makeMS('st',[['MD/MS','MD/MS'],['DNB','DNB'],['Diploma','Diploma']],[],'degrees');
 makeMS('quota',[["Open", "State Quota"], ["In-Service", "In Service"], ["In-Service DNB", "In Service DNB"], ["NRI", "NRI"], ["Private Mgmt", "All India"]],['Open'],'quotas');
 makeMS('cat',[["UR", "UR"], ["EWS", "EWS"], ["SC", "SC"], ["ST", "ST"], ["OBC-A", "OBC-A"], ["OBC-B", "OBC-B"], ["OBC", "OBC"]],[],'categories');
 (function(){
@@ -373,7 +373,7 @@ function query(){
  function stat(g){var v=cvals(g.r[rd]);if(!v)return -1;if(ar)return pass(ar,v.c);if(sm)return v.s==null?-1:pass(sm,v.s);return -1}
  var out=L.filter(function(g){
   if(!cvals(g.r[rd]))return false;
-  if(has(ss0)&&!ss0[g.deg])return false;
+  if(has(ss0)&&!ss0[(g.deg==='MD'||g.deg==='MS')?'MD/MS':g.deg])return false;
   if(has(qs)&&!qs[g.qt])return false;
   if(has(cs)&&!cs[g.cat])return false;
   if(has(sbs)&&!sbs[g.sub])return false;
@@ -398,7 +398,7 @@ function render(){
   return '<tr><td class="c"><b>'+g.college+'</b></td><td class="br" title="'+g.srcb.replace(/"/g,'&quot;')+'">'+g.subj+'</td><td class="q"><span class="qp q1">'+(QLONG[g.qt]||g.qt)+'</span> <span class="cp">'+g.cat+'</span>'+(g.sub?' <span class="cp">'+SUBL(g.sub)+'</span>':'')+'</td>'+allcell(g.r[0])+rc+'<td>'+st+'</td></tr>'});
  $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters in this round.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
- $('legend').textContent='Closing = last-ranked allotment (AIR). Final = the closing rank from the Revised Stray Vacancy Round if the seat group appears there, else the latest earlier round it appears in. Round wise: '+$('round').selectedOptions[0].text+', '+(CT==='all'?'All-round':'New allotment')+' cutoff.';
+ $('legend').textContent='Closing = last-ranked allotment (AIR). Final = the closing rank from the Revised Stray Vacancy Round if the seat group appears there, else the latest earlier round it appears in. Round: '+$('round').selectedOptions[0].text+', '+(CT==='all'?'All-round':'New allotment')+' cutoff.';
  $('more').hidden=true;
  $('dlp').disabled=!out.length;
  $('hint').hidden=true;
@@ -406,7 +406,7 @@ function render(){
 var DLS=null;
 function say(m){$('dlmsg').textContent=m}
 function info(Q){
- return [['Your AIR',Q.ar||'not entered'],['Round wise',$('round').selectedOptions[0].text],['Cutoff type',CT==='all'?'All-round':CT==='both'?'New allotment and All-round':'New allotment'],
+ return [['Your AIR',Q.ar||'not entered'],['Round',$('round').selectedOptions[0].text],['Cutoff type',CT==='all'?'All-round':CT==='both'?'New allotment and All-round':'New allotment'],
   ['Degree',MS.st.labels().join(', ')||'All'],['Quota',MS.quota.labels().join(', ')||'All'],['Category',MS.cat.labels().join(', ')||'All'],['Clinical / Non-clinical',MS.btype.labels().join(', ')||'All'],['Branch',MS.subj.labels().join(', ')||'All'],['College type',MS.ctype.labels().join(', ')||'All'],['City',MS.city.labels().join(', ')||'All'],['College',MS.inst.labels().join(', ')||'All'],['Search text',Q.text||'-'],['Sub quota',MS.sub.labels().join(', ')||'All'],['Seat groups in this report',Q.out.length]];
 }
 function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
