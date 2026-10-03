@@ -230,7 +230,25 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
    if(n===0)return opts.length?opts[0].value:null;
    opts.forEach(function(o){if(o.value===String(n)||o.value==='r'+n)hit=o.value});
    return hit}
+  /* AIR / SML wording (West Bengal, Uttarakhand, Uttar Pradesh, Tripura, Telangana set window.PGAIRSML):
+     "All rounds" becomes a group heading over AIR and SML, and every "Closing" / "SML No." heading is shortened to AIR / SML */
+  function airsmlRestructure(){
+   var rows=tbl.querySelectorAll('thead tr'),r1=rows[0],r2=rows[1];if(!r1||!r2)return;
+   var th=[].filter.call(r1.children,function(x){return x.rowSpan>1&&/^(final|all rounds)/i.test((x.textContent||'').trim())})[0];
+   if(!th)return;
+   var sm=th.nextElementSibling;if(!sm||!/smlh/.test(sm.className))return;
+   th.rowSpan=1;th.colSpan=2;th.textContent='All Rounds';th.className='n rg';sm.parentNode.removeChild(sm);
+   var a=d.createElement('th');a.className='n s';a.textContent='Closing AIR';var b=d.createElement('th');b.className='n smlh';b.textContent='SML No.';
+   r2.insertBefore(b,r2.firstChild);r2.insertBefore(a,b)}
+  function airsmlRelabel(){
+   [].forEach.call(tbl.querySelectorAll('thead th'),function(th){
+    var t=(th.textContent||'').trim().replace(/\s+/g,' '),nt=null;
+    if(/^sml no\.?$/i.test(t))nt='SML';else if(/^closing( air)?$/i.test(t))nt='AIR';
+    if(!nt)return;
+    var tn=[].filter.call(th.childNodes,function(n){return n.nodeType===3});
+    if(tn.length){tn[0].nodeValue=nt;tn.slice(1).forEach(function(n){n.parentNode.removeChild(n)})}else th.insertBefore(d.createTextNode(nt),th.firstChild)})}
   function setup(){
+   if(window.PGAIRSML)airsmlRestructure();
    var ths=[].slice.call(tbl.querySelectorAll('thead th'));
    ths.forEach(function(th){
     if(th.getAttribute('data-srt'))return;
@@ -251,7 +269,8 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
      if(k==='fee')v=(sel.value==='feeasc')?'feedesc':'feeasc';
      if(th.hasAttribute('data-rd')&&rsel)rsel.value=th.getAttribute('data-rd');
      sel.value=v;sel.dispatchEvent(new Event('change',{bubbles:true}))});
-    heads.push(th)})}
+    heads.push(th)});
+   if(window.PGAIRSML)airsmlRelabel()}
   function mark(){
    var v=sel.value,rv=rsel?rsel.value:null;
    heads.forEach(function(th){var k=th.getAttribute('data-srt'),on=false;
