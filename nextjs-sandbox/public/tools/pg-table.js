@@ -243,7 +243,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
   function airsmlRelabel(){
    [].forEach.call(tbl.querySelectorAll('thead th'),function(th){
     var t=(th.textContent||'').trim().replace(/\s+/g,' '),nt=null;
-    if(/^sml no\.?$/i.test(t))nt='SML';else if(/^closing( air)?$/i.test(t))nt='AIR';
+    if(/^sml no\.?$/i.test(t))nt='SML';else if(/^closing( air| sml)?$/i.test(t))nt=(window.PGAIRSML==='sml')?'SML':'AIR';
     if(!nt)return;
     var tn=[].filter.call(th.childNodes,function(n){return n.nodeType===3});
     if(tn.length){tn[0].nodeValue=nt;tn.slice(1).forEach(function(n){n.parentNode.removeChild(n)})}else th.insertBefore(d.createTextNode(nt),th.firstChild)})}
