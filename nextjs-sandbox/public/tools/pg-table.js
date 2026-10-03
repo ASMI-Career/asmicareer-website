@@ -50,6 +50,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
     if(thB){if(bCol>cCol+1)thC.parentNode.insertBefore(thB,thC.nextSibling);thB.classList.add('pgc2')}}
    if(smlCols===null&&rows.length){
     var seen={};rows.forEach(function(tr){[].forEach.call(tr.cells,function(td,i){if(td.querySelector('.smlp'))seen[i]=1})});
+    if(window.PGSMLALL&&hdrInfo)hdrInfo.forEach(function(x,i){if(x&&x.r2&&/^closing/i.test((x.r2.textContent||'').trim()))seen[i]=1});
     smlCols=Object.keys(seen).map(Number).sort(function(a,b){return a-b});
     if(smlCols.length)headerSML(smlCols)}
    if(smlCols&&smlCols.length)rows.forEach(function(tr){
