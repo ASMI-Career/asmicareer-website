@@ -156,6 +156,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
 small.sub{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:2px}
+@media (min-width:961px){body.pgui .fxg.fxg{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -260,17 +261,17 @@ td.n .sml+small{margin-top:4px}
 <div class="fld chipw">Cutoff type<span class="chips seg" id="cchips"></span></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Show<select id="show"><option value="all">All Seats</option><option value="within">Within My Rank</option><option value="near">Borderline Option</option></select></label>
-<label>Round wise<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="fld">Quota<span id="ms-quota"></span></div>
-<div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">Sub quota<span id="ms-sub"></span></div>
 <div class="fld">Clinical / Non-clinical<span id="ms-btype"></span></div>
+<div class="fld">Degree<span id="ms-st"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
 <div class="fld">College type<span id="ms-ctype"></span></div>
-<div class="fld">City<span id="ms-city"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
+<label>Round wise<select id="round"></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing AIR</option><option value="sml">Closing SML</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
 </section>
