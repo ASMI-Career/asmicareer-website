@@ -90,7 +90,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
   function svg(k){return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[k]||P.list)+'</svg>'}
   function ic(k,t){var i=d.createElement('i');i.className='ic';i.setAttribute('data-t',t);i.innerHTML=svg(k);return i}
   /* label text -> icon + colour */
-  var KM=[[/fee/,'rupee',4],[/^state/,'flag',1],[/^show/,'eye',1],[/^round/,'target',2],[/^sort/,'sort',1],[/^(degree|course|stream)/,'cap',3],[/^(quota|category|pool)/,'users',4],
+  var KM=[[/fee/,'rupee',4],[/^state/,'flag',1],[/^show/,'eye',1],[/^round/,'target',2],[/^sort/,'sort',1],[/^(degree|course|stream)/,'cap',3],[/^(quota|category|pool)/,'users',4],[/^gender/,'user',5],
    [/^sub/,'tag',5],[/^college type/,'bank',6],[/^clinical/,'steth',7],[/^(branch|specialty|subject)/,'star',2],[/^city/,'pin',5],[/^college/,'building',6]];
   function kind(txt){txt=txt.toLowerCase();if(/^category/.test(txt))return ['tag',5];for(var i=0;i<KM.length;i++)if(KM[i][0].test(txt))return [KM[i][1],KM[i][2]];return ['list',1]}
   function lbl(el){ /* wrap the leading text node in <b class=lb> */
