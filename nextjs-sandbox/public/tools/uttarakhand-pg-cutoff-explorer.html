@@ -411,8 +411,8 @@ async function savePdf(){
  doc.setFontSize(8);doc.setFont('helvetica','normal');
  var I=info(Q),y=31,line1=[I[0],I[1],I[2],I[3]].map(function(p){return p[0]+': '+p[1]}).join('     ');
  doc.text(asc(line1),10,y);y+=4.5;
- var line2='Course: '+I[5][1]+'   |   Quota: '+I[6][1]+'   |   Category: '+I[7][1]+'   |   Special Reservation: '+I[8][1]+'   |   Cutoff type: '+I[15][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
- var line3='Branch: '+I[9][1]+'   |   Type: '+I[10][1]+'   |   City: '+I[11][1]+'   |   College: '+I[12][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
+ var line2='Degree: '+I[5][1]+'   |   Quota: '+I[6][1]+'   |   Category: '+I[7][1]+'   |   Gender: '+I[8][1]+'   |   Special Reservation: '+I[9][1]+'   |   Cutoff type: '+I[16][1];doc.text(doc.splitTextToSize(asc(line2),277),10,y);y+=4.5;
+ var line3='Branch: '+I[10][1]+'   |   Type: '+I[11][1]+'   |   College Type: '+I[15][1]+'   |   City: '+I[12][1]+'   |   College: '+I[13][1];var l3=doc.splitTextToSize(asc(line3),277);doc.text(l3,10,y);y+=4*l3.length+1;
  var fmt=function(v){return v===null?'-':Number(v).toLocaleString('en-IN')};
  var body=rowsFor(Q).map(function(r){var o=[asc(r[0]),asc(r[3]),asc(r[5]),r[6]];
   var pc=function(a,b){return CM==='all'?a:(CM==='both'&&a!==null&&a!==b?fmt(a)+' / '+fmt(b):(a===null?'-':fmt(a)))};
