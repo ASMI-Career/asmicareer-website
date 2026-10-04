@@ -15,19 +15,31 @@
           "Intake": 1,
           "AIR": 186088,
           "SML": 14962,
-          "Score": "OBC-4368"
+          "CSML": "OBC-4368"
         },
-        "Stray Round 2": {
-          "Intake": 413,
-          "AIR": 1,
-          "SML": 254345,
-          "Score": 19373
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 254345,
+          "SML": 19373,
+          "CSML": "OBC-5600"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 260503,
+          "SML": 19694,
+          "CSML": "OBC-5663"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 437441,
+          "SML": 30429,
+          "CSML": "OBC-8533"
         }
       }
     },
     {
       "code": 2105,
-      "name": "MGV\u2019s KBH Dental College & Hospital, Nashik",
+      "name": "MGV’s KBH Dental College & Hospital, Nashik",
       "establishment": 1991,
       "fees": "2,07,435/-",
       "rounds": {
@@ -35,13 +47,23 @@
           "Intake": 3,
           "AIR": 223559,
           "SML": 17470,
-          "Score": "OBC-5082"
+          "CSML": "OBC-5082"
         },
-        "Stray Round 2": {
-          "Intake": 393,
-          "AIR": 1,
-          "SML": 279757,
-          "Score": 20961
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 279757,
+          "SML": 20961,
+          "CSML": "OBC-6002"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -55,13 +77,23 @@
           "Intake": 3,
           "AIR": 166594,
           "SML": 13558,
-          "Score": "OBC-3979"
+          "CSML": "OBC-3979"
         },
-        "Stray Round 2": {
-          "Intake": 423,
-          "AIR": 2,
-          "SML": 207022,
-          "Score": 16416
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 207022,
+          "SML": 16416,
+          "CSML": "OBC-4765"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -75,13 +107,24 @@
           "Intake": 3,
           "AIR": 221712,
           "SML": 17360,
-          "Score": "OBC-5050"
+          "CSML": "OBC-5050"
         },
-        "Stray Round 2": {
-          "Intake": 394,
-          "AIR": 3,
-          "SML": 258924,
-          "Score": 19691
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 258924,
+          "SML": 19691,
+          "CSML": "OBC-5684"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 280573,
+          "SML": 20918,
+          "CSML": "OBC-5982"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -95,13 +138,23 @@
           "Intake": 3,
           "AIR": 275268,
           "SML": 20713,
-          "Score": "OBC-5939"
+          "CSML": "OBC-5939"
         },
-        "Stray Round 2": {
-          "Intake": 368,
-          "AIR": 1,
-          "SML": 348238,
-          "Score": 25152
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 348238,
+          "SML": 25152,
+          "CSML": "OBC-7130"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -115,13 +168,24 @@
           "Intake": 2,
           "AIR": 295918,
           "SML": 21961,
-          "Score": "OBC-6293"
+          "CSML": "OBC-6293"
         },
-        "Stray Round 2": {
-          "Intake": 359,
-          "AIR": 2,
-          "SML": 386821,
-          "Score": 27553
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 386821,
+          "SML": 27553,
+          "CSML": "OBC-7781"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 414588,
+          "SML": 29087,
+          "CSML": "OBC-8193"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -129,19 +193,27 @@
       "code": 2119,
       "name": "M.A. Rangoonwala Dental College, Pune",
       "establishment": 2000,
-      "fees": "-",
+      "fees": null,
       "rounds": {
         "Round 1": {
-          "Intake": "-",
-          "AIR": "-",
-          "SML": "-",
-          "Score": "-"
+          "Intake": null,
+          "AIR": null,
+          "SML": null
         },
-        "Stray Round 2": {
-          "Intake": "-",
-          "AIR": 0,
-          "SML": "-",
-          "Score": "-"
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -155,13 +227,24 @@
           "Intake": 2,
           "AIR": 258924,
           "SML": 19691,
-          "Score": "OBC-5684"
+          "CSML": "OBC-5684"
         },
-        "Stray Round 2": {
-          "Intake": 376,
-          "AIR": 0,
-          "SML": 328661,
-          "Score": 23984
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 328661,
+          "SML": 23984,
+          "CSML": "OBC-6820"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 380948,
+          "SML": 27031,
+          "CSML": "OBC-7613"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -175,13 +258,24 @@
           "Intake": 3,
           "AIR": 275370,
           "SML": 20726,
-          "Score": "OBC-5943"
+          "CSML": "OBC-5943"
         },
-        "Stray Round 2": {
-          "Intake": 368,
-          "AIR": 3,
-          "SML": 352969,
-          "Score": 25442
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 352969,
+          "SML": 25442,
+          "CSML": "OBC-7201"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 363246,
+          "SML": 25994,
+          "CSML": "OBC-7334"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -195,13 +289,25 @@
           "Intake": 3,
           "AIR": 169108,
           "SML": 13764,
-          "Score": "OBC-4047"
+          "CSML": "OBC-4047"
         },
-        "Stray Round 2": {
-          "Intake": 422,
-          "AIR": 3,
-          "SML": 210970,
-          "Score": 16677
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 210970,
+          "SML": 16677,
+          "CSML": "OBC-4833"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 240657,
+          "SML": 18476,
+          "CSML": "OBC-5349"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 267121,
+          "SML": 20104,
+          "CSML": "OBC-5761"
         }
       }
     },
@@ -215,13 +321,23 @@
           "Intake": 3,
           "AIR": 127965,
           "SML": 10707,
-          "Score": "OBC-3144"
+          "CSML": "OBC-3144"
         },
-        "Stray Round 2": {
-          "Intake": 446,
-          "AIR": 0,
-          "SML": "-",
-          "Score": "-"
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 140990,
+          "SML": 11677,
+          "CSML": "OBC-3431"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -235,13 +351,23 @@
           "Intake": 3,
           "AIR": 201174,
           "SML": 16004,
-          "Score": "OBC-4649"
+          "CSML": "OBC-4649"
         },
-        "Stray Round 2": {
-          "Intake": 405,
-          "AIR": 2,
-          "SML": 267827,
-          "Score": 20249
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 267827,
+          "SML": 20249,
+          "CSML": "OBC-5820"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -255,13 +381,25 @@
           "Intake": 3,
           "AIR": 329566,
           "SML": 24038,
-          "Score": "OBC-6839"
+          "CSML": "OBC-6839"
         },
-        "Stray Round 2": {
-          "Intake": 344,
-          "AIR": 3,
-          "SML": 405328,
-          "Score": 28701
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 405328,
+          "SML": 28701,
+          "CSML": "OBC-8116"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 436452,
+          "SML": 30369,
+          "CSML": "OBC-8518"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 462914,
+          "SML": 31996,
+          "CSML": "OBC-8938"
         }
       }
     },
@@ -275,13 +413,22 @@
           "Intake": 2,
           "AIR": 318516,
           "SML": 23355,
-          "Score": "OBC-6658"
+          "CSML": "OBC-6658"
         },
-        "Stray Round 2": {
-          "Intake": 349,
-          "AIR": 1,
-          "SML": "-",
-          "Score": "-"
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -295,13 +442,23 @@
           "Intake": 3,
           "AIR": 260266,
           "SML": 19765,
-          "Score": "OBC-5695"
+          "CSML": "OBC-5695"
         },
-        "Stray Round 2": {
-          "Intake": 375,
-          "AIR": 1,
-          "SML": 309652,
-          "Score": 22841
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 309652,
+          "SML": 22841,
+          "CSML": "OBC-6516"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -315,13 +472,24 @@
           "Intake": 3,
           "AIR": 342208,
           "SML": 24809,
-          "Score": "OBC-7041"
+          "CSML": "OBC-7041"
         },
-        "Stray Round 2": {
-          "Intake": 339,
-          "AIR": 2,
-          "SML": 412460,
-          "Score": 29125
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 412460,
+          "SML": 29125,
+          "CSML": "OBC-8234"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 436841,
+          "SML": 30397,
+          "CSML": "OBC-8526"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -335,13 +503,23 @@
           "Intake": 3,
           "AIR": 224449,
           "SML": 17536,
-          "Score": "OBC-5098"
+          "CSML": "OBC-5098"
         },
-        "Stray Round 2": {
-          "Intake": 393,
-          "AIR": 3,
-          "SML": 267314,
-          "Score": 20218
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 267314,
+          "SML": 20218,
+          "CSML": "OBC-5807"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -355,13 +533,25 @@
           "Intake": 3,
           "AIR": 359201,
           "SML": 25849,
-          "Score": "OBC-7310"
+          "CSML": "OBC-7310"
         },
-        "Stray Round 2": {
-          "Intake": 332,
-          "AIR": 3,
-          "SML": 435878,
-          "Score": 30524
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 435878,
+          "SML": 30524,
+          "CSML": "OBC-8597"
+        },
+        "Round 3": {
+          "Intake": 3,
+          "AIR": 466829,
+          "SML": 32208,
+          "CSML": "OBC-9000"
+        },
+        "Stray Round 1": {
+          "Intake": 2,
+          "AIR": 502301,
+          "SML": 34254,
+          "CSML": "OBC-9525"
         }
       }
     },
@@ -375,19 +565,30 @@
           "Intake": 3,
           "AIR": 309415,
           "SML": 22829,
-          "Score": "OBC-6513"
+          "CSML": "OBC-6513"
         },
-        "Stray Round 2": {
-          "Intake": 353,
-          "AIR": 2,
-          "SML": 377885,
-          "Score": 26993
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 377885,
+          "SML": 26993,
+          "CSML": "OBC-7624"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 394609,
+          "SML": 27885,
+          "CSML": "OBC-7844"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
     {
       "code": 2314,
-      "name": "C.S.M.S.S.\u2019s Dental College & Hospital, Aurangabad",
+      "name": "C.S.M.S.S.’s Dental College & Hospital, Aurangabad",
       "establishment": 1991,
       "fees": "1,59,250/-",
       "rounds": {
@@ -395,13 +596,25 @@
           "Intake": 3,
           "AIR": 181223,
           "SML": 14611,
-          "Score": "OBC-4273"
+          "CSML": "OBC-4273"
         },
-        "Stray Round 2": {
-          "Intake": 415,
-          "AIR": 1,
-          "SML": 224449,
-          "Score": 17536
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 224449,
+          "SML": 17536,
+          "CSML": "OBC-5098"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 235052,
+          "SML": 18117,
+          "CSML": "OBC-5256"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 353761,
+          "SML": 25379,
+          "CSML": "OBC-7158"
         }
       }
     },
@@ -415,13 +628,24 @@
           "Intake": 3,
           "AIR": 258155,
           "SML": 19628,
-          "Score": "OBC-5664"
+          "CSML": "OBC-5664"
         },
-        "Stray Round 2": {
-          "Intake": 376,
-          "AIR": 3,
-          "SML": 325216,
-          "Score": 23756
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 325216,
+          "SML": 23756,
+          "CSML": "OBC-6763"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 342211,
+          "SML": 24690,
+          "CSML": "OBC-6986"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -435,13 +659,24 @@
           "Intake": 3,
           "AIR": 358308,
           "SML": 25792,
-          "Score": "OBC-7299"
+          "CSML": "OBC-7299"
         },
-        "Stray Round 2": {
-          "Intake": 332,
-          "AIR": 2,
-          "SML": 433009,
-          "Score": 30366
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 433009,
+          "SML": 30366,
+          "CSML": "OBC-8551"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 458334,
+          "SML": 31689,
+          "CSML": "OBC-8860"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -455,19 +690,31 @@
           "Intake": 2,
           "AIR": 377224,
           "SML": 26960,
-          "Score": "OBC-7617"
+          "CSML": "OBC-7617"
         },
-        "Stray Round 2": {
-          "Intake": 325,
-          "AIR": 3,
-          "SML": 459231,
-          "Score": 31935
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 459231,
+          "SML": 31935,
+          "CSML": "OBC-8965"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 490144,
+          "SML": 33538,
+          "CSML": "OBC-9326"
+        },
+        "Stray Round 1": {
+          "Intake": 2,
+          "AIR": 509001,
+          "SML": 34614,
+          "CSML": "OBC-9622"
         }
       }
     },
     {
       "code": 2332,
-      "name": "Dr. Hedgewar Smruti Rugna Seva Mandal\u2019s Dental College & Hospital, Hingoli",
+      "name": "Dr. Hedgewar Smruti Rugna Seva Mandal’s Dental College & Hospital, Hingoli",
       "establishment": 2008,
       "fees": "1,07,500/-",
       "rounds": {
@@ -475,13 +722,24 @@
           "Intake": 3,
           "AIR": 363663,
           "SML": 26154,
-          "Score": "OBC-7405"
+          "CSML": "OBC-7405"
         },
-        "Stray Round 2": {
-          "Intake": 330,
-          "AIR": 2,
-          "SML": 453014,
-          "Score": 31575
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 453014,
+          "SML": 31575,
+          "CSML": "OBC-8886"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 475877,
+          "SML": 32700,
+          "CSML": "OBC-9128"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -495,13 +753,24 @@
           "Intake": 3,
           "AIR": 308449,
           "SML": 22753,
-          "Score": "OBC-6494"
+          "CSML": "OBC-6494"
         },
-        "Stray Round 2": {
-          "Intake": 353,
-          "AIR": 2,
-          "SML": 398741,
-          "Score": 28302
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 398741,
+          "SML": 28302,
+          "CSML": "OBC-7988"
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 435162,
+          "SML": 30298,
+          "CSML": "OBC-8496"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     }

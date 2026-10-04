@@ -1,0 +1,207 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "GOVT_BDS",
+  "category": "SEBC",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": 2101,
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 97535,
+          "SML": 8219,
+          "CSML": "SEBC-1146"
+        },
+        "Round 2": {
+          "Intake": 6,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 113311,
+          "SML": 9522,
+          "CSML": "SEBC-1347"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 115912,
+          "SML": 9719,
+          "CSML": "SEBC-1364"
+        },
+        "Stray Round 2": {
+          "AIR": 153281,
+          "SML": 12571,
+          "CSML": "SEBC-1686"
+        },
+        "Stray Round 3": {
+          "AIR": 163945,
+          "SML": 13301,
+          "CSML": "SEBC-1771"
+        }
+      }
+    },
+    {
+      "code": 2102,
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 96095,
+          "SML": 8101,
+          "CSML": "SEBC-1128"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 107605,
+          "SML": 9115,
+          "CSML": "SEBC-1282"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 119019,
+          "SML": 9960,
+          "CSML": "SEBC-1387"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": 131164,
+          "SML": 10902,
+          "CSML": "SEBC-1509"
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 3": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2136,
+      "name": "Government Dental College, Jalgaon",
+      "establishment": 2025,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 105940,
+          "SML": 8974,
+          "CSML": "SEBC-1263"
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 126928,
+          "SML": 10628,
+          "CSML": "SEBC-1464"
+        },
+        "Round 3": {
+          "Intake": 2,
+          "AIR": 170685,
+          "SML": 13815,
+          "CSML": "SEBC-1825"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 3": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2207,
+      "name": "Government Dental College, Nagpur",
+      "establishment": 1968,
+      "fees": "11,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 100426,
+          "SML": 8475,
+          "CSML": "SEBC-1180"
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 117449,
+          "SML": 9898,
+          "CSML": "SEBC-1377"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 129783,
+          "SML": 10796,
+          "CSML": "SEBC-1495"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 3": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2313,
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "11,150/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 99633,
+          "SML": 8406,
+          "CSML": "SEBC-1173"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 108399,
+          "SML": 9175,
+          "CSML": "SEBC-1290"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 129278,
+          "SML": 10756,
+          "CSML": "SEBC-1489"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 3": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}

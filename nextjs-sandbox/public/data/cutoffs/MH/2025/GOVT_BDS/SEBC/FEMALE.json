@@ -15,19 +15,24 @@
           "Intake": 3,
           "AIR": 84579,
           "SML": 7135,
-          "Score": "SEBC-1002"
+          "CSML": "SEBC-1002"
         },
-        "Stray Round 2": {
-          "Intake": 475,
-          "AIR": 1,
-          "SML": 98530,
-          "Score": 8315
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 98530,
+          "SML": 8315,
+          "CSML": "SEBC-1159"
         },
-        "Stray Round 3": {
-          "Intake": "SEBC-1159",
-          "AIR": 560,
-          "SML": 0,
-          "Score": 109705
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 109705,
+          "SML": 9222,
+          "CSML": "SEBC-1308"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -41,45 +46,52 @@
           "Intake": 2,
           "AIR": 98530,
           "SML": 8315,
-          "Score": "SEBC-1159"
+          "CSML": "SEBC-1159"
         },
-        "Stray Round 2": {
-          "Intake": 465,
-          "AIR": 0,
-          "SML": 106351,
-          "Score": 9003
+        "Round 2": {
+          "Intake": 0,
+          "AIR": 106351,
+          "SML": 9003,
+          "CSML": "SEBC-1268"
         },
-        "Stray Round 3": {
-          "Intake": "SEBC-1268",
-          "AIR": 558,
-          "SML": 0,
-          "Score": 118745
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 118745,
+          "SML": 9935,
+          "CSML": "SEBC-1384"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
     {
       "code": 2126,
-      "name": "Government Dental College, Jalgaon ",
+      "name": "Government Dental College, Jalgaon",
       "establishment": 2025,
       "fees": null,
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": "-",
-          "SML": "-",
-          "Score": "-"
+          "AIR": null,
+          "SML": null
         },
-        "Stray Round 2": {
-          "Intake": "-",
-          "AIR": 1,
-          "SML": "-",
-          "Score": "-"
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         },
-        "Stray Round 3": {
-          "Intake": "-",
-          "AIR": "-",
-          "SML": 1,
-          "Score": "-"
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -93,19 +105,23 @@
           "Intake": 2,
           "AIR": 102813,
           "SML": 8696,
-          "Score": "SEBC-1217"
+          "CSML": "SEBC-1217"
         },
-        "Stray Round 2": {
-          "Intake": 462,
-          "AIR": 1,
-          "SML": 111585,
-          "Score": 9425
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 111585,
+          "SML": 9425,
+          "CSML": "SEBC-1330"
         },
-        "Stray Round 3": {
-          "Intake": "SEBC-1330",
-          "AIR": 557,
-          "SML": 0,
-          "Score": "-"
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -119,19 +135,23 @@
           "Intake": 2,
           "AIR": 102075,
           "SML": 8639,
-          "Score": "SEBC-1208"
+          "CSML": "SEBC-1208"
         },
-        "Stray Round 2": {
-          "Intake": 463,
-          "AIR": 1,
-          "SML": 105940,
-          "Score": 8974
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 105940,
+          "SML": 8974,
+          "CSML": "SEBC-1263"
         },
-        "Stray Round 3": {
-          "Intake": "SEBC-1263",
-          "AIR": 558,
-          "SML": 0,
-          "Score": "-"
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     }

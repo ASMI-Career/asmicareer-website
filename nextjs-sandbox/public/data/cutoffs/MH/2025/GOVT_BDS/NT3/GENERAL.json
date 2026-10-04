@@ -1,0 +1,180 @@
+{
+  "counselling": "MH",
+  "year": 2025,
+  "quota_type": "GOVT_BDS",
+  "category": "NT3",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": 2101,
+      "name": "Government Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "11,100/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 88112,
+          "SML": 7437,
+          "CSML": "NT(D)-302"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 89171,
+          "SML": 7528,
+          "CSML": "NT(D)-306"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 89044,
+          "SML": 7470,
+          "CSML": "NT(D)-303"
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2102,
+      "name": "Nair Dental College, Mumbai",
+      "establishment": 1951,
+      "fees": "6,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2136,
+      "name": "Government Dental College, Jalgaon",
+      "establishment": 2025,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 110895,
+          "SML": 9377,
+          "CSML": "NT(D)-385"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 126862,
+          "SML": 10565,
+          "CSML": "NT(D)-436"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 133247,
+          "SML": 11065,
+          "CSML": "NT(D)-452"
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2207,
+      "name": "Government Dental College, Nagpur",
+      "establishment": 1968,
+      "fees": "11,400/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 100685,
+          "SML": 8506,
+          "CSML": "NT(D)-351"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 111384,
+          "SML": 9408,
+          "CSML": "NT(D)-390"
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": 91955,
+          "SML": 7707,
+          "CSML": "NT(D)-320"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 127358,
+          "SML": 10602,
+          "CSML": "NT(D)-437"
+        },
+        "Stray Round 2": {
+          "AIR": 163318,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": 2313,
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "11,150/-",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 93334,
+          "SML": 7864,
+          "CSML": "NT(D)-327"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 3": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 1": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
+        },
+        "Stray Round 2": {
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}
