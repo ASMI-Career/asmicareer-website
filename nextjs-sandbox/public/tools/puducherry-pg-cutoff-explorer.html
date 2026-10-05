@@ -346,7 +346,7 @@ function query(){
  function stat(g){var v=cv(g,rd);if(v==null)return -1;if(ar)return pass(ar,v);if(sm){var w=cs(g,rd);return w==null?-1:pass(sm,w)}return -1}
  var out=L.filter(function(g){
   if(CM==='all'?(rd?!(g.a[rd]!=null||g.r[rd]):!(g.a[0]!=null||g.r[0]||g.any)):(rd?!(g.r[rd]):!(g.r[0])))return false;
-  if(has(ps)&&!ps[g.pool])return false;
+  if(has(ps)&&!ps[g.pool]&&!(g.pool==='MI'&&has(mnz)&&ps.MG))return false;
   if(has(mnz)&&!mnz[g.pool])return false;
   if(has(cs0)&&!cs0[g.cat])return false;
   if(has(sbs)&&!g.tg.some(function(t){return sbs[t]}))return false;
