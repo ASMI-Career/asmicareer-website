@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASMI MCC PG Cutoff Explorer</title>
+<meta name="description" content="Filterable NEET-PG MCC Round 1-4 2026 closing ranks — pick multiple states and branches to compare cutoffs by college, category and quota, by ASMI Youth Career Advisor">
+<style>
+:root{
+  --bg:#fbf7f0; --surface:#ffffff; --surface-2:#fff4e8; --border:#ecd9bb; --text:#241c14; --muted:#8a7a63;
+  --accent:#d6541a; --accent-2:#0f7a5c; --accent-3:#7b3fb3; --accent-ink:#fffaf3;
+  --chip-bg:#ffe4cc; --chip-text:#a3390f; --chip-bg2:#d7f0e6; --chip-text2:#0c5d43;
+  --head-bg:#241c14; --head-text:#fdf4e5;
+  --row-alt:#fdf6ec; --focus:#d6541a; --shadow: 0 2px 8px rgba(90,58,20,0.08);
+  --grad-a:#d6541a; --grad-b:#e79a2e; --grad-c:#0f7a5c;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#191410; --surface:#231d17; --surface-2:#2a2119; --border:#40342697; --border:#453626; --text:#f4ead9; --muted:#b3a08a;
+    --accent:#ef8a4c; --accent-2:#4bd6a6; --accent-3:#c9a0f2; --accent-ink:#1c1006;
+    --chip-bg:#4a2a15; --chip-text:#ffb684; --chip-bg2:#153a2d; --chip-text2:#7fe0bd;
+    --head-bg:#120e0a; --head-text:#f4ead9;
+    --row-alt:#1f1a14; --focus:#ef8a4c; --shadow:none;
+    --grad-a:#ef8a4c; --grad-b:#d6541a; --grad-c:#4bd6a6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#191410; --surface:#231d17; --surface-2:#2a2119; --border:#453626; --text:#f4ead9; --muted:#b3a08a;
+  --accent:#ef8a4c; --accent-2:#4bd6a6; --accent-3:#c9a0f2; --accent-ink:#1c1006;
+  --chip-bg:#4a2a15; --chip-text:#ffb684; --chip-bg2:#153a2d; --chip-text2:#7fe0bd;
+  --head-bg:#120e0a; --head-text:#f4ead9;
+  --row-alt:#1f1a14; --focus:#ef8a4c; --shadow:none;
+  --grad-a:#ef8a4c; --grad-b:#d6541a; --grad-c:#4bd6a6;
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:'Mona Sans','Source Sans 3',-apple-system,Segoe UI,Roboto,sans-serif;
+  padding-inline:18px;
+  padding-block: max(24px, env(safe-area-inset-top)) 48px;
+  margin:0;
+}
+.wrap{max-width:1260px;margin:0 auto;}
+
+.hero{
+  background: linear-gradient(120deg, var(--grad-a), var(--grad-b) 55%, var(--grad-c));
+  border-radius:20px; padding:0; margin-bottom:18px; color:#fff8ef; overflow:hidden;
+  box-shadow: 0 10px 30px rgba(90,50,10,0.3);
+  position:relative;
+}
+.hero::before{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(circle at 88% -10%, rgba(255,255,255,0.22), transparent 45%);
+}
+.hero-top{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  padding:18px 26px; background:rgba(0,0,0,0.1); border-bottom:1px solid rgba(255,255,255,0.16);
+  position:relative; z-index:1;
+}
+.hero-body{
+  display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;
+  padding:24px 26px 26px; position:relative; z-index:1;
+}
+.hero .title-block{max-width:660px;}
+.brand-row{display:flex; align-items:center; gap:14px;}
+.brand-mark{
+  width:64px; height:64px; border-radius:14px; background:#fffaf3; object-fit:contain;
+  padding:6px; box-shadow:0 3px 10px rgba(0,0,0,0.25); flex-shrink:0;
+}
+.brand-text{display:flex; flex-direction:column; gap:2px;}
+.brand-name{font-family:'Fraunces',Georgia,serif; font-size:1.32rem; font-weight:700; color:#fffdf9; letter-spacing:-0.005em; line-height:1.15;}
+.brand-tag{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:#ffe9d4; font-weight:700; margin-top:1px;}
+.brand-helpline{font-size:0.86rem; color:#fff2e0; font-weight:600;}
+.brand-helpline a{
+  color:#fff; text-decoration:none; background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.4);
+  padding:7px 14px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; transition:background .12s ease;
+}
+.brand-helpline a:hover{background:rgba(255,255,255,0.28);}
+.eyebrow{
+  font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:#fff2e0;
+  font-weight:700; margin:0 0 6px; opacity:0.9;
+}
+h1{
+  font-family:'Fraunces',Georgia,serif;
+  font-weight:700; font-size:2.1rem; letter-spacing:-0.015em;
+  margin:0 0 8px; text-wrap:balance; line-height:1.08; color:#fffaf4;
+}
+.sub{color:#fff2e2; font-size:0.93rem; margin:0; line-height:1.55; max-width:560px;}
+.sub b{color:#fff; font-weight:700;}
+
+.stats{display:flex; gap:10px; flex-wrap:wrap;}
+.stat{
+  background:rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.3); border-radius:12px;
+  padding:10px 16px; min-width:100px; backdrop-filter: blur(2px);
+}
+.stat .n{font-family:'Fraunces',Georgia,serif; font-size:1.35rem; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; color:#fff;}
+.stat .l{font-size:0.66rem; text-transform:uppercase; letter-spacing:0.05em; color:#ffe9d4; margin-top:2px;}
+
+.panel{
+  background:var(--surface); border:1px solid var(--border); border-radius:16px;
+  padding:18px; margin-bottom:16px; box-shadow:var(--shadow);
+}
+.panel-label{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); font-weight:700; margin:0 0 12px;}
+.filters{display:flex; flex-wrap:wrap; gap:12px;}
+.field{display:flex; flex-direction:column; gap:5px; flex:1 1 170px; min-width:160px; position:relative;}
+.field label{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); font-weight:700;}
+.field input, .field select{
+  background:var(--surface-2); border:1.5px solid var(--border); border-radius:9px; color:var(--text);
+  padding:9px 11px; font-size:0.91rem; font-family:inherit; width:100%;
+  transition: border-color .12s ease, box-shadow .12s ease;
+}
+.field input:focus, .field select:focus{outline:none; border-color:var(--focus); box-shadow:0 0 0 3px color-mix(in srgb, var(--focus) 20%, transparent);}
+.field.grow{flex:2 1 220px;}
+.field.search input{
+  padding-left:34px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a7a63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:10px center;
+}
+.panel-divider{height:1px; background:var(--border); margin:16px 0; border:none;}
+
+/* multi-select */
+.multiselect{position:relative;}
+.ms-box{
+  background:var(--surface-2); border:1.5px solid var(--border); border-radius:9px;
+  padding:6px 8px; min-height:40px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; cursor:text;
+}
+.ms-box:focus-within{outline:2px solid var(--focus); outline-offset:1px; border-color:var(--focus);}
+.ms-chip{
+  display:inline-flex; align-items:center; gap:5px; background:var(--chip-bg); color:var(--chip-text);
+  border-radius:999px; padding:3px 6px 3px 10px; font-size:0.8rem; font-weight:700; white-space:nowrap;
+}
+.ms-chip.alt{background:var(--chip-bg2); color:var(--chip-text2);}
+.ms-chip button{
+  background:none; border:none; color:inherit; cursor:pointer; font-size:0.95rem; line-height:1; padding:2px 3px;
+  opacity:0.75; font-weight:800;
+}
+.ms-chip button:hover{opacity:1;}
+.ms-box input{
+  border:none; background:none; flex:1 1 80px; min-width:70px; padding:4px 2px; font-size:0.9rem; color:var(--text);
+}
+.ms-box input:focus{outline:none;}
+.ms-panel{
+  position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:20;
+  background:var(--surface); border:1.5px solid var(--border); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.18);
+  max-height:230px; overflow-y:auto; display:none;
+}
+.ms-panel.open{display:block;}
+.ms-opt{padding:8px 12px; font-size:0.87rem; cursor:pointer; display:flex; justify-content:space-between; gap:8px;}
+.ms-opt:hover{background:var(--surface-2);}
+.ms-opt.selected{color:var(--accent); font-weight:700;}
+.ms-opt .tick{opacity:0; font-weight:800;}
+.ms-opt.selected .tick{opacity:1;}
+.ms-empty{padding:10px 12px; font-size:0.85rem; color:var(--muted);}
+
+.rank-panel{
+  border:2px solid var(--accent); background:linear-gradient(135deg, var(--chip-bg) 0%, var(--surface) 60%);
+}
+.rank-row{display:flex; gap:12px; flex-wrap:wrap; align-items:center;}
+.rank-input-wrap{flex:1 1 260px; min-width:220px;}
+#fRank{
+  width:100%; background:var(--surface); border:2px solid var(--accent); border-radius:10px;
+  padding:12px 14px; font-size:1.1rem; font-weight:800; color:var(--text); font-family:inherit;
+  font-variant-numeric:tabular-nums;
+}
+#fRank:focus{outline:none; box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);}
+.rank-cell.eligible{background:color-mix(in srgb, var(--accent-2) 16%, transparent);}
+.rank-cell.eligible .close{color:var(--accent-2);}
+.rank-cell.not-eligible{opacity:0.35;}
+.roundbar{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px;}
+.round-btn{
+  border:2px solid var(--border); background:var(--surface); color:var(--muted);
+  border-radius:999px; padding:8px 16px; font-size:0.85rem; font-weight:800; cursor:pointer;
+  font-family:inherit; transition:transform .08s ease;
+}
+.round-btn:hover{transform:translateY(-1px);}
+.round-btn[data-active="1"]{color:#fff; border-color:transparent;}
+.round-btn[data-round="r1"][data-active="1"]{background:#d6541a;}
+.round-btn[data-round="r2"][data-active="1"]{background:#0f7a5c;}
+.round-btn[data-round="r3"][data-active="1"]{background:#7b3fb3;}
+.round-btn[data-round="r4"][data-active="1"]{background:#c2871a;}
+.roundbar-hint{font-size:0.78rem; color:var(--muted); margin:6px 0 14px;}
+
+th.grp{text-align:center !important; border-bottom-width:0 !important; color:#241c14 !important;}
+th.grp.r1{background:#ffd9c2;}
+th.grp.r2{background:#c9ecdf;}
+th.grp.r3{background:#e3d3f7;}
+th.grp.r4{background:#ffe6b3;}
+th.sub{border-bottom:3px solid transparent !important; font-size:0.68rem !important;}
+th.sub.r1{border-bottom-color:#d6541a !important;}
+th.sub.r2{border-bottom-color:#0f7a5c !important;}
+th.sub.r3{border-bottom-color:#7b3fb3 !important;}
+th.sub.r4{border-bottom-color:#c2871a !important;}
+td.empty-cell{color:var(--muted); opacity:0.5; text-align:center;}
+table.hide-r1 .col-r1{display:none;}
+table.hide-r2 .col-r2{display:none;}
+table.hide-r3 .col-r3{display:none;}
+table.hide-r4 .col-r4{display:none;}
+td.col-r1{background:color-mix(in srgb, #ffd9c2 22%, transparent);}
+td.col-r2{background:color-mix(in srgb, #c9ecdf 22%, transparent);}
+td.col-r3{background:color-mix(in srgb, #e3d3f7 22%, transparent);}
+td.col-r4{background:color-mix(in srgb, #ffe6b3 22%, transparent);}
+.elig-chip{
+  display:inline-block; font-size:0.62rem; font-weight:800; text-transform:uppercase; letter-spacing:0.02em;
+  padding:1px 6px; border-radius:999px; margin-left:5px; vertical-align:middle;
+}
+.elig-chip.safe{background:#d3f3e2; color:#0c6b46;}
+.elig-chip.no{background:#fddede; color:#a3271f;}
+
+/* seat-matrix styling: seats shown as a small pill, set apart from opening/closing ranks */
+th.seat-col{border-right:1px dashed rgba(255,255,255,0.35) !important;}
+td.seat-col{border-right:1px dashed var(--border);}
+td.seat-col .seat-pill{
+  display:inline-flex; align-items:center; justify-content:center; gap:3px;
+  min-width:26px; padding:2px 7px; border-radius:7px; font-weight:800; font-size:0.78rem;
+  background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+}
+td.seat-col .seat-pill::before{content:'👥'; font-size:0.64rem; opacity:0.6;}
+
+.rowbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin:16px 0 10px; flex-wrap:wrap;}
+.sortbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.sortbar label{font-size:0.78rem; color:var(--muted); font-weight:700;}
+.sortbar select{
+  background:var(--surface-2); border:1.5px solid var(--border); border-radius:8px; color:var(--text);
+  padding:6px 10px; font-size:0.85rem; font-family:inherit;
+}
+.sort-dir-btn{
+  border:1.5px solid var(--accent); background:var(--chip-bg); color:var(--chip-text);
+  border-radius:999px; padding:6px 14px; font-size:0.82rem; font-weight:800; cursor:pointer; font-family:inherit;
+}
+.sort-dir-btn:hover{filter:brightness(1.05);}
+.rowbar-actions{display:flex; align-items:center; gap:10px;}
+.pdf-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--accent-2); color:#fff; border:none; border-radius:9px;
+  padding:9px 16px; font-size:0.85rem; font-weight:800; cursor:pointer; font-family:inherit;
+}
+.pdf-btn:hover{filter:brightness(1.07);}
+.pdf-btn:disabled{opacity:0.6; cursor:wait;}
+.pdf-btn svg{flex-shrink:0;}
+.excel-btn{
+  display:inline-flex; align-items:center; gap:7px;
+  background:#f2b705; color:#241c14; border:none; border-radius:9px;
+  padding:9px 16px; font-size:0.85rem; font-weight:800; cursor:pointer; font-family:inherit;
+}
+.excel-btn:hover{filter:brightness(1.05);}
+.excel-btn:disabled{opacity:0.6; cursor:wait;}
+.excel-btn svg{flex-shrink:0;}
+.count{font-size:0.86rem; color:var(--muted);}
+.count b{color:var(--text); font-variant-numeric:tabular-nums; font-weight:800;}
+button.reset{
+  background:none; border:1.5px solid var(--border); color:var(--muted); border-radius:9px;
+  padding:7px 14px; font-size:0.82rem; cursor:pointer; font-family:inherit; font-weight:700;
+}
+button.reset:hover{color:var(--accent); border-color:var(--accent);}
+
+.tablewrap{
+  border:1px solid var(--border); border-radius:16px; overflow:auto; max-height:64vh;
+  background:var(--surface); box-shadow:var(--shadow);
+}
+table{width:100%; border-collapse:collapse; font-size:0.86rem; min-width:1850px;}
+thead th{
+  position:sticky; top:0; background:var(--head-bg); color:var(--head-text);
+  text-align:left; padding:11px 13px; font-weight:700; font-size:0.72rem;
+  text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap; cursor:pointer;
+  user-select:none; border-bottom:3px solid var(--accent);
+}
+thead tr:first-child th{padding:7px 13px; top:0;}
+thead tr:last-child th{top:31px;}
+thead th:hover{color:var(--grad-b);}
+thead th .arrow{opacity:0.8; margin-left:3px; color:var(--accent-2);}
+tbody td{padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top;}
+tbody tr:nth-child(even){background:var(--row-alt);}
+tbody tr:hover{background:var(--chip-bg);}
+td.num{font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; font-weight:700;}
+td.college{max-width:270px; font-weight:700;}
+td.city{color:var(--muted); white-space:nowrap;}
+td.small{color:var(--muted); font-size:0.81rem;}
+.state-tag{
+  display:inline-block; padding:2px 8px; border-radius:6px; font-size:0.74rem; font-weight:700;
+  background:var(--chip-bg2); color:var(--chip-text2);
+}
+.pill{
+  display:inline-block; padding:2px 9px; border-radius:999px; font-size:0.72rem;
+  background:var(--chip-bg); color:var(--chip-text); font-weight:700; white-space:nowrap;
+}
+.dash{color:var(--muted); opacity:0.6;}
+.city-guess{border-bottom:1.5px dashed var(--accent-3); cursor:help;}
+.empty{padding:44px 12px; text-align:center; color:var(--muted);}
+.note{font-size:0.79rem; color:var(--muted); margin-top:12px; line-height:1.6;}
+.note b{color:var(--text);}
+@media (max-width:640px){
+  .field{flex:1 1 100%;}
+  table{min-width:780px;}
+  h1{font-size:1.7rem;}
+  .hero-top{padding:14px 18px;}
+  .hero-body{padding:18px;}
+  .brand-mark{width:48px; height:48px;}
+  .brand-name{font-size:1.05rem;}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Mona+Sans:wght@400;500;600;700;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="brand-row">
+        <img class="brand-mark" src="/asmi-logo.png" alt="ASMI Youth Career Advisor logo">
+        <div class="brand-text">
+          <span class="brand-name">ASMI Youth Career Advisor</span>
+          <span class="brand-tag">India's Trusted NEET Admission Counsellors · Since 2016</span>
+        </div>
+      </div>
+      <span class="brand-helpline">Helpline: <a href="tel:7410019075">📞 7410019075</a></span>
+    </div>
+    <div class="hero-body">
+      <div class="title-block">
+        <p class="eyebrow">NEET-PG · MCC Counselling 2026</p>
+        <h1>MCC PG Cutoff Explorer</h1>
+        <p class="sub">Round&nbsp;1, Round&nbsp;2, Round&nbsp;3 and Round&nbsp;4 (Stray Vacancy) cutoffs for the same college + branch + category + quota sit in <b>one row</b>, side by side. Toggle rounds on or off below, and pick <b>multiple states</b> and <b>multiple branches</b> to compare further. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n" id="stGroups">–</div><div class="l">Cutoff rows</div></div>
+        <div class="stat"><div class="n" id="stColleges">–</div><div class="l">Institutes</div></div>
+        <div class="stat"><div class="n" id="stStates">–</div><div class="l">States/UTs</div></div>
+        <div class="stat"><div class="n" id="stCourses">–</div><div class="l">Branches</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel rank-panel">
+    <p class="panel-label">Check colleges by rank</p>
+    <div class="rank-row">
+      <div class="rank-input-wrap">
+        <input id="fRank" type="number" min="1" inputmode="numeric" placeholder="Enter your NEET-PG rank, e.g. 4500">
+      </div>
+      <button type="button" class="reset" id="rankClearBtn">Clear rank</button>
+    </div>
+    <p class="roundbar-hint" id="rankHint">Shows every college + branch + category + quota whose closing rank is at or beyond your rank — a rough "you could have gotten this seat" view based on last year's/this cycle's actual closing ranks, not an official prediction. Use the Category and Quota filters below to narrow it to your own category.</p>
+  </div>
+
+  <div class="panel">
+    <p class="panel-label">Rounds shown as columns — click to hide/show</p>
+    <div class="roundbar" id="roundBar"></div>
+    <p class="roundbar-hint">All four rounds are shown by default in one row per college + branch + category + quota.</p>
+    <hr class="panel-divider">
+    <p class="panel-label">Filter &amp; compare</p>
+    <div class="filters">
+      <div class="field grow search">
+        <label for="fCollege">College</label>
+        <input id="fCollege" type="text" list="collegeList" placeholder="Search or pick a college" autocomplete="off">
+        <datalist id="collegeList"></datalist>
+      </div>
+      <div class="field search">
+        <label for="fCity">City</label>
+        <input id="fCity" type="text" list="cityList" placeholder="Any city" autocomplete="off">
+        <datalist id="cityList"></datalist>
+      </div>
+      <div class="field grow multiselect" id="msState">
+        <label>States <span style="font-weight:400;color:var(--muted);">(pick any number)</span></label>
+        <div class="ms-box" tabindex="-1">
+          <div class="ms-chips"></div>
+          <input type="text" placeholder="Add a state…" autocomplete="off">
+        </div>
+        <div class="ms-panel"></div>
+      </div>
+      <div class="field grow multiselect" id="msCourse">
+        <label>Branches <span style="font-weight:400;color:var(--muted);">(pick 3+ to compare)</span></label>
+        <div class="ms-box" tabindex="-1">
+          <div class="ms-chips"></div>
+          <input type="text" placeholder="Add a branch…" autocomplete="off">
+        </div>
+        <div class="ms-panel"></div>
+      </div>
+      <div class="field">
+        <label for="fCat">Category</label>
+        <select id="fCat"><option value="">All categories</option></select>
+      </div>
+      <div class="field grow multiselect" id="msQuota">
+        <label>Quota <span style="font-weight:400;color:var(--muted);">(pick any number)</span></label>
+        <div class="ms-box" tabindex="-1">
+          <div class="ms-chips"></div>
+          <input type="text" placeholder="Add a quota…" autocomplete="off">
+        </div>
+        <div class="ms-panel"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rowbar">
+    <div class="count"><b id="rCount">0</b> results</div>
+    <div class="sortbar">
+      <label for="sortField">Sort by</label>
+      <select id="sortField">
+        <option value="college">College name</option>
+        <option value="r1c">Round 1 closing rank</option>
+        <option value="r2c">Round 2 closing rank</option>
+        <option value="r3c">Round 3 closing rank</option>
+        <option value="r4c">Round 4 (Stray) closing rank</option>
+      </select>
+      <button type="button" class="sort-dir-btn" id="sortDirBtn" data-dir="1">Low → High</button>
+    </div>
+    <div class="rowbar-actions">
+      <button type="button" class="excel-btn" id="excelBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span id="excelBtnLabel">Download Excel</span>
+      </button>
+      <button type="button" class="pdf-btn" id="pdfBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span id="pdfBtnLabel">Download PDF</span>
+      </button>
+      <button class="reset" id="resetBtn">Clear filters</button>
+    </div>
+  </div>
+
+  <div class="tablewrap">
+    <table id="mainTable">
+      <thead>
+        <tr>
+          <th rowspan="2" data-key="college">College <span class="arrow"></span></th>
+          <th rowspan="2" data-key="city">City <span class="arrow"></span></th>
+          <th rowspan="2" data-key="state">State <span class="arrow"></span></th>
+          <th rowspan="2" data-key="course">Branch <span class="arrow"></span></th>
+          <th rowspan="2" data-key="quota">Quota <span class="arrow"></span></th>
+          <th rowspan="2" data-key="cat">Category <span class="arrow"></span></th>
+          <th colspan="3" class="grp r1 col-r1">Round 1</th>
+          <th colspan="3" class="grp r2 col-r2">Round 2</th>
+          <th colspan="3" class="grp r3 col-r3">Round 3</th>
+          <th colspan="3" class="grp r4 col-r4">Round 4 (Stray)</th>
+        </tr>
+        <tr>
+          <th class="num sub r1 col-r1 seat-col" data-key="r1s">Seats <span class="arrow"></span></th>
+          <th class="num sub r1 col-r1" data-key="r1o">Opening <span class="arrow"></span></th>
+          <th class="num sub r1 col-r1" data-key="r1c">Closing <span class="arrow"></span></th>
+          <th class="num sub r2 col-r2 seat-col" data-key="r2s">Seats <span class="arrow"></span></th>
+          <th class="num sub r2 col-r2" data-key="r2o">Opening <span class="arrow"></span></th>
+          <th class="num sub r2 col-r2" data-key="r2c">Closing <span class="arrow"></span></th>
+          <th class="num sub r3 col-r3 seat-col" data-key="r3s">Seats <span class="arrow"></span></th>
+          <th class="num sub r3 col-r3" data-key="r3o">Opening <span class="arrow"></span></th>
+          <th class="num sub r3 col-r3" data-key="r3c">Closing <span class="arrow"></span></th>
+          <th class="num sub r4 col-r4 seat-col" data-key="r4s">Seats <span class="arrow"></span></th>
+          <th class="num sub r4 col-r4" data-key="r4o">Opening <span class="arrow"></span></th>
+          <th class="num sub r4 col-r4" data-key="r4c">Closing <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <p class="note">Source: MCC NEET-PG 2026 provisional allotment results for Round&nbsp;1, Round&nbsp;2, Round&nbsp;3 and the Stray Vacancy round (labelled Round&nbsp;4 here). Each round's column shows <b>closing rank</b> (bold, the highest/worst allotted rank) with <b>opening rank</b> and <b>seats allotted</b> underneath, for that exact college + branch + category + quota combination; a round with no matching allotment shows <span class="dash">—</span>. <b>Round&nbsp;1</b> and <b>Round&nbsp;4</b> are each that round's own full allotment list. <b>Round&nbsp;2</b> and <b>Round&nbsp;3</b> are the effective seat held after that round: a candidate's own fresh allotment for that round where one exists, otherwise their earlier-round seat carried forward if the round file's status marked it "Reported" — a seat marked "Not Reported", "Seat Surrendered" or "Seat Cancelled" is dropped rather than carried forward. College names are re-cased from the source files' mixed/all-caps text into standard title case. <b>City</b> is parsed from the institute's address and general knowledge of the institution; a city with a dashed underline and <span class="city-guess" title="Best-effort guess from address text">~</span> is a best-effort guess from messy address text, and a small remainder still shows <span class="dash">—</span> where none could be inferred.</p>
+</div>
+
+<script>
+(function(){
+  var rows = [];
+  var lastFiltered = [];
+  var sortKey = 'college', sortDir = 1;
+  var selState = [];
+  var selCourse = [];
+  var selQuota = [];
+  var ROUND_KEYS = ['r1','r2','r3','r4'];
+  var ROUND_LABELS = {r1:'Round 1', r2:'Round 2', r3:'Round 3', r4:'Round 4'};
+  var hiddenRounds = {};
+
+  var els = {
+    college: document.getElementById('fCollege'),
+    city: document.getElementById('fCity'),
+    cat: document.getElementById('fCat'),
+    tbody: document.getElementById('tbody'),
+    rCount: document.getElementById('rCount'),
+    resetBtn: document.getElementById('resetBtn'),
+    sortField: document.getElementById('sortField'),
+    sortDirBtn: document.getElementById('sortDirBtn'),
+    rank: document.getElementById('fRank'),
+    rankClearBtn: document.getElementById('rankClearBtn'),
+    pdfBtn: document.getElementById('pdfBtn'),
+    pdfBtnLabel: document.getElementById('pdfBtnLabel'),
+    excelBtn: document.getElementById('excelBtn'),
+    excelBtnLabel: document.getElementById('excelBtnLabel')
+  };
+
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+    });
+  }
+  function norm(s){ return (s||'').toLowerCase(); }
+
+  function fillDatalist(dl, values){
+    var frag = document.createDocumentFragment();
+    values.forEach(function(v){
+      if(!v) return;
+      var o = document.createElement('option');
+      o.value = v;
+      frag.appendChild(o);
+    });
+    dl.appendChild(frag);
+  }
+  function fillSelect(sel, values){
+    values.forEach(function(v){
+      var o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    });
+  }
+
+  // ---- generic multi-select chip widget ----
+  function makeMultiSelect(rootId, allValues, selectedArr, onChange, chipAlt){
+    var root = document.getElementById(rootId);
+    var box = root.querySelector('.ms-box');
+    var chipsEl = root.querySelector('.ms-chips');
+    var input = root.querySelector('input');
+    var panel = root.querySelector('.ms-panel');
+
+    function renderChips(){
+      chipsEl.innerHTML = selectedArr.map(function(v){
+        return '<span class="ms-chip'+(chipAlt?' alt':'')+'" data-v="'+esc(v)+'">'+esc(v)+
+          '<button type="button" aria-label="Remove '+esc(v)+'">×</button></span>';
+      }).join('');
+    }
+    function renderPanel(){
+      var q = norm(input.value);
+      var opts = allValues.filter(function(v){ return norm(v).indexOf(q) !== -1; });
+      if (opts.length === 0){
+        panel.innerHTML = '<div class="ms-empty">No matches</div>';
+      } else {
+        panel.innerHTML = opts.slice(0,200).map(function(v){
+          var isSel = selectedArr.indexOf(v) !== -1;
+          return '<div class="ms-opt'+(isSel?' selected':'')+'" data-v="'+esc(v)+'">'+
+            '<span>'+esc(v)+'</span><span class="tick">✓</span></div>';
+        }).join('');
+      }
+    }
+    function open(){ renderPanel(); panel.classList.add('open'); }
+    function close(){ panel.classList.remove('open'); }
+
+    box.addEventListener('click', function(e){
+      if (e.target === box || e.target === chipsEl) input.focus();
+    });
+    input.addEventListener('focus', open);
+    input.addEventListener('input', open);
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Backspace' && input.value === '' && selectedArr.length){
+        selectedArr.pop(); renderChips(); onChange(); renderPanel();
+      }
+    });
+    document.addEventListener('click', function(e){
+      if (!root.contains(e.target)) close();
+    });
+    panel.addEventListener('click', function(e){
+      var opt = e.target.closest('.ms-opt');
+      if (!opt) return;
+      var v = opt.getAttribute('data-v');
+      var idx = selectedArr.indexOf(v);
+      if (idx === -1) selectedArr.push(v); else selectedArr.splice(idx,1);
+      input.value=''; renderChips(); renderPanel(); onChange();
+    });
+    chipsEl.addEventListener('click', function(e){
+      var btn = e.target.closest('button');
+      if (!btn) return;
+      var chip = btn.closest('.ms-chip');
+      var v = chip.getAttribute('data-v');
+      var idx = selectedArr.indexOf(v);
+      if (idx !== -1) selectedArr.splice(idx,1);
+      renderChips(); onChange(); if(panel.classList.contains('open')) renderPanel();
+    });
+
+    renderChips();
+    return { refreshOptions: function(newValues){ allValues = newValues; }, clear: function(){ selectedArr.length = 0; renderChips(); } };
+  }
+
+  var stateWidget, courseWidget, quotaWidget;
+
+  // row layout: [college, city, cityConf, state, course, quota, cat, r1, r2, r3, r4]
+  // each rN is null or [opening, closing, seats]
+  var IDX = {college:0, city:1, cityConf:2, state:3, course:4, quota:5, cat:6, r1:7, r2:8, r3:9, r4:10};
+
+  function render(){
+    var qc = norm(els.college.value);
+    var qcity = norm(els.city.value);
+    var cat = els.cat.value;
+    var rankVal = els.rank.value ? parseInt(els.rank.value, 10) : null;
+    if (rankVal !== null && (isNaN(rankVal) || rankVal < 1)) rankVal = null;
+
+    var filtered = rows.filter(function(r){
+      if (selState.length && selState.indexOf(r[IDX.state]) === -1) return false;
+      if (selCourse.length && selCourse.indexOf(r[IDX.course]) === -1) return false;
+      if (cat && r[IDX.cat] !== cat) return false;
+      if (selQuota.length && selQuota.indexOf(r[IDX.quota]) === -1) return false;
+      if (qc && norm(r[IDX.college]).indexOf(qc) === -1) return false;
+      if (qcity && norm(r[IDX.city]).indexOf(qcity) === -1) return false;
+      if (rankVal !== null){
+        var anyEligible = ROUND_KEYS.some(function(rk){
+          var v = r[IDX[rk]];
+          return v && v[1] >= rankVal;
+        });
+        if (!anyEligible) return false;
+      }
+      return true;
+    });
+
+    var ROUND_SUB = {r1o:['r1',0], r1c:['r1',1], r1s:['r1',2],
+      r2o:['r2',0], r2c:['r2',1], r2s:['r2',2],
+      r3o:['r3',0], r3c:['r3',1], r3s:['r3',2],
+      r4o:['r4',0], r4c:['r4',1], r4s:['r4',2]};
+
+    filtered.sort(function(a,b){
+      var av, bv;
+      if (ROUND_SUB[sortKey]){
+        var rk = ROUND_SUB[sortKey][0], pos = ROUND_SUB[sortKey][1];
+        var ra = a[IDX[rk]], rb = b[IDX[rk]];
+        av = ra ? ra[pos] : null; bv = rb ? rb[pos] : null;
+        if (av === null && bv === null) return 0;
+        if (av === null) return 1;
+        if (bv === null) return -1;
+        return (av-bv)*sortDir;
+      }
+      av = a[IDX[sortKey]]; bv = b[IDX[sortKey]];
+      return String(av).localeCompare(String(bv)) * sortDir;
+    });
+
+    els.rCount.textContent = filtered.length.toLocaleString('en-IN');
+    lastFiltered = filtered;
+
+    var cap = 500;
+    var shown = filtered.slice(0, cap);
+    var html = '';
+    if (shown.length === 0){
+      els.tbody.innerHTML = '<tr><td colspan="18" class="empty">No matching allotments. Try clearing a filter.</td></tr>';
+      return;
+    }
+    var showStateTag = selState.length > 1;
+    for (var i=0;i<shown.length;i++){
+      var r = shown[i];
+      var cityCell = '<span class="dash">—</span>';
+      if (r[IDX.city]){
+        cityCell = r[IDX.cityConf] === 'guess'
+          ? '<span class="city-guess" title="Best-effort guess from address text">'+esc(r[IDX.city])+'~</span>'
+          : esc(r[IDX.city]);
+      }
+      var stateCell = showStateTag ? '<span class="state-tag">'+esc(r[IDX.state])+'</span>' : '<span class="small">'+esc(r[IDX.state])+'</span>';
+
+      // build 3 cells (seats, opening, closing) per round, in fixed order
+      var roundCells = ROUND_KEYS.map(function(rk){
+        var v = r[IDX[rk]];
+        if (!v){
+          return '<td class="num empty-cell col-'+rk+' seat-col">—</td>' +
+                 '<td class="num empty-cell col-'+rk+'">—</td>' +
+                 '<td class="num empty-cell col-'+rk+'">—</td>';
+        }
+        var opening = v[0], closing = v[1], seats = v[2];
+        var rankCls = '', chip = '';
+        if (rankVal){
+          if (closing >= rankVal){
+            rankCls = ' rank-cell eligible';
+            chip = '<span class="elig-chip safe">Safe</span>';
+          } else {
+            rankCls = ' rank-cell not-eligible';
+            chip = '<span class="elig-chip no">No</span>';
+          }
+        }
+        return '<td class="num col-'+rk+rankCls+' seat-col"><span class="seat-pill">'+seats+'</span></td>' +
+               '<td class="num col-'+rk+rankCls+'">'+opening.toLocaleString('en-IN')+'</td>' +
+               '<td class="num col-'+rk+rankCls+'"><span class="close" style="font-weight:800;">'+closing.toLocaleString('en-IN')+'</span>'+chip+'</td>';
+      }).join('');
+
+      html += '<tr>' +
+        '<td class="college">'+esc(r[IDX.college])+'</td>' +
+        '<td class="city">'+cityCell+'</td>' +
+        '<td>'+stateCell+'</td>' +
+        '<td>'+esc(r[IDX.course])+'</td>' +
+        '<td class="small">'+esc(r[IDX.quota])+'</td>' +
+        '<td><span class="pill">'+esc(r[IDX.cat])+'</span></td>' +
+        roundCells +
+      '</tr>';
+    }
+    if (filtered.length > cap){
+      html += '<tr><td colspan="18" class="empty">Showing first '+cap+' of '+filtered.length.toLocaleString('en-IN')+' — narrow the filters to see more.</td></tr>';
+    }
+    els.tbody.innerHTML = html;
+  }
+
+  function syncSortUI(){
+    document.querySelectorAll('thead .arrow').forEach(function(a){a.textContent='';});
+    var activeTh = document.querySelector('thead th[data-key="'+sortKey+'"]');
+    if (activeTh) activeTh.querySelector('.arrow').textContent = sortDir===1 ? '▲' : '▼';
+    var known = ['college','r1c','r2c','r3c','r4c'];
+    if (known.indexOf(sortKey) !== -1) els.sortField.value = sortKey;
+    els.sortDirBtn.setAttribute('data-dir', sortDir);
+    els.sortDirBtn.textContent = sortDir === 1 ? 'Low → High' : 'High → Low';
+  }
+
+  document.querySelectorAll('thead th[data-key]').forEach(function(th){
+    th.addEventListener('click', function(){
+      var k = th.getAttribute('data-key');
+      if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = 1; }
+      syncSortUI();
+      render();
+    });
+  });
+
+  els.sortField.addEventListener('change', function(){
+    sortKey = els.sortField.value; sortDir = 1;
+    syncSortUI(); render();
+  });
+  els.sortDirBtn.addEventListener('click', function(){
+    sortDir *= -1;
+    syncSortUI(); render();
+  });
+
+  [els.college, els.city, els.rank].forEach(function(el){ el.addEventListener('input', render); });
+  els.rankClearBtn.addEventListener('click', function(){ els.rank.value=''; render(); });
+  els.cat.addEventListener('change', render);
+  els.resetBtn.addEventListener('click', function(){
+    els.college.value=''; els.city.value=''; els.cat.value=''; els.rank.value='';
+    if (stateWidget) stateWidget.clear();
+    if (courseWidget) courseWidget.clear();
+    if (quotaWidget) quotaWidget.clear();
+    hiddenRounds = {};
+    renderRoundBar();
+    applyColumnVisibility();
+    sortKey = 'college'; sortDir = 1;
+    syncSortUI();
+    render();
+  });
+
+  function applyColumnVisibility(){
+    var table = document.getElementById('mainTable');
+    ROUND_KEYS.forEach(function(rk){
+      table.classList.toggle('hide-'+rk, !!hiddenRounds[rk]);
+    });
+  }
+
+  function renderRoundBar(){
+    var bar = document.getElementById('roundBar');
+    bar.innerHTML = ROUND_KEYS.map(function(rk){
+      var active = !hiddenRounds[rk];
+      return '<button type="button" class="round-btn" data-round="'+rk+'" data-active="'+(active?1:0)+'">'+ROUND_LABELS[rk]+'</button>';
+    }).join('');
+    bar.querySelectorAll('.round-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var rk = btn.getAttribute('data-round');
+        hiddenRounds[rk] = !hiddenRounds[rk];
+        renderRoundBar();
+        applyColumnVisibility();
+      });
+    });
+  }
+
+  fetch('cutoff_data.json').then(function(r){ return r.json(); }).then(function(data){
+    rows = data;
+    var colleges = Array.from(new Set(rows.map(function(r){return r[IDX.college];}))).sort();
+    var cities = Array.from(new Set(rows.map(function(r){return r[IDX.city];}).filter(Boolean))).sort();
+    var states = Array.from(new Set(rows.map(function(r){return r[IDX.state];}))).sort();
+    var courses = Array.from(new Set(rows.map(function(r){return r[IDX.course];}))).sort();
+    var quotas = Array.from(new Set(rows.map(function(r){return r[IDX.quota];}))).sort();
+    var cats = Array.from(new Set(rows.map(function(r){return r[IDX.cat];}))).sort();
+
+    document.getElementById('stGroups').textContent = rows.length.toLocaleString('en-IN');
+    document.getElementById('stColleges').textContent = colleges.length.toLocaleString('en-IN');
+    document.getElementById('stStates').textContent = states.length.toLocaleString('en-IN');
+    document.getElementById('stCourses').textContent = courses.length.toLocaleString('en-IN');
+
+    fillDatalist(document.getElementById('collegeList'), colleges);
+    fillDatalist(document.getElementById('cityList'), cities);
+    fillSelect(els.cat, cats);
+
+    renderRoundBar();
+    stateWidget = makeMultiSelect('msState', states, selState, render, false);
+    courseWidget = makeMultiSelect('msCourse', courses, selCourse, render, true);
+    quotaWidget = makeMultiSelect('msQuota', quotas, selQuota, render, false);
+
+    syncSortUI();
+    render();
+  }).catch(function(err){
+    els.tbody.innerHTML = '<tr><td colspan="18" class="empty">Could not load cutoff data.</td></tr>';
+  });
+
+  // ---- PDF export ----
+  var logoDataUrl = null;
+  (function loadLogoForPdf(){
+    fetch('/asmi-logo.png').then(function(res){ return res.blob(); }).then(function(blob){
+      var reader = new FileReader();
+      reader.onload = function(){ logoDataUrl = reader.result; };
+      reader.readAsDataURL(blob);
+    }).catch(function(){ /* logo optional in PDF */ });
+  })();
+
+  function roundKeysVisible(){
+    return ROUND_KEYS.filter(function(rk){ return !hiddenRounds[rk]; });
+  }
+
+  function buildPdf(rows, docTitle){
+    rows = rows || lastFiltered;
+    docTitle = docTitle || 'MCC PG Cutoff Explorer';
+    var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+    var visRounds = roundKeysVisible().length ? roundKeysVisible() : ROUND_KEYS;
+    var doc = new jsPDFCtor({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    var pageW = doc.internal.pageSize.getWidth();
+    var marginX = 30;
+
+    // ---- letterhead band ----
+    var bandH = 64;
+    doc.setFillColor(214, 84, 26); // brand terracotta
+    doc.rect(0, 0, pageW, bandH, 'F');
+    doc.setFillColor(15, 122, 92); // brand teal accent strip
+    doc.rect(0, bandH, pageW, 3, 'F');
+
+    var logoBoxSize = 44, logoPad = 5;
+    var logoX = marginX, logoY = (bandH - logoBoxSize) / 2;
+    doc.setFillColor(255, 250, 243);
+    if (doc.roundedRect) doc.roundedRect(logoX, logoY, logoBoxSize, logoBoxSize, 8, 8, 'F');
+    else doc.rect(logoX, logoY, logoBoxSize, logoBoxSize, 'F');
+    if (logoDataUrl){
+      try {
+        var innerW = logoBoxSize - logoPad*2;
+        var innerH = innerW * (404/529); // preserve logo's native aspect ratio
+        if (innerH > logoBoxSize - logoPad*2){ innerH = logoBoxSize - logoPad*2; innerW = innerH * (529/404); }
+        doc.addImage(logoDataUrl, 'PNG', logoX + (logoBoxSize-innerW)/2, logoY + (logoBoxSize-innerH)/2, innerW, innerH);
+      } catch(e){}
+    }
+
+    var textX = logoX + logoBoxSize + 14;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(17);
+    doc.setTextColor(255, 250, 243);
+    doc.text('ASMI Youth Career Advisor', textX, bandH/2 - 6);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(255, 224, 196);
+    doc.text("India's Trusted NEET Admission Counsellors  ·  Since 2016", textX, bandH/2 + 10);
+
+    // helpline pill, right-aligned
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    var helplineText = 'Helpline: 7410019075';
+    var htw = doc.getTextWidth(helplineText);
+    var pillW = htw + 24, pillH = 22, pillX = pageW - marginX - pillW, pillY = bandH/2 - pillH/2;
+    doc.setDrawColor(255, 250, 243); doc.setLineWidth(1);
+    if (doc.roundedRect) doc.roundedRect(pillX, pillY, pillW, pillH, 11, 11, 'S');
+    doc.setTextColor(255, 250, 243);
+    doc.text(helplineText, pillX + pillW/2, pillY + pillH/2 + 3.5, { align: 'center' });
+
+    // ---- title + meta row ----
+    var y = bandH + 22;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(36, 28, 20);
+    doc.text(docTitle, marginX, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(120, 108, 90);
+    var genLine = 'Generated ' + new Date().toLocaleString('en-IN') + '  ·  ' + rows.length.toLocaleString('en-IN') + ' rows';
+    doc.text(genLine, pageW - marginX, y, { align: 'right' });
+
+    // active filter summary
+    var filterBits = [];
+    if (els.college.value) filterBits.push('College: ' + els.college.value);
+    if (els.city.value) filterBits.push('City: ' + els.city.value);
+    if (selState.length) filterBits.push('State: ' + selState.join(', '));
+    if (selCourse.length) filterBits.push('Branch: ' + selCourse.join(', '));
+    if (els.cat.value) filterBits.push('Category: ' + els.cat.value);
+    if (selQuota.length) filterBits.push('Quota: ' + selQuota.join(', '));
+    if (els.rank.value) filterBits.push('Rank: ' + els.rank.value);
+    var tableStartY = y + 14;
+    if (filterBits.length){
+      doc.setFontSize(8);
+      doc.setTextColor(163, 57, 15);
+      var filterLine = doc.splitTextToSize('Filters — ' + filterBits.join('  |  '), pageW - marginX*2);
+      doc.text(filterLine, marginX, y + 14);
+      tableStartY = y + 14 + (filterLine.length * 10);
+    }
+
+    var head = [['College', 'City', 'State', 'Branch', 'Quota', 'Category']];
+    visRounds.forEach(function(rk){
+      head[0].push(ROUND_LABELS[rk] + ' Seats', ROUND_LABELS[rk] + ' Open', ROUND_LABELS[rk] + ' Close');
+    });
+
+    var body = rows.map(function(r){
+      var row = [r[IDX.college], r[IDX.city] || '—', r[IDX.state], r[IDX.course], r[IDX.quota], r[IDX.cat]];
+      visRounds.forEach(function(rk){
+        var v = r[IDX[rk]];
+        if (!v){ row.push('—', '—', '—'); }
+        else { row.push(String(v[2]), String(v[0]), String(v[1])); }
+      });
+      return row;
+    });
+
+    doc.autoTable({
+      head: head,
+      body: body,
+      startY: tableStartY + 6,
+      margin: { left: marginX, right: marginX, bottom: 30 },
+      styles: { fontSize: 7, cellPadding: 3, overflow: 'linebreak' },
+      headStyles: { fillColor: [36, 28, 20], textColor: 255, fontSize: 7 },
+      alternateRowStyles: { fillColor: [253, 246, 236] },
+      columnStyles: { 0: { cellWidth: 130 }, 3: { cellWidth: 90 } },
+      didDrawPage: function(data){
+        var pageH = doc.internal.pageSize.getHeight();
+        doc.setDrawColor(230, 220, 205);
+        doc.setLineWidth(0.5);
+        doc.line(marginX, pageH - 22, pageW - marginX, pageH - 22);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(140, 128, 108);
+        doc.text('ASMI Youth Career Advisor · asmicareer.com · Helpline 7410019075', marginX, pageH - 12);
+        doc.text('Page ' + doc.internal.getNumberOfPages(), pageW - marginX, pageH - 12, { align: 'right' });
+      }
+    });
+
+    return doc;
+  }
+
+  els.pdfBtn.addEventListener('click', function(){
+    if (!lastFiltered.length){
+      els.pdfBtnLabel.textContent = 'No rows to export';
+      setTimeout(function(){ els.pdfBtnLabel.textContent = 'Download PDF'; }, 1800);
+      return;
+    }
+    els.pdfBtn.disabled = true;
+    var originalLabel = els.pdfBtnLabel.textContent;
+    els.pdfBtnLabel.textContent = 'Preparing…';
+
+    Promise.resolve().then(function(){
+      var doc = buildPdf();
+      var blob = doc.output('blob');
+      var fname = 'ASMI-NEETPG-Cutoffs-' + new Date().toISOString().slice(0,10) + '.pdf';
+      downloadBlob(fname, blob);
+      els.pdfBtnLabel.textContent = 'Saved!';
+    }).catch(function(err){
+      els.pdfBtnLabel.textContent = 'Failed — retry';
+    }).finally(function(){
+      els.pdfBtn.disabled = false;
+      setTimeout(function(){ els.pdfBtnLabel.textContent = originalLabel; }, 2200);
+    });
+  });
+
+  function downloadBlob(filename, data){
+    var blob = (data instanceof Blob) ? data : new Blob([data]);
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function saveBlob(filename, data, btn, label, doneLabel){
+    var original = label.textContent;
+    btn.disabled = true;
+    label.textContent = 'Preparing…';
+    return Promise.resolve().then(function(){
+      downloadBlob(filename, data);
+      label.textContent = doneLabel || 'Saved!';
+    }).catch(function(err){
+      label.textContent = 'Failed — retry';
+    }).finally(function(){
+      btn.disabled = false;
+      setTimeout(function(){ label.textContent = original; }, 2200);
+    });
+  }
+
+  els.excelBtn.addEventListener('click', function(){
+    if (!lastFiltered.length){
+      var orig0 = els.excelBtnLabel.textContent; els.excelBtnLabel.textContent = 'No rows to export';
+      setTimeout(function(){ els.excelBtnLabel.textContent = orig0; }, 1800);
+      return;
+    }
+    var visRounds = roundKeysVisible().length ? roundKeysVisible() : ROUND_KEYS;
+    var header = ['College', 'City', 'State', 'Branch', 'Quota', 'Category'];
+    visRounds.forEach(function(rk){
+      header.push(ROUND_LABELS[rk] + ' Seats', ROUND_LABELS[rk] + ' Open', ROUND_LABELS[rk] + ' Close');
+    });
+    var data = lastFiltered.map(function(r){
+      var row = [r[IDX.college], r[IDX.city] || '', r[IDX.state], r[IDX.course], r[IDX.quota], r[IDX.cat]];
+      visRounds.forEach(function(rk){
+        var v = r[IDX[rk]];
+        if (!v){ row.push('', '', ''); } else { row.push(v[2], v[0], v[1]); }
+      });
+      return row;
+    });
+    var ws = XLSX.utils.aoa_to_sheet([header].concat(data));
+    ws['!cols'] = header.map(function(h, i){ return { wch: i===0?32:(i===3?26:14) }; });
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'MCC Cutoffs');
+    var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    var blob = new Blob([wbout], { type: 'application/octet-stream' });
+    var fname = 'ASMI-NEETPG-Cutoffs-' + new Date().toISOString().slice(0,10) + '.xlsx';
+    saveBlob(fname, blob, els.excelBtn, els.excelBtnLabel, 'Saved!');
+  });
+})();
+</script>
+</body>
+</html>
