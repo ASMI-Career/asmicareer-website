@@ -180,7 +180,7 @@ var REGIONS=[
  {name:'Bihar',slug:'bihar',mono:'BR',desc:'2025 Bihar PGMAC allotment lists, Rounds 1 to 3 plus stray. All India Rank.',status:'live',url:'/tools/bihar-pg-cutoff-explorer'},
  {name:'Chhattisgarh',slug:'chhattisgarh',mono:'CG',desc:'2025 NEET PG (MD/MS) allotments, Rounds 1 to 5 with merit lists and seat matrices. State rank and All India Rank.',status:'live',url:'/tools/chhattisgarh-pg-cutoff-explorer'},
  {name:'Haryana',slug:'haryana',mono:'HR',desc:'2025 Haryana PG counselling allotments, Rounds 1 to 3 plus stray. State, Management, NRI and Minority quotas. All India Rank.',status:'live',url:'/tools/haryana-pg-cutoff-explorer'},
- {name:'Himachal Pradesh',slug:'himachal-pradesh',mono:'HP',desc:'2025 AMRU allotments, Rounds 1 to 3, stray and 2nd stray. HP Quota (Direct and In-service), Management and NRI. State merit number and All India Rank.',status:'live',url:'/tools/himachal-pradesh-pg-cutoff-explorer'},
+ {name:'Himachal Pradesh',slug:'himachal-pradesh',mono:'HP',desc:'2025 AMRU allotments, Rounds 1 to 3, stray and 2nd stray. State Quota, In Service, All India Quota and NRI. State merit number and All India Rank.',status:'live',url:'/tools/himachal-pradesh-pg-cutoff-explorer'},
  {name:'Maharashtra',slug:'maharashtra',mono:'MH',desc:'2025 State CET Cell selection lists, Rounds 1 to 5. State rank and All India Rank.',status:'live',url:'/tools/pg-cutoff-explorer'},
  {name:'Karnataka',slug:'karnataka',mono:'KA',desc:'2025 KEA allotment lists, Rounds 1 to 3, stray and stray extended. Closing All India Rank.',status:'live',url:'/tools/karnataka-pg-cutoff-explorer'},
  {name:'Tamil Nadu',slug:'tamil-nadu',mono:'TN',desc:'2025 Management Quota allotments, Rounds 1 to 4. TN Management Quota, NRI, minority and CMC Vellore categories. SML (G Rank).',status:'live',url:'/tools/tamil-nadu-pg-cutoff-explorer'},
@@ -264,7 +264,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){drawMenu(active);tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261005c'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261005d'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
