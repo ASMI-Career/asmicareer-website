@@ -7,15 +7,20 @@
     "colleges": [
       {
         "code": null,
-        "name": "M G M Medical College & L S K Hospital, Kishanganj",
-        "establishment": null,
-        "fees": "NA",
+        "name": "Mata Gujari Memorial Medical College, Kishanganj",
+        "establishment": 2005,
+        "fees": "1163000",
         "type": "Private",
         "rounds": {
           "Round 1": {
             "Intake": 60,
             "AIR": 433751,
             "SML": 7203
+          },
+          "Round 2": {
+            "Intake": 11,
+            "AIR": 442613,
+            "SML": 6798
           }
         }
       }

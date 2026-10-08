@@ -345,6 +345,7 @@ function query(){
   if(has(cs)&&g.cat!=='All'&&!cs[g.cat])return false;
   if(has(ss)&&!ss[g.sub])return false;
   if(has(mnz)&&!mnz[g.sub])return false;
+  if(!has(ss)&&!has(mnz)&&g.sub!=='Regular')return false;
   if(has(crs)&&!crs[g.crs])return false;
   if(has(js)&&!js[g.subj])return false;
   if(has(bs)&&!bs[g.bt])return false;
