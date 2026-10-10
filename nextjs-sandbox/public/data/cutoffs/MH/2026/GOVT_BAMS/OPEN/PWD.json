@@ -16,6 +16,11 @@
           "AIR": 415881,
           "SML": 11538,
           "CSML": "PWD"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -30,6 +35,11 @@
           "AIR": 428705,
           "SML": 12080,
           "CSML": "SEBC-1678"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -46,7 +56,7 @@
           "CSML": "SEBC-2035"
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 662464,
           "SML": 21079,
           "CSML": "PWD"
@@ -80,7 +90,7 @@
           "CSML": "PWD"
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 939956,
           "SML": 28951,
           "CSML": "DT-VJ(A)-1056"
@@ -98,6 +108,11 @@
           "AIR": 1003811,
           "SML": 30472,
           "CSML": "PWD"
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
         }
       }
     },
@@ -113,7 +128,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 677756,
           "SML": 21605
         }
@@ -131,7 +146,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 849814,
           "SML": 26737
         }
@@ -149,7 +164,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 425182,
           "SML": 11891
         }
@@ -162,6 +177,11 @@
       "fees": "76577",
       "rounds": {
         "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
           "Intake": 1,
           "AIR": null,
           "SML": null
@@ -180,7 +200,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 2,
           "AIR": 950904,
           "SML": 29215
         }
@@ -193,6 +213,11 @@
       "fees": "91650",
       "rounds": {
         "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
           "Intake": 1,
           "AIR": null,
           "SML": null
@@ -211,7 +236,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1139986,
           "SML": 32259
         }
@@ -224,6 +249,11 @@
       "fees": "94650",
       "rounds": {
         "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
           "Intake": 1,
           "AIR": null,
           "SML": null
@@ -242,7 +272,7 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 504499,
           "SML": 15165
         }
@@ -260,9 +290,28 @@
           "SML": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1053505,
           "SML": 31092
+        }
+      }
+    },
+    {
+      "code": "3236",
+      "name": "Vidarbha Ayurvedic Mahavidyalaya, Amravati",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

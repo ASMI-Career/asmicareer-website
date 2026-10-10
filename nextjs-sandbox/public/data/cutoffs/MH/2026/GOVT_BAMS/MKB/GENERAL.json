@@ -18,7 +18,7 @@
           "CSML": "MKB"
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 204673,
           "SML": 3698,
           "CSML": "MKB"
@@ -38,7 +38,7 @@
           "CSML": "MKB"
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 0,
           "AIR": 200227,
           "SML": 3578,
           "CSML": "MKB"
@@ -56,6 +56,11 @@
           "AIR": 262872,
           "SML": 5661,
           "CSML": "MKB"
+        },
+        "Round 2": {
+          "Intake": 0,
+          "AIR": null,
+          "SML": null
         }
       }
     }
