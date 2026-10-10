@@ -355,9 +355,9 @@
         },
         "Round 2": {
           "Intake": 0,
-          "AIR": 889277,
-          "SML": 27721,
-          "CSML": "ST-1169"
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -854,17 +854,17 @@
         },
         "Round 2": {
           "Intake": 0,
-          "AIR": 1111708,
-          "SML": 31884,
-          "CSML": "ST-1460"
+          "AIR": 916028,
+          "SML": 28373,
+          "CSML": null
         }
       }
     },
     {
       "code": "4174",
       "name": "Pharate Patil Homoeopathic Medical College, Pune",
-      "establishment": null,
-      "fees": null,
+      "establishment": 2026,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": null,
@@ -882,7 +882,7 @@
       "code": "4339",
       "name": "Vasantrao Kale Homoeopathic Medical College, Latur",
       "establishment": 2008,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": null,
@@ -900,7 +900,7 @@
       "code": "4117",
       "name": "Gandhi Natha Rangaji Homoeopathy Medical College, Solapur",
       "establishment": 2006,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": null,
@@ -918,7 +918,7 @@
       "code": "4266",
       "name": "R.N. Lahoti Homeopathic Collge, Buldhana",
       "establishment": 2023,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": null,
