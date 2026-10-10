@@ -15,6 +15,11 @@
           "Intake": 9,
           "AIR": 937485,
           "SML": 29008
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 756850,
+          "SML": 24057
         }
       }
     },
@@ -29,6 +34,12 @@
           "AIR": 1157968,
           "SML": 32677,
           "CSML": "OBC-9401"
+        },
+        "Round 2": {
+          "Intake": 3,
+          "AIR": 976535,
+          "SML": 29816,
+          "CSML": "EWS-2593"
         }
       }
     },
@@ -43,6 +54,48 @@
           "AIR": 1161253,
           "SML": 32705,
           "CSML": "OBC-9415"
+        },
+        "Round 2": {
+          "Intake": 6,
+          "AIR": 867545,
+          "SML": 27194,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "5307",
+      "name": "Yunus Fazlani Unani Medical College, Kannad",
+      "establishment": 2022,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 7,
+          "AIR": 1163283,
+          "SML": 32532
+        }
+      }
+    },
+    {
+      "code": "5111",
+      "name": "A.P.J. Abdul Kalam Unani Medical College, Yeola, Nashik",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": null,
+          "AIR": null,
+          "SML": null
+        },
+        "Round 2": {
+          "Intake": 15,
+          "AIR": 1189060,
+          "SML": 32853
         }
       }
     }
