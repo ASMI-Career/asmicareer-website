@@ -493,10 +493,16 @@
     }
 
     // MH Specific Setters
+    function mhSortedCats(q) {
+      const ORDER = ['OPEN', 'OBC', 'SC', 'ST', 'EWS', 'SEBC', 'VJ', 'NT1', 'NTB', 'NT2', 'NTC', 'NT3', 'NTD'];
+      const rank = c => { const i = ORDER.indexOf(c); return i >= 0 ? i : (c === 'IQ' ? 1001 : c === 'AIQ' ? 1002 : 500); };
+      return Object.keys(MH_DATA_MAP[q] || {}).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+    }
+
     function setMHQuota(q) {
        mhQuota = q;
        if (!MH_DATA_MAP[mhQuota][mhCategory]) {
-           mhCategory = Object.keys(MH_DATA_MAP[mhQuota])[0] || 'OPEN';
+           mhCategory = mhSortedCats(mhQuota)[0] || 'OPEN';
        }
        if (!MH_DATA_MAP[mhQuota][mhCategory].includes(mhSubType)) {
            mhSubType = MH_DATA_MAP[mhQuota][mhCategory][0] || 'GENERAL';
@@ -634,7 +640,7 @@
 
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
-         let availCats = Object.keys(MH_DATA_MAP[mhQuota] || {}).sort();
+         let availCats = mhSortedCats(mhQuota);
          if (currentYear === '2025' && (mhQuota === 'PRIVATE_MBBS' || mhQuota === 'PRIVATE_BDS')) {
             availCats = availCats.filter(cat => cat !== 'AIQ'); // AIQ only started in 2026
          }
