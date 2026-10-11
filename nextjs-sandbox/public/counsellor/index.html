@@ -2211,7 +2211,7 @@
 
     function renderPdfMhCategories() {
       const quota = document.getElementById('pdfMhQuota').value;
-      const cats = Object.keys(MH_DATA_MAP[quota] || {}).sort();
+      const cats = mhSortedCats(quota);
       const wrap = document.getElementById('pdfMhCategories');
       wrap.innerHTML = cats.map(c => `<label class="flex items-center gap-1.5 text-sm"><input type="checkbox" class="pdf-cat-check" value="${c}" checked> ${c}</label>`).join('');
     }
