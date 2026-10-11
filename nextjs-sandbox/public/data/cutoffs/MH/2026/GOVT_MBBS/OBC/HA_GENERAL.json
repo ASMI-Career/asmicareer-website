@@ -40,6 +40,12 @@
         "Round 2": {
           "Intake": null,
           "AIR": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 56512,
+          "SML": 4235,
+          "CSML": "OBC-1198"
         }
       }
     },
@@ -58,6 +64,12 @@
         "Round 2": {
           "Intake": null,
           "AIR": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 47658,
+          "SML": 3513,
+          "CSML": "OBC-965"
         }
       }
     },
@@ -138,6 +150,12 @@
           "AIR": 22240,
           "SML": 1553,
           "CSML": "OBC-377"
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 28111,
+          "SML": 1998,
+          "CSML": "OBC-521"
         }
       }
     },
@@ -308,6 +326,34 @@
         "Round 2": {
           "Intake": null,
           "AIR": null
+        }
+      }
+    },
+    {
+      "code": "1119",
+      "name": "Bhausaheb Hire Medical College, Dhule",
+      "establishment": 1988,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 40148,
+          "SML": 2925,
+          "CSML": "OBC-792"
+        }
+      }
+    },
+    {
+      "code": "1329",
+      "name": "Swami Ramanand Tirth Medical College, Ambejogai",
+      "establishment": 1974,
+      "fees": "1,38,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 35385,
+          "SML": 2565,
+          "CSML": "OBC-691"
         }
       }
     }

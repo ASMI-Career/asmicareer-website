@@ -1,0 +1,52 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BDS",
+  "category": "SEBC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "2115",
+      "name": "Y.M.T. Dental College & Hospital, Navi Mumbai",
+      "establishment": 2000,
+      "fees": "12,72,000/-",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 293803,
+          "SML": 17798,
+          "CSML": "SEBC-2093"
+        }
+      }
+    },
+    {
+      "code": "2117",
+      "name": "Sau. Mathurabai Bhausaheb Thorat Dental College & Hospital, Sangamner",
+      "establishment": 2001,
+      "fees": "17,39,500/-",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 405875,
+          "SML": 21861,
+          "CSML": "SEBC-2378"
+        }
+      }
+    },
+    {
+      "code": "2212",
+      "name": "Ranjeet Deshmukh Dental College, Nagpur",
+      "establishment": 1996,
+      "fees": "495000",
+      "type": "Private",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 600046,
+          "SML": 27630,
+          "CSML": "SEBC-2779"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_MBBS",
+  "category": "SEBC",
+  "sub_type": "HA_FEMALE",
+  "colleges": [
+    {
+      "code": "1120",
+      "name": "ACPM Medical College Dhule",
+      "establishment": 1990,
+      "fees": "24,00,000",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 81037,
+          "SML": 6225,
+          "CSML": "SEBC-898"
+        }
+      }
+    }
+  ]
+}
