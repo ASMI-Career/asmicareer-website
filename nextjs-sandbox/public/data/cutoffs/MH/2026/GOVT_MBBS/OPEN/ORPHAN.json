@@ -76,7 +76,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 862646,
           "SML": 32368,
           "CSML": null
@@ -90,7 +90,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 33977,
           "SML": 2449,
           "CSML": null
@@ -104,7 +104,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 759904,
           "SML": 30743,
           "CSML": null
@@ -118,7 +118,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 32605,
           "SML": 2331,
           "CSML": null
@@ -132,7 +132,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 43163,
           "SML": 3144,
           "CSML": null
@@ -146,7 +146,7 @@
       "fees": "1,49,830",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 28612,
           "SML": 2039,
           "CSML": null
@@ -160,9 +160,37 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 49893,
           "SML": 3681,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1150",
+      "name": "Government Medical College, Baramati",
+      "establishment": 2019,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 6,
+          "AIR": null,
+          "SML": null,
           "CSML": null
         }
       }

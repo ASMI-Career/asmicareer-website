@@ -44,7 +44,7 @@
           "CSML": "ST-723"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 367190,
           "SML": 20540,
           "CSML": null
@@ -66,6 +66,12 @@
         "Round 2": {
           "Intake": 0,
           "AIR": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     },

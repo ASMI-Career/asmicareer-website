@@ -96,7 +96,7 @@
           "CSML": "ST-880"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 157853,
           "SML": 11389,
           "CSML": "ST-68"
@@ -120,7 +120,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 203026,
           "SML": 13812,
           "CSML": "ST-113"
@@ -134,7 +134,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 201156,
           "SML": 13731,
           "CSML": "ST-108"
@@ -148,7 +148,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 223116,
           "SML": 14738,
           "CSML": "ST-146"
@@ -162,7 +162,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 234776,
           "SML": 15267,
           "CSML": "ST-169"
@@ -176,7 +176,7 @@
       "fees": "1,76,200",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 206375,
           "SML": 13971,
           "CSML": "ST-118"
@@ -190,7 +190,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 313025,
           "SML": 18552,
           "CSML": "ST-345"
@@ -204,7 +204,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 988094,
           "SML": 33949,
           "CSML": "ST-1957"
@@ -218,7 +218,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 267854,
           "SML": 16752,
           "CSML": "ST-238"
@@ -232,7 +232,7 @@
       "fees": "1,39,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 216053,
           "SML": 14413,
           "CSML": "ST-137"
@@ -246,7 +246,7 @@
       "fees": null,
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 314400,
           "SML": 18622,
           "CSML": "ST-350"
@@ -260,7 +260,7 @@
       "fees": "1,51,940",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 253298,
           "SML": 16101,
           "CSML": "ST-204"
@@ -274,10 +274,24 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 202314,
           "SML": 13786,
           "CSML": "ST-110"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 12,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

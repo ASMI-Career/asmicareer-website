@@ -72,7 +72,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 33029,
           "SML": 2362,
           "CSML": "OBC-623"
@@ -104,7 +104,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 672167,
           "SML": 29183,
           "CSML": "OBC-7268"
@@ -118,7 +118,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 31567,
           "SML": 2257,
           "CSML": "OBC-597"
@@ -132,7 +132,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1089845,
           "SML": 34743,
           "CSML": "OBC-8572"
@@ -146,7 +146,7 @@
       "fees": "1,38,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 44835,
           "SML": 3284,
           "CSML": "OBC-902"
@@ -160,10 +160,24 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 45543,
           "SML": 3339,
           "CSML": "OBC-916"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 4,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

@@ -44,7 +44,7 @@
           "CSML": "EWS-719"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 112284,
           "SML": 8512,
           "CSML": "EWS-772"
@@ -66,6 +66,12 @@
         "Round 2": {
           "Intake": 0,
           "AIR": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -106,7 +112,7 @@
           "CSML": "EWS-656"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 119721,
           "SML": 8989,
           "CSML": "EWS-810"

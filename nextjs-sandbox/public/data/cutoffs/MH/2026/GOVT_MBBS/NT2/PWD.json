@@ -24,7 +24,7 @@
           "CSML": "NT(C)-1349"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 798687,
           "SML": 31376,
           "CSML": "NT(C)-1349"
@@ -160,10 +160,24 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 56451,
           "SML": 4230,
           "CSML": "NT(C)-155"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

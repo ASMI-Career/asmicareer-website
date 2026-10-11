@@ -24,7 +24,7 @@
           "CSML": "NT(B)-140"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 195457,
           "SML": 13427,
           "CSML": "NT(B)-243"
@@ -86,6 +86,20 @@
           "AIR": 171215,
           "SML": 12147,
           "CSML": "NT(B)-219"
+        }
+      }
+    },
+    {
+      "code": "2313",
+      "name": "Government Dental College, Aurangabad",
+      "establishment": 1982,
+      "fees": "1,25,800",
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

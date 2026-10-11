@@ -24,7 +24,7 @@
           "CSML": "DT-VJ(A)-823"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 507739,
           "SML": 25195,
           "CSML": "DT-VJ(A)-814"
@@ -50,7 +50,7 @@
           "CSML": "DT-VJ(A)-800"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 517621,
           "SML": 25483,
           "CSML": "DT-VJ(A)-823"
@@ -94,7 +94,7 @@
           "CSML": "DT-VJ(A)-711"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 464815,
           "SML": 23833,
           "CSML": "DT-VJ(A)-771"
@@ -158,7 +158,7 @@
           "CSML": "DT-VJ(A)-701"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 387707,
           "SML": 21284,
           "CSML": "DT-VJ(A)-711"
@@ -233,6 +233,20 @@
           "AIR": 583559,
           "SML": 27225,
           "CSML": "DT-VJ(A)-872"
+        }
+      }
+    },
+    {
+      "code": "2333",
+      "name": "Nanded Rural Dental College & Research Centre, Nanded",
+      "establishment": 2014,
+      "fees": "8,41,500/-",
+      "rounds": {
+        "Round 3": {
+          "Intake": 3,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

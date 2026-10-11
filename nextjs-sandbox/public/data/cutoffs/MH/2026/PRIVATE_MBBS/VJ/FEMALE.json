@@ -94,7 +94,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 97530,
           "SML": 7456,
           "CSML": "DT-VJ(A)-178"
@@ -156,7 +156,7 @@
           "CSML": "DT-VJ(A)-256"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 108700,
           "SML": 8275,
           "CSML": "DT-VJ(A)-212"
@@ -282,7 +282,7 @@
           "CSML": "DT-VJ(A)-327"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 260735,
           "SML": 16428,
           "CSML": "DT-VJ(A)-531"
@@ -326,7 +326,7 @@
           "CSML": "DT-VJ(A)-444"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 2,
           "AIR": 183797,
           "SML": 12819,
           "CSML": "DT-VJ(A)-388"
@@ -340,10 +340,24 @@
       "fees": "24,00,000",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 100916,
           "SML": 7738,
           "CSML": "DT-VJ(A)-190"
+        }
+      }
+    },
+    {
+      "code": "1380",
+      "name": "ASPL CSMSS Medical College & Hospital, Chhatrapati Sambhajinagar",
+      "establishment": 2026,
+      "fees": "8,50,000",
+      "rounds": {
+        "Round 3": {
+          "Intake": 3,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

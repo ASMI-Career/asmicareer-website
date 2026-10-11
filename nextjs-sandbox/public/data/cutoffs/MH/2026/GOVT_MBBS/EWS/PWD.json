@@ -122,7 +122,7 @@
           "CSML": "EWS-2458"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 44692,
           "SML": 3275,
           "CSML": "EWS-254"
@@ -202,7 +202,7 @@
           "CSML": "EWS-1451"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 271399,
           "SML": 16892,
           "CSML": "EWS-1451"
@@ -306,7 +306,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 60530,
           "SML": 4545,
           "CSML": "EWS-400"
@@ -320,7 +320,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 59551,
           "SML": 4465,
           "CSML": "EWS-392"
@@ -334,7 +334,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 57472,
           "SML": 4302,
           "CSML": "EWS-370"
@@ -348,7 +348,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 74455,
           "SML": 5662,
           "CSML": "EWS-515"
@@ -362,7 +362,7 @@
       "fees": null,
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 75882,
           "SML": 5793,
           "CSML": "EWS-530"
@@ -376,7 +376,7 @@
       "fees": "1,51,940",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 74802,
           "SML": 5702,
           "CSML": "EWS-520"
@@ -390,7 +390,7 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 68745,
           "SML": 5194,
           "CSML": "EWS-467"
@@ -404,10 +404,24 @@
       "fees": "1,67,300",
       "rounds": {
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 75036,
           "SML": 5723,
           "CSML": "EWS-521"
+        }
+      }
+    },
+    {
+      "code": "1373",
+      "name": "Government Medical College, Gadchiroli",
+      "establishment": 2024,
+      "fees": "1,67,300",
+      "rounds": {
+        "Round 3": {
+          "Intake": 10,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }

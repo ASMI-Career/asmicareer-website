@@ -120,7 +120,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 72335,
           "SML": 5484,
           "CSML": "NT(C)-233"
@@ -144,7 +144,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 72316,
           "SML": 5482,
           "CSML": "NT(C)-232"
@@ -182,7 +182,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 75102,
           "SML": 5730,
           "CSML": "NT(C)-252"
@@ -206,7 +206,7 @@
           "AIR": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 91321,
           "SML": 7019,
           "CSML": "NT(C)-316"
@@ -252,7 +252,7 @@
           "CSML": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 93241,
           "SML": 7145,
           "CSML": "NT(C)-319"
@@ -278,7 +278,7 @@
           "CSML": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 76637,
           "SML": 5860,
           "CSML": "NT(C)-263"
@@ -304,7 +304,7 @@
           "CSML": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 90521,
           "SML": 6950,
           "CSML": "NT(C)-313"
@@ -330,7 +330,7 @@
           "CSML": null
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 76555,
           "SML": 5852,
           "CSML": "NT(C)-260"
@@ -356,7 +356,7 @@
           "CSML": "NT(C)-529"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 202823,
           "SML": 13800,
           "CSML": "NT(C)-663"
@@ -381,7 +381,7 @@
           "CSML": "NT(C)-409"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 173128,
           "SML": 12248,
           "CSML": "NT(C)-596"
@@ -406,10 +406,24 @@
           "CSML": "NT(C)-534"
         },
         "Round 3": {
-          "Intake": null,
+          "Intake": 3,
           "AIR": 207923,
           "SML": 14041,
           "CSML": "NT(C)-676"
+        }
+      }
+    },
+    {
+      "code": "1380",
+      "name": "ASPL CSMSS Medical College & Hospital, Chhatrapati Sambhajinagar",
+      "establishment": 2026,
+      "fees": "8,50,000",
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }
