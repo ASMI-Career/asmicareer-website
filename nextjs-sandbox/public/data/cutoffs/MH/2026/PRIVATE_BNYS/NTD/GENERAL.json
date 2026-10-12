@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BNYS",
+  "category": "NTD",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "9851",
+      "name": "MAHALAXMI COLLEGE OF NATUROPATHY",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1797255,
+          "SML": 37507,
+          "CSML": "NTD-1128"
+        }
+      }
+    },
+    {
+      "code": "9855",
+      "name": "RATAN TATA INSTITUTE OF WARDHA",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1944013,
+          "SML": 38095,
+          "CSML": "NTD-1139"
+        }
+      }
+    }
+  ]
+}

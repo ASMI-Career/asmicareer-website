@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BPTH",
+  "category": "OPEN",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "6102",
+      "name": "GS PT MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 6,
+          "AIR": 99258,
+          "SML": 663,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "6101",
+      "name": "LTMC PT MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 117103,
+          "SML": 1127,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "6103",
+      "name": "TNMC PT MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 121774,
+          "SML": 1236,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "6208",
+      "name": "GMC PT NAGPUR",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 5,
+          "AIR": 133810,
+          "SML": 1568,
+          "CSML": null
+        }
+      }
+    }
+  ]
+}
