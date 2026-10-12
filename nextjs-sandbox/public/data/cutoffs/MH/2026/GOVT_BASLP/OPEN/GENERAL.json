@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BASLP",
+  "category": "OPEN",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "8101",
+      "name": "AYJ NATIONAL INNSTITUTE FOR",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 156149,
+          "SML": 2220,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "8102",
+      "name": "TN MEDICAL & NAIR HOSPITAL MUMBAI",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": 288439,
+          "SML": 6551,
+          "CSML": null
+        }
+      }
+    }
+  ]
+}

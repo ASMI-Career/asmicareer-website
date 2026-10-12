@@ -329,6 +329,12 @@
       "PRIVATE_BUMS": {"IQ": ["GENERAL"], "OPEN": ["FEMALE", "GENERAL"]},
       "GOVT_BPTH": {"D1": ["FEMALE", "GENERAL"], "D2": ["FEMALE", "GENERAL"], "D3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL", "PWD"], "OPEN": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "PWD"], "SEBC": ["FEMALE", "GENERAL", "PWD"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
       "PRIVATE_BPTH": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "GOVT_BOTH": {"D1": ["FEMALE", "GENERAL"], "D2": ["GENERAL"], "EWS": ["FEMALE", "GENERAL", "PWD"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL", "PWD"], "OPEN": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL", "PWD"], "VJ": ["FEMALE", "GENERAL"]},
+      "PRIVATE_BOTH": {"EWS": ["FEMALE", "GENERAL"], "NTC": ["GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["GENERAL"]},
+      "GOVT_BASLP": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["GENERAL"], "NTC": ["GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL", "PWD"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["GENERAL"]},
+      "GOVT_BPO": {"EWS": ["GENERAL"], "NTB": ["GENERAL"], "OBC": ["GENERAL"], "OPEN": ["GENERAL"], "SC": ["FEMALE"], "SEBC": ["FEMALE"], "VJ": ["GENERAL"]},
+      "GOVT_BNYS": {"D1": ["FEMALE", "GENERAL"], "D2": ["GENERAL"], "EWS": ["FEMALE", "GENERAL", "PWD"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "PWD"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "PRIVATE_BNYS": {"EWS": ["FEMALE", "GENERAL"], "NTB": ["FEMALE", "GENERAL"], "NTC": ["FEMALE", "GENERAL"], "NTD": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
       "AYUSH_AIQ": {"BAMS": ["GENERAL"], "BHMS": ["GENERAL"], "BUMS": ["GENERAL"]}
     };
 
@@ -629,6 +635,12 @@
            { id: 'PRIVATE_BUMS', label: 'Private BUMS' },
            { id: 'GOVT_BPTH', label: 'Govt BPTH' },
            { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
+           { id: 'GOVT_BOTH', label: 'Govt BOTH' },
+           { id: 'PRIVATE_BOTH', label: 'Private BOTH' },
+           { id: 'GOVT_BASLP', label: 'Govt BASLP' },
+           { id: 'GOVT_BPO', label: 'Govt BP&O' },
+           { id: 'GOVT_BNYS', label: 'Govt BNYS' },
+           { id: 'PRIVATE_BNYS', label: 'Private BNYS' },
            { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
          quotas.forEach(q => {

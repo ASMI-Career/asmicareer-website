@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BOTH",
+  "category": "SC",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "7103",
+      "name": "OT SCHOOL & CENTRE, LTM MED.",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 510401,
+          "SML": 15437,
+          "CSML": "SC-1897"
+        }
+      }
+    },
+    {
+      "code": "7205",
+      "name": "OCCUPATIONAL THERAPY SCHOOL &",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 583216,
+          "SML": 18311,
+          "CSML": "SC-2317"
+        }
+      }
+    },
+    {
+      "code": "7102",
+      "name": "DEPT. OF OCCUPATIONAL THERAPY,",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 583997,
+          "SML": 18355,
+          "CSML": "SC-2327"
+        }
+      }
+    },
+    {
+      "code": "7101",
+      "name": "DEPT. OF OCCUPATIONAL THERAPY,",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 671584,
+          "SML": 21447,
+          "CSML": "SC-2799"
+        }
+      }
+    }
+  ]
+}
