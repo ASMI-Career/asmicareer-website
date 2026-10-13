@@ -580,17 +580,31 @@
       MCC:   { title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
       MH:    { title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
       OPEN:  { title: 'Open States', subtitle: '17 states · MQ & NRI quota' },
-      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · AIQ' },
+      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · Round 1 2026' },
       DEEMED_BPTH: { title: 'Deemed BPTH', subtitle: 'Deemed universities · BPTH' },
       VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
       MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
     };
-    const NEW_COUNSELLINGS = ['AACCC', 'DEEMED_BPTH', 'MAFSU']; // no filters/data yet
+    const NEW_COUNSELLINGS = ['DEEMED_BPTH', 'MAFSU']; // no filters/data yet
     const VCI_INST_TYPES = [
       { id: 'GOVT_BVSC', label: 'Govt BVSc' },
       { id: 'PRIVATE_BVSC', label: 'Private BVSc' }
     ];
     const VCI_CATS = ['OPEN', 'EWS', 'OBC', 'SC', 'ST'];
+    // AACCC (AYUSH) closing ranks: instType = COURSE_QUOTA, one file per allotted category
+    const AACCC_COURSES = [
+      { id: 'BAMS', label: 'BAMS' }, { id: 'BHMS', label: 'BHMS' }, { id: 'BUMS', label: 'BUMS' },
+      { id: 'BSMS', label: 'BSMS' }, { id: 'BPHARM', label: 'B.Pharm (Ayurveda)' }
+    ];
+    const AACCC_QUOTAS = [
+      { id: 'AG', label: 'AIQ Govt' }, { id: 'GA', label: 'AIQ Govt Aided' },
+      { id: 'CU', label: 'Central Univ / National Inst' }, { id: 'PS', label: 'Management / Paid' },
+      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }
+    ];
+    // course+quota combinations that have data in the Round 1 allotment list
+    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM'], BHMS: ['AG','GA','CU','PS','MM'], BUMS: ['AG','CU','PS','MG'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
+    const aacccCourse = () => selectedInstType.split('_')[0];
+    const aacccQuota = () => selectedInstType.split('_')[1];
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
@@ -748,6 +762,9 @@
       } else if (c === 'VCI') {
         selectedInstType = 'GOVT_BVSC';
         selectedCategory = 'OPEN';
+      } else if (c === 'AACCC') {
+        selectedInstType = 'BAMS_AG';
+        selectedCategory = 'OPEN';
       } else if (c === 'MH') {
         mhQuota = grp.mhDefault;
         mhCategory = 'OPEN';
@@ -777,6 +794,9 @@
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
           subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
+        } else if (c === 'AACCC') {
+          titleEl.textContent = 'AACCC — Round 1 2026 Allotment';
+          subtitleEl.textContent = 'Closing rank = last AIR allotted in Round 1 · AYUSH seats';
         } else if (COUNSELLING_CARDS[c]) {
           titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
           subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
@@ -807,6 +827,19 @@
       }
 
       renderCounsellingCards();
+      renderFilters();
+      loadData();
+    }
+
+    function setAacccCourse(course) {
+      const quotas = AACCC_AVAILABLE[course];
+      selectedInstType = `${course}_${quotas.includes(aacccQuota()) ? aacccQuota() : quotas[0]}`;
+      renderFilters();
+      loadData();
+    }
+
+    function setAacccQuota(quota) {
+      selectedInstType = `${aacccCourse()}_${quota}`;
       renderFilters();
       loadData();
     }
@@ -957,6 +990,7 @@
          if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
+         else if (selectedCounselling === 'AACCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'VCI') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else summary = COUNSELLING_CARDS[selectedCounselling].title;
 
@@ -1005,6 +1039,15 @@
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
          VCI_INST_TYPES.forEach(t => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedInstType === t.id)} text-sm font-bold transition-all" onclick="setInstType('${t.id}')">${t.label}</button>`; });
          html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p><div class="flex flex-wrap gap-2">`;
+         VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
+         html += `</div>`;
+      } else if (selectedCounselling === 'AACCC') {
+         const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Course</p><div class="flex flex-wrap gap-2 mb-6">`;
+         AACCC_COURSES.forEach(t => { html += `<button class="px-4 py-2 rounded-full ${pill(aacccCourse() === t.id)} text-sm font-bold transition-all" onclick="setAacccCourse('${t.id}')">${t.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quota</p><div class="flex flex-wrap gap-2 mb-6">`;
+         AACCC_QUOTAS.filter(q => AACCC_AVAILABLE[aacccCourse()].includes(q.id)).forEach(q => { html += `<button class="px-4 py-2 rounded-full ${pill(aacccQuota() === q.id)} text-sm font-bold transition-all" onclick="setAacccQuota('${q.id}')">${q.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Allotted Category</p><div class="flex flex-wrap gap-2">`;
          VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
          html += `</div>`;
       } else if (selectedCounselling === 'OPEN') {
@@ -1224,6 +1267,8 @@
          url = `/data/cutoffs/${openRoot()}/${currentYear}/${folder}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'MH') {
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+      } else if (selectedCounselling === 'AACCC') {
+         url = `/data/cutoffs/AACCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'VCI') {
          url = `/data/cutoffs/VCI/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else {
@@ -1277,7 +1322,7 @@
       let borderCount = 0;
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
 
@@ -1966,7 +2011,7 @@
       }
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
@@ -2217,7 +2262,7 @@
       }
       const body = document.getElementById('pdfExportModalBody');
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
@@ -2319,7 +2364,7 @@
 
     function confirmPdfExport() {
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
