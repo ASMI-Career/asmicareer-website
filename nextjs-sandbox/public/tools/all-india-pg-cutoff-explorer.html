@@ -20,7 +20,7 @@ select:focus,input:focus,button:focus-visible{outline:2px solid var(--accent);ou
 .rank input{font-family:var(--mono);font-size:16px;font-weight:500}
 .meta{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:1350px}
+table{border-collapse:collapse;width:100%;min-width:1450px}
 th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
 th{background:var(--head);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);position:sticky;top:0}
 td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -152,6 +152,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu input.msq{width:100%;padding:8px 10px;border-radius:8px;margin-bottom:6px;font-size:13px}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
+td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;white-space:nowrap}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -165,7 +166,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 <label class="rank">Your NEET-PG rank<input id="rank" type="number" min="1" inputmode="numeric" placeholder="e.g. 4500"></label>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <label>Round used for status and sorting<select id="round"></select></label>
-<label>Sort by<select id="sort"><option value="air">Closing rank</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option></select></label>
+<label>Sort by<select id="sort"><option value="air">Closing rank</option><option value="college">College</option><option value="branch">Branch</option><option value="city">City</option><option value="feeasc">Fees: low to high</option><option value="feedesc">Fees: high to low</option></select></label>
 <label>Show<select id="show"><option value="all">All seat groups</option><option value="within">Only within my rank</option><option value="near">Within or borderline</option></select></label>
 <div class="fld">State<span id="ms-state"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
@@ -173,6 +174,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 <div class="fld">Minority<span id="ms-min"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">City<span id="ms-city"></span></div>
+<div class="fld">Fees<span id="ms-fee"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
 <div class="actions"><button id="reset" type="button">Reset filters</button></div>
 </div></details>
@@ -180,13 +182,18 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
 <div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
-<div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">City</th><th rowspan="2">State</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th class="n rg r0" colspan="2">All Rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4 (Stray)</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r0">Seats</th><th class="n r0">Closing</th><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
+<div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">City</th><th rowspan="2">State</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th rowspan="2">Fee</th><th class="n rg r0" colspan="2">All Rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4 (Stray)</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r0">Seats</th><th class="n r0">Closing</th><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
-<p class="note">Source: MCC NEET-PG 2026 provisional allotment results. Each round's column shows <b>seats allotted</b> and <b>closing rank</b> (the highest/worst allotted rank) for that exact college + branch + category + quota combination; a round with no matching allotment shows <span style="opacity:.5">–</span>. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades. College names are re-cased from the source files' mixed/all-caps text into standard title case.</p>
+<p class="note">Source: MCC NEET-PG 2026 provisional allotment results. Each round's column shows <b>seats allotted</b> and <b>closing rank</b> (the highest/worst allotted rank) for that exact college + branch + category + quota combination; a round with no matching allotment shows <span style="opacity:.5">–</span>. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades. College names are re-cased from the source files' mixed/all-caps text into standard title case. <b>Fee.</b> The Fee column is shown for deemed university paid seats only. Self-Financed Merit Seat (Paid Seat Quota) rows show the General-category management fee for that college and branch; Non-Resident Indian rows show the NRI fee (where Priority I and II differ, the lower is shown with Priority II underneath). Fees come from the fee sheets supplied; a dash means the sheets have no fee for that college and branch (or the seat is not a deemed paid seat). Verify the fee with the college and the official MCC notice before deciding.</p>
 </div>
 <script>
 (function(){
 function $(id){return document.getElementById(id)}
+function inr(v){return '\u20b9'+Number(v).toLocaleString('en-IN')}
+function feeOf(g){var f=g[11];if(f==null)return 0;if(typeof f==='number')return f;var a=f.filter(function(x){return x});return a.length?Math.min.apply(null,a):0}
+var FEEB=['Up to \u20b910 lakh','\u20b910 to 25 lakh','\u20b925 to 40 lakh','Above \u20b940 lakh','Fee not listed'];
+function feeBand(f){if(!f)return FEEB[4];return f<=1000000?FEEB[0]:(f<=2500000?FEEB[1]:(f<=4000000?FEEB[2]:FEEB[3]))}
+function feecell(g){var f=g[11];if(f==null)return '<td class="n fee">\u2013</td>';if(typeof f==='number')return '<td class="n fee" title="Management (paid seat) quota fee, General category">'+inr(f)+'</td>';var a=f[0],b=f[1];if(a&&b&&a!==b)return '<td class="n fee" title="NRI fee: Priority I '+inr(a)+', Priority II '+inr(b)+'">'+inr(a)+'<small>P-II '+inr(b)+'</small></td>';var v=a||b;return '<td class="n fee" title="NRI fee'+(a&&b?'':(a?' (Priority I)':' (Priority II)'))+'">'+inr(v)+'</td>'}
 var IDX = {college:0, city:1, cityConf:2, state:3, course:4, quota:5, cat:6, r1:7, r2:8, r3:9, r4:10};
 var ROUND_KEYS = ['r1','r2','r3','r4'];
 var ROUND_LABELS = {r0:'All Rounds Combined', r1:'Round 1', r2:'Round 2', r3:'Round 3', r4:'Round 4 (Stray)'};
@@ -230,7 +237,7 @@ function allRounds(g){
 function getX(g,rd){return rd==='r0'?allRounds(g):g[IDX[rd]]}
 
 function query(){
- var qts=MS.qt(),mnz=MS.min(),cs=MS.cat(),ss=MS.state(),js=MS.subj(),is=MS.inst(),ys=MS.city();
+ var qts=MS.qt(),mnz=MS.min(),cs=MS.cat(),ss=MS.state(),js=MS.subj(),is=MS.inst(),ys=MS.city(),fs=MS.fee();
  function has(o){return Object.keys(o).length>0}
  var rd=$('round').value,t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),rk=parseInt($('rank').value,10)||0,show=$('show').value;
  function stat(g){var x=getX(g,rd);if(!x)return -1;var s=3;if(rk)s=Math.min(s,pass(rk,x[1]));return s===3?-1:s}
@@ -242,11 +249,12 @@ function query(){
   if(has(js)&&!js[g[IDX.course]])return false;
   if(has(is)&&!is[g[IDX.college]])return false;
   if(has(ys)&&!ys[g[IDX.city]])return false;
+  if(has(fs)&&!fs[feeBand(feeOf(g))])return false;
   var hay=(g[IDX.college]+' '+(g[IDX.city]||'')+' '+g[IDX.state]+' '+g[IDX.course]+' '+g[IDX.quota]+' '+g[IDX.cat]).toLowerCase();
   for(var ti=0;ti<t.length;ti++)if(hay.indexOf(t[ti])<0)return false;
   if(rk&&show!=='all'){var s=stat(g);if(show==='within'&&s!==2)return false;if(show==='near'&&s<1)return false}
   return true});
- var so=$('sort').value,ki={college:IDX.college,branch:IDX.course,city:IDX.city}[so];out.sort(function(a,b){if(ki!==undefined&&a[ki]!==b[ki])return a[ki]<b[ki]?-1:1;var xa=getX(a,rd),xb=getX(b,rd);var va=xa?xa[1]:Infinity,vb=xb?xb[1]:Infinity;return va-vb});
+ var so=$('sort').value,ki={college:IDX.college,branch:IDX.course,city:IDX.city}[so];out.sort(function(a,b){if(so==='feeasc'||so==='feedesc'){var fa=feeOf(a),fb=feeOf(b);if(!fa!==!fb)return fa?-1:1;if(fa&&fa!==fb)return so==='feeasc'?fa-fb:fb-fa}if(ki!==undefined&&a[ki]!==b[ki])return a[ki]<b[ki]?-1:1;var xa=getX(a,rd),xb=getX(b,rd);var va=xa?xa[1]:Infinity,vb=xb?xb[1]:Infinity;return va-vb});
  return {out:out,stat:stat,rk:rk,rd:rd,show:show,text:$('q').value.trim()};
 }
 
@@ -261,11 +269,11 @@ function render(){
   if(rk){if(sv===2)st='<span class="pill g">Within cutoff</span>';else if(sv===1)st='<span class="pill w">Borderline</span>';else if(sv===0)st='<span class="pill b">Above cutoff</span>'}
   var qi=(['State','In-Service','NRI','Institute Quota (I.Q.)'].indexOf(g[IDX.quota])+4)%4;
   var allR=allRounds(g),onAll=rd==='r0';
-  return '<tr><td class="c">'+esc(g[IDX.college])+'</td><td>'+esc(g[IDX.city]||'–')+'</td><td>'+esc(g[IDX.state]||'–')+'</td><td>'+esc(g[IDX.course])+'</td><td><span class="qp q'+qi+'">'+esc(g[IDX.quota])+'</span></td><td><span class="cp">'+esc(g[IDX.cat])+'</span></td>'+
+  return '<tr><td class="c">'+esc(g[IDX.college])+'</td><td>'+esc(g[IDX.city]||'–')+'</td><td>'+esc(g[IDX.state]||'–')+'</td><td>'+esc(g[IDX.course])+'</td><td><span class="qp q'+qi+'">'+esc(g[IDX.quota])+'</span></td><td><span class="cp">'+esc(g[IDX.cat])+'</span></td>'+feecell(g)+
    scell(allR,onAll)+cell(allR,onAll)+
    ROUND_KEYS.map(function(rk2){var on=rk2===rd;return scell(g[IDX[rk2]],on)+cell(g[IDX[rk2]],on)}).join('')+
    '<td>'+st+'</td></tr>'});
- $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="15" class="empty">No seat groups match these filters.</td></tr>';
+ $('body').innerHTML=html.length?html.join(''):'<tr><td colspan="16" class="empty">No seat groups match these filters.</td></tr>';
  $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by closing rank in '+ROUND_LABELS[rd]+', lowest first';
  $('more').hidden=true;
@@ -284,7 +292,7 @@ $('sort').addEventListener('change',function(){shown=LIM;render()});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 $('reset').addEventListener('click',function(){
  $('q').value='';$('rank').value='';$('show').value='all';$('sort').value='air';$('round').value='r0';
- ['qt','min','cat','state','subj','inst','city'].forEach(function(id){if(MS[id])MS[id].reset(true)});
+ ['qt','min','cat','state','subj','inst','city','fee'].forEach(function(id){if(MS[id])MS[id].reset(true)});
  shown=LIM;render();
 });
 
@@ -329,11 +337,11 @@ $('dlp').addEventListener('click',function(){
   doc.text('MCC PG Cutoff Explorer',marginX,y);
   doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(106,102,137);
   doc.text('Generated '+new Date().toLocaleString('en-IN')+'  ·  '+Q.out.length.toLocaleString('en-IN')+' rows',pageW-marginX,y,{align:'right'});
-  var head=[['College','City','State','Branch','Quota','Category','All Rd Seats','All Rd Close']];
+  var head=[['College','City','State','Branch','Quota','Category','Fee','All Rd Seats','All Rd Close']];
   ROUND_KEYS.forEach(function(rk){head[0].push(ROUND_LABELS[rk]+' Seats',ROUND_LABELS[rk]+' Close')});
   var body=Q.out.map(function(g){
    var allR=allRounds(g);
-   var row=[g[IDX.college],g[IDX.city]||'–',g[IDX.state],g[IDX.course],g[IDX.quota],g[IDX.cat],allR?String(allR[2]):'–',allR?String(allR[1]):'–'];
+   var row=[g[IDX.college],g[IDX.city]||'–',g[IDX.state],g[IDX.course],g[IDX.quota],g[IDX.cat],(function(){var f=g[11];if(f==null)return '–';var rs=function(v){return 'Rs '+Number(v).toLocaleString('en-IN')};if(typeof f==='number')return rs(f);return f.filter(Boolean).map(rs).join(' / ')})(),allR?String(allR[2]):'–',allR?String(allR[1]):'–'];
    ROUND_KEYS.forEach(function(rk){var x=g[IDX[rk]];row.push(x?String(x[2]):'–',x?String(x[1]):'–')});
    return row;
   });
@@ -356,7 +364,7 @@ $('dlp').addEventListener('click',function(){
  }catch(e){fail(e,'PDF')}
 });
 
-fetch('/data/cutoffs/MCC/pg-2026-all-india.json?v=20261005a').then(function(r){return r.json()}).then(function(data){
+fetch('/data/cutoffs/MCC/pg-2026-all-india.json?v=20261013c').then(function(r){return r.json()}).then(function(data){
  L=data;
  var states=Array.from(new Set(L.map(function(r){return r[IDX.state]}).filter(Boolean))).sort();
  var courses=Array.from(new Set(L.map(function(r){return r[IDX.course]}).filter(Boolean))).sort();
@@ -371,11 +379,12 @@ fetch('/data/cutoffs/MCC/pg-2026-all-india.json?v=20261005a').then(function(r){r
  makeMS('cat',cats,[],'categories');
  makeMS('city',cities,[],'cities');
  makeMS('inst',colleges,[],'colleges');
+ makeMS('fee',FEEB,[],'fee ranges');
  shown=LIM;
  render();
  sticky();
 }).catch(function(err){
- $('body').innerHTML='<tr><td colspan="15" class="empty">Could not load cutoff data.</td></tr>';
+ $('body').innerHTML='<tr><td colspan="16" class="empty">Could not load cutoff data.</td></tr>';
 });
 
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
