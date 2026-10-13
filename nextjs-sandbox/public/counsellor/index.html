@@ -472,6 +472,8 @@
                 <div class="flex flex-wrap items-center gap-3">
                   <label for="sortSelect" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Sort</label>
                   <select id="sortSelect" onchange="setSortKey(this.value)" class="px-3 py-2 rounded-full bg-gray-50 text-gray-700 text-sm font-bold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20">
+                    <option value="name-asc">College Name: A to Z</option>
+                    <option value="name-desc">College Name: Z to A</option>
                     <option value="r1-asc">Round 1: Low to High</option>
                     <option value="r1-desc">Round 1: High to Low</option>
                     <option value="r2-asc">Round 2: Low to High</option>
@@ -608,8 +610,9 @@
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
-    let selectedStates = []; // MCC state filter (multi-select, client-side)
-    let currentSort = 'r1-asc'; // main table sort key
+    let selectedStates = []; // State filter (multi-select, client-side) for MCC / VCI / AACCC
+    const STATE_FILTER_COUNSELLINGS = ['MCC', 'VCI', 'AACCC'];
+    let currentSort = 'name-asc'; // main table sort key (default: college name)
     let activePrefTab = null; // which counselling-type tab is showing in the preference panel
 
     // MH State defaults
@@ -834,12 +837,14 @@
     function setAacccCourse(course) {
       const quotas = AACCC_AVAILABLE[course];
       selectedInstType = `${course}_${quotas.includes(aacccQuota()) ? aacccQuota() : quotas[0]}`;
+      selectedStates = [];
       renderFilters();
       loadData();
     }
 
     function setAacccQuota(quota) {
       selectedInstType = `${aacccCourse()}_${quota}`;
+      selectedStates = [];
       renderFilters();
       loadData();
     }
@@ -978,6 +983,19 @@
       }).join('');
     }
 
+    // State filter — client-side, built from currently loaded data (states vary by institution type / course / quota)
+    function stateFilterHtml(topGap) {
+      const availableStates = (currentData && currentData.colleges && currentData.counselling === selectedCounselling)
+        ? [...new Set(currentData.colleges.map(c => c.state).filter(Boolean))].sort()
+        : [];
+      if (!availableStates.length) return '';
+      const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+      let html = `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ${topGap ? 'mt-6' : ''}">State</p><div class="flex flex-wrap gap-2 mb-6">`;
+      html += `<button class="px-4 py-2 rounded-full ${pill(selectedStates.length === 0)} text-sm font-bold transition-all" onclick="clearMCCStateFilter()">All</button>`;
+      availableStates.forEach(st => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedStates.includes(st))} text-sm font-bold transition-all" onclick="toggleMCCState('${escAttr(st)}')">${st}</button>`; });
+      return html + `</div>`;
+    }
+
     function renderFilters() {
       const container = document.getElementById('dynamic-filters');
       if (!container) return;
@@ -1018,22 +1036,7 @@
          });
          html += `</div>`;
 
-         // MCC State filter — client-side, built from currently loaded data (states vary by institution type)
-         const availableStates = (currentData && currentData.colleges)
-           ? [...new Set(currentData.colleges.map(c => c.state).filter(Boolean))].sort()
-           : [];
-         if (availableStates.length) {
-            html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
-            html += `<div class="flex flex-wrap gap-2 mb-6">`;
-            const allSel = selectedStates.length === 0;
-            html += `<button class="px-4 py-2 rounded-full ${allSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]'} text-sm font-bold transition-all" onclick="clearMCCStateFilter()">All</button>`;
-            availableStates.forEach(st => {
-               const isSel = selectedStates.includes(st);
-               const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
-               html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="toggleMCCState('${escAttr(st)}')">${st}</button>`;
-            });
-            html += `</div>`;
-         }
+         html += stateFilterHtml();
       } else if (selectedCounselling === 'VCI') {
          const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
@@ -1041,6 +1044,7 @@
          html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p><div class="flex flex-wrap gap-2">`;
          VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
          html += `</div>`;
+         html += stateFilterHtml(true);
       } else if (selectedCounselling === 'AACCC') {
          const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Course</p><div class="flex flex-wrap gap-2 mb-6">`;
@@ -1050,6 +1054,7 @@
          html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Allotted Category</p><div class="flex flex-wrap gap-2">`;
          VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
          html += `</div>`;
+         html += stateFilterHtml(true);
       } else if (selectedCounselling === 'OPEN') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
@@ -1205,6 +1210,23 @@
       renderTable();
     }
 
+    // SML sort options only make sense where the data carries SML (Maharashtra / Open States); add them per loaded dataset.
+    function updateSmlSortOptions(data) {
+      const sel = document.getElementById('sortSelect');
+      if (!sel) return;
+      sel.querySelectorAll('option[data-sml]').forEach(o => o.remove());
+      const colleges = (data && data.colleges) || [];
+      const feesOpt = sel.querySelector('option[value="fees-asc"]');
+      [1, 2, 3].forEach(n => {
+        const has = colleges.some(c => { const r = c.rounds && c.rounds['Round ' + n]; return r && r.SML != null && r.SML !== ''; });
+        if (!has) return;
+        const o = document.createElement('option');
+        o.value = `sml${n}-asc`; o.textContent = `Round ${n} SML: Low to High`; o.dataset.sml = '1';
+        sel.insertBefore(o, feesOpt);
+      });
+      sel.value = currentSort;
+    }
+
     function getSortedColleges(colleges) {
       const list = [...colleges];
       const isHP = !!(currentData && currentData.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
@@ -1227,8 +1249,21 @@
         return isNaN(n) ? null : n;
       }
 
-      let roundKey = 'Round 1', dir = 1, useFees = false;
+      function smlFor(college, roundName) {
+        const r = college.rounds && college.rounds[roundName];
+        return (r && r.SML != null && r.SML !== '') ? parseInt(r.SML, 10) : null;
+      }
+
+      if (currentSort === 'name-asc' || currentSort === 'name-desc') {
+        const dirName = currentSort === 'name-asc' ? 1 : -1;
+        return list.sort((a, b) => dirName * (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' }));
+      }
+
+      let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false;
       switch (currentSort) {
+        case 'sml1-asc': roundKey = 'Round 1'; useSml = true; break;
+        case 'sml2-asc': roundKey = 'Round 2'; useSml = true; break;
+        case 'sml3-asc': roundKey = 'Round 3'; useSml = true; break;
         case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
@@ -1238,8 +1273,8 @@
       }
 
       list.sort((a, b) => {
-        const va = useFees ? feesFor(a) : airFor(a, roundKey);
-        const vb = useFees ? feesFor(b) : airFor(b, roundKey);
+        const va = useFees ? feesFor(a) : useSml ? smlFor(a, roundKey) : airFor(a, roundKey);
+        const vb = useFees ? feesFor(b) : useSml ? smlFor(b, roundKey) : airFor(b, roundKey);
         const aNull = va == null, bNull = vb == null;
         if (aNull && bNull) return 0;
         if (aNull) return 1;  // nulls always sort to the end
@@ -1254,10 +1289,10 @@
       const tbody = document.getElementById('collegeTableBody');
       tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
 
-      // Default sort on every fresh fetch (Round 1: Low to High)
-      currentSort = 'r1-asc';
+      // Default sort on every fresh fetch (College Name: A to Z)
+      currentSort = 'name-asc';
       const sortSelectEl = document.getElementById('sortSelect');
-      if (sortSelectEl) sortSelectEl.value = 'r1-asc';
+      if (sortSelectEl) sortSelectEl.value = 'name-asc';
 
       let url = '';
       if (selectedCounselling === 'MCC') {
@@ -1280,7 +1315,8 @@
         if (!res.ok) throw new Error('Data not found');
         const data = await res.json();
         currentData = data;
-        if (selectedCounselling === 'MCC') renderFilters(); // refresh State pills against newly loaded colleges
+        updateSmlSortOptions(data);
+        if (STATE_FILTER_COUNSELLINGS.includes(selectedCounselling)) renderFilters(); // refresh State pills against newly loaded colleges
         renderTable();
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No ${currentYear} data yet for this selection. Data is added as it becomes available.</td></tr>`;
@@ -1301,7 +1337,7 @@
       }
 
       let workingColleges = getSortedColleges(currentData.colleges);
-      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(currentData.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
 
@@ -2002,7 +2038,7 @@
       await loadScoreLookupTable();
 
       let workingColleges = getSortedColleges(currentData.colleges);
-      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(currentData.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
       if (workingColleges.length === 0) {
@@ -2157,7 +2193,7 @@
 
     function pdfSectionForData(data, labelOverride, selectedRounds) {
       let workingColleges = getSortedColleges(data.colleges || []);
-      if (data.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(data.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
       if (workingColleges.length === 0) return null;
