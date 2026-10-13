@@ -392,6 +392,9 @@
                 </div>
               </div>
 
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Course</p>
+              <div class="flex flex-wrap gap-2 mb-5" id="course-groups"></div>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Counselling</p>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="counselling-cards">
                 <!-- Rendered via JS -->
               </div>
@@ -565,6 +568,24 @@
     let currentData = null;
     let currentYear = '2026';
     let selectedCounselling = 'MCC';
+    let selectedGroup = 'MED';
+    // Course groups -> counselling cards shown under each. MCC/MH/OPEN are live; the rest show the empty state until data exists.
+    const COURSE_GROUPS = [
+      { id: 'MED',  label: 'MBBS / BDS', cards: ['MCC', 'MH', 'OPEN'], mhPrefix: ['MBBS', 'BDS'], mhDefault: 'GOVT_MBBS' },
+      { id: 'AYUSH', label: 'AYUSH (BAMS / BHMS / BUMS)', cards: ['AACCC', 'MH', 'OPEN'], mhPrefix: ['BAMS', 'BHMS', 'BUMS', 'AYUSH'], mhDefault: 'GOVT_BAMS' },
+      { id: 'BPTH', label: 'BPTH', cards: ['MH', 'DEEMED_BPTH'], mhPrefix: ['BPTH'], mhDefault: 'GOVT_BPTH' },
+      { id: 'VET',  label: 'Veterinary (BVSc)', cards: ['VCI', 'MAFSU', 'OPEN'], mhPrefix: [], mhDefault: 'GOVT_MBBS' }
+    ];
+    const COUNSELLING_CARDS = {
+      MCC:   { title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
+      MH:    { title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
+      OPEN:  { title: 'Open States', subtitle: '17 states · MQ & NRI quota' },
+      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · AIQ' },
+      DEEMED_BPTH: { title: 'Deemed BPTH', subtitle: 'Deemed universities · BPTH' },
+      VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
+      MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
+    };
+    const NEW_COUNSELLINGS = ['AACCC', 'DEEMED_BPTH', 'VCI', 'MAFSU']; // no filters/data yet
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
@@ -694,14 +715,21 @@
       loadData();
     }
 
+    function setGroup(g) {
+      if (g === selectedGroup) return;
+      selectedGroup = g;
+      setCounselling(COURSE_GROUPS.find(x => x.id === g).cards[0]);
+    }
+
     function setCounselling(c) {
       selectedCounselling = c;
       selectedStates = [];
+      const grp = COURSE_GROUPS.find(x => x.id === selectedGroup);
       if (c === 'MCC') {
         selectedInstType = 'GOVT_MBBS';
         selectedCategory = 'OPEN';
       } else if (c === 'MH') {
-        mhQuota = 'GOVT_MBBS';
+        mhQuota = grp.mhDefault;
         mhCategory = 'OPEN';
         mhSubType = 'GENERAL';
       } else if (c === 'OPEN') {
@@ -725,6 +753,9 @@
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
           subtitleEl.textContent = '17 states · MQ & NRI quota · MBBS seats';
+        } else if (COUNSELLING_CARDS[c]) {
+          titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
+          subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
         }
       }
 
@@ -852,11 +883,16 @@
       const container = document.getElementById('counselling-cards');
       if (!container) return;
 
-      const cards = [
-        { id: 'MCC', title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
-        { id: 'MH', title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
-        { id: 'OPEN', title: 'Open States', subtitle: '17 states · MQ & NRI quota' }
-      ];
+      const groupsEl = document.getElementById('course-groups');
+      if (groupsEl) {
+        groupsEl.innerHTML = COURSE_GROUPS.map(g => {
+          const cls = g.id === selectedGroup ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+          return `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setGroup('${g.id}')">${g.label}</button>`;
+        }).join('');
+      }
+      const grp = COURSE_GROUPS.find(g => g.id === selectedGroup);
+      const cards = grp.cards.map(id => ({ id, ...COUNSELLING_CARDS[id] }));
+      container.className = 'grid grid-cols-1 gap-3 ' + (cards.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3');
 
       container.innerHTML = cards.map(c => {
         const isSel = selectedCounselling === c.id;
@@ -892,6 +928,7 @@
          if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
+         else summary = COUNSELLING_CARDS[selectedCounselling].title;
 
          html += `<div class="text-sm font-bold text-[#1A0040] bg-[#EDE9FF] px-4 py-2 rounded-xl">${summary}</div>`;
          html += `<button onclick="toggleFilters()" class="p-2 text-gray-500 hover:text-[#1A0040] hover:bg-gray-100 rounded-xl transition-all" title="Expand filters"><iconify-icon icon="lucide:chevron-down" class="text-xl"></iconify-icon></button>`;
@@ -960,7 +997,8 @@
            { id: 'PRIVATE_BPTH', label: 'Private BPTH' },
            { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
-         quotas.forEach(q => {
+         const prefixes = COURSE_GROUPS.find(g => g.id === selectedGroup).mhPrefix;
+         quotas.filter(q => prefixes.some(p => q.id.includes(p))).forEach(q => {
             const isSel = mhQuota === q.id;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHQuota('${q.id}')">${q.label}</button>`;
@@ -991,7 +1029,7 @@
          html += `</div>`;
       }
 
-      if (selectedCounselling !== 'MH') {
+      if (selectedCounselling !== 'MH' && !NEW_COUNSELLINGS.includes(selectedCounselling)) {
           const folder = selectedState.replace(/ /g, '_');
           {
              html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
@@ -1140,9 +1178,12 @@
          url = `/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'OPEN') {
          const folder = selectedState.replace(/ /g, '_');
-         url = `/data/cutoffs/OPEN/${currentYear}/${folder}/${selectedCategory}.json`;
+         const openRoot = selectedGroup === 'AYUSH' ? 'OPEN_AYUSH' : selectedGroup === 'VET' ? 'OPEN_BVSC' : 'OPEN';
+         url = `/data/cutoffs/${openRoot}/${currentYear}/${folder}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'MH') {
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+      } else {
+         url = `/data/cutoffs/${selectedCounselling}/${currentYear}/ALL/OPEN.json`; // not loaded yet -> empty state
       }
 
       try {
