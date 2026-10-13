@@ -580,7 +580,7 @@
       MCC:   { title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
       MH:    { title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
       OPEN:  { title: 'Open States', subtitle: '17 states · MQ & NRI quota' },
-      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · Round 1 2026' },
+      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · Rounds 1-2 · 2026' },
       DEEMED_BPTH: { title: 'Deemed BPTH', subtitle: 'Deemed universities · BPTH' },
       VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
       MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
@@ -599,10 +599,10 @@
     const AACCC_QUOTAS = [
       { id: 'AG', label: 'AIQ Govt' }, { id: 'GA', label: 'AIQ Govt Aided' },
       { id: 'CU', label: 'Central Univ / National Inst' }, { id: 'PS', label: 'Management / Paid' },
-      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }, { id: 'NR', label: 'NRI' }
+      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }, { id: 'NR', label: 'NRI' }, { id: 'SF', label: 'Self Finance' }
     ];
     // course+quota combinations that have data in the Round 1 allotment list
-    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM','NR'], BHMS: ['AG','GA','CU','PS','MM','NR'], BUMS: ['AG','CU','PS','MG'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
+    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM','NR','SF'], BHMS: ['AG','GA','CU','PS','MM','NR'], BUMS: ['AG','CU','PS','MG','SF'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
     const aacccCourse = () => selectedInstType.split('_')[0];
     const aacccQuota = () => selectedInstType.split('_')[1];
     let selectedInstType = 'GOVT_MBBS';
@@ -795,8 +795,8 @@
           titleEl.textContent = 'Open States — Management Quota';
           subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
         } else if (c === 'AACCC') {
-          titleEl.textContent = 'AACCC — Round 1 2026 Allotment';
-          subtitleEl.textContent = 'Intake = Round 1 seat matrix · AIR = last rank allotted in Round 1';
+          titleEl.textContent = 'AACCC — Round 1 & 2 2026 Allotment';
+          subtitleEl.textContent = 'Intake = Round 1 seat matrix · AIR = last rank allotted in each round';
         } else if (COUNSELLING_CARDS[c]) {
           titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
           subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
