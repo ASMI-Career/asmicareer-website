@@ -1271,7 +1271,7 @@
       let borderCount = 0;
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
 
@@ -1960,7 +1960,7 @@
       }
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
@@ -2211,7 +2211,7 @@
       }
       const body = document.getElementById('pdfExportModalBody');
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
@@ -2313,7 +2313,7 @@
 
     function confirmPdfExport() {
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = currentData.counselling === 'MCC' || currentData.counselling === 'VCI'; // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
