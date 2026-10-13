@@ -1,0 +1,51 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BOTH",
+  "category": "SC",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "7205",
+      "name": "Occupational Therapy School & Centre, GMC Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 368109,
+          "SML": 9589,
+          "CSML": "SC-1034"
+        }
+      }
+    },
+    {
+      "code": "7101",
+      "name": "Department of Occupational Therapy, Seth GS Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 556326,
+          "SML": 17283,
+          "CSML": "SC-2183"
+        }
+      }
+    },
+    {
+      "code": "7103",
+      "name": "Occupational Therapy School & Centre, Lokmanya Tilak Medical Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 584271,
+          "SML": 18369,
+          "CSML": "SC-2329"
+        }
+      }
+    }
+  ]
+}

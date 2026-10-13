@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BASLP",
+  "category": "SC",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "8102",
+      "name": "TN Medical & Nair Hospital, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 561768,
+          "SML": 17505,
+          "CSML": "SC-2213"
+        }
+      }
+    },
+    {
+      "code": "8101",
+      "name": "AYJ National Institute for Hearing, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 633350,
+          "SML": 20192,
+          "CSML": "SC-2606"
+        }
+      }
+    }
+  ]
+}

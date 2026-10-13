@@ -1,0 +1,51 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BNYS",
+  "category": "VJ",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "9853",
+      "name": "International Board of Yoga's Bachelor of Naturopathy & Yogic Sciences, Mumbai",
+      "establishment": 2026,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1417310,
+          "SML": 35328,
+          "CSML": "DT-VJ(A)-1317"
+        }
+      }
+    },
+    {
+      "code": "9852",
+      "name": "Shikshan Maharshi Ankushrao Kadam Yoga & Naturopathy College, Sambhajinagar",
+      "establishment": 2024,
+      "fees": "12500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1868052,
+          "SML": 37789,
+          "CSML": "DT-VJ(A)-1395"
+        }
+      }
+    },
+    {
+      "code": "9855",
+      "name": "Ratan Tata Institute of Naturopathy & Yoga Sciences, Wardha",
+      "establishment": 2026,
+      "fees": "15000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1922339,
+          "SML": 38008,
+          "CSML": "DT-VJ(A)-1398"
+        }
+      }
+    }
+  ]
+}

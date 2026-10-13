@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BPTH",
+  "category": "ST",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "6102",
+      "name": "Physiotherapy School & Centre, Seth G S Medical College, Parel, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 529547,
+          "SML": 16187,
+          "CSML": "ST-500"
+        }
+      }
+    },
+    {
+      "code": "6103",
+      "name": "Physiotherapy School & Centre, Topiwala National Medical College, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 541086,
+          "SML": 16631,
+          "CSML": "ST-518"
+        }
+      }
+    }
+  ]
+}

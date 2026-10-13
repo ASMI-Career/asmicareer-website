@@ -1,0 +1,65 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BOTH",
+  "category": "EWS",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "7205",
+      "name": "Occupational Therapy School & Centre, GMC Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1134604,
+          "SML": 32805,
+          "CSML": "EWS-2822"
+        }
+      }
+    },
+    {
+      "code": "7101",
+      "name": "Department of Occupational Therapy, Seth GS Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 1704697,
+          "SML": 37068,
+          "CSML": "EWS-3099"
+        }
+      }
+    },
+    {
+      "code": "7102",
+      "name": "Department of Occupational Therapy School, Topiwala National Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1767304,
+          "SML": 37365,
+          "CSML": "EWS-3121"
+        }
+      }
+    },
+    {
+      "code": "7103",
+      "name": "Occupational Therapy School & Centre, Lokmanya Tilak Medical Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    }
+  ]
+}

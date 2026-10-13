@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "GOVT_BPTH",
+  "category": "NTC",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "6102",
+      "name": "Physiotherapy School & Centre, Seth G S Medical College, Parel, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 245375,
+          "SML": 5079,
+          "CSML": "NTC-353"
+        }
+      }
+    },
+    {
+      "code": "6101",
+      "name": "Physiotherapy Therapy Treatment & Teaching Centre, LTM Medical College, Mumbai",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 270215,
+          "SML": 5937,
+          "CSML": "NTC-419"
+        }
+      }
+    }
+  ]
+}

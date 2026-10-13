@@ -1,0 +1,37 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BNYS",
+  "category": "NTD",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "9851",
+      "name": "Mahalaxmi College of Naturopathy & Yogic Sciences, Satara",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1797255,
+          "SML": 37507,
+          "CSML": "NTD-1128"
+        }
+      }
+    },
+    {
+      "code": "9855",
+      "name": "Ratan Tata Institute of Naturopathy & Yoga Sciences, Wardha",
+      "establishment": 2026,
+      "fees": "15000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 1944013,
+          "SML": 38095,
+          "CSML": "NTD-1139"
+        }
+      }
+    }
+  ]
+}

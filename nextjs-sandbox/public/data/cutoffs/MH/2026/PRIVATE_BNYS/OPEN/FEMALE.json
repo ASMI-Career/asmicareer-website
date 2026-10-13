@@ -1,0 +1,79 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BNYS",
+  "category": "OPEN",
+  "sub_type": "FEMALE",
+  "colleges": [
+    {
+      "code": "9853",
+      "name": "International Board of Yoga's Bachelor of Naturopathy & Yogic Sciences, Mumbai",
+      "establishment": 2026,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 828657,
+          "SML": 26243,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "9854",
+      "name": "Chhatrapati Shivaji Maharaj Institute of Yoga & Naturopathy, Panvel",
+      "establishment": 2026,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 7,
+          "AIR": 1086214,
+          "SML": 32032,
+          "CSML": "OBC-9055"
+        }
+      }
+    },
+    {
+      "code": "9852",
+      "name": "Shikshan Maharshi Ankushrao Kadam Yoga & Naturopathy College, Sambhajinagar",
+      "establishment": 2024,
+      "fees": "125000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 1122155,
+          "SML": 32561,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "9855",
+      "name": "Ratan Tata Institute of Naturopathy & Yoga Sciences, Wardha",
+      "establishment": 2026,
+      "fees": "150000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 1183340,
+          "SML": 33540,
+          "CSML": "SC-4851"
+        }
+      }
+    },
+    {
+      "code": "9851",
+      "name": "Mahalaxmi College of Naturopathy & Yogic Sciences, Satara",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 8,
+          "AIR": 1346159,
+          "SML": 34829,
+          "CSML": "SC-5084"
+        }
+      }
+    }
+  ]
+}

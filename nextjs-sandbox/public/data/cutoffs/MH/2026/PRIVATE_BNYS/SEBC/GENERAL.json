@@ -1,0 +1,79 @@
+{
+  "counselling": "MH",
+  "year": 2026,
+  "quota_type": "PRIVATE_BNYS",
+  "category": "SEBC",
+  "sub_type": "GENERAL",
+  "colleges": [
+    {
+      "code": "9852",
+      "name": "Shikshan Maharshi Ankushrao Kadam Yoga & Naturopathy College, Sambhajinagar",
+      "establishment": 2024,
+      "fees": "62500",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": 1892598,
+          "SML": 37895,
+          "CSML": "SEBC-3849"
+        }
+      }
+    },
+    {
+      "code": "9855",
+      "name": "Ratan Tata Institute of Naturopathy & Yoga Sciences, Wardha",
+      "establishment": 2026,
+      "fees": "75000",
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": 1933671,
+          "SML": 38059,
+          "CSML": "SEBC-3861"
+        }
+      }
+    },
+    {
+      "code": "9851",
+      "name": "Mahalaxmi College of Naturopathy & Yogic Sciences, Satara",
+      "establishment": 2024,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "9853",
+      "name": "International Board of Yoga's Bachelor of Naturopathy & Yogic Sciences, Mumbai",
+      "establishment": 2026,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    },
+    {
+      "code": "9854",
+      "name": "Chhatrapati Shivaji Maharaj Institute of Yoga & Naturopathy, Panvel",
+      "establishment": 2026,
+      "fees": null,
+      "rounds": {
+        "Round 1": {
+          "Intake": 3,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
+        }
+      }
+    }
+  ]
+}
