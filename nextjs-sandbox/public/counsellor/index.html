@@ -776,7 +776,7 @@
           subtitleEl.textContent = `Maharashtra State Quota · Govt & Private · ${courseLabel} seats`;
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
-          subtitleEl.textContent = '17 states · MQ & NRI quota · MBBS seats';
+          subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
         } else if (COUNSELLING_CARDS[c]) {
           titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
           subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
@@ -920,6 +920,7 @@
       }
       const grp = COURSE_GROUPS.find(g => g.id === selectedGroup);
       const cards = grp.cards.map(id => ({ id, ...COUNSELLING_CARDS[id] }));
+      if (selectedGroup === 'VET') cards.forEach(c => { if (c.id === 'OPEN') c.subtitle = OPEN_VET_STATES.length + ' states · Private colleges'; });
       container.className = 'grid grid-cols-1 gap-3 ' + (cards.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3');
 
       container.innerHTML = cards.map(c => {
