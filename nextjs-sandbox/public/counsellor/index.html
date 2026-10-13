@@ -585,7 +585,12 @@
       VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
       MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
     };
-    const NEW_COUNSELLINGS = ['AACCC', 'DEEMED_BPTH', 'VCI', 'MAFSU']; // no filters/data yet
+    const NEW_COUNSELLINGS = ['AACCC', 'DEEMED_BPTH', 'MAFSU']; // no filters/data yet
+    const VCI_INST_TYPES = [
+      { id: 'GOVT_BVSC', label: 'Govt BVSc' },
+      { id: 'PRIVATE_BVSC', label: 'Private BVSc' }
+    ];
+    const VCI_CATS = ['OPEN', 'EWS', 'OBC', 'SC', 'ST'];
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
@@ -733,6 +738,9 @@
       const grp = COURSE_GROUPS.find(x => x.id === selectedGroup);
       if (c === 'MCC') {
         selectedInstType = 'GOVT_MBBS';
+        selectedCategory = 'OPEN';
+      } else if (c === 'VCI') {
+        selectedInstType = 'GOVT_BVSC';
         selectedCategory = 'OPEN';
       } else if (c === 'MH') {
         mhQuota = grp.mhDefault;
@@ -942,6 +950,7 @@
          if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
+         else if (selectedCounselling === 'VCI') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else summary = COUNSELLING_CARDS[selectedCounselling].title;
 
          html += `<div class="text-sm font-bold text-[#1A0040] bg-[#EDE9FF] px-4 py-2 rounded-xl">${summary}</div>`;
@@ -984,6 +993,13 @@
             });
             html += `</div>`;
          }
+      } else if (selectedCounselling === 'VCI') {
+         const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
+         VCI_INST_TYPES.forEach(t => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedInstType === t.id)} text-sm font-bold transition-all" onclick="setInstType('${t.id}')">${t.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p><div class="flex flex-wrap gap-2">`;
+         VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
+         html += `</div>`;
       } else if (selectedCounselling === 'OPEN') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
@@ -1202,6 +1218,8 @@
          url = `/data/cutoffs/${openRoot}/${currentYear}/${folder}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'MH') {
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+      } else if (selectedCounselling === 'VCI') {
+         url = `/data/cutoffs/VCI/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else {
          url = `/data/cutoffs/${selectedCounselling}/${currentYear}/ALL/OPEN.json`; // not loaded yet -> empty state
       }
