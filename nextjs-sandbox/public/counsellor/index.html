@@ -599,10 +599,10 @@
     const AACCC_QUOTAS = [
       { id: 'AG', label: 'AIQ Govt' }, { id: 'GA', label: 'AIQ Govt Aided' },
       { id: 'CU', label: 'Central Univ / National Inst' }, { id: 'PS', label: 'Management / Paid' },
-      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }
+      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }, { id: 'NR', label: 'NRI' }
     ];
     // course+quota combinations that have data in the Round 1 allotment list
-    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM'], BHMS: ['AG','GA','CU','PS','MM'], BUMS: ['AG','CU','PS','MG'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
+    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM','NR'], BHMS: ['AG','GA','CU','PS','MM','NR'], BUMS: ['AG','CU','PS','MG'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
     const aacccCourse = () => selectedInstType.split('_')[0];
     const aacccQuota = () => selectedInstType.split('_')[1];
     let selectedInstType = 'GOVT_MBBS';
@@ -796,7 +796,7 @@
           subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
         } else if (c === 'AACCC') {
           titleEl.textContent = 'AACCC — Round 1 2026 Allotment';
-          subtitleEl.textContent = 'Closing rank = last AIR allotted in Round 1 · AYUSH seats';
+          subtitleEl.textContent = 'Intake = Round 1 seat matrix · AIR = last rank allotted in Round 1';
         } else if (COUNSELLING_CARDS[c]) {
           titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
           subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
