@@ -1,7 +1,7 @@
 {
  "counselling": "VCI",
  "institution_type": "PRIVATE_BVSC",
- "year": 2025,
+ "year": 2026,
  "category": "EWS",
  "colleges": [
   {
@@ -12,18 +12,8 @@
    "type": "Private",
    "rounds": {
     "Round 1": {
-     "Intake": 1,
-     "AIR": 108608,
-     "AIR_PWD": null
-    },
-    "Round 2": {
-     "Intake": null,
-     "AIR": null,
-     "AIR_PWD": null
-    },
-    "Stray Vacancy Round": {
-     "Intake": 1,
-     "AIR": 278093,
+     "Intake": 2,
+     "AIR": 73677,
      "AIR_PWD": null
     }
    }
@@ -36,42 +26,22 @@
    "type": "Private",
    "rounds": {
     "Round 1": {
-     "Intake": 2,
-     "AIR": 133513,
-     "AIR_PWD": null
-    },
-    "Round 2": {
      "Intake": 1,
-     "AIR": 97561,
-     "AIR_PWD": null
-    },
-    "Stray Vacancy Round": {
-     "Intake": 2,
-     "AIR": 289091,
+     "AIR": 94257,
      "AIR_PWD": null
     }
    }
   },
   {
-   "code": "RJ005",
-   "name": "Mahatma Jyotiba Fule College of Veterinary and Animal Science, Jaipur",
-   "establishment": 2007,
+   "code": null,
+   "name": "M.B. Veterinary College, Dungarpur",
+   "establishment": null,
    "state": "Rajasthan",
    "type": "Private",
    "rounds": {
     "Round 1": {
      "Intake": 1,
-     "AIR": 111125,
-     "AIR_PWD": null
-    },
-    "Round 2": {
-     "Intake": 1,
-     "AIR": 137008,
-     "AIR_PWD": null
-    },
-    "Stray Vacancy Round": {
-     "Intake": 1,
-     "AIR": 292745,
+     "AIR": 84036,
      "AIR_PWD": null
     }
    }
@@ -85,17 +55,7 @@
    "rounds": {
     "Round 1": {
      "Intake": 2,
-     "AIR": 115488,
-     "AIR_PWD": null
-    },
-    "Round 2": {
-     "Intake": 2,
-     "AIR": 143782,
-     "AIR_PWD": null
-    },
-    "Stray Vacancy Round": {
-     "Intake": 2,
-     "AIR": 307798,
+     "AIR": 108315,
      "AIR_PWD": null
     }
    }
@@ -108,18 +68,22 @@
    "type": "Private",
    "rounds": {
     "Round 1": {
-     "Intake": 1,
-     "AIR": 111892,
+     "Intake": 2,
+     "AIR": 98438,
      "AIR_PWD": null
-    },
-    "Round 2": {
+    }
+   }
+  },
+  {
+   "code": "RJ005",
+   "name": "Mahatma Jyotiba Fule College of Veterinary and Animal Science, Jaipur",
+   "establishment": 2007,
+   "state": "Rajasthan",
+   "type": "Private",
+   "rounds": {
+    "Round 1": {
      "Intake": 1,
-     "AIR": 108160,
-     "AIR_PWD": null
-    },
-    "Stray Vacancy Round": {
-     "Intake": 1,
-     "AIR": 329094,
+     "AIR": 95755,
      "AIR_PWD": null
     }
    }

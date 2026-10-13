@@ -1,0 +1,820 @@
+{
+ "counselling": "VCI",
+ "institution_type": "GOVT_BVSC",
+ "year": 2026,
+ "category": "OPEN",
+ "colleges": [
+  {
+   "code": "AP001",
+   "name": "College of Veterinary Science, Proddatur",
+   "establishment": 2008,
+   "state": "Andhra Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 56784,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "AP002",
+   "name": "College of Veterinary Science, Tirupati",
+   "establishment": 1957,
+   "state": "Andhra Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 46180,
+     "AIR_PWD": 140732
+    }
+   }
+  },
+  {
+   "code": "AP003",
+   "name": "NTR College of Veterinary Science, Gannavaram",
+   "establishment": 1998,
+   "state": "Andhra Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 8,
+     "AIR": 53978,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "AS001",
+   "name": "College of Veterinary Science, Lakhimpur",
+   "establishment": 1987,
+   "state": "Assam",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 52815,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "AS002",
+   "name": "College of Veterinary Science, Guwahati",
+   "establishment": 1948,
+   "state": "Assam",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 48147,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "BH001",
+   "name": "Bihar Veterinary College, Patna",
+   "establishment": 1927,
+   "state": "Bihar",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 39825,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "CH001",
+   "name": "College of Veterinary Science and Animal Husbandry, Durg",
+   "establishment": 1985,
+   "state": "Chhattisgarh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 41153,
+     "AIR_PWD": 774668
+    }
+   }
+  },
+  {
+   "code": "GJ001",
+   "name": "College of Veterinary Science and Animal Husbandry, Anand",
+   "establishment": 1964,
+   "state": "Gujarat",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 37482,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "GJ002",
+   "name": "College of Veterinary Science and Animal Husbandry, Junagadh",
+   "establishment": 2008,
+   "state": "Gujarat",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 41422,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "GJ003",
+   "name": "College of Veterinary Science and Animal Husbandry, Navsari",
+   "establishment": 2008,
+   "state": "Gujarat",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 43863,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "GJ004",
+   "name": "College of Veterinary Science and Animal Husbandry, Sardarkrushinagar",
+   "establishment": 1981,
+   "state": "Gujarat",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 43464,
+     "AIR_PWD": 828824
+    }
+   }
+  },
+  {
+   "code": "HY001",
+   "name": "College of Veterinary Science, Hisar",
+   "establishment": 1948,
+   "state": "Haryana",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 31407,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "HP001",
+   "name": "Dr. G.C. Negi College of Veterinary and Animal Sciences, Palampur",
+   "establishment": 1986,
+   "state": "Himachal Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 38380,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "JK001",
+   "name": "Faculty of Veterinary Sciences and Animal Husbandry, Jammu",
+   "establishment": 1995,
+   "state": "Jammu and Kashmir",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 44009,
+     "AIR_PWD": 668175
+    }
+   }
+  },
+  {
+   "code": "JK002",
+   "name": "Faculty of Veterinary Sciences and Animal Husbandry, Srinagar",
+   "establishment": 1984,
+   "state": "Jammu and Kashmir",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 39785,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "Ranchi College of Veterinary Science and Animal Husbandry, Ranchi",
+   "establishment": null,
+   "state": "Jharkhand",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 44686,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "KA001",
+   "name": "Veterinary College, Hebbal, Bengaluru",
+   "establishment": 1958,
+   "state": "Karnataka",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 39354,
+     "AIR_PWD": 730407
+    }
+   }
+  },
+  {
+   "code": "KA002",
+   "name": "Veterinary College, Nandinagar, Bidar",
+   "establishment": 1984,
+   "state": "Karnataka",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 52617,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "KA003",
+   "name": "Veterinary College, Gadag",
+   "establishment": 2017,
+   "state": "Karnataka",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 59268,
+     "AIR_PWD": 509703
+    }
+   }
+  },
+  {
+   "code": "KA004",
+   "name": "Veterinary College, Hassan",
+   "establishment": 2007,
+   "state": "Karnataka",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 54570,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "KA005",
+   "name": "Veterinary College, Shimoga",
+   "establishment": 2006,
+   "state": "Karnataka",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 54845,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "KL001",
+   "name": "College of Veterinary and Animal Sciences, Thrissur",
+   "establishment": 1955,
+   "state": "Kerala",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 29786,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "KL002",
+   "name": "College of Veterinary and Animal Sciences, Pookote",
+   "establishment": 2004,
+   "state": "Kerala",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 35626,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MP001",
+   "name": "College of Veterinary Science and Animal Husbandry, Jabalpur",
+   "establishment": 1948,
+   "state": "Madhya Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 42180,
+     "AIR_PWD": 855601
+    }
+   }
+  },
+  {
+   "code": "MP002",
+   "name": "College of Veterinary Science and Animal Husbandry, Mhow",
+   "establishment": 1955,
+   "state": "Madhya Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 46228,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MP003",
+   "name": "College of Veterinary Science and Animal Husbandry, Rewa",
+   "establishment": 2007,
+   "state": "Madhya Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 48004,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MH001",
+   "name": "College of Veterinary and Animal Sciences, Parbhani",
+   "establishment": 1972,
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 54596,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MH002",
+   "name": "College of Veterinary and Animal Sciences, Udgir",
+   "establishment": 1987,
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 55967,
+     "AIR_PWD": 1034564
+    }
+   }
+  },
+  {
+   "code": "MH003",
+   "name": "K.N.P. College of Veterinary Sciences, Satara",
+   "establishment": 1988,
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 53797,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MH004",
+   "name": "Mumbai Veterinary College, Mumbai",
+   "establishment": 1886,
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 36739,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "MH005",
+   "name": "Nagpur Veterinary College, Nagpur",
+   "establishment": 1958,
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 44549,
+     "AIR_PWD": 578926
+    }
+   }
+  },
+  {
+   "code": "MZ001",
+   "name": "College of Veterinary Science and Animal Husbandry, Aizawl",
+   "establishment": 1998,
+   "state": "Mizoram",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 60419,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "NG001",
+   "name": "College of Veterinary Science, Jalukie, Peren",
+   "establishment": 2016,
+   "state": "Nagaland",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 62718,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "OD001",
+   "name": "College of Veterinary Science and Animal Husbandry, Bhubaneswar",
+   "establishment": 1960,
+   "state": "Odisha",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 27390,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "PY001",
+   "name": "Rajiv Gandhi College of Veterinary and Animal Sciences, Puducherry",
+   "establishment": 1994,
+   "state": "Puducherry",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 46819,
+     "AIR_PWD": 863811
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "College of Veterinary Science, Rampura Phul, Bathinda",
+   "establishment": null,
+   "state": "Punjab",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 40069,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "PB001",
+   "name": "College of Veterinary Science, Ludhiana",
+   "establishment": 1969,
+   "state": "Punjab",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 30078,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "RJ003",
+   "name": "College of Veterinary and Animal Science, Bikaner",
+   "establishment": 1954,
+   "state": "Rajasthan",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 6,
+     "AIR": 30067,
+     "AIR_PWD": 538024
+    }
+   }
+  },
+  {
+   "code": "RJ004",
+   "name": "College of Veterinary and Animal Sciences, Udaipur",
+   "establishment": 2007,
+   "state": "Rajasthan",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 34274,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "RJ006",
+   "name": "Post Graduate Institute of Veterinary Education and Research, Jaipur",
+   "establishment": 2012,
+   "state": "Rajasthan",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 32222,
+     "AIR_PWD": 406526
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "Veterinary College and Research Institute, Salem",
+   "establishment": null,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 53516,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "Veterinary College and Research Institute, Theni",
+   "establishment": null,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 57964,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "Veterinary College and Research Institute, Udumalpet",
+   "establishment": null,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 56975,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "TN001",
+   "name": "College of Veterinary Science and Research Institute, Namakkal",
+   "establishment": 1985,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 40414,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "TN002",
+   "name": "Madras Veterinary College, Chennai",
+   "establishment": 1903,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 26988,
+     "AIR_PWD": 37640
+    }
+   }
+  },
+  {
+   "code": "TN003",
+   "name": "Veterinary College and Research Institute, Orthanadu",
+   "establishment": 2011,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 49813,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "TN004",
+   "name": "Veterinary College and Research Institute, Tirunelveli",
+   "establishment": 2011,
+   "state": "Tamil Nadu",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 52393,
+     "AIR_PWD": 1016285
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "College of Veterinary Science, Mamnoor, Warangal",
+   "establishment": null,
+   "state": "Telangana",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 58771,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "TL001",
+   "name": "College of Veterinary Science, Hyderabad",
+   "establishment": 1946,
+   "state": "Telangana",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 44356,
+     "AIR_PWD": 663704
+    }
+   }
+  },
+  {
+   "code": "TL002",
+   "name": "College of Veterinary Science, Korutla",
+   "establishment": 2008,
+   "state": "Telangana",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 59702,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "College of Veterinary Sciences & Animal Husbandry, Tripura",
+   "establishment": null,
+   "state": "Tripura",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 60982,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "College of Veterinary & Animal Sciences, Meerut",
+   "establishment": null,
+   "state": "Uttar Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 38157,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": null,
+   "name": "College of Veterinary Science & Animal Husbandry, Kumarganj",
+   "establishment": null,
+   "state": "Uttar Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 45296,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "UP003",
+   "name": "College of Veterinary Science and Animal Husbandry, Mathura",
+   "establishment": 1947,
+   "state": "Uttar Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 33959,
+     "AIR_PWD": 275864
+    }
+   }
+  },
+  {
+   "code": "UP004",
+   "name": "Faculty of Veterinary and Animal Sciences, Banaras Hindu University, Barkachha",
+   "establishment": 2015,
+   "state": "Uttar Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 5,
+     "AIR": 36359,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "UP005",
+   "name": "ICAR - Indian Veterinary Research Institute, Bareilly",
+   "establishment": 1889,
+   "state": "Uttar Pradesh",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": null,
+     "AIR": null,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "UP006",
+   "name": "College of Veterinary and Animal Sciences, Pantnagar",
+   "establishment": 1960,
+   "state": "Uttarakhand",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 3,
+     "AIR": 35310,
+     "AIR_PWD": 1095166
+    }
+   }
+  },
+  {
+   "code": "WB001",
+   "name": "Faculty of Veterinary and Animal Sciences, Mohanpur, Nadia",
+   "establishment": 1974,
+   "state": "West Bengal",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 7,
+     "AIR": 37457,
+     "AIR_PWD": null
+    }
+   }
+  }
+ ]
+}
