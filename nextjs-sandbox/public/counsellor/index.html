@@ -2057,7 +2057,8 @@
         ? (mhQuota.startsWith('GOVT_') ? 'Government Colleges' : mhCategory === 'IQ' ? 'Institutional Quota' : 'Private Colleges')
         : (currentData.state ? `${currentData.state} — ${currentData.quota || currentData.category || ''}` : (currentData.counselling || 'Cutoff Data'));
 
-      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', 'Establishment', 'Fees'];
+      // MCC-style data (MCC, VCI, AACCC) spans many states, so each college row carries its own State
+      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', ...(isMCC ? ['State'] : []), 'Establishment', 'Fees'];
       const headerRow1 = [bucketLabel, ...staticCols.slice(1).map(() => null)];
       const headerRow2 = [...staticCols];
       const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: staticCols.length - 1 } }];
@@ -2073,7 +2074,7 @@
       workingColleges.forEach((college, i) => {
         const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
         const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
-        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', college.establishment || '-', college.fees || '-'];
+        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', ...(isMCC ? [college.state || '-'] : []), college.establishment || '-', college.fees || '-'];
         roundKeys.forEach(round => {
           const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
           row.push(rd.Intake ?? '-');
@@ -2109,7 +2110,7 @@
       }
       ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: totalRows - 1, c: totalCols - 1 } });
 
-      ws['!cols'] = staticCols.map((label, i) => ({ wch: i === 2 ? 45 : i === 3 ? 14 : 12 }))
+      ws['!cols'] = staticCols.map((label, i) => ({ wch: i === 2 ? 45 : label === 'State' ? 18 : label === 'Establishment' ? 14 : 12 }))
         .concat(roundKeys.flatMap(() => subCols.map(() => ({ wch: 10 }))));
 
       const wb = XLSX.utils.book_new();
