@@ -651,6 +651,12 @@
       'Jharkhand', 'Karnataka', 'Kerala', 'Manipur', 'Meghalaya', 'Pondicherry',
       'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
     ];
+    // Veterinary (BVSc) open-state data: separate state list + quota keys, stored under OPEN_BVSC/
+    const OPEN_VET_STATES = ['Himachal Pradesh', 'Haryana', 'Madhya Pradesh', 'Pondicherry', 'Punjab', 'Rajasthan', 'Telangana', 'Uttar Pradesh', 'Uttarakhand'];
+    const OPEN_VET_CATS = Object.fromEntries(OPEN_VET_STATES.map(s => [s.replace(/ /g, '_'), ['PRIVATE']]));
+    const openStates = () => selectedGroup === 'VET' ? OPEN_VET_STATES : OPEN_STATES;
+    const openCats = folder => (selectedGroup === 'VET' ? OPEN_VET_CATS : OPEN_STATE_CATS)[folder];
+    const openRoot = () => selectedGroup === 'AYUSH' ? 'OPEN_AYUSH' : selectedGroup === 'VET' ? 'OPEN_BVSC' : 'OPEN';
     const OPEN_STATE_CATS = {
       'Andhra_Pradesh': ['COUNSELOR', 'NRI', 'GOV_NRI'],
       'Bihar': ['UR_PVT', 'MM', 'SM', 'NRI'],
@@ -747,8 +753,8 @@
         mhCategory = 'OPEN';
         mhSubType = 'GENERAL';
       } else if (c === 'OPEN') {
-        selectedState = 'Karnataka';
-        selectedCategory = 'MQ';
+        selectedState = selectedGroup === 'VET' ? OPEN_VET_STATES[0] : 'Karnataka';
+        selectedCategory = selectedGroup === 'VET' ? 'PRIVATE' : 'MQ';
       }
 
       const titleEl = document.getElementById('counselling-title');
@@ -821,7 +827,7 @@
     function setOpenState(st) {
        selectedState = st;
        const folder = st.replace(/ /g, '_');
-       selectedCategory = OPEN_STATE_CATS[folder][0];
+       selectedCategory = openCats(folder)[0];
        renderFilters();
        loadData();
     }
@@ -1003,7 +1009,7 @@
       } else if (selectedCounselling === 'OPEN') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
-         OPEN_STATES.forEach(st => {
+         openStates().forEach(st => {
             const isSel = selectedState === st;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setOpenState('${st}')">${st}</button>`;
@@ -1076,7 +1082,7 @@
                 if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
                 else cats = MCC_STD_CATS;
              } else if (selectedCounselling === 'OPEN') {
-                cats = OPEN_STATE_CATS[folder] || [];
+                cats = openCats(folder) || [];
              }
 
              const isDeemed = selectedCounselling === 'MCC' && selectedInstType.includes('DEEMED');
@@ -1214,8 +1220,7 @@
          url = `/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'OPEN') {
          const folder = selectedState.replace(/ /g, '_');
-         const openRoot = selectedGroup === 'AYUSH' ? 'OPEN_AYUSH' : selectedGroup === 'VET' ? 'OPEN_BVSC' : 'OPEN';
-         url = `/data/cutoffs/${openRoot}/${currentYear}/${folder}/${selectedCategory}.json`;
+         url = `/data/cutoffs/${openRoot()}/${currentYear}/${folder}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'MH') {
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
       } else if (selectedCounselling === 'VCI') {
@@ -2244,7 +2249,7 @@
           </div>`;
       } else if (isOPEN && !isHP) {
         const folder = (currentData.state || selectedState).replace(/ /g, '_');
-        const cats = OPEN_STATE_CATS[folder] || [currentData.quota || selectedCategory];
+        const cats = openCats(folder) || [currentData.quota || selectedCategory];
         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">${currentData.state || selectedState}</p>
           <div class="flex items-center justify-between mb-2">
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quota</p>
@@ -2374,7 +2379,7 @@
         const folder = (currentData.state || selectedState).replace(/ /g, '_');
         for (const cat of scope.categories) {
           try {
-            const res = await fetch(`/data/cutoffs/OPEN/${currentYear}/${folder}/${cat}.json`);
+            const res = await fetch(`/data/cutoffs/${openRoot()}/${currentYear}/${folder}/${cat}.json`);
             if (!res.ok) continue;
             const data = await res.json();
             const section = pdfSectionForData(data, cat, scope.rounds);
