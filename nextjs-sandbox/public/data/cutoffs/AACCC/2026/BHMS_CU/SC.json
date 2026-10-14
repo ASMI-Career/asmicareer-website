@@ -1,0 +1,44 @@
+{
+ "counselling": "AACCC",
+ "institution_type": "BHMS_CU",
+ "year": 2026,
+ "category": "SC",
+ "colleges": [
+  {
+   "code": "900198",
+   "name": "National Institute of Homoeopathy, Salt Lake, Kolkata",
+   "state": "West Bengal",
+   "type": "Government",
+   "rounds": {
+    "Round 1": {
+     "Intake": 13,
+     "AIR": 248674,
+     "AIR_PWD": null
+    },
+    "Round 2": {
+     "Intake": 4,
+     "AIR": 245363,
+     "AIR_PWD": null
+    }
+   }
+  },
+  {
+   "code": "900197",
+   "name": "North Eastern Institute of Ayurveda and Homoeopathy, Shillong",
+   "state": "Meghalaya",
+   "type": "Government",
+   "rounds": {
+    "Round 1": {
+     "Intake": 4,
+     "AIR": 255029,
+     "AIR_PWD": null
+    },
+    "Round 2": {
+     "Intake": 3,
+     "AIR": 267589,
+     "AIR_PWD": null
+    }
+   }
+  }
+ ]
+}
