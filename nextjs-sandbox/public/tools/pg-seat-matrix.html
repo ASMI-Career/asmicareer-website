@@ -394,7 +394,7 @@ $('dlp').addEventListener('click',function(){
   doc.save('ASMI_PG_Seat_Matrix_'+stamp()+'.pdf');say('PDF saved.')
  }catch(e){say('PDF could not be created here.')}
 });
-fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016j').then(function(r){return r.json()}).then(function(data){
+fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016k').then(function(r){return r.json()}).then(function(data){
  D=data;D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]=/\(Pvt\.\)/.test(i[3])?'DNB (Pvt.)':'DNB (Govt.)'});
  makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
  makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
