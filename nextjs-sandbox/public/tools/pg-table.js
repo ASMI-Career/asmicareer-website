@@ -106,8 +106,8 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
   var hero=d.createElement('section');hero.className='hero2';hero.setAttribute('aria-label','About this explorer');
   var esc=function(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;')};
   var words=(name||'Cutoff Explorer').split(/\s+/),last=words.pop(),first=words.join(' ');
-  var feats=[['chart','1','Round-wise','Analysis'],['building','4','All Colleges',name||'In this state'],['users','3','Quotas &amp;','Categories']];
-  hero.innerHTML='<div class="h2c"><span class="h2b">'+svg('cap')+' NEET-PG 2025</span><h1 class="h2t">'+(first?esc(first)+' ':'')+'<em>'+esc(last)+'</em></h1></div>'
+  var feats=(d.defaultView&&d.defaultView.PGFEATS)||[['chart','1','Round-wise','Analysis'],['building','4','All Colleges',name||'In this state'],['users','3','Quotas &amp;','Categories']];
+  hero.innerHTML='<div class="h2c"><span class="h2b">'+svg('cap')+' '+esc((d.defaultView&&d.defaultView.PGBADGE)||'NEET-PG 2025')+'</span><h1 class="h2t">'+(first?esc(first)+' ':'')+'<em>'+esc(last)+'</em></h1></div>'
    +'<div class="h2f">'+feats.map(function(f){return '<div class="h2fi"><i class="ic" data-t="'+f[1]+'">'+svg(f[0])+'</i><span><b>'+f[2]+'</b>'+esc(f[3])+'</span></div>'}).join('')+'</div>'
    +'<a class="h2call" href="tel:7410019075"><i>'+svg('phone')+'</i><span><small>Helpline</small><b>7410019075</b></span></a>';
   wrap.insertBefore(hero,wrap.firstChild);
