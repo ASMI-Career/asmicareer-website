@@ -198,7 +198,7 @@ td.c{white-space:normal;min-width:230px;max-width:320px}
 </section>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
 <div class="dl" id="dl"><button id="dlc" type="button">Download CSV</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every row that matches your filters.</span></div>
-<div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">State</th><th rowspan="2" id="hb">Branch</th><th rowspan="2" id="hq">Quota</th><th rowspan="2" class="n cat">Open</th><th rowspan="2" class="n cat">OBC</th><th rowspan="2" class="n cat">EWS</th><th rowspan="2" class="n cat">SC</th><th rowspan="2" class="n cat">ST</th><th rowspan="2" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" class="n cat">Open</th><th rowspan="2" class="n cat">OBC</th><th rowspan="2" class="n cat">EWS</th><th rowspan="2" class="n cat">SC</th><th rowspan="2" class="n cat">ST</th><th rowspan="2" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 22,507 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in state and other institutes; Deemed University = paid, NRI and minority seats in deemed universities; Central University = central university institutes (their All India Quota seats plus the Delhi University, IP University, BHU and AMU internal quotas); DNB = DNB (Govt.) PG seats. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
 </div>
@@ -209,7 +209,7 @@ window.PGBADGE='NEET-PG 2026';window.PGFEATS=[['chart','1','Category-wise','Seat
 (function(){
 function $(id){return document.getElementById(id)}
 var CATS=['OP','BC','EW','SC','ST'],CL={OP:'Open',BC:'OBC',EW:'EWS',SC:'SC',ST:'ST'};
-var D=null,grp='0',view='seat',MS={},shown=0,LIM=100,CUR=[];
+var D=null,grp='0',view='seat',HS={k:null,d:1},MS={},shown=0,LIM=100,CUR=[];
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function nf(v){return Number(v).toLocaleString('en-IN')}
 function makeMS(id,items,defaults,noun){
@@ -251,14 +251,36 @@ function query(){
   CATS.forEach(function(c){g.c[c]+=cv[c]});g.pw+=pw;g.total+=tot;g.colleges[r[0]]=1;g.branches[br]=1;g.states[ins[2]]=1;g.quotas[quota]=1;
  });
  var out=order.map(function(k){return G[k]});
- var so=$('sort').value;
+ var so=HS.k||$('sort').value,dir=HS.k?HS.d:(so==='total'?-1:1);
+ function val(g,k){
+  var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,nq=Object.keys(g.quotas).length;
+  if(k==='college')return view==='branch'?g.branch:g.college;
+  if(k==='branch')return view==='seat'?g.branch:(view==='college'?nb:nc);
+  if(k==='quota')return view==='seat'?g.quota:(view==='college'?g.ctype:nq);
+  if(k==='state')return view==='branch'?Object.keys(g.states).length:g.state;
+  if(k==='pw'||k==='total')return g[k];
+  return g.c[k]}
  out.sort(function(a,b){
-  if(so==='college'&&a.college!==b.college)return a.college<b.college?-1:1;
-  if(so==='state'&&a.state!==b.state)return a.state<b.state?-1:1;
-  if(so==='branch'&&(a.branch||'')!==(b.branch||''))return (a.branch||'')<(b.branch||'')?-1:1;
+  var x=val(a,so),y=val(b,so);
+  if(x!==y)return (x<y?-1:1)*dir;
   return b.total-a.total||(a.college<b.college?-1:1)});
  return out;
 }
+var TK={'State':'state','States':'state','Quota':'quota','Quotas':'quota','College type':'quota','Open':'OP','OBC':'BC','EWS':'EW','SC':'SC','ST':'ST','PwD':'pw','Total':'total','Branches':'branch','Colleges':'branch'};
+var ARR='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M8 19l-3-3M8 19l3-3M16 19V5M16 5l-3 3M16 5l3 3"/></svg>';
+function decorate(){
+ var ths=document.querySelectorAll('thead th');
+ for(var i=0;i<ths.length;i++){var th=ths[i],t=(th.textContent||'').trim(),k=TK[t];
+  if(!k){th.removeAttribute('data-mine');continue}
+  th.setAttribute('data-mine',k);th.classList.add('srtable');
+  if(!th.querySelector('.srt')){var b=document.createElement('span');b.className='srt';b.innerHTML=ARR;th.appendChild(b)}}
+ for(var j=0;j<ths.length;j++){var m=ths[j].getAttribute('data-mine');if(m)ths[j].classList.toggle('srt-on',HS.k===m)}
+}
+document.addEventListener('click',function(e){
+ var th=e.target.closest&&e.target.closest('th[data-mine]');if(!th)return;var k=th.getAttribute('data-mine');
+ var so=$('sort');if(so.value!=='total'){so.value='total';so.dispatchEvent(new Event('change',{bubbles:true}))}
+ if(HS.k===k)HS.d=-HS.d;else{HS.k=k;HS.d=(['state','quota'].indexOf(k)>=0)?1:-1}
+ shown=LIM;render()});
 function render(){
  if(!D)return;
  var out=query();CUR=out;
@@ -266,7 +288,7 @@ function render(){
  out.forEach(function(g){tot+=g.total;Object.keys(g.colleges).forEach(function(k){cols[k]=1});Object.keys(g.branches).forEach(function(k){brs[k]=1});Object.keys(g.states).forEach(function(k){sts[k]=1})});
  $('t-seats').textContent=nf(tot);$('t-col').textContent=nf(Object.keys(cols).length);$('t-br').textContent=nf(Object.keys(brs).length);$('t-st').textContent=nf(Object.keys(sts).length);
  var H={seat:['College','State','Branch','Quota'],college:['College','State','Branches','College type'],branch:['Branch','States','Colleges','Quotas']}[view];
- var ths=document.querySelectorAll('thead th');for(var hi=0;hi<4;hi++)ths[hi].textContent=H[hi];
+ for(var hi=0;hi<4;hi++){var hh=document.getElementById('h'+hi);var sp=hh.querySelector('.srt');hh.textContent=H[hi];if(sp)hh.appendChild(sp)}
  var rows=out.slice(0,shown).map(function(g){
   var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,lead;
   if(view==='seat')lead='<td class="c">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.branch)+'</td><td><span class="qp q0">'+esc(g.quota)+'</span></td>';
@@ -274,13 +296,14 @@ function render(){
   else lead='<td class="c">'+esc(g.branch)+'</td><td>'+(ns>1?ns+' states':esc(g.state))+'</td><td>'+nc+(nc===1?' college':' colleges')+'</td><td>'+nq+(nq===1?' quota':' quotas')+'</td>';
   var cells=CATS.map(function(c){var v=g.c[c];return '<td class="n'+(v?'':' z')+'">'+(v?nf(v):'–')+'</td>'}).join('');
   return '<tr>'+lead+cells+'<td class="n'+(g.pw?'':' z')+'">'+(g.pw?nf(g.pw):'–')+'</td><td class="n tot">'+nf(g.total)+'</td></tr>'});
+ decorate();
  $('body').innerHTML=rows.length?rows.join(''):'<tr><td colspan="11" class="empty">No seats match these filters.</td></tr>';
  $('count').textContent=nf(out.length)+(view==='seat'?' college + branch rows':(view==='college'?' colleges':' branches'))+' , '+nf(tot)+' seats';
  $('legend').textContent='Sorted by '+$('sort').selectedOptions[0].text.toLowerCase();
  $('more').hidden=out.length<=shown;$('dlc').disabled=$('dlp').disabled=!out.length;
 }
 $('q').addEventListener('input',function(){shown=LIM;render()});
-$('sort').addEventListener('change',function(){shown=LIM;render()});
+$('sort').addEventListener('change',function(){HS.k=null;shown=LIM;render()});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 $('grp').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;grp=b.getAttribute('data-g');Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x===b))});shown=LIM;render()});
 $('seg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;view=b.getAttribute('data-v');Array.prototype.forEach.call($('seg').children,function(x){x.setAttribute('aria-pressed',String(x===b))});shown=LIM;render()});
