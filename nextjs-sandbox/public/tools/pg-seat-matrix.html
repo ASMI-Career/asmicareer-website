@@ -223,7 +223,7 @@ td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 <div class="dl" id="dl"><button id="dlc" type="button">Download CSV</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every row that matches your filters.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" class="n cat">Open</th><th rowspan="2" class="n cat">OBC</th><th rowspan="2" class="n cat">EWS</th><th rowspan="2" class="n cat">SC</th><th rowspan="2" class="n cat">ST</th><th rowspan="2" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
-<p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 22,507 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in state and other institutes; Deemed University = paid, NRI and minority seats in deemed universities; Central University = central university institutes (their All India Quota seats plus the Delhi University, IP University, BHU and AMU internal quotas); DNB = DNB (Govt.) PG seats. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
+<p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 31,708 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in all institutes (including central university institutes and DNB-type hospitals); Deemed University = paid, NRI and minority seats in deemed universities; Central University = central internal quota seats (Delhi University, IP University, BHU and AMU quotas); DNB = DNB Quota seats (NBEMS) in government and private hospitals. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -304,7 +304,7 @@ document.addEventListener('click',function(e){
  var so=$('sort');if(so.value!=='total'){so.value='total';so.dispatchEvent(new Event('change',{bubbles:true}))}
  if(HS.k===k)HS.d=-HS.d;else{HS.k=k;HS.d=(['state','quota'].indexOf(k)>=0)?1:-1}
  shown=LIM;render()});
-var GD=['All India Quota seats in state and other institutes (central universities and DNB are listed separately).','Paid (self-financed merit), NRI and minority seats in deemed universities.','Central university institutes: their All India Quota seats plus the Delhi University, IP University, BHU and AMU internal quotas.','DNB Quota seats (NBEMS) in government and private hospitals, as published by MCC.','Every seat group together: AIQ, Deemed University, Central University and DNB.'];
+var GD=['All India Quota seats in every institute: state colleges, central institutes and DNB-type hospitals.','Paid (self-financed merit), NRI and minority seats in deemed universities.','Central internal quota seats: Delhi University, IP University, Banaras Hindu University and Aligarh Muslim University quotas.','DNB Quota seats (NBEMS) in government and private hospitals, as published by MCC.','Every seat group together: AIQ, Deemed University, Central University and DNB.'];
 function inGroup(r){return grp==='all'||String(r[3])===grp}
 function nfmt(v){return Number(v).toLocaleString('en-IN')}
 function groupCards(){
@@ -381,7 +381,7 @@ $('dlp').addEventListener('click',function(){
   doc.save('ASMI_PG_Seat_Matrix_'+stamp()+'.pdf');say('PDF saved.')
  }catch(e){say('PDF could not be created here.')}
 });
-fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016f').then(function(r){return r.json()}).then(function(data){
+fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016g').then(function(r){return r.json()}).then(function(data){
  D=data;D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]=/\(Pvt\.\)/.test(i[3])?'DNB (Pvt.)':'DNB (Govt.)'});
  makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
  makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
