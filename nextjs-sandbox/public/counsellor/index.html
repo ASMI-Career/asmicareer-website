@@ -392,6 +392,9 @@
                 </div>
               </div>
 
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Course</p>
+              <div class="flex flex-wrap gap-2 mb-5" id="course-groups"></div>
+              <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Counselling</p>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="counselling-cards">
                 <!-- Rendered via JS -->
               </div>
@@ -469,6 +472,8 @@
                 <div class="flex flex-wrap items-center gap-3">
                   <label for="sortSelect" class="text-xs font-bold text-gray-400 uppercase tracking-widest">Sort</label>
                   <select id="sortSelect" onchange="setSortKey(this.value)" class="px-3 py-2 rounded-full bg-gray-50 text-gray-700 text-sm font-bold border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1A0040]/20">
+                    <option value="name-asc">College Name: A to Z</option>
+                    <option value="name-desc">College Name: Z to A</option>
                     <option value="r1-asc">Round 1: Low to High</option>
                     <option value="r1-desc">Round 1: High to Low</option>
                     <option value="r2-asc">Round 2: Low to High</option>
@@ -565,11 +570,49 @@
     let currentData = null;
     let currentYear = '2026';
     let selectedCounselling = 'MCC';
+    let selectedGroup = 'MED';
+    // Course groups -> counselling cards shown under each. MCC/MH/OPEN are live; the rest show the empty state until data exists.
+    const COURSE_GROUPS = [
+      { id: 'MED',  label: 'MBBS / BDS', cards: ['MCC', 'MH', 'OPEN'], mhPrefix: ['MBBS', 'BDS'], mhDefault: 'GOVT_MBBS' },
+      { id: 'AYUSH', label: 'AYUSH (BAMS / BHMS / BUMS)', cards: ['AACCC', 'MH', 'OPEN'], mhPrefix: ['BAMS', 'BHMS', 'BUMS', 'AYUSH'], mhDefault: 'GOVT_BAMS' },
+      { id: 'BPTH', label: 'BPTH', cards: ['MH', 'DEEMED_BPTH'], mhPrefix: ['BPTH'], mhDefault: 'GOVT_BPTH' },
+      { id: 'VET',  label: 'Veterinary (BVSc)', cards: ['VCI', 'MAFSU', 'OPEN'], mhPrefix: [], mhDefault: 'GOVT_MBBS' }
+    ];
+    const COUNSELLING_CARDS = {
+      MCC:   { title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
+      MH:    { title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
+      OPEN:  { title: 'Open States', subtitle: '17 states · MQ & NRI quota' },
+      AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · Rounds 1-2 · 2026' },
+      DEEMED_BPTH: { title: 'Deemed BPTH', subtitle: 'Deemed universities · BPTH' },
+      VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
+      MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
+    };
+    const NEW_COUNSELLINGS = ['DEEMED_BPTH', 'MAFSU']; // no filters/data yet
+    const VCI_INST_TYPES = [
+      { id: 'GOVT_BVSC', label: 'Govt BVSc' },
+      { id: 'PRIVATE_BVSC', label: 'Private BVSc' }
+    ];
+    const VCI_CATS = ['OPEN', 'EWS', 'OBC', 'SC', 'ST'];
+    // AACCC (AYUSH) closing ranks: instType = COURSE_QUOTA, one file per allotted category
+    const AACCC_COURSES = [
+      { id: 'BAMS', label: 'BAMS' }, { id: 'BHMS', label: 'BHMS' }, { id: 'BUMS', label: 'BUMS' },
+      { id: 'BSMS', label: 'BSMS' }, { id: 'BPHARM', label: 'B.Pharm (Ayurveda)' }
+    ];
+    const AACCC_QUOTAS = [
+      { id: 'AG', label: 'AIQ Govt' }, { id: 'GA', label: 'AIQ Govt Aided' },
+      { id: 'CU', label: 'Central Univ / National Inst' }, { id: 'PS', label: 'Management / Paid' },
+      { id: 'MM', label: 'Muslim Minority' }, { id: 'MG', label: 'Muslim Minority (Govt Aided)' }, { id: 'NR', label: 'NRI' }, { id: 'SF', label: 'Self Finance' }
+    ];
+    // course+quota combinations that have data in the Round 1 allotment list
+    const AACCC_AVAILABLE = { BAMS: ['AG','GA','CU','PS','MM','NR','SF'], BHMS: ['AG','GA','CU','PS','MM','NR','SF'], BUMS: ['AG','CU','PS','MG','SF'], BSMS: ['AG','CU'], BPHARM: ['CU'] };
+    const aacccCourse = () => selectedInstType.split('_')[0];
+    const aacccQuota = () => selectedInstType.split('_')[1];
     let selectedInstType = 'GOVT_MBBS';
     let selectedCategory = 'OPEN'; // Default
     let selectedState = 'Karnataka';
-    let selectedStates = []; // MCC state filter (multi-select, client-side)
-    let currentSort = 'r1-asc'; // main table sort key
+    let selectedStates = []; // State filter (multi-select, client-side) for MCC / VCI / AACCC
+    const STATE_FILTER_COUNSELLINGS = ['MCC', 'VCI', 'AACCC'];
+    let currentSort = 'name-asc'; // main table sort key (default: college name)
     let activePrefTab = null; // which counselling-type tab is showing in the preference panel
 
     // MH State defaults
@@ -625,6 +668,12 @@
       'Jharkhand', 'Karnataka', 'Kerala', 'Manipur', 'Meghalaya', 'Pondicherry',
       'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
     ];
+    // Veterinary (BVSc) open-state data: separate state list + quota keys, stored under OPEN_BVSC/
+    const OPEN_VET_STATES = ['Himachal Pradesh', 'Haryana', 'Madhya Pradesh', 'Pondicherry', 'Punjab', 'Rajasthan', 'Telangana', 'Uttar Pradesh', 'Uttarakhand'];
+    const OPEN_VET_CATS = Object.fromEntries(OPEN_VET_STATES.map(s => [s.replace(/ /g, '_'), ['PRIVATE']]));
+    const openStates = () => selectedGroup === 'VET' ? OPEN_VET_STATES : OPEN_STATES;
+    const openCats = folder => (selectedGroup === 'VET' ? OPEN_VET_CATS : OPEN_STATE_CATS)[folder];
+    const openRoot = () => selectedGroup === 'AYUSH' ? 'OPEN_AYUSH' : selectedGroup === 'VET' ? 'OPEN_BVSC' : 'OPEN';
     const OPEN_STATE_CATS = {
       'Andhra_Pradesh': ['COUNSELOR', 'NRI', 'GOV_NRI'],
       'Bihar': ['UR_PVT', 'MM', 'SM', 'NRI'],
@@ -700,19 +749,32 @@
       loadData();
     }
 
+    function setGroup(g) {
+      if (g === selectedGroup) return;
+      selectedGroup = g;
+      setCounselling(COURSE_GROUPS.find(x => x.id === g).cards[0]);
+    }
+
     function setCounselling(c) {
       selectedCounselling = c;
       selectedStates = [];
+      const grp = COURSE_GROUPS.find(x => x.id === selectedGroup);
       if (c === 'MCC') {
         selectedInstType = 'GOVT_MBBS';
         selectedCategory = 'OPEN';
+      } else if (c === 'VCI') {
+        selectedInstType = 'GOVT_BVSC';
+        selectedCategory = 'OPEN';
+      } else if (c === 'AACCC') {
+        selectedInstType = 'BAMS_AG';
+        selectedCategory = 'OPEN';
       } else if (c === 'MH') {
-        mhQuota = 'GOVT_MBBS';
+        mhQuota = grp.mhDefault;
         mhCategory = 'OPEN';
         mhSubType = 'GENERAL';
       } else if (c === 'OPEN') {
-        selectedState = 'Karnataka';
-        selectedCategory = 'MQ';
+        selectedState = selectedGroup === 'VET' ? OPEN_VET_STATES[0] : 'Karnataka';
+        selectedCategory = selectedGroup === 'VET' ? 'PRIVATE' : 'MQ';
       }
 
       const titleEl = document.getElementById('counselling-title');
@@ -734,7 +796,13 @@
           subtitleEl.textContent = `Maharashtra State Quota · Govt & Private · ${courseLabel} seats`;
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
-          subtitleEl.textContent = '17 states · MQ & NRI quota · MBBS seats';
+          subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
+        } else if (c === 'AACCC') {
+          titleEl.textContent = 'AACCC — Round 1 & 2 2026 Allotment';
+          subtitleEl.textContent = 'Intake = Round 1 seat matrix · AIR = last rank allotted in each round';
+        } else if (COUNSELLING_CARDS[c]) {
+          titleEl.textContent = `${COUNSELLING_CARDS[c].title} — ${grp.label}`;
+          subtitleEl.textContent = `${COUNSELLING_CARDS[c].subtitle} · data coming soon`;
         }
       }
 
@@ -766,6 +834,21 @@
       loadData();
     }
 
+    function setAacccCourse(course) {
+      const quotas = AACCC_AVAILABLE[course];
+      selectedInstType = `${course}_${quotas.includes(aacccQuota()) ? aacccQuota() : quotas[0]}`;
+      selectedStates = [];
+      renderFilters();
+      loadData();
+    }
+
+    function setAacccQuota(quota) {
+      selectedInstType = `${aacccCourse()}_${quota}`;
+      selectedStates = [];
+      renderFilters();
+      loadData();
+    }
+
     function setInstType(type) {
       selectedInstType = type;
       selectedStates = [];
@@ -782,7 +865,7 @@
     function setOpenState(st) {
        selectedState = st;
        const folder = st.replace(/ /g, '_');
-       selectedCategory = OPEN_STATE_CATS[folder][0];
+       selectedCategory = openCats(folder)[0];
        renderFilters();
        loadData();
     }
@@ -866,11 +949,17 @@
       const container = document.getElementById('counselling-cards');
       if (!container) return;
 
-      const cards = [
-        { id: 'MCC', title: 'MCC AIQ', subtitle: 'All India Quota · Govt colleges' },
-        { id: 'MH', title: 'MH State', subtitle: 'Maharashtra CAP · Govt & Private' },
-        { id: 'OPEN', title: 'Open States', subtitle: '17 states · MQ & NRI quota' }
-      ];
+      const groupsEl = document.getElementById('course-groups');
+      if (groupsEl) {
+        groupsEl.innerHTML = COURSE_GROUPS.map(g => {
+          const cls = g.id === selectedGroup ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+          return `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setGroup('${g.id}')">${g.label}</button>`;
+        }).join('');
+      }
+      const grp = COURSE_GROUPS.find(g => g.id === selectedGroup);
+      const cards = grp.cards.map(id => ({ id, ...COUNSELLING_CARDS[id] }));
+      if (selectedGroup === 'VET') cards.forEach(c => { if (c.id === 'OPEN') c.subtitle = OPEN_VET_STATES.length + ' states · Private colleges'; });
+      container.className = 'grid grid-cols-1 gap-3 ' + (cards.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3');
 
       container.innerHTML = cards.map(c => {
         const isSel = selectedCounselling === c.id;
@@ -894,6 +983,19 @@
       }).join('');
     }
 
+    // State filter — client-side, built from currently loaded data (states vary by institution type / course / quota)
+    function stateFilterHtml(topGap) {
+      const availableStates = (currentData && currentData.colleges && currentData.counselling === selectedCounselling)
+        ? [...new Set(currentData.colleges.map(c => c.state).filter(Boolean))].sort()
+        : [];
+      if (!availableStates.length) return '';
+      const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+      let html = `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ${topGap ? 'mt-6' : ''}">State</p><div class="flex flex-wrap gap-2 mb-6">`;
+      html += `<button class="px-4 py-2 rounded-full ${pill(selectedStates.length === 0)} text-sm font-bold transition-all" onclick="clearMCCStateFilter()">All</button>`;
+      availableStates.forEach(st => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedStates.includes(st))} text-sm font-bold transition-all" onclick="toggleMCCState('${escAttr(st)}')">${st}</button>`; });
+      return html + `</div>`;
+    }
+
     function renderFilters() {
       const container = document.getElementById('dynamic-filters');
       if (!container) return;
@@ -906,6 +1008,9 @@
          if (selectedCounselling === 'MCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
+         else if (selectedCounselling === 'AACCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'VCI') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
+         else summary = COUNSELLING_CARDS[selectedCounselling].title;
 
          html += `<div class="text-sm font-bold text-[#1A0040] bg-[#EDE9FF] px-4 py-2 rounded-xl">${summary}</div>`;
          html += `<button onclick="toggleFilters()" class="p-2 text-gray-500 hover:text-[#1A0040] hover:bg-gray-100 rounded-xl transition-all" title="Expand filters"><iconify-icon icon="lucide:chevron-down" class="text-xl"></iconify-icon></button>`;
@@ -931,26 +1036,29 @@
          });
          html += `</div>`;
 
-         // MCC State filter — client-side, built from currently loaded data (states vary by institution type)
-         const availableStates = (currentData && currentData.colleges)
-           ? [...new Set(currentData.colleges.map(c => c.state).filter(Boolean))].sort()
-           : [];
-         if (availableStates.length) {
-            html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
-            html += `<div class="flex flex-wrap gap-2 mb-6">`;
-            const allSel = selectedStates.length === 0;
-            html += `<button class="px-4 py-2 rounded-full ${allSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]'} text-sm font-bold transition-all" onclick="clearMCCStateFilter()">All</button>`;
-            availableStates.forEach(st => {
-               const isSel = selectedStates.includes(st);
-               const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
-               html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="toggleMCCState('${escAttr(st)}')">${st}</button>`;
-            });
-            html += `</div>`;
-         }
+         html += stateFilterHtml();
+      } else if (selectedCounselling === 'VCI') {
+         const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
+         VCI_INST_TYPES.forEach(t => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedInstType === t.id)} text-sm font-bold transition-all" onclick="setInstType('${t.id}')">${t.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p><div class="flex flex-wrap gap-2">`;
+         VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
+         html += `</div>`;
+         html += stateFilterHtml(true);
+      } else if (selectedCounselling === 'AACCC') {
+         const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Course</p><div class="flex flex-wrap gap-2 mb-6">`;
+         AACCC_COURSES.forEach(t => { html += `<button class="px-4 py-2 rounded-full ${pill(aacccCourse() === t.id)} text-sm font-bold transition-all" onclick="setAacccCourse('${t.id}')">${t.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quota</p><div class="flex flex-wrap gap-2 mb-6">`;
+         AACCC_QUOTAS.filter(q => AACCC_AVAILABLE[aacccCourse()].includes(q.id)).forEach(q => { html += `<button class="px-4 py-2 rounded-full ${pill(aacccQuota() === q.id)} text-sm font-bold transition-all" onclick="setAacccQuota('${q.id}')">${q.label}</button>`; });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Allotted Category</p><div class="flex flex-wrap gap-2">`;
+         VCI_CATS.forEach(cat => { html += `<button class="px-4 py-2 rounded-full ${pill(selectedCategory === cat)} text-sm font-bold transition-all" onclick="setCategory('${cat}')">${cat}</button>`; });
+         html += `</div>`;
+         html += stateFilterHtml(true);
       } else if (selectedCounselling === 'OPEN') {
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">State</p>`;
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
-         OPEN_STATES.forEach(st => {
+         openStates().forEach(st => {
             const isSel = selectedState === st;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setOpenState('${st}')">${st}</button>`;
@@ -980,7 +1088,8 @@
            { id: 'PRIVATE_BNYS', label: 'Private BNYS' },
            { id: 'AYUSH_AIQ', label: '15% AIQ AYUSH' }
          ];
-         quotas.forEach(q => {
+         const prefixes = COURSE_GROUPS.find(g => g.id === selectedGroup).mhPrefix;
+         quotas.filter(q => prefixes.some(p => q.id.includes(p))).forEach(q => {
             const isSel = mhQuota === q.id;
             const cls = isSel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
             html += `<button class="px-4 py-2 rounded-full ${cls} text-sm font-bold transition-all" onclick="setMHQuota('${q.id}')">${q.label}</button>`;
@@ -1011,7 +1120,7 @@
          html += `</div>`;
       }
 
-      if (selectedCounselling !== 'MH') {
+      if (selectedCounselling !== 'MH' && !NEW_COUNSELLINGS.includes(selectedCounselling)) {
           const folder = selectedState.replace(/ /g, '_');
           {
              html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category / Quota</p>`;
@@ -1022,7 +1131,7 @@
                 if (selectedInstType.includes('DEEMED')) cats = getDeemedCats(selectedInstType);
                 else cats = MCC_STD_CATS;
              } else if (selectedCounselling === 'OPEN') {
-                cats = OPEN_STATE_CATS[folder] || [];
+                cats = openCats(folder) || [];
              }
 
              const isDeemed = selectedCounselling === 'MCC' && selectedInstType.includes('DEEMED');
@@ -1101,6 +1210,23 @@
       renderTable();
     }
 
+    // SML sort options only make sense where the data carries SML (Maharashtra / Open States); add them per loaded dataset.
+    function updateSmlSortOptions(data) {
+      const sel = document.getElementById('sortSelect');
+      if (!sel) return;
+      sel.querySelectorAll('option[data-sml]').forEach(o => o.remove());
+      const colleges = (data && data.colleges) || [];
+      const feesOpt = sel.querySelector('option[value="fees-asc"]');
+      [1, 2, 3].forEach(n => {
+        const has = colleges.some(c => { const r = c.rounds && c.rounds['Round ' + n]; return r && r.SML != null && r.SML !== ''; });
+        if (!has) return;
+        const o = document.createElement('option');
+        o.value = `sml${n}-asc`; o.textContent = `Round ${n} SML: Low to High`; o.dataset.sml = '1';
+        sel.insertBefore(o, feesOpt);
+      });
+      sel.value = currentSort;
+    }
+
     function getSortedColleges(colleges) {
       const list = [...colleges];
       const isHP = !!(currentData && currentData.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
@@ -1123,8 +1249,21 @@
         return isNaN(n) ? null : n;
       }
 
-      let roundKey = 'Round 1', dir = 1, useFees = false;
+      function smlFor(college, roundName) {
+        const r = college.rounds && college.rounds[roundName];
+        return (r && r.SML != null && r.SML !== '') ? parseInt(r.SML, 10) : null;
+      }
+
+      if (currentSort === 'name-asc' || currentSort === 'name-desc') {
+        const dirName = currentSort === 'name-asc' ? 1 : -1;
+        return list.sort((a, b) => dirName * (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' }));
+      }
+
+      let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false;
       switch (currentSort) {
+        case 'sml1-asc': roundKey = 'Round 1'; useSml = true; break;
+        case 'sml2-asc': roundKey = 'Round 2'; useSml = true; break;
+        case 'sml3-asc': roundKey = 'Round 3'; useSml = true; break;
         case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
@@ -1134,8 +1273,8 @@
       }
 
       list.sort((a, b) => {
-        const va = useFees ? feesFor(a) : airFor(a, roundKey);
-        const vb = useFees ? feesFor(b) : airFor(b, roundKey);
+        const va = useFees ? feesFor(a) : useSml ? smlFor(a, roundKey) : airFor(a, roundKey);
+        const vb = useFees ? feesFor(b) : useSml ? smlFor(b, roundKey) : airFor(b, roundKey);
         const aNull = va == null, bNull = vb == null;
         if (aNull && bNull) return 0;
         if (aNull) return 1;  // nulls always sort to the end
@@ -1150,19 +1289,25 @@
       const tbody = document.getElementById('collegeTableBody');
       tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
 
-      // Default sort on every fresh fetch (Round 1: Low to High)
-      currentSort = 'r1-asc';
+      // Default sort on every fresh fetch (College Name: A to Z)
+      currentSort = 'name-asc';
       const sortSelectEl = document.getElementById('sortSelect');
-      if (sortSelectEl) sortSelectEl.value = 'r1-asc';
+      if (sortSelectEl) sortSelectEl.value = 'name-asc';
 
       let url = '';
       if (selectedCounselling === 'MCC') {
          url = `/data/cutoffs/MCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'OPEN') {
          const folder = selectedState.replace(/ /g, '_');
-         url = `/data/cutoffs/OPEN/${currentYear}/${folder}/${selectedCategory}.json`;
+         url = `/data/cutoffs/${openRoot()}/${currentYear}/${folder}/${selectedCategory}.json`;
       } else if (selectedCounselling === 'MH') {
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
+      } else if (selectedCounselling === 'AACCC') {
+         url = `/data/cutoffs/AACCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
+      } else if (selectedCounselling === 'VCI') {
+         url = `/data/cutoffs/VCI/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
+      } else {
+         url = `/data/cutoffs/${selectedCounselling}/${currentYear}/ALL/OPEN.json`; // not loaded yet -> empty state
       }
 
       try {
@@ -1170,7 +1315,8 @@
         if (!res.ok) throw new Error('Data not found');
         const data = await res.json();
         currentData = data;
-        if (selectedCounselling === 'MCC') renderFilters(); // refresh State pills against newly loaded colleges
+        updateSmlSortOptions(data);
+        if (STATE_FILTER_COUNSELLINGS.includes(selectedCounselling)) renderFilters(); // refresh State pills against newly loaded colleges
         renderTable();
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500">No ${currentYear} data yet for this selection. Data is added as it becomes available.</td></tr>`;
@@ -1191,7 +1337,7 @@
       }
 
       let workingColleges = getSortedColleges(currentData.colleges);
-      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(currentData.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
 
@@ -1212,7 +1358,7 @@
       let borderCount = 0;
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
 
@@ -1892,7 +2038,7 @@
       await loadScoreLookupTable();
 
       let workingColleges = getSortedColleges(currentData.colleges);
-      if (currentData.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(currentData.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
       if (workingColleges.length === 0) {
@@ -1901,7 +2047,7 @@
       }
 
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
@@ -1947,7 +2093,8 @@
         ? (mhQuota.startsWith('GOVT_') ? 'Government Colleges' : mhCategory === 'IQ' ? 'Institutional Quota' : 'Private Colleges')
         : (currentData.state ? `${currentData.state} — ${currentData.quota || currentData.category || ''}` : (currentData.counselling || 'Cutoff Data'));
 
-      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', 'Establishment', 'Fees'];
+      // MCC-style data (MCC, VCI, AACCC) spans many states, so each college row carries its own State
+      const staticCols = ['Sr', isHP ? 'Category' : 'Code', 'Institute Name', ...(isMCC ? ['State'] : []), 'Establishment', 'Fees'];
       const headerRow1 = [bucketLabel, ...staticCols.slice(1).map(() => null)];
       const headerRow2 = [...staticCols];
       const merges = [{ s: { r: 0, c: 0 }, e: { r: 0, c: staticCols.length - 1 } }];
@@ -1963,7 +2110,7 @@
       workingColleges.forEach((college, i) => {
         const roundData = isHP ? (college.categories || {}) : (college.rounds || {});
         const catKey = isHP ? (Object.keys(college.categories || {})[0] || '') : null;
-        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', college.establishment || '-', college.fees || '-'];
+        const row = [i + 1, isHP ? catKey : (college.code || '-'), college.name || '', ...(isMCC ? [college.state || '-'] : []), college.establishment || '-', college.fees || '-'];
         roundKeys.forEach(round => {
           const rd = (isHP ? (roundData[catKey] || {})[round] : roundData[round]) || {};
           row.push(rd.Intake ?? '-');
@@ -1999,7 +2146,7 @@
       }
       ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: totalRows - 1, c: totalCols - 1 } });
 
-      ws['!cols'] = staticCols.map((label, i) => ({ wch: i === 2 ? 45 : i === 3 ? 14 : 12 }))
+      ws['!cols'] = staticCols.map((label, i) => ({ wch: i === 2 ? 45 : label === 'State' ? 18 : label === 'Establishment' ? 14 : 12 }))
         .concat(roundKeys.flatMap(() => subCols.map(() => ({ wch: 10 }))));
 
       const wb = XLSX.utils.book_new();
@@ -2046,7 +2193,7 @@
 
     function pdfSectionForData(data, labelOverride, selectedRounds) {
       let workingColleges = getSortedColleges(data.colleges || []);
-      if (data.counselling === 'MCC' && selectedStates.length > 0) {
+      if (STATE_FILTER_COUNSELLINGS.includes(data.counselling) && selectedStates.length > 0) {
         workingColleges = workingColleges.filter(c => selectedStates.includes(c.state));
       }
       if (workingColleges.length === 0) return null;
@@ -2152,7 +2299,7 @@
       }
       const body = document.getElementById('pdfExportModalBody');
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
@@ -2185,7 +2332,7 @@
           </div>`;
       } else if (isOPEN && !isHP) {
         const folder = (currentData.state || selectedState).replace(/ /g, '_');
-        const cats = OPEN_STATE_CATS[folder] || [currentData.quota || selectedCategory];
+        const cats = openCats(folder) || [currentData.quota || selectedCategory];
         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">${currentData.state || selectedState}</p>
           <div class="flex items-center justify-between mb-2">
             <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quota</p>
@@ -2254,7 +2401,7 @@
 
     function confirmPdfExport() {
       const isMH = currentData.counselling === 'MH';
-      const isMCC = currentData.counselling === 'MCC';
+      const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isDeemed = isMCC && (currentData.institution_type || '').includes('DEEMED');
@@ -2315,7 +2462,7 @@
         const folder = (currentData.state || selectedState).replace(/ /g, '_');
         for (const cat of scope.categories) {
           try {
-            const res = await fetch(`/data/cutoffs/OPEN/${currentYear}/${folder}/${cat}.json`);
+            const res = await fetch(`/data/cutoffs/${openRoot()}/${currentYear}/${folder}/${cat}.json`);
             if (!res.ok) continue;
             const data = await res.json();
             const section = pdfSectionForData(data, cat, scope.rounds);
