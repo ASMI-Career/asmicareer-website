@@ -122,10 +122,12 @@ body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overf
 #efw{flex:1;min-height:0;display:flex}
 #efw iframe{flex:1;min-height:0;width:100%;border:0;background:var(--bg);visibility:hidden}
 @media (max-width:720px){.nbrand span{display:none}.navin{gap:10px}.tabs{justify-content:flex-start}.stripin a.hl{display:none}}
+.smx{flex:none;background:#ffd60a;color:#2e1065;font-weight:700;font-size:13px;text-decoration:none;padding:7px 14px;border-radius:99px;white-space:nowrap}.smx:hover{filter:brightness(.95)}
 </style></head><body>
 <header class="nav"><div class="navin">
  <a class="nbrand" href="#"><img alt="ASMI Youth Career Advisor" src="/asmi-logo.png"><span><b>NEET-PG Cutoff Explorer</b><small>ASMI Youth Career Advisor</small></span></a>
  <nav class="tabs" id="tabs" aria-label="Regions"></nav>
+ <a class="smx" href="/tools/pg-seat-matrix">Seat Matrix</a>
  <div class="smenu"><button type="button" id="smbtn" aria-haspopup="true" aria-expanded="false" aria-controls="smlist"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>All states</span><svg class="chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="smlist" role="menu" hidden></div></div>
 </div></header>
 <div id="home">
@@ -267,7 +269,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){drawMenu(active);tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261013e'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261016a'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
