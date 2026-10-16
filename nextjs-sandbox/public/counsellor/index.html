@@ -636,7 +636,7 @@
 
     const MH_DATA_MAP = {
       "GOVT_MBBS": {"DEF_1": ["FEMALE", "GENERAL"], "DEF_2": ["FEMALE", "GENERAL"], "DEF_3": ["FEMALE", "GENERAL"], "EWS": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "MKB": ["FEMALE", "GENERAL"], "NT1": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT2": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "NT3": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "OPEN": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "SEBC": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "ST": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"], "VJ": ["FEMALE", "GENERAL", "HA_FEMALE", "HA_GENERAL", "ORPHAN", "PWD"]},
-      "PRIVATE_MBBS": {"AIQ": ["GENERAL"], "IQ": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
+      "PRIVATE_MBBS": {"AIQ": ["GENERAL"], "IQ": ["GENERAL"], "NRI": ["GENERAL"], "NT1": ["FEMALE", "GENERAL"], "NT2": ["FEMALE", "GENERAL"], "NT3": ["FEMALE", "GENERAL"], "OBC": ["FEMALE", "GENERAL"], "OPEN": ["FEMALE", "GENERAL"], "SC": ["FEMALE", "GENERAL"], "SEBC": ["FEMALE", "GENERAL"], "ST": ["FEMALE", "GENERAL"], "VJ": ["FEMALE", "GENERAL"]},
       // BDS quotas — subtype file is named "OPEN" here (not "GENERAL" like the MBBS quotas
       // above); folder names use NT_1/NT_2/NT_3 (underscored), unlike MBBS's NT1/NT2/NT3.
       // Both confirmed against the actual delivered files, not assumed.
@@ -879,7 +879,7 @@
     // MH Specific Setters
     function mhSortedCats(q) {
       const ORDER = ['OPEN', 'OBC', 'SC', 'ST', 'EWS', 'SEBC', 'VJ', 'NT1', 'NTB', 'NT2', 'NTC', 'NT3', 'NTD'];
-      const rank = c => { const i = ORDER.indexOf(c); return i >= 0 ? i : (c === 'IQ' ? 1001 : c === 'AIQ' ? 1002 : 500); };
+      const rank = c => { const i = ORDER.indexOf(c); return i >= 0 ? i : (c === 'IQ' ? 1001 : c === 'AIQ' ? 1002 : c === 'NRI' ? 1003 : 500); };
       return Object.keys(MH_DATA_MAP[q] || {}).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
     }
 
@@ -1100,7 +1100,7 @@
          html += `<div class="flex flex-wrap gap-2 mb-6">`;
          let availCats = mhSortedCats(mhQuota);
          if (currentYear === '2025' && (mhQuota === 'PRIVATE_MBBS' || mhQuota === 'PRIVATE_BDS')) {
-            availCats = availCats.filter(cat => cat !== 'AIQ'); // AIQ only started in 2026
+            availCats = availCats.filter(cat => cat !== 'AIQ' && cat !== 'NRI'); // AIQ and NRI only started in 2026
          }
          availCats.forEach(cat => {
             const isSel = mhCategory === cat;
@@ -1366,7 +1366,7 @@
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
 
-      const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ'].includes(currentData.category) : ['AIQ', 'IQ'].includes(mhCategory));
+      const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ', 'NRI'].includes(currentData.category) : ['AIQ', 'IQ', 'NRI'].includes(mhCategory));
       const isAyushAIQ = isMH && (currentData.quota_type === 'AYUSH_AIQ' || mhQuota === 'AYUSH_AIQ');
       const showSML = isMH || (isOPEN && !isKarnataka);
       const showCSML = isMH && !isMHNoMerit && !isAyushAIQ && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
@@ -2052,7 +2052,7 @@
       const isOPEN = currentData.counselling === 'OPEN';
       const isHP = !!(isOPEN && workingColleges[0] && workingColleges[0].categories);
       const isKarnataka = (isOPEN && currentData.state === 'Karnataka');
-      const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ'].includes(currentData.category) : ['AIQ', 'IQ'].includes(mhCategory));
+      const isMHNoMerit = isMH && (currentData.category ? ['AIQ', 'IQ', 'NRI'].includes(currentData.category) : ['AIQ', 'IQ', 'NRI'].includes(mhCategory));
       const isAyushAIQ = isMH && (currentData.quota_type === 'AYUSH_AIQ' || mhQuota === 'AYUSH_AIQ');
       const showSML = isMH || (isOPEN && !isKarnataka);
       const showCSML = isMH && !isMHNoMerit && !isAyushAIQ && (currentData.category ? currentData.category !== 'OPEN' : mhCategory !== 'OPEN');
