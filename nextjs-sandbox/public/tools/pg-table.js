@@ -174,7 +174,7 @@ try{var fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://f
    var r=d.createElement('div');r.className='rb-r';
    var so=d.getElementById('sort')||d.getElementById('sortby'),sl=so&&so.closest('label');
    if(sl){sl.classList.remove('tile');sl.removeAttribute('data-t');var si=sl.querySelector(':scope>i.ic');if(si)si.remove();sl.classList.add('rb-sort');var sb=lbl(sl);if(sb)sb.textContent='Sort by:';r.appendChild(sl)}
-   dlp.classList.add('rb-dl');dlp.innerHTML=svg('download')+' Download PDF';r.appendChild(dlp);
+   dlp.classList.add('rb-dl');dlp.innerHTML=svg('download')+' Download PDF';r.appendChild(dlp);var dlx=d.getElementById('dlx');if(dlx){dlx.classList.add('rb-dl');dlx.innerHTML=svg('download')+' Download Excel';r.appendChild(dlx)}
    bar.appendChild(l);bar.appendChild(m);bar.appendChild(r);
    (meta||count.parentNode).parentNode.insertBefore(bar,meta||count.parentNode);
    if(legend)legend.style.display='none';
