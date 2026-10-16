@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!doctype html><html lang="en"><head><script data-hosted>(function(){try{if(window.top===window.self){location.replace("/tools/neet-pg-cutoff#seat-matrix");return}}catch(e){}var st=document.createElement("style");st.textContent="#cs{display:none}";document.head.appendChild(st)})()</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>NEET-PG Seat Matrix 2026 | ASMI Career</title>
 <meta name="description" content="MCC NEET-PG 2026 seat matrix: seats by college, branch, state and category (Open, OBC, EWS, SC, ST, PwD), by ASMI Youth Career Advisor">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -174,7 +174,7 @@ td.c{white-space:normal;min-width:230px;max-width:320px}
 </style>
 </head><body>
 <div class="wrap">
-<p style="margin:0 0 10px"><a href="/tools/neet-pg-cutoff" style="color:var(--accent);font-weight:600;text-decoration:none">&larr; NEET-PG Cutoff Explorer</a></p>
+<p id="cs" style="margin:0 0 10px"><a href="/tools/neet-pg-cutoff" style="color:var(--accent);font-weight:600;text-decoration:none">&larr; NEET-PG Cutoff Explorer</a></p>
 <header class="brand"><img class="logo" alt="ASMI Youth Career Advisor" src="/asmi-logo.png">
 <div><h1>NEET-PG Seat Matrix 2026</h1><p class="help">ASMI Youth Career Advisor &nbsp;|&nbsp; Helpline: <a href="tel:7410019075">7410019075</a></p>
 <p class="sub">MCC NEET-PG 2026, Round 1. See how many seats each college has, branch by branch and category by category. Pick a seat group first (AIQ, Deemed University, Central University or DNB), then narrow down by state, quota, degree, college, branch and category.</p></div></header>
@@ -198,13 +198,14 @@ td.c{white-space:normal;min-width:230px;max-width:320px}
 </section>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
 <div class="dl" id="dl"><button id="dlc" type="button">Download CSV</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every row that matches your filters.</span></div>
-<div class="tw"><table><thead><tr><th>College</th><th>State</th><th id="hb">Branch</th><th id="hq">Quota</th><th class="n cat">Open</th><th class="n cat">OBC</th><th class="n cat">EWS</th><th class="n cat">SC</th><th class="n cat">ST</th><th class="n cat">PwD</th><th class="n cat">Total</th></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">State</th><th rowspan="2" id="hb">Branch</th><th rowspan="2" id="hq">Quota</th><th rowspan="2" class="n cat">Open</th><th rowspan="2" class="n cat">OBC</th><th rowspan="2" class="n cat">EWS</th><th rowspan="2" class="n cat">SC</th><th rowspan="2" class="n cat">ST</th><th rowspan="2" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 22,507 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in state and other institutes; Deemed University = paid, NRI and minority seats in deemed universities; Central University = central university institutes (their All India Quota seats plus the Delhi University, IP University, BHU and AMU internal quotas); DNB = DNB (Govt.) PG seats. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
+window.PGBADGE='NEET-PG 2026';window.PGFEATS=[['chart','1','Category-wise','Seats'],['building','4','College &amp; Branch','wise view'],['users','3','State-wise','Filters']];
 (function(){
 function $(id){return document.getElementById(id)}
 var CATS=['OP','BC','EW','SC','ST'],CL={OP:'Open',BC:'OBC',EW:'EWS',SC:'SC',ST:'ST'};
