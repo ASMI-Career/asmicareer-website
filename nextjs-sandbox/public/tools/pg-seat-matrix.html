@@ -171,6 +171,23 @@ td.z{color:var(--muted);opacity:.55}
 th.cat{text-align:right}
 td.c{white-space:normal;min-width:230px;max-width:320px}
 .cs{display:block;color:var(--muted);font-size:12px;font-weight:400}
+
+.gwrap{display:flex;flex-direction:column;gap:8px}
+.gwrap .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.gcards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.gcards button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:12px 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;font-weight:500;transition:transform .12s,box-shadow .12s,border-color .12s}
+.gcards button:hover{border-color:var(--hero2);transform:translateY(-1px)}
+.gcards button b{font-size:15px;font-weight:700}
+.gcards button .gs{font-family:var(--mono);font-size:19px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.gcards button small{font-size:12px;color:var(--muted)}
+.gcards button[aria-pressed="true"]{background:linear-gradient(135deg,#6d28d9,#4f46e5);border-color:transparent;color:#fff;box-shadow:0 8px 20px rgba(91,33,182,.3)}
+.gcards button[aria-pressed="true"] .gs,.gcards button[aria-pressed="true"] small{color:#fff}
+.gcards button[aria-pressed="true"] small{opacity:.85}
+.gdesc{margin:0;font-size:13px;color:var(--muted);background:color-mix(in srgb,var(--accent) 7%,var(--surface));border-radius:12px;padding:9px 14px}
+@media (max-width:900px){.gcards{grid-template-columns:repeat(2,minmax(0,1fr))}.gcards button:last-child{grid-column:1/-1}}
+.tile{position:relative;overflow:hidden}
+.tile b{letter-spacing:-.01em}
+td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 </style>
 </head><body>
 <div class="wrap">
@@ -181,7 +198,13 @@ td.c{white-space:normal;min-width:230px;max-width:320px}
 <section class="tiles" aria-label="Totals"><div class="tile"><b id="t-seats">0</b><span>Seats</span></div><div class="tile"><b id="t-col">0</b><span>Colleges</span></div><div class="tile"><b id="t-br">0</b><span>Branches</span></div><div class="tile"><b id="t-st">0</b><span>States</span></div></section>
 <section class="panel" aria-label="Filters">
 <label class="wide">Search<input id="q" type="search" placeholder="College, city or branch, e.g. Maulana Azad Radiology" autocomplete="off"></label>
-<div class="wide vrow"><span class="lbl">Seat group</span><div class="seg" id="grp"><button type="button" data-g="0" aria-pressed="true">AIQ</button><button type="button" data-g="1" aria-pressed="false">Deemed University</button><button type="button" data-g="2" aria-pressed="false">Central University</button><button type="button" data-g="3" aria-pressed="false">DNB</button><button type="button" data-g="all" aria-pressed="false">All</button></div></div>
+<div class="wide gwrap"><span class="lbl">Seat group</span><div class="gcards" id="grp" role="group" aria-label="Seat group">
+<button type="button" data-g="0" aria-pressed="true"><b>AIQ</b><span class="gs"></span><small></small></button>
+<button type="button" data-g="1" aria-pressed="false"><b>Deemed University</b><span class="gs"></span><small></small></button>
+<button type="button" data-g="2" aria-pressed="false"><b>Central University</b><span class="gs"></span><small></small></button>
+<button type="button" data-g="3" aria-pressed="false"><b>DNB</b><span class="gs"></span><small></small></button>
+<button type="button" data-g="all" aria-pressed="false"><b>All</b><span class="gs"></span><small></small></button>
+</div><p class="gdesc" id="gdesc"></p></div>
 <div class="wide vrow"><span class="lbl">View</span><div class="seg" id="seg"><button type="button" data-v="seat" aria-pressed="true">College + branch</button><button type="button" data-v="college" aria-pressed="false">College-wise</button><button type="button" data-v="branch" aria-pressed="false">Branch-wise</button></div></div>
 <details class="fx" id="fx" open><summary>Filters</summary><div class="fxg">
 <div class="fld">State<span id="ms-state"></span></div>
@@ -281,6 +304,27 @@ document.addEventListener('click',function(e){
  var so=$('sort');if(so.value!=='total'){so.value='total';so.dispatchEvent(new Event('change',{bubbles:true}))}
  if(HS.k===k)HS.d=-HS.d;else{HS.k=k;HS.d=(['state','quota'].indexOf(k)>=0)?1:-1}
  shown=LIM;render()});
+var GD=['All India Quota seats in state and other institutes (central universities and DNB are listed separately).','Paid (self-financed merit), NRI and minority seats in deemed universities.','Central university institutes: their All India Quota seats plus the Delhi University, IP University, BHU and AMU internal quotas.','DNB (Govt.) PG seats offered through MCC counselling.','Every seat group together: AIQ, Deemed University, Central University and DNB.'];
+function inGroup(r){return grp==='all'||String(r[3])===grp}
+function nfmt(v){return Number(v).toLocaleString('en-IN')}
+function groupCards(){
+ var btns=$('grp').children;
+ Array.prototype.forEach.call(btns,function(b){
+  var g=b.getAttribute('data-g'),seats=0,cols={};
+  D.rows.forEach(function(r){if(g==='all'||String(r[3])===g){var t=0;r[4].forEach(function(v){t+=v});seats+=t;cols[r[0]]=1}});
+  b.querySelector('.gs').textContent=nfmt(seats);b.querySelector('small').textContent='seats \u00b7 '+nfmt(Object.keys(cols).length)+' colleges'})
+}
+function setGroup(g){
+ grp=g;
+ Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-g')===g))});
+ $('gdesc').textContent=GD[g==='all'?4:+g];
+ /* filter lists only offer what exists in the chosen group */
+ var st={},qs={},ts={},ds={},is={},bs={};
+ D.rows.forEach(function(r){if(!inGroup(r))return;var ins=D.inst[r[0]],bra=D.branches[r[2]];st[ins[2]]=1;qs[D.quotas[r[1]]]=1;ts[ins[3]]=1;ds[bra[1]]=1;is[ins[0]]=1;bs[bra[0]]=1});
+ var L=function(o){return Object.keys(o).sort()};
+ [['state',L(st),'states'],['quota',L(qs),'quotas'],['ctype',L(ts),'college types'],['deg',['MD','MS','Diploma','M.Ch'].filter(function(x){return ds[x]}),'degrees'],['inst',L(is),'colleges'],['subj',L(bs),'branches']].forEach(function(x){
+  var host=$('ms-'+x[0]);host.innerHTML='';makeMS(x[0],x[1],[],x[2])});
+}
 function render(){
  if(!D)return;
  var out=query();CUR=out;
@@ -305,9 +349,9 @@ function render(){
 $('q').addEventListener('input',function(){shown=LIM;render()});
 $('sort').addEventListener('change',function(){HS.k=null;shown=LIM;render()});
 $('more').addEventListener('click',function(){shown+=LIM;render()});
-$('grp').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;grp=b.getAttribute('data-g');Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x===b))});shown=LIM;render()});
+$('grp').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setGroup(b.getAttribute('data-g'));shown=LIM;render()});
 $('seg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;view=b.getAttribute('data-v');Array.prototype.forEach.call($('seg').children,function(x){x.setAttribute('aria-pressed',String(x===b))});shown=LIM;render()});
-$('reset').addEventListener('click',function(){grp='0';Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-g')==='0'))});$('q').value='';$('sort').value='total';Object.keys(MS).forEach(function(k){MS[k].reset(true)});shown=LIM;render()});
+$('reset').addEventListener('click',function(){$('q').value='';$('sort').value='total';HS.k=null;setGroup('0');['cat','pwd'].forEach(function(k){MS[k].reset(true)});shown=LIM;render()});
 function say(m){$('dlmsg').textContent=m}
 function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function tableRows(){
@@ -338,16 +382,10 @@ $('dlp').addEventListener('click',function(){
  }catch(e){say('PDF could not be created here.')}
 });
 fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016b').then(function(r){return r.json()}).then(function(data){
- D=data;
- var uniq=function(a){return Array.from(new Set(a)).sort()};
- makeMS('state',uniq(D.inst.map(function(i){return i[2]})),[],'states');
- makeMS('quota',D.quotas.slice().sort(),[],'quotas');
- makeMS('ctype',uniq(D.inst.map(function(i){return i[3]})),[],'college types');
- makeMS('deg',['MD','MS','Diploma','M.Ch'],[],'degrees');
- makeMS('inst',uniq(D.inst.map(function(i){return i[0]})),[],'colleges');
- makeMS('subj',uniq(D.branches.map(function(b){return b[0]})),[],'branches');
+ D=data;D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]='DNB (Govt.)'});
  makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
  makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
+ groupCards();setGroup('0');
  shown=LIM;render();
 }).catch(function(){$('body').innerHTML='<tr><td colspan="11" class="empty">Could not load the seat matrix.</td></tr>'});
 })();
