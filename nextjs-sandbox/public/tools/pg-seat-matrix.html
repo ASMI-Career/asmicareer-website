@@ -213,6 +213,7 @@ td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 <div class="fld">College Type<span id="ms-ctype"></span></div>
 <div class="fld">Degree<span id="ms-deg"></span></div>
 <div class="fld">College<span id="ms-inst"></span></div>
+<div class="fld">City<span id="ms-city"></span></div>
 <div class="fld">Branch<span id="ms-subj"></span></div>
 <div class="fld">Category<span id="ms-cat"></span></div>
 <div class="fld">Seat Type<span id="ms-pwd"></span></div>
@@ -222,7 +223,7 @@ td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 </section>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
 <div class="dl" id="dl"><button id="dlc" type="button">Download CSV</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every row that matches your filters.</span></div>
-<div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" id="h4" class="n cat">Open</th><th rowspan="2" id="h5" class="n cat">OBC</th><th rowspan="2" id="h6" class="n cat">EWS</th><th rowspan="2" id="h7" class="n cat">SC</th><th rowspan="2" id="h8" class="n cat">ST</th><th rowspan="2" id="h9" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="hc">City</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" id="h4" class="n cat">Open</th><th rowspan="2" id="h5" class="n cat">OBC</th><th rowspan="2" id="h6" class="n cat">EWS</th><th rowspan="2" id="h7" class="n cat">SC</th><th rowspan="2" id="h8" class="n cat">ST</th><th rowspan="2" id="h9" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="12" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 31,708 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in all institutes (including central university institutes and DNB-type hospitals); Deemed University = paid, NRI and minority seats in deemed universities; Central University = central internal quota seats (Delhi University, IP University, BHU and AMU quotas); DNB = DNB Quota seats (NBEMS) in government and private hospitals. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
 </div>
@@ -257,14 +258,14 @@ document.addEventListener('click',function(e){document.querySelectorAll('details
 
 function has(o){return Object.keys(o).length>0}
 function query(){
- var ss=MS.state(),qs=MS.quota(),ts=MS.ctype(),ds=MS.deg(),is=MS.inst(),js=MS.subj(),cs=MS.cat(),ps=MS.pwd();
+ var ss=MS.state(),qs=MS.quota(),ts=MS.ctype(),ds=MS.deg(),ys=MS.city(),is=MS.inst(),js=MS.subj(),cs=MS.cat(),ps=MS.pwd();
  var t=$('q').value.trim().toLowerCase().split(/\s+/).filter(Boolean),G={},order=[];
  var mode=(ps['Seats without PwD']&&!ps['PwD seats only'])?'no':((ps['PwD seats only']&&!ps['Seats without PwD'])?'ph':'all');
  var csel=has(cs)?cs:null;
  D.rows.forEach(function(r){
   if(grp!=='all'&&String(r[3])!==grp)return;
   var ins=D.inst[r[0]],quota=D.quotas[r[1]],bra=D.branches[r[2]],br=bra[0];
-  if(has(ss)&&!ss[ins[2]])return;if(has(qs)&&!qs[quota])return;if(has(ts)&&!ts[ins[3]])return;if(has(ds)&&!ds[bra[1]])return;if(has(is)&&!is[ins[0]])return;if(has(js)&&!js[br])return;
+  if(has(ss)&&!ss[ins[2]])return;if(has(qs)&&!qs[quota])return;if(has(ts)&&!ts[ins[3]])return;if(has(ds)&&!ds[bra[1]])return;if(has(ys)&&!ys[ins[1]||'Not stated'])return;if(has(is)&&!is[ins[0]])return;if(has(js)&&!js[br])return;
   var hay=(ins[0]+' '+ins[1]+' '+ins[2]+' '+br+' '+quota).toLowerCase();
   for(var i=0;i<t.length;i++)if(hay.indexOf(t[i])<0)return;
   var cv={OP:0,BC:0,EW:0,SC:0,ST:0},pw=0,tot=0;
@@ -272,8 +273,8 @@ function query(){
   else CATS.forEach(function(c,ci){if(csel&&!csel[CL[c]])return;var no=mode==='ph'?0:r[4][ci],ph=mode==='no'?0:r[4][ci+5];cv[c]=no+ph;pw+=ph;tot+=no+ph});
   if(!tot)return;
   var key=view==='college'?r[0]+'|':(view==='branch'?'|'+br:(dm()?r[0]+'|'+br:r[0]+'|'+quota+'|'+br));
-  var g=G[key];if(!g){g=G[key]={college:ins[0],addr:ins[4],city:ins[1],state:ins[2],ctype:ins[3],branch:view==='college'?null:br,quota:(view==='seat'&&!dm())?quota:null,c:{OP:0,BC:0,EW:0,SC:0,ST:0},pw:0,total:0,colleges:{},branches:{},states:{},quotas:{}};order.push(key)}
-  CATS.forEach(function(c){g.c[c]+=cv[c]});g.pw+=pw;g.total+=tot;g.colleges[r[0]]=1;g.branches[br]=1;g.states[ins[2]]=1;g.quotas[quota]=1;
+  var g=G[key];if(!g){g=G[key]={college:ins[0],addr:ins[4],city:ins[1],state:ins[2],ctype:ins[3],branch:view==='college'?null:br,quota:(view==='seat'&&!dm())?quota:null,c:{OP:0,BC:0,EW:0,SC:0,ST:0},pw:0,total:0,colleges:{},branches:{},states:{},quotas:{},cities:{}};order.push(key)}
+  CATS.forEach(function(c){g.c[c]+=cv[c]});g.pw+=pw;g.total+=tot;g.colleges[r[0]]=1;g.branches[br]=1;g.states[ins[2]]=1;g.quotas[quota]=1;g.cities[ins[1]||'Not stated']=1;
  });
  var out=order.map(function(k){return G[k]});
  var so=HS.k||$('sort').value,dir=HS.k?HS.d:(so==='total'?-1:1);
@@ -283,6 +284,7 @@ function query(){
   if(k==='branch')return view==='seat'?g.branch:(view==='college'?nb:nc);
   if(k==='quota')return view==='seat'?g.quota:(view==='college'?g.ctype:nq);
   if(k==='state')return view==='branch'?Object.keys(g.states).length:g.state;
+  if(k==='city')return view==='branch'?Object.keys(g.cities).length:(g.city||'');
   if(k==='pw'||k==='total')return g[k];
   return g.c[k]}
  out.sort(function(a,b){
@@ -291,7 +293,7 @@ function query(){
   return b.total-a.total||(a.college<b.college?-1:1)});
  return out;
 }
-var TK={'State':'state','States':'state','Quota':'quota','Quotas':'quota','College type':'quota','Open':'OP','OBC':'BC','EWS':'EW','SC':'SC','ST':'ST','PwD':'pw','Self-Financed':'OP','NRI':'BC','Minority':'EW','Total':'total','Branches':'branch','Colleges':'branch'};
+var TK={'State':'state','States':'state','Quota':'quota','Quotas':'quota','College type':'quota','Open':'OP','OBC':'BC','EWS':'EW','SC':'SC','ST':'ST','PwD':'pw','Self-Financed':'OP','NRI':'BC','Minority':'EW','City':'city','Cities':'city','Total':'total','Branches':'branch','Colleges':'branch'};
 var ARR='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M8 19l-3-3M8 19l3-3M16 19V5M16 5l-3 3M16 5l3 3"/></svg>';
 function decorate(){
  var ths=document.querySelectorAll('thead th');
@@ -324,10 +326,10 @@ function setGroup(g){
  Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-g')===g))});
  $('gdesc').textContent=GD[g==='all'?4:+g];
  /* filter lists only offer what exists in the chosen group */
- var st={},qs={},ts={},ds={},is={},bs={};
- D.rows.forEach(function(r){if(!inGroup(r))return;var ins=D.inst[r[0]],bra=D.branches[r[2]];st[ins[2]]=1;qs[D.quotas[r[1]]]=1;ts[ins[3]]=1;ds[bra[1]]=1;is[ins[0]]=1;bs[bra[0]]=1});
+ var st={},qs={},ts={},ds={},is={},bs={},cy={};
+ D.rows.forEach(function(r){if(!inGroup(r))return;var ins=D.inst[r[0]],bra=D.branches[r[2]];st[ins[2]]=1;qs[D.quotas[r[1]]]=1;ts[ins[3]]=1;ds[bra[1]]=1;is[ins[0]]=1;bs[bra[0]]=1;cy[ins[1]||'Not stated']=1});
  var L=function(o){return Object.keys(o).sort()};
- [['state',L(st),'states'],['quota',L(qs),'quotas'],['ctype',L(ts),'college types'],['deg',['MD','MS','Diploma','M.Ch','DNB','DNB Diploma'].filter(function(x){return ds[x]}),'degrees'],['inst',L(is),'colleges'],['subj',L(bs),'branches']].forEach(function(x){
+ [['state',L(st),'states'],['quota',L(qs),'quotas'],['ctype',L(ts),'college types'],['deg',['MD','MS','Diploma','M.Ch','DNB','DNB Diploma'].filter(function(x){return ds[x]}),'degrees'],['city',L(cy),'cities'],['inst',L(is),'colleges'],['subj',L(bs),'branches']].forEach(function(x){
   var host=$('ms-'+x[0]);host.innerHTML='';makeMS(x[0],x[1],[],x[2])});
 }
 function render(){
@@ -340,15 +342,16 @@ function render(){
  var HC=dm()?['Self-Financed','NRI','Minority']:['Open','OBC','EWS'];
  for(var hi=0;hi<7;hi++){var hh=document.getElementById('h'+hi);var sp=hh.querySelector('.srt');hh.textContent=hi<4?H[hi]:HC[hi-4];if(sp)hh.appendChild(sp)}
  document.querySelector('.tw table').classList.toggle('dm',dm());
+ var hcc=document.getElementById('hc'),hsp=hcc.querySelector('.srt');hcc.textContent=view==='branch'?'Cities':'City';if(hsp)hcc.appendChild(hsp);
  var rows=out.slice(0,shown).map(function(g){
   var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,lead;
-  if(view==='seat')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.branch)+'</td><td class="k-q"><span class="qp q0">'+esc(g.quota||'')+'</span></td>';
-  else if(view==='college')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+nb+' branches</td><td class="k-q"><span class="cp">'+esc(g.ctype)+'</span></td>';
-  else lead='<td class="c">'+esc(g.branch)+'</td><td>'+(ns>1?ns+' states':esc(g.state))+'</td><td>'+nc+(nc===1?' college':' colleges')+'</td><td class="k-q">'+nq+(nq===1?' quota':' quotas')+'</td>';
+  if(view==='seat')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.city||'\u2013')+'</td><td>'+esc(g.branch)+'</td><td class="k-q"><span class="qp q0">'+esc(g.quota||'')+'</span></td>';
+  else if(view==='college')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.city||'\u2013')+'</td><td>'+nb+(nb===1?' branch':' branches')+'</td><td class="k-q"><span class="cp">'+esc(g.ctype)+'</span></td>';
+  else lead='<td class="c">'+esc(g.branch)+'</td><td>'+(ns>1?ns+' states':esc(g.state))+'</td><td>'+Object.keys(g.cities).length+(Object.keys(g.cities).length===1?' city':' cities')+'</td><td>'+nc+(nc===1?' college':' colleges')+'</td><td class="k-q">'+nq+(nq===1?' quota':' quotas')+'</td>';
   var cells=CATS.map(function(c){var v=g.c[c];return '<td class="n k-'+c+(v?'':' z')+'">'+(v?nf(v):'–')+'</td>'}).join('');
   return '<tr>'+lead+cells+'<td class="n k-pw'+(g.pw?'':' z')+'">'+(g.pw?nf(g.pw):'–')+'</td><td class="n tot">'+nf(g.total)+'</td></tr>'});
  decorate();
- $('body').innerHTML=rows.length?rows.join(''):'<tr><td colspan="11" class="empty">No seats match these filters.</td></tr>';
+ $('body').innerHTML=rows.length?rows.join(''):'<tr><td colspan="12" class="empty">No seats match these filters.</td></tr>';
  $('count').textContent=nf(out.length)+(view==='seat'?' college + branch rows':(view==='college'?' colleges':' branches'))+' , '+nf(tot)+' seats';
  $('legend').textContent='Sorted by '+$('sort').selectedOptions[0].text.toLowerCase();
  $('more').hidden=out.length<=shown;$('dlc').disabled=$('dlp').disabled=!out.length;
@@ -362,13 +365,13 @@ $('reset').addEventListener('click',function(){$('q').value='';$('sort').value='
 function say(m){$('dlmsg').textContent=m}
 function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function tableRows(){
- return CUR.map(function(g){var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,l;
-  if(view==='seat')l=[g.college,g.state,g.branch,g.quota];else if(view==='college')l=[g.college,g.state,nb+' branches',g.ctype];else l=[g.branch,ns>1?ns+' states':g.state,nc+' colleges',nq+' quotas'];
-  if(dm())return l.slice(0,3).concat([g.c.OP,g.c.BC,g.c.EW,g.total]);
+ return CUR.map(function(g){var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,ncy=Object.keys(g.cities).length,l;
+  if(view==='seat')l=[g.college,g.state,g.city||'',g.branch,g.quota];else if(view==='college')l=[g.college,g.state,g.city||'',nb+(nb===1?' branch':' branches'),g.ctype];else l=[g.branch,ns>1?ns+' states':g.state,ncy+(ncy===1?' city':' cities'),nc+' colleges',nq+' quotas'];
+  if(dm())return l.slice(0,4).concat([g.c.OP,g.c.BC,g.c.EW,g.total]);
   return l.concat(CATS.map(function(c){return g.c[c]}),[g.pw,g.total])})
 }
-function headRow(){var h={seat:['College','State','Branch','Quota'],college:['College','State','Branches','College type'],branch:['Branch','States','Colleges','Quotas']}[view];
- if(dm())return h.slice(0,3).concat(['Self-Financed','NRI','Minority','Total']);
+function headRow(){var h={seat:['College','State','City','Branch','Quota'],college:['College','State','City','Branches','College type'],branch:['Branch','States','Cities','Colleges','Quotas']}[view];
+ if(dm())return h.slice(0,4).concat(['Self-Financed','NRI','Minority','Total']);
  return h.concat(['Open','OBC','EWS','SC','ST','PwD','Total'])}
 function save(name,blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
 $('dlc').addEventListener('click',function(){
@@ -391,13 +394,13 @@ $('dlp').addEventListener('click',function(){
   doc.save('ASMI_PG_Seat_Matrix_'+stamp()+'.pdf');say('PDF saved.')
  }catch(e){say('PDF could not be created here.')}
 });
-fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016g').then(function(r){return r.json()}).then(function(data){
+fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261016h').then(function(r){return r.json()}).then(function(data){
  D=data;D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]=/\(Pvt\.\)/.test(i[3])?'DNB (Pvt.)':'DNB (Govt.)'});
  makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
  makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
  groupCards();setGroup('0');
  shown=LIM;render();
-}).catch(function(){$('body').innerHTML='<tr><td colspan="11" class="empty">Could not load the seat matrix.</td></tr>'});
+}).catch(function(){$('body').innerHTML='<tr><td colspan="12" class="empty">Could not load the seat matrix.</td></tr>'});
 })();
 </script>
 </body></html>
