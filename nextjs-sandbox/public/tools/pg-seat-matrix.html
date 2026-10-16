@@ -172,6 +172,7 @@ th.cat{text-align:right}
 td.c{white-space:normal;min-width:230px;max-width:320px}
 .cs{display:block;color:var(--muted);font-size:12px;font-weight:400}
 
+.dm #h3,.dm #h7,.dm #h8,.dm #h9,.dm td.k-q,.dm td.k-SC,.dm td.k-ST,.dm td.k-pw{display:none}
 .gwrap{display:flex;flex-direction:column;gap:8px}
 .gwrap .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
 .gcards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
@@ -221,7 +222,7 @@ td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 </section>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
 <div class="dl" id="dl"><button id="dlc" type="button">Download CSV</button><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every row that matches your filters.</span></div>
-<div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" class="n cat">Open</th><th rowspan="2" class="n cat">OBC</th><th rowspan="2" class="n cat">EWS</th><th rowspan="2" class="n cat">SC</th><th rowspan="2" class="n cat">ST</th><th rowspan="2" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
+<div class="tw"><table><thead><tr><th rowspan="2" id="h0">College</th><th rowspan="2" id="h1">State</th><th rowspan="2" id="h2">Branch</th><th rowspan="2" id="h3">Quota</th><th rowspan="2" id="h4" class="n cat">Open</th><th rowspan="2" id="h5" class="n cat">OBC</th><th rowspan="2" id="h6" class="n cat">EWS</th><th rowspan="2" id="h7" class="n cat">SC</th><th rowspan="2" id="h8" class="n cat">ST</th><th rowspan="2" id="h9" class="n cat">PwD</th><th rowspan="2" class="n cat">Total</th></tr><tr class="h2"></tr></thead><tbody id="body"><tr><td colspan="11" class="empty">Loading seat matrix...</td></tr></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note"><b>Source.</b> MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 31,708 seats in total. <b>Seat groups:</b> AIQ = All India Quota seats in all institutes (including central university institutes and DNB-type hospitals); Deemed University = paid, NRI and minority seats in deemed universities; Central University = central internal quota seats (Delhi University, IP University, BHU and AMU quotas); DNB = DNB Quota seats (NBEMS) in government and private hospitals. <b>Category</b> columns count seats reserved for that category (Open, OBC, EWS, SC, ST); the <b>PwD</b> column shows the seats among them reserved for candidates with benchmark disability, which are already included in each category column. Seat numbers change between rounds, so confirm against the official MCC notice before deciding.</p>
 </div>
@@ -267,10 +268,11 @@ function query(){
   var hay=(ins[0]+' '+ins[1]+' '+ins[2]+' '+br+' '+quota).toLowerCase();
   for(var i=0;i<t.length;i++)if(hay.indexOf(t[i])<0)return;
   var cv={OP:0,BC:0,EW:0,SC:0,ST:0},pw=0,tot=0;
-  CATS.forEach(function(c,ci){if(csel&&!csel[CL[c]])return;var no=mode==='ph'?0:r[4][ci],ph=mode==='no'?0:r[4][ci+5];cv[c]=no+ph;pw+=ph;tot+=no+ph});
+  if(dm()){var sm=0;r[4].forEach(function(v){sm+=v});var bk=quota==='Self-Financed Merit Seat'?'OP':(quota==='Non-Resident Indian'?'BC':'EW');cv[bk]=sm;tot=sm}
+  else CATS.forEach(function(c,ci){if(csel&&!csel[CL[c]])return;var no=mode==='ph'?0:r[4][ci],ph=mode==='no'?0:r[4][ci+5];cv[c]=no+ph;pw+=ph;tot+=no+ph});
   if(!tot)return;
-  var key=view==='college'?r[0]+'|':(view==='branch'?'|'+br:r[0]+'|'+quota+'|'+br);
-  var g=G[key];if(!g){g=G[key]={college:ins[0],addr:ins[4],city:ins[1],state:ins[2],ctype:ins[3],branch:view==='college'?null:br,quota:view==='seat'?quota:null,c:{OP:0,BC:0,EW:0,SC:0,ST:0},pw:0,total:0,colleges:{},branches:{},states:{},quotas:{}};order.push(key)}
+  var key=view==='college'?r[0]+'|':(view==='branch'?'|'+br:(dm()?r[0]+'|'+br:r[0]+'|'+quota+'|'+br));
+  var g=G[key];if(!g){g=G[key]={college:ins[0],addr:ins[4],city:ins[1],state:ins[2],ctype:ins[3],branch:view==='college'?null:br,quota:(view==='seat'&&!dm())?quota:null,c:{OP:0,BC:0,EW:0,SC:0,ST:0},pw:0,total:0,colleges:{},branches:{},states:{},quotas:{}};order.push(key)}
   CATS.forEach(function(c){g.c[c]+=cv[c]});g.pw+=pw;g.total+=tot;g.colleges[r[0]]=1;g.branches[br]=1;g.states[ins[2]]=1;g.quotas[quota]=1;
  });
  var out=order.map(function(k){return G[k]});
@@ -289,7 +291,7 @@ function query(){
   return b.total-a.total||(a.college<b.college?-1:1)});
  return out;
 }
-var TK={'State':'state','States':'state','Quota':'quota','Quotas':'quota','College type':'quota','Open':'OP','OBC':'BC','EWS':'EW','SC':'SC','ST':'ST','PwD':'pw','Total':'total','Branches':'branch','Colleges':'branch'};
+var TK={'State':'state','States':'state','Quota':'quota','Quotas':'quota','College type':'quota','Open':'OP','OBC':'BC','EWS':'EW','SC':'SC','ST':'ST','PwD':'pw','Self-Financed':'OP','NRI':'BC','Minority':'EW','Total':'total','Branches':'branch','Colleges':'branch'};
 var ARR='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5v14M8 19l-3-3M8 19l3-3M16 19V5M16 5l-3 3M16 5l3 3"/></svg>';
 function decorate(){
  var ths=document.querySelectorAll('thead th');
@@ -305,6 +307,7 @@ document.addEventListener('click',function(e){
  if(HS.k===k)HS.d=-HS.d;else{HS.k=k;HS.d=(['state','quota'].indexOf(k)>=0)?1:-1}
  shown=LIM;render()});
 var GD=['All India Quota seats in every institute: state colleges, central institutes and DNB-type hospitals.','Paid (self-financed merit), NRI and minority seats in deemed universities.','Central internal quota seats: Delhi University, IP University, Banaras Hindu University and Aligarh Muslim University quotas.','DNB Quota seats (NBEMS) in government and private hospitals, as published by MCC.','Every seat group together: AIQ, Deemed University, Central University and DNB.'];
+function dm(){return grp==='1'}
 function inGroup(r){return grp==='all'||String(r[3])===grp}
 function nfmt(v){return Number(v).toLocaleString('en-IN')}
 function groupCards(){
@@ -316,6 +319,8 @@ function groupCards(){
 }
 function setGroup(g){
  grp=g;
+ ['ctype','cat','pwd'].forEach(function(id){var e=$('ms-'+id);if(!e)return;var t=e.closest('.tile')||e.closest('.fld')||e.parentElement;if(dm())t.style.setProperty('display','none','important');else t.style.removeProperty('display')});
+ if(dm()){['cat','pwd'].forEach(function(k){if(MS[k])MS[k].reset(true)})}
  Array.prototype.forEach.call($('grp').children,function(x){x.setAttribute('aria-pressed',String(x.getAttribute('data-g')===g))});
  $('gdesc').textContent=GD[g==='all'?4:+g];
  /* filter lists only offer what exists in the chosen group */
@@ -332,14 +337,16 @@ function render(){
  out.forEach(function(g){tot+=g.total;Object.keys(g.colleges).forEach(function(k){cols[k]=1});Object.keys(g.branches).forEach(function(k){brs[k]=1});Object.keys(g.states).forEach(function(k){sts[k]=1})});
  $('t-seats').textContent=nf(tot);$('t-col').textContent=nf(Object.keys(cols).length);$('t-br').textContent=nf(Object.keys(brs).length);$('t-st').textContent=nf(Object.keys(sts).length);
  var H={seat:['College','State','Branch','Quota'],college:['College','State','Branches','College type'],branch:['Branch','States','Colleges','Quotas']}[view];
- for(var hi=0;hi<4;hi++){var hh=document.getElementById('h'+hi);var sp=hh.querySelector('.srt');hh.textContent=H[hi];if(sp)hh.appendChild(sp)}
+ var HC=dm()?['Self-Financed','NRI','Minority']:['Open','OBC','EWS'];
+ for(var hi=0;hi<7;hi++){var hh=document.getElementById('h'+hi);var sp=hh.querySelector('.srt');hh.textContent=hi<4?H[hi]:HC[hi-4];if(sp)hh.appendChild(sp)}
+ document.querySelector('.tw table').classList.toggle('dm',dm());
  var rows=out.slice(0,shown).map(function(g){
   var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,lead;
-  if(view==='seat')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.branch)+'</td><td><span class="qp q0">'+esc(g.quota)+'</span></td>';
-  else if(view==='college')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+nb+' branches</td><td><span class="cp">'+esc(g.ctype)+'</span></td>';
-  else lead='<td class="c">'+esc(g.branch)+'</td><td>'+(ns>1?ns+' states':esc(g.state))+'</td><td>'+nc+(nc===1?' college':' colleges')+'</td><td>'+nq+(nq===1?' quota':' quotas')+'</td>';
-  var cells=CATS.map(function(c){var v=g.c[c];return '<td class="n'+(v?'':' z')+'">'+(v?nf(v):'–')+'</td>'}).join('');
-  return '<tr>'+lead+cells+'<td class="n'+(g.pw?'':' z')+'">'+(g.pw?nf(g.pw):'–')+'</td><td class="n tot">'+nf(g.total)+'</td></tr>'});
+  if(view==='seat')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+esc(g.branch)+'</td><td class="k-q"><span class="qp q0">'+esc(g.quota||'')+'</span></td>';
+  else if(view==='college')lead='<td class="c" title="'+esc(g.addr||'')+'">'+esc(g.college)+'</td><td>'+esc(g.state)+'</td><td>'+nb+' branches</td><td class="k-q"><span class="cp">'+esc(g.ctype)+'</span></td>';
+  else lead='<td class="c">'+esc(g.branch)+'</td><td>'+(ns>1?ns+' states':esc(g.state))+'</td><td>'+nc+(nc===1?' college':' colleges')+'</td><td class="k-q">'+nq+(nq===1?' quota':' quotas')+'</td>';
+  var cells=CATS.map(function(c){var v=g.c[c];return '<td class="n k-'+c+(v?'':' z')+'">'+(v?nf(v):'–')+'</td>'}).join('');
+  return '<tr>'+lead+cells+'<td class="n k-pw'+(g.pw?'':' z')+'">'+(g.pw?nf(g.pw):'–')+'</td><td class="n tot">'+nf(g.total)+'</td></tr>'});
  decorate();
  $('body').innerHTML=rows.length?rows.join(''):'<tr><td colspan="11" class="empty">No seats match these filters.</td></tr>';
  $('count').textContent=nf(out.length)+(view==='seat'?' college + branch rows':(view==='college'?' colleges':' branches'))+' , '+nf(tot)+' seats';
@@ -357,9 +364,12 @@ function stamp(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+
 function tableRows(){
  return CUR.map(function(g){var nb=Object.keys(g.branches).length,nc=Object.keys(g.colleges).length,ns=Object.keys(g.states).length,nq=Object.keys(g.quotas).length,l;
   if(view==='seat')l=[g.college,g.state,g.branch,g.quota];else if(view==='college')l=[g.college,g.state,nb+' branches',g.ctype];else l=[g.branch,ns>1?ns+' states':g.state,nc+' colleges',nq+' quotas'];
+  if(dm())return l.slice(0,3).concat([g.c.OP,g.c.BC,g.c.EW,g.total]);
   return l.concat(CATS.map(function(c){return g.c[c]}),[g.pw,g.total])})
 }
-function headRow(){return {seat:['College','State','Branch','Quota'],college:['College','State','Branches','College type'],branch:['Branch','States','Colleges','Quotas']}[view].concat(['Open','OBC','EWS','SC','ST','PwD','Total'])}
+function headRow(){var h={seat:['College','State','Branch','Quota'],college:['College','State','Branches','College type'],branch:['Branch','States','Colleges','Quotas']}[view];
+ if(dm())return h.slice(0,3).concat(['Self-Financed','NRI','Minority','Total']);
+ return h.concat(['Open','OBC','EWS','SC','ST','PwD','Total'])}
 function save(name,blob){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
 $('dlc').addEventListener('click',function(){
  var q=function(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
