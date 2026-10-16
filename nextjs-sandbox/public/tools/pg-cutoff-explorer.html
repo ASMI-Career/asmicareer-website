@@ -238,6 +238,7 @@ th.st{text-align:center}
 .brand .help{margin:4px 0 0;font-size:15px}
 @media (min-width:961px){body.pgui .fxg.fxg{grid-template-columns:repeat(6,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-flow:row!important}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;white-space:nowrap}</style></head><body>
@@ -269,7 +270,7 @@ th.st{text-align:center}
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><button id="dlx" type="button">Download Excel</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">Branch</th><th rowspan="2">Code</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th rowspan="2">Fee</th><th class="n rg r0" rowspan="2">All rounds<small class="hs">closing</small></th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4</th><th class="n rg r5" colspan="2">Round 5</th><th class="st" rowspan="2">Your rank</th></tr><tr class="h2"><th class="n k r1">Seats</th><th class="n r1">Closing</th><th class="n k r2">Seats</th><th class="n r2">Closing</th><th class="n k r3">Seats</th><th class="n r3">Closing</th><th class="n k r4">Seats</th><th class="n r4">Closing</th><th class="n k r5">Seats</th><th class="n r5">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
 <div class="note"><b>Fee.</b> The Fee column shows the fee from the Maharashtra private college fee sheet supplied, for private colleges only. State quota seats show the government-quota fee for the college and branch (the sheet lists the same fee for every government category), minority seats at the minority college show the minority fee, Institute Quota seats show the management fee, and NRI seats show the NRI fee. A dash means the sheet has no fee for that college, branch and quota; government college seats and In-Service seats have no fee here. Verify the fee with the college and the CET Cell notice before deciding.</div>
 <div><button id="more" hidden>Show more</button></div>
@@ -380,7 +381,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+((rk||ar)?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent=CUTL[CT]+' cutoff | sorted by closing '+(by==='air'?'AIR':'SML')+' in '+$('round').selectedOptions[0].text+', lowest first'+(CT==='both'?' | grey "all" line shows the All cutoff when it differs':'');
  $('more').hidden=true;
- $('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;$('dlx').disabled=$('dlp').disabled;
  var h=$('hint');if(rk&&Q.qs['In-Service']){h.hidden=false;h.textContent='In-Service SML is a separate list and is not comparable with State SML. Use your AIR to check In-Service seats.'}else h.hidden=true;
 }
 /* ---------- downloads ---------- */
@@ -447,6 +448,7 @@ async function savePdf(){
 }
 if(window.claude&&window.claude.use){window.claude.use('downloads').then(function(d){DLS=d;if(!d){DLS={save:browserSave}}}).catch(function(){DLS={save:browserSave}})}else{DLS={save:browserSave}}
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
+$('dlx').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}saveXlsx()});
 $('reset').addEventListener('click',function(){['rank','air','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('round').value=0;setCut('new');$('sortby').value='air';Object.keys(MS).forEach(function(k){MS[k].reset(true)});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
 window.addEventListener('resize',sticky);

@@ -154,6 +154,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
 td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;white-space:nowrap}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <div class="wrap">
@@ -181,7 +182,7 @@ td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;white
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><button id="dlx" type="button">Download Excel</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">City</th><th rowspan="2">State</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Category</th><th rowspan="2">Fee</th><th class="n rg r0" colspan="2">All Rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4 (Stray)</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s r0">Seats</th><th class="n r0">Closing</th><th class="n s r1">Seats</th><th class="n r1">Closing</th><th class="n s r2">Seats</th><th class="n r2">Closing</th><th class="n s r3">Seats</th><th class="n r3">Closing</th><th class="n s r4">Seats</th><th class="n r4">Closing</th></tr></thead><tbody id="body"></tbody></table></div>
 <div><button id="more" hidden>Show more</button></div>
 <p class="note">Source: MCC NEET-PG 2026 provisional allotment results. Each round's column shows <b>seats allotted</b> and <b>closing rank</b> (the highest/worst allotted rank) for that exact college + branch + category + quota combination; a round with no matching allotment shows <span style="opacity:.5">–</span>. Round&nbsp;2 and Round&nbsp;3 include candidates who retained an earlier round's seat, not just fresh upgrades. College names are re-cased from the source files' mixed/all-caps text into standard title case. <b>Fee.</b> The Fee column is shown for deemed university paid seats only. Self-Financed Merit Seat (Paid Seat Quota) rows show the General-category management fee for that college and branch; Non-Resident Indian rows show the NRI fee (where Priority I and II differ, the lower is shown with Priority II underneath). Fees come from the fee sheets supplied; a dash means the sheets have no fee for that college and branch (or the seat is not a deemed paid seat). Verify the fee with the college and the official MCC notice before deciding.</p>
@@ -277,7 +278,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+(rk?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by closing rank in '+ROUND_LABELS[rd]+', lowest first';
  $('more').hidden=true;
- $('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;$('dlx').disabled=$('dlp').disabled;
  $('hint').hidden=true;
 }
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -310,6 +311,24 @@ function downloadBlob(filename,data){
 var logoDataUrl=null;
 (function loadLogo(){fetch('/asmi-logo.png').then(function(r){return r.blob()}).then(function(b){var rd=new FileReader();rd.onload=function(){logoDataUrl=rd.result};rd.readAsDataURL(b)}).catch(function(){})})();
 
+
+function feeTxt(f){if(f==null)return '';if(typeof f==='number')return f;return f.filter(Boolean).map(function(v){return 'Rs '+Number(v).toLocaleString('en-IN')}).join(' / ')}
+$('dlx').addEventListener('click',function(){
+ var Q=query();if(!Q.out.length)return;
+ if(!window.XLSX){say('The Excel library did not load. Check your connection and reload.');return}
+ var H=['College','City','State','Branch','Quota','Category','Fee (Rs)','All Rounds Seats','All Rounds Closing Rank'];
+ ROUND_KEYS.forEach(function(rk){H.push(ROUND_LABELS[rk]+' Seats',ROUND_LABELS[rk]+' Closing Rank')});
+ var rows=Q.out.map(function(g){var a=allRounds(g);var r=[g[IDX.college],g[IDX.city]||'',g[IDX.state],g[IDX.course],g[IDX.quota],g[IDX.cat],feeTxt(g[11]),a?a[2]:'',a?a[1]:''];
+  ROUND_KEYS.forEach(function(rk){var x=g[IDX[rk]];r.push(x?x[2]:'',x?x[1]:'')});return r});
+ var wb=XLSX.utils.book_new();
+ var ws0=XLSX.utils.aoa_to_sheet([['MCC NEET-PG 2026 cutoff report',''],['ASMI Youth Career Advisor','Helpline: 7410019075'],['Prepared',stamp()],['Rows in this report',rows.length],['Notes','Closing rank = highest (worst) allotted rank for that college + branch + category + quota. Fee = management / deemed fee (Rs) where available; blank means not listed. Verify with the current MCC notice.']]);
+ ws0['!cols']=[{wch:24},{wch:90}];XLSX.utils.book_append_sheet(wb,ws0,'Report Info');
+ var ws=XLSX.utils.aoa_to_sheet([H].concat(rows));
+ ws['!cols']=[{wch:60},{wch:16},{wch:16},{wch:36},{wch:22},{wch:12},{wch:16}].concat(H.slice(7).map(function(){return {wch:14}}));
+ ws['!freeze']={xSplit:0,ySplit:1};ws['!autofilter']={ref:ws['!ref']};
+ XLSX.utils.book_append_sheet(wb,ws,'Cutoffs');
+ try{downloadBlob(fname('xlsx'),new Blob([XLSX.write(wb,{type:'array',bookType:'xlsx'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));say('Excel file saved.')}catch(e){say('The Excel file could not be saved.')}
+});
 $('dlp').addEventListener('click',function(){
  var Q=query();
  try{
