@@ -233,6 +233,7 @@ td.n.st{border-left:1px solid var(--line);width:56px}
 td.sn{width:64px}
 .note{margin-top:4px}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap}</style></head><body>
@@ -261,7 +262,7 @@ td.sn{width:64px}
 </section>
 <div id="hint" class="hint" hidden></div>
 <div class="meta"><span id="count"></span><span id="legend"></span></div>
-<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
+<div class="dl" id="dl"><button id="dlp" type="button">Download PDF</button><button id="dlx" type="button">Download Excel</button><span id="dlmsg">Downloads include every seat group that matches your filters and your rank status.</span></div>
 <div class="tw"><table><thead><tr><th rowspan="2">College</th><th rowspan="2">Branch</th><th rowspan="2">Quota</th><th rowspan="2">Fee</th><th class="n rg" colspan="1">All rounds</th><th class="n rg r1" colspan="2">Round 1</th><th class="n rg r2" colspan="2">Round 2</th><th class="n rg r3" colspan="2">Round 3</th><th class="n rg r4" colspan="2">Round 4</th><th rowspan="2">Your rank</th></tr><tr class="h2"><th class="n s">Closing AIR</th><th class="n s r1">Allotted</th><th class="n r1">Closing AIR</th><th class="n s r2">Allotted</th><th class="n r2">Closing AIR</th><th class="n s r3">Allotted</th><th class="n r3">Closing AIR</th><th class="n s r4">Allotted</th><th class="n r4">Closing AIR</th></tr></thead><tbody id="body"></tbody></table></div>
 <div class="note"><b>Fee.</b> The Fee column shows the General-category management quota fee from the Tamil Nadu management quota fee sheet supplied. It is shown for All India Quota seats only (142 of 201 groups). Dash means no fee in the sheet: NRI and minority quotas are not covered by it, CMC Vellore is not in it, and Dhanalakshmi Srinivasan Institute of Medical Sciences, Karpaga Vinayaga, Srinivasan Medical College and St. Peters (all converted from private to deemed in 2026) have no fee listed. Verify the fee with the college and the official TN counselling notice.</div>
 <div><button id="more" hidden>Show more</button></div>
@@ -379,7 +380,7 @@ function render(){
  $('count').textContent=out.length+' seat groups'+(ar?' , '+nOk+' within your rank':'')+'';
  $('legend').textContent='Sorted by '+$('sort').selectedOptions[0].text.toLowerCase()+($('sort').value==='air'||$('sort').value==='sml'?' in '+$('round').selectedOptions[0].text+', lowest first':'');
  $('more').hidden=true;
- $('dlp').disabled=!out.length;
+ $('dlp').disabled=!out.length;$('dlx').disabled=$('dlp').disabled;
  $('hint').hidden=true;
 }
 /* ---------- downloads ---------- */
@@ -426,6 +427,25 @@ async function savePdf(){
  try{await DLS.save({filename:fname(Q,'pdf'),data:buf});say('PDF saved.')}catch(e){fail(e,'The PDF')}
 }
 DLS={save:function(o){return new Promise(function(res){var b=new Blob([o.data],{type:'application/pdf'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();res()},500)})}};
+function xsave(name,buf){var b=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(u)},1000)}
+
+function saveXlsx(){
+ var Q=query();if(!Q.out.length)return;
+ if(!window.XLSX){say('The Excel library did not load. Check your connection and reload.');return}
+ var H=['College','City','Degree','Branch','Fee (Rs)','Clinical / Non-Clinical','Quota','Status','College Type','All rounds Closing AIR (new allotment)','All rounds Closing AIR (all-round)'];
+ for(var n=1;n<=4;n++)H.push('Round '+n+' Seats','Round '+n+' Allotted','Round '+n+' Closing AIR (new allotment)','Round '+n+' Closing AIR (all-round)');
+ H.push('All rounds SML (new allotment)','All rounds SML (all-round)');for(n=1;n<=4;n++)H.push('Round '+n+' SML (new allotment)','Round '+n+' SML (all-round)');
+ var rows=rowsFor(Q).map(function(r){var f=r[r.length-1],q=r.slice(0,r.length-1),o=[q[0],q[1],q[2],q[3],f===null?'':f,q[4],q[5],q[6],q[7]].concat(q.slice(8));return o.map(function(v){return v===null||v===undefined?'':v})});
+ var wb=XLSX.utils.book_new();
+ var ws0=XLSX.utils.aoa_to_sheet([['Tamil Nadu NEET-PG 2025 cutoff report',''],[BRAND,HELP],['Prepared',stamp()],['Rows in this report',rows.length],['Notes','AIR = All India Rank. SML = Tamil Nadu G Rank. Fee = management quota fee (Rs, General category) where available; blank means not listed.']].concat(info(Q)));
+ ws0['!cols']=[{wch:36},{wch:90}];XLSX.utils.book_append_sheet(wb,ws0,'Report Info');
+ var ws=XLSX.utils.aoa_to_sheet([H].concat(rows));
+ ws['!cols']=[{wch:60},{wch:16},{wch:10},{wch:40},{wch:14},{wch:16},{wch:20},{wch:14},{wch:14}].concat(H.slice(9).map(function(){return {wch:14}}));
+ ws['!freeze']={xSplit:0,ySplit:1};ws['!autofilter']={ref:ws['!ref']};
+ XLSX.utils.book_append_sheet(wb,ws,'Cutoffs');
+ try{xsave(fname(Q,'xlsx'),XLSX.write(wb,{type:'array',bookType:'xlsx'}));say('Excel file saved.')}catch(e){say('The Excel file could not be saved.')}
+}
+$('dlx').addEventListener('click',saveXlsx);
 $('dlp').addEventListener('click',function(){if(!DLS){say('Downloads are not available in this view.');return}savePdf()});
 $('reset').addEventListener('click',function(){['air','sml','q'].forEach(function(i){$(i).value=''});$('show').value='all';$('sort').value='air';$('round').value=0;CM='new';document.querySelectorAll('#cm button').forEach(function(x){x.setAttribute('aria-pressed',x.getAttribute('data-m')==='new'?'true':'false')});Object.keys(MS).forEach(function(k){MS[k].reset(true)});shown=LIM;render()});
 function sticky(){var r=document.querySelector('thead tr');if(r)document.documentElement.style.setProperty('--h1',r.offsetHeight+'px')}
