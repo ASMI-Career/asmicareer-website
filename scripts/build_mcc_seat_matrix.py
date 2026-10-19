@@ -62,6 +62,19 @@ def raw_pdf(path):
                         rows.append(r)
     return rows, total
 
+CITY_ALIAS = {'Bangalore': 'Bengaluru', 'Mysore': 'Mysuru', 'Mangalore': 'Mangaluru', 'Hubli': 'Hubballi',
+              'Pudukottai': 'Pudukkottai', 'Allahabad': 'Prayagraj', 'Baroda': 'Vadodara', 'Faizabad': 'Ayodhya'}
+# names in the ASMI lists that carry no ', City' suffix
+CITY_BY_CODE = {'200642': 'Dhubri', '200633': 'Navsari', '200670': 'Alwar', '200454': 'Hyderabad', '200466': 'Coochbehar',
+                '200608': 'Chikkamagaluru', '200610': 'Haveri', '200607': 'Chittorgarh',
+                '200613': 'Barasat', '200604': 'Tamluk'}
+
+def city_of(code, name, states):
+    """No district data exists in any source file; the ASMI institute name ends with the city/town."""
+    c = CITY_BY_CODE.get(code) or (name.rsplit(',', 1)[1].strip() if ',' in name else '')
+    c = CITY_ALIAS.get(c, c)
+    return '' if c in states else c   # a trailing state name is not a city
+
 def load_master(path, nri_sheet):
     """ASMI MBBS/BDS list: code -> official name, establishment year, annual fee (and NRI fee for deemed)."""
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
@@ -71,7 +84,8 @@ def load_master(path, nri_sheet):
         if ws.title == nri_sheet: continue
         for r in list(ws.iter_rows(values_only=True))[2:]:
             if r[1]:
-                master[str(r[1]).strip()] = dict(name=clean(r[2]), est=r[4], fee=num(r[5]), nri=None)
+                master[str(r[1]).strip()] = dict(name=clean(r[2]), est=r[4], fee=num(r[5]), nri=None,
+                                                 city=city_of(str(r[1]).strip(), clean(r[2]), STATES))
     for r in list(wb[nri_sheet].iter_rows(values_only=True))[2:]:
         if r[1] and clean(r[5]).startswith('$'): master[str(r[1]).strip()]['nri'] = clean(r[5])
     return master
@@ -122,6 +136,8 @@ for k, (rows, total) in list(rounds.items()):
     nursing_seats[k] = sum(x['seats'] for x in rows if x['branch'].startswith('B.Sc'))
     rounds[k] = ([x for x in rows if not x['branch'].startswith('B.Sc')], total)
 
+STATES = {x[0].strip() for x in r1 + r2 + r3 + rs} | {'Assam', 'Karnataka', 'Rajasthan'}
+STATES -= {'Puducherry', 'Delhi', 'Goa', 'Chandigarh'}  # these are also city names
 # Name, establishment year and fees from the ASMI MBBS / BDS lists
 master = {'MBBS': load_master(f'{SRC}/AIQ_MBBS.xlsx', 'DEEMED MBBS NRI'),
           'BDS': load_master(f'{SRC}/BDS.xlsx', 'DEEMED NRI')}
@@ -131,7 +147,7 @@ for rows, _ in rounds.values():
         course = x['branch'].split()[0]
         if course in master:
             m = master[course][x['code']]  # KeyError = a college missing from the ASMI list; fix the list, don't guess
-            x.update(collegeName=m['name'], city='', establishment=m['est'], fee=m['fee'], feeNRI=m['nri'])
+            x.update(collegeName=m['name'], city=NAME_FIX.get(x['code'], ('', m['city']))[1] or m['city'], establishment=m['est'], fee=m['fee'], feeNRI=m['nri'])
 
 # Round 2 addendum
 by_code = {x['code']: x for k in ('round3', 'stray') for x in rounds[k][0]}

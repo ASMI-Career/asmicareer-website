@@ -46,7 +46,7 @@
   /* five numbered filters */
   .filters{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;display:grid;grid-template-columns:repeat(12,1fr);gap:16px 18px}
   .f{grid-column:span 12;min-width:0}
-  .f.s3{grid-column:span 3}.f.s4{grid-column:span 4}.f.s5{grid-column:span 5}.f.s8{grid-column:span 8}
+  .f.s4{grid-column:span 4}.f.s8{grid-column:span 8}.f.s12{grid-column:span 12}
   .f-title{display:flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
   .f-title i{font-style:normal;background:var(--purple);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem}
   .seg{display:flex;flex-wrap:wrap;gap:6px}
@@ -56,8 +56,26 @@
   .seg.pwd button.active[data-v="yes"]{background:#b07900;border-color:#b07900}
   select,input{font:500 .88rem 'Montserrat',system-ui,sans-serif;padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%}
   select:focus,input:focus{outline:2px solid var(--purple);outline-offset:-1px}
+  .f-title small{font-weight:600;text-transform:none;letter-spacing:0;color:var(--faint)}
+  .ms{position:relative}
+  .ms-btn{width:100%;text-align:left;font:500 .88rem 'Montserrat',system-ui,sans-serif;padding:9px 32px 9px 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ms-btn::after{content:"▾";position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--muted)}
+  .ms-btn.has{border-color:var(--purple);color:var(--purple);font-weight:700}
+  .ms-panel{position:absolute;z-index:20;top:calc(100% + 4px);left:0;right:0;min-width:240px;background:#fff;border:1.5px solid var(--purple);border-radius:10px;box-shadow:0 10px 30px rgba(26,0,64,.18);padding:8px}
+  .ms-panel[hidden]{display:none}
+  .ms-list{max-height:260px;overflow:auto;margin:8px 0 4px}
+  .ms-list label{display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:6px;font-size:.84rem;font-weight:500;cursor:pointer}
+  .ms-list label:hover{background:#f3ecfb}
+  .ms-list input{width:auto;accent-color:var(--purple)}
+  .ms-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:6px}
+  .ms-foot button{background:none;border:none;color:var(--purple);font-size:.8rem;font-weight:700;cursor:pointer;padding:4px 6px}
+  .ms-empty{padding:10px;color:var(--muted);font-size:.82rem}
   .filters-foot{grid-column:span 12;display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px dashed var(--line);padding-top:14px}
-  .filters-foot input{flex:1;min-width:240px;width:auto}
+  .college-filter{flex:1;min-width:260px;display:flex;flex-direction:column;gap:6px}
+  .college-filter span{font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  thead th.nri{background:#4a1a7e}
+  td.nri{text-align:center;font-weight:700;color:#4a1a7e;background:#f6f0ff !important}
+  td.nrifee{white-space:nowrap;font-weight:700;text-align:right;color:#4a1a7e}
   .reset{background:none;border:none;color:var(--purple);font-size:.85rem;font-weight:700;cursor:pointer;padding:9px 6px}
 
   .result-line{display:flex;justify-content:space-between;font-size:.84rem;color:var(--muted);margin:6px 2px 8px;flex-wrap:wrap;gap:6px}
@@ -77,6 +95,7 @@
   td.college{min-width:300px;max-width:380px;position:sticky;left:0;z-index:1;box-shadow:1px 0 0 var(--line)}
   thead th.college{left:0;z-index:4}
   .cname{font-weight:700;line-height:1.35}
+  td.loc{white-space:nowrap;font-weight:600}
   .cmeta{font-size:.76rem;color:var(--muted);margin-top:2px}
   .type-chip{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;padding:3px 9px;border-radius:999px;white-space:nowrap}
   td.est{text-align:center;font-weight:600;color:var(--muted)}
@@ -93,7 +112,7 @@
 
   .empty{padding:50px;text-align:center;color:var(--muted);font-weight:600}
   footer{margin:16px 0 40px;font-size:.78rem;color:var(--muted);line-height:1.6}
-  @media(max-width:900px){.f.s3,.f.s4,.f.s5,.f.s8{grid-column:span 12}}
+  @media(max-width:900px){.f.s4,.f.s8{grid-column:span 12}}
   @media(max-width:700px){.wrap{padding:0 12px}h1{font-size:1.2rem}}
 </style>
 </head>
@@ -127,28 +146,34 @@
   </div>
 
   <div class="filters">
-    <div class="f s3">
+    <div class="f s4">
       <div class="f-title"><i>1</i>Course</div>
       <div class="seg" id="fCourse"></div>
     </div>
-    <div class="f s5">
-      <div class="f-title"><i>2</i>College type</div>
+    <div class="f s8">
+      <div class="f-title"><i>2</i>College type <small>(select one or more)</small></div>
       <div class="seg" id="fType"></div>
     </div>
     <div class="f s4">
-      <div class="f-title"><i>3</i>State</div>
-      <select id="fState"><option value="">All states / UTs</option></select>
+      <div class="f-title"><i>3</i>State <small>(select one or more)</small></div>
+      <div class="ms" id="fState"></div>
     </div>
-    <div class="f s8">
-      <div class="f-title"><i>4</i>Category</div>
-      <div class="seg" id="fCat"></div>
+    <div class="f s4">
+      <div class="f-title"><i>4</i>City <small>(select one or more)</small></div>
+      <div class="ms" id="fCity"></div>
     </div>
     <div class="f s4">
       <div class="f-title"><i>5</i>PwD seats</div>
       <div class="seg pwd" id="fPwd"></div>
     </div>
+    <div class="f s12">
+      <div class="f-title"><i>6</i>Category</div>
+      <div class="seg" id="fCat"></div>
+    </div>
     <div class="filters-foot">
-      <input id="search" type="text" placeholder="Search by college name, city or MCC code">
+      <label class="college-filter"><span>College name</span>
+        <input id="search" type="text" list="collegeList" placeholder="Type or pick a college (name, city or MCC code)" autocomplete="off">
+        <datalist id="collegeList"></datalist></label>
       <button class="reset" id="reset">Reset all filters</button>
     </div>
   </div>
@@ -163,16 +188,20 @@
     <table id="tbl">
       <thead><tr>
         <th class="college" data-key="name">College</th>
+        <th data-key="state">State</th>
+        <th data-key="city">City</th>
         <th data-key="type">Type</th>
         <th class="num" data-key="est">Est.</th>
         <th data-key="course">Course</th>
         <th data-key="quota">Quota</th>
         <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS and BDS)">Fees / yr</th>
+        <th data-key="feeNRI" style="text-align:right" title="NRI quota fee (USD) for deemed universities">NRI fee</th>
         <th class="num cat" data-key="UR">General<br>/ UR</th>
         <th class="num cat" data-key="OBC">OBC</th>
         <th class="num cat" data-key="EWS">EWS</th>
         <th class="num cat" data-key="SC">SC</th>
         <th class="num cat" data-key="ST">ST</th>
+        <th class="num nri" data-key="nri">NRI<br>seats</th>
         <th class="num" data-key="total">Total</th>
       </tr></thead>
       <tbody id="body"></tbody>
@@ -181,7 +210,7 @@
   </div>
 
   <footer>
-    <b>How to read:</b> each row is one college + quota + course. Category columns show the seats open in that category (– means none). With PwD = No you see regular seats; with PwD = Yes you see only the PwD seats in each category.<br>
+    <b>How to read:</b> each row is one college + quota + course. Category columns show the seats open in that category (– means none). With PwD = No you see regular seats; with PwD = Yes you see only the PwD seats in each category. For deemed universities the NRI-quota seats and NRI fee (USD) sit on the same row as the self-financed seats.<br>
     Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. ESI colleges are listed under Government Colleges. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section.<br>
     Source: official MCC seat matrix / clear-vacancy lists for UG Counselling 2026.
   </footer>
@@ -201,7 +230,7 @@ const ROUND_NOTE={
   stray:"Source: MCC Clear Vacancy Stray Vacancy Round (MBBS · BDS)."};
 const RAW={};
 let ROWS=[], sortKey="state", sortAsc=true;
-const F={quota:"all",course:"",type:"",cat:"",pwd:"no"};
+const F={quota:"all",course:"",type:new Set(),state:new Set(),city:new Set(),cat:"",pwd:"no"};
 const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -211,43 +240,49 @@ function quotaGroup(q){
   if(q==="Self-Financed Merit Seat") return "sf";
   return "other";
 }
+const GROUPS=["aiq","sf","other","nri"];
 
-// One row per college + quota + course (+ seat gender); regular and PwD seats kept apart per category
+// One row per college + quota + course. Deemed NRI seats fold into the same row as the self-financed seats.
 function pivot(data){
   const zero=()=>({UR:0,OBC:0,EWS:0,SC:0,ST:0});
-  const map=new Map();
+  const blank=d=>({name:d.collegeName,state:d.state,type:d.type==="ESI"?"Government":d.type,code:d.code,est:d.establishment,
+    course:d.branch.replace(/\s*\(.*\)/,""),quota:d.quota,gender:d.gender,city:d.city,added:false,fee:null,feeNRI:null,
+    g:Object.fromEntries(GROUPS.map(x=>[x,{nor:zero(),pwd:zero()}]))});
+  const add=(r,grp,d)=>{const [c,k]=d.category.split(" ");r.g[grp][k==="PH"?"pwd":"nor"][CAT_OF[c]]+=d.seats;if(d.added)r.added=true;};
+  const rows=new Map(), sfRow=new Map();
   for(const d of data){
+    const grp=quotaGroup(d.quota); if(grp==="nri") continue;
     const key=[d.code,d.quota,d.branch,d.gender||""].join("|");
-    let r=map.get(key);
-    if(!r){
-      r={name:d.collegeName,state:d.state,type:d.type==="ESI"?"Government":d.type,code:d.code,est:d.establishment,course:d.branch.replace(/\s*\(.*\)/,""),
-         quota:d.quota,qg:quotaGroup(d.quota),gender:d.gender,city:d.city,added:false,nor:zero(),pwd:zero(),
-         fee:/NRI|Non-Resident/i.test(d.quota)?(d.feeNRI||null):d.fee};
-      map.set(key,r);
-    }
-    const [c,k]=d.category.split(" ");
-    (k==="PH"?r.pwd:r.nor)[CAT_OF[c]]+=d.seats;
-    if(d.added) r.added=true;
+    let r=rows.get(key); if(!r){r=blank(d);r.fee=d.fee;rows.set(key,r);if(grp==="sf")sfRow.set([d.code,d.branch,d.gender||""].join("|"),r);}
+    add(r,grp,d);
   }
-  return [...map.values()];
+  for(const d of data){
+    if(quotaGroup(d.quota)!=="nri") continue;
+    let r=d.type==="Deemed"?sfRow.get([d.code,d.branch,d.gender||""].join("|")):null;
+    if(!r){const key=[d.code,d.quota,d.branch,d.gender||""].join("|");r=rows.get(key);if(!r){r=blank(d);rows.set(key,r);}}
+    r.feeNRI=d.feeNRI||r.feeNRI; add(r,"nri",d);
+  }
+  return [...rows.values()];
 }
 
-const seatsOf=r=>F.pwd==="yes"?r.pwd:r.nor;
-const rowTotal=r=>CATS.reduce((s,c)=>s+seatsOf(r)[c],0);
-const feeNum=r=>typeof r.fee==="number"?r.fee:(typeof r.fee==="string"?parseInt(r.fee.replace(/\D/g,""))||0:0);
-function feeText(r){
-  if(typeof r.fee==="string") return esc(r.fee);
-  if(r.fee) return "₹"+r.fee.toLocaleString("en-IN");
-  return '<span class="none">—</span>';
-}
+// what a row shows under the current quota / PwD filters
+const inc=g=>F.quota==="all"||F.quota===g;
+const mode=()=>F.pwd==="yes"?"pwd":"nor";
+const mainSeat=(r,c)=>["aiq","sf","other"].reduce((s,g)=>s+(inc(g)?r.g[g][mode()][c]:0),0);
+const mainTotal=r=>CATS.reduce((s,c)=>s+mainSeat(r,c),0);
+const nriSeat=r=>inc("nri")?CATS.reduce((s,c)=>s+r.g.nri[mode()][c],0):0;
+const rowTotal=r=>mainTotal(r)+nriSeat(r);
+const catSeats=(r,c)=>mainSeat(r,c)+(c==="UR"?nriSeat(r):0);   // NRI seats are all General/UR
+const numOf=v=>typeof v==="number"?v:(typeof v==="string"?parseInt(v.replace(/\D/g,""))||0:0);
+const dash='<span class="none">—</span>';
+const feeText=r=>r.fee?"₹"+r.fee.toLocaleString("en-IN"):dash;
 
 function matches(r){
-  if(F.quota!=="all"&&r.qg!==F.quota) return false;
   if(F.course&&r.course!==F.course) return false;
-  if(F.type&&r.type!==F.type) return false;
-  if($("fState").value&&r.state!==$("fState").value) return false;
-  const s=seatsOf(r);
-  if(F.cat?!s[F.cat]:!CATS.some(c=>s[c])) return false;
+  if(F.type.size&&!F.type.has(r.type)) return false;
+  if(F.state.size&&!F.state.has(r.state)) return false;
+  if(F.city.size&&!F.city.has(r.city)) return false;
+  if(F.cat?!catSeats(r,F.cat):!rowTotal(r)) return false;
   const q=$("search").value.trim().toLowerCase();
   if(q&&!(r.name+" "+r.city+" "+r.code+" "+r.state).toLowerCase().includes(q)) return false;
   return true;
@@ -255,33 +290,65 @@ function matches(r){
 
 function render(){
   const out=ROWS.filter(matches);
-  const val=r=>sortKey==="name"?r.name:sortKey==="fee"?feeNum(r):sortKey==="est"?(r.est||0):sortKey==="total"?rowTotal(r):CATS.includes(sortKey)?seatsOf(r)[sortKey]:r[sortKey]??"";
+  const val=r=>sortKey==="name"?r.name:sortKey==="fee"?numOf(r.fee):sortKey==="feeNRI"?numOf(r.feeNRI):sortKey==="est"?(r.est||0):sortKey==="total"?rowTotal(r):sortKey==="nri"?nriSeat(r):CATS.includes(sortKey)?mainSeat(r,sortKey):r[sortKey]??"";
   out.sort((a,b)=>{
     let x=val(a),y=val(b);
     if(typeof x==="string"){x=x.toLowerCase();y=String(y).toLowerCase();}
     return ((x<y?-1:x>y?1:0)||a.name.localeCompare(b.name))*(sortAsc?1:-1);
   });
   $("rowCount").textContent=out.length.toLocaleString();
-  $("seatCount").textContent=out.reduce((s,r)=>s+(F.cat?seatsOf(r)[F.cat]:rowTotal(r)),0).toLocaleString();
+  $("seatCount").textContent=out.reduce((s,r)=>s+(F.cat?catSeats(r,F.cat):rowTotal(r)),0).toLocaleString();
   $("modeBanner").style.display=F.pwd==="yes"?"block":"none";
   $("empty").style.display=out.length?"none":"block";
   $("tbl").style.display=out.length?"table":"none";
   const html=[];
   for(const r of out){
-    const s=seatsOf(r);
-    const sub=[esc(r.state),r.city?esc(r.city):null,"MCC code "+esc(r.code)].filter(Boolean).join(" · ");
-    const cells=CATS.map(c=>`<td class="n${s[c]?"":" zero"}${F.cat===c?" hl":""}">${s[c]||"–"}</td>`).join("");
+    const cells=CATS.map(c=>{const n=mainSeat(r,c);return `<td class="n${n?"":" zero"}${F.cat===c?" hl":""}">${n||"–"}</td>`;}).join("");
+    const nri=nriSeat(r);
     html.push(`<tr>
-      <td class="college"><div class="cname">${esc(r.name)}${r.added?'<span class="tag added">ADDED</span>':""}${r.gender==="Female Only"?'<span class="tag female">FEMALE ONLY</span>':""}</div><div class="cmeta">${sub}</div></td>
+      <td class="college"><div class="cname">${esc(r.name)}${r.added?'<span class="tag added">ADDED</span>':""}${r.gender==="Female Only"?'<span class="tag female">FEMALE ONLY</span>':""}</div></td>
+      <td class="loc">${esc(r.state)}</td>
+      <td class="loc">${r.city?esc(r.city):'<span class="none">—</span>'}</td>
       <td><span class="type-chip" style="background:${TYPE_COLORS[r.type]}">${esc(TYPE_LABEL[r.type]||r.type)}</span></td>
       <td class="est">${r.est||'<span class="none">–</span>'}</td>
       <td>${esc(r.course)}</td>
       <td class="quota">${esc(r.quota)}</td>
       <td class="fee">${feeText(r)}</td>
+      <td class="nrifee">${r.feeNRI?esc(r.feeNRI):dash}</td>
       ${cells}
+      <td class="n nri${nri?"":" zero"}">${nri||"–"}</td>
       <td class="total">${rowTotal(r)}</td></tr>`);
   }
   $("body").innerHTML=html.join("");
+}
+
+const MS={};
+// checkbox dropdown: nothing ticked = "all"
+function msInit(id,key,allLabel,optionsFn,onChange){
+  const el=$(id);
+  el.innerHTML='<button type="button" class="ms-btn"></button><div class="ms-panel" hidden><input class="ms-search" type="text" placeholder="Search…"><div class="ms-list"></div><div class="ms-foot"><button type="button" class="ms-clear">Clear</button><button type="button" class="ms-close">Done</button></div></div>';
+  const btn=el.querySelector(".ms-btn"), panel=el.querySelector(".ms-panel"), list=el.querySelector(".ms-list"), search=el.querySelector(".ms-search");
+  const label=()=>{const n=F[key].size;btn.textContent=n===0?allLabel:n===1?[...F[key]][0]:n+" selected";btn.classList.toggle("has",n>0);};
+  const draw=()=>{
+    const q=search.value.trim().toLowerCase(), opts=optionsFn().filter(o=>o.toLowerCase().includes(q));
+    list.innerHTML=opts.length?opts.map(o=>`<label><input type="checkbox" value="${esc(o)}"${F[key].has(o)?" checked":""}>${esc(o)}</label>`).join(""):'<div class="ms-empty">No matches</div>';
+  };
+  const refresh=prune=>{ if(prune){const ok=new Set(optionsFn());[...F[key]].forEach(v=>{if(!ok.has(v))F[key].delete(v);});} label();draw(); };
+  MS[id]={refresh};
+  btn.onclick=()=>{const open=panel.hidden;document.querySelectorAll(".ms-panel").forEach(x=>x.hidden=true);panel.hidden=!open;if(open){search.value="";draw();search.focus();}};
+  list.onchange=e=>{const v=e.target.value;e.target.checked?F[key].add(v):F[key].delete(v);label();if(onChange)onChange();render();};
+  search.oninput=draw;
+  el.querySelector(".ms-clear").onclick=()=>{F[key].clear();label();draw();if(onChange)onChange();render();};
+  el.querySelector(".ms-close").onclick=()=>{panel.hidden=true;};
+  label();
+}
+document.addEventListener("click",e=>{if(!e.target.closest(".ms"))document.querySelectorAll(".ms-panel").forEach(x=>x.hidden=true);});
+
+function typeBar(types){
+  const el=$("fType");
+  const draw=()=>{el.innerHTML=[["","All"],...types.map(t=>[t,TYPE_LABEL[t]])].map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${(v===""?F.type.size===0:F.type.has(v))?"active":""}">${esc(l)}</button>`).join("");
+    el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});};
+  draw();
 }
 
 function seg(id,items,key){
@@ -292,36 +359,38 @@ function seg(id,items,key){
 
 function build(){
   // top stats: regular + PwD seats together = full MCC totals
-  const all=r=>CATS.reduce((s,c)=>s+r.nor[c]+r.pwd[c],0);
+  const grpSeats=(r,g)=>CATS.reduce((s,c)=>s+r.g[g].nor[c]+r.g[g].pwd[c],0);
+  const all=r=>GROUPS.reduce((s,g)=>s+grpSeats(r,g),0);
   const sum=f=>ROWS.filter(f).reduce((s,r)=>s+all(r),0);
   $("stats").innerHTML=[[sum(()=>true),"Total seats"],[new Set(ROWS.map(r=>r.code)).size,"Colleges · "+new Set(ROWS.map(r=>r.state)).size+" states/UTs"],
     [sum(r=>r.course==="MBBS"),"MBBS seats"],[sum(r=>r.course==="BDS"),"BDS seats"]]
     .map(([n,l])=>`<div class="stat"><b>${n.toLocaleString()}</b><span>${l}</span></div>`).join("");
   // quota bar with seat counts
-  const qs={};ROWS.forEach(r=>{qs[r.qg]=(qs[r.qg]||0)+all(r);});
+  const qs={};ROWS.forEach(r=>GROUPS.forEach(g=>{qs[g]=(qs[g]||0)+grpSeats(r,g);}));
   const total=Object.values(qs).reduce((a,b)=>a+b,0);
   $("quotaBar").innerHTML=QUOTAS.filter(([k])=>k==="all"||qs[k]).map(([k,l])=>`<button type="button" class="quota-btn${F.quota===k?" active":""}" data-v="${k}">${l}<span class="count">${(k==="all"?total:qs[k]).toLocaleString()}</span></button>`).join("");
   $("quotaBar").querySelectorAll("button").forEach(b=>b.onclick=()=>{F.quota=b.dataset.v;$("quotaBar").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));render();});
+  $("collegeList").innerHTML=[...new Set(ROWS.map(r=>r.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
   seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
   const present=new Set(ROWS.map(r=>r.type));
-  seg("fType",[["","All"],...TYPE_ORDER.filter(t=>present.has(t)).map(t=>[t,TYPE_LABEL[t]])],"type");
+  typeBar([...TYPE_ORDER.filter(t=>present.has(t))]);
   seg("fCat",[["","All"],["UR","General"],["OBC","OBC"],["SC","SC"],["ST","ST"],["EWS","EWS"]],"cat");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
-  const sel=$("fState");while(sel.options.length>1)sel.remove(1);
-  [...new Set(ROWS.map(r=>r.state))].sort().forEach(v=>sel.add(new Option(v,v)));
+  msInit("fState","state","All states / UTs",()=>[...new Set(ROWS.map(r=>r.state))].sort(),()=>MS.fCity&&MS.fCity.refresh(true));
+  msInit("fCity","city","All cities",()=>[...new Set(ROWS.filter(r=>!F.state.size||F.state.has(r.state)).map(r=>r.city).filter(Boolean))].sort());
 }
 
 function resetFilters(){
-  Object.assign(F,{quota:"all",course:"",type:"",cat:"",pwd:"no"});
+  Object.assign(F,{quota:"all",course:"",type:new Set(),state:new Set(),city:new Set(),cat:"",pwd:"no"});
   $("search").value="";
-  build();$("fState").value="";render();
+  build();render();
 }
 
 async function loadRound(id){
-  $("body").innerHTML='<tr><td colspan="12" class="empty">Loading seat matrix…</td></tr>';$("tbl").style.display="table";$("empty").style.display="none";
+  $("body").innerHTML='<tr><td colspan="16" class="empty">Loading seat matrix…</td></tr>';$("tbl").style.display="table";$("empty").style.display="none";
   try{
     if(!RAW[id]){const res=await fetch(`/data/seat-matrix/MCC/2026/${id}.json`);if(!res.ok)throw 0;RAW[id]=pivot(await res.json());}
-  }catch(e){$("body").innerHTML='<tr><td colspan="12" class="empty">Could not load this round. Please refresh.</td></tr>';return;}
+  }catch(e){$("body").innerHTML='<tr><td colspan="16" class="empty">Could not load this round. Please refresh.</td></tr>';return;}
   ROWS=RAW[id];
   document.querySelectorAll(".round-tab").forEach(b=>b.classList.toggle("active",b.dataset.round===id));
   $("roundNote").textContent=ROUND_NOTE[id];
@@ -331,7 +400,6 @@ async function loadRound(id){
 }
 
 $("search").addEventListener("input",render);
-$("fState").addEventListener("change",render);
 $("reset").onclick=resetFilters;
 document.querySelectorAll("thead th").forEach(th=>th.onclick=()=>{
   const k=th.dataset.key;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=!["total","UR","OBC","EWS","SC","ST"].includes(k);}
