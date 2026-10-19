@@ -164,14 +164,6 @@
   footer{margin:18px 0 44px;font-size:.78rem;color:var(--muted);line-height:1.65}
 
   @media(max-width:1100px){.stats{grid-template-columns:1fr 1fr}.f.s2,.f.s3,.f.s4,.f.s5,.f.s6{grid-column:span 6}.source-card{margin-left:0}}
-  .rank-cell{text-align:center;white-space:nowrap}
-  .rank-cell b{display:block;font-size:1.02rem;font-weight:800;color:var(--purple-dark)}
-  .rank-cell small{display:block;font-size:.7rem;color:var(--muted);font-weight:600;margin-top:1px}
-  .rank-cell.none{color:var(--faint)}
-  .info-note{background:#eef4ff;border:1px solid #cddcf7;color:#1f467f;border-radius:10px;padding:8px 14px;font-size:.84rem;font-weight:600;margin-bottom:10px;display:none}
-  thead th.round{background:linear-gradient(180deg,#4a1a99,#3b1585)}
-  .modal table td.rank-cell b{font-size:.92rem}
-  @media(max-width:1100px){.f.s6{grid-column:span 12}}
   /* ---------- mobile ---------- */
   .m-only{display:none}
   .cards{display:none}
@@ -258,6 +250,28 @@
     .modal .mt-cut td:nth-child(1){grid-column:1/-1;text-align:left;font-size:1rem}
     footer{font-size:.74rem}
   }
+  .rank-cell{text-align:center;white-space:nowrap}
+  .rank-cell b{display:block;font-size:1.02rem;font-weight:800;color:var(--purple-dark)}
+  .rank-cell small{display:block;font-size:.7rem;color:var(--muted);font-weight:600;margin-top:1px}
+  .rank-cell.none{color:var(--faint)}
+  .info-note{background:#eef4ff;border:1px solid #cddcf7;color:#1f467f;border-radius:10px;padding:8px 14px;font-size:.84rem;font-weight:600;margin-bottom:10px;display:none}
+  thead th.round{background:linear-gradient(180deg,#4a1a99,#3b1585)}
+  a.cname-link{color:inherit;text-decoration:none}
+  a.cname-link:hover{color:var(--purple);text-decoration:underline}
+  a.view-btn{text-decoration:none}
+  .airbox input{font-weight:700;letter-spacing:.02em}
+  .rank-help{font-size:.68rem;color:var(--muted);margin-top:4px;line-height:1.3}
+  .chance{display:inline-block;margin-top:5px;font-size:.68rem;font-weight:800;padding:3px 9px;border-radius:999px}
+  .ch-safe{background:#e0f5ea;color:#12804a}.ch-likely{background:#e1ecff;color:#1b57b8}.ch-border{background:#fff0cc;color:#8a5a00}.ch-out{background:#eceaf2;color:#77708a}
+  td.rank-cell.ch-safe{background:#eefaf3 !important}td.rank-cell.ch-likely{background:#eef4ff !important}td.rank-cell.ch-border{background:#fff8e6 !important}td.rank-cell.ch-out{background:#f4f3f8 !important}
+  .mc-cat.ch-safe{background:#e8f8ef;border-color:#9bd7b6;color:inherit}.mc-cat.ch-likely{background:#eaf2ff;border-color:#a9c6f3;color:inherit}.mc-cat.ch-border{background:#fff5dc;border-color:#ecd18a;color:inherit}.mc-cat.ch-out{background:#f4f3f8;color:inherit}
+  .legend{display:none;gap:8px;flex-wrap:wrap;margin:0 0 12px;align-items:center;font-size:.78rem;color:var(--muted);font-weight:600}
+  .legend .chance{margin-top:0}
+  .f.s9{grid-column:span 9}
+  @media(max-width:1100px){.f.s9{grid-column:span 12}}
+  .m-sort{width:auto;min-width:240px}
+  .reach{font-weight:700;color:var(--purple)}
+  @media(max-width:760px){.m-sort{width:100%}}
 </style>
 </head>
 <body>
@@ -283,43 +297,69 @@
   <div class="pills bar" id="fType"></div>
 
   <div class="filters">
-    <div class="f s5 f-search">
+    <div class="f s4 f-search">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>College name</div>
       <div class="searchbox">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="search" type="text" list="collegeList" placeholder="Search college, state or MCC code" autocomplete="off">
+        <input id="search" type="text" list="collegeList" placeholder="Search college, city or MCC code" autocomplete="off">
         <datalist id="collegeList"></datalist>
       </div>
     </div>
+    <div class="f s2 f-search airbox">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Your NEET AIR</div>
+      <input id="rank" type="text" inputmode="numeric" placeholder="e.g. 15000" autocomplete="off">
+    </div>
     <button type="button" class="filter-toggle m-only" id="filterToggle">More filters</button>
-    <div class="f s4">
-      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>State / UT <small>(select one or more)</small></div>
+    <div class="f s3">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>State / UT <small>(one or more)</small></div>
       <div class="ms" id="fState"></div>
+    </div>
+    <div class="f s3">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/></svg>City <small>(one or more)</small></div>
+      <div class="ms" id="fCity"></div>
     </div>
     <div class="f s3">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h16"/></svg>Course</div>
       <div class="seg" id="fCourse"></div>
     </div>
-    <div class="f s8">
+    <div class="f s9">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Category</div>
       <div class="seg" id="fCat"></div>
     </div>
-    <div class="f s2" style="grid-column:span 2">
+    <div class="f s5">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M9 4c6 0 6 10 0 10H6l8 6"/></svg>Fees per year</div>
+      <div class="seg" id="fFee"></div>
+    </div>
+    <div class="f s2">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 8v5l3 6M12 13l-3 6M8 11h8"/></svg>PwD</div>
       <div class="seg pwd" id="fPwd"></div>
     </div>
-    <div class="f s2" style="grid-column:span 2">
+    <div class="f s3">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Show</div>
+      <div class="seg" id="fShow"></div>
+    </div>
+    <div class="f s2">
       <div class="f-title"></div>
       <button class="reset-btn" id="reset" style="width:100%"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Reset</button>
     </div>
   </div>
 
+  <div class="legend" id="legend">
+    <span>Your chance at last round's closing rank:</span>
+    <span class="chance ch-safe">Safe</span><span class="chance ch-likely">Likely</span><span class="chance ch-border">Borderline</span><span class="chance ch-out">Out of reach</span>
+  </div>
   <div class="info-note" id="infoNote"></div>
   <div class="mode-banner" id="modeBanner">Showing the PwD closing rank for the chosen category. Colleges with no PwD allotment in a round show a dash.</div>
   <div class="result-line">
-    <span class="big" id="rowCount">0</span><span class="txt">colleges</span>
-    <span class="hint">Closing All India Rank · click a column heading to sort</span>
-    <select id="mSort" class="m-only m-sort" aria-label="Sort colleges"><option value="r1:1">Sort: Round 1 rank (best first)</option><option value="r2:1">Sort: Round 2 rank (best first)</option><option value="r3:1">Sort: Round 3 rank (best first)</option><option value="name:1">Sort: College name (A–Z)</option><option value="fee:1">Sort: Fees (low to high)</option></select>
+    <span class="big" id="rowCount">0</span><span class="txt">colleges</span><span class="txt reach" id="reachInfo"></span>
+    <select id="mSort" class="m-sort" aria-label="Sort colleges">
+      <option value="rl:1">Sort: Latest round rank (best first)</option>
+      <option value="r1:1">Sort: Round 1 rank (best first)</option>
+      <option value="r2:1">Sort: Round 2 rank (best first)</option>
+      <option value="r3:1">Sort: Round 3 rank (best first)</option>
+      <option value="name:1">Sort: College name (A–Z)</option>
+      <option value="fee:1">Sort: Fees (low to high)</option>
+    </select>
     <button class="dl-btn" id="download" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M4 21h16"/></svg>Download Excel (CSV)</button>
   </div>
 
@@ -340,20 +380,15 @@
     </table>
     <div class="empty" id="empty" style="display:none">No colleges match these filters. Try clearing one.</div>
   </div>
-
   <div class="cards" id="cards"></div>
   <div class="empty m-only" id="cardsEmpty" style="display:none">No colleges match these filters. Try clearing one.</div>
 
   <footer>
     <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of seats offered in that round for that category. A dash means nobody was allotted in that round.<br>
-    <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas.<br>
-    <b>NRI:</b> NRI Priority 1 / 2 as marked in the allotment list. In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
-    Source: official MCC allotment lists, UG Counselling 2026. Round 1 values as already published on ASMI.
+    <b>Your chances:</b> enter your NEET AIR. Safe = your rank is at least 12% better than the closing rank, Likely = at or better than it, Borderline = within 12% above it, Out of reach = further away. It compares with the latest round that has data. This is a guide, not a guarantee: actual allotment depends on your choice filling and on seats left in later rounds.<br>
+    <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI Priority 1 / 2 as marked in the allotment list. In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
+    City is taken from the institute name; official districts are not in the source files. Source: official MCC allotment lists, UG Counselling 2026. Round 1 values as already published on ASMI.
   </footer>
-</div>
-
-<div class="modal" id="modal" hidden>
-  <div class="modal-card"><button class="modal-x" id="modalX" aria-label="Close">×</button><div id="modalBody"></div></div>
 </div>
 
 <script>
@@ -368,61 +403,75 @@ const IC={
   eye:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'};
 const TYPE_ICON={Government:"building",Deemed:"cap",AIIMS:"building",JIPMER:"pin","Central University":"building"};
 const ROUNDS=["Round 1","Round 2","Round 3"];
-// category buttons -> file category names (NRI files are NRI_P1 / NRI_P2 for BDS)
 const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI1","NRI Priority 1"],["NRI2","NRI Priority 2"],["MINORITY","Minority"]];
 const CAT_LABEL=Object.fromEntries(CATS);
-const FILE_CAT={NRI1:["NRI_P-I","NRI_P1"],NRI2:["NRI_P-II","NRI_P2"]};
-const $=id=>document.getElementById(id);
-const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const F={type:new Set(),state:new Set(),course:"",cat:"OPEN",pwd:"no"};
-let COLLEGES=[], VIEW=[], sortKey="r1", sortAsc=true;
-
+const FEES=[["any","Any fee"],["0-100000","Up to ₹1 L"],["100000-500000","₹1–5 L"],["500000-1500000","₹5–15 L"],["1500000-2500000","₹15–25 L"],["2500000-","Above ₹25 L"]];
+const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
 // the cutoff files spell some states two ways; use the seat matrix spelling so the State filter has one entry each
 const STATE_ALIAS={"Tamilnadu":"Tamil Nadu","Jammu and Kashmir":"Jammu And Kashmir","Pondicherry":"Puducherry","Andaman Nicobar":"Andaman And Nicobar Islands","Dadra and Nagar Haveli":"The Dadra And Nagar Haveli And Daman And Diu"};
 const normState=s=>STATE_ALIAS[s]||s;
 const normCat=c=>c==="NRI_P-I"||c==="NRI_P1"?"NRI1":c==="NRI_P-II"||c==="NRI_P2"?"NRI2":c;
-const rankOf=(rd)=>rd?(F.pwd==="yes"?rd.AIR_PWD:rd.AIR):null;
+const $=id=>document.getElementById(id);
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DEFAULTS={type:new Set(),state:new Set(),city:new Set(),course:"",cat:"OPEN",pwd:"no",fee:"any",show:"all"};
+const F={...DEFAULTS,type:new Set(),state:new Set(),city:new Set()};
+let COLLEGES=[], VIEW=[], sortKey="rl", sortAsc=true;
+
+const rankOf=rd=>rd?(F.pwd==="yes"?rd.AIR_PWD:rd.AIR):null;
 const fmt=n=>n==null?null:Number(n).toLocaleString("en-IN");
-function feeText(c){
+const feeNum=c=>{const n=parseInt(String(c.fees==null?"":c.fees).replace(/\D/g,""));return n||0;};
+const feeText=c=>{
   const f=c.fees; if(f==null||f==="") return '<span class="none">—</span>';
   if(typeof f==="string"&&f.trim().startsWith("$")) return esc(f.trim());
-  const n=parseInt(String(f).replace(/\D/g,"")); return n?"₹"+n.toLocaleString("en-IN"):'<span class="none">—</span>';
-}
-const feeNum=c=>{const f=c.fees;return f==null?0:parseInt(String(f).replace(/\D/g,""))||0;};
+  return feeNum(c)?"₹"+feeNum(c).toLocaleString("en-IN"):'<span class="none">—</span>';
+};
+const myRank=()=>{const v=parseInt($("rank").value.replace(/\D/g,""));return v>0?v:null;};
+function chance(R,v){ if(R==null||v==null) return null; if(R<=v*0.88) return "safe"; if(R<=v) return "likely"; if(R<=v*1.12) return "border"; return "out"; }
+function latest(c){const e=c.cats[F.cat];for(const r of ["Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
+function hasData(c,cat){const e=c.cats[cat];return !!e&&ROUNDS.some(r=>rankOf(e[r])!=null);}
+const detailUrl=c=>`/mcc-college.html?c=${encodeURIComponent(c.code)}&t=${c.itype}&ca=${F.cat}&pw=${F.pwd}${myRank()?"&rk="+myRank():""}`;
 
-function cellRounds(c,cat){const e=c.cats[cat];return e||null;}
-function hasData(c,cat){
-  const e=c.cats[cat]; if(!e) return false;
-  return ROUNDS.some(r=>rankOf(e[r])!=null);
+function feeOk(c){
+  if(F.fee==="any") return true;
+  const n=feeNum(c); if(!n) return false;
+  const [a,b]=F.fee.split("-"); return n>+a&&(b===""||n<=+b);
 }
-
-function matches(c){
+function matches(c,R){
   if(F.type.size&&!F.type.has(c.type)) return false;
   if(F.state.size&&!F.state.has(c.state)) return false;
+  if(F.city.size&&!F.city.has(c.city)) return false;
   if(F.course&&c.course!==F.course) return false;
   if(!hasData(c,F.cat)) return false;
+  if(!feeOk(c)) return false;
+  if(F.show==="reach"){const l=latest(c);const ch=l&&chance(R,l.v);if(!ch||ch==="out") return false;}
   const q=$("search").value.trim().toLowerCase();
-  if(q&&!(c.name+" "+c.state+" "+c.code).toLowerCase().includes(q)) return false;
+  if(q&&!(c.name+" "+c.state+" "+c.city+" "+c.code).toLowerCase().includes(q)) return false;
   return true;
 }
 
-function rankCell(e,r){
+function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
   if(v==null) return '<td class="rank-cell none">—</td>';
-  return `<td class="rank-cell"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
+  const ch=chance(R,v);
+  return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
 }
 
 function render(){
-  VIEW=COLLEGES.filter(matches);
-  const key=r=>{const e=r.cats[F.cat];return k=>rankOf(e&&e[k]);};
+  const R=myRank();
+  VIEW=COLLEGES.filter(c=>matches(c,R));
   const val=c=>{
     if(sortKey==="name") return c.name.toLowerCase();
     if(sortKey==="est") return c.est||0;
-    if(sortKey==="fee") return feeNum(c);
+    if(sortKey==="fee") return feeNum(c)||null;
     if(sortKey==="course") return c.course;
+    if(sortKey==="rl"){const l=latest(c);return l?l.v:null;}
     const e=c.cats[F.cat]; return rankOf(e&&e["Round "+sortKey.slice(1)]);
   };
   VIEW.sort((a,b)=>{
+    if(R&&sortKey==="rl"){   // with a rank entered, colleges within reach come before those out of reach
+      const ra=(()=>{const l=latest(a),ch=l&&chance(R,l.v);return ch&&ch!=="out"?0:1;})(), rb=(()=>{const l=latest(b),ch=l&&chance(R,l.v);return ch&&ch!=="out"?0:1;})();
+      if(ra!==rb) return ra-rb;
+    }
     let x=val(a),y=val(b);
     const nx=x==null,ny=y==null; if(nx||ny) return nx&&ny?0:nx?1:-1;   // blanks always last
     if(typeof x==="string"){x=x.toLowerCase();y=String(y).toLowerCase();}
@@ -430,74 +479,76 @@ function render(){
   });
   $("rowCount").textContent=VIEW.length.toLocaleString();
   $("modeBanner").style.display=F.pwd==="yes"?"block":"none";
+  $("legend").style.display=R?"flex":"none";
+  const reach=R?VIEW.filter(c=>{const l=latest(c);const ch=l&&chance(R,l.v);return ch&&ch!=="out";}).length:0;
+  $("reachInfo").textContent=R?`· ${reach.toLocaleString()} within your reach`:"";
   const note=$("infoNote");
   if(/^NRI|MINORITY/.test(F.cat)){note.style.display="block";note.textContent=CAT_LABEL[F.cat]+" cutoffs exist for deemed universities only.";}
   else if(F.cat!=="OPEN"&&F.type.size&&F.type.has("Deemed")&&F.type.size===1){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
+  else if(F.fee!=="any"){note.style.display="block";note.textContent="Fee filter uses the annual fee in Indian rupees. Colleges without a listed fee are hidden.";}
   else note.style.display="none";
   $("empty").style.display=VIEW.length?"none":"block";
   $("tbl").style.display=VIEW.length?"table":"none";
-  const html=[];
+  const html=[], cards=[];
   VIEW.forEach((c,i)=>{
-    const e=c.cats[F.cat];
+    const e=c.cats[F.cat], l=latest(c), ch=R&&l?chance(R,l.v):null, url=detailUrl(c);
+    const badge=ch?`<span class="chance ch-${ch}">${CH_LABEL[ch]}</span>`:"";
+    const sub=esc(c.state)+(c.city?" · "+esc(c.city):"");
     html.push(`<tr><td class="idx">${i+1}</td>
-      <td class="college"><div class="cname">${esc(c.name)}</div><div class="cstate">${esc(c.state)}</div></td>
+      <td class="college"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</td>
       <td class="est">${c.est||'<span class="none">–</span>'}</td>
       <td>${esc(c.course)}</td>
       <td class="fee">${feeText(c)}</td>
-      ${ROUNDS.map(r=>rankCell(e,r)).join("")}
-      <td class="act"><button type="button" class="view-btn" data-i="${i}">${IC.eye}View Details</button></td></tr>`);
-  });
-  $("body").innerHTML=html.join("");
-  $("cards").innerHTML=VIEW.map((c,i)=>{
-    const e=c.cats[F.cat];
-    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd);return `<div class="mc-cat${v==null?" zero":""}"><i>${r}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
-    return `<article class="mcard"><div class="mc-head"><div class="mc-name"><div class="cname">${esc(c.name)}</div><div class="cstate">${esc(c.state)}</div></div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
+      ${ROUNDS.map(r=>rankCell(e,r,R)).join("")}
+      <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
+    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${r}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
+    cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / yr</i>${feeText(c)}</span></div>
       <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[F.cat])}${F.pwd==="yes"?" (PwD)":""}</div>
       <div class="mc-cats" style="grid-template-columns:repeat(3,1fr)">${rounds}</div>
-      <button type="button" class="view-btn" data-i="${i}">${IC.eye}View Details</button></article>`;
-  }).join("");
+      <a class="view-btn" href="${url}">${IC.eye}View Details</a></article>`);
+  });
+  $("body").innerHTML=html.join("");
+  $("cards").innerHTML=cards.join("");
   $("cardsEmpty").style.display=VIEW.length?"none":"block";
-  updateFilterCount();
+  updateFilterCount(); saveState();
 }
 
 function updateFilterCount(){
-  const n=(F.course?1:0)+(F.state.size?1:0)+(F.cat!=="OPEN"?1:0)+(F.pwd==="yes"?1:0);
+  const n=(F.course?1:0)+(F.state.size?1:0)+(F.city.size?1:0)+(F.cat!=="OPEN"?1:0)+(F.pwd==="yes"?1:0)+(F.fee!=="any"?1:0)+(F.show!=="all"?1:0);
   const open=document.querySelector(".filters").classList.contains("open");
   $("filterToggle").innerHTML=(open?"Hide filters":"More filters")+(n?` <span class="fc">${n}</span>`:"");
 }
 
-/* ---------- details: every category, every round, regular and PwD ---------- */
-function openDetails(c){
-  const order=CATS.map(x=>x[0]).filter(k=>c.cats[k]);
-  const rows=order.map(k=>{
-    const e=c.cats[k];
-    const cells=ROUNDS.map(r=>{
-      const rd=e[r]||{}, a=rd.AIR, p=rd.AIR_PWD;
-      return `<td data-label="${r} · closing AIR" class="rank-cell${a==null?" none":""}">${a==null?"—":"<b>"+fmt(a)+"</b>"}${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>
-              <td data-label="${r} · PwD AIR" class="rank-cell${p==null?" none":""}">${p==null?"—":"<b>"+fmt(p)+"</b>"}</td>`;
-    }).join("");
-    return `<tr><td style="font-weight:700">${esc(CAT_LABEL[k])}</td>${cells}</tr>`;
-  }).join("");
-  $("modalBody").innerHTML=`<h2>${esc(c.name)}</h2>
-    <div class="meta"><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span><span><b>${esc(c.state)}</b></span><span>Course: <b>${esc(c.course)}</b></span><span>Est. <b>${c.est||"–"}</b></span><span>Fees / yr <b>${feeText(c)}</b></span><span>MCC code <b>${esc(c.code)}</b></span></div>
-    <div style="overflow:auto"><table class="mt-cut"><thead><tr><th rowspan="2">Category</th>${ROUNDS.map(r=>`<th class="num" colspan="2">${r}</th>`).join("")}</tr>
-      <tr>${ROUNDS.map(()=>'<th class="num">Closing AIR</th><th class="num">PwD AIR</th>').join("")}</tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="modal-note">Closing All India Rank = last candidate allotted in that round (fresh and upgraded allotments only; retained seats are ignored). A dash means nobody was allotted.</p>`;
-  $("modal").hidden=false;
+/* ---------- filters live in the link, so Back from a college page and shared links keep them ---------- */
+function saveState(){
+  const p=new URLSearchParams();
+  if(F.type.size) p.set("t",[...F.type].join("|"));
+  if(F.state.size) p.set("s",[...F.state].join("|"));
+  if(F.city.size) p.set("ci",[...F.city].join("|"));
+  if(F.course) p.set("co",F.course);
+  if(F.cat!==DEFAULTS.cat) p.set("ca",F.cat);
+  if(F.pwd!==DEFAULTS.pwd) p.set("pw",F.pwd);
+  if(F.fee!==DEFAULTS.fee) p.set("fee",F.fee);
+  if(F.show!==DEFAULTS.show) p.set("sh",F.show);
+  const q=$("search").value.trim(); if(q) p.set("q",q);
+  const R=myRank(); if(R) p.set("rk",R);
+  const so=sortKey+":"+(sortAsc?1:0); if(so!=="rl:1") p.set("so",so);
+  const s=p.toString();
+  try{history.replaceState(null,"",location.pathname+(s?"?"+s:""));}catch(e){}
 }
-$("modalX").onclick=()=>{$("modal").hidden=true;};
-$("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("modal").hidden=true;});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").hidden=true;});
-$("body").addEventListener("click",e=>{const b=e.target.closest(".view-btn");if(b)openDetails(VIEW[+b.dataset.i]);});
-
-$("download").onclick=()=>{
-  const head=["#","College","State","Type","Course","Est. year","Fees / yr","Category",...ROUNDS.map(r=>r+" closing AIR"),...ROUNDS.map(r=>r+" seats")];
-  const lines=[head].concat(VIEW.map((c,i)=>{const e=c.cats[F.cat]||{};return [i+1,c.name,c.state,c.type,c.course,c.est||"",c.fees||"",CAT_LABEL[F.cat]+(F.pwd==="yes"?" (PwD)":""),...ROUNDS.map(r=>rankOf(e[r])??""),...ROUNDS.map(r=>(e[r]&&e[r].Intake)||"")];}));
-  const csv="﻿"+lines.map(l=>l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  a.download=`mcc-cutoff-2026-${F.cat.toLowerCase()}${F.pwd==="yes"?"-pwd":""}.csv`;document.body.appendChild(a);a.click();a.remove();
-};
+function loadState(){
+  const p=new URLSearchParams(location.search), set=k=>new Set((p.get(k)||"").split("|").filter(Boolean));
+  F.type=set("t"); F.state=set("s"); F.city=set("ci");
+  F.course=["MBBS","BDS"].includes(p.get("co"))?p.get("co"):"";
+  F.cat=CAT_LABEL[p.get("ca")]?p.get("ca"):"OPEN";
+  F.pwd=p.get("pw")==="yes"?"yes":"no";
+  F.fee=FEES.some(x=>x[0]===p.get("fee"))?p.get("fee"):"any";
+  F.show=p.get("sh")==="reach"?"reach":"all";
+  $("search").value=p.get("q")||""; $("rank").value=p.get("rk")||"";
+  const so=(p.get("so")||"rl:1").split(":"); sortKey=so[0]||"rl"; sortAsc=so[1]!=="0";
+  if(![...$("mSort").options].some(o=>o.value===sortKey+":"+(sortAsc?1:0))) $("mSort").value="rl:1"; else $("mSort").value=sortKey+":"+(sortAsc?1:0);
+}
 
 /* ---------- controls ---------- */
 const MS={};
@@ -510,7 +561,7 @@ function msInit(id,key,allLabel,optionsFn,onChange){
     const q=search.value.trim().toLowerCase(), opts=optionsFn().filter(o=>o.toLowerCase().includes(q));
     list.innerHTML=opts.length?opts.map(o=>`<label><input type="checkbox" value="${esc(o)}"${F[key].has(o)?" checked":""}>${esc(o)}</label>`).join(""):'<div class="ms-empty">No matches</div>';
   };
-  MS[id]={refresh:()=>{label();draw();}};
+  MS[id]={refresh:(prune)=>{ if(prune){const ok=new Set(optionsFn());[...F[key]].forEach(v=>{if(!ok.has(v))F[key].delete(v);});} label();draw(); }};
   btn.onclick=()=>{const open=panel.hidden;document.querySelectorAll(".ms-panel").forEach(x=>x.hidden=true);panel.hidden=!open;if(open){search.value="";draw();search.focus();}};
   list.onchange=e=>{const v=e.target.value;e.target.checked?F[key].add(v):F[key].delete(v);label();if(onChange)onChange();render();};
   search.oninput=draw;
@@ -529,7 +580,7 @@ function seg(id,items,key){
 function typeBar(counts){
   const el=$("fType");
   const draw=()=>{
-    const items=[["","All types",COLLEGES.length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t==="Government"?"Government":t,counts[t],TYPE_ICON[t]])];
+    const items=[["","All types",COLLEGES.length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
     el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#5b21b6"}">${IC[ic]}${esc(l)}<span class="count">${n}</span></button>`).join("");
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});
   };
@@ -550,13 +601,16 @@ function buildUI(){
   typeBar(counts);
   seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
   seg("fCat",CATS,"cat");
+  seg("fFee",FEES,"fee");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
-  msInit("fState","state","All states / UTs",()=>[...states].sort());
+  seg("fShow",[["all","All colleges"],["reach","Within my reach"]],"show");
+  msInit("fState","state","All states / UTs",()=>[...states].sort(),()=>MS.fCity&&MS.fCity.refresh(true));
+  msInit("fCity","city","All cities",()=>[...new Set(COLLEGES.filter(c=>!F.state.size||F.state.has(c.state)).map(c=>c.city).filter(Boolean))].sort());
 }
 
 function reset(){
-  Object.assign(F,{type:new Set(),state:new Set(),course:"",cat:"OPEN",pwd:"no"});
-  $("search").value=""; sortKey="r1"; sortAsc=true; $("mSort").value="r1:1";
+  Object.assign(F,{...DEFAULTS,type:new Set(),state:new Set(),city:new Set()});
+  $("search").value=""; $("rank").value=""; sortKey="rl"; sortAsc=true; $("mSort").value="rl:1";
   document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));
   buildUI(); render();
 }
@@ -564,32 +618,44 @@ function reset(){
 async function init(){
   $("body").innerHTML='<tr><td colspan="9" class="empty">Loading cutoffs…</td></tr>';
   try{
-    const files=await Promise.all(ITYPES.map(async t=>{const r=await fetch(`/data/cutoffs/MCC/2026/${t}/all.json`);if(!r.ok)throw new Error(t);return r.json();}));
+    const [index,...files]=await Promise.all([
+      fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({})),
+      ...ITYPES.map(async t=>{const r=await fetch(`/data/cutoffs/MCC/2026/${t}/all.json`);if(!r.ok)throw new Error(t);return r.json();})]);
     const map=new Map();
     files.forEach(f=>{
       const [prefix,course]=f.institution_type.split("_");
       Object.entries(f.categories).forEach(([cat,list])=>list.forEach(c=>{
         const key=f.institution_type+"|"+c.code;
         let o=map.get(key);
-        if(!o){o={code:c.code,name:c.name,state:normState(c.state),est:c.establishment,fees:c.fees,type:TYPE_OF[prefix],course,cats:{}};map.set(key,o);}
+        if(!o){o={code:c.code,name:c.name,state:normState(c.state),city:(index[c.code]||{}).city||"",est:c.establishment,fees:c.fees,type:TYPE_OF[prefix],course,itype:f.institution_type,cats:{}};map.set(key,o);}
         o.cats[normCat(cat)]=c.rounds;
-        if(normCat(cat)==="NRI1"&&c.fees!=null) o.nriFee=c.fees;
+        if(typeof c.fees==="string"&&c.fees.trim().startsWith("$")) o.nriFee=c.fees; else if(c.fees!=null&&!feeNum(o)&&String(c.fees).replace(/\D/g,"")) o.fees=c.fees;
       }));
     });
-    COLLEGES=[...map.values()].filter(c=>Object.keys(c.cats).some(k=>hasData(c,k)||ROUNDS.some(r=>c.cats[k][r]&&(c.cats[k][r].AIR!=null||c.cats[k][r].AIR_PWD!=null))));
+    COLLEGES=[...map.values()].filter(c=>Object.values(c.cats).some(e=>ROUNDS.some(r=>e[r]&&(e[r].AIR!=null||e[r].AIR_PWD!=null))));
   }catch(e){$("body").innerHTML='<tr><td colspan="9" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
-  reset();
+  loadState(); buildUI(); render();
 }
 
-
-$("filterToggle").onclick=()=>{document.querySelector(".filters").classList.toggle("open");updateFilterCount();};
-$("mSort").onchange=e=>{const [k,a]=e.target.value.split(":");sortKey=k;sortAsc=a==="1";render();};
-$("cards").addEventListener("click",e=>{const b=e.target.closest(".view-btn");if(b)openDetails(VIEW[+b.dataset.i]);});
 $("search").addEventListener("input",render);
+$("rank").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);render();});
 $("reset").onclick=reset;
+$("filterToggle").onclick=()=>{document.querySelector(".filters").classList.toggle("open");updateFilterCount();};
+$("mSort").onchange=e=>{const [k,a]=e.target.value.split(":");sortKey=k;sortAsc=a==="1";document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));render();};
 document.querySelectorAll("thead th[data-key]").forEach(th=>th.onclick=()=>{
   const k=th.dataset.key;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true;}
-  document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));th.classList.add("sorted");if(sortAsc)th.classList.add("asc");render();});
+  document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));th.classList.add("sorted");if(sortAsc)th.classList.add("asc");
+  const opt=k+":"+(sortAsc?1:0);if([...$("mSort").options].some(o=>o.value===opt))$("mSort").value=opt;render();});
+
+$("download").onclick=()=>{
+  const R=myRank();
+  const head=["#","College","State","City","Type","Course","Est. year","Fees / yr","Category",...ROUNDS.map(r=>r+" closing AIR"),...ROUNDS.map(r=>r+" seats"),...(R?["Chance for AIR "+R]:[])];
+  const lines=[head].concat(VIEW.map((c,i)=>{const e=c.cats[F.cat]||{};const l=latest(c);const ch=R&&l?chance(R,l.v):null;
+    return [i+1,c.name,c.state,c.city,c.type,c.course,c.est||"",c.fees||"",CAT_LABEL[F.cat]+(F.pwd==="yes"?" (PwD)":""),...ROUNDS.map(r=>rankOf(e[r])??""),...ROUNDS.map(r=>(e[r]&&e[r].Intake)||""),...(R?[ch?CH_LABEL[ch]:""]:[])];}));
+  const csv="﻿"+lines.map(l=>l.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  a.download=`mcc-cutoff-2026-${F.cat.toLowerCase()}${F.pwd==="yes"?"-pwd":""}.csv`;document.body.appendChild(a);a.click();a.remove();
+};
 init();
 </script>
 </body>

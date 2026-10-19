@@ -509,6 +509,8 @@ function updateFilterCount(){
 }
 
 /* ---------- details modal: every quota row of one college, regular and PwD ---------- */
+const TYPE_PREFIX={Government:"GOVT",Deemed:"DEEMED",AIIMS:"AIIMS",JIPMER:"JIPMER","Central University":"CENTRAL"};
+const collegeUrl=r=>`/mcc-college.html?c=${encodeURIComponent(r.code)}&t=${TYPE_PREFIX[r.type]||"GOVT"}_${r.course}`;
 function openDetails(r){
   const same=ROWS.filter(x=>x.code===r.code&&x.course===r.course&&(x.gender||"")===(r.gender||""));
   const sum=(o)=>CATS.reduce((s,c)=>s+o[c],0);
@@ -525,6 +527,7 @@ function openDetails(r){
   $("modalBody").innerHTML=`<h2>${esc(r.name)}</h2>
     <div class="meta">${typeChip(r.type)}<span><b>${esc(r.state)}</b>${r.city?" · "+esc(r.city):""}</span><span>Course: <b>${esc(r.course)}</b></span><span>Est. <b>${r.est||"–"}</b></span><span>MCC code <b>${esc(r.code)}</b></span><span>${ROUND_LABEL[ROUND]}</span>${r.feeNRI?`<span>NRI fee <b>${esc(r.feeNRI)}</b></span>`:""}</div>
     <div style="overflow:auto"><table class="mt-seat"><thead><tr><th>Quota</th><th style="text-align:right">Fees / yr</th><th class="num">Gen / UR</th><th class="num">OBC</th><th class="num">EWS</th><th class="num">SC</th><th class="num">ST</th><th class="num nri">NRI seats</th><th>PwD seats</th><th class="num">Total</th></tr></thead><tbody>${lines}</tbody></table></div>
+    <p style="margin:14px 0 0"><a class="view-btn" style="padding:11px 18px" href="${collegeUrl(r)}">Open full college page: cutoff, seats and fees</a></p>
     <p class="modal-note">Seats in this ${ROUND_LABEL[ROUND]} list. Regular seats are shown by category; PwD seats are listed separately with their category.</p>`;
   $("modal").hidden=false;
 }
