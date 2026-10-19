@@ -144,7 +144,7 @@
         <th class="num" data-key="est">Est.</th>
         <th data-key="course">Course</th>
         <th data-key="quota">Quota</th>
-        <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS only)">Fees / yr</th>
+        <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS and BDS)">Fees / yr</th>
         <th class="num cat" data-key="UR">General<br>/ UR</th>
         <th class="num cat" data-key="OBC">OBC</th>
         <th class="num cat" data-key="EWS">EWS</th>
@@ -160,7 +160,7 @@
 
   <footer>
     <b>How to read:</b> each row is one college + quota + course. Category columns show the number of seats open in that category (– means none). PwBD seats are shown separately with their category.<br>
-    Fees: annual fee as per ASMI fee list, MBBS only (BDS fees to be added). NRI-quota rows show the USD fee. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section.<br>
+    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. B.Sc Nursing fees not included. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section.<br>
     Source: official MCC seat matrix / clear-vacancy lists for UG Counselling 2026.
   </footer>
 </div>
@@ -191,7 +191,7 @@ function pivot(data){
     if(!r){
       r={name:d.collegeName,state:d.state,type:d.type,code:d.code,est:d.establishment,course:d.branch.replace(/\s*\(.*\)/,""),
          quota:d.quota,gender:d.gender,city:d.city,added:false,UR:0,OBC:0,EWS:0,SC:0,ST:0,pwdMap:{},pwd:0,total:0,
-         fee:(d.feeNRI&&/NRI|Non-Resident/i.test(d.quota))?d.feeNRI:d.fee};
+         fee:/NRI|Non-Resident/i.test(d.quota)?(d.feeNRI||null):d.fee};
       map.set(key,r);
     }
     const [c,k]=d.category.split(" "), cat=CAT_OF[c];
