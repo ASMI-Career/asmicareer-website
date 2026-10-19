@@ -2,7 +2,7 @@
 
 Usage: python3 scripts/build_mcc_seat_matrix.py <input_dir> [output_dir]
   input_dir must contain: round_1.xlsx, ROUND_2_CLEAR_VACANCY.xlsx,
-  ROUND_3_CLEAR_VACANCY.pdf, STRAY_ROUND.pdf
+  ROUND_3_CLEAR_VACANCY.pdf, STRAY_ROUND.pdf, AIQ_MBBS.xlsx (ASMI MBBS name/fee list)
 Every parsed round is checked against the grand total printed in the source file.
 """
 import json, re, sys, os, glob
@@ -63,6 +63,20 @@ def raw_pdf(path):
                         rows.append(r)
     return rows, total
 
+def load_mbbs_master(path):
+    """ASMI MBBS list: code -> official name, establishment year, annual fee (and NRI fee for deemed)."""
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    num = lambda v: int(re.sub(r'\D', '', str(v))) if re.search(r'\d', str(v)) else None
+    master = {}
+    for ws in wb:
+        if ws.title == 'DEEMED MBBS NRI': continue
+        for r in list(ws.iter_rows(values_only=True))[2:]:
+            if r[1]:
+                master[str(r[1]).strip()] = dict(name=clean(r[2]), est=r[4], fee=num(r[5]), nri=None)
+    for r in list(wb['DEEMED MBBS NRI'].iter_rows(values_only=True))[2:]:
+        if r[1] and clean(r[5]).startswith('$'): master[str(r[1]).strip()]['nri'] = clean(r[5])
+    return master
+
 def code(inst):
     m = re.search(r'\((\d{5,6})\)\s*$', inst); return m.group(1) if m else None
 
@@ -102,6 +116,15 @@ for rows in (r1, r2, r3, rs):
 
 rounds = {'round1': (convert(r1, names, True), t1), 'round2': (convert(r2, names), t2),
           'round3': (convert(r3, names), t3), 'stray': (convert(rs, names), ts)}
+
+# MBBS rows: official name, establishment year and fees from the ASMI MBBS list
+mbbs = load_mbbs_master(f'{SRC}/AIQ_MBBS.xlsx')
+for rows, _ in rounds.values():
+    for x in rows:
+        x.update(establishment=None, fee=None, feeNRI=None)
+        if x['branch'].startswith('MBBS'):
+            m = mbbs[x['code']]  # KeyError = a college missing from the ASMI list; fix the list, don't guess
+            x.update(collegeName=m['name'], city='', establishment=m['est'], fee=m['fee'], feeNRI=m['nri'])
 
 # Round 2 addendum
 by_code = {x['code']: x for k in ('round3', 'stray') for x in rounds[k][0]}

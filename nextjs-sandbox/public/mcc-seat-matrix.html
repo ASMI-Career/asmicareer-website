@@ -263,6 +263,7 @@
           <th data-key="quota">Quota</th>
           <th data-key="branch">Course</th>
           <th data-key="categoryFull">Category</th>
+          <th data-key="fee" style="text-align:right;" title="Annual fee as per ASMI fee list (MBBS only)">Fees / yr</th>
           <th data-key="seats" style="text-align:right;">Seats</th>
         </tr>
       </thead>
@@ -272,6 +273,7 @@
   </div>
 
   <footer>
+    <span>Fees: annual fee as per ASMI fee list, MBBS only (BDS fees to be added). NRI-quota seats show the USD fee where available.</span>
     <span>Category codes: <b>OP</b>=General/UR · <b>BC</b>=OBC · <b>SC</b>=Scheduled Caste · <b>ST</b>=Scheduled Tribe · <b>EW</b>=EWS · PwBD=Persons with Benchmark Disability</span>
     <span>Built for ASMI Career counselling use</span>
   </footer>
@@ -404,6 +406,12 @@ function getFiltered(){
   });
 }
 
+function feeText(d){
+  if(d.feeNRI && /NRI|Non-Resident/i.test(d.quota)) return esc(d.feeNRI);
+  if(d.fee) return "₹" + d.fee.toLocaleString("en-IN");
+  return '<span style="color:var(--slate);font-weight:500">—</span>';
+}
+
 function renderTable(rows){
   const body = document.getElementById("tableBody");
   const empty = document.getElementById("emptyState");
@@ -419,6 +427,7 @@ function renderTable(rows){
 
   const sorted = [...rows].sort((a,b)=>{
     let av=a[sortKey], bv=b[sortKey];
+    if(sortKey==="fee"){ av = av||0; bv = bv||0; }
     if(typeof av === "number"){ return sortAsc ? av-bv : bv-av; }
     av = String(av).toLowerCase(); bv = String(bv).toLowerCase();
     if(av<bv) return sortAsc?-1:1;
@@ -434,10 +443,11 @@ function renderTable(rows){
     tr.innerHTML = `
       <td class="state-cell">${esc(d.state)}</td>
       <td><span class="type-chip" style="background:${c}">${d.type}</span></td>
-      <td class="inst-cell">${esc(d.collegeName)}${d.added ? '<span class="new-flag">ADDED</span>' : ''}<br><span style="color:var(--slate);font-weight:500;font-size:0.82rem;">${d.city ? esc(d.city) + ' · ' : ''}MCC code ${esc(d.code || '')}</span></td>
+      <td class="inst-cell">${esc(d.collegeName)}${d.added ? '<span class="new-flag">ADDED</span>' : ''}<br><span style="color:var(--slate);font-weight:500;font-size:0.82rem;">${d.city ? esc(d.city) + ' · ' : ''}${d.establishment ? 'Est. ' + d.establishment + ' · ' : ''}MCC code ${esc(d.code || '')}</span></td>
       <td>${esc(d.quota)}</td>
       <td>${esc(d.branch)}</td>
       <td class="cat-cell">${d.categoryFull}${isPwd ? '<span class="pwd-flag">PwBD</span>' : ''}${d.gender === 'Female Only' ? '<span class="pwd-flag" style="background:#fbe4ee;color:#8a1c4a">Female only</span>' : ''}</td>
+      <td class="seats-cell fee-cell">${feeText(d)}</td>
       <td class="seats-cell">${d.seats}</td>
     `;
     frag.appendChild(tr);
@@ -494,7 +504,7 @@ function initFilters(){
 async function loadRound(id){
   const body = document.getElementById("tableBody");
   document.getElementById("dataTable").style.display = "table";
-  body.innerHTML = '<tr><td colspan="7" class="loading">Loading seat matrix…</td></tr>';
+  body.innerHTML = '<tr><td colspan="8" class="loading">Loading seat matrix…</td></tr>';
   try {
     if(!ROUNDS[id]){
       const res = await fetch(`/data/seat-matrix/MCC/2026/${id}.json`);
@@ -502,7 +512,7 @@ async function loadRound(id){
       ROUNDS[id] = await res.json();
     }
   } catch(e){
-    body.innerHTML = '<tr><td colspan="7" class="loading">Could not load this round. Please refresh and try again.</td></tr>';
+    body.innerHTML = '<tr><td colspan="8" class="loading">Could not load this round. Please refresh and try again.</td></tr>';
     return;
   }
   SEAT_DATA = ROUNDS[id];
