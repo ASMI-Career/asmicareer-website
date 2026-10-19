@@ -26,7 +26,6 @@ NAME_FIX = {'904771': ('Bagalkote Medical College and Research Institute', 'Baga
             '200329': ('K M Shah Dental College', 'Vadodara'),
             '200494': ('Government Dental College Kannur', 'Kannur'),
             '200470': ('NAMO Medical Education & Research Institute', 'Silvassa'),
-            '200541': ('Ahilya Bai College of Nursing', ''),
             '200293': ('Dr. Bhimrao Ramji Ambedkar Government Medical College', ''),
             '200540': ('Sri Lalithambigai Medical College and Hospital', ''),
             '200503': ('AIIMS Bhopal', 'Bhopal'),
@@ -117,14 +116,20 @@ for rows in (r1, r2, r3, rs):
 rounds = {'round1': (convert(r1, names, True), t1), 'round2': (convert(r2, names), t2),
           'round3': (convert(r3, names), t3), 'stray': (convert(rs, names), ts)}
 
-# MBBS and BDS rows: name, establishment year and fees from the ASMI lists
+# B.Sc Nursing is not part of this product: drop it, remembering its seats so totals still reconcile
+nursing_seats = {}
+for k, (rows, total) in list(rounds.items()):
+    nursing_seats[k] = sum(x['seats'] for x in rows if x['branch'].startswith('B.Sc'))
+    rounds[k] = ([x for x in rows if not x['branch'].startswith('B.Sc')], total)
+
+# Name, establishment year and fees from the ASMI MBBS / BDS lists
 master = {'MBBS': load_master(f'{SRC}/AIQ_MBBS.xlsx', 'DEEMED MBBS NRI'),
           'BDS': load_master(f'{SRC}/BDS.xlsx', 'DEEMED NRI')}
 for rows, _ in rounds.values():
     for x in rows:
         x.update(establishment=None, fee=None, feeNRI=None)
         course = x['branch'].split()[0]
-        if course in master:  # B.Sc Nursing is deliberately left as MCC gave it
+        if course in master:
             m = master[course][x['code']]  # KeyError = a college missing from the ASMI list; fix the list, don't guess
             x.update(collegeName=m['name'], city='', establishment=m['est'], fee=m['fee'], feeNRI=m['nri'])
 
@@ -141,15 +146,15 @@ for c, cats in R2_ADDED.items():
 assert added == 30
 
 os.makedirs(OUT, exist_ok=True)
-META = {'round1': ('Round 1', 'Seat Matrix for Round 1 NEET UG MBBS BDS & BSc Nursing'),
+META = {'round1': ('Round 1', 'Seat Matrix for Round 1 NEET UG MBBS BDS'),
         'round2': ('Round 2', 'Clear Vacancy Round 2 + 30 seats added by MCC Notice 19 (05.09.2026)'),
         'round3': ('Round 3', 'Clear Vacancy Round 3'), 'stray': ('Stray Vacancy', 'Clear Vacancy Stray Vacancy Round')}
 index = []
 for k, (rows, total) in rounds.items():
     seats = sum(x['seats'] for x in rows)
-    expect = total + (30 if k == 'round2' else 0)
+    expect = total - nursing_seats[k] + (30 if k == 'round2' else 0)
     assert seats == expect, f'{k}: parsed {seats} != source total {expect}'
     json.dump(rows, open(f'{OUT}/{k}.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
     index.append(dict(id=k, label=META[k][0], source=META[k][1], rows=len(rows), seats=seats))
-    print(f'{k}: {len(rows)} rows, {seats} seats (source total {total}{" + 30 added" if k=="round2" else ""}) OK')
+    print(f'{k}: {len(rows)} rows, {seats} seats (source total {total} - {nursing_seats[k]} nursing{" + 30 added" if k=="round2" else ""}) OK')
 json.dump(dict(counselling='MCC', year=2026, rounds=index), open(f'{OUT}/index.json', 'w'), indent=1)

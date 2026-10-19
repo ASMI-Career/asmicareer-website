@@ -9,7 +9,7 @@
   :root{
     --purple:#6a0dad; --purple-dark:#1a0040; --gold:#ffd700;
     --bg:#f5f3fa; --card:#fff; --line:#e8e3f1; --ink:#1d1530; --muted:#6c6483; --faint:#b9b3c8;
-    --gov:#1f8a5f; --deemed:#c99a00; --aiims:#6a0dad; --jipmer:#c23b6b; --cu:#2266a8; --esi:#665a7a; --nursing:#178a8a;
+    --gov:#1f8a5f; --deemed:#c99a00; --aiims:#6a0dad; --jipmer:#c23b6b; --cu:#2266a8; --esi:#665a7a;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -99,7 +99,7 @@
     <img src="/asmi-logo.png" alt="ASMI Career">
     <div>
       <h1>All India Quota <span>Seat Matrix 2026</span></h1>
-      <p class="sub">MCC NEET UG · MBBS, BDS &amp; B.Sc Nursing · seats by category, round by round</p>
+      <p class="sub">MCC NEET UG · MBBS &amp; BDS · seats by category, round by round</p>
     </div>
   </div>
 </header>
@@ -160,23 +160,23 @@
 
   <footer>
     <b>How to read:</b> each row is one college + quota + course. Category columns show the number of seats open in that category (– means none). PwBD seats are shown separately with their category.<br>
-    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. B.Sc Nursing fees not included. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section.<br>
+    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section.<br>
     Source: official MCC seat matrix / clear-vacancy lists for UG Counselling 2026.
   </footer>
 </div>
 
 <script>
-const TYPE_COLORS={"Government":"#1f8a5f","Deemed":"#c99a00","AIIMS":"#6a0dad","JIPMER":"#c23b6b","Central University":"#2266a8","ESI":"#665a7a","B.Sc Nursing":"#178a8a"};
-const TYPE_ORDER=["Government","Deemed","AIIMS","JIPMER","Central University","ESI","B.Sc Nursing"];
+const TYPE_COLORS={"Government":"#1f8a5f","Deemed":"#c99a00","AIIMS":"#6a0dad","JIPMER":"#c23b6b","Central University":"#2266a8","ESI":"#665a7a"};
+const TYPE_ORDER=["Government","Deemed","AIIMS","JIPMER","Central University","ESI"];
 const POPULAR=["Maharashtra","Karnataka","Tamil Nadu","Delhi","Uttar Pradesh","Telangana","Gujarat","Rajasthan"];
 const CATS=["UR","OBC","EWS","SC","ST"];
 const CAT_OF={OP:"UR",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
 const PWD_LABEL={UR:"UR",OBC:"OBC",EWS:"EWS",SC:"SC",ST:"ST"};
 const ROUND_NOTE={
-  round1:"Source: MCC Seat Matrix for Round 1 NEET UG (MBBS · BDS · B.Sc Nursing).",
+  round1:"Source: MCC Seat Matrix for Round 1 NEET UG (MBBS · BDS).",
   round2:"Source: MCC Clear Vacancy Round 2 + 30 seats added later via MCC Notice 19 (05.09.2026).",
-  round3:"Source: MCC Clear Vacancy Round 3 (MBBS · BDS · B.Sc Nursing).",
-  stray:"Source: MCC Clear Vacancy Stray Vacancy Round (MBBS · BDS · B.Sc Nursing)."};
+  round3:"Source: MCC Clear Vacancy Round 3 (MBBS · BDS).",
+  stray:"Source: MCC Clear Vacancy Stray Vacancy Round (MBBS · BDS)."};
 const RAW={};
 let ROWS=[], activeType="", sortKey="state", sortAsc=true;
 const $=id=>document.getElementById(id);
@@ -262,8 +262,8 @@ function build(){
   // stats from pivoted rows
   const seats=f=>ROWS.filter(f).reduce((s,r)=>s+r.total,0);
   const colleges=new Set(ROWS.map(r=>r.code)).size, states=new Set(ROWS.map(r=>r.state)).size;
-  const mbbs=seats(r=>r.course==="MBBS"), bds=seats(r=>r.course==="BDS"), nur=seats(r=>r.course.startsWith("B.Sc"));
-  $("stats").innerHTML=[[seats(()=>true),"Total seats"],[colleges,"Colleges · "+states+" states/UTs"],[mbbs,"MBBS seats"],[bds,"BDS seats"],[nur,"Nursing seats"]]
+  const mbbs=seats(r=>r.course==="MBBS"), bds=seats(r=>r.course==="BDS");
+  $("stats").innerHTML=[[seats(()=>true),"Total seats"],[colleges,"Colleges · "+states+" states/UTs"],[mbbs,"MBBS seats"],[bds,"BDS seats"]]
     .map(([n,l])=>`<div class="stat"><b>${n.toLocaleString()}</b><span>${l}</span></div>`).join("");
   // type tabs
   const cnt={};ROWS.forEach(r=>cnt[r.type]=(cnt[r.type]||0)+1);
