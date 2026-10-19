@@ -248,7 +248,6 @@
       <thead><tr>
         <th class="idx nosort">#</th>
         <th class="college" data-key="name">College<small>Name and state</small></th>
-        <th data-key="type">Type</th>
         <th class="num" data-key="est">Est. year</th>
         <th data-key="course">Course</th>
         <th data-key="quota">Quota</th>
@@ -381,7 +380,6 @@ function render(){
     html.push(`<tr>
       <td class="idx">${i+1}</td>
       <td class="college"><div class="cname">${esc(r.name)}${r.added?'<span class="tag added">ADDED</span>':""}${r.gender==="Female Only"?'<span class="tag female">FEMALE ONLY</span>':""}</div><div class="cstate">${esc(r.state)}</div></td>
-      <td>${typeChip(r.type)}</td>
       <td class="est">${r.est||'<span class="none">–</span>'}</td>
       <td>${esc(r.course)}</td>
       <td class="quota">${esc(r.quota)}</td>
@@ -507,10 +505,10 @@ function resetFilters(){
 }
 
 async function loadRound(id){
-  $("body").innerHTML='<tr><td colspan="16" class="empty">Loading seat matrix…</td></tr>';$("tbl").style.display="table";$("empty").style.display="none";
+  $("body").innerHTML='<tr><td colspan="15" class="empty">Loading seat matrix…</td></tr>';$("tbl").style.display="table";$("empty").style.display="none";
   try{
     if(!RAW[id]){const res=await fetch(`/data/seat-matrix/MCC/2026/${id}.json`);if(!res.ok)throw 0;RAW[id]=pivot(await res.json());}
-  }catch(e){$("body").innerHTML='<tr><td colspan="16" class="empty">Could not load this round. Please refresh.</td></tr>';return;}
+  }catch(e){$("body").innerHTML='<tr><td colspan="15" class="empty">Could not load this round. Please refresh.</td></tr>';return;}
   ROUND=id;ROWS=RAW[id];
   document.querySelectorAll(".round-tab").forEach(b=>b.classList.toggle("active",b.dataset.round===id));
   $("roundNote").textContent="Source: "+ROUND_NOTE[id]+".";
