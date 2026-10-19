@@ -403,13 +403,14 @@ function openDetails(r){
   const same=ROWS.filter(x=>x.code===r.code&&x.course===r.course&&(x.gender||"")===(r.gender||""));
   const sum=(o)=>CATS.reduce((s,c)=>s+o[c],0);
   const lines=same.map(x=>{
-    const reg={},pw={};CATS.forEach(c=>{reg[c]=0;pw[c]=0;GROUPS.forEach(g=>{reg[c]+=x.g[g].nor[c];pw[c]+=x.g[g].pwd[c];});});
+    const REG=GROUPS.filter(g=>g!=="nri");   // NRI seats get their own column, so keep them out of the category columns
+    const reg={},pw={};CATS.forEach(c=>{reg[c]=0;pw[c]=0;REG.forEach(g=>{reg[c]+=x.g[g].nor[c];pw[c]+=x.g[g].pwd[c];});});
     const nri=sum(x.g.nri.nor)+sum(x.g.nri.pwd);
     return `<tr><td>${esc(x.quota)}</td><td style="text-align:right;font-weight:700">${feeText(x)}</td>
       ${CATS.map(c=>`<td class="n${reg[c]?"":" zero"}">${reg[c]||"–"}</td>`).join("")}
-      <td class="n nri${nri?"":" zero"}">${nri||"–"}</td>
+      <td class="n nri${nri?"":" zero"}">${nri?nri+(x.feeNRI?'<div style="font-size:.7rem;font-weight:600">'+esc(x.feeNRI)+'</div>':""):"–"}</td>
       <td class="n${sum(pw)?"":" zero"}">${sum(pw)?CATS.filter(c=>pw[c]).map(c=>c+" "+pw[c]).join(", "):"–"}</td>
-      <td class="total">${sum(reg)+sum(pw)}</td></tr>`;
+      <td class="total">${sum(reg)+sum(pw)+nri}</td></tr>`;
   }).join("");
   $("modalBody").innerHTML=`<h2>${esc(r.name)}</h2>
     <div class="meta">${typeChip(r.type)}<span><b>${esc(r.state)}</b>${r.city?" · "+esc(r.city):""}</span><span>Course: <b>${esc(r.course)}</b></span><span>Est. <b>${r.est||"–"}</b></span><span>MCC code <b>${esc(r.code)}</b></span><span>${ROUND_LABEL[ROUND]}</span>${r.feeNRI?`<span>NRI fee <b>${esc(r.feeNRI)}</b></span>`:""}</div>
