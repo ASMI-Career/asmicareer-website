@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCC NEET UG 2026 Seat Matrix | ASMI Career</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=JetBrains+Mono:wght@600&display=swap');
+
+  :root{
+    --navy-1:#1a0040;
+    --navy-2:#3d1170;
+    --navy-3:#6a0dad;
+    --gold:#ffd700;
+    --gold-deep:#e0b800;
+    --paper:#f6f4fb;
+    --panel:#ffffff;
+    --line:#e3dcf0;
+    --ink:#1a0040;
+    --slate:#665a7a;
+
+    --gov:#1f8a5f;
+    --deemed:#e0b800;
+    --aiims:#6a0dad;
+    --jipmer:#c23b6b;
+    --cu:#2266a8;
+    --esi:#665a7a;
+    --nursing:#178a8a;
+
+    --mono:'JetBrains Mono',Consolas,monospace;
+    --display:'Montserrat',system-ui,sans-serif;
+    --body:'Montserrat',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Hero */
+  .hero{
+    background:linear-gradient(115deg,var(--navy-1) 0%, var(--navy-2) 55%, var(--navy-3) 100%);
+    color:#fff;padding:44px 24px 90px;
+  }
+  .hero-inner{max-width:1360px;margin:0 auto;}
+  .brand-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+  .brand-logo{flex:none;height:64px;width:auto;}
+  .hero h1{
+    font-family:var(--display);font-weight:800;font-size:2.5rem;margin:0 0 10px;line-height:1.12;letter-spacing:-0.01em;
+  }
+  .hero h1 .accent{color:var(--gold);font-weight:800;}
+  .hero p{
+    margin:0;max-width:680px;color:#cfe0ee;font-size:1rem;line-height:1.55;
+  }
+
+  .app{max-width:1360px;margin:0 auto;padding:0 24px 60px;}
+
+  /* Stat strip — overlaps hero */
+  .stats{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:16px;
+    margin-top:-52px;margin-bottom:22px;position:relative;z-index:2;
+  }
+  .stat{
+    background:var(--panel);border-radius:14px;padding:18px 20px;
+    box-shadow:0 10px 30px rgba(13,43,69,0.14);
+  }
+  .stat .num{font-family:var(--display);font-size:1.7rem;font-weight:700;}
+  .stat:nth-child(1) .num{color:var(--navy-2);}
+  .stat:nth-child(2) .num{color:var(--gold-deep);}
+  .stat:nth-child(3) .num{color:var(--navy-2);}
+  .stat:nth-child(4) .num{color:var(--jipmer);}
+  .stat:nth-child(5) .num{color:var(--nursing);}
+  .stat .lbl{font-size:0.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--slate);font-weight:700;margin-top:3px;}
+  .stat .sub{font-size:0.76rem;color:#9aa7b3;margin-top:1px;}
+
+  /* Type tabs (pill toggle) */
+  .type-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .type-tab{
+    border:1.5px solid var(--line);background:var(--panel);
+    padding:9px 18px;font-size:0.87rem;cursor:pointer;color:var(--slate);font-weight:700;
+    border-radius:999px;transition:.15s;display:flex;align-items:center;gap:8px;
+  }
+  .type-tab .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .type-tab .count{font-family:var(--mono);font-size:0.72rem;opacity:.75;}
+  .type-tab.active{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
+  .type-tab:hover{border-color:var(--navy-2);}
+
+  /* Filter card */
+  .filters-card{
+    background:var(--panel);border-radius:16px;padding:20px;margin-bottom:16px;
+    box-shadow:0 4px 18px rgba(13,43,69,0.06);
+  }
+  .filters-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field label{font-size:0.71rem;text-transform:uppercase;letter-spacing:.04em;color:var(--slate);font-weight:700;}
+  .field select, .field input{
+    font-family:var(--body);font-size:0.9rem;font-weight:600;color:var(--ink);
+    padding:9px 12px;border:1.5px solid var(--line);background:#f8fafc;
+    min-width:160px;border-radius:10px;
+  }
+  .field select:focus, .field input:focus{outline:none;border-color:var(--navy-2);background:#fff;}
+  #searchBox{min-width:260px;flex:1;}
+  .reset-btn{
+    font-family:var(--body);font-size:0.85rem;font-weight:700;
+    background:none;border:none;color:var(--gold-deep);
+    cursor:pointer;align-self:center;padding:8px 4px;
+  }
+  .reset-btn:hover{text-decoration:underline;}
+
+  .quick-chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px dashed var(--line);padding-top:14px;}
+  .quick-chips .qc-label{font-size:0.78rem;color:var(--slate);font-weight:700;margin-right:2px;}
+  .chip{
+    border:1.5px solid var(--line);background:#f8fafc;color:var(--ink);
+    padding:6px 14px;border-radius:999px;font-size:0.82rem;font-weight:700;cursor:pointer;
+  }
+  .chip:hover, .chip.active{background:var(--navy-2);border-color:var(--navy-2);color:#fff;}
+
+  .result-line{
+    font-size:0.87rem;color:var(--slate);font-weight:600;
+    margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .result-line b{color:var(--navy-2);}
+  .sort-hint{font-size:0.78rem;color:#9aa7b3;font-weight:500;}
+
+  /* Table */
+  .table-wrap{
+    border-radius:16px;background:var(--panel);overflow-x:auto;
+    box-shadow:0 4px 18px rgba(13,43,69,0.06);
+  }
+  table{border-collapse:collapse;width:100%;min-width:940px;}
+  thead th{
+    position:sticky;top:0;background:var(--navy-1);color:#eef2f6;
+    text-align:left;font-size:0.71rem;text-transform:uppercase;letter-spacing:.05em;
+    padding:13px 14px;cursor:pointer;user-select:none;white-space:nowrap;z-index:2;font-weight:700;
+  }
+  thead th:first-child{border-top-left-radius:16px;}
+  thead th:last-child{border-top-right-radius:16px;}
+  thead th:hover{background:var(--navy-2);}
+  thead th.sorted::after{content:" ▾";color:var(--gold);}
+  thead th.sorted.asc::after{content:" ▴";color:var(--gold);}
+  tbody td{
+    padding:11px 14px;font-size:0.87rem;border-bottom:1px solid var(--line);vertical-align:top;
+  }
+  tbody tr:hover{background:#f4f8fb;}
+  td.inst-cell{max-width:340px;line-height:1.4;font-weight:600;}
+  td.state-cell{white-space:nowrap;font-weight:700;color:var(--navy-1);}
+  td.seats-cell{text-align:right;font-family:var(--mono);font-weight:700;color:var(--navy-2);white-space:nowrap;font-size:0.93rem;}
+  td.cat-cell{white-space:nowrap;}
+  .type-chip{
+    display:inline-block;font-size:0.72rem;padding:3px 10px;border-radius:999px;
+    font-weight:700;white-space:nowrap;color:#fff;
+  }
+  .pwd-flag{
+    display:inline-block;margin-left:6px;font-size:0.66rem;padding:2px 7px;border-radius:6px;
+    background:var(--gold);color:#3a2c05;font-weight:800;
+  }
+
+  .empty-state{padding:50px 20px;text-align:center;color:var(--slate);font-weight:600;}
+
+  footer{
+    margin-top:22px;font-size:0.8rem;color:var(--slate);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    background:var(--panel);border-radius:14px;padding:14px 18px;
+  }
+  footer b{color:var(--navy-2);}
+
+  @media (max-width:900px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:720px){
+    .hero{padding:32px 16px 70px;}
+    .hero h1{font-size:1.9rem;}
+    .app{padding:0 12px 40px;}
+    .stats{margin-top:-40px;}
+  }
+
+  .round-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px;}
+  .round-tab{border:2px solid var(--navy-3);background:var(--panel);color:var(--navy-3);padding:10px 22px;font-size:.92rem;font-weight:800;border-radius:12px;cursor:pointer;font-family:inherit;}
+  .round-tab.active{background:var(--navy-3);color:#fff;}
+  .round-note{font-size:.82rem;color:var(--slate);margin:0 0 16px;}
+  .new-flag{display:inline-block;margin-left:6px;font-size:.66rem;padding:2px 7px;border-radius:6px;background:#e6f6ee;color:#14663f;font-weight:800;}
+  .notice{background:#fff8d6;border:1px solid #f0dc7a;border-radius:12px;padding:12px 16px;margin:0 0 16px;font-size:.85rem;line-height:1.5;}
+  .loading{padding:40px;text-align:center;color:var(--slate);font-weight:600;}
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="brand-row"><img class="brand-logo" src="/asmi-logo.png" alt="ASMI Career"></div>
+      <h1>All India Quota <span class="accent">Seat Matrix 2026</span></h1>
+      <p>MBBS, BDS &amp; B.Sc Nursing seats released by MCC in each round, covering government colleges, central universities, AIIMS, JIPMER, ESI and deemed universities. Search by college, state, category and quota.</p>
+    </div>
+  </div>
+
+<div class="app">
+
+  <div class="stats" id="statsStrip"></div>
+
+  <div class="round-tabs">
+    <button class="round-tab" data-round="round1">Round 1</button>
+    <button class="round-tab" data-round="round2">Round 2</button>
+    <button class="round-tab" data-round="round3">Round 3</button>
+    <button class="round-tab" data-round="stray">Stray Vacancy</button>
+  </div>
+  <p class="round-note" id="roundNote"></p>
+  <div class="notice" id="round2Notice" style="display:none"><b>Round 2 includes 30 seats added after the main matrix</b> (MCC Notice 19, 05.09.2026): Bagalkote Medical College (15), Govt. Medical College Chapra (7) and Shri Ram Janki Medical College Samastipur (8). They are marked <span class="new-flag">ADDED</span>.</div>
+
+  <div class="type-tabs" id="typeTabs"></div>
+
+  <div class="filters-card">
+    <div class="filters-row">
+      <div class="field" style="flex:1;">
+        <label>Search</label>
+        <input type="text" id="searchBox" placeholder="Search college name or state...">
+      </div>
+      <div class="field">
+        <label>State</label>
+        <select id="stateFilter"><option value="">All States / UTs</option></select>
+      </div>
+      <div class="field">
+        <label>Quota</label>
+        <select id="quotaFilter"><option value="">All quotas</option></select>
+      </div>
+      <div class="field">
+        <label>Course</label>
+        <select id="branchFilter"><option value="">All courses</option></select>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="categoryFilter"><option value="">All categories</option></select>
+      </div>
+      <div class="field">
+        <label>PwBD</label>
+        <select id="pwdFilter">
+          <option value="">Include all</option>
+          <option value="pwd">PwBD only</option>
+          <option value="nopwd">Exclude PwBD</option>
+        </select>
+      </div>
+      <button class="reset-btn" id="resetBtn">Reset filters</button>
+    </div>
+    <div class="quick-chips" id="quickChips">
+      <span class="qc-label">Popular:</span>
+    </div>
+  </div>
+
+  <div class="result-line">
+    <span><b id="rowCount">0</b> rows · <b id="seatCount">0</b> seats matching filters</span>
+    <span class="sort-hint">Click a column header to sort</span>
+  </div>
+
+  <div class="table-wrap">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th data-key="state">State</th>
+          <th data-key="type">Institute Type</th>
+          <th data-key="collegeName">College</th>
+          <th data-key="quota">Quota</th>
+          <th data-key="branch">Course</th>
+          <th data-key="categoryFull">Category</th>
+          <th data-key="seats" style="text-align:right;">Seats</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none;">No rows match these filters. Try clearing one.</div>
+  </div>
+
+  <footer>
+    <span>Category codes: <b>OP</b>=General/UR · <b>BC</b>=OBC · <b>SC</b>=Scheduled Caste · <b>ST</b>=Scheduled Tribe · <b>EW</b>=EWS · PwBD=Persons with Benchmark Disability</span>
+    <span>Built for ASMI Career counselling use</span>
+  </footer>
+
+</div>
+
+<script>
+let SEAT_DATA = [];
+const ROUNDS = {};
+const TYPE_COLORS = {
+  "Government": "#1f8a5f",
+  "Deemed": "#e0b800",
+  "AIIMS": "#6a0dad",
+  "JIPMER": "#c23b6b",
+  "Central University": "#2266a8",
+  "ESI": "#665a7a",
+  "B.Sc Nursing": "#178a8a"
+};
+const TYPE_ORDER = ["Government","Deemed","AIIMS","JIPMER","Central University","ESI","B.Sc Nursing"];
+const POPULAR_STATES = ["Tamil Nadu","Maharashtra","Karnataka","Delhi","Uttar Pradesh","Telangana"];
+
+let activeType = "";
+let sortKey = "state";
+let sortAsc = true;
+
+function esc(v){ return String(v).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+function uniqueSorted(arr){ return [...new Set(arr)].sort(); }
+
+function populateSelect(id, values){
+  const sel = document.getElementById(id);
+  values.forEach(v=>{
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  });
+}
+
+function buildTypeTabs(){
+  const wrap = document.getElementById("typeTabs"); wrap.innerHTML = ""; activeType = "";
+  const counts = {};
+  SEAT_DATA.forEach(d => counts[d.type] = (counts[d.type]||0)+1);
+
+  const allTab = document.createElement("div");
+  allTab.className = "type-tab active";
+  allTab.dataset.type = "";
+  allTab.innerHTML = `<span class="dot" style="background:#fff"></span>All Institute Types <span class="count">${SEAT_DATA.length}</span>`;
+  allTab.onclick = () => { activeType=""; refresh(); highlightTab(""); };
+  wrap.appendChild(allTab);
+
+  TYPE_ORDER.forEach(t=>{
+    if(!counts[t]) return;
+    const tab = document.createElement("div");
+    tab.className = "type-tab";
+    tab.dataset.type = t;
+    tab.innerHTML = `<span class="dot" style="background:${TYPE_COLORS[t]}"></span>${t} <span class="count">${counts[t]}</span>`;
+    tab.onclick = () => { activeType = t; refresh(); highlightTab(t); };
+    wrap.appendChild(tab);
+  });
+}
+function highlightTab(t){
+  document.querySelectorAll(".type-tab").forEach(el=>{
+    el.classList.toggle("active", el.dataset.type === t);
+  });
+}
+
+function buildQuickChips(){
+  const wrap = document.getElementById("quickChips"); wrap.innerHTML = '<span class="qc-label">Popular:</span>';
+  const states = new Set(SEAT_DATA.map(d=>d.state));
+  POPULAR_STATES.filter(s=>states.has(s)).forEach(s=>{
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = s;
+    chip.onclick = () => {
+      const sel = document.getElementById("stateFilter");
+      const turningOn = sel.value !== s;
+      sel.value = turningOn ? s : "";
+      refresh();
+      document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", turningOn && c===chip));
+    };
+    wrap.appendChild(chip);
+  });
+}
+
+function buildStats(){
+  const strip = document.getElementById("statsStrip"); strip.innerHTML = "";
+  const totalSeats = SEAT_DATA.reduce((s,d)=>s+d.seats,0);
+  const colleges = new Set(SEAT_DATA.map(d=>d.institute)).size;
+  const states = new Set(SEAT_DATA.map(d=>d.state)).size;
+  const mbbsSeats = SEAT_DATA.filter(d=>d.branch.startsWith("MBBS")).reduce((s,d)=>s+d.seats,0);
+  const bdsSeats = SEAT_DATA.filter(d=>d.branch.startsWith("BDS")).reduce((s,d)=>s+d.seats,0);
+  const nursingSeats = SEAT_DATA.filter(d=>d.branch.startsWith("B.Sc")).reduce((s,d)=>s+d.seats,0);
+  const pwdSeats = SEAT_DATA.filter(d=>d.category.endsWith("PH")).reduce((s,d)=>s+d.seats,0);
+
+  const stats = [
+    [totalSeats.toLocaleString(), "Total Seats", ""],
+    [colleges.toLocaleString(), "Institutes", `Across ${states} states / UTs`],
+    [mbbsSeats.toLocaleString(), "MBBS Seats", ""],
+    [(bdsSeats+nursingSeats).toLocaleString(), "BDS + Nursing", `${bdsSeats} BDS · ${nursingSeats} Nursing`],
+    [pwdSeats.toLocaleString(), "PwBD Seats", "Across all categories"]
+  ];
+  stats.forEach(([num,lbl,sub])=>{
+    const div = document.createElement("div");
+    div.className = "stat";
+    div.innerHTML = `<div class="num">${num}</div><div class="lbl">${lbl}</div>${sub?`<div class="sub">${sub}</div>`:''}`;
+    strip.appendChild(div);
+  });
+}
+
+function getFiltered(){
+  const state = document.getElementById("stateFilter").value;
+  const quota = document.getElementById("quotaFilter").value;
+  const branch = document.getElementById("branchFilter").value;
+  const category = document.getElementById("categoryFilter").value;
+  const pwd = document.getElementById("pwdFilter").value;
+  const search = document.getElementById("searchBox").value.trim().toLowerCase();
+
+  return SEAT_DATA.filter(d=>{
+    if(activeType && d.type !== activeType) return false;
+    if(state && d.state !== state) return false;
+    if(quota && d.quota !== quota) return false;
+    if(branch && d.branch !== branch) return false;
+    if(category && d.categoryFull !== category) return false;
+    if(pwd === "pwd" && !d.category.endsWith("PH")) return false;
+    if(pwd === "nopwd" && d.category.endsWith("PH")) return false;
+    if(search){
+      const hay = (d.institute + " " + d.state + " " + d.type + " " + (d.code||"")).toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+}
+
+function renderTable(rows){
+  const body = document.getElementById("tableBody");
+  const empty = document.getElementById("emptyState");
+  body.innerHTML = "";
+
+  if(rows.length === 0){
+    empty.style.display = "block";
+    document.getElementById("dataTable").style.display = "none";
+  } else {
+    empty.style.display = "none";
+    document.getElementById("dataTable").style.display = "table";
+  }
+
+  const sorted = [...rows].sort((a,b)=>{
+    let av=a[sortKey], bv=b[sortKey];
+    if(typeof av === "number"){ return sortAsc ? av-bv : bv-av; }
+    av = String(av).toLowerCase(); bv = String(bv).toLowerCase();
+    if(av<bv) return sortAsc?-1:1;
+    if(av>bv) return sortAsc?1:-1;
+    return 0;
+  });
+
+  const frag = document.createDocumentFragment();
+  sorted.forEach(d=>{
+    const tr = document.createElement("tr");
+    const isPwd = d.category.endsWith("PH");
+    const c = TYPE_COLORS[d.type];
+    tr.innerHTML = `
+      <td class="state-cell">${esc(d.state)}</td>
+      <td><span class="type-chip" style="background:${c}">${d.type}</span></td>
+      <td class="inst-cell">${esc(d.collegeName)}${d.added ? '<span class="new-flag">ADDED</span>' : ''}<br><span style="color:var(--slate);font-weight:500;font-size:0.82rem;">${d.city ? esc(d.city) + ' · ' : ''}MCC code ${esc(d.code || '')}</span></td>
+      <td>${esc(d.quota)}</td>
+      <td>${esc(d.branch)}</td>
+      <td class="cat-cell">${d.categoryFull}${isPwd ? '<span class="pwd-flag">PwBD</span>' : ''}${d.gender === 'Female Only' ? '<span class="pwd-flag" style="background:#fbe4ee;color:#8a1c4a">Female only</span>' : ''}</td>
+      <td class="seats-cell">${d.seats}</td>
+    `;
+    frag.appendChild(tr);
+  });
+  body.appendChild(frag);
+}
+
+function refresh(){
+  const rows = getFiltered();
+  document.getElementById("rowCount").textContent = rows.length.toLocaleString();
+  document.getElementById("seatCount").textContent = rows.reduce((s,d)=>s+d.seats,0).toLocaleString();
+  renderTable(rows);
+}
+
+function fillFilters(){
+  ["stateFilter","quotaFilter","branchFilter","categoryFilter"].forEach(id=>{ const sel=document.getElementById(id); while(sel.options.length>1) sel.remove(1); });
+  populateSelect("stateFilter", uniqueSorted(SEAT_DATA.map(d=>d.state)));
+  populateSelect("quotaFilter", uniqueSorted(SEAT_DATA.map(d=>d.quota)));
+  populateSelect("branchFilter", uniqueSorted(SEAT_DATA.map(d=>d.branch)));
+  populateSelect("categoryFilter", uniqueSorted(SEAT_DATA.map(d=>d.categoryFull)));
+}
+
+function initFilters(){
+  ["stateFilter","quotaFilter","branchFilter","categoryFilter","pwdFilter"].forEach(id=>{
+    document.getElementById(id).addEventListener("change", refresh);
+  });
+  document.getElementById("searchBox").addEventListener("input", refresh);
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    document.getElementById("stateFilter").value="";
+    document.getElementById("quotaFilter").value="";
+    document.getElementById("branchFilter").value="";
+    document.getElementById("categoryFilter").value="";
+    document.getElementById("pwdFilter").value="";
+    document.getElementById("searchBox").value="";
+    activeType="";
+    highlightTab("");
+    document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+    refresh();
+  });
+
+  document.querySelectorAll("thead th").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      const key = th.dataset.key;
+      if(sortKey === key){ sortAsc = !sortAsc; } else { sortKey = key; sortAsc = true; }
+      document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));
+      th.classList.add("sorted");
+      if(sortAsc) th.classList.add("asc");
+      refresh();
+    });
+  });
+}
+
+
+async function loadRound(id){
+  const body = document.getElementById("tableBody");
+  document.getElementById("dataTable").style.display = "table";
+  body.innerHTML = '<tr><td colspan="7" class="loading">Loading seat matrix…</td></tr>';
+  try {
+    if(!ROUNDS[id]){
+      const res = await fetch(`/data/seat-matrix/MCC/2026/${id}.json`);
+      if(!res.ok) throw new Error(res.status);
+      ROUNDS[id] = await res.json();
+    }
+  } catch(e){
+    body.innerHTML = '<tr><td colspan="7" class="loading">Could not load this round. Please refresh and try again.</td></tr>';
+    return;
+  }
+  SEAT_DATA = ROUNDS[id];
+  document.querySelectorAll(".round-tab").forEach(b=>b.classList.toggle("active", b.dataset.round===id));
+  const m = ROUND_META[id];
+  document.getElementById("roundNote").textContent = m.note;
+  document.getElementById("round2Notice").style.display = id==="round2" ? "block" : "none";
+  ["stateFilter","quotaFilter","branchFilter","categoryFilter","pwdFilter","searchBox"].forEach(x=>document.getElementById(x).value="");
+  buildStats(); buildTypeTabs(); buildQuickChips(); fillFilters(); refresh();
+  try { history.replaceState(null,"","#"+id); } catch(e){}
+}
+
+const ROUND_META = {
+  round1: {note:"Source: MCC Seat Matrix for Round 1 NEET UG (MBBS · BDS · B.Sc Nursing)."},
+  round2: {note:"Source: MCC Clear Vacancy Round 2 matrix + 30 seats added later via MCC Notice 19 (05.09.2026)."},
+  round3: {note:"Source: MCC Clear Vacancy Round 3 (MBBS · BDS · B.Sc Nursing)."},
+  stray:  {note:"Source: MCC Clear Vacancy Stray Vacancy Round (MBBS · BDS · B.Sc Nursing)."}
+};
+document.querySelectorAll(".round-tab").forEach(b=>b.addEventListener("click",()=>loadRound(b.dataset.round)));
+initFilters();
+const startRound = (location.hash||"").slice(1);
+loadRound(ROUND_META[startRound] ? startRound : "stray");
+</script>
+</body>
+</html>
