@@ -287,7 +287,7 @@ const TYPE_ORDER=["Government","Deemed","AIIMS","JIPMER","Central University"];
 const CATS=["UR","OBC","EWS","SC","ST"];
 const CAT_OF={OP:"UR",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
 const CAT_NAME={UR:"General / UR",OBC:"OBC",EWS:"EWS",SC:"SC",ST:"ST"};
-const QUOTAS=[["all","All quotas"],["aiq","All India"],["nri","NRI quota"],["sf","Self-financed (deemed)"],["other","Other quotas"]];
+const QUOTAS=[["all","All quotas"],["aiq","All India"],["nri","NRI quota"],["sf","Self-financed (deemed)"],["open","Open Seat Quota"],["other","Other quotas"]];
 const ROUND_NOTE={
   round1:"MCC Seat Matrix for Round 1 NEET UG (MBBS · BDS)",
   round2:"MCC Clear Vacancy Round 2 + 30 seats added via Notice 19 (05.09.2026)",
@@ -311,9 +311,10 @@ function quotaGroup(q){
   if(q==="All India") return "aiq";
   if(/NRI|Non-Resident/i.test(q)) return "nri";
   if(q==="Self-Financed Merit Seat") return "sf";
+  if(q==="Open Seat Quota") return "open";
   return "other";
 }
-const GROUPS=["aiq","sf","other","nri"];
+const GROUPS=["aiq","sf","open","other","nri"];
 
 // One row per college + quota + course. Deemed NRI seats fold into the same row as the self-financed seats.
 function pivot(data){
@@ -341,7 +342,7 @@ function pivot(data){
 // what a row shows under the current quota / PwD filters
 const inc=g=>F.quota==="all"||F.quota===g;
 const mode=()=>F.pwd==="yes"?"pwd":"nor";
-const mainSeat=(r,c)=>["aiq","sf","other"].reduce((s,g)=>s+(inc(g)?r.g[g][mode()][c]:0),0);
+const mainSeat=(r,c)=>["aiq","sf","open","other"].reduce((s,g)=>s+(inc(g)?r.g[g][mode()][c]:0),0);
 const mainTotal=r=>CATS.reduce((s,c)=>s+mainSeat(r,c),0);
 const nriSeat=r=>inc("nri")?CATS.reduce((s,c)=>s+r.g.nri[mode()][c],0):0;
 const rowTotal=r=>mainTotal(r)+nriSeat(r);
