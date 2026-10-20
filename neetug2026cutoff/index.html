@@ -380,6 +380,7 @@
   @media(max-width:1500px){.tagline{display:none}}
   @media(max-width:1100px){.hero-row{flex-wrap:wrap}.hero-title{flex:1 1 100%}.hero-title h1{white-space:normal}.source-card{margin-left:0}}
   @media(max-width:760px){.pills.bar{justify-content:flex-start}.cards .mcard{margin-bottom:12px}.hero-title h1{font-size:1.5rem}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mc-head{min-height:0}.mc-name .cname{min-height:0}}
+  #fCat.dim{opacity:.4}
   .rank-cell.lowest b{color:#c2410c}
   th.lowest{background:linear-gradient(180deg,#b45309,#7c2d12) !important}
   .mc-low{display:flex;align-items:baseline;gap:8px;justify-content:center;margin:0 0 12px;padding:9px;border-radius:10px;background:#fff7e0;border:1px solid #f3dd9a;font-size:.84rem}
@@ -451,6 +452,10 @@
     <div class="f s9">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Category</div>
       <div class="seg" id="fCat"></div>
+    </div>
+    <div class="f s5" id="nriWrap" style="display:none">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Deemed Seat Quota</div>
+      <div class="seg" id="fDeemedQ"></div>
     </div>
     <div class="f s3" id="minWrap">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.4 5 5.6.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.6-.8z"/></svg>Minority <small>(Deemed)</small></div>
@@ -637,6 +642,15 @@ function render(){
   $("minWrap").style.display=deemedOk?"":"none"; seg("fMinority",MINORITIES,"minority");
   if(MS.fQuota) MS.fQuota.refresh(true);
   drawCats();
+  const deemedOnly=F.type.size>0&&[...F.type].every(t=>t==="Deemed");
+  $("nriWrap").style.display=deemedOnly?"":"none";
+  if(deemedOnly){
+    const nri=F.quota.size===1&&F.quota.has("NRI Quota");
+    const el=$("fDeemedQ");
+    el.innerHTML=[["","Self Financed Merit"],["NRI Quota","NRI"]].map(([v,l])=>`<button type="button" data-v="${v}" class="${(v==="NRI Quota")===nri?"active":""}">${l}</button>`).join("");
+    el.querySelectorAll("button").forEach(b=>b.onclick=()=>{F.quota.clear();if(b.dataset.v)F.quota.add(b.dataset.v);render();});
+  }
+  $("fCat").classList.toggle("dim",ec()!==F.cat);
   VIEW=COLLEGES.filter(c=>matches(c,R));
   const val=c=>{
     if(sortKey==="name") return c.name.toLowerCase();
