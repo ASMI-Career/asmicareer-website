@@ -363,7 +363,7 @@
         <th data-key="quota">Quota</th>
         <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS and BDS)">Fees / Year</th>
         <th class="nricol" data-key="feeNRI" style="text-align:right" title="NRI quota fee (USD) for deemed universities">NRI fee</th>
-        <th class="num" data-key="UR">Gen / UR</th>
+        <th class="num" data-key="UR">Open</th>
         <th class="num" data-key="OBC">OBC</th>
         <th class="num" data-key="EWS">EWS</th>
         <th class="num" data-key="SC">SC</th>
@@ -382,7 +382,7 @@
 
   <footer>
     <b>How to read:</b> each row is one college + quota + course. Category columns show the seats open in that category (– means none). With PwD = No you see regular seats; with PwD = Yes you see only the PwD seats in each category. For deemed universities the NRI-quota seats and NRI fee (USD) sit on the same row as the self-financed seats.<br>
-    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. ESI colleges are listed under Government Colleges. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section. District is added by ASMI (it is not part of the MCC data).<br>
+    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. ESI colleges are listed under Government Colleges. Open = General (OP) category, OBC = Other Backward Classes, EWS = Economically Weaker Section. District is added by ASMI (it is not part of the MCC data).<br>
     Source: official MCC seat matrix / clear-vacancy lists for UG Counselling 2026.
   </footer>
 </div>
@@ -397,7 +397,7 @@ const TYPE_LABEL={"Government":"Government","AIIMS":"AIIMS","JIPMER":"JIPMER","C
 const TYPE_ORDER=["Government","Deemed","AIIMS","JIPMER","Central University"];
 const CATS=["UR","OBC","EWS","SC","ST"];
 const CAT_OF={OP:"UR",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
-const CAT_NAME={UR:"General / UR",OBC:"OBC",EWS:"EWS",SC:"SC",ST:"ST"};
+const CAT_NAME={UR:"Open",OBC:"OBC",EWS:"EWS",SC:"SC",ST:"ST"};
 const QUOTAS=[["all","All quotas"],["aiq","All India"],["nri","NRI quota"],["sf","Self-financed (deemed)"],["open","Open Seat Quota"],["other","Other quotas"]];
 const ROUND_NOTE={
   round1:"MCC Seat Matrix for Round 1 NEET UG (MBBS · BDS)",
@@ -511,7 +511,7 @@ function render(){
   $("cards").innerHTML=VIEW.map((r,i)=>{
     const nri=nriSeat(r);
     const tags=(r.added?'<span class="tag added">ADDED</span>':"")+(r.gender==="Female Only"?'<span class="tag female">FEMALE ONLY</span>':"");
-    const cats=CATS.map(c=>{const v=mainSeat(r,c);return `<div class="mc-cat${v?"":" zero"}${F.cat===c?" hl":""}"><i>${c==="UR"?"Gen/UR":c}</i><b>${v||"–"}</b></div>`;}).join("")
+    const cats=CATS.map(c=>{const v=mainSeat(r,c);return `<div class="mc-cat${v?"":" zero"}${F.cat===c?" hl":""}"><i>${c==="UR"?"Open":c}</i><b>${v||"–"}</b></div>`;}).join("")
       +(showNri?`<div class="mc-cat nri${nri?"":" zero"}"><i>NRI</i><b>${nri||"–"}</b></div>`:"");
     return `<article class="mcard"><div class="mc-head"><div class="mc-name"><div class="cname">${esc(r.name)}${tags}</div><div class="cstate">${esc(r.state)}</div></div><div class="mc-total"><b>${rowTotal(r)}</b><span>seats</span></div></div>
       <div class="mc-facts"><span><i>Course</i>${esc(r.course)}</span><span><i>Est.</i>${r.est||"–"}</span><span><i>Fees / Year</i>${feeText(r)}</span>${showNri&&r.feeNRI?`<span><i>NRI fee</i>${esc(r.feeNRI)}</span>`:""}</div>
@@ -540,14 +540,14 @@ function openDetails(r){
     const reg={},pw={};CATS.forEach(c=>{reg[c]=0;pw[c]=0;REG.forEach(g=>{reg[c]+=x.g[g].nor[c];pw[c]+=x.g[g].pwd[c];});});
     const nri=sum(x.g.nri.nor)+sum(x.g.nri.pwd);
     return `<tr><td data-label="Quota">${esc(x.quota)}</td><td data-label="Fees / Year" style="text-align:right;font-weight:700">${feeText(x)}</td>
-      ${CATS.map(c=>`<td data-label="${c==="UR"?"Gen / UR":c}" class="n${reg[c]?"":" zero"}">${reg[c]||"–"}</td>`).join("")}
+      ${CATS.map(c=>`<td data-label="${c==="UR"?"Open":c}" class="n${reg[c]?"":" zero"}">${reg[c]||"–"}</td>`).join("")}
       <td data-label="NRI seats" class="n nri${nri?"":" zero"}">${nri?nri+(x.feeNRI?'<div style="font-size:.7rem;font-weight:600">'+esc(x.feeNRI)+'</div>':""):"–"}</td>
-      <td data-label="PwD seats" class="n${sum(pw)?"":" zero"}">${sum(pw)?CATS.filter(c=>pw[c]).map(c=>c+" "+pw[c]).join(", "):"–"}</td>
+      <td data-label="PwD seats" class="n${sum(pw)?"":" zero"}">${sum(pw)?CATS.filter(c=>pw[c]).map(c=>(c==="UR"?"Open":c)+" PwD "+pw[c]).join(", "):"–"}</td>
       <td data-label="Total" class="total">${sum(reg)+sum(pw)+nri}</td></tr>`;
   }).join("");
   $("modalBody").innerHTML=`<h2>${esc(r.name)}</h2>
     <div class="meta">${typeChip(r.type)}<span><b>${esc(r.state)}</b>${r.district?" · "+esc(r.district):""}</span><span>Course: <b>${esc(r.course)}</b></span><span>Est. <b>${r.est||"–"}</b></span><span>MCC code <b>${esc(r.code)}</b></span><span>${ROUND_LABEL[ROUND]}</span>${r.feeNRI?`<span>NRI fee <b>${esc(r.feeNRI)}</b></span>`:""}</div>
-    <div style="overflow:auto"><table class="mt-seat"><thead><tr><th>Quota</th><th style="text-align:right">Fees / Year</th><th class="num">Gen / UR</th><th class="num">OBC</th><th class="num">EWS</th><th class="num">SC</th><th class="num">ST</th><th class="num nri">NRI seats</th><th>PwD seats</th><th class="num">Total</th></tr></thead><tbody>${lines}</tbody></table></div>
+    <div style="overflow:auto"><table class="mt-seat"><thead><tr><th>Quota</th><th style="text-align:right">Fees / Year</th><th class="num">Open</th><th class="num">OBC</th><th class="num">EWS</th><th class="num">SC</th><th class="num">ST</th><th class="num nri">NRI seats</th><th>PwD seats</th><th class="num">Total</th></tr></thead><tbody>${lines}</tbody></table></div>
     <p style="margin:14px 0 0"><a class="view-btn" style="padding:11px 18px" href="${collegeUrl(r)}">Open full college page: cutoff, seats and fees</a></p>
     <p class="modal-note">Seats in this ${ROUND_LABEL[ROUND]} list. Regular seats are shown by category; PwD seats are listed separately with their category.</p>`;
   $("modal").hidden=false;
@@ -623,7 +623,7 @@ function build(){
   seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
   const counts={};ROWS.forEach(r=>counts[r.type]=(counts[r.type]||0)+1);
   typeBar(TYPE_ORDER.filter(t=>counts[t]),counts);
-  seg("fCat",[["","All"],["UR","General"],["OBC","OBC"],["SC","SC"],["ST","ST"],["EWS","EWS"]],"cat");
+  seg("fCat",[["","All"],["UR","Open"],["OBC","OBC"],["SC","SC"],["ST","ST"],["EWS","EWS"]],"cat");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
   msInit("fState","state","All States / UTs",()=>[...new Set(ROWS.map(r=>r.state))].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
   msInit("fDistrict","district","All Districts",()=>[...new Set(ROWS.filter(r=>!F.state.size||F.state.has(r.state)).map(r=>r.district).filter(Boolean))].sort());

@@ -118,12 +118,13 @@ for rname, _, rd in ROUNDS:
         try: q = canon(x['quota'])
         except SystemExit: continue   # the seat matrix has a few quota names cut short (Delhi NCR CW); they get no seat count
         if q is None: continue
-        seats[(rname, x['code'], course, q, seat_cat(q, x['quota'], SEAT_CAT[x['category'].split()[0]]))] += x['seats']
+        seats[(rname, x['code'], course, q, seat_cat(q, x['quota'], SEAT_CAT[x['category'].split()[0]]), x['category'].split()[1] == 'PH')] += x['seats']   # PH = PwD
 for e in entries.values():
     for cname, cat in e['cats'].items():
         for r in ALL_ROUNDS: cat.setdefault(r, {'AIR': None, 'AIR_PWD': None, 'OPEN_AIR': None, 'OPEN_AIR_PWD': None})
         for r in ALL_ROUNDS:
-            cat[r]['Intake'] = seats.get((r, e['code'], e['course'], e['quota'], cname)) or None    # seats offered (seat matrix)
+            cat[r]['Intake'] = seats.get((r, e['code'], e['course'], e['quota'], cname, False)) or None    # regular seats offered (seat matrix)
+            cat[r]['Intake_PWD'] = seats.get((r, e['code'], e['course'], e['quota'], cname, True)) or None   # PwD seats (PH)
             cat[r]['Allotted'] = held_by_round.get(r, {}).get((e['code'], e['course'], e['quota'], cname)) or None
 data = sorted(entries.values(), key=lambda e: (e['quota'], e['course'], e['name']))
 quotas = collections.Counter(e['quota'] for e in data)

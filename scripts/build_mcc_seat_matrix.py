@@ -121,7 +121,7 @@ def convert(rows, names, gender_col=False):
         a, b = clean(r[5]).split()
         name, city = NAME_FIX.get(c) or names.get(c) or guess(inst)
         out.append(dict(state=clean(r[0]), type=TYPE[clean(r[1])], institute=inst, code=c, quota=fix_quota(clean(r[3]), c),
-                        branch=clean(r[4]), category=f'{a} {b}', categoryFull=CAT[a] + (' - PwBD' if b == 'PH' else ''),
+                        branch=clean(r[4]), category=f'{a} {b}', categoryFull=CAT[a] + (' - PwD' if b == 'PH' else ''),
                         seats=int(r[6]), collegeName=name, city=city,
                         gender=(r[7] if gender_col else None), added=False))
     return out
@@ -167,7 +167,7 @@ for c, cats in R2_ADDED.items():
     base = by_code[c]
     for k, n in cats.items():
         cat = ADD_CAT[k]; a, b = cat.split()
-        rounds['round2'][0].append(dict(base, category=cat, categoryFull=CAT[a] + (' - PwBD' if b == 'PH' else ''),
+        rounds['round2'][0].append(dict(base, category=cat, categoryFull=CAT[a] + (' - PwD' if b == 'PH' else ''),
                                         seats=n, quota='All India', branch='MBBS (MBBS)', gender=None, added=True))
         added += n
 assert added == 30
