@@ -483,7 +483,7 @@ function draw(){
   <section class="card">
     <h2>Cutoff, Round by Round <small id="ctSub">${ctSubText()}</small></h2>
     <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}<small style="display:block;font-weight:600;opacity:.8">Closing AIR</small></th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
-    <p class="note">Closing rank = the last candidate freshly allotted (or upgraded) a seat in that round; retained seats do not set it. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat here after that round, retained seats included. A dash means nobody new was allotted in that round; "N retained" is the number of candidates who kept the seat they already held.</p>
+    <p class="note">Closing rank = the last candidate freshly allotted (or upgraded) a seat in that round; retained seats do not set it. Smaller rank = harder to get. "n seats" is the number of seats offered in that round (MCC seat matrix). A dash means nobody was freshly allotted in that round.</p>
   </section>
 
   ${(()=>{const oth=OTHERS.filter(x=>x.course===C.course&&x.quota!==C.quota);return oth.length?`<section class="card"><h2>Other Quotas At This College <small>Cutoffs For Other Seat Quotas</small></h2><div class="chips">${oth.map(x=>`<a class="chip2" style="text-decoration:none" href="/mcc-college.html?c=${encodeURIComponent(x.code)}&t=OTHER&co=${x.course}&q=${encodeURIComponent(x.quota)}">${esc(x.quota)}</a>`).join("")}</div></section>`:""})()}
@@ -523,7 +523,7 @@ function refresh(){
     const e=C.cats[k];
     return `<tr class="${k===S.cat?"sel":""}"><td>${esc(l)}</td>${ROUNDS.map(r=>{
       const rd=e[r], v=rankOf(rd), opn=S.pwd==="yes"?rd.OPEN_AIR_PWD:rd.OPEN_AIR;
-      if(v==null) return `<td class="rank-cell none">—${rd.Intake?`<small>${rd.Intake} retained</small>`:""}</td>`;
+      if(v==null) return `<td class="rank-cell none">—${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
       const ch=k===S.cat?chance(R,v):null;
       return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${opn!=null?`<small class="op">Opening ${fmt(opn)}</small>`:""}${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;}).join("")}</tr>`;
   }).join("");

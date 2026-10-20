@@ -13,28 +13,32 @@
       "type": "Deemed",
       "rounds": {
         "Round 1": {
-          "Intake": 78,
+          "Intake": 106,
           "AIR": 1040306,
           "OPEN_AIR": 145217,
-          "OPEN_AIR_PWD": null
+          "OPEN_AIR_PWD": null,
+          "Allotted": 78
         },
         "Round 2": {
-          "Intake": 28,
+          "Intake": 42,
           "AIR": 992590,
           "OPEN_AIR": 463532,
-          "OPEN_AIR_PWD": null
+          "OPEN_AIR_PWD": null,
+          "Allotted": 28
         },
         "Round 3": {
-          "Intake": 5,
+          "Intake": 42,
           "AIR": 967991,
           "OPEN_AIR": 967991,
-          "OPEN_AIR_PWD": null
+          "OPEN_AIR_PWD": null,
+          "Allotted": 5
         },
         "Stray Vacancy Round": {
           "Intake": 1,
           "AIR": 709464,
           "OPEN_AIR": 709464,
-          "OPEN_AIR_PWD": null
+          "OPEN_AIR_PWD": null,
+          "Allotted": 1
         },
         "Special Stray Vacancy Round": {
           "Intake": null,

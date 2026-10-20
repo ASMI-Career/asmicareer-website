@@ -552,13 +552,13 @@
 
   <div class="guide-bg" id="guide" hidden><div class="guide-box"><div class="guide-head"><b>Quick Guide</b><button type="button" id="guideClose" aria-label="Close">×</button></div><div class="guide-body" id="guideBody"></div></div></div>
 
-  <footer>
-    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat in that college and category after that round, retained seats included. A dash means nobody new was allotted in that round; "N retained" under a dash is the number of candidates who kept the seat they already held. <b>Lowest Cutoff</b> is the highest rank allotted in any of the four rounds, the last rank that still got a seat.<br>
+  <div id="guideSrc" hidden>
+    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of seats offered in that round, from the MCC seat matrix of the round. A dash means nobody was freshly allotted in that round; seats shown under a dash were offered but nobody new took them. <b>Lowest Cutoff</b> is the highest rank allotted in any of the four rounds, the last rank that still got a seat.<br>
     <b>Your Chances:</b> enter your NEET AIR. Safe = your rank is at least 12% better than the closing rank, Likely = at or better than it, Borderline = within 12% above it, Out of reach = further away. It compares with the latest round that has data. This is a guide, not a guarantee: actual allotment depends on your choice filling and on seats left in later rounds.<br>
     <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI is one category (no priority split). In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
     <b>Other quotas:</b> Delhi University, IP University, ESI, AMU, Jamia, Puducherry domicile, Muslim / Jain minority and other quotas are listed as separate rows. Choose them in the Quota filter; their rounds are worked out the same way from the MCC allotment lists, and a college can appear once for each quota.<br>
-    District is added by ASMI (the MCC files do not carry it) and is being checked; tell us if you spot a wrong one. Source: official MCC allotment lists, UG Counselling 2026. Round 1 values as already published on ASMI. Stray Vacancy values are from the MCC stray round result list.
-  </footer>
+    District is added by ASMI (the MCC files do not carry it) and is being checked; tell us if you spot a wrong one. Source: official MCC allotment lists, UG Counselling 2026. Stray Vacancy values are from the MCC stray round result list.
+  </div>
 </div>
 
 <script>
@@ -651,7 +651,7 @@ function openCell(e,r){
 }
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
-  if(v==null) return `<td class="rank-cell none" title="Nobody new was allotted here. The candidates counted kept the seat they already held.">—${rd&&rd.Intake?`<small>${rd.Intake} retained</small>`:""}</td>`;
+  if(v==null) return `<td class="rank-cell none" title="Seats were offered in this round but nobody new was allotted.">—${rd&&rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
   const ch=chance(R,v);
   return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
 }
@@ -719,7 +719,7 @@ function render(){
       ${ROUNDS.map(r=>openCell(e,r)+rankCell(e,r,R)).join("")}
       <td class="rank-cell lowest">${lw?`<b>${fmt(lw.v)}</b><small>${RLABEL(lw.r)}</small>`:"—"}</td>
       <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
-    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${openOf(rd)!=null?`<small class="op">Opening ${fmt(openOf(rd))}</small>`:""}${rd&&rd.Intake?`<small>${v==null?rd.Intake+" retained":rd.Intake+" seat"+(rd.Intake>1?"s":"")}</small>`:""}</div>`;}).join("");
+    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${openOf(rd)!=null?`<small class="op">Opening ${fmt(openOf(rd))}</small>`:""}${rd&&rd.Intake?`<small>${rd.Intake+" seat"+(rd.Intake>1?"s":"")}</small>`:""}</div>`;}).join("");
     cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / Year</i>${feeText(c)}</span></div>
       <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[ec()])}${F.pwd==="yes"?" (PwD)":""}</div>
@@ -872,7 +872,7 @@ $("search").addEventListener("input",render);
 $("rank").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);render();});
 $("reset").onclick=reset;
 $("apply").onclick=()=>{document.querySelector(".filters").classList.remove("open");updateFilterCount();render();document.querySelector(".result-line").scrollIntoView({behavior:"smooth",block:"start"});};
-$("guideBtn").onclick=()=>{$("guideBody").innerHTML=document.querySelector("footer").innerHTML;$("guide").hidden=false;};
+$("guideBtn").onclick=()=>{$("guideBody").innerHTML=$("guideSrc").innerHTML;$("guide").hidden=false;};
 $("guideClose").onclick=()=>{$("guide").hidden=true;};
 $("guide").onclick=e=>{if(e.target.id==="guide")$("guide").hidden=true;};
 const setView=v=>{document.body.classList.toggle("cardview",v==="card");$("vTable").classList.toggle("on",v!=="card");$("vCard").classList.toggle("on",v==="card");};

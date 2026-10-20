@@ -16,7 +16,7 @@ Rules (checked against the existing Round 1 files, which this script does not to
   * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
     been converted to general merit, so the NRI cutoff is the college's last allotted rank.
   * MBBS and BDS only. B.Sc Nursing is ignored.
-AIR / AIR_PWD (closing = the last rank freshly allotted) and OPEN_AIR / OPEN_AIR_PWD (opening = the first rank freshly allotted) come from the allotment lists. Intake is the number of seats allotted in the round, retained seats included (also from the allotment lists). Intake and every other field stay as they were.
+AIR / AIR_PWD (closing = the last rank freshly allotted) and OPEN_AIR / OPEN_AIR_PWD (opening = the first rank freshly allotted) come from the allotment lists. Intake is the number of seats offered in the round (from the seat matrix of that round); Allotted is the number of candidates holding a seat after the round, retained included (from the allotment lists). Intake and every other field stay as they were.
 """
 import json, os, re, sys, collections
 import openpyxl
@@ -89,6 +89,22 @@ def has_nri_seats(k, code, course):
     rows = seat_rows[SEATKEY[k]]
     return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
 
+
+def offered(k, folder, cat, code):
+    """Seats offered in that round for the quota / category the cutoff is about, from the seat matrix of the round
+    (normal and PwD seats together). None when there are none."""
+    itype, course, quotas, kind = JOBS[folder]
+    n = 0
+    for x in seat_rows[SEATKEY[k]]:
+        if x['code'] != code or not x['branch'].startswith(course): continue
+        q = squash(x['quota'])
+        if kind == 'cat':
+            if q in quotas and SEAT_CAT.get(x['category'].split()[0]) == cat: n += x['seats']
+        elif cat == 'OPEN': n += x['seats'] if q == SFM else 0
+        elif cat == 'MINORITY': n += x['seats'] if q in MINORITY else 0
+        elif cat in MINORITY_CAT.values(): n += x['seats'] if MINORITY_CAT.get(q) == cat else 0
+        elif cat in ('NRI_P-I', 'NRI_P1'): n += x['seats'] if q == NRI else 0
+    return n or None
 
 def allotted(k, rows):
     """-> {(folder, category): {code: n}}: candidates holding a seat after the round, retained ones included
@@ -180,9 +196,10 @@ for folder in JOBS:
             for k in ROUND_IDS:
                 new = computed[k].get((folder, cat), {}).get(c['code'], {})
                 rd = c['rounds'][RKEY[k]]
-                it = held[k].get((folder, cat), {}).get(c['code']) or None
+                it = offered(k, folder, cat, c['code'])   # seats offered in the round (seat matrix)
                 stats['intake unchanged' if rd.get('Intake') == it else 'intake fixed'] += 1
                 rd['Intake'] = it
+                rd['Allotted'] = held[k].get((folder, cat), {}).get(c['code']) or None   # candidates holding a seat after the round, retained included
                 rd.setdefault('OPEN_AIR', None); rd.setdefault('OPEN_AIR_PWD', None)
                 for fld in ('AIR', 'AIR_PWD', 'OPEN_AIR', 'OPEN_AIR_PWD'):
                     if fld not in rd: continue
