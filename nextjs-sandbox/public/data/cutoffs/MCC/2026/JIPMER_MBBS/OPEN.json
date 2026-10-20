@@ -13,12 +13,13 @@
       "type": "Govt",
       "rounds": {
         "Round 1": {
-          "Intake": 54,
+          "Intake": 51,
           "AIR": 309,
           "AIR_PWD": 54144,
           "OPEN_AIR": 12,
           "OPEN_AIR_PWD": 8186,
-          "Allotted": 54
+          "Allotted": 54,
+          "Intake_PWD": 3
         },
         "Round 2": {
           "Intake": 1,
@@ -26,7 +27,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": 289,
           "OPEN_AIR_PWD": null,
-          "Allotted": 5
+          "Allotted": 5,
+          "Intake_PWD": null
         },
         "Round 3": {
           "Intake": null,
@@ -34,7 +36,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": 407,
           "OPEN_AIR_PWD": null,
-          "Allotted": 1
+          "Allotted": 1,
+          "Intake_PWD": null
         },
         "Stray Vacancy Round": {
           "Intake": null,
@@ -42,7 +45,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": null,
           "OPEN_AIR_PWD": null,
-          "Allotted": null
+          "Allotted": null,
+          "Intake_PWD": null
         },
         "Special Stray Vacancy Round": {
           "Intake": null,
@@ -60,12 +64,13 @@
       "type": "Govt",
       "rounds": {
         "Round 1": {
-          "Intake": 18,
+          "Intake": 17,
           "AIR": 2638,
           "AIR_PWD": 180830,
           "OPEN_AIR": 1442,
           "OPEN_AIR_PWD": 180830,
-          "Allotted": 18
+          "Allotted": 18,
+          "Intake_PWD": 1
         },
         "Round 2": {
           "Intake": 8,
@@ -73,7 +78,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": 2314,
           "OPEN_AIR_PWD": null,
-          "Allotted": 17
+          "Allotted": 17,
+          "Intake_PWD": null
         },
         "Round 3": {
           "Intake": 5,
@@ -81,7 +87,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": 4009,
           "OPEN_AIR_PWD": null,
-          "Allotted": 10
+          "Allotted": 10,
+          "Intake_PWD": null
         },
         "Stray Vacancy Round": {
           "Intake": 3,
@@ -89,7 +96,8 @@
           "AIR_PWD": null,
           "OPEN_AIR": 11282,
           "OPEN_AIR_PWD": null,
-          "Allotted": 3
+          "Allotted": 3,
+          "Intake_PWD": null
         },
         "Special Stray Vacancy Round": {
           "Intake": null,

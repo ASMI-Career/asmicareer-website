@@ -384,7 +384,7 @@ function mergeRounds(a,b){
   const out={};
   for(const r of new Set([...Object.keys(a),...Object.keys(b)])){
     const x=a[r]||{},y=b[r]||{},m=(p,q)=>p==null?q:q==null?p:Math.max(p,q),mn=(p,q)=>p==null?q:q==null?p:Math.min(p,q);
-    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD),OPEN_AIR:mn(x.OPEN_AIR,y.OPEN_AIR),OPEN_AIR_PWD:mn(x.OPEN_AIR_PWD,y.OPEN_AIR_PWD)};
+    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),Intake_PWD:(x.Intake_PWD==null&&y.Intake_PWD==null)?null:(x.Intake_PWD||0)+(y.Intake_PWD||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD),OPEN_AIR:mn(x.OPEN_AIR,y.OPEN_AIR),OPEN_AIR_PWD:mn(x.OPEN_AIR_PWD,y.OPEN_AIR_PWD)};
   }
   return out;
 }
@@ -526,7 +526,7 @@ function refresh(){
     return `<tr class="${k===S.cat?"sel":""}"><td>${esc(l)}</td>${ROUNDS.map(r=>{
       const rd=e[r], v=rankOf(rd), opn=S.pwd==="yes"?rd.OPEN_AIR_PWD:rd.OPEN_AIR;
       const open=opn!=null?`<td class="rank-cell open"><b>${fmt(opn)}</b></td>`:'<td class="rank-cell open none">—</td>';
-      const seats=rd&&rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:"";
+      const nS=rd?(S.pwd==="yes"?rd.Intake_PWD:rd.Intake):null, seats=nS?`<small>${nS} seat${nS>1?"s":""}</small>`:"";
       if(v==null) return open+`<td class="rank-cell none" title="Seats offered in this round, nobody new allotted.">—${seats}</td>`;
       const ch=k===S.cat?chance(R,v):null;
       return open+`<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${seats}</td>`;}).join("")}</tr>`;

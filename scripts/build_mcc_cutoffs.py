@@ -90,13 +90,14 @@ def has_nri_seats(k, code, course):
     return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
 
 
-def offered(k, folder, cat, code):
+def offered(k, folder, cat, code, pwd=False):
     """Seats offered in that round for the quota / category the cutoff is about, from the seat matrix of the round
-    (normal and PwD seats together). None when there are none."""
+    (regular seats, or the PwD seats when pwd=True: the seat matrix marks them 'PH'). None when there are none."""
     itype, course, quotas, kind = JOBS[folder]
     n = 0
     for x in seat_rows[SEATKEY[k]]:
         if x['code'] != code or not x['branch'].startswith(course): continue
+        if (x['category'].split()[1] == 'PH') != pwd: continue
         q = squash(x['quota'])
         if kind == 'cat':
             if q in quotas and SEAT_CAT.get(x['category'].split()[0]) == cat: n += x['seats']
@@ -199,6 +200,7 @@ for folder in JOBS:
                 it = offered(k, folder, cat, c['code'])   # seats offered in the round (seat matrix)
                 stats['intake unchanged' if rd.get('Intake') == it else 'intake fixed'] += 1
                 rd['Intake'] = it
+                rd['Intake_PWD'] = offered(k, folder, cat, c['code'], True)   # PwD seats (PH in the seat matrix)
                 rd['Allotted'] = held[k].get((folder, cat), {}).get(c['code']) or None   # candidates holding a seat after the round, retained included
                 rd.setdefault('OPEN_AIR', None); rd.setdefault('OPEN_AIR_PWD', None)
                 for fld in ('AIR', 'AIR_PWD', 'OPEN_AIR', 'OPEN_AIR_PWD'):
