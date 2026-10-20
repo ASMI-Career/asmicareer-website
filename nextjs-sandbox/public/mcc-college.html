@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>College details | MCC NEET UG 2026 | ASMI Career</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap');
   :root{
     --b1:#2a0a5e; --b2:#4a1a99; --b3:#6d3bd2; --brand:#5b21b6; --brand-dark:#1f0a52; --gold:#ffd700;
     --bg:#f4f2fb; --card:#fff; --line:#e7e2f3; --ink:#1d1530; --muted:#6c6483; --faint:#b9b3c8;
@@ -342,6 +342,8 @@
   @media(max-width:760px){.logo{height:84px;max-width:128px;border-radius:14px;padding:7px 10px}}
   .qchip{display:inline-block;background:#ffd700;color:#2c0450;border-radius:6px;padding:1px 7px;font-weight:700;font-size:.72rem}
   table.ct th{background:linear-gradient(180deg,#4a1a99,#2f0a68);color:#fff}
+  .rank-cell,.rank-cell b,.rank-cell small{font-family:'Inter',system-ui,sans-serif;font-variant-numeric:tabular-nums lining-nums}
+  .rank-cell small.op{color:#6d3bd2;font-weight:600}
 </style>
 </head>
 <body>
@@ -379,8 +381,8 @@ function mergeRounds(a,b){
   if(!a) return b; if(!b) return a;
   const out={};
   for(const r of new Set([...Object.keys(a),...Object.keys(b)])){
-    const x=a[r]||{},y=b[r]||{},m=(p,q)=>p==null?q:q==null?p:Math.max(p,q);
-    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD)};
+    const x=a[r]||{},y=b[r]||{},m=(p,q)=>p==null?q:q==null?p:Math.max(p,q),mn=(p,q)=>p==null?q:q==null?p:Math.min(p,q);
+    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD),OPEN_AIR:mn(x.OPEN_AIR,y.OPEN_AIR),OPEN_AIR_PWD:mn(x.OPEN_AIR_PWD,y.OPEN_AIR_PWD)};
   }
   return out;
 }
@@ -480,7 +482,7 @@ function draw(){
 
   <section class="card">
     <h2>Cutoff, Round by Round <small id="ctSub">${ctSubText()}</small></h2>
-    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
+    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}<small style="display:block;font-weight:600;opacity:.8">Closing AIR</small></th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
     <p class="note">Closing rank = the last candidate freshly allotted (or upgraded) a seat in that round; retained seats do not set it. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat here after that round, retained seats included. A dash means nobody new was allotted in that round; "N retained" is the number of candidates who kept the seat they already held.</p>
   </section>
 
@@ -520,10 +522,10 @@ function refresh(){
   $("ctBody").innerHTML=availCats().map(([k,l])=>{
     const e=C.cats[k];
     return `<tr class="${k===S.cat?"sel":""}"><td>${esc(l)}</td>${ROUNDS.map(r=>{
-      const rd=e[r], v=rankOf(rd);
+      const rd=e[r], v=rankOf(rd), opn=S.pwd==="yes"?rd.OPEN_AIR_PWD:rd.OPEN_AIR;
       if(v==null) return `<td class="rank-cell none">—${rd.Intake?`<small>${rd.Intake} retained</small>`:""}</td>`;
       const ch=k===S.cat?chance(R,v):null;
-      return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;}).join("")}</tr>`;
+      return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${opn!=null?`<small class="op">Opening ${fmt(opn)}</small>`:""}${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;}).join("")}</tr>`;
   }).join("");
   $("ctSub").textContent=ctSubText();
   // verdict

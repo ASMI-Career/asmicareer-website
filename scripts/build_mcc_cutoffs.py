@@ -16,7 +16,7 @@ Rules (checked against the existing Round 1 files, which this script does not to
   * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
     been converted to general merit, so the NRI cutoff is the college's last allotted rank.
   * MBBS and BDS only. B.Sc Nursing is ignored.
-AIR and AIR_PWD come from the allotment lists. Intake is the number of seats allotted in the round, retained seats included (also from the allotment lists). Intake and every other field stay as they were.
+AIR / AIR_PWD (closing = the last rank freshly allotted) and OPEN_AIR / OPEN_AIR_PWD (opening = the first rank freshly allotted) come from the allotment lists. Intake is the number of seats allotted in the round, retained seats included (also from the allotment lists). Intake and every other field stay as they were.
 """
 import json, os, re, sys, collections
 import openpyxl
@@ -109,6 +109,7 @@ def compute(k, rows):
     """-> {(folder, category): {code: {'AIR':..,'AIR_PWD':..}}}"""
     res = collections.defaultdict(lambda: collections.defaultdict(dict))
     bump = lambda d, key, v: d.__setitem__(key, max(d.get(key) or 0, v))
+    low = lambda d, key, v: d.__setitem__(key, min(d.get(key) or v, v))   # opening AIR = best rank freshly allotted
     for folder, (itype, course, quotas, kind) in JOBS.items():
         pool = [r for r in rows if r['course'] == course and ctype.get(r['code']) == itype and not IGNORED(r)]
         if kind == 'cat':
@@ -116,21 +117,26 @@ def compute(k, rows):
                 if r['quota'] not in quotas: continue
                 d = res[(folder, CAT[r['acat'].replace(' PwD', '')])][r['code']]
                 bump(d, 'AIR_PWD' if r['acat'].endswith('PwD') else 'AIR', r['rank'])
+                low(d, 'OPEN_AIR_PWD' if r['acat'].endswith('PwD') else 'OPEN_AIR', r['rank'])
             continue
         sfm_last = {}
         for r in pool:
             if r['quota'] == SFM:
                 bump(res[(folder, 'OPEN')][r['code']], 'AIR', r['rank']); bump(sfm_last, r['code'], r['rank'])
+                low(res[(folder, 'OPEN')][r['code']], 'OPEN_AIR', r['rank'])
             elif r['quota'] in MINORITY:
                 bump(res[(folder, 'MINORITY')][r['code']], 'AIR', r['rank'])
                 bump(res[(folder, MINORITY_CAT[r['quota']])][r['code']], 'AIR', r['rank'])
+                low(res[(folder, 'MINORITY')][r['code']], 'OPEN_AIR', r['rank'])
+                low(res[(folder, MINORITY_CAT[r['quota']])][r['code']], 'OPEN_AIR', r['rank'])
             elif r['quota'] == NRI:   # one NRI category, no priority split (the BDS file is named NRI_P1)
                 bump(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'AIR', r['rank'])
+                low(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'OPEN_AIR', r['rank'])
         if k == 3:   # unfilled NRI seats are converted to general merit (decide for the Stray round once its results are in)
             p1 = 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1'
             for code, last in sfm_last.items():
                 if code not in res[(folder, p1)] and has_nri_seats(k, code, course):
-                    res[(folder, p1)][code]['AIR'] = last
+                    res[(folder, p1)][code]['AIR'] = last; res[(folder, p1)][code]['OPEN_AIR'] = last
     return res
 
 def dump(path, obj):
@@ -177,7 +183,8 @@ for folder in JOBS:
                 it = held[k].get((folder, cat), {}).get(c['code']) or None
                 stats['intake unchanged' if rd.get('Intake') == it else 'intake fixed'] += 1
                 rd['Intake'] = it
-                for fld in ('AIR', 'AIR_PWD'):
+                rd.setdefault('OPEN_AIR', None); rd.setdefault('OPEN_AIR_PWD', None)
+                for fld in ('AIR', 'AIR_PWD', 'OPEN_AIR', 'OPEN_AIR_PWD'):
                     if fld not in rd: continue
                     old, val = rd[fld], new.get(fld)
                     stats['unchanged' if old == val else 'filled' if old is None else 'cleared' if val is None else 'changed'] += 1
