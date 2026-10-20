@@ -344,19 +344,32 @@ const fmt=n=>n==null?null:Number(n).toLocaleString("en-IN");
 const TYPE_OF={GOVT:"Government",AIIMS:"AIIMS",JIPMER:"JIPMER",CENTRAL:"Central University",DEEMED:"Deemed University"};
 const TYPE_COLORS={"Government":"#1f9d63","Deemed University":"#d19a00","AIIMS":"#6d3bd2","JIPMER":"#d6366b","Central University":"#2a6fd0"};
 const STATE_ALIAS={"Tamilnadu":"Tamil Nadu","Jammu and Kashmir":"Jammu And Kashmir","Pondicherry":"Puducherry","Andaman Nicobar":"Andaman And Nicobar Islands","Dadra and Nagar Haveli":"The Dadra And Nagar Haveli And Daman And Diu"};
-const ROUNDS=["Round 1","Round 2","Round 3"];
+const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
+const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
 const ALL_TYPES=["GOVT_MBBS","GOVT_BDS","AIIMS_MBBS","JIPMER_MBBS","CENTRAL_MBBS","CENTRAL_BDS","DEEMED_MBBS","DEEMED_BDS"];
 const SEAT_ROUNDS=[["round1","Round 1"],["round2","Round 2"],["round3","Round 3"],["stray","Stray Vacancy"]];
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI1","NRI Priority 1"],["NRI2","NRI Priority 2"],["MINORITY","Minority"]];
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"]];
 const CAT_LABEL=Object.fromEntries(CATS);
 const SEAT_CAT={OP:"OPEN",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
-const normCat=c=>c==="NRI_P-I"||c==="NRI_P1"?"NRI1":c==="NRI_P-II"||c==="NRI_P2"?"NRI2":c;
+const normCat=c=>/^NRI_P/.test(c)?"NRI":c;
+// NRI is one category: the P-I / P-II files are merged (the closing rank is the larger of the two)
+function mergeRounds(a,b){
+  if(!a) return b; if(!b) return a;
+  const out={};
+  for(const r of new Set([...Object.keys(a),...Object.keys(b)])){
+    const x=a[r]||{},y=b[r]||{},m=(p,q)=>p==null?q:q==null?p:Math.max(p,q);
+    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD)};
+  }
+  return out;
+}
+
 const chance=(R,v)=>R==null||v==null?null:R<=v*0.88?"safe":R<=v?"likely":R<=v*1.12?"border":"out";
 
 const q=new URLSearchParams(location.search);
 const CODE=q.get("c"), ITYPE=q.get("t");
-const S={cat:CATS.some(c=>c[0]===q.get("ca"))?q.get("ca"):"OPEN",pwd:q.get("pw")==="yes"?"yes":"no",rank:parseInt(q.get("rk"))||null,seatRound:null};
+const CA=/^NRI/.test(q.get("ca")||"")?"NRI":q.get("ca");   // older links used NRI1 / NRI2
+const S={cat:CATS.some(c=>c[0]===CA)?CA:"OPEN",pwd:q.get("pw")==="yes"?"yes":"no",rank:parseInt(q.get("rk"))||null,seatRound:null};
 let C=null, SEAT={};
 
 // Back goes to the list with its filters (browser Back keeps them); fall back to the plain list
@@ -379,7 +392,7 @@ async function load(){
       Object.entries(file.categories).forEach(([cat,list])=>list.forEach(c=>{
         if(c.code!==CODE) return;
         if(!o) o={code:c.code,name:c.name,state:STATE_ALIAS[c.state]||c.state,est:c.establishment,fees:c.fees,type:TYPE_OF[prefix],course,cats:{},nriFee:null};
-        o.cats[normCat(cat)]=c.rounds;
+        const nc=normCat(cat); o.cats[nc]=nc==="NRI"?mergeRounds(o.cats[nc],c.rounds):c.rounds;
         if(typeof c.fees==="string"&&c.fees.trim().startsWith("$")) o.nriFee=c.fees.trim(); else if(!feeNum(o.fees)&&feeNum(c.fees)) o.fees=c.fees;
       }));
       if(o) break;
@@ -398,7 +411,7 @@ function fail(msg){$("page").innerHTML=`<div class="card err">${esc(msg)}<div st
 
 const hasAny=k=>ROUNDS.some(r=>{const d=C.cats[k]&&C.cats[k][r];return d&&(d.AIR!=null||d.AIR_PWD!=null);});
 const availCats=()=>CATS.filter(([k])=>C.cats[k]&&hasAny(k));
-function latest(cat){const e=C.cats[cat];for(const r of ["Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
+function latest(cat){const e=C.cats[cat];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
 
 function feeLine(){
   const f=feeNum(C.fees);
@@ -419,7 +432,7 @@ function draw(){
       ${C.nriFee?`<div class="fact"><i>NRI quota fee</i><b>${esc(C.nriFee)}</b><small>Per year (USD)</small></div>`:""}
       <div class="fact"><i>Established</i><b>${C.est||"—"}</b></div>
       <div class="fact"><i>MCC code</i><b>${esc(C.code)}</b></div>
-      ${lg?`<div class="fact"><i>General closing AIR</i><b>${fmt(lg.v)}</b><small>${lg.r}${seatsNow?` · ${seatsNow} seat${seatsNow>1?"s":""}`:""}</small></div>`:""}
+      ${lg?`<div class="fact"><i>General closing AIR</i><b>${fmt(lg.v)}</b><small>${RLABEL(lg.r)}${seatsNow?` · ${seatsNow} seat${seatsNow>1?"s":""}`:""}</small></div>`:""}
     </div>
     <div class="sharebar">
       <a class="btn out" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a>
@@ -428,7 +441,7 @@ function draw(){
   </section>
 
   <section class="card">
-    <h2>Check your chances <small>Compares your NEET AIR with the closing rank</small></h2>
+    <h2>Check your chances <small>Compares your NEET AIR with the latest closing rank</small></h2>
     <div class="airrow">
       <div class="f"><div class="f-title">Your NEET AIR</div><input id="rank" type="text" inputmode="numeric" placeholder="e.g. 15000" autocomplete="off" value="${S.rank||""}"></div>
       <div class="f"><div class="f-title">Category</div><div class="seg" id="catSeg"></div></div>
@@ -439,7 +452,7 @@ function draw(){
 
   <section class="card">
     <h2>Cutoff, round by round <small id="ctSub">Closing All India Rank${S.pwd==="yes"?" (PwD)":""}</small></h2>
-    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${r}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
+    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
     <p class="note">Closing rank = the last candidate allotted a seat in that round (fresh and upgraded allotments; retained seats are ignored). Smaller rank = harder to get. A dash means nobody was allotted in that round.</p>
   </section>
 
@@ -498,7 +511,7 @@ function refresh(){
     const ch=chance(R,l.v);
     const msg={safe:"Your rank is comfortably better than the closing rank.",likely:"Your rank is at or better than the closing rank.",border:"Your rank is a little behind the closing rank. It depends on seats left in later rounds.",out:"Your rank is well behind the closing rank."}[ch];
     vd.className="verdict v-"+ch;vd.style.display="block";
-    vd.innerHTML=`At AIR <b>${fmt(R)}</b> your chance in <b>${esc(CAT_LABEL[S.cat])}${S.pwd==="yes"?" (PwD)":""}</b> is <b>${CH_LABEL[ch]}</b>. Closing rank in ${l.r} was <b>${fmt(l.v)}</b>. ${msg}`;
+    vd.innerHTML=`At AIR <b>${fmt(R)}</b> your chance in <b>${esc(CAT_LABEL[S.cat])}${S.pwd==="yes"?" (PwD)":""}</b> is <b>${CH_LABEL[ch]}</b>. Closing rank in ${RLABEL(l.r)==="Stray"?"the Stray round":l.r} was <b>${fmt(l.v)}</b>. ${msg}`;
   }
 }
 

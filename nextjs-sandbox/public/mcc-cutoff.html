@@ -357,6 +357,7 @@
       <option value="r1:1">Sort: Round 1 rank (best first)</option>
       <option value="r2:1">Sort: Round 2 rank (best first)</option>
       <option value="r3:1">Sort: Round 3 rank (best first)</option>
+      <option value="r4:1">Sort: Stray round rank (best first)</option>
       <option value="name:1">Sort: College name (A–Z)</option>
       <option value="fee:1">Sort: Fees (low to high)</option>
     </select>
@@ -364,7 +365,7 @@
   </div>
 
   <div class="table-wrap">
-    <table id="tbl" style="min-width:980px">
+    <table id="tbl" style="min-width:1100px">
       <thead><tr>
         <th class="idx nosort">#</th>
         <th class="college" data-key="name">College<small>Name and state</small></th>
@@ -374,6 +375,7 @@
         <th class="num round" data-key="r1">Round 1<small>closing AIR</small></th>
         <th class="num round" data-key="r2">Round 2<small>closing AIR</small></th>
         <th class="num round" data-key="r3">Round 3<small>closing AIR</small></th>
+        <th class="num round" data-key="r4">Stray<small>closing AIR</small></th>
         <th class="num nosort">Actions</th>
       </tr></thead>
       <tbody id="body"></tbody>
@@ -386,8 +388,8 @@
   <footer>
     <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of seats offered in that round for that category. A dash means nobody was allotted in that round.<br>
     <b>Your chances:</b> enter your NEET AIR. Safe = your rank is at least 12% better than the closing rank, Likely = at or better than it, Borderline = within 12% above it, Out of reach = further away. It compares with the latest round that has data. This is a guide, not a guarantee: actual allotment depends on your choice filling and on seats left in later rounds.<br>
-    <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI Priority 1 / 2 as marked in the allotment list. In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
-    City is taken from the institute name; official districts are not in the source files. Source: official MCC allotment lists, UG Counselling 2026. Round 1 values as already published on ASMI.
+    <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI is one category (no priority split). In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
+    City is taken from the institute name; official districts are not in the source files. Source: official MCC allotment lists, UG Counselling 2026. Round 1 values as already published on ASMI. Stray Vacancy values are from the MCC stray round result list.
   </footer>
 </div>
 
@@ -402,15 +404,28 @@ const IC={
   pin:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
   eye:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'};
 const TYPE_ICON={Government:"building",Deemed:"cap",AIIMS:"building",JIPMER:"pin","Central University":"building"};
-const ROUNDS=["Round 1","Round 2","Round 3"];
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI1","NRI Priority 1"],["NRI2","NRI Priority 2"],["MINORITY","Minority"]];
+const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
+const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
+const RSORT={r1:"Round 1",r2:"Round 2",r3:"Round 3",r4:"Stray Vacancy Round"};
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"]];
 const CAT_LABEL=Object.fromEntries(CATS);
 const FEES=[["any","Any fee"],["0-100000","Up to ₹1 L"],["100000-500000","₹1–5 L"],["500000-1500000","₹5–15 L"],["1500000-2500000","₹15–25 L"],["2500000-","Above ₹25 L"]];
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
 // the cutoff files spell some states two ways; use the seat matrix spelling so the State filter has one entry each
 const STATE_ALIAS={"Tamilnadu":"Tamil Nadu","Jammu and Kashmir":"Jammu And Kashmir","Pondicherry":"Puducherry","Andaman Nicobar":"Andaman And Nicobar Islands","Dadra and Nagar Haveli":"The Dadra And Nagar Haveli And Daman And Diu"};
 const normState=s=>STATE_ALIAS[s]||s;
-const normCat=c=>c==="NRI_P-I"||c==="NRI_P1"?"NRI1":c==="NRI_P-II"||c==="NRI_P2"?"NRI2":c;
+const normCat=c=>/^NRI_P/.test(c)?"NRI":c;
+// NRI is one category: the P-I / P-II files are merged (the closing rank is the larger of the two)
+function mergeRounds(a,b){
+  if(!a) return b; if(!b) return a;
+  const out={};
+  for(const r of new Set([...Object.keys(a),...Object.keys(b)])){
+    const x=a[r]||{},y=b[r]||{},m=(p,q)=>p==null?q:q==null?p:Math.max(p,q);
+    out[r]={Intake:(x.Intake==null&&y.Intake==null)?null:(x.Intake||0)+(y.Intake||0),AIR:m(x.AIR,y.AIR),AIR_PWD:m(x.AIR_PWD,y.AIR_PWD)};
+  }
+  return out;
+}
+
 const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEFAULTS={type:new Set(),state:new Set(),city:new Set(),course:"",cat:"OPEN",pwd:"no",fee:"any",show:"all"};
@@ -427,7 +442,7 @@ const feeText=c=>{
 };
 const myRank=()=>{const v=parseInt($("rank").value.replace(/\D/g,""));return v>0?v:null;};
 function chance(R,v){ if(R==null||v==null) return null; if(R<=v*0.88) return "safe"; if(R<=v) return "likely"; if(R<=v*1.12) return "border"; return "out"; }
-function latest(c){const e=c.cats[F.cat];for(const r of ["Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
+function latest(c){const e=c.cats[F.cat];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
 function hasData(c,cat){const e=c.cats[cat];return !!e&&ROUNDS.some(r=>rankOf(e[r])!=null);}
 const detailUrl=c=>`/mcc-college.html?c=${encodeURIComponent(c.code)}&t=${c.itype}&ca=${F.cat}&pw=${F.pwd}${myRank()?"&rk="+myRank():""}`;
 
@@ -465,7 +480,7 @@ function render(){
     if(sortKey==="fee") return feeNum(c)||null;
     if(sortKey==="course") return c.course;
     if(sortKey==="rl"){const l=latest(c);return l?l.v:null;}
-    const e=c.cats[F.cat]; return rankOf(e&&e["Round "+sortKey.slice(1)]);
+    const e=c.cats[F.cat]; return rankOf(e&&e[RSORT[sortKey]]);
   };
   VIEW.sort((a,b)=>{
     if(R&&sortKey==="rl"){   // with a rank entered, colleges within reach come before those out of reach
@@ -501,11 +516,11 @@ function render(){
       <td class="fee">${feeText(c)}</td>
       ${ROUNDS.map(r=>rankCell(e,r,R)).join("")}
       <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
-    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${r}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
+    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
     cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / yr</i>${feeText(c)}</span></div>
       <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[F.cat])}${F.pwd==="yes"?" (PwD)":""}</div>
-      <div class="mc-cats" style="grid-template-columns:repeat(3,1fr)">${rounds}</div>
+      <div class="mc-cats" style="grid-template-columns:repeat(2,1fr)">${rounds}</div>
       <a class="view-btn" href="${url}">${IC.eye}View Details</a></article>`);
   });
   $("body").innerHTML=html.join("");
@@ -541,7 +556,8 @@ function loadState(){
   const p=new URLSearchParams(location.search), set=k=>new Set((p.get(k)||"").split("|").filter(Boolean));
   F.type=set("t"); F.state=set("s"); F.city=set("ci");
   F.course=["MBBS","BDS"].includes(p.get("co"))?p.get("co"):"";
-  F.cat=CAT_LABEL[p.get("ca")]?p.get("ca"):"OPEN";
+  const ca=/^NRI/.test(p.get("ca")||"")?"NRI":p.get("ca");   // older links used NRI1 / NRI2
+  F.cat=CAT_LABEL[ca]?ca:"OPEN";
   F.pwd=p.get("pw")==="yes"?"yes":"no";
   F.fee=FEES.some(x=>x[0]===p.get("fee"))?p.get("fee"):"any";
   F.show=p.get("sh")==="reach"?"reach":"all";
@@ -616,7 +632,7 @@ function reset(){
 }
 
 async function init(){
-  $("body").innerHTML='<tr><td colspan="9" class="empty">Loading cutoffs…</td></tr>';
+  $("body").innerHTML='<tr><td colspan="10" class="empty">Loading cutoffs…</td></tr>';
   try{
     const [index,...files]=await Promise.all([
       fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({})),
@@ -628,12 +644,12 @@ async function init(){
         const key=f.institution_type+"|"+c.code;
         let o=map.get(key);
         if(!o){o={code:c.code,name:c.name,state:normState(c.state),city:(index[c.code]||{}).city||"",est:c.establishment,fees:c.fees,type:TYPE_OF[prefix],course,itype:f.institution_type,cats:{}};map.set(key,o);}
-        o.cats[normCat(cat)]=c.rounds;
+        const nc=normCat(cat); o.cats[nc]=nc==='NRI'?mergeRounds(o.cats[nc],c.rounds):c.rounds;
         if(typeof c.fees==="string"&&c.fees.trim().startsWith("$")) o.nriFee=c.fees; else if(c.fees!=null&&!feeNum(o)&&String(c.fees).replace(/\D/g,"")) o.fees=c.fees;
       }));
     });
     COLLEGES=[...map.values()].filter(c=>Object.values(c.cats).some(e=>ROUNDS.some(r=>e[r]&&(e[r].AIR!=null||e[r].AIR_PWD!=null))));
-  }catch(e){$("body").innerHTML='<tr><td colspan="9" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
+  }catch(e){$("body").innerHTML='<tr><td colspan="10" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
   loadState(); buildUI(); render();
 }
 

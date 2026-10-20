@@ -2,6 +2,7 @@
 
 Usage: python3 scripts/build_mcc_cutoffs.py <input_dir> [--dry-run]
   input_dir must contain: allot_round2.xlsx, allot_round3.xlsx
+  and, once MCC publishes it, allot_stray.xlsx (same columns) for the Stray Vacancy Round
   (MCC "all allotments" lists: SNo, Rank, Score, Allotted Quota, Allotted Institute, Course,
    Alloted Category, Candidate Category, Remarks)
 
@@ -10,19 +11,26 @@ Rules (checked against the existing Round 1 files, which this script does not to
     AIR_PWD is the same for the PwD seat of that category.
   * Retained seats are ignored, so are "Did not fill up fresh choices" rows (those candidates just keep
     their earlier seat). Only Fresh / Upgraded allotments set a round's cutoff.
-  * NRI_P-I / NRI_P-II come from the Remarks column ("NRI Priority : 1" / ": 2").
+  * NRI is one category (no priority split): every fresh / upgraded NRI-quota allotment counts and goes
+    into the NRI_P-I / NRI_P1 files; the P-II files are left empty.
   * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
     been converted to general merit, so the NRI cutoff is the college's last allotted rank.
   * MBBS and BDS only. B.Sc Nursing is ignored.
 Only AIR and AIR_PWD of Round 2 / Round 3 are written. Intake and every other field stay as they were.
 """
-import json, re, sys, collections
+import json, os, re, sys, collections
 import openpyxl
 
 SRC = sys.argv[1]
 DRY = '--dry-run' in sys.argv
 ROOT = 'nextjs-sandbox/public/data/cutoffs/MCC/2026'
 SEAT = 'nextjs-sandbox/public/data/seat-matrix/MCC/2026'
+
+# round id -> key used in the cutoff files / allotment file / seat-matrix file
+RKEY = {2: 'Round 2', 3: 'Round 3', 'stray': 'Stray Vacancy Round'}
+AFILE = {2: 'allot_round2.xlsx', 3: 'allot_round3.xlsx', 'stray': 'allot_stray.xlsx'}
+SEATKEY = {2: 'round2', 3: 'round3', 'stray': 'stray'}
+ROUND_IDS = [k for k in (2, 3, 'stray') if os.path.exists(f'{SRC}/{AFILE[k]}')]   # the Stray round only once its file exists
 
 norm = lambda s: re.sub(r'[^a-z0-9]', '', str(s).lower())
 squash = lambda s: re.sub(r'\s+', '', str(s))
@@ -39,15 +47,28 @@ for rd in ('round1', 'round2', 'round3', 'stray'):
         ctype[x['code']] = 'Government' if x['type'] == 'ESI' else x['type']
 
 def load(k):
-    ws = openpyxl.load_workbook(f'{SRC}/allot_round{k}.xlsx', read_only=True, data_only=True).active
+    """Read one allotment file. Finds the results sheet and the columns by their headings, because the
+    Stray file has no Score column, keeps results on its second sheet and calls the open category 'Open'."""
+    wb = openpyxl.load_workbook(f'{SRC}/{AFILE[k]}', read_only=True, data_only=True)
+    rows = head = None
+    for sh in wb.worksheets:
+        got = list(sh.iter_rows(values_only=True))
+        for i, r in enumerate(got[:6]):
+            if r and 'Rank' in r and 'Allotted Institute' in r: rows, head = got, i
+    if rows is None: raise SystemExit(f'{RKEY[k]}: could not find the allotment table in {AFILE[k]}')
+    col = {name: i for i, name in enumerate(rows[head]) if name}
     out, missing = [], collections.Counter()
-    for r in list(ws.iter_rows(values_only=True))[1:]:
-        if r[5] not in ('MBBS', 'BDS'): continue
-        name = re.sub(r'\(\s*female seat only\s*\)\s*$', '', str(r[4]), flags=re.I)
+    for r in rows[head + 1:]:
+        if not isinstance(r[col['Rank']], int): continue   # blank rows and the notes under the table
+        if r[col['Course']] not in ('MBBS', 'BDS'): continue
+        name = re.sub(r'\(\s*female\s+seat\s+only\s*\)\s*$', '', str(r[col['Allotted Institute']]), flags=re.I)
         code = by_name.get(norm(name))
         if not code: missing[name] += 1; continue
-        out.append(dict(rank=r[1], quota=squash(r[3]), code=code, course=r[5], acat=r[6], rem=str(r[8])))
-    if missing: raise SystemExit(f'Round {k}: institutes not found in the seat matrix: {dict(missing)}')
+        acat = re.sub(r'\s+', ' ', str(r[col['Alloted Category']])).strip()
+        acat = re.sub(r'^Open\b', 'General', acat)   # Stray file: 'Open' / 'Open PwD'
+        out.append(dict(rank=r[col['Rank']], quota=squash(r[col['Allotted Quota']]), code=code, course=r[col['Course']],
+                        acat=acat, rem=re.sub(r'\s+', ' ', str(r[col['Remarks']]))))
+    if missing: raise SystemExit(f'{RKEY[k]}: institutes not found in the seat matrix: {dict(missing)}')
     return out
 
 IGNORED = lambda r: r['rem'].startswith('Retained') or r['rem'].startswith('Did not fill')
@@ -63,11 +84,8 @@ JOBS = {
 MINORITY = {'MuslimMinorityQuota', 'JainMinorityQuota'}
 SFM, NRI = 'Self-FinancedMeritSeat', 'Non-ResidentIndian'
 
-def nri_priority(r):
-    m = re.search(r'NRI Priority : (\d)', r['rem']); return int(m.group(1)) if m else None
-
 def has_nri_seats(k, code, course):
-    rows = seat_rows[f'round{k}']
+    rows = seat_rows[SEATKEY[k]]
     return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
 
 def compute(k, rows):
@@ -88,14 +106,12 @@ def compute(k, rows):
                 bump(res[(folder, 'OPEN')][r['code']], 'AIR', r['rank']); bump(sfm_last, r['code'], r['rank'])
             elif r['quota'] in MINORITY:
                 bump(res[(folder, 'MINORITY')][r['code']], 'AIR', r['rank'])
-            elif r['quota'] == NRI and nri_priority(r) in (1, 2):
-                p = nri_priority(r)
-                name = ('NRI_P-I' if p == 1 else 'NRI_P-II') if folder == 'DEEMED_MBBS' else f'NRI_P{p}'   # BDS files are NRI_P1 / NRI_P2
-                bump(res[(folder, name)][r['code']], 'AIR', r['rank'])
-        if k == 3:   # unfilled NRI seats are converted to general merit
+            elif r['quota'] == NRI:   # one NRI category, no priority split (the BDS file is named NRI_P1)
+                bump(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'AIR', r['rank'])
+        if k == 3:   # unfilled NRI seats are converted to general merit (decide for the Stray round once its results are in)
             p1 = 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1'
             for code, last in sfm_last.items():
-                if code not in res[(folder, p1)] and has_nri_seats(3, code, course):
+                if code not in res[(folder, p1)] and has_nri_seats(k, code, course):
                     res[(folder, p1)][code]['AIR'] = last
     return res
 
@@ -104,7 +120,7 @@ def dump(path, obj):
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 stats = collections.Counter(); added = []
-computed = {k: compute(k, load(k)) for k in (2, 3)}
+computed = {k: compute(k, load(k)) for k in ROUND_IDS}
 for folder in JOBS:
     cats = list(json.load(open(f'{ROOT}/{folder}/all.json'))['categories'])
     files = {cat: json.load(open(f'{ROOT}/{folder}/{cat}.json')) for cat in cats}
@@ -113,16 +129,16 @@ for folder in JOBS:
         for c in data['colleges']: sibling.setdefault(c['code'], c)
     for cat, data in files.items():
         have = {c['code'] for c in data['colleges']}
-        for k in (2, 3):   # colleges that got an allotment but are missing from this category file
+        for k in ROUND_IDS:   # colleges that got an allotment but are missing from this category file
             for code in sorted(set(computed[k].get((folder, cat), {})) - have):
                 src = sibling[code]
                 blank = {r: {f: None for f in v} for r, v in src['rounds'].items()}
                 data['colleges'].append({**{f: src[f] for f in src if f != 'rounds'}, 'rounds': blank})
                 have.add(code); added.append(f'{folder}/{cat}: {code} {src["name"]}')
         for c in data['colleges']:
-            for k in (2, 3):
+            for k in ROUND_IDS:
                 new = computed[k].get((folder, cat), {}).get(c['code'], {})
-                rd = c['rounds'][f'Round {k}']
+                rd = c['rounds'][RKEY[k]]
                 for fld in ('AIR', 'AIR_PWD'):
                     if fld not in rd: continue
                     old, val = rd[fld], new.get(fld)
@@ -135,7 +151,7 @@ for folder in JOBS:
         allj['categories'] = {cat: files[cat]['colleges'] for cat in cats}
         dump(f'{ROOT}/{folder}/all.json', allj)
 
-print('Round 2 + Round 3 AIR / AIR_PWD cells:', dict(stats))
+print(' + '.join(RKEY[k] for k in ROUND_IDS), 'AIR / AIR_PWD cells:', dict(stats))
 print('colleges added to a category file because they had allotments there:', len(added))
 for n in added: print('  +', n)
 print('(dry run, nothing written)' if DRY else 'written.')
