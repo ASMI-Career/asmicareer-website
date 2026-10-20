@@ -353,6 +353,14 @@
   .pills.bar{justify-content:center}
   .type-tab .count,.type-tab.active .count{background:none;padding:0;border-radius:0;font-size:.95rem;font-weight:800;color:var(--muted)}
   .type-tab.active .count{color:#2c0450}
+  /* clear banner */
+  .hero-row{align-items:center;padding:24px 28px}
+  .hero-title h1{font-size:2.3rem;line-height:1.1;margin:0 0 8px}
+  .hero-title .sub1{font-size:1.05rem;font-weight:800;color:#fff;margin:0}
+  .hero-title .sub2{font-size:.92rem;font-weight:500;color:#e2d2ff;margin:3px 0 0}
+  .tagline{display:none}
+  @media(min-width:1250px){.tagline{display:block}}
+  @media(max-width:760px){.hero-row{padding:16px}.hero-title h1{font-size:1.55rem}.hero-title .sub1{font-size:.95rem}}
   /* banner, cards and ranks, round 2 */
   .hero-row{flex-wrap:nowrap;gap:28px;padding:22px 24px;align-items:center}
   .hero-title{flex:1 1 auto;min-width:0}
@@ -395,8 +403,8 @@
     <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
     <div class="hero-title">
       <h1>All India Quota <span>Cutoff 2026</span></h1>
-      <p><b>MCC NEET UG</b> • MBBS &amp; BDS • <span id="heroSub">Closing Rank, Round by Round</span></p>
-      <div class="hero-stats" id="stats"></div>
+      <p class="sub1">MCC NEET UG • MBBS &amp; BDS</p>
+      <p class="sub2">Closing rank, round by round</p>
     </div>
     <div class="tagline">Right Guidance<br>Brighter Tomorrow</div>
     <div class="source-card">
@@ -534,7 +542,7 @@
   <div class="guide-bg" id="guide" hidden><div class="guide-box"><div class="guide-head"><b>Quick Guide</b><button type="button" id="guideClose" aria-label="Close">×</button></div><div class="guide-body" id="guideBody"></div></div></div>
 
   <footer>
-    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat in that college and category after that round, retained seats included. A dash means nobody was freshly allotted in that round (the seat count under a dash is seats held by retained candidates). <b>Lowest Cutoff</b> is the highest rank allotted in any of the four rounds, the last rank that still got a seat.<br>
+    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat in that college and category after that round, retained seats included. A dash means nobody new was allotted in that round; "N retained" under a dash is the number of candidates who kept the seat they already held. <b>Lowest Cutoff</b> is the highest rank allotted in any of the four rounds, the last rank that still got a seat.<br>
     <b>Your Chances:</b> enter your NEET AIR. Safe = your rank is at least 12% better than the closing rank, Likely = at or better than it, Borderline = within 12% above it, Out of reach = further away. It compares with the latest round that has data. This is a guide, not a guarantee: actual allotment depends on your choice filling and on seats left in later rounds.<br>
     <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI is one category (no priority split). In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
     <b>Other quotas:</b> Delhi University, IP University, ESI, AMU, Jamia, Puducherry domicile, Muslim / Jain minority and other quotas are listed as separate rows. Choose them in the Quota filter; their rounds are worked out the same way from the MCC allotment lists, and a college can appear once for each quota.<br>
@@ -630,7 +638,7 @@ function matches(c,R){
 
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
-  if(v==null) return `<td class="rank-cell none">—${rd&&rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
+  if(v==null) return `<td class="rank-cell none" title="Nobody new was allotted here. The candidates counted kept the seat they already held.">—${rd&&rd.Intake?`<small>${rd.Intake} retained</small>`:""}</td>`;
   const ch=chance(R,v);
   return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
 }
@@ -698,7 +706,7 @@ function render(){
       ${ROUNDS.map(r=>rankCell(e,r,R)).join("")}
       <td class="rank-cell lowest">${lw?`<b>${fmt(lw.v)}</b><small>${RLABEL(lw.r)}</small>`:"—"}</td>
       <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
-    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
+    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake?`<small>${v==null?rd.Intake+" retained":rd.Intake+" seat"+(rd.Intake>1?"s":"")}</small>`:""}</div>`;}).join("");
     cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / Year</i>${feeText(c)}</span></div>
       <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[ec()])}${F.pwd==="yes"?" (PwD)":""}</div>
@@ -799,12 +807,6 @@ function typeBar(counts){
 const svg=(p)=>`<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 function buildUI(){
   const base=COLLEGES.filter(isMain), states=new Set(base.map(c=>c.state)), mb=base.filter(c=>c.course==="MBBS").length, bd=base.filter(c=>c.course==="BDS").length;
-  $("stats").innerHTML=
-    `<div class="hstat">${svg('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>')}<div><b>${base.length.toLocaleString()}</b><span>Colleges</span></div></div>`+
-    `<div class="hstat">${svg('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 1.7 6 5"/>')}<div><b>${states.size}</b><span>States / UTs</span></div></div>`+
-    `<div class="hstat">${svg('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>')}<div><b>${mb.toLocaleString()}</b><span>MBBS Colleges</span></div></div>`+
-    `<div class="hstat">${svg('<path d="M12 6c-2-2-7-2-7 3 0 4 2 5 2 9 0 2 1 3 2 3 2 0 1-4 3-4s1 4 3 4c1 0 2-1 2-3 0-4 2-5 2-9 0-5-5-5-7-3z"/>')}<div><b>${bd.toLocaleString()}</b><span>BDS Colleges</span></div></div>`;
-  $("heroSub").innerHTML=`Closing Rank, Round by Round • <b>${states.size} States / UTs</b>`;
   $("collegeList").innerHTML=[...new Set(COLLEGES.map(c=>c.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
   const counts={};base.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   typeBar(counts);
