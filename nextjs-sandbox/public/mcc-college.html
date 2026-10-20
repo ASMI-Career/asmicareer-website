@@ -344,6 +344,8 @@
   table.ct th{background:linear-gradient(180deg,#4a1a99,#2f0a68);color:#fff}
   .rank-cell,.rank-cell b,.rank-cell small{font-family:'Inter',system-ui,sans-serif;font-variant-numeric:tabular-nums lining-nums}
   .rank-cell small.op{color:#6d3bd2;font-weight:600}
+  .rank-cell.open b{font-weight:600;color:#4a1a99}
+  .rank-cell.open.none{color:var(--faint)}
 </style>
 </head>
 <body>
@@ -482,7 +484,7 @@ function draw(){
 
   <section class="card">
     <h2>Cutoff, Round by Round <small id="ctSub">${ctSubText()}</small></h2>
-    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}<small style="display:block;font-weight:600;opacity:.8">Closing AIR</small></th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
+    <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}<small style="display:block;font-weight:600;opacity:.8">Opening AIR</small></th><th>${RLABEL(r)}<small style="display:block;font-weight:600;opacity:.8">Closing AIR</small></th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
     <p class="note">Closing rank = the last candidate freshly allotted (or upgraded) a seat in that round; retained seats do not set it. Smaller rank = harder to get. "n seats" is the number of seats offered in that round (MCC seat matrix). A dash means nobody was freshly allotted in that round.</p>
   </section>
 
@@ -523,9 +525,11 @@ function refresh(){
     const e=C.cats[k];
     return `<tr class="${k===S.cat?"sel":""}"><td>${esc(l)}</td>${ROUNDS.map(r=>{
       const rd=e[r], v=rankOf(rd), opn=S.pwd==="yes"?rd.OPEN_AIR_PWD:rd.OPEN_AIR;
-      if(v==null) return `<td class="rank-cell none">—${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
+      const open=opn!=null?`<td class="rank-cell open"><b>${fmt(opn)}</b></td>`:'<td class="rank-cell open none">—</td>';
+      const seats=rd&&rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:"";
+      if(v==null) return open+`<td class="rank-cell none" title="Seats offered in this round, nobody new allotted.">—${seats}</td>`;
       const ch=k===S.cat?chance(R,v):null;
-      return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${opn!=null?`<small class="op">Opening ${fmt(opn)}</small>`:""}${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;}).join("")}</tr>`;
+      return open+`<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${seats}</td>`;}).join("")}</tr>`;
   }).join("");
   $("ctSub").textContent=ctSubText();
   // verdict

@@ -105,13 +105,22 @@ def guess(inst):
         city = ''
     return name, city
 
+# The MCC files cut some Delhi NCR armed-forces (CW) quota names short ("Delhi NCR Children/Widows of Personnel of the").
+# The allotment lists say which university quota each of these colleges uses.
+CW_DU = {'200448', '200449', '200450', '200451'}          # Lady Hardinge, MAMC, UCMS, MAIDS: Delhi University quota
+CW_IP = {'904361', '200495', '200498'}                     # ESIC Basaidarapur, VMMC, ABVIMS: IP University quota
+def fix_quota(q, c):
+    if q.startswith('Delhi NCR Children/Widows of') and not re.search(r'\(CW\) (DU|IP)', q):
+        return 'Delhi NCR Children/Widows of Personnel of the Armed Forces (CW) ' + ('DU' if c in CW_DU else 'IP' if c in CW_IP else '?')
+    return q
+
 def convert(rows, names, gender_col=False):
     out = []
     for r in rows:
         inst = clean(r[2]); inst = fix_split(inst); c = code(inst)
         a, b = clean(r[5]).split()
         name, city = NAME_FIX.get(c) or names.get(c) or guess(inst)
-        out.append(dict(state=clean(r[0]), type=TYPE[clean(r[1])], institute=inst, code=c, quota=clean(r[3]),
+        out.append(dict(state=clean(r[0]), type=TYPE[clean(r[1])], institute=inst, code=c, quota=fix_quota(clean(r[3]), c),
                         branch=clean(r[4]), category=f'{a} {b}', categoryFull=CAT[a] + (' - PwBD' if b == 'PH' else ''),
                         seats=int(r[6]), collegeName=name, city=city,
                         gender=(r[7] if gender_col else None), added=False))
