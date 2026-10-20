@@ -353,6 +353,14 @@
   .pills.bar{justify-content:center}
   .type-tab .count,.type-tab.active .count{background:none;padding:0;border-radius:0;font-size:.95rem;font-weight:800;color:var(--muted)}
   .type-tab.active .count{color:#2c0450}
+  /* clear banner */
+  .hero-row{align-items:center;padding:24px 28px}
+  .hero-title h1{font-size:2.3rem;line-height:1.1;margin:0 0 8px}
+  .hero-title .sub1{font-size:1.05rem;font-weight:800;color:#fff;margin:0}
+  .hero-title .sub2{font-size:.92rem;font-weight:500;color:#e2d2ff;margin:3px 0 0}
+  .tagline{display:none}
+  @media(min-width:1250px){.tagline{display:block}}
+  @media(max-width:760px){.hero-row{padding:16px}.hero-title h1{font-size:1.55rem}.hero-title .sub1{font-size:.95rem}}
   /* banner, cards and ranks, round 2 */
   .hero-row{flex-wrap:nowrap;gap:28px;padding:22px 24px;align-items:center}
   .hero-title{flex:1 1 auto;min-width:0}
@@ -395,8 +403,8 @@
     <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
     <div class="hero-title">
       <h1>All India Quota <span>Cutoff 2026</span></h1>
-      <p><b>MCC NEET UG</b> • MBBS &amp; BDS • <span id="heroSub">Closing Rank, Round by Round</span></p>
-      <div class="hero-stats" id="stats"></div>
+      <p class="sub1">MCC NEET UG • MBBS &amp; BDS</p>
+      <p class="sub2">Closing rank, round by round</p>
     </div>
     <div class="tagline">Right Guidance<br>Brighter Tomorrow</div>
     <div class="source-card">
@@ -799,12 +807,6 @@ function typeBar(counts){
 const svg=(p)=>`<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 function buildUI(){
   const base=COLLEGES.filter(isMain), states=new Set(base.map(c=>c.state)), mb=base.filter(c=>c.course==="MBBS").length, bd=base.filter(c=>c.course==="BDS").length;
-  $("stats").innerHTML=
-    `<div class="hstat">${svg('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>')}<div><b>${base.length.toLocaleString()}</b><span>Colleges</span></div></div>`+
-    `<div class="hstat">${svg('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 1.7 6 5"/>')}<div><b>${states.size}</b><span>States / UTs</span></div></div>`+
-    `<div class="hstat">${svg('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>')}<div><b>${mb.toLocaleString()}</b><span>MBBS Colleges</span></div></div>`+
-    `<div class="hstat">${svg('<path d="M12 6c-2-2-7-2-7 3 0 4 2 5 2 9 0 2 1 3 2 3 2 0 1-4 3-4s1 4 3 4c1 0 2-1 2-3 0-4 2-5 2-9 0-5-5-5-7-3z"/>')}<div><b>${bd.toLocaleString()}</b><span>BDS Colleges</span></div></div>`;
-  $("heroSub").innerHTML=`Closing Rank, Round by Round • <b>${states.size} States / UTs</b>`;
   $("collegeList").innerHTML=[...new Set(COLLEGES.map(c=>c.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
   const counts={};base.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   typeBar(counts);
