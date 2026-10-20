@@ -16,7 +16,7 @@ Rules (checked against the existing Round 1 files, which this script does not to
   * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
     been converted to general merit, so the NRI cutoff is the college's last allotted rank.
   * MBBS and BDS only. B.Sc Nursing is ignored.
-AIR and AIR_PWD come from the allotment lists, Intake (seats offered) from the seat matrix. Intake and every other field stay as they were.
+AIR and AIR_PWD come from the allotment lists. Intake is the number of seats allotted in the round, retained seats included (also from the allotment lists). Intake and every other field stay as they were.
 """
 import json, os, re, sys, collections
 import openpyxl
@@ -82,6 +82,7 @@ JOBS = {
     'DEEMED_MBBS': ('Deemed', 'MBBS', None, 'deemed'), 'DEEMED_BDS': ('Deemed', 'BDS', None, 'deemed'),
 }
 MINORITY = {'MuslimMinorityQuota', 'JainMinorityQuota'}
+MINORITY_CAT = {'MuslimMinorityQuota': 'MINORITY_MUSLIM', 'JainMinorityQuota': 'MINORITY_JAIN'}
 SFM, NRI = 'Self-FinancedMeritSeat', 'Non-ResidentIndian'
 
 def has_nri_seats(k, code, course):
@@ -89,21 +90,20 @@ def has_nri_seats(k, code, course):
     return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
 
 
-SEAT_Q = {'AllIndia': 'All India', 'OpenSeatQuota': 'Open Seat Quota'}
-def intake(k, folder, cat, code):
-    """Seats offered in that round for the quota / category the cutoff is about, straight from the seat matrix
-    (normal and PwD seats together). None when there are none."""
-    itype, course, quotas, kind = JOBS[folder]
-    n = 0
-    for x in seat_rows[SEATKEY[k]]:
-        if x['code'] != code or not x['branch'].startswith(course): continue
-        q = squash(x['quota'])
-        if kind == 'cat':
-            if q in quotas and SEAT_CAT.get(x['category'].split()[0]) == cat: n += x['seats']
-        elif cat == 'OPEN': n += x['seats'] if q == SFM else 0
-        elif cat == 'MINORITY': n += x['seats'] if q in MINORITY else 0
-        elif cat in ('NRI_P-I', 'NRI_P1'): n += x['seats'] if q == NRI else 0
-    return n or None
+def allotted(k, rows):
+    """-> {(folder, category): {code: n}}: candidates holding a seat after the round, retained ones included
+    (every row of the allotment list is one candidate; PwD and normal seats together)."""
+    n = collections.defaultdict(lambda: collections.defaultdict(int))
+    for folder, (itype, course, quotas, kind) in JOBS.items():
+        for r in rows:
+            if r['course'] != course or ctype.get(r['code']) != itype: continue
+            if kind == 'cat':
+                if r['quota'] in quotas: n[(folder, CAT[r['acat'].replace(' PwD', '')])][r['code']] += 1
+            elif r['quota'] == SFM: n[(folder, 'OPEN')][r['code']] += 1
+            elif r['quota'] in MINORITY:
+                n[(folder, 'MINORITY')][r['code']] += 1; n[(folder, MINORITY_CAT[r['quota']])][r['code']] += 1
+            elif r['quota'] == NRI: n[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']] += 1
+    return n
 
 def compute(k, rows):
     """-> {(folder, category): {code: {'AIR':..,'AIR_PWD':..}}}"""
@@ -123,6 +123,7 @@ def compute(k, rows):
                 bump(res[(folder, 'OPEN')][r['code']], 'AIR', r['rank']); bump(sfm_last, r['code'], r['rank'])
             elif r['quota'] in MINORITY:
                 bump(res[(folder, 'MINORITY')][r['code']], 'AIR', r['rank'])
+                bump(res[(folder, MINORITY_CAT[r['quota']])][r['code']], 'AIR', r['rank'])
             elif r['quota'] == NRI:   # one NRI category, no priority split (the BDS file is named NRI_P1)
                 bump(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'AIR', r['rank'])
         if k == 3:   # unfilled NRI seats are converted to general merit (decide for the Stray round once its results are in)
@@ -147,10 +148,15 @@ for rd in seat_rows.values():
         if x['fee'] and not re.search(r'NRI|Non-Resident', x['quota']): seat_fee.setdefault((x['code'], x['branch'].split()[0]), x['fee'])
 
 stats = collections.Counter(); added = []
-computed = {k: compute(k, load(k)) for k in ROUND_IDS}
+loaded = {k: load(k) for k in ROUND_IDS}
+computed = {k: compute(k, loaded[k]) for k in ROUND_IDS}
+held = {k: allotted(k, loaded[k]) for k in ROUND_IDS}
 for folder in JOBS:
     cats = list(json.load(open(f'{ROOT}/{folder}/all.json'))['categories'])
-    files = {cat: json.load(open(f'{ROOT}/{folder}/{cat}.json')) for cat in cats}
+    if JOBS[folder][3] == 'deemed':   # Muslim and Jain minority get their own category next to the combined MINORITY one
+        cats += [c for c in ('MINORITY_MUSLIM', 'MINORITY_JAIN') if c not in cats]
+    files = {cat: (json.load(open(f'{ROOT}/{folder}/{cat}.json')) if os.path.exists(f'{ROOT}/{folder}/{cat}.json')
+                   else {'counselling': 'MCC', 'institution_type': folder, 'year': 2026, 'category': cat, 'colleges': []}) for cat in cats}
     sibling = {}   # code -> college entry from any category file (for colleges a category file does not list yet)
     for data in files.values():
         for c in data['colleges']: sibling.setdefault(c['code'], c)
@@ -168,7 +174,7 @@ for folder in JOBS:
             for k in ROUND_IDS:
                 new = computed[k].get((folder, cat), {}).get(c['code'], {})
                 rd = c['rounds'][RKEY[k]]
-                it = intake(k, folder, cat, c['code'])
+                it = held[k].get((folder, cat), {}).get(c['code']) or None
                 stats['intake unchanged' if rd.get('Intake') == it else 'intake fixed'] += 1
                 rd['Intake'] = it
                 for fld in ('AIR', 'AIR_PWD'):

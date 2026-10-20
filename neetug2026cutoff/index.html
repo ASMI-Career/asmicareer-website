@@ -380,6 +380,11 @@
   @media(max-width:1500px){.tagline{display:none}}
   @media(max-width:1100px){.hero-row{flex-wrap:wrap}.hero-title{flex:1 1 100%}.hero-title h1{white-space:normal}.source-card{margin-left:0}}
   @media(max-width:760px){.pills.bar{justify-content:flex-start}.cards .mcard{margin-bottom:12px}.hero-title h1{font-size:1.5rem}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mc-head{min-height:0}.mc-name .cname{min-height:0}}
+  .rank-cell.lowest b{color:#c2410c}
+  th.lowest{background:linear-gradient(180deg,#b45309,#7c2d12) !important}
+  .mc-low{display:flex;align-items:baseline;gap:8px;justify-content:center;margin:0 0 12px;padding:9px;border-radius:10px;background:#fff7e0;border:1px solid #f3dd9a;font-size:.84rem}
+  .mc-low i{font-style:normal;font-weight:800;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .mc-low b{font-size:1.05rem}.mc-low span{color:var(--muted);font-size:.74rem}
 </style>
 </head>
 <body>
@@ -447,6 +452,18 @@
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Category</div>
       <div class="seg" id="fCat"></div>
     </div>
+    <div class="f s3" id="minWrap">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.4 5 5.6.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.6-.8z"/></svg>Minority <small>(Deemed)</small></div>
+      <div class="seg" id="fMinority"></div>
+    </div>
+    <div class="f s4">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Established</div>
+      <div class="seg" id="fEst"></div>
+    </div>
+    <div class="f s5">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Seats Allotted In</div>
+      <div class="seg" id="fRound"></div>
+    </div>
     <div class="f s5">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M9 4c6 0 6 10 0 10H6l8 6"/></svg>Fees Per Year</div>
       <div class="seg" id="fFee"></div>
@@ -480,6 +497,7 @@
       <option value="r2:1">Sort: Round 2 rank (best first)</option>
       <option value="r3:1">Sort: Round 3 rank (best first)</option>
       <option value="r4:1">Sort: Stray round rank (best first)</option>
+      <option value="lc:1">Sort: Lowest cutoff (best first)</option>
       <option value="name:1">Sort: College Name (A–Z)</option>
       <option value="fee:1">Sort: Fees (low to high)</option>
     </select>
@@ -498,6 +516,7 @@
         <th class="num round" data-key="r2">Round 2<small>closing AIR</small></th>
         <th class="num round" data-key="r3">Round 3<small>closing AIR</small></th>
         <th class="num round" data-key="r4">Stray<small>closing AIR</small></th>
+        <th class="num round lowest" data-key="lc" title="Highest AIR allotted in any of the 4 rounds: the last rank that still got a seat">Lowest Cutoff<small>of 4 rounds</small></th>
         <th class="num nosort">Actions</th>
       </tr></thead>
       <tbody id="body"></tbody>
@@ -510,7 +529,7 @@
   <div class="guide-bg" id="guide" hidden><div class="guide-box"><div class="guide-head"><b>Quick Guide</b><button type="button" id="guideClose" aria-label="Close">×</button></div><div class="guide-body" id="guideBody"></div></div></div>
 
   <footer>
-    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of seats offered in that round for that category. A dash means nobody was allotted in that round.<br>
+    <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat in that college and category after that round, retained seats included. A dash means nobody was freshly allotted in that round (the seat count under a dash is seats held by retained candidates). <b>Lowest Cutoff</b> is the highest rank allotted in any of the four rounds, the last rank that still got a seat.<br>
     <b>Your Chances:</b> enter your NEET AIR. Safe = your rank is at least 12% better than the closing rank, Likely = at or better than it, Borderline = within 12% above it, Out of reach = further away. It compares with the latest round that has data. This is a guide, not a guarantee: actual allotment depends on your choice filling and on seats left in later rounds.<br>
     <b>What is counted:</b> only fresh and upgraded allotments. Retained seats (candidates who kept their earlier seat) are ignored. Government colleges use the All India quota; AIIMS, JIPMER and Central universities use the Open Seat Quota; deemed universities use the Self-financed merit seats (General), Minority and NRI quotas. NRI is one category (no priority split). In Round 3, where NRI seats stayed vacant and were converted to general merit, the cutoff shown is the college's last allotted rank.<br>
     <b>Other quotas:</b> Delhi University, IP University, ESI, AMU, Jamia, Puducherry domicile, Muslim / Jain minority and other quotas are listed as separate rows. Choose them in the Quota filter; their rounds are worked out the same way from the MCC allotment lists, and a college can appear once for each quota.<br>
@@ -535,8 +554,12 @@ const isMain=c=>c.itype!=="OTHER"||c.quota==="All India Quota";
 const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
 const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
 const RSORT={r1:"Round 1",r2:"Round 2",r3:"Round 3",r4:"Stray Vacancy Round"};
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"],["WOMEN","Women"]];
-const CAT_LABEL=Object.fromEntries(CATS);
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"]];
+const CAT_LABEL={...Object.fromEntries(CATS),WOMEN:"Women",NRI:"NRI",MINORITY:"Minority",MINORITY_MUSLIM:"Muslim Minority",MINORITY_JAIN:"Jain Minority"};
+const MINORITIES=[["","None"],["MINORITY_MUSLIM","Muslim"],["MINORITY_JAIN","Jain"]];
+const ESTS=[["","Any"],["old","Before 2000"],["mid","2000–2014"],["new","2015 Onwards"]];
+const ESTFN={old:y=>y<2000,mid:y=>y>=2000&&y<=2014,new:y=>y>=2015};
+const ROUND_OPTS=[["","Any Round"],["Round 1","Round 1"],["Round 2","Round 2"],["Round 3","Round 3"],["Stray Vacancy Round","Stray"]];
 const FEES=[["any","Any Fee"],["0-100000","Up to ₹1 L"],["100000-500000","₹1–5 L"],["500000-1500000","₹5–15 L"],["1500000-2500000","₹15–25 L"],["2500000-","Above ₹25 L"]];
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
 // the cutoff files spell some states two ways; use the seat matrix spelling so the State filter has one entry each
@@ -556,7 +579,7 @@ function mergeRounds(a,b){
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const DEFAULTS={type:new Set(),state:new Set(),district:new Set(),quota:new Set(),course:"",cat:"OPEN",pwd:"no",fee:"any",show:"all"};
+const DEFAULTS={type:new Set(),state:new Set(),district:new Set(),quota:new Set(),course:"",cat:"OPEN",minority:"",est:"",round:"",pwd:"no",fee:"any",show:"all"};
 const F={...DEFAULTS,type:new Set(),state:new Set(),district:new Set(),quota:new Set()};
 let TYPE_REDRAW=()=>{}, COLLEGES=[], VIEW=[], sortKey="rl", sortAsc=true;
 
@@ -570,9 +593,12 @@ const feeText=c=>{
 };
 const myRank=()=>{const v=parseInt($("rank").value.replace(/\D/g,""));return v>0?v:null;};
 function chance(R,v){ if(R==null||v==null) return null; if(R<=v*0.88) return "safe"; if(R<=v) return "likely"; if(R<=v*1.12) return "border"; return "out"; }
-function latest(c){const e=c.cats[F.cat];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
+function ec(){ if(F.minority) return F.minority; if(F.quota.size===1&&F.quota.has("NRI Quota")) return "NRI"; return F.cat; }
+const rankSet=(c,cat)=>{const e=c.cats[cat];return e?ROUNDS.map(r=>({r,v:rankOf(e[r])})).filter(x=>x.v!=null):[];};
+const lowest=c=>{const a=rankSet(c,ec());return a.length?a.reduce((m,x)=>x.v>m.v?x:m):null;};   // highest AIR allotted in any round = the last rank that still got a seat
+function latest(c){const e=c.cats[ec()];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
 function hasData(c,cat){const e=c.cats[cat];return !!e&&ROUNDS.some(r=>rankOf(e[r])!=null);}
-const detailUrl=c=>`/mcc-college.html?c=${encodeURIComponent(c.code)}&q=${encodeURIComponent(c.quota)}&co=${c.course}&t=${c.itype}&ca=${F.cat}&pw=${F.pwd}${myRank()?"&rk="+myRank():""}`;
+const detailUrl=c=>`/mcc-college.html?c=${encodeURIComponent(c.code)}&q=${encodeURIComponent(c.quota)}&co=${c.course}&t=${c.itype}&ca=${ec()}&pw=${F.pwd}${myRank()?"&rk="+myRank():""}`;
 
 function feeOk(c){
   if(F.fee==="any") return true;
@@ -583,10 +609,13 @@ function matches(c,R){
   if(F.type.size&&!F.type.has(c.type)) return false;
   if(F.state.size&&!F.state.has(c.state)) return false;
   if(F.district.size&&!F.district.has(c.district)) return false;
-  if(F.quota.size){ if(!(F.quota.has(c.quota)||(F.quota.has("NRI Quota")&&c.cats.NRI))) return false; }
-  else if(c.itype==="OTHER"&&!(c.quota==="All India Quota"||(F.cat==="NRI"&&c.quota==="NRI Quota")||(F.cat==="WOMEN"&&c.quota==="Muslim Quota"))) return false;
+  if(F.minority){ if(c.itype==="OTHER") return false; }
+  else if(F.quota.size){ if(!(F.quota.has(c.quota)||(F.quota.has("NRI Quota")&&c.cats.NRI))) return false; }
+  else if(c.itype==="OTHER"&&!(c.quota==="All India Quota"||(F.cat==="WOMEN"&&c.quota==="Muslim Quota"))) return false;
+  if(F.est&&!(c.est&&ESTFN[F.est](c.est))) return false;
+  if(F.round){const e=c.cats[ec()];if(!(e&&rankOf(e[F.round])!=null)) return false;}
   if(F.course&&c.course!==F.course) return false;
-  if(!hasData(c,F.cat)) return false;
+  if(!hasData(c,ec())) return false;
   if(!feeOk(c)) return false;
   if(F.show==="reach"){const l=latest(c);const ch=l&&chance(R,l.v);if(!ch||ch==="out") return false;}
   const q=$("search").value.trim().toLowerCase();
@@ -596,13 +625,18 @@ function matches(c,R){
 
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
-  if(v==null) return '<td class="rank-cell none">—</td>';
+  if(v==null) return `<td class="rank-cell none">—${rd&&rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
   const ch=chance(R,v);
   return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
 }
 
 function render(){
   const R=myRank();
+  const deemedOk=!F.type.size||F.type.has("Deemed");
+  if(!deemedOk&&F.minority) F.minority="";
+  $("minWrap").style.display=deemedOk?"":"none"; seg("fMinority",MINORITIES,"minority");
+  if(MS.fQuota) MS.fQuota.refresh(true);
+  drawCats();
   VIEW=COLLEGES.filter(c=>matches(c,R));
   const val=c=>{
     if(sortKey==="name") return c.name.toLowerCase();
@@ -610,7 +644,8 @@ function render(){
     if(sortKey==="fee") return feeNum(c)||null;
     if(sortKey==="course") return c.course;
     if(sortKey==="rl"){const l=latest(c);return l?l.v:null;}
-    const e=c.cats[F.cat]; return rankOf(e&&e[RSORT[sortKey]]);
+    if(sortKey==="lc"){const w=lowest(c);return w?w.v:null;}
+    const e=c.cats[ec()]; return rankOf(e&&e[RSORT[sortKey]]);
   };
   VIEW.sort((a,b)=>{
     if(R&&sortKey==="rl"){   // with a rank entered, colleges within reach come before those out of reach
@@ -628,16 +663,17 @@ function render(){
   const reach=R?VIEW.filter(c=>{const l=latest(c);const ch=l&&chance(R,l.v);return ch&&ch!=="out";}).length:0;
   $("reachInfo").textContent=R?`· ${reach.toLocaleString()} within your reach`:"";
   const note=$("infoNote");
-  if(/^NRI|MINORITY/.test(F.cat)){note.style.display="block";note.textContent=F.cat==="NRI"?"NRI cutoffs: deemed universities, plus the NRI seats of AMU and Jamia.":"Minority cutoffs exist for deemed universities only.";}
+  if(F.minority){note.style.display="block";note.textContent=(F.minority==="MINORITY_JAIN"?"Jain":"Muslim")+" minority seats exist in deemed universities only.";}
+  else if(ec()==="NRI"){note.style.display="block";note.textContent="NRI cutoffs: deemed universities, plus the NRI seats of AMU and Jamia.";}
   else if(F.cat==="WOMEN"){note.style.display="block";note.textContent="Women: the Muslim Women seats of the Muslim Quota (Jamia Millia Islamia). Pick the Muslim Quota in the Quota filter.";}
-  else if(F.cat!=="OPEN"&&F.type.size&&F.type.has("Deemed")&&F.type.size===1){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
+  else if(F.cat!=="OPEN"&&F.type.size===1&&F.type.has("Deemed")){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
   else if(F.fee!=="any"){note.style.display="block";note.textContent="Fee filter uses the annual fee in Indian rupees. Colleges without a listed fee are hidden.";}
   else note.style.display="none";
   $("empty").style.display=VIEW.length?"none":"block";
   $("tbl").style.display=VIEW.length?"table":"none";
   const html=[], cards=[];
   VIEW.forEach((c,i)=>{
-    const e=c.cats[F.cat], l=latest(c), ch=R&&l?chance(R,l.v):null, url=detailUrl(c);
+    const e=c.cats[ec()], l=latest(c), ch=R&&l?chance(R,l.v):null, url=detailUrl(c), lw=lowest(c);
     const badge=ch?`<span class="chance ch-${ch}">${CH_LABEL[ch]}</span>`:"";
     const sub=esc(c.state)+(c.district&&c.district!==c.state?" · "+esc(c.district):"");
     html.push(`<tr><td class="idx">${i+1}</td>
@@ -646,12 +682,14 @@ function render(){
       <td>${esc(c.course)}</td>
       <td class="fee">${feeText(c)}</td>
       ${ROUNDS.map(r=>rankCell(e,r,R)).join("")}
+      <td class="rank-cell lowest">${lw?`<b>${fmt(lw.v)}</b><small>${RLABEL(lw.r)}</small>`:"—"}</td>
       <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
     const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${rd&&rd.Intake&&v!=null?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</div>`;}).join("");
     cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / Year</i>${feeText(c)}</span></div>
-      <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[F.cat])}${F.pwd==="yes"?" (PwD)":""}</div>
+      <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[ec()])}${F.pwd==="yes"?" (PwD)":""}</div>
       <div class="mc-cats" style="grid-template-columns:repeat(2,1fr)">${rounds}</div>
+      <div class="mc-low"><i>Lowest Cutoff</i><b>${lw?fmt(lw.v):"—"}</b>${lw?`<span>${RLABEL(lw.r)}</span>`:""}</div>
       <a class="view-btn" href="${url}">${IC.eye}View Details</a></article>`);
   });
   $("body").innerHTML=html.join("");
@@ -661,7 +699,7 @@ function render(){
 }
 
 function updateFilterCount(){
-  const n=(F.course?1:0)+(F.state.size?1:0)+(F.district.size?1:0)+(F.quota.size?1:0)+(F.cat!=="OPEN"?1:0)+(F.pwd==="yes"?1:0)+(F.fee!=="any"?1:0)+(F.show!=="all"?1:0);
+  const n=(F.course?1:0)+(F.state.size?1:0)+(F.district.size?1:0)+(F.quota.size?1:0)+(F.cat!=="OPEN"?1:0)+(F.minority?1:0)+(F.est?1:0)+(F.round?1:0)+(F.pwd==="yes"?1:0)+(F.fee!=="any"?1:0)+(F.show!=="all"?1:0);
   const open=document.querySelector(".filters").classList.contains("open");
   $("filterToggle").innerHTML=(open?"Hide Filters":"More Filters")+(n?` <span class="fc">${n}</span>`:"");
 }
@@ -675,6 +713,9 @@ function saveState(){
   if(F.quota.size) p.set("qu",[...F.quota].join("|"));
   if(F.course) p.set("co",F.course);
   if(F.cat!==DEFAULTS.cat) p.set("ca",F.cat);
+  if(F.minority) p.set("mi",F.minority);
+  if(F.est) p.set("es",F.est);
+  if(F.round) p.set("rd",F.round);
   if(F.pwd!==DEFAULTS.pwd) p.set("pw",F.pwd);
   if(F.fee!==DEFAULTS.fee) p.set("fee",F.fee);
   if(F.show!==DEFAULTS.show) p.set("sh",F.show);
@@ -689,7 +730,10 @@ function loadState(){
   F.type=set("t"); F.state=set("s"); F.district=set("di"); F.quota=set("qu");
   F.course=["MBBS","BDS"].includes(p.get("co"))?p.get("co"):"";
   const ca=/^NRI/.test(p.get("ca")||"")?"NRI":p.get("ca");   // older links used NRI1 / NRI2
-  F.cat=CAT_LABEL[ca]?ca:"OPEN";
+  F.cat=CATS.some(x=>x[0]===ca)||ca==="WOMEN"?ca:"OPEN";
+  if(ca==="NRI") F.quota.add("NRI Quota");                       // older links
+  F.minority=["MINORITY_MUSLIM","MINORITY_JAIN"].includes(p.get("mi"))?p.get("mi"):(ca==="MINORITY"?"MINORITY_MUSLIM":"");
+  F.est=ESTFN[p.get("es")]?p.get("es"):""; F.round=ROUNDS.includes(p.get("rd"))?p.get("rd"):"";
   F.pwd=p.get("pw")==="yes"?"yes":"no";
   F.fee=FEES.some(x=>x[0]===p.get("fee"))?p.get("fee"):"any";
   F.show=p.get("sh")==="reach"?"reach":"all";
@@ -719,6 +763,7 @@ function msInit(id,key,allLabel,optionsFn,onChange){
 }
 document.addEventListener("click",e=>{if(!e.target.closest(".ms"))document.querySelectorAll(".ms-panel").forEach(x=>x.hidden=true);});
 
+function drawCats(){if(F.cat==="WOMEN"&&!F.quota.has("Muslim Quota")) F.cat="OPEN"; seg("fCat",F.quota.has("Muslim Quota")?[...CATS,["WOMEN","Women"]]:CATS,"cat");}
 function seg(id,items,key){
   const el=$(id);
   el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${F[key]===v?"active":""}">${esc(l)}</button>`).join("");
@@ -750,13 +795,16 @@ function buildUI(){
   const counts={};base.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   typeBar(counts);
   seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
-  seg("fCat",CATS,"cat");
+  drawCats(); seg("fMinority",MINORITIES,"minority"); seg("fEst",ESTS,"est"); seg("fRound",ROUND_OPTS,"round");
   seg("fFee",FEES,"fee");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
   seg("fShow",[["all","All Colleges"],["reach","Within My Reach"]],"show");
   msInit("fState","state","All States / UTs",()=>[...states].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
   msInit("fDistrict","district","All Districts",()=>[...new Set(COLLEGES.filter(c=>!F.state.size||F.state.has(c.state)).map(c=>c.district).filter(Boolean))].sort());
-  msInit("fQuota","quota","All Quotas",()=>QUOTA_ORDER.filter(q=>COLLEGES.some(c=>c.quota===q)).concat([...new Set(COLLEGES.map(c=>c.quota))].filter(q=>!QUOTA_ORDER.includes(q)).sort()),()=>{if(F.quota.size===1&&F.quota.has("NRI Quota")&&F.cat!=="NRI"){F.cat="NRI";seg("fCat",CATS,"cat");}});
+  msInit("fQuota","quota","All Quotas",()=>{
+    if(F.type.size&&[...F.type].every(t=>t==="Deemed")) return ["Self Financed Merit Seat","NRI Quota"];
+    return QUOTA_ORDER.filter(q=>COLLEGES.some(c=>c.quota===q)).concat([...new Set(COLLEGES.map(c=>c.quota))].filter(q=>!QUOTA_ORDER.includes(q)).sort());
+  },()=>{drawCats();});
 }
 
 function reset(){
@@ -767,7 +815,7 @@ function reset(){
 }
 
 async function init(){
-  $("body").innerHTML='<tr><td colspan="10" class="empty">Loading cutoffs…</td></tr>';
+  $("body").innerHTML='<tr><td colspan="11" class="empty">Loading cutoffs…</td></tr>';
   try{
     const [index,other,...files]=await Promise.all([
       fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({})),
@@ -788,7 +836,7 @@ async function init(){
       map.set("OTHER|"+e.code+"|"+e.course+"|"+e.quota,{code:e.code,name:e.name,state:normState(e.state),city:(index[e.code]||{}).city||"",district:(index[e.code]||{}).district||"",quota:e.quota,est:e.establishment,fees:e.fees,type:e.type,course:e.course,itype:"OTHER",cats:e.cats});
     });
     COLLEGES=[...map.values()].filter(c=>Object.values(c.cats).some(e=>ROUNDS.some(r=>e[r]&&(e[r].AIR!=null||e[r].AIR_PWD!=null))));
-  }catch(e){$("body").innerHTML='<tr><td colspan="10" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
+  }catch(e){$("body").innerHTML='<tr><td colspan="11" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
   loadState(); buildUI(); render();
 }
 

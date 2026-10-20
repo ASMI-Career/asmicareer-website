@@ -1,0 +1,38 @@
+{
+  "counselling": "MCC",
+  "institution_type": "DEEMED_MBBS",
+  "year": 2026,
+  "category": "MINORITY_JAIN",
+  "colleges": [
+    {
+      "code": "200330",
+      "name": "Smt. B. K. Shah Medical Institute & Research Centre, Sumandeep Vidyapeeth, Vadodara",
+      "state": "Gujarat",
+      "establishment": 2002,
+      "fees": 2388750,
+      "type": "Deemed",
+      "rounds": {
+        "Round 1": {
+          "Intake": 78,
+          "AIR": 1040306
+        },
+        "Round 2": {
+          "Intake": 28,
+          "AIR": 992590
+        },
+        "Round 3": {
+          "Intake": 5,
+          "AIR": 967991
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": 709464
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    }
+  ]
+}
