@@ -7,9 +7,9 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
   :root{
-    --b1:#5e2c0a; --b2:#994d1a; --b3:#d2773b; --brand:#b65d21; --brand-dark:#52270a; --gold:#ffd700;
-    --bg:#fbf8f2; --card:#fff; --line:#f3eee2; --ink:#302015; --muted:#837064; --faint:#c8bbb3;
-    --gov:#1f9d63; --deemed:#d19a00; --aiims:#d2773b; --jipmer:#d6366b; --cu:#2a6fd0;
+    --b1:#2a0a5e; --b2:#4a1a99; --b3:#6d3bd2; --brand:#5b21b6; --brand-dark:#1f0a52; --gold:#ffd700;
+    --bg:#f4f2fb; --card:#fff; --line:#e7e2f3; --ink:#1d1530; --muted:#6c6483; --faint:#b9b3c8;
+    --gov:#1f9d63; --deemed:#d19a00; --aiims:#6d3bd2; --jipmer:#d6366b; --cu:#2a6fd0;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -18,13 +18,13 @@
   svg{flex:none}
 
   /* ---------- hero ---------- */
-  .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(105deg,var(--b1) 0%,var(--b2) 55%,#c46b2f 100%)}
+  .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(105deg,var(--b1) 0%,var(--b2) 55%,#6a2fc4 100%)}
   .hero::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='160' viewBox='0 0 900 160'><polyline points='0,140 120,120 220,128 330,92 430,104 540,60 650,78 760,40 900,52' fill='none' stroke='white' stroke-opacity='.10' stroke-width='3'/><g fill='white' fill-opacity='.07'><rect x='640' y='86' width='14' height='60'/><rect x='670' y='66' width='14' height='80'/><rect x='700' y='96' width='14' height='50'/><path d='M760 150 V96 Q790 40 820 96 V150 Z'/></g></svg>") right bottom/auto 100% no-repeat;pointer-events:none}
   .hero-row{position:relative;display:flex;align-items:center;gap:22px;padding:22px;flex-wrap:wrap}
   .logo{height:84px;width:84px;background:#fff;border-radius:18px;padding:8px;object-fit:contain;box-shadow:0 6px 20px rgba(0,0,0,.25)}
   .hero h1{margin:0;font-size:2.15rem;font-weight:800;line-height:1.1}
   .hero h1 span{color:var(--gold)}
-  .hero p{margin:5px 0 0;color:#f7eed8;font-size:.95rem;font-weight:500}
+  .hero p{margin:5px 0 0;color:#e2d8f7;font-size:.95rem;font-weight:500}
   .hero p b{color:#fff}
   .source-card{margin-left:auto;background:rgba(255,255,255,.94);color:var(--ink);border-radius:14px;padding:12px 16px;display:flex;gap:12px;align-items:center;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
   .source-card .helpline{font-size:.95rem;font-weight:700;margin-top:3px}
@@ -41,7 +41,7 @@
   .stat .l{font-size:1rem;font-weight:700}
   .stat .s{font-size:.82rem;font-weight:500;opacity:.85}
   .stat .badge{margin-left:auto;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;white-space:nowrap}
-  .st-total{background:linear-gradient(120deg,#dd874d,#f0a16c);color:#fff}
+  .st-total{background:linear-gradient(120deg,#7c4ddd,#9c6cf0);color:#fff}
   .st-total .ico{background:rgba(255,255,255,.2)}
   .st-col{background:#e5eeff;color:#17418f}.st-col b{color:#1e5fd8}.st-col .ico{background:#2a6fd0}
   .st-mbbs{background:#dcf5e7;color:#0e5f38}.st-mbbs b{color:#12804a}.st-mbbs .ico{background:#1f9d63}
@@ -55,14 +55,14 @@
   .round-note{font-size:.8rem;color:var(--muted);margin:8px 0 14px}
   .notice{background:#fff8d6;border:1px solid #efd972;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.84rem;line-height:1.5}
   .type-tab{border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:10px 18px;border-radius:999px;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px}
-  .type-tab .count{font-size:.74rem;background:#f9f4ea;color:var(--muted);border-radius:999px;padding:2px 9px;font-weight:700}
+  .type-tab .count{font-size:.74rem;background:#efeaf9;color:var(--muted);border-radius:999px;padding:2px 9px;font-weight:700}
   .type-tab.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff}
   .type-tab.active .count{background:rgba(255,255,255,.2);color:#fff}
   .type-tab svg{color:var(--c,var(--brand))}
   .type-tab.active svg{color:#fff}
   .bar{margin:0 0 14px}
   .quota-btn{border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:9px 18px;border-radius:999px;font-size:.86rem;font-weight:700;cursor:pointer;display:flex;gap:8px;align-items:center}
-  .quota-btn .count{font-size:.72rem;background:#f9f4ea;color:var(--muted);border-radius:999px;padding:1px 9px}
+  .quota-btn .count{font-size:.72rem;background:#efeaf9;color:var(--muted);border-radius:999px;padding:1px 9px}
   .quota-btn.active{background:var(--gold);border-color:var(--gold);color:var(--brand-dark)}
   .quota-btn.active .count{background:rgba(82,39,10,.12);color:var(--brand-dark)}
 
@@ -84,7 +84,7 @@
   .searchbox svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
   .searchbox input{padding-left:38px}
   .reset-btn{align-self:end;border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:10px 20px;font-size:.88rem;font-weight:700;cursor:pointer;display:flex;gap:8px;align-items:center;justify-content:center;height:44px}
-  .reset-btn:hover{background:#fbf6ec}
+  .reset-btn:hover{background:#f3ecfb}
 
   .ms{position:relative}
   .ms-btn{width:100%;text-align:left;font:500 .9rem 'Montserrat',system-ui,sans-serif;padding:11px 32px 11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -95,7 +95,7 @@
   .ms-search{padding:9px 10px !important;font-size:.85rem !important}
   .ms-list{max-height:260px;overflow:auto;margin:8px 0 4px}
   .ms-list label{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer}
-  .ms-list label:hover{background:#fbf6ec}
+  .ms-list label:hover{background:#f3ecfb}
   .ms-list input{width:auto;accent-color:var(--brand)}
   .ms-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:6px}
   .ms-foot button{background:none;border:none;color:var(--brand);font-size:.8rem;font-weight:700;cursor:pointer;padding:4px 6px}
@@ -111,8 +111,8 @@
   /* ---------- table ---------- */
   .table-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:auto;max-height:78vh;box-shadow:0 4px 18px rgba(94,44,10,.05)}
   table{border-collapse:separate;border-spacing:0;width:100%;min-width:1280px}
-  thead th{position:sticky;top:0;z-index:3;background:linear-gradient(180deg,#854215,#6e350f);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:13px 10px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-weight:800}
-  thead th small{display:block;text-transform:none;letter-spacing:0;font-weight:500;color:#eed2bf;font-size:.7rem;margin-top:2px}
+  thead th{position:sticky;top:0;z-index:3;background:linear-gradient(180deg,#3b1585,#2f0f6e);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:13px 10px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-weight:800}
+  thead th small{display:block;text-transform:none;letter-spacing:0;font-weight:500;color:#cdbfee;font-size:.7rem;margin-top:2px}
   thead th.num{text-align:center}
   thead th.nosort{cursor:default}
   thead th.sorted::after{content:" ▾";color:var(--gold)}
@@ -120,8 +120,8 @@
   thead th.idx{left:0;z-index:5;text-align:center;width:48px;min-width:48px}
   thead th.college{left:48px;z-index:5}
   tbody td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:.87rem;vertical-align:middle;background:#fff}
-  tbody tr:nth-child(even) td{background:#fefcf8}
-  tbody tr:hover td{background:#fcf7eb}
+  tbody tr:nth-child(even) td{background:#faf8fe}
+  tbody tr:hover td{background:#f1ebfc}
   td.idx{position:sticky;left:0;z-index:2;text-align:center;width:48px;min-width:48px;color:var(--muted);font-weight:600}
   td.college{min-width:310px;max-width:390px;position:sticky;left:48px;z-index:2;box-shadow:1px 0 0 var(--line)}
   .cname{font-weight:700;line-height:1.35}
@@ -129,17 +129,17 @@
   .type-chip{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;color:#fff;padding:5px 12px;border-radius:999px;white-space:nowrap}
   td.est{text-align:center;font-weight:600;color:var(--muted)}
   td.fee{white-space:nowrap;font-weight:700;color:var(--brand-dark);text-align:right}
-  td.nrifee{white-space:nowrap;font-weight:700;text-align:right;color:#7e421a}
+  td.nrifee{white-space:nowrap;font-weight:700;text-align:right;color:#4a1a7e}
   td.n{text-align:center;font-weight:700;font-size:.97rem}
   td.n.zero{color:var(--faint);font-weight:500}
   td.n.hl{background:#fff4b8 !important}
-  td.n.nri{color:#7e421a;background:#fffaee !important}
-  thead th.nri{background:#7e421a}
-  td.total{text-align:center;font-weight:800;font-size:1.05rem;color:var(--brand);background:#fcf7ea !important;border-left:2px solid var(--line)}
+  td.n.nri{color:#4a1a7e;background:#f4eeff !important}
+  thead th.nri{background:#4a1a7e}
+  td.total{text-align:center;font-weight:800;font-size:1.05rem;color:var(--brand);background:#f1eafc !important;border-left:2px solid var(--line)}
   td.quota{font-size:.82rem;max-width:200px}
   td.act{text-align:center;white-space:nowrap}
   .view-btn{border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:8px 14px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
-  .view-btn:hover{background:#fbf6ec}
+  .view-btn:hover{background:#f3ecfb}
   .hide-nri .nricol{display:none}
   .none{color:var(--faint)}
   .tag{display:inline-block;margin-left:6px;font-size:.62rem;font-weight:800;padding:2px 6px;border-radius:5px;vertical-align:middle}
@@ -168,19 +168,19 @@
   .mcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(94,44,10,.05)}
   .mc-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
   .mc-name{min-width:0}
-  .mc-total{flex:none;text-align:center;background:#fcf7ea;border-radius:12px;padding:6px 12px;min-width:62px}
+  .mc-total{flex:none;text-align:center;background:#f1eafc;border-radius:12px;padding:6px 12px;min-width:62px}
   .mc-total b{display:block;font-size:1.25rem;font-weight:800;color:var(--brand);line-height:1.1}
   .mc-total span{font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase}
   .mc-facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 4px;font-size:.88rem;font-weight:700}
   .mc-facts i,.mc-cat i{display:block;font-style:normal;font-size:.62rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
   .mc-quota{font-size:.8rem;color:var(--muted);font-weight:600;margin:6px 0 10px}
   .mc-cats{display:grid;gap:6px;margin:10px 0 12px}
-  .mc-cat{text-align:center;background:#fefcf8;border:1px solid var(--line);border-radius:10px;padding:7px 2px}
+  .mc-cat{text-align:center;background:#faf8fe;border:1px solid var(--line);border-radius:10px;padding:7px 2px}
   .mc-cat b{display:block;font-size:1.05rem;font-weight:800;color:var(--brand-dark)}
   .mc-cat small{display:block;font-size:.62rem;color:var(--muted);font-weight:600}
   .mc-cat.zero b{color:var(--faint);font-weight:500}
   .mc-cat.hl{background:#fff4b8;border-color:#e6cf55}
-  .mc-cat.nri{background:#fffaee}
+  .mc-cat.nri{background:#f4eeff}
   .mcard .view-btn{width:100%;justify-content:center;padding:11px}
   .filter-toggle{width:100%;margin-top:10px;border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:11px;font:700 .9rem 'Montserrat',system-ui,sans-serif;cursor:pointer;align-items:center;justify-content:center;gap:8px}
   .filters.open .filter-toggle{margin-bottom:16px}
@@ -233,7 +233,7 @@
     .f-title:empty{display:none}
     .modal table.mt-seat,.modal table.mt-cut,.modal .mt-seat tbody,.modal .mt-cut tbody{display:block;min-width:0 !important;width:100%}
     .modal .mt-seat thead,.modal .mt-cut thead{display:none}
-    .modal .mt-seat tr,.modal .mt-cut tr{display:grid;gap:8px 6px;background:#fefcf8;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+    .modal .mt-seat tr,.modal .mt-cut tr{display:grid;gap:8px 6px;background:#faf8fe;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
     .modal .mt-seat tr{grid-template-columns:repeat(10,1fr)}
     .modal .mt-cut tr{grid-template-columns:1fr 1fr}
     .modal .mt-seat td,.modal .mt-cut td{display:block;padding:0;border:none;background:none !important;text-align:center;font-size:.9rem;box-shadow:none}
@@ -257,10 +257,10 @@
   .card h2 small{font-weight:600;color:var(--muted);font-size:.78rem}
   .college-head h1{margin:0 0 8px;font-size:1.7rem;line-height:1.2}
   .chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
-  .chip2{display:inline-flex;align-items:center;gap:6px;background:#fcf7ea;color:var(--brand);font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:999px}
+  .chip2{display:inline-flex;align-items:center;gap:6px;background:#f1eafc;color:var(--brand);font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:999px}
   .where{color:var(--muted);font-weight:600;font-size:.95rem}
   .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
-  .fact{background:#fefcf8;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .fact{background:#faf8fe;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
   .fact i{display:block;font-style:normal;font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px}
   .fact b{font-size:1.2rem;font-weight:800;color:var(--brand-dark)}
   .fact small{display:block;font-size:.72rem;color:var(--muted);font-weight:600;margin-top:2px}
@@ -268,25 +268,25 @@
   .airrow .f{flex:1 1 220px}
   .verdict{margin-top:14px;border-radius:14px;padding:14px 16px;font-weight:600;line-height:1.5;display:none}
   .verdict b{font-weight:800}
-  .v-safe{background:#e8f8ef;border:1px solid #9bd7b6}.v-likely{background:#eaf2ff;border:1px solid #a9c6f3}.v-border{background:#fff5dc;border:1px solid #ecd18a}.v-out{background:#f1f0f6;border:1px solid #e2d8d2}
+  .v-safe{background:#e8f8ef;border:1px solid #9bd7b6}.v-likely{background:#eaf2ff;border:1px solid #a9c6f3}.v-border{background:#fff5dc;border:1px solid #ecd18a}.v-out{background:#f1f0f6;border:1px solid #d6d2e2}
   table.ct{width:100%;min-width:0;border-collapse:collapse}
-  table.ct th{background:linear-gradient(180deg,#854215,#6e350f);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:12px 10px;text-align:center}
+  table.ct th{background:linear-gradient(180deg,#3b1585,#2f0f6e);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:12px 10px;text-align:center}
   table.ct th:first-child{text-align:left;border-top-left-radius:12px}
   table.ct th:last-child{border-top-right-radius:12px}
   table.ct td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:center}
   table.ct td:first-child{text-align:left;font-weight:700}
   table.ct tr.sel td:first-child{color:var(--brand)}
-  table.ct tr.sel td{background:#fffdf9}
+  table.ct tr.sel td{background:#fbf9ff}
   .rank-cell b{display:block;font-size:1.05rem;font-weight:800;color:var(--brand-dark)}
   .rank-cell small{display:block;font-size:.7rem;color:var(--muted);font-weight:600}
   .rank-cell.none{color:var(--faint)}
-  td.rank-cell.ch-safe{background:#eefaf3 !important}td.rank-cell.ch-likely{background:#eef4ff !important}td.rank-cell.ch-border{background:#fff8e6 !important}td.rank-cell.ch-out{background:#f8f6f3 !important}
+  td.rank-cell.ch-safe{background:#eefaf3 !important}td.rank-cell.ch-likely{background:#eef4ff !important}td.rank-cell.ch-border{background:#fff8e6 !important}td.rank-cell.ch-out{background:#f4f3f8 !important}
   .scroll{overflow:auto;border:1px solid var(--line);border-radius:12px}
   .qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px;margin-top:14px}
   .qcard{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
   .qcard h3{margin:0 0 4px;font-size:.95rem}
   .qcard .qt{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-  .qcard .qtotal{background:#fcf7ea;border-radius:12px;padding:5px 12px;text-align:center;min-width:60px}
+  .qcard .qtotal{background:#f1eafc;border-radius:12px;padding:5px 12px;text-align:center;min-width:60px}
   .qcard .qtotal b{display:block;font-size:1.15rem;color:var(--brand);line-height:1.1}
   .qcard .qtotal span{font-size:.6rem;font-weight:700;text-transform:uppercase;color:var(--muted)}
   .qcard .mc-cats{margin:12px 0 4px}
@@ -317,20 +317,32 @@
     table.ct td,table.ct th{padding:10px 4px}
     table.ct th{font-size:.62rem}
   }
-  /* ---------- yellow & orange theme ---------- */
-  :root{--b1:#9a3412;--b2:#c2410c;--b3:#ea580c;--brand:#c2410c;--brand-dark:#431407;--gold:#ffd21f;--bg:#fff8eb}
-  .hero{background:linear-gradient(105deg,#c2410c 0%,#ea580c 52%,#f59e0b 100%)}
-  .hero h1 span{color:#fff1a8}
-  .hero p{color:#ffe9c9}
-  thead th{background:linear-gradient(180deg,#c2410c,#9a3412)}
-  thead th.cat{background:#b45309}
-  thead th.round{background:linear-gradient(180deg,#ea580c,#c2410c)}
-  thead th.nri{background:#9a3412}
-  .st-total{background:linear-gradient(120deg,#c2410c,#ea580c)}
-  .st-col{background:#fff3c4;color:#7c4a03}.st-col b{color:#b45309}.st-col .ico{background:#f59e0b}
-  .round-tab.active{background:linear-gradient(120deg,#c2410c,#ea580c);box-shadow:0 6px 16px rgba(234,88,12,.35)}
-  .type-tab.active{background:#431407;border-color:#431407}
-  table.ct th{background:linear-gradient(180deg,#c2410c,#9a3412)}
+  /* ---------- yellow (main) & purple (secondary) theme ---------- */
+  :root{--b1:#ffd700;--b2:#ffcf00;--b3:#50098a;--brand:#50098a;--brand-dark:#2c0450;--gold:#ffd700;--bg:#fffbe6}
+  .hero{background:linear-gradient(105deg,#ffd700 0%,#ffdf2e 55%,#ffc800 100%);color:#2c0450}
+  .hero h1,.hero h1 span{color:#2c0450}
+  .hero h1 span{color:#50098a}
+  .hero p,.hero p b{color:#410775}
+  .hero::before{opacity:.5}
+  thead th{background:linear-gradient(180deg,#ffe033,#ffd700);color:#2c0450}
+  thead th small,thead th.round small{color:#50098a}
+  thead th.cat{background:#ffd700;color:#2c0450}
+  thead th.round{background:linear-gradient(180deg,#ffec7a,#ffdc1a);color:#2c0450}
+  thead th.nri{background:#50098a;color:#ffd700}
+  thead th.sorted{box-shadow:inset 0 -3px 0 #50098a}
+  .st-total{background:linear-gradient(120deg,#ffd700,#ffe45c);color:#2c0450}.st-total .badge{background:#50098a;color:#ffd700}.st-total .ico{background:#50098a}
+  .st-col{background:#50098a;color:#fff}.st-col b{color:#ffd700}.st-col .ico{background:#ffd700}.st-col .ico svg{stroke:#2c0450}
+  .round-tab.active{background:#ffd700;color:#2c0450;border-color:#50098a;box-shadow:0 6px 16px rgba(255,215,0,.5)}
+  .type-tab.active{background:#ffd700;border-color:#50098a;color:#2c0450}
+  .type-tab.active .count{background:#50098a;color:#ffd700}
+  .seg button.active{background:#ffd700;border-color:#50098a;color:#2c0450}
+  .ms-btn.has{border-color:#50098a;box-shadow:0 0 0 2px rgba(255,215,0,.7)}
+  .btn:not(.out){background:#ffd700;color:#2c0450;border:1.5px solid #50098a}
+  .logo{height:128px;width:auto;max-width:190px;border-radius:20px;padding:10px 14px}
+  @media(max-width:760px){.logo{height:84px;max-width:128px;border-radius:14px;padding:7px 10px}}
+  .qchip{display:inline-block;background:#ffd700;color:#2c0450;border-radius:6px;padding:1px 7px;font-weight:700;font-size:.72rem;border:1px solid #50098a}
+  table.ct th{background:linear-gradient(180deg,#ffe033,#ffd700);color:#2c0450}
+  .hero .back{color:#2c0450;background:rgba(80,9,138,.14)}.hero .back:hover{background:rgba(80,9,138,.24)}
 </style>
 </head>
 <body>
@@ -340,7 +352,7 @@
     <a class="back" id="back" href="/mcc-cutoff.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back to cutoffs</a>
     <div class="spacer"></div>
     <div class="source-card" style="margin-left:0">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#b65d21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#50098a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
       <div><b>ASMI Helpline</b><small class="helpline"><a href="tel:+917410019074">7410019074</a> / <a href="tel:+917410019075">75</a> / <a href="tel:+917410019076">76</a> / <a href="tel:+917410019077">77</a></small></div>
     </div>
   </div>
@@ -357,6 +369,7 @@ const TYPE_COLORS={"Government":"#1f9d63","Deemed University":"#d19a00","AIIMS":
 const STATE_ALIAS={"Tamilnadu":"Tamil Nadu","Jammu and Kashmir":"Jammu And Kashmir","Pondicherry":"Puducherry","Andaman Nicobar":"Andaman And Nicobar Islands","Dadra and Nagar Haveli":"The Dadra And Nagar Haveli And Daman And Diu"};
 const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
 const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
+let OTHERS=[];
 const ALL_TYPES=["GOVT_MBBS","GOVT_BDS","AIIMS_MBBS","JIPMER_MBBS","CENTRAL_MBBS","CENTRAL_BDS","DEEMED_MBBS","DEEMED_BDS"];
 const SEAT_ROUNDS=[["round1","Round 1"],["round2","Round 2"],["round3","Round 3"],["stray","Stray Vacancy"]];
 const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"]];
@@ -378,7 +391,8 @@ function mergeRounds(a,b){
 const chance=(R,v)=>R==null||v==null?null:R<=v*0.88?"safe":R<=v?"likely":R<=v*1.12?"border":"out";
 
 const q=new URLSearchParams(location.search);
-const CODE=q.get("c"), ITYPE=q.get("t");
+const CODE=q.get("c"), COURSE_Q=q.get("co"), QUOTA_Q=q.get("q")||"";
+const ITYPE=q.get("t")==="OTHER"?(COURSE_Q==="BDS"?"OTHER_BDS":"OTHER_MBBS"):q.get("t");
 const CA=/^NRI/.test(q.get("ca")||"")?"NRI":q.get("ca");   // older links used NRI1 / NRI2
 const S={cat:CATS.some(c=>c[0]===CA)?CA:"OPEN",pwd:q.get("pw")==="yes"?"yes":"no",rank:parseInt(q.get("rk"))||null,seatRound:null};
 let C=null, SEAT={};
@@ -393,11 +407,16 @@ async function load(){
   if(!CODE||!ITYPE||!/^[A-Z]+_(MBBS|BDS)$/.test(ITYPE)||!/^\d+$/.test(CODE)){return fail("This link is missing the college details. Please open a college from the cutoff list.");}
   try{
     const index=await fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({}));
+    OTHERS=((await fetch("/data/cutoffs/MCC/2026/OTHER_QUOTA/all.json").then(r=>r.ok?r.json():{entries:[]}).catch(()=>({entries:[]}))).entries||[]).filter(e=>e.code===CODE);
     // the link says which file the college is in; if not there (e.g. a Delhi college typed differently in the seat matrix) try the other files of the same course
     const course=ITYPE.split("_")[1];
     const order=[ITYPE,...ALL_TYPES.filter(t=>t!==ITYPE&&t.endsWith("_"+course))];
     let o=null;
-    for(const it of order){
+    if(/^OTHER_/.test(ITYPE)){
+      const e=OTHERS.find(x=>x.course===course&&x.quota===QUOTA_Q)||OTHERS.find(x=>x.course===course);
+      if(e) o={code:e.code,name:e.name,state:STATE_ALIAS[e.state]||e.state,est:e.establishment,fees:e.fees,type:e.type,course,quota:e.quota,cats:e.cats,nriFee:null};
+    }
+    else for(const it of order){
       const file=await fetch(`/data/cutoffs/MCC/2026/${it}/all.json`).then(r=>{if(!r.ok)throw 0;return r.json();});
       const [prefix]=file.institution_type.split("_");
       Object.entries(file.categories).forEach(([cat,list])=>list.forEach(c=>{
@@ -409,7 +428,8 @@ async function load(){
       if(o) break;
     }
     if(!o) return fail("We could not find this college in the cutoff data.");
-    const ix=index[CODE]||{}; o.city=ix.city||""; o.address=ix.address||"";
+    const ix=index[CODE]||{}; o.city=ix.city||""; o.district=ix.district||""; o.address=ix.address||"";
+    if(!o.quota) o.quota={GOVT:"All India Quota",AIIMS:"Open Seat Quota",JIPMER:"Open Seat Quota",CENTRAL:"Open Seat Quota",DEEMED:"Self Financed Merit Seat"}[ITYPE.split("_")[0]]||"";
     C=o;
   }catch(e){return fail("Could not load the college details. Please refresh the page.");}
   if(!C.cats[S.cat]) S.cat="OPEN";
@@ -436,10 +456,10 @@ function draw(){
   $("page").innerHTML=`
   <section class="card college-head">
     <h1>${esc(C.name)}</h1>
-    <div class="chips"><span class="type-chip" style="background:${TYPE_COLORS[C.type]||"#b65d21"}">${esc(C.type)}</span><span class="chip2">${esc(C.course)}</span>${C.est?`<span class="chip2">Est. ${C.est}</span>`:""}</div>
-    <div class="where">${esc(C.state)}${C.city?" · "+esc(C.city):""}</div>
+    <div class="chips"><span class="type-chip" style="background:${TYPE_COLORS[C.type]||"#50098a"}">${esc(C.type)}</span><span class="chip2">${esc(C.course)}</span>${C.quota?`<span class="chip2">${esc(C.quota)}</span>`:""}${C.est?`<span class="chip2">Est. ${C.est}</span>`:""}</div>
+    <div class="where">${esc(C.state)}${C.district?" · "+esc(C.district):""}</div>
     <div class="facts">
-      <div class="fact"><i>Fees per year</i><b>${feeLine()}</b><small>As per ASMI fee list</small></div>
+      <div class="fact"><i>Fees Per Year</i><b>${feeLine()}</b><small>As per ASMI fee list</small></div>
       ${C.nriFee?`<div class="fact"><i>NRI quota fee</i><b>${esc(C.nriFee)}</b><small>Per year (USD)</small></div>`:""}
       <div class="fact"><i>Established</i><b>${C.est||"—"}</b></div>
       <div class="fact"><i>MCC code</i><b>${esc(C.code)}</b></div>
@@ -447,12 +467,12 @@ function draw(){
     </div>
     <div class="sharebar">
       <a class="btn out" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a>
-      <button class="btn out" id="copy" type="button">Copy link</button>
+      <button class="btn out" id="copy" type="button">Copy Link</button>
     </div>
   </section>
 
   <section class="card">
-    <h2>Check your chances <small>Compares your NEET AIR with the latest closing rank</small></h2>
+    <h2>Check Your Chances <small>Compares your NEET AIR with the latest closing rank</small></h2>
     <div class="airrow">
       <div class="f"><div class="f-title">Your NEET AIR</div><input id="rank" type="text" inputmode="numeric" placeholder="e.g. 15000" autocomplete="off" value="${S.rank||""}"></div>
       <div class="f"><div class="f-title">Category</div><div class="seg" id="catSeg"></div></div>
@@ -462,11 +482,12 @@ function draw(){
   </section>
 
   <section class="card">
-    <h2>Cutoff, round by round <small id="ctSub">Closing All India Rank${S.pwd==="yes"?" (PwD)":""}</small></h2>
+    <h2>Cutoff, Round by Round <small id="ctSub">Closing All India Rank${S.pwd==="yes"?" (PwD)":""}</small></h2>
     <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
     <p class="note">Closing rank = the last candidate allotted a seat in that round (fresh and upgraded allotments; retained seats are ignored). Smaller rank = harder to get. A dash means nobody was allotted in that round.</p>
   </section>
 
+  ${(()=>{const oth=OTHERS.filter(x=>x.course===C.course&&x.quota!==C.quota);return oth.length?`<section class="card"><h2>Other Quotas At This College <small>Cutoffs For Other Seat Quotas</small></h2><div class="chips">${oth.map(x=>`<a class="chip2" style="text-decoration:none" href="/mcc-college.html?c=${encodeURIComponent(x.code)}&t=OTHER&co=${x.course}&q=${encodeURIComponent(x.quota)}">${esc(x.quota)}</a>`).join("")}</div></section>`:""})()}
   <section class="card" id="seats">
     <h2>Seats offered <small>From the MCC seat matrix of each round</small></h2>
     <div class="pills" id="seatPills"></div>
@@ -479,13 +500,13 @@ function draw(){
       <dt>College</dt><dd>${esc(C.name)}</dd>
       <dt>Type</dt><dd>${esc(C.type)} · ${esc(C.course)}</dd>
       <dt>State</dt><dd>${esc(C.state)}</dd>
-      ${C.city?`<dt>City</dt><dd>${esc(C.city)}</dd>`:""}
+      ${C.district?`<dt>District</dt><dd>${esc(C.district)}</dd>`:""}${C.city&&C.city!==C.district?`<dt>City / Town</dt><dd>${esc(C.city)}</dd>`:""}
       ${C.est?`<dt>Established</dt><dd>${C.est}</dd>`:""}
       <dt>Annual fee</dt><dd>${feeLine()}${C.nriFee?` &nbsp;·&nbsp; NRI quota ${esc(C.nriFee)}`:""}</dd>
       <dt>MCC code</dt><dd>${esc(C.code)}</dd>
       ${C.address?`<dt>Address (as listed by MCC)</dt><dd>${esc(C.address)}</dd>`:""}
     </dl>
-    <p class="note">Fees are as per ASMI's fee list and can change; confirm with the college at the time of admission. District is not part of the MCC data, so city is shown.</p>
+    <p class="note">Fees are as per ASMI's fee list and can change; confirm with the college at the time of admission. District is added by ASMI (it is not part of the MCC data).</p>
   </section>
 
   <section class="cta">
@@ -494,7 +515,7 @@ function draw(){
   </section>`;
   const url=location.href;
   $("wa").href="https://wa.me/?text="+encodeURIComponent(`${C.name} – NEET UG 2026 cutoff and seats on ASMI Career: ${url}`);
-  $("copy").onclick=async()=>{try{await navigator.clipboard.writeText(url);$("copy").textContent="Link copied ✓";}catch(e){$("copy").textContent="Copy failed";}setTimeout(()=>$("copy").textContent="Copy link",1800);};
+  $("copy").onclick=async()=>{try{await navigator.clipboard.writeText(url);$("copy").textContent="Link copied ✓";}catch(e){$("copy").textContent="Copy failed";}setTimeout(()=>$("copy").textContent="Copy Link",1800);};
   const seg=(id,items,key,onc)=>{const el=$(id);el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${S[key]===v?"active":""}">${esc(l)}</button>`).join("");el.querySelectorAll("button").forEach(b=>b.onclick=()=>{S[key]=b.dataset.v;el.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));onc();});};
   seg("catSeg",cats.map(([k,l])=>[k,l]),"cat",refresh);
   seg("pwdSeg",[["no","No"],["yes","Yes"]],"pwd",refresh);

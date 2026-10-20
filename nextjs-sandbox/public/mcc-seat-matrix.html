@@ -7,9 +7,9 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
   :root{
-    --b1:#5e2c0a; --b2:#994d1a; --b3:#d2773b; --brand:#b65d21; --brand-dark:#52270a; --gold:#ffd700;
-    --bg:#fbf8f2; --card:#fff; --line:#f3eee2; --ink:#302015; --muted:#837064; --faint:#c8bbb3;
-    --gov:#1f9d63; --deemed:#d19a00; --aiims:#d2773b; --jipmer:#d6366b; --cu:#2a6fd0;
+    --b1:#2a0a5e; --b2:#4a1a99; --b3:#6d3bd2; --brand:#5b21b6; --brand-dark:#1f0a52; --gold:#ffd700;
+    --bg:#f4f2fb; --card:#fff; --line:#e7e2f3; --ink:#1d1530; --muted:#6c6483; --faint:#b9b3c8;
+    --gov:#1f9d63; --deemed:#d19a00; --aiims:#6d3bd2; --jipmer:#d6366b; --cu:#2a6fd0;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -18,13 +18,13 @@
   svg{flex:none}
 
   /* ---------- hero ---------- */
-  .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(105deg,var(--b1) 0%,var(--b2) 55%,#c46b2f 100%)}
+  .hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(105deg,var(--b1) 0%,var(--b2) 55%,#6a2fc4 100%)}
   .hero::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='160' viewBox='0 0 900 160'><polyline points='0,140 120,120 220,128 330,92 430,104 540,60 650,78 760,40 900,52' fill='none' stroke='white' stroke-opacity='.10' stroke-width='3'/><g fill='white' fill-opacity='.07'><rect x='640' y='86' width='14' height='60'/><rect x='670' y='66' width='14' height='80'/><rect x='700' y='96' width='14' height='50'/><path d='M760 150 V96 Q790 40 820 96 V150 Z'/></g></svg>") right bottom/auto 100% no-repeat;pointer-events:none}
   .hero-row{position:relative;display:flex;align-items:center;gap:22px;padding:22px;flex-wrap:wrap}
   .logo{height:84px;width:84px;background:#fff;border-radius:18px;padding:8px;object-fit:contain;box-shadow:0 6px 20px rgba(0,0,0,.25)}
   .hero h1{margin:0;font-size:2.15rem;font-weight:800;line-height:1.1}
   .hero h1 span{color:var(--gold)}
-  .hero p{margin:5px 0 0;color:#f7eed8;font-size:.95rem;font-weight:500}
+  .hero p{margin:5px 0 0;color:#e2d8f7;font-size:.95rem;font-weight:500}
   .hero p b{color:#fff}
   .source-card{margin-left:auto;background:rgba(255,255,255,.94);color:var(--ink);border-radius:14px;padding:12px 16px;display:flex;gap:12px;align-items:center;max-width:340px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
   .source-card .helpline{font-size:.95rem;font-weight:700;margin-top:3px}
@@ -41,7 +41,7 @@
   .stat .l{font-size:1rem;font-weight:700}
   .stat .s{font-size:.82rem;font-weight:500;opacity:.85}
   .stat .badge{margin-left:auto;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;white-space:nowrap}
-  .st-total{background:linear-gradient(120deg,#dd874d,#f0a16c);color:#fff}
+  .st-total{background:linear-gradient(120deg,#7c4ddd,#9c6cf0);color:#fff}
   .st-total .ico{background:rgba(255,255,255,.2)}
   .st-col{background:#e5eeff;color:#17418f}.st-col b{color:#1e5fd8}.st-col .ico{background:#2a6fd0}
   .st-mbbs{background:#dcf5e7;color:#0e5f38}.st-mbbs b{color:#12804a}.st-mbbs .ico{background:#1f9d63}
@@ -55,14 +55,14 @@
   .round-note{font-size:.8rem;color:var(--muted);margin:8px 0 14px}
   .notice{background:#fff8d6;border:1px solid #efd972;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.84rem;line-height:1.5}
   .type-tab{border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:10px 18px;border-radius:999px;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:9px}
-  .type-tab .count{font-size:.74rem;background:#f9f4ea;color:var(--muted);border-radius:999px;padding:2px 9px;font-weight:700}
+  .type-tab .count{font-size:.74rem;background:#efeaf9;color:var(--muted);border-radius:999px;padding:2px 9px;font-weight:700}
   .type-tab.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff}
   .type-tab.active .count{background:rgba(255,255,255,.2);color:#fff}
   .type-tab svg{color:var(--c,var(--brand))}
   .type-tab.active svg{color:#fff}
   .bar{margin:0 0 14px}
   .quota-btn{border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:9px 18px;border-radius:999px;font-size:.86rem;font-weight:700;cursor:pointer;display:flex;gap:8px;align-items:center}
-  .quota-btn .count{font-size:.72rem;background:#f9f4ea;color:var(--muted);border-radius:999px;padding:1px 9px}
+  .quota-btn .count{font-size:.72rem;background:#efeaf9;color:var(--muted);border-radius:999px;padding:1px 9px}
   .quota-btn.active{background:var(--gold);border-color:var(--gold);color:var(--brand-dark)}
   .quota-btn.active .count{background:rgba(82,39,10,.12);color:var(--brand-dark)}
 
@@ -84,7 +84,7 @@
   .searchbox svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
   .searchbox input{padding-left:38px}
   .reset-btn{align-self:end;border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:10px 20px;font-size:.88rem;font-weight:700;cursor:pointer;display:flex;gap:8px;align-items:center;justify-content:center;height:44px}
-  .reset-btn:hover{background:#fbf6ec}
+  .reset-btn:hover{background:#f3ecfb}
 
   .ms{position:relative}
   .ms-btn{width:100%;text-align:left;font:500 .9rem 'Montserrat',system-ui,sans-serif;padding:11px 32px 11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -95,7 +95,7 @@
   .ms-search{padding:9px 10px !important;font-size:.85rem !important}
   .ms-list{max-height:260px;overflow:auto;margin:8px 0 4px}
   .ms-list label{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;font-size:.85rem;font-weight:500;cursor:pointer}
-  .ms-list label:hover{background:#fbf6ec}
+  .ms-list label:hover{background:#f3ecfb}
   .ms-list input{width:auto;accent-color:var(--brand)}
   .ms-foot{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:6px}
   .ms-foot button{background:none;border:none;color:var(--brand);font-size:.8rem;font-weight:700;cursor:pointer;padding:4px 6px}
@@ -111,8 +111,8 @@
   /* ---------- table ---------- */
   .table-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:auto;max-height:78vh;box-shadow:0 4px 18px rgba(94,44,10,.05)}
   table{border-collapse:separate;border-spacing:0;width:100%;min-width:1280px}
-  thead th{position:sticky;top:0;z-index:3;background:linear-gradient(180deg,#854215,#6e350f);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:13px 10px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-weight:800}
-  thead th small{display:block;text-transform:none;letter-spacing:0;font-weight:500;color:#eed2bf;font-size:.7rem;margin-top:2px}
+  thead th{position:sticky;top:0;z-index:3;background:linear-gradient(180deg,#3b1585,#2f0f6e);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:13px 10px;text-align:left;white-space:nowrap;cursor:pointer;user-select:none;font-weight:800}
+  thead th small{display:block;text-transform:none;letter-spacing:0;font-weight:500;color:#cdbfee;font-size:.7rem;margin-top:2px}
   thead th.num{text-align:center}
   thead th.nosort{cursor:default}
   thead th.sorted::after{content:" ▾";color:var(--gold)}
@@ -120,8 +120,8 @@
   thead th.idx{left:0;z-index:5;text-align:center;width:48px;min-width:48px}
   thead th.college{left:48px;z-index:5}
   tbody td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:.87rem;vertical-align:middle;background:#fff}
-  tbody tr:nth-child(even) td{background:#fefcf8}
-  tbody tr:hover td{background:#fcf7eb}
+  tbody tr:nth-child(even) td{background:#faf8fe}
+  tbody tr:hover td{background:#f1ebfc}
   td.idx{position:sticky;left:0;z-index:2;text-align:center;width:48px;min-width:48px;color:var(--muted);font-weight:600}
   td.college{min-width:310px;max-width:390px;position:sticky;left:48px;z-index:2;box-shadow:1px 0 0 var(--line)}
   .cname{font-weight:700;line-height:1.35}
@@ -129,17 +129,17 @@
   .type-chip{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;color:#fff;padding:5px 12px;border-radius:999px;white-space:nowrap}
   td.est{text-align:center;font-weight:600;color:var(--muted)}
   td.fee{white-space:nowrap;font-weight:700;color:var(--brand-dark);text-align:right}
-  td.nrifee{white-space:nowrap;font-weight:700;text-align:right;color:#7e421a}
+  td.nrifee{white-space:nowrap;font-weight:700;text-align:right;color:#4a1a7e}
   td.n{text-align:center;font-weight:700;font-size:.97rem}
   td.n.zero{color:var(--faint);font-weight:500}
   td.n.hl{background:#fff4b8 !important}
-  td.n.nri{color:#7e421a;background:#fffaee !important}
-  thead th.nri{background:#7e421a}
-  td.total{text-align:center;font-weight:800;font-size:1.05rem;color:var(--brand);background:#fcf7ea !important;border-left:2px solid var(--line)}
+  td.n.nri{color:#4a1a7e;background:#f4eeff !important}
+  thead th.nri{background:#4a1a7e}
+  td.total{text-align:center;font-weight:800;font-size:1.05rem;color:var(--brand);background:#f1eafc !important;border-left:2px solid var(--line)}
   td.quota{font-size:.82rem;max-width:200px}
   td.act{text-align:center;white-space:nowrap}
   .view-btn{border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:8px 14px;font-size:.8rem;font-weight:700;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
-  .view-btn:hover{background:#fbf6ec}
+  .view-btn:hover{background:#f3ecfb}
   .hide-nri .nricol{display:none}
   .none{color:var(--faint)}
   .tag{display:inline-block;margin-left:6px;font-size:.62rem;font-weight:800;padding:2px 6px;border-radius:5px;vertical-align:middle}
@@ -168,19 +168,19 @@
   .mcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(94,44,10,.05)}
   .mc-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start}
   .mc-name{min-width:0}
-  .mc-total{flex:none;text-align:center;background:#fcf7ea;border-radius:12px;padding:6px 12px;min-width:62px}
+  .mc-total{flex:none;text-align:center;background:#f1eafc;border-radius:12px;padding:6px 12px;min-width:62px}
   .mc-total b{display:block;font-size:1.25rem;font-weight:800;color:var(--brand);line-height:1.1}
   .mc-total span{font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase}
   .mc-facts{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 4px;font-size:.88rem;font-weight:700}
   .mc-facts i,.mc-cat i{display:block;font-style:normal;font-size:.62rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
   .mc-quota{font-size:.8rem;color:var(--muted);font-weight:600;margin:6px 0 10px}
   .mc-cats{display:grid;gap:6px;margin:10px 0 12px}
-  .mc-cat{text-align:center;background:#fefcf8;border:1px solid var(--line);border-radius:10px;padding:7px 2px}
+  .mc-cat{text-align:center;background:#faf8fe;border:1px solid var(--line);border-radius:10px;padding:7px 2px}
   .mc-cat b{display:block;font-size:1.05rem;font-weight:800;color:var(--brand-dark)}
   .mc-cat small{display:block;font-size:.62rem;color:var(--muted);font-weight:600}
   .mc-cat.zero b{color:var(--faint);font-weight:500}
   .mc-cat.hl{background:#fff4b8;border-color:#e6cf55}
-  .mc-cat.nri{background:#fffaee}
+  .mc-cat.nri{background:#f4eeff}
   .mcard .view-btn{width:100%;justify-content:center;padding:11px}
   .filter-toggle{width:100%;margin-top:10px;border:1.5px solid var(--b3);background:#fff;color:var(--brand);border-radius:10px;padding:11px;font:700 .9rem 'Montserrat',system-ui,sans-serif;cursor:pointer;align-items:center;justify-content:center;gap:8px}
   .filters.open .filter-toggle{margin-bottom:16px}
@@ -233,7 +233,7 @@
     .f-title:empty{display:none}
     .modal table.mt-seat,.modal table.mt-cut,.modal .mt-seat tbody,.modal .mt-cut tbody{display:block;min-width:0 !important;width:100%}
     .modal .mt-seat thead,.modal .mt-cut thead{display:none}
-    .modal .mt-seat tr,.modal .mt-cut tr{display:grid;gap:8px 6px;background:#fefcf8;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+    .modal .mt-seat tr,.modal .mt-cut tr{display:grid;gap:8px 6px;background:#faf8fe;border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
     .modal .mt-seat tr{grid-template-columns:repeat(10,1fr)}
     .modal .mt-cut tr{grid-template-columns:1fr 1fr}
     .modal .mt-seat td,.modal .mt-cut td{display:block;padding:0;border:none;background:none !important;text-align:center;font-size:.9rem;box-shadow:none}
@@ -247,19 +247,30 @@
     .modal .mt-cut td:nth-child(1){grid-column:1/-1;text-align:left;font-size:1rem}
     footer{font-size:.74rem}
   }
-  /* ---------- yellow & orange theme ---------- */
-  :root{--b1:#9a3412;--b2:#c2410c;--b3:#ea580c;--brand:#c2410c;--brand-dark:#431407;--gold:#ffd21f;--bg:#fff8eb}
-  .hero{background:linear-gradient(105deg,#c2410c 0%,#ea580c 52%,#f59e0b 100%)}
-  .hero h1 span{color:#fff1a8}
-  .hero p{color:#ffe9c9}
-  thead th{background:linear-gradient(180deg,#c2410c,#9a3412)}
-  thead th.cat{background:#b45309}
-  thead th.round{background:linear-gradient(180deg,#ea580c,#c2410c)}
-  thead th.nri{background:#9a3412}
-  .st-total{background:linear-gradient(120deg,#c2410c,#ea580c)}
-  .st-col{background:#fff3c4;color:#7c4a03}.st-col b{color:#b45309}.st-col .ico{background:#f59e0b}
-  .round-tab.active{background:linear-gradient(120deg,#c2410c,#ea580c);box-shadow:0 6px 16px rgba(234,88,12,.35)}
-  .type-tab.active{background:#431407;border-color:#431407}
+  /* ---------- yellow (main) & purple (secondary) theme ---------- */
+  :root{--b1:#ffd700;--b2:#ffcf00;--b3:#50098a;--brand:#50098a;--brand-dark:#2c0450;--gold:#ffd700;--bg:#fffbe6}
+  .hero{background:linear-gradient(105deg,#ffd700 0%,#ffdf2e 55%,#ffc800 100%);color:#2c0450}
+  .hero h1,.hero h1 span{color:#2c0450}
+  .hero h1 span{color:#50098a}
+  .hero p,.hero p b{color:#410775}
+  .hero::before{opacity:.5}
+  thead th{background:linear-gradient(180deg,#ffe033,#ffd700);color:#2c0450}
+  thead th small,thead th.round small{color:#50098a}
+  thead th.cat{background:#ffd700;color:#2c0450}
+  thead th.round{background:linear-gradient(180deg,#ffec7a,#ffdc1a);color:#2c0450}
+  thead th.nri{background:#50098a;color:#ffd700}
+  thead th.sorted{box-shadow:inset 0 -3px 0 #50098a}
+  .st-total{background:linear-gradient(120deg,#ffd700,#ffe45c);color:#2c0450}.st-total .badge{background:#50098a;color:#ffd700}.st-total .ico{background:#50098a}
+  .st-col{background:#50098a;color:#fff}.st-col b{color:#ffd700}.st-col .ico{background:#ffd700}.st-col .ico svg{stroke:#2c0450}
+  .round-tab.active{background:#ffd700;color:#2c0450;border-color:#50098a;box-shadow:0 6px 16px rgba(255,215,0,.5)}
+  .type-tab.active{background:#ffd700;border-color:#50098a;color:#2c0450}
+  .type-tab.active .count{background:#50098a;color:#ffd700}
+  .seg button.active{background:#ffd700;border-color:#50098a;color:#2c0450}
+  .ms-btn.has{border-color:#50098a;box-shadow:0 0 0 2px rgba(255,215,0,.7)}
+  .btn:not(.out){background:#ffd700;color:#2c0450;border:1.5px solid #50098a}
+  .logo{height:128px;width:auto;max-width:190px;border-radius:20px;padding:10px 14px}
+  @media(max-width:760px){.logo{height:84px;max-width:128px;border-radius:14px;padding:7px 10px}}
+  .qchip{display:inline-block;background:#ffd700;color:#2c0450;border-radius:6px;padding:1px 7px;font-weight:700;font-size:.72rem;border:1px solid #50098a}
 </style>
 </head>
 <body>
@@ -273,7 +284,7 @@
       <p id="heroSub">Seats by category, round by round</p>
     </div>
     <div class="source-card">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#b65d21" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#50098a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
       <div><b>ASMI Helpline</b><small class="helpline"><a href="tel:+917410019074">7410019074</a> / <a href="tel:+917410019075">75</a> / <a href="tel:+917410019076">76</a> / <a href="tel:+917410019077">77</a></small></div>
     </div>
   </div>
@@ -300,21 +311,21 @@
 
   <div class="filters">
     <div class="f s5 f-search">
-      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>College name</div>
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>College Name</div>
       <div class="searchbox">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="search" type="text" list="collegeList" placeholder="Search college, city or MCC code" autocomplete="off">
+        <input id="search" type="text" list="collegeList" placeholder="Search College, District or MCC Code" autocomplete="off">
         <datalist id="collegeList"></datalist>
       </div>
     </div>
-    <button type="button" class="filter-toggle m-only" id="filterToggle">More filters</button>
+    <button type="button" class="filter-toggle m-only" id="filterToggle">More Filters</button>
     <div class="f s3">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>State / UT <small>(select one or more)</small></div>
       <div class="ms" id="fState"></div>
     </div>
     <div class="f s3">
-      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/></svg>City <small>(select one or more)</small></div>
-      <div class="ms" id="fCity"></div>
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/></svg>District <small>(Select One or More)</small></div>
+      <div class="ms" id="fDistrict"></div>
     </div>
     <div class="f s1" style="grid-column:span 1"></div>
     <div class="f s6" style="grid-column:span 3">
@@ -339,7 +350,7 @@
   <div class="result-line">
     <span class="big" id="rowCount">0</span><span class="txt">colleges</span><span class="txt">•</span><span class="big" id="seatCount">0</span><span class="txt">seats</span>
     <span class="hint">Click on a column heading to sort</span>
-    <select id="mSort" class="m-only m-sort" aria-label="Sort colleges"><option value="state:1">Sort: State (A–Z)</option><option value="name:1">Sort: College name (A–Z)</option><option value="total:0">Sort: Most seats first</option><option value="fee:1">Sort: Fees (low to high)</option><option value="est:1">Sort: Oldest college first</option></select>
+    <select id="mSort" class="m-only m-sort" aria-label="Sort colleges"><option value="state:1">Sort: State (A–Z)</option><option value="name:1">Sort: College Name (A–Z)</option><option value="total:0">Sort: Most seats first</option><option value="fee:1">Sort: Fees (low to high)</option><option value="est:1">Sort: Oldest college first</option></select>
   </div>
 
   <div class="table-wrap">
@@ -350,7 +361,7 @@
         <th class="num" data-key="est">Est. year</th>
         <th data-key="course">Course</th>
         <th data-key="quota">Quota</th>
-        <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS and BDS)">Fees / yr</th>
+        <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list (MBBS and BDS)">Fees / Year</th>
         <th class="nricol" data-key="feeNRI" style="text-align:right" title="NRI quota fee (USD) for deemed universities">NRI fee</th>
         <th class="num" data-key="UR">Gen / UR</th>
         <th class="num" data-key="OBC">OBC</th>
@@ -371,7 +382,7 @@
 
   <footer>
     <b>How to read:</b> each row is one college + quota + course. Category columns show the seats open in that category (– means none). With PwD = No you see regular seats; with PwD = Yes you see only the PwD seats in each category. For deemed universities the NRI-quota seats and NRI fee (USD) sit on the same row as the self-financed seats.<br>
-    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. ESI colleges are listed under Government Colleges. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section. City is taken from the institute name; official districts are not in the source files.<br>
+    Fees: annual fee as per ASMI fee list (MBBS and BDS). NRI-quota rows show the USD fee; "—" means no fee listed. ESI colleges are listed under Government Colleges. UR = General/Open, OBC = Other Backward Classes, EWS = Economically Weaker Section. District is added by ASMI (it is not part of the MCC data).<br>
     Source: official MCC seat matrix / clear-vacancy lists for UG Counselling 2026.
   </footer>
 </div>
@@ -403,7 +414,7 @@ const IC={
 const TYPE_ICON={Government:"building",Deemed:"cap",AIIMS:"building",JIPMER:"pin","Central University":"building"};
 const RAW={};
 let ROUND="stray", ROWS=[], sortKey="state", sortAsc=true, VIEW=[];
-const F={quota:"all",course:"",type:new Set(),state:new Set(),city:new Set(),cat:"",pwd:"no"};
+const F={quota:"all",course:"",type:new Set(),state:new Set(),district:new Set(),cat:"",pwd:"no"};
 const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -414,13 +425,14 @@ function quotaGroup(q){
   if(q==="Open Seat Quota") return "open";
   return "other";
 }
+let DIST={};
 const GROUPS=["aiq","sf","open","other","nri"];
 
 // One row per college + quota + course. Deemed NRI seats fold into the same row as the self-financed seats.
 function pivot(data){
   const zero=()=>({UR:0,OBC:0,EWS:0,SC:0,ST:0});
   const blank=d=>({name:d.collegeName,state:d.state,type:d.type==="ESI"?"Government":d.type,code:d.code,est:d.establishment,
-    course:d.branch.replace(/\s*\(.*\)/,""),quota:d.quota,gender:d.gender,city:d.city,added:false,fee:null,feeNRI:null,
+    course:d.branch.replace(/\s*\(.*\)/,""),quota:d.quota,gender:d.gender,district:(DIST[d.code]||{}).district||d.city,added:false,fee:null,feeNRI:null,
     g:Object.fromEntries(GROUPS.map(x=>[x,{nor:zero(),pwd:zero()}]))});
   const add=(r,grp,d)=>{const [c,k]=d.category.split(" ");r.g[grp][k==="PH"?"pwd":"nor"][CAT_OF[c]]+=d.seats;if(d.added)r.added=true;};
   const rows=new Map(), sfRow=new Map();
@@ -456,10 +468,10 @@ function matches(r){
   if(F.course&&r.course!==F.course) return false;
   if(F.type.size&&!F.type.has(r.type)) return false;
   if(F.state.size&&!F.state.has(r.state)) return false;
-  if(F.city.size&&!F.city.has(r.city)) return false;
+  if(F.district.size&&!F.district.has(r.district)) return false;
   if(F.cat?!catSeats(r,F.cat):!rowTotal(r)) return false;
   const q=$("search").value.trim().toLowerCase();
-  if(q&&!(r.name+" "+r.city+" "+r.code+" "+r.state).toLowerCase().includes(q)) return false;
+  if(q&&!(r.name+" "+r.district+" "+r.code+" "+r.state).toLowerCase().includes(q)) return false;
   return true;
 }
 
@@ -502,7 +514,7 @@ function render(){
     const cats=CATS.map(c=>{const v=mainSeat(r,c);return `<div class="mc-cat${v?"":" zero"}${F.cat===c?" hl":""}"><i>${c==="UR"?"Gen/UR":c}</i><b>${v||"–"}</b></div>`;}).join("")
       +(showNri?`<div class="mc-cat nri${nri?"":" zero"}"><i>NRI</i><b>${nri||"–"}</b></div>`:"");
     return `<article class="mcard"><div class="mc-head"><div class="mc-name"><div class="cname">${esc(r.name)}${tags}</div><div class="cstate">${esc(r.state)}</div></div><div class="mc-total"><b>${rowTotal(r)}</b><span>seats</span></div></div>
-      <div class="mc-facts"><span><i>Course</i>${esc(r.course)}</span><span><i>Est.</i>${r.est||"–"}</span><span><i>Fees / yr</i>${feeText(r)}</span>${showNri&&r.feeNRI?`<span><i>NRI fee</i>${esc(r.feeNRI)}</span>`:""}</div>
+      <div class="mc-facts"><span><i>Course</i>${esc(r.course)}</span><span><i>Est.</i>${r.est||"–"}</span><span><i>Fees / Year</i>${feeText(r)}</span>${showNri&&r.feeNRI?`<span><i>NRI fee</i>${esc(r.feeNRI)}</span>`:""}</div>
       <div class="mc-quota">${esc(r.quota)}</div>
       <div class="mc-cats" style="grid-template-columns:repeat(${showNri?6:5},1fr)">${cats}</div>
       <button type="button" class="view-btn" data-i="${i}">${IC.eye}View Details</button></article>`;
@@ -512,9 +524,9 @@ function render(){
 }
 
 function updateFilterCount(){
-  const n=(F.course?1:0)+(F.state.size?1:0)+(F.city.size?1:0)+(F.cat?1:0)+(F.pwd==="yes"?1:0);
+  const n=(F.course?1:0)+(F.state.size?1:0)+(F.district.size?1:0)+(F.cat?1:0)+(F.pwd==="yes"?1:0);
   const open=document.querySelector(".filters").classList.contains("open");
-  $("filterToggle").innerHTML=(open?"Hide filters":"More filters")+(n?` <span class="fc">${n}</span>`:"");
+  $("filterToggle").innerHTML=(open?"Hide Filters":"More Filters")+(n?` <span class="fc">${n}</span>`:"");
 }
 
 /* ---------- details modal: every quota row of one college, regular and PwD ---------- */
@@ -527,15 +539,15 @@ function openDetails(r){
     const REG=GROUPS.filter(g=>g!=="nri");   // NRI seats get their own column, so keep them out of the category columns
     const reg={},pw={};CATS.forEach(c=>{reg[c]=0;pw[c]=0;REG.forEach(g=>{reg[c]+=x.g[g].nor[c];pw[c]+=x.g[g].pwd[c];});});
     const nri=sum(x.g.nri.nor)+sum(x.g.nri.pwd);
-    return `<tr><td data-label="Quota">${esc(x.quota)}</td><td data-label="Fees / yr" style="text-align:right;font-weight:700">${feeText(x)}</td>
+    return `<tr><td data-label="Quota">${esc(x.quota)}</td><td data-label="Fees / Year" style="text-align:right;font-weight:700">${feeText(x)}</td>
       ${CATS.map(c=>`<td data-label="${c==="UR"?"Gen / UR":c}" class="n${reg[c]?"":" zero"}">${reg[c]||"–"}</td>`).join("")}
       <td data-label="NRI seats" class="n nri${nri?"":" zero"}">${nri?nri+(x.feeNRI?'<div style="font-size:.7rem;font-weight:600">'+esc(x.feeNRI)+'</div>':""):"–"}</td>
       <td data-label="PwD seats" class="n${sum(pw)?"":" zero"}">${sum(pw)?CATS.filter(c=>pw[c]).map(c=>c+" "+pw[c]).join(", "):"–"}</td>
       <td data-label="Total" class="total">${sum(reg)+sum(pw)+nri}</td></tr>`;
   }).join("");
   $("modalBody").innerHTML=`<h2>${esc(r.name)}</h2>
-    <div class="meta">${typeChip(r.type)}<span><b>${esc(r.state)}</b>${r.city?" · "+esc(r.city):""}</span><span>Course: <b>${esc(r.course)}</b></span><span>Est. <b>${r.est||"–"}</b></span><span>MCC code <b>${esc(r.code)}</b></span><span>${ROUND_LABEL[ROUND]}</span>${r.feeNRI?`<span>NRI fee <b>${esc(r.feeNRI)}</b></span>`:""}</div>
-    <div style="overflow:auto"><table class="mt-seat"><thead><tr><th>Quota</th><th style="text-align:right">Fees / yr</th><th class="num">Gen / UR</th><th class="num">OBC</th><th class="num">EWS</th><th class="num">SC</th><th class="num">ST</th><th class="num nri">NRI seats</th><th>PwD seats</th><th class="num">Total</th></tr></thead><tbody>${lines}</tbody></table></div>
+    <div class="meta">${typeChip(r.type)}<span><b>${esc(r.state)}</b>${r.district?" · "+esc(r.district):""}</span><span>Course: <b>${esc(r.course)}</b></span><span>Est. <b>${r.est||"–"}</b></span><span>MCC code <b>${esc(r.code)}</b></span><span>${ROUND_LABEL[ROUND]}</span>${r.feeNRI?`<span>NRI fee <b>${esc(r.feeNRI)}</b></span>`:""}</div>
+    <div style="overflow:auto"><table class="mt-seat"><thead><tr><th>Quota</th><th style="text-align:right">Fees / Year</th><th class="num">Gen / UR</th><th class="num">OBC</th><th class="num">EWS</th><th class="num">SC</th><th class="num">ST</th><th class="num nri">NRI seats</th><th>PwD seats</th><th class="num">Total</th></tr></thead><tbody>${lines}</tbody></table></div>
     <p style="margin:14px 0 0"><a class="view-btn" style="padding:11px 18px" href="${collegeUrl(r)}">Open full college page: cutoff, seats and fees</a></p>
     <p class="modal-note">Seats in this ${ROUND_LABEL[ROUND]} list. Regular seats are shown by category; PwD seats are listed separately with their category.</p>`;
   $("modal").hidden=false;
@@ -572,8 +584,8 @@ document.addEventListener("click",e=>{if(!e.target.closest(".ms"))document.query
 function typeBar(types,counts){
   const el=$("fType");
   const draw=()=>{
-    const items=[["","All types",ROWS.length,"all"],...types.map(t=>[t,TYPE_LABEL[t],counts[t],TYPE_ICON[t]])];
-    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#b65d21"}">${IC[ic]||IC.building}${esc(l)}<span class="count">${n}</span></button>`).join("");
+    const items=[["","All Types",ROWS.length,"all"],...types.map(t=>[t,TYPE_LABEL[t],counts[t],TYPE_ICON[t]])];
+    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#50098a"}">${IC[ic]||IC.building}${esc(l)}<span class="count">${n}</span></button>`).join("");
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});
   };
   draw();
@@ -613,12 +625,12 @@ function build(){
   typeBar(TYPE_ORDER.filter(t=>counts[t]),counts);
   seg("fCat",[["","All"],["UR","General"],["OBC","OBC"],["SC","SC"],["ST","ST"],["EWS","EWS"]],"cat");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
-  msInit("fState","state","All states / UTs",()=>[...new Set(ROWS.map(r=>r.state))].sort(),()=>MS.fCity&&MS.fCity.refresh(true));
-  msInit("fCity","city","All cities",()=>[...new Set(ROWS.filter(r=>!F.state.size||F.state.has(r.state)).map(r=>r.city).filter(Boolean))].sort());
+  msInit("fState","state","All States / UTs",()=>[...new Set(ROWS.map(r=>r.state))].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
+  msInit("fDistrict","district","All Districts",()=>[...new Set(ROWS.filter(r=>!F.state.size||F.state.has(r.state)).map(r=>r.district).filter(Boolean))].sort());
 }
 
 function resetFilters(){
-  Object.assign(F,{quota:"all",course:"",type:new Set(),state:new Set(),city:new Set(),cat:"",pwd:"no"});
+  Object.assign(F,{quota:"all",course:"",type:new Set(),state:new Set(),district:new Set(),cat:"",pwd:"no"});
   $("search").value="";
   build();render();
 }
@@ -626,6 +638,7 @@ function resetFilters(){
 async function loadRound(id){
   $("body").innerHTML='<tr><td colspan="15" class="empty">Loading seat matrix…</td></tr>';$("tbl").style.display="table";$("empty").style.display="none";
   try{
+    if(!Object.keys(DIST).length) DIST=await fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({}));
     if(!RAW[id]){const res=await fetch(`/data/seat-matrix/MCC/2026/${id}.json`);if(!res.ok)throw 0;RAW[id]=pivot(await res.json());}
   }catch(e){$("body").innerHTML='<tr><td colspan="15" class="empty">Could not load this round. Please refresh.</td></tr>';return;}
   ROUND=id;ROWS=RAW[id];
