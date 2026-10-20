@@ -1,0 +1,68 @@
+{
+  "counselling": "MCC",
+  "institution_type": "DEEMED_BDS",
+  "year": 2026,
+  "category": "MINORITY",
+  "colleges": [
+    {
+      "code": "200329",
+      "name": "K M Shah Dental College, Sumandeep Vidyapeeth, Vadodara",
+      "state": "Gujarat",
+      "establishment": 1999,
+      "fees": "Rs. 3,75,000/-",
+      "type": "Deemed",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 899447
+        },
+        "Round 2": {
+          "Intake": 1,
+          "AIR": 402313
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": 1,
+          "AIR": 746797
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    },
+    {
+      "code": "200350",
+      "name": "Yenepoya Dental College, Mangalore",
+      "state": "Karnataka",
+      "establishment": 2006,
+      "fees": "Rs. 5,02,000/-",
+      "type": "Deemed",
+      "rounds": {
+        "Round 1": {
+          "Intake": 30,
+          "AIR": 698015
+        },
+        "Round 2": {
+          "Intake": 2,
+          "AIR": 367759
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null
+        }
+      }
+    }
+  ]
+}
