@@ -101,15 +101,17 @@ for rname, fn, _ in ROUNDS:
     for key in heldn: entries.setdefault(key[:3], dict(info[key[0]], course=key[1], quota=key[2], cats={})).setdefault('cats', {}).setdefault(key[3], {})
     for code, course, quota, cat, pwd, rank in got:
         e = entries.setdefault((code, course, quota), dict(info[code], course=course, quota=quota, cats={}))
-        d = e['cats'].setdefault(cat, {}).setdefault(rname, {'AIR': None, 'AIR_PWD': None})
+        d = e['cats'].setdefault(cat, {}).setdefault(rname, {'AIR': None, 'AIR_PWD': None, 'OPEN_AIR': None, 'OPEN_AIR_PWD': None})
         k = 'AIR_PWD' if pwd else 'AIR'
         d[k] = max(d[k] or 0, rank); n += 1
+        ko = 'OPEN_AIR_PWD' if pwd else 'OPEN_AIR'
+        d[ko] = min(d[ko] or rank, rank)
     print(f'{rname}: {n} fresh / upgraded allotments in the other quotas')
 
 ALL_ROUNDS = [r for r, _, _ in ROUNDS]
 for e in entries.values():
     for cname, cat in e['cats'].items():
-        for r in ALL_ROUNDS: cat.setdefault(r, {'AIR': None, 'AIR_PWD': None})
+        for r in ALL_ROUNDS: cat.setdefault(r, {'AIR': None, 'AIR_PWD': None, 'OPEN_AIR': None, 'OPEN_AIR_PWD': None})
         for r in ALL_ROUNDS: cat[r]['Intake'] = held_by_round.get(r, {}).get((e['code'], e['course'], e['quota'], cname)) or None
 data = sorted(entries.values(), key=lambda e: (e['quota'], e['course'], e['name']))
 quotas = collections.Counter(e['quota'] for e in data)
