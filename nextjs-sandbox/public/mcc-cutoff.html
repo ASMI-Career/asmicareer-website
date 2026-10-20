@@ -405,6 +405,7 @@
   .rank-cell.open.none{color:var(--faint)}
   th.open{background:linear-gradient(180deg,#5a22ad,#3a0f80) !important}
   .mc-cat .op{display:block;font-size:.68rem;font-weight:600;color:#6d3bd2;margin-top:1px}
+  .head-links{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}.head-links .guide-btn{margin-left:0;text-decoration:none}
 </style>
 </head>
 <body>
@@ -432,7 +433,8 @@
     <div class="f-head">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="#410775"><path d="M3 4h18l-7 8.5V20l-4-2v-5.5z"/></svg>
       <h2>Find Your College</h2><span>Search And Filter Colleges By Your Preferences</span>
-      <button type="button" class="guide-btn" id="guideBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/></svg>Quick Guide</button>
+      <div class="head-links"><a class="guide-btn" id="rankLink" href="/mcc-rank-allotment.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Rank-wise Allotted Colleges</a>
+      <button type="button" class="guide-btn" id="guideBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/></svg>Quick Guide</button></div>
     </div>
     <div class="f s4 f-search">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>College Name</div>
@@ -658,6 +660,7 @@ function rankCell(e,r,R){
 
 function render(){
   const R=myRank();
+  $("rankLink").href="/mcc-rank-allotment.html"+(R?"?rk="+R:"");
   const deemedOk=!F.type.size||F.type.has("Deemed");
   if(!deemedOk&&F.minority) F.minority="";
   $("minWrap").style.display=deemedOk?"":"none"; seg("fMinority",MINORITIES,"minority");
