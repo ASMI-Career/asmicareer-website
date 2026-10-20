@@ -52,7 +52,7 @@ for c in mcc:
     key = norm(ALIAS.get(c['code'], c['name']))
     if key not in sheet: raise SystemExit(f'no fee found for {c["code"]} {c["name"]}')
     name, est, fee = sheet[key]
-    if c['establishment'] and c['establishment'] != est:
+    if c['establishment'] and est and c['establishment'] != est:
         raise SystemExit(f'establishment differs for {c["name"]}: {c["establishment"]} vs {est} in the fee file')
     fee_of[c['code']] = fee; used.add(key)
 unused = [v[0] for k, v in sheet.items() if k not in used]

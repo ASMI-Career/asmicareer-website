@@ -18,6 +18,8 @@ TYPE = {'All India except Central University': 'Government', 'Deemed University'
         'Jawaharlal Institute of Postgraduate Medical Education and Research': 'JIPMER'}
 CAT = {'OP': 'General / UR', 'BC': 'OBC', 'SC': 'Scheduled Caste (SC)', 'ST': 'Scheduled Tribe (ST)', 'EW': 'EWS'}
 # Names the heuristic (first two comma parts) gets wrong
+# colleges that started in 2026 (the ASMI lists have no year for them)
+EST_FIX = {'905629': 2026, '905630': 2026}
 NAME_FIX = {'904771': ('Bagalkote Medical College and Research Institute', 'Bagalkote'),
             '904772': ('Government Medical College Chapra (Saran)', 'Chapra'),
             '904773': ('Shri Ram Janki Medical College and Hospital', 'Samastipur'),
@@ -147,7 +149,7 @@ for rows, _ in rounds.values():
         course = x['branch'].split()[0]
         if course in master:
             m = master[course][x['code']]  # KeyError = a college missing from the ASMI list; fix the list, don't guess
-            x.update(collegeName=m['name'], city=NAME_FIX.get(x['code'], ('', m['city']))[1] or m['city'], establishment=m['est'], fee=m['fee'], feeNRI=m['nri'])
+            x.update(collegeName=m['name'], city=NAME_FIX.get(x['code'], ('', m['city']))[1] or m['city'], establishment=EST_FIX.get(x['code'], m['est']), fee=m['fee'], feeNRI=m['nri'])
 
 # Round 2 addendum
 by_code = {x['code']: x for k in ('round3', 'stray') for x in rounds[k][0]}
