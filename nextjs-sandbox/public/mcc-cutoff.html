@@ -269,30 +269,87 @@
   .m-sort{width:auto;min-width:240px}
   .reach{font-weight:700;color:var(--brand)}
   @media(max-width:760px){.m-sort{width:100%}}
-  /* ---------- yellow (main) & purple (secondary) theme ---------- */
-  :root{--b1:#ffd700;--b2:#ffcf00;--b3:#50098a;--brand:#50098a;--brand-dark:#2c0450;--gold:#ffd700;--bg:#fffbe6}
-  .hero{background:linear-gradient(105deg,#ffd700 0%,#ffdf2e 55%,#ffc800 100%);color:#2c0450}
-  .hero h1,.hero h1 span{color:#2c0450}
-  .hero h1 span{color:#50098a}
-  .hero p,.hero p b{color:#410775}
-  .hero::before{opacity:.5}
-  thead th{background:linear-gradient(180deg,#ffe033,#ffd700);color:#2c0450}
-  thead th small,thead th.round small{color:#50098a}
-  thead th.cat{background:#ffd700;color:#2c0450}
-  thead th.round{background:linear-gradient(180deg,#ffec7a,#ffdc1a);color:#2c0450}
-  thead th.nri{background:#50098a;color:#ffd700}
-  thead th.sorted{box-shadow:inset 0 -3px 0 #50098a}
-  .st-total{background:linear-gradient(120deg,#ffd700,#ffe45c);color:#2c0450}.st-total .badge{background:#50098a;color:#ffd700}.st-total .ico{background:#50098a}
-  .st-col{background:#50098a;color:#fff}.st-col b{color:#ffd700}.st-col .ico{background:#ffd700}.st-col .ico svg{stroke:#2c0450}
-  .round-tab.active{background:#ffd700;color:#2c0450;border-color:#50098a;box-shadow:0 6px 16px rgba(255,215,0,.5)}
-  .type-tab.active{background:#ffd700;border-color:#50098a;color:#2c0450}
-  .type-tab.active .count{background:#50098a;color:#ffd700}
-  .seg button.active{background:#ffd700;border-color:#50098a;color:#2c0450}
+  /* ---------- ASMI purple banner, yellow accents ---------- */
+  :root{--b1:#2a0a5e;--b2:#410775;--b3:#50098a;--brand:#50098a;--brand-dark:#2c0450;--gold:#ffd700;--bg:#f4f1fb}
+  .hero{background:linear-gradient(105deg,#240652 0%,#410775 48%,#50098a 100%);color:#fff}
+  .hero h1,.hero h1 span{color:#fff}.hero h1 span{color:#ffd700}
+  .hero p,.hero p b{color:#efe4ff}
+  .hero::before{opacity:1}
+  thead th{background:linear-gradient(180deg,#4a1a99,#2f0a68);color:#fff}
+  thead th small{color:#d9c6ff}
+  thead th.cat{background:#3a0f80;color:#fff}
+  thead th.round{background:linear-gradient(180deg,#5a22ad,#3a0f80);color:#fff}
+  thead th.nri{background:#2c0450;color:#ffd700}
+  thead th.sorted{box-shadow:inset 0 -3px 0 #ffd700}
+  .st-total{background:linear-gradient(120deg,#410775,#50098a);color:#fff}.st-total .badge{background:#ffd700;color:#2c0450}.st-total .ico{background:rgba(255,255,255,.18)}
+  .st-col{background:#ffd700;color:#2c0450}.st-col b{color:#2c0450}.st-col .ico{background:#410775}.st-col .ico svg{stroke:#fff}
+  .round-tab.active{background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;border-color:#ffb800;box-shadow:0 6px 16px rgba(255,184,0,.4)}
+  .type-tab.active{background:linear-gradient(120deg,#ffd700,#ffb800);border-color:#ffb800;color:#2c0450}
+  .type-tab.active .count{background:#410775;color:#ffd700}
+  .seg button.active{background:#410775;border-color:#410775;color:#fff}
   .ms-btn.has{border-color:#50098a;box-shadow:0 0 0 2px rgba(255,215,0,.7)}
-  .btn:not(.out){background:#ffd700;color:#2c0450;border:1.5px solid #50098a}
+  .btn:not(.out){background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;border:0}
+  .hero .back{color:#fff;background:rgba(255,255,255,.14)}.hero .back:hover{background:rgba(255,255,255,.24)}
   .logo{height:128px;width:auto;max-width:190px;border-radius:20px;padding:10px 14px}
   @media(max-width:760px){.logo{height:84px;max-width:128px;border-radius:14px;padding:7px 10px}}
-  .qchip{display:inline-block;background:#ffd700;color:#2c0450;border-radius:6px;padding:1px 7px;font-weight:700;font-size:.72rem;border:1px solid #50098a}
+  .qchip{display:inline-block;background:#ffd700;color:#2c0450;border-radius:6px;padding:1px 7px;font-weight:700;font-size:.72rem}
+  /* ---------- banner, type cards, filter panel (design from the ASMI mockup) ---------- */
+  .hero-row{flex-wrap:nowrap;gap:26px;padding:20px 22px}
+  .hero-title{flex:0 1 auto;min-width:0}
+  .hero-stats{display:flex;gap:20px;align-items:center;margin-left:8px;flex-wrap:nowrap}
+  .hero-title{flex:1 1 420px}.hero-title h1{font-size:1.8rem}.hero-stats{flex:none}
+  .hstat{display:flex;align-items:center;gap:10px;color:#fff}
+  .hstat svg{flex:none}
+  .hstat b{display:block;font-size:1.35rem;font-weight:800;line-height:1.05;color:#fff}
+  .hstat span{font-size:.74rem;font-weight:600;color:#e2d2ff;white-space:nowrap}
+  .tagline{margin-left:auto;font:italic 600 1.6rem/1.15 "Segoe Script","Brush Script MT","Lucida Handwriting",cursive;color:#fff;transform:rotate(-5deg);text-align:left;white-space:nowrap;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .tagline::after{content:"";display:block;height:3px;width:78%;margin-top:4px;background:#ffd700;border-radius:3px;transform:rotate(-2deg)}
+  .source-card{margin-left:0;background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;box-shadow:0 8px 22px rgba(0,0,0,.25)}
+  .source-card .helpline a,.source-card b{color:#2c0450}
+  .source-card svg{stroke:#2c0450}
+  .pills.bar{gap:12px;margin:18px 0}
+  .type-tab{border-radius:14px;padding:12px 20px 12px 14px;gap:12px;min-width:130px;box-shadow:0 2px 10px rgba(65,7,117,.06)}
+  .type-tab .tt-ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--c) 14%,#fff);flex:none}
+  .type-tab .tt-ic svg{width:26px;height:26px}
+  .type-tab .tt-tx{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+  .type-tab .tt-tx b{font-size:.95rem;font-weight:800}
+  .type-tab.active .tt-ic{background:rgba(255,255,255,.55)}
+  .type-tab.active svg{color:#410775}
+  .f-head{grid-column:1/-1;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:2px}
+  .f-head h2{margin:0;font-size:1.3rem;font-weight:800;color:#2c0450}
+  .f-head span{font-size:.82rem;color:var(--muted)}
+  .guide-btn{margin-left:auto;display:flex;gap:8px;align-items:center;border:1.5px solid #50098a;background:#fff;color:#50098a;border-radius:10px;padding:9px 16px;font:700 .85rem 'Montserrat',system-ui,sans-serif;cursor:pointer}
+  .hint-eg{font-size:.72rem;color:var(--faint);margin:6px 0 0 14px}
+  .f.actions{display:flex;flex-direction:row;gap:12px;align-items:end;grid-column:span 4}
+  .apply-btn{flex:1.3;display:flex;gap:10px;align-items:center;justify-content:center;background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;border:0;border-radius:12px;padding:15px 18px;font:800 .95rem 'Montserrat',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(255,184,0,.4)}
+  .f.actions .reset-btn{flex:1;width:auto !important;justify-content:center;padding:14px 18px}
+  .sortlbl{font-size:.85rem;font-weight:600;color:var(--muted)}
+  .viewtog{margin-left:auto;display:flex;gap:8px}
+  .viewtog button{border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:11px 18px;font:700 .85rem 'Montserrat',system-ui,sans-serif;cursor:pointer}
+  .viewtog button.on{background:#410775;border-color:#410775;color:#fff}
+  .rank-cell .rbox{display:inline-block;min-width:104px;border-radius:10px;padding:8px 12px;background:#f1ebfc}
+  td.rank-cell.ch-safe,td.rank-cell.ch-likely,td.rank-cell.ch-border,td.rank-cell.ch-out{background:transparent !important}
+  .rank-cell.ch-safe .rbox{background:#dff5e8}.rank-cell.ch-likely .rbox{background:#e1ecff}.rank-cell.ch-border .rbox{background:#fff0cc}.rank-cell.ch-out .rbox{background:#ffe1e3}
+  .rank-cell.none .rbox{background:#f1ebfc;color:var(--faint);font-weight:700}
+  .guide-bg{position:fixed;inset:0;background:rgba(20,5,40,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+  .guide-bg[hidden]{display:none}
+  .guide-box{background:#fff;border-radius:16px;max-width:760px;width:100%;max-height:86vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .guide-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:linear-gradient(105deg,#240652,#50098a);color:#fff;border-radius:16px 16px 0 0;font-size:1.05rem}
+  .guide-head button{background:none;border:0;color:#fff;font-size:1.7rem;line-height:1;cursor:pointer}
+  .guide-body{padding:16px 20px;font-size:.88rem;line-height:1.6;color:var(--ink)}
+  body.cardview .table-wrap{display:none}
+  body.cardview .cards{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  body.cardview .cardsmsg{display:none}
+  @media(max-width:1700px){.hero-row{flex-wrap:wrap}.tagline{display:none}.hero-stats{order:5;width:100%;margin:6px 0 0;flex-wrap:wrap}.source-card{margin-left:auto}}
+  @media(max-width:760px){
+    .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .hstat b{font-size:1.1rem}.hstat svg{width:26px;height:26px}
+    .type-tab{min-width:0;padding:9px 12px 9px 10px}.type-tab .tt-ic{width:34px;height:34px}.type-tab .tt-ic svg{width:20px;height:20px}
+    .f-head{gap:8px}.f-head span{display:none}.guide-btn{padding:8px 12px}
+    .f.actions{grid-column:1/-1}
+    .viewtog{display:none}
+    .f-head h2{font-size:1.1rem}
+  }
 </style>
 </head>
 <body>
@@ -300,11 +357,13 @@
 <div class="hero">
   <div class="wrap hero-row">
     <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
-    <div>
+    <div class="hero-title">
       <h1>All India Quota <span>Cutoff 2026</span></h1>
       <p><b>MCC NEET UG</b> • MBBS &amp; BDS</p>
       <p id="heroSub">Closing Rank, Round by Round</p>
     </div>
+    <div class="hero-stats" id="stats"></div>
+    <div class="tagline">Right Guidance<br>Brighter Tomorrow</div>
     <div class="source-card">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#50098a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
       <div><b>ASMI Helpline</b><small class="helpline"><a href="tel:+917410019074">7410019074</a> / <a href="tel:+917410019075">75</a> / <a href="tel:+917410019076">76</a> / <a href="tel:+917410019077">77</a></small></div>
@@ -313,11 +372,14 @@
 </div>
 
 <div class="wrap">
-  <div class="stats" id="stats"></div>
-
   <div class="pills bar" id="fType"></div>
 
   <div class="filters">
+    <div class="f-head">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#410775"><path d="M3 4h18l-7 8.5V20l-4-2v-5.5z"/></svg>
+      <h2>Find Your College</h2><span>Search And Filter Colleges By Your Preferences</span>
+      <button type="button" class="guide-btn" id="guideBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/></svg>Quick Guide</button>
+    </div>
     <div class="f s4 f-search">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>College Name</div>
       <div class="searchbox">
@@ -325,6 +387,7 @@
         <input id="search" type="text" list="collegeList" placeholder="Search College, District or MCC Code" autocomplete="off">
         <datalist id="collegeList"></datalist>
       </div>
+      <div class="hint-eg">e.g. AIIMS Delhi, VMMC, 15000</div>
     </div>
     <div class="f s2 f-search airbox">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Your NEET AIR</div>
@@ -347,6 +410,10 @@
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h16"/></svg>Course</div>
       <div class="seg" id="fCourse"></div>
     </div>
+    <div class="f s6">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/></svg>College Type</div>
+      <div class="seg" id="fTypeSeg"></div>
+    </div>
     <div class="f s9">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Category</div>
       <div class="seg" id="fCat"></div>
@@ -363,9 +430,9 @@
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Show</div>
       <div class="seg" id="fShow"></div>
     </div>
-    <div class="f s2">
-      <div class="f-title"></div>
-      <button class="reset-btn" id="reset" style="width:100%"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Reset</button>
+    <div class="f s2 actions">
+      <button class="apply-btn" id="apply" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Apply Filters</button>
+      <button class="reset-btn" id="reset" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>Reset</button>
     </div>
   </div>
 
@@ -376,7 +443,8 @@
   <div class="info-note" id="infoNote"></div>
   <div class="mode-banner" id="modeBanner">Showing the PwD closing rank for the chosen category. Colleges with no PwD allotment in a round show a dash.</div>
   <div class="result-line">
-    <span class="big" id="rowCount">0</span><span class="txt">colleges</span><span class="txt reach" id="reachInfo"></span>
+    <span class="big" id="rowCount">0</span><span class="txt">Colleges Found</span><span class="txt reach" id="reachInfo"></span>
+    <label class="sortlbl" for="mSort">Sort By</label>
     <select id="mSort" class="m-sort" aria-label="Sort colleges">
       <option value="rl:1">Sort: Latest round rank (best first)</option>
       <option value="r1:1">Sort: Round 1 rank (best first)</option>
@@ -386,6 +454,7 @@
       <option value="name:1">Sort: College Name (A–Z)</option>
       <option value="fee:1">Sort: Fees (low to high)</option>
     </select>
+    <div class="viewtog"><button type="button" id="vTable" class="on">Table View</button><button type="button" id="vCard">Card View</button></div>
   </div>
 
   <div class="table-wrap">
@@ -408,6 +477,8 @@
   </div>
   <div class="cards" id="cards"></div>
   <div class="empty m-only" id="cardsEmpty" style="display:none">No colleges match these filters. Try clearing one.</div>
+
+  <div class="guide-bg" id="guide" hidden><div class="guide-box"><div class="guide-head"><b>Quick Guide</b><button type="button" id="guideClose" aria-label="Close">×</button></div><div class="guide-body" id="guideBody"></div></div></div>
 
   <footer>
     <b>How to read:</b> the closing rank is the All India Rank of the <b>last candidate allotted</b> a seat in that college, course and category in that round. Smaller rank = harder to get. "n seats" is the number of seats offered in that round for that category. A dash means nobody was allotted in that round.<br>
@@ -457,7 +528,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const DEFAULTS={type:new Set(),state:new Set(),district:new Set(),quota:new Set(),course:"",cat:"OPEN",pwd:"no",fee:"any",show:"all"};
 const F={...DEFAULTS,type:new Set(),state:new Set(),district:new Set(),quota:new Set()};
-let COLLEGES=[], VIEW=[], sortKey="rl", sortAsc=true;
+let TYPE_REDRAW=()=>{}, COLLEGES=[], VIEW=[], sortKey="rl", sortAsc=true;
 
 const rankOf=rd=>rd?(F.pwd==="yes"?rd.AIR_PWD:rd.AIR):null;
 const fmt=n=>n==null?null:Number(n).toLocaleString("en-IN");
@@ -494,9 +565,9 @@ function matches(c,R){
 
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
-  if(v==null) return '<td class="rank-cell none">—</td>';
+  if(v==null) return '<td class="rank-cell none"><div class="rbox">—</div></td>';
   const ch=chance(R,v);
-  return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
+  return `<td class="rank-cell${ch?" ch-"+ch:""}"><div class="rbox"><b>${fmt(v)}</b>${rd.Intake?`<small>(${rd.Intake} seat${rd.Intake>1?"s":""})</small>`:""}</div></td>`;
 }
 
 function render(){
@@ -623,23 +694,25 @@ function seg(id,items,key){
 }
 
 function typeBar(counts){
-  const el=$("fType");
+  const el=$("fType"), seg=$("fTypeSeg");
+  const items=[["","All Colleges",COLLEGES.length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
   const draw=()=>{
-    const items=[["","All Types",COLLEGES.length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
-    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#50098a"}">${IC[ic]}${esc(l)}<span class="count">${n}</span></button>`).join("");
+    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#50098a"}"><span class="tt-ic">${IC[ic]}</span><span class="tt-tx"><b>${esc(l)}</b><span class="count">${n}</span></span></button>`).join("");
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});
+    seg.innerHTML=[["","All"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t])].map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${(v===""?F.type.size===0:(F.type.size===1&&F.type.has(v)))?"active":""}">${esc(l)}</button>`).join("");
+    seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;F.type.clear();if(v)F.type.add(v);draw();render();});
   };
-  draw();
+  TYPE_REDRAW=draw; draw();
 }
 
-const svg=(p)=>`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const svg=(p)=>`<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 function buildUI(){
   const states=new Set(COLLEGES.map(c=>c.state)), mb=COLLEGES.filter(c=>c.course==="MBBS").length, bd=COLLEGES.filter(c=>c.course==="BDS").length;
   $("stats").innerHTML=
-    `<div class="stat st-total"><div class="ico">${svg('<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>')}</div><div><b>${COLLEGES.length.toLocaleString()}</b><div class="l">Colleges</div></div><span class="badge">MBBS + BDS</span></div>`+
-    `<div class="stat st-col"><div class="ico">${svg('<path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>')}</div><div><b>${states.size}</b><div class="l">States / UTs</div></div></div>`+
-    `<div class="stat st-mbbs"><div class="ico">${svg('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>')}</div><div><b>${mb.toLocaleString()}</b><div class="l">MBBS Colleges</div></div></div>`+
-    `<div class="stat st-bds"><div class="ico">${svg('<path d="M12 6c-2-2-7-2-7 3 0 4 2 5 2 9 0 2 1 3 2 3 2 0 1-4 3-4s1 4 3 4c1 0 2-1 2-3 0-4 2-5 2-9 0-5-5-5-7-3z"/>')}</div><div><b>${bd.toLocaleString()}</b><div class="l">BDS Colleges</div></div></div>`;
+    `<div class="hstat">${svg('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>')}<div><b>${COLLEGES.length.toLocaleString()}</b><span>Colleges</span></div></div>`+
+    `<div class="hstat">${svg('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 1.7 6 5"/>')}<div><b>${states.size}</b><span>States / UTs</span></div></div>`+
+    `<div class="hstat">${svg('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>')}<div><b>${mb.toLocaleString()}</b><span>MBBS Colleges</span></div></div>`+
+    `<div class="hstat">${svg('<path d="M12 6c-2-2-7-2-7 3 0 4 2 5 2 9 0 2 1 3 2 3 2 0 1-4 3-4s1 4 3 4c1 0 2-1 2-3 0-4 2-5 2-9 0-5-5-5-7-3z"/>')}<div><b>${bd.toLocaleString()}</b><span>BDS Colleges</span></div></div>`;
   $("heroSub").innerHTML=`Closing Rank, Round by Round • <b>${states.size} States / UTs</b>`;
   $("collegeList").innerHTML=[...new Set(COLLEGES.map(c=>c.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
   const counts={};COLLEGES.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
@@ -690,6 +763,12 @@ async function init(){
 $("search").addEventListener("input",render);
 $("rank").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);render();});
 $("reset").onclick=reset;
+$("apply").onclick=()=>{document.querySelector(".filters").classList.remove("open");updateFilterCount();render();document.querySelector(".result-line").scrollIntoView({behavior:"smooth",block:"start"});};
+$("guideBtn").onclick=()=>{$("guideBody").innerHTML=document.querySelector("footer").innerHTML;$("guide").hidden=false;};
+$("guideClose").onclick=()=>{$("guide").hidden=true;};
+$("guide").onclick=e=>{if(e.target.id==="guide")$("guide").hidden=true;};
+const setView=v=>{document.body.classList.toggle("cardview",v==="card");$("vTable").classList.toggle("on",v!=="card");$("vCard").classList.toggle("on",v==="card");};
+$("vTable").onclick=()=>setView("table"); $("vCard").onclick=()=>setView("card");
 $("filterToggle").onclick=()=>{document.querySelector(".filters").classList.toggle("open");updateFilterCount();};
 $("mSort").onchange=e=>{const [k,a]=e.target.value.split(":");sortKey=k;sortAsc=a==="1";document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));render();};
 document.querySelectorAll("thead th[data-key]").forEach(th=>th.onclick=()=>{
