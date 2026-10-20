@@ -14,7 +14,7 @@
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 26459,
+          "AIR": null,
           "AIR_PWD": null
         },
         "Round 2": {
@@ -578,7 +578,7 @@
           "AIR_PWD": null
         },
         "Round 2": {
-          "Intake": 1,
+          "Intake": 2,
           "AIR": 41111,
           "AIR_PWD": null
         },
@@ -819,7 +819,7 @@
       "rounds": {
         "Round 1": {
           "Intake": 1,
-          "AIR": 36051,
+          "AIR": null,
           "AIR_PWD": null
         },
         "Round 2": {
@@ -888,8 +888,8 @@
       "type": "Govt",
       "rounds": {
         "Round 1": {
-          "Intake": null,
-          "AIR": null,
+          "Intake": 2,
+          "AIR": 36867,
           "AIR_PWD": null
         },
         "Round 2": {
@@ -1238,12 +1238,12 @@
       "type": "Govt",
       "rounds": {
         "Round 1": {
-          "Intake": null,
-          "AIR": null,
+          "Intake": 1,
+          "AIR": 26546,
           "AIR_PWD": null
         },
         "Round 2": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 37059,
           "AIR_PWD": null
         },
@@ -1654,7 +1654,7 @@
       "name": "Government Dental College and Hospital, Ahmedabad",
       "state": "Gujarat",
       "establishment": 1963,
-      "fees": null,
+      "fees": "20,000/-",
       "type": "Govt",
       "rounds": {
         "Round 1": {
@@ -1689,7 +1689,7 @@
       "name": "Government Dental College, Thrissur",
       "state": "Kerala",
       "establishment": 2015,
-      "fees": null,
+      "fees": "26,640/-",
       "type": "Govt",
       "rounds": {
         "Round 1": {
@@ -1705,6 +1705,41 @@
         "Round 3": {
           "Intake": null,
           "AIR": 52270,
+          "AIR_PWD": null
+        },
+        "Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Special Stray Vacancy Round": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        }
+      }
+    },
+    {
+      "code": "904763",
+      "name": "Regional Dental College, Guwahati",
+      "state": "Assam",
+      "establishment": 1982,
+      "fees": "Rs. 15,300/-",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 1,
+          "AIR": 40637,
+          "AIR_PWD": null
+        },
+        "Round 2": {
+          "Intake": null,
+          "AIR": null,
+          "AIR_PWD": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": null,
           "AIR_PWD": null
         },
         "Stray Vacancy Round": {

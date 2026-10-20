@@ -371,7 +371,7 @@ const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
 let OTHERS=[];
 const ALL_TYPES=["GOVT_MBBS","GOVT_BDS","AIIMS_MBBS","JIPMER_MBBS","CENTRAL_MBBS","CENTRAL_BDS","DEEMED_MBBS","DEEMED_BDS"];
 const SEAT_ROUNDS=[["round1","Round 1"],["round2","Round 2"],["round3","Round 3"],["stray","Stray Vacancy"]];
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"]];
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"],["WOMEN","Women"]];
 const CAT_LABEL=Object.fromEntries(CATS);
 const SEAT_CAT={OP:"OPEN",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
@@ -443,6 +443,7 @@ const hasAny=k=>ROUNDS.some(r=>{const d=C.cats[k]&&C.cats[k][r];return d&&(d.AIR
 const availCats=()=>CATS.filter(([k])=>C.cats[k]&&hasAny(k));
 function latest(cat){const e=C.cats[cat];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
 
+const ctSubText=()=>"Closing All India Rank"+(/^OTHER_/.test(ITYPE)&&C.quota!=="All India Quota"?" · "+C.quota:"")+(S.pwd==="yes"?" (PwD)":"");
 function feeLine(){
   const f=feeNum(C.fees);
   return f?"₹"+f.toLocaleString("en-IN"):'<span class="none">—</span>';
@@ -455,7 +456,7 @@ function draw(){
   $("page").innerHTML=`
   <section class="card college-head">
     <h1>${esc(C.name)}</h1>
-    <div class="chips"><span class="type-chip" style="background:${TYPE_COLORS[C.type]||"#50098a"}">${esc(C.type)}</span><span class="chip2">${esc(C.course)}</span>${C.quota?`<span class="chip2">${esc(C.quota)}</span>`:""}${C.est?`<span class="chip2">Est. ${C.est}</span>`:""}</div>
+    <div class="chips"><span class="type-chip" style="background:${TYPE_COLORS[C.type]||"#50098a"}">${esc(C.type)}</span><span class="chip2">${esc(C.course)}</span>${C.est?`<span class="chip2">Est. ${C.est}</span>`:""}</div>
     <div class="where">${esc(C.state)}${C.district?" · "+esc(C.district):""}</div>
     <div class="facts">
       <div class="fact"><i>Fees Per Year</i><b>${feeLine()}</b><small>As per ASMI fee list</small></div>
@@ -481,7 +482,7 @@ function draw(){
   </section>
 
   <section class="card">
-    <h2>Cutoff, Round by Round <small id="ctSub">Closing All India Rank${S.pwd==="yes"?" (PwD)":""}</small></h2>
+    <h2>Cutoff, Round by Round <small id="ctSub">${ctSubText()}</small></h2>
     <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
     <p class="note">Closing rank = the last candidate allotted a seat in that round (fresh and upgraded allotments; retained seats are ignored). Smaller rank = harder to get. A dash means nobody was allotted in that round.</p>
   </section>
@@ -533,7 +534,7 @@ function refresh(){
       const ch=k===S.cat?chance(R,v):null;
       return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;}).join("")}</tr>`;
   }).join("");
-  $("ctSub").textContent="Closing All India Rank"+(S.pwd==="yes"?" (PwD)":"");
+  $("ctSub").textContent=ctSubText();
   // verdict
   const vd=$("verdict"), l=latest(S.cat);
   if(!R){vd.style.display="none";}

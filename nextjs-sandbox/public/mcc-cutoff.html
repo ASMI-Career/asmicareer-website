@@ -340,7 +340,7 @@
   body.cardview .table-wrap{display:none}
   body.cardview .cards{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
   body.cardview .cardsmsg{display:none}
-  @media(max-width:1700px){.hero-row{flex-wrap:wrap}.tagline{display:none}.hero-stats{order:5;width:100%;margin:6px 0 0;flex-wrap:wrap}.source-card{margin-left:auto}}
+  
   @media(max-width:760px){
     .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .hstat b{font-size:1.1rem}.hstat svg{width:26px;height:26px}
@@ -353,6 +353,33 @@
   .pills.bar{justify-content:center}
   .type-tab .count,.type-tab.active .count{background:none;padding:0;border-radius:0;font-size:.95rem;font-weight:800;color:var(--muted)}
   .type-tab.active .count{color:#2c0450}
+  /* banner, cards and ranks, round 2 */
+  .hero-row{flex-wrap:nowrap;gap:28px;padding:22px 24px;align-items:center}
+  .hero-title{flex:1 1 auto;min-width:0}
+  .hero-title h1{font-size:2.1rem;white-space:nowrap;margin:0 0 4px}
+  .hero-title p{margin:0;font-size:.95rem}
+  .hero-stats{margin:16px 0 0;padding:0;gap:30px;flex-wrap:wrap}
+  .hstat{gap:12px}.hstat b{font-size:1.5rem}.hstat span{font-size:.78rem}
+  .tagline{flex:none;font-size:1.7rem;margin:0 8px 0 0}
+  .source-card{flex:none;margin:0;padding:14px 20px;white-space:nowrap}
+  .source-card .helpline{font-size:1.05rem}
+  .rank-cell .rbox{display:none}
+  .rank-cell b{font-size:1.1rem}
+  .rank-cell small{font-size:.74rem}
+  .mcard{display:flex;flex-direction:column;margin:0;height:100%}
+  .mc-head{align-items:flex-start;min-height:92px}
+  .mc-name{min-width:0;flex:1}
+  .mc-name .cname{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:3.9em;line-height:1.3}
+  .mc-name .cstate{min-height:1.3em}
+  .mc-facts{margin-top:10px}
+  .mc-quota{margin-top:10px}
+  .mcard .view-btn{margin-top:auto}
+  .mc-cats{margin-bottom:14px}
+  .mc-cat{min-height:78px;display:flex;flex-direction:column;justify-content:flex-start;padding-top:10px}
+  body.cardview .cards{align-items:stretch}
+  @media(max-width:1500px){.tagline{display:none}}
+  @media(max-width:1100px){.hero-row{flex-wrap:wrap}.hero-title{flex:1 1 100%}.hero-title h1{white-space:normal}.source-card{margin-left:0}}
+  @media(max-width:760px){.pills.bar{justify-content:flex-start}.cards .mcard{margin-bottom:12px}.hero-title h1{font-size:1.5rem}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mc-head{min-height:0}.mc-name .cname{min-height:0}}
 </style>
 </head>
 <body>
@@ -362,10 +389,9 @@
     <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
     <div class="hero-title">
       <h1>All India Quota <span>Cutoff 2026</span></h1>
-      <p><b>MCC NEET UG</b> • MBBS &amp; BDS</p>
-      <p id="heroSub">Closing Rank, Round by Round</p>
+      <p><b>MCC NEET UG</b> • MBBS &amp; BDS • <span id="heroSub">Closing Rank, Round by Round</span></p>
+      <div class="hero-stats" id="stats"></div>
     </div>
-    <div class="hero-stats" id="stats"></div>
     <div class="tagline">Right Guidance<br>Brighter Tomorrow</div>
     <div class="source-card">
       <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#50098a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
@@ -504,11 +530,12 @@ const IC={
   eye:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>'};
 const TYPE_ICON={Government:"building",Deemed:"cap",AIIMS:"building",JIPMER:"pin","Central University":"building"};
 const QUOTA_BY_TYPE={Government:"All India Quota",AIIMS:"Open Seat Quota",JIPMER:"Open Seat Quota","Central University":"Open Seat Quota",Deemed:"Self Financed Merit Seat"};
-const QUOTA_ORDER=["All India Quota","Open Seat Quota","Self Financed Merit Seat","Delhi University Quota","IP University Quota","ESI Quota","AMU Quota","AMU Self Finance (All India)","AMU Self Finance (Internal)","AMU NRI Quota","Jamia Internal Quota","Muslim Quota","Muslim OBC Quota","Muslim ST Quota","Muslim Women Quota","Jamia NRI Quota","Puducherry UT Domicile (Internal)","Delhi NCR CW Quota (DU)","Delhi NCR CW Quota (IP)","Foreign Country Quota","NRI Quota"];
+const QUOTA_ORDER=["All India Quota","Open Seat Quota","Self Financed Merit Seat","NRI Quota","Delhi University Quota","IP University Quota","ESI Quota","AMU Self Finance (All India)","Muslim Quota","Delhi NCR CW Quota (DU)","Delhi NCR CW Quota (IP)","Foreign Country Quota","AMU Quota","AMU Self Finance (Internal)","Jamia Internal Quota","Puducherry UT Domicile (Internal)"];
+const isMain=c=>c.itype!=="OTHER"||c.quota==="All India Quota";
 const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
 const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
 const RSORT={r1:"Round 1",r2:"Round 2",r3:"Round 3",r4:"Stray Vacancy Round"};
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"]];
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"],["WOMEN","Women"]];
 const CAT_LABEL=Object.fromEntries(CATS);
 const FEES=[["any","Any Fee"],["0-100000","Up to ₹1 L"],["100000-500000","₹1–5 L"],["500000-1500000","₹5–15 L"],["1500000-2500000","₹15–25 L"],["2500000-","Above ₹25 L"]];
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
@@ -556,7 +583,8 @@ function matches(c,R){
   if(F.type.size&&!F.type.has(c.type)) return false;
   if(F.state.size&&!F.state.has(c.state)) return false;
   if(F.district.size&&!F.district.has(c.district)) return false;
-  if(F.quota.size&&!F.quota.has(c.quota)) return false;
+  if(F.quota.size){ if(!(F.quota.has(c.quota)||(F.quota.has("NRI Quota")&&c.cats.NRI))) return false; }
+  else if(c.itype==="OTHER"&&!(c.quota==="All India Quota"||(F.cat==="NRI"&&c.quota==="NRI Quota")||(F.cat==="WOMEN"&&c.quota==="Muslim Quota"))) return false;
   if(F.course&&c.course!==F.course) return false;
   if(!hasData(c,F.cat)) return false;
   if(!feeOk(c)) return false;
@@ -568,9 +596,9 @@ function matches(c,R){
 
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
-  if(v==null) return '<td class="rank-cell none"><div class="rbox">—</div></td>';
+  if(v==null) return '<td class="rank-cell none">—</td>';
   const ch=chance(R,v);
-  return `<td class="rank-cell${ch?" ch-"+ch:""}"><div class="rbox"><b>${fmt(v)}</b>${rd.Intake?`<small>(${rd.Intake} seat${rd.Intake>1?"s":""})</small>`:""}</div></td>`;
+  return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${rd.Intake?`<small>${rd.Intake} seat${rd.Intake>1?"s":""}</small>`:""}</td>`;
 }
 
 function render(){
@@ -600,7 +628,8 @@ function render(){
   const reach=R?VIEW.filter(c=>{const l=latest(c);const ch=l&&chance(R,l.v);return ch&&ch!=="out";}).length:0;
   $("reachInfo").textContent=R?`· ${reach.toLocaleString()} within your reach`:"";
   const note=$("infoNote");
-  if(/^NRI|MINORITY/.test(F.cat)){note.style.display="block";note.textContent=CAT_LABEL[F.cat]+" cutoffs exist for deemed universities only.";}
+  if(/^NRI|MINORITY/.test(F.cat)){note.style.display="block";note.textContent=F.cat==="NRI"?"NRI cutoffs: deemed universities, plus the NRI seats of AMU and Jamia.":"Minority cutoffs exist for deemed universities only.";}
+  else if(F.cat==="WOMEN"){note.style.display="block";note.textContent="Women: the Muslim Women seats of the Muslim Quota (Jamia Millia Islamia). Pick the Muslim Quota in the Quota filter.";}
   else if(F.cat!=="OPEN"&&F.type.size&&F.type.has("Deemed")&&F.type.size===1){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
   else if(F.fee!=="any"){note.style.display="block";note.textContent="Fee filter uses the annual fee in Indian rupees. Colleges without a listed fee are hidden.";}
   else note.style.display="none";
@@ -610,7 +639,7 @@ function render(){
   VIEW.forEach((c,i)=>{
     const e=c.cats[F.cat], l=latest(c), ch=R&&l?chance(R,l.v):null, url=detailUrl(c);
     const badge=ch?`<span class="chance ch-${ch}">${CH_LABEL[ch]}</span>`:"";
-    const sub=esc(c.state)+(c.district?" · "+esc(c.district):"")+(c.quota?` · <span class="qchip">${esc(c.quota)}</span>`:"");
+    const sub=esc(c.state)+(c.district&&c.district!==c.state?" · "+esc(c.district):"");
     html.push(`<tr><td class="idx">${i+1}</td>
       <td class="college"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</td>
       <td class="est">${c.est||'<span class="none">–</span>'}</td>
@@ -698,7 +727,7 @@ function seg(id,items,key){
 
 function typeBar(counts){
   const el=$("fType"), seg=$("fTypeSeg");
-  const items=[["","All Colleges",COLLEGES.length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
+  const items=[["","All Colleges",COLLEGES.filter(isMain).length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
   const draw=()=>{
     el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#50098a"}"><span class="tt-ic">${IC[ic]}</span><span class="tt-tx"><b>${esc(l)}</b><span class="count">${n}</span></span></button>`).join("");
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});
@@ -710,15 +739,15 @@ function typeBar(counts){
 
 const svg=(p)=>`<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 function buildUI(){
-  const states=new Set(COLLEGES.map(c=>c.state)), mb=COLLEGES.filter(c=>c.course==="MBBS").length, bd=COLLEGES.filter(c=>c.course==="BDS").length;
+  const base=COLLEGES.filter(isMain), states=new Set(base.map(c=>c.state)), mb=base.filter(c=>c.course==="MBBS").length, bd=base.filter(c=>c.course==="BDS").length;
   $("stats").innerHTML=
-    `<div class="hstat">${svg('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>')}<div><b>${COLLEGES.length.toLocaleString()}</b><span>Colleges</span></div></div>`+
+    `<div class="hstat">${svg('<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>')}<div><b>${base.length.toLocaleString()}</b><span>Colleges</span></div></div>`+
     `<div class="hstat">${svg('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M15 14.5c3 0 6 1.7 6 5"/>')}<div><b>${states.size}</b><span>States / UTs</span></div></div>`+
     `<div class="hstat">${svg('<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v2a5 5 0 0 0 10 0v-1"/><circle cx="20" cy="12" r="2"/>')}<div><b>${mb.toLocaleString()}</b><span>MBBS Colleges</span></div></div>`+
     `<div class="hstat">${svg('<path d="M12 6c-2-2-7-2-7 3 0 4 2 5 2 9 0 2 1 3 2 3 2 0 1-4 3-4s1 4 3 4c1 0 2-1 2-3 0-4 2-5 2-9 0-5-5-5-7-3z"/>')}<div><b>${bd.toLocaleString()}</b><span>BDS Colleges</span></div></div>`;
   $("heroSub").innerHTML=`Closing Rank, Round by Round • <b>${states.size} States / UTs</b>`;
   $("collegeList").innerHTML=[...new Set(COLLEGES.map(c=>c.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
-  const counts={};COLLEGES.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
+  const counts={};base.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   typeBar(counts);
   seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
   seg("fCat",CATS,"cat");
@@ -727,7 +756,7 @@ function buildUI(){
   seg("fShow",[["all","All Colleges"],["reach","Within My Reach"]],"show");
   msInit("fState","state","All States / UTs",()=>[...states].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
   msInit("fDistrict","district","All Districts",()=>[...new Set(COLLEGES.filter(c=>!F.state.size||F.state.has(c.state)).map(c=>c.district).filter(Boolean))].sort());
-  msInit("fQuota","quota","All Quotas",()=>QUOTA_ORDER.filter(q=>COLLEGES.some(c=>c.quota===q)).concat([...new Set(COLLEGES.map(c=>c.quota))].filter(q=>!QUOTA_ORDER.includes(q)).sort()));
+  msInit("fQuota","quota","All Quotas",()=>QUOTA_ORDER.filter(q=>COLLEGES.some(c=>c.quota===q)).concat([...new Set(COLLEGES.map(c=>c.quota))].filter(q=>!QUOTA_ORDER.includes(q)).sort()),()=>{if(F.quota.size===1&&F.quota.has("NRI Quota")&&F.cat!=="NRI"){F.cat="NRI";seg("fCat",CATS,"cat");}});
 }
 
 function reset(){
