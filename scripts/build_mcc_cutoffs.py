@@ -1,7 +1,7 @@
-"""Update the MCC 2026 All India cutoffs (Round 2 and Round 3) from the official MCC allotment lists.
+"""Update the MCC 2026 All India cutoffs (Round 1, 2, 3 and the Stray round) from the official MCC allotment lists.
 
 Usage: python3 scripts/build_mcc_cutoffs.py <input_dir> [--dry-run]
-  input_dir must contain: allot_round2.xlsx, allot_round3.xlsx
+  input_dir must contain: allot_round1.xlsx, allot_round2.xlsx, allot_round3.xlsx
   and, once MCC publishes it, allot_stray.xlsx (same columns) for the Stray Vacancy Round
   (MCC "all allotments" lists: SNo, Rank, Score, Allotted Quota, Allotted Institute, Course,
    Alloted Category, Candidate Category, Remarks)
@@ -16,7 +16,7 @@ Rules (checked against the existing Round 1 files, which this script does not to
   * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
     been converted to general merit, so the NRI cutoff is the college's last allotted rank.
   * MBBS and BDS only. B.Sc Nursing is ignored.
-Only AIR and AIR_PWD of Round 2 / Round 3 are written. Intake and every other field stay as they were.
+AIR and AIR_PWD come from the allotment lists, Intake (seats offered) from the seat matrix. Intake and every other field stay as they were.
 """
 import json, os, re, sys, collections
 import openpyxl
@@ -27,10 +27,10 @@ ROOT = 'nextjs-sandbox/public/data/cutoffs/MCC/2026'
 SEAT = 'nextjs-sandbox/public/data/seat-matrix/MCC/2026'
 
 # round id -> key used in the cutoff files / allotment file / seat-matrix file
-RKEY = {2: 'Round 2', 3: 'Round 3', 'stray': 'Stray Vacancy Round'}
-AFILE = {2: 'allot_round2.xlsx', 3: 'allot_round3.xlsx', 'stray': 'allot_stray.xlsx'}
-SEATKEY = {2: 'round2', 3: 'round3', 'stray': 'stray'}
-ROUND_IDS = [k for k in (2, 3, 'stray') if os.path.exists(f'{SRC}/{AFILE[k]}')]   # the Stray round only once its file exists
+RKEY = {1: 'Round 1', 2: 'Round 2', 3: 'Round 3', 'stray': 'Stray Vacancy Round'}
+AFILE = {1: 'allot_round1.xlsx', 2: 'allot_round2.xlsx', 3: 'allot_round3.xlsx', 'stray': 'allot_stray.xlsx'}
+SEATKEY = {1: 'round1', 2: 'round2', 3: 'round3', 'stray': 'stray'}
+ROUND_IDS = [k for k in (1, 2, 3, 'stray') if os.path.exists(f'{SRC}/{AFILE[k]}')]   # the Stray round only once its file exists
 
 norm = lambda s: re.sub(r'[^a-z0-9]', '', str(s).lower())
 squash = lambda s: re.sub(r'\s+', '', str(s))
@@ -88,6 +88,23 @@ def has_nri_seats(k, code, course):
     rows = seat_rows[SEATKEY[k]]
     return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
 
+
+SEAT_Q = {'AllIndia': 'All India', 'OpenSeatQuota': 'Open Seat Quota'}
+def intake(k, folder, cat, code):
+    """Seats offered in that round for the quota / category the cutoff is about, straight from the seat matrix
+    (normal and PwD seats together). None when there are none."""
+    itype, course, quotas, kind = JOBS[folder]
+    n = 0
+    for x in seat_rows[SEATKEY[k]]:
+        if x['code'] != code or not x['branch'].startswith(course): continue
+        q = squash(x['quota'])
+        if kind == 'cat':
+            if q in quotas and SEAT_CAT.get(x['category'].split()[0]) == cat: n += x['seats']
+        elif cat == 'OPEN': n += x['seats'] if q == SFM else 0
+        elif cat == 'MINORITY': n += x['seats'] if q in MINORITY else 0
+        elif cat in ('NRI_P-I', 'NRI_P1'): n += x['seats'] if q == NRI else 0
+    return n or None
+
 def compute(k, rows):
     """-> {(folder, category): {code: {'AIR':..,'AIR_PWD':..}}}"""
     res = collections.defaultdict(lambda: collections.defaultdict(dict))
@@ -119,6 +136,16 @@ def dump(path, obj):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
+
+def indian(n):
+    t = str(n); head, tail = t[:-3], t[-3:]
+    while len(head) > 2: tail = head[-2:] + ',' + tail; head = head[:-2]
+    return (head + ',' + tail) if head else tail
+seat_fee = {}   # (code, course) -> annual fee from the seat matrix (non-NRI rows)
+for rd in seat_rows.values():
+    for x in rd:
+        if x['fee'] and not re.search(r'NRI|Non-Resident', x['quota']): seat_fee.setdefault((x['code'], x['branch'].split()[0]), x['fee'])
+
 stats = collections.Counter(); added = []
 computed = {k: compute(k, load(k)) for k in ROUND_IDS}
 for folder in JOBS:
@@ -136,9 +163,14 @@ for folder in JOBS:
                 data['colleges'].append({**{f: src[f] for f in src if f != 'rounds'}, 'rounds': blank})
                 have.add(code); added.append(f'{folder}/{cat}: {code} {src["name"]}')
         for c in data['colleges']:
+            if c.get('fees') in (None, '') and seat_fee.get((c['code'], JOBS[folder][1])):   # colleges the old fee list did not have
+                c['fees'] = indian(seat_fee[(c['code'], JOBS[folder][1])]) + '/-'; stats['fee filled'] += 1
             for k in ROUND_IDS:
                 new = computed[k].get((folder, cat), {}).get(c['code'], {})
                 rd = c['rounds'][RKEY[k]]
+                it = intake(k, folder, cat, c['code'])
+                stats['intake unchanged' if rd.get('Intake') == it else 'intake fixed'] += 1
+                rd['Intake'] = it
                 for fld in ('AIR', 'AIR_PWD'):
                     if fld not in rd: continue
                     old, val = rd[fld], new.get(fld)

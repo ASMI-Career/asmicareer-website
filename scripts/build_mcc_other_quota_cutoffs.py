@@ -47,16 +47,22 @@ def canon(q):
     if s == 'aligarhmuslimuniversityamuquota': return 'AMU Quota'
     if s == 'amuselffinanceallindia': return 'AMU Self Finance (All India)'
     if s == 'amuselffinanceinternal': return 'AMU Self Finance (Internal)'
-    if s == 'nonresidentindianamuquota': return 'AMU NRI Quota'
-    if s == 'nonresidentindianjamiaquota': return 'Jamia NRI Quota'
-    if 'cw' in s and s.endswith('duquota'): return 'Delhi NCR CW Quota (DU)'
-    if 'cw' in s and s.endswith('ipquota'): return 'Delhi NCR CW Quota (IP)'
-    names = {'muslimquota': 'Muslim Quota', 'muslimobcquota': 'Muslim OBC Quota', 'muslimstquota': 'Muslim ST Quota',
-             'muslimwomenquota': 'Muslim Women Quota', 'muslimminorityquota': 'Muslim Minority Quota', 'jainminorityquota': 'Jain Minority Quota',
+    if s == 'nonresidentindianamuquota': return 'NRI Quota'
+    if s == 'nonresidentindianjamiaquota': return 'NRI Quota'
+    if 'cw' in s and s.endswith(('duquota', 'cwdu')): return 'Delhi NCR CW Quota (DU)'
+    if 'cw' in s and s.endswith(('ipquota', 'cwip')): return 'Delhi NCR CW Quota (IP)'
+    names = {'muslimquota': 'Muslim Quota', 'muslimobcquota': 'Muslim Quota', 'muslimstquota': 'Muslim Quota',
+             'muslimwomenquota': 'Muslim Quota', 'muslimminorityquota': 'Muslim Minority Quota', 'jainminorityquota': 'Jain Minority Quota',
              'jamiainternalquota': 'Jamia Internal Quota', 'foreigncountryquota': 'Foreign Country Quota',
              'allindia': 'All India Quota', 'openseatquota': 'Open Seat Quota', 'selffinancedmeritseat': 'Self Financed Merit Seat', 'nonresidentindian': 'NRI Quota'}
     if s in names: return names[s]
     raise SystemExit(f'unknown quota: {q!r}')
+
+def seat_cat(quota, raw_quota, cat):
+    """NRI seats are the NRI category (as for the deemed universities); the Muslim Women seats are a category
+    of their own under the merged Muslim Quota."""
+    if quota == 'NRI Quota': return 'NRI'
+    return 'WOMEN' if norm(raw_quota) == 'muslimwomenquota' else cat
 
 def load(path):
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
@@ -79,7 +85,7 @@ def load(path):
         if (info[code]['type'], norm(r[col['Allotted Quota']])) in COVERED: continue
         acat = re.sub(r'\s+', ' ', str(r[col['Alloted Category']])).strip()
         acat = re.sub(r'^Open\b', 'General', acat)
-        out.append((code, r[col['Course']], quota, CAT[acat.replace(' PwD', '')], acat.endswith('PwD'), r[col['Rank']]))
+        out.append((code, r[col['Course']], quota, seat_cat(quota, r[col['Allotted Quota']], CAT[acat.replace(' PwD', '')]), acat.endswith('PwD'), r[col['Rank']]))
     if missing: raise SystemExit(f'institutes not found in the seat matrix: {dict(missing)}')
     return out
 
@@ -95,9 +101,21 @@ for rname, fn, _ in ROUNDS:
     print(f'{rname}: {n} fresh / upgraded allotments in the other quotas')
 
 ALL_ROUNDS = [r for r, _, _ in ROUNDS]
+SEAT_CAT = {'OP': 'OPEN', 'BC': 'OBC', 'EW': 'EWS', 'SC': 'SC', 'ST': 'ST'}
+seats = collections.Counter()   # (round, code, course, quota, category) -> seats, normal and PwD together
+for rname, _, rd in ROUNDS:
+    for x in json.load(open(f'{SEAT}/{rd}.json')):
+        course = x['branch'].split()[0]
+        if (info[x['code']]['type'], norm(x['quota'])) in COVERED: continue
+        try: q = canon(x['quota'])
+        except SystemExit: continue   # the seat matrix has a few quota names cut short (Delhi NCR CW); they get no seat count
+        if q is None: continue
+        seats[(rname, x['code'], course, q, seat_cat(q, x['quota'], SEAT_CAT[x['category'].split()[0]]))] += x['seats']
+
 for e in entries.values():
-    for cat in e['cats'].values():
+    for cname, cat in e['cats'].items():
         for r in ALL_ROUNDS: cat.setdefault(r, {'AIR': None, 'AIR_PWD': None})
+        for r in ALL_ROUNDS: cat[r]['Intake'] = seats.get((r, e['code'], e['course'], e['quota'], cname)) or None
 data = sorted(entries.values(), key=lambda e: (e['quota'], e['course'], e['name']))
 quotas = collections.Counter(e['quota'] for e in data)
 print(len(data), 'college / course / quota rows')
