@@ -370,10 +370,8 @@ const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
 const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
 let OTHERS=[];
 const ALL_TYPES=["GOVT_MBBS","GOVT_BDS","AIIMS_MBBS","JIPMER_MBBS","CENTRAL_MBBS","CENTRAL_BDS","DEEMED_MBBS","DEEMED_BDS"];
-const SEAT_ROUNDS=[["round1","Round 1"],["round2","Round 2"],["round3","Round 3"],["stray","Stray Vacancy"]];
-const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority"],["WOMEN","Women"]];
+const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"],["NRI","NRI"],["MINORITY","Minority (All)"],["MINORITY_MUSLIM","Muslim Minority"],["MINORITY_JAIN","Jain Minority"],["WOMEN","Women"]];
 const CAT_LABEL=Object.fromEntries(CATS);
-const SEAT_CAT={OP:"OPEN",BC:"OBC",EW:"EWS",SC:"SC",ST:"ST"};
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
 const normCat=c=>/^NRI_P/.test(c)?"NRI":c;
 // NRI is one category: the P-I / P-II files are merged (the closing rank is the larger of the two)
@@ -393,8 +391,8 @@ const q=new URLSearchParams(location.search);
 const CODE=q.get("c"), COURSE_Q=q.get("co"), QUOTA_Q=q.get("q")||"";
 const ITYPE=q.get("t")==="OTHER"?(COURSE_Q==="BDS"?"OTHER_BDS":"OTHER_MBBS"):q.get("t");
 const CA=/^NRI/.test(q.get("ca")||"")?"NRI":q.get("ca");   // older links used NRI1 / NRI2
-const S={cat:CATS.some(c=>c[0]===CA)?CA:"OPEN",pwd:q.get("pw")==="yes"?"yes":"no",rank:parseInt(q.get("rk"))||null,seatRound:null};
-let C=null, SEAT={};
+const S={cat:CATS.some(c=>c[0]===CA)?CA:"OPEN",pwd:q.get("pw")==="yes"?"yes":"no",rank:parseInt(q.get("rk"))||null};
+let C=null;
 
 // Back goes to the list with its filters (browser Back keeps them); fall back to the plain list
 $("back").onclick=e=>{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){e.preventDefault();history.back();}};
@@ -435,7 +433,6 @@ async function load(){
   if(!C.cats[S.cat]) S.cat=Object.keys(C.cats)[0];
   document.title=`${C.name} | Cutoff & seats 2026 | ASMI Career`;
   draw();
-  loadSeats();
 }
 function fail(msg){$("page").innerHTML=`<div class="card err">${esc(msg)}<div style="margin-top:16px"><a class="btn out" href="/mcc-cutoff.html">Go to cutoff list</a></div></div>`;}
 
@@ -484,16 +481,10 @@ function draw(){
   <section class="card">
     <h2>Cutoff, Round by Round <small id="ctSub">${ctSubText()}</small></h2>
     <div class="scroll"><table class="ct"><thead><tr><th>Category</th>${ROUNDS.map(r=>`<th>${RLABEL(r)}</th>`).join("")}</tr></thead><tbody id="ctBody"></tbody></table></div>
-    <p class="note">Closing rank = the last candidate allotted a seat in that round (fresh and upgraded allotments; retained seats are ignored). Smaller rank = harder to get. A dash means nobody was allotted in that round.</p>
+    <p class="note">Closing rank = the last candidate freshly allotted (or upgraded) a seat in that round; retained seats do not set it. Smaller rank = harder to get. "n seats" is the number of candidates holding a seat here after that round, retained seats included. A dash means nobody was freshly allotted in that round.</p>
   </section>
 
   ${(()=>{const oth=OTHERS.filter(x=>x.course===C.course&&x.quota!==C.quota);return oth.length?`<section class="card"><h2>Other Quotas At This College <small>Cutoffs For Other Seat Quotas</small></h2><div class="chips">${oth.map(x=>`<a class="chip2" style="text-decoration:none" href="/mcc-college.html?c=${encodeURIComponent(x.code)}&t=OTHER&co=${x.course}&q=${encodeURIComponent(x.quota)}">${esc(x.quota)}</a>`).join("")}</div></section>`:""})()}
-  <section class="card" id="seats">
-    <h2>Seats offered <small>From the MCC seat matrix of each round</small></h2>
-    <div class="pills" id="seatPills"></div>
-    <div id="seatBody"><div class="err" style="padding:24px">Loading seat matrix…</div></div>
-  </section>
-
   <section class="card">
     <h2>About this college</h2>
     <dl class="about">
@@ -547,39 +538,6 @@ function refresh(){
   }
 }
 
-/* ---------- seat matrix of this college, every round ---------- */
-async function loadSeats(){
-  try{
-    const res=await Promise.all(SEAT_ROUNDS.map(([id])=>fetch(`/data/seat-matrix/MCC/2026/${id}.json`).then(r=>r.ok?r.json():[]).catch(()=>[])));
-    SEAT_ROUNDS.forEach(([id],i)=>{SEAT[id]=res[i].filter(x=>x.code===C.code&&x.branch.startsWith(C.course));});
-  }catch(e){}
-  const have=SEAT_ROUNDS.filter(([id])=>SEAT[id]&&SEAT[id].length);
-  if(!have.length){$("seatBody").innerHTML='<p class="note">No seat matrix rows found for this college.</p>';$("seatPills").innerHTML="";return;}
-  S.seatRound=have[have.length-1][0];
-  $("seatPills").innerHTML=have.map(([id,l])=>`<button type="button" class="round-tab${id===S.seatRound?" active":""}" data-r="${id}">${l}</button>`).join("");
-  $("seatPills").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.seatRound=b.dataset.r;$("seatPills").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));drawSeats();});
-  drawSeats();
-}
-function drawSeats(){
-  const rows=SEAT[S.seatRound]||[], by=new Map();
-  rows.forEach(x=>{
-    const key=x.quota+"|"+(x.gender||"");
-    let g=by.get(key); if(!g){g={quota:x.quota,gender:x.gender,fee:x.fee,feeNRI:x.feeNRI,nor:{},pwd:{},added:false};by.set(key,g);}
-    const [c,k]=x.category.split(" "), cat=SEAT_CAT[c];
-    const t=k==="PH"?g.pwd:g.nor; t[cat]=(t[cat]||0)+x.seats; if(x.added) g.added=true;
-  });
-  const L={OPEN:"Gen/UR",OBC:"OBC",EWS:"EWS",SC:"SC",ST:"ST"};
-  const total=[...by.values()].reduce((s,g)=>s+Object.values(g.nor).reduce((a,b)=>a+b,0)+Object.values(g.pwd).reduce((a,b)=>a+b,0),0);
-  $("seatBody").innerHTML=`<p class="note" style="margin:10px 0 0"><b>${total}</b> seats in this round for ${esc(C.course)} at this college.</p><div class="qgrid">`+[...by.values()].map(g=>{
-    const n=Object.values(g.nor).reduce((a,b)=>a+b,0), p=Object.values(g.pwd).reduce((a,b)=>a+b,0);
-    const isNri=/NRI|Non-Resident/i.test(g.quota);
-    const fee=isNri?(g.feeNRI?esc(g.feeNRI)+" per year":""):(g.fee?"₹"+Number(g.fee).toLocaleString("en-IN")+" per year":"");
-    const cats=Object.keys(L).map(k=>{const v=g.nor[k]||0;return `<div class="mc-cat${v?"":" zero"}"><i>${L[k]}</i><b>${v||"–"}</b></div>`;}).join("");
-    return `<div class="qcard"><div class="qt"><div><h3>${esc(g.quota)}${g.added?' <span class="tag added">ADDED</span>':""}${g.gender==="Female Only"?' <span class="tag female">FEMALE ONLY</span>':""}</h3>${fee?`<div class="qfee">Fees: ${fee}</div>`:""}</div><div class="qtotal"><b>${n+p}</b><span>seats</span></div></div>
-      <div class="mc-cats" style="grid-template-columns:repeat(5,1fr)">${cats}</div>
-      ${p?`<div class="pwdline">PwD seats: ${Object.keys(L).filter(k=>g.pwd[k]).map(k=>L[k]+" "+g.pwd[k]).join(", ")}</div>`:""}</div>`;
-  }).join("")+"</div>";
-}
 load();
 </script>
 </body>

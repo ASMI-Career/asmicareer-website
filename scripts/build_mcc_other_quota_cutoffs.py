@@ -72,11 +72,10 @@ def load(path):
         for i, r in enumerate(got[:6]):
             if r and 'Rank' in r and 'Allotted Institute' in r: rows, head = got, i
     col = {n: i for i, n in enumerate(rows[head]) if n}
-    out, missing = [], collections.Counter()
+    out, missing, held = [], collections.Counter(), collections.Counter()
     for r in rows[head + 1:]:
         if not isinstance(r[col['Rank']], int) or r[col['Course']] not in ('MBBS', 'BDS'): continue
         rem = re.sub(r'\s+', ' ', str(r[col['Remarks']]))
-        if rem.startswith('Retained') or rem.startswith('Did not fill'): continue
         name = re.sub(r'\(\s*female\s+seat\s+only\s*\)\s*$', '', str(r[col['Allotted Institute']]), flags=re.I)
         code = by_name.get(norm(name))
         if not code: missing[name] += 1; continue
@@ -85,15 +84,22 @@ def load(path):
         if (info[code]['type'], norm(r[col['Allotted Quota']])) in COVERED: continue
         acat = re.sub(r'\s+', ' ', str(r[col['Alloted Category']])).strip()
         acat = re.sub(r'^Open\b', 'General', acat)
-        out.append((code, r[col['Course']], quota, seat_cat(quota, r[col['Allotted Quota']], CAT[acat.replace(' PwD', '')]), acat.endswith('PwD'), r[col['Rank']]))
+        cat = seat_cat(quota, r[col['Allotted Quota']], CAT[acat.replace(' PwD', '')])
+        held[(code, r[col['Course']], quota, cat)] += 1   # seats allotted = every candidate holding a seat, retained included
+        if rem.startswith('Retained') or rem.startswith('Did not fill'): continue
+        out.append((code, r[col['Course']], quota, cat, acat.endswith('PwD'), r[col['Rank']]))
     if missing: raise SystemExit(f'institutes not found in the seat matrix: {dict(missing)}')
-    return out
+    return out, held
 
 entries = {}
+held_by_round = {}
 for rname, fn, _ in ROUNDS:
     if not os.path.exists(f'{SRC}/{fn}'): continue
     n = 0
-    for code, course, quota, cat, pwd, rank in load(f'{SRC}/{fn}'):
+    got, heldn = load(f'{SRC}/{fn}')
+    held_by_round[rname] = heldn
+    for key in heldn: entries.setdefault(key[:3], dict(info[key[0]], course=key[1], quota=key[2], cats={})).setdefault('cats', {}).setdefault(key[3], {})
+    for code, course, quota, cat, pwd, rank in got:
         e = entries.setdefault((code, course, quota), dict(info[code], course=course, quota=quota, cats={}))
         d = e['cats'].setdefault(cat, {}).setdefault(rname, {'AIR': None, 'AIR_PWD': None})
         k = 'AIR_PWD' if pwd else 'AIR'
@@ -101,21 +107,10 @@ for rname, fn, _ in ROUNDS:
     print(f'{rname}: {n} fresh / upgraded allotments in the other quotas')
 
 ALL_ROUNDS = [r for r, _, _ in ROUNDS]
-SEAT_CAT = {'OP': 'OPEN', 'BC': 'OBC', 'EW': 'EWS', 'SC': 'SC', 'ST': 'ST'}
-seats = collections.Counter()   # (round, code, course, quota, category) -> seats, normal and PwD together
-for rname, _, rd in ROUNDS:
-    for x in json.load(open(f'{SEAT}/{rd}.json')):
-        course = x['branch'].split()[0]
-        if (info[x['code']]['type'], norm(x['quota'])) in COVERED: continue
-        try: q = canon(x['quota'])
-        except SystemExit: continue   # the seat matrix has a few quota names cut short (Delhi NCR CW); they get no seat count
-        if q is None: continue
-        seats[(rname, x['code'], course, q, seat_cat(q, x['quota'], SEAT_CAT[x['category'].split()[0]]))] += x['seats']
-
 for e in entries.values():
     for cname, cat in e['cats'].items():
         for r in ALL_ROUNDS: cat.setdefault(r, {'AIR': None, 'AIR_PWD': None})
-        for r in ALL_ROUNDS: cat[r]['Intake'] = seats.get((r, e['code'], e['course'], e['quota'], cname)) or None
+        for r in ALL_ROUNDS: cat[r]['Intake'] = held_by_round.get(r, {}).get((e['code'], e['course'], e['quota'], cname)) or None
 data = sorted(entries.values(), key=lambda e: (e['quota'], e['course'], e['name']))
 quotas = collections.Counter(e['quota'] for e in data)
 print(len(data), 'college / course / quota rows')
