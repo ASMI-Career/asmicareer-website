@@ -1210,6 +1210,11 @@
       renderTable();
     }
 
+    // First stray-round key of a college's rounds object (ignores "Special Stray").
+    function strayKeyOf(rounds) {
+      return Object.keys(rounds || {}).find(k => /stray/i.test(k) && !/special/i.test(k)) || null;
+    }
+
     // SML sort options only make sense where the data carries SML (Maharashtra / Open States); add them per loaded dataset.
     function updateSmlSortOptions(data) {
       const sel = document.getElementById('sortSelect');
@@ -1224,6 +1229,17 @@
         o.value = `sml${n}-asc`; o.textContent = `Round ${n} SML: Low to High`; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
       });
+      // Stray round sort: only where some college carries a stray-round AIR (round key differs by counselling: "Stray Round", "Stray Round 1", "Stray Vacancy Round").
+      const isHPData = !!(data && data.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
+      const hasStray = colleges.some(c => {
+        const src = isHPData ? Object.values(c.categories || {}).map(v => v || {}) : [c.rounds || {}];
+        return src.some(rs => { const k = strayKeyOf(rs); return k && rs[k] && rs[k].AIR != null && rs[k].AIR !== ''; });
+      });
+      if (hasStray) {
+        const o = document.createElement('option');
+        o.value = 'stray-asc'; o.textContent = 'Stray Round: Low to High'; o.dataset.sml = '1';
+        sel.insertBefore(o, feesOpt);
+      }
       sel.value = currentSort;
     }
 
@@ -1232,6 +1248,12 @@
       const isHP = !!(currentData && currentData.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
 
       function airFor(college, roundName) {
+        if (roundName === '__stray__') {
+          const rs = isHP ? ((college.categories || {})[Object.keys(college.categories || {})[0]] || {}) : (college.rounds || {});
+          const k = strayKeyOf(rs);
+          const rr = k ? rs[k] : null;
+          return (rr && rr.AIR != null && rr.AIR !== '') ? parseInt(rr.AIR, 10) : null;
+        }
         if (isHP) {
           const cats = Object.keys(college.categories || {});
           if (!cats.length) return null;
@@ -1267,6 +1289,7 @@
         case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
+        case 'stray-asc': roundKey = '__stray__'; dir = 1; break;
         case 'fees-asc': useFees = true; dir = 1; break;
         case 'r1-asc':
         default: roundKey = 'Round 1'; dir = 1; break;
