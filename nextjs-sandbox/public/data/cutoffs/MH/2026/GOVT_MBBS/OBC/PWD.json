@@ -310,7 +310,7 @@
           "CSML": "OBC-10252"
         },
         "Stray Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 1111939,
           "SML": 40183,
           "CSML": "OBC-10308"
@@ -732,12 +732,6 @@
           "AIR": 645537,
           "SML": 31453,
           "CSML": "OBC-8003"
-        },
-        "Stray Round 1": {
-          "Intake": 1,
-          "AIR": null,
-          "SML": null,
-          "CSML": null
         }
       }
     },
@@ -812,12 +806,6 @@
           "AIR": 927780,
           "SML": 37791,
           "CSML": "OBC-9532"
-        },
-        "Stray Round 1": {
-          "Intake": 1,
-          "AIR": null,
-          "SML": null,
-          "CSML": null
         }
       }
     }

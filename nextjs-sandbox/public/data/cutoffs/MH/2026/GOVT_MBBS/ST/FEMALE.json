@@ -420,7 +420,7 @@
           "CSML": "ST-291"
         },
         "Stray Round 1": {
-          "Intake": null,
+          "Intake": 1,
           "AIR": 338279,
           "SML": 20112,
           "CSML": "ST-444"
@@ -910,12 +910,6 @@
           "AIR": 298224,
           "SML": 18395,
           "CSML": "ST-316"
-        },
-        "Stray Round 1": {
-          "Intake": 2,
-          "AIR": null,
-          "SML": null,
-          "CSML": null
         }
       }
     }

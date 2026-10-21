@@ -28,7 +28,7 @@
           "CSML": "OBC-10520"
         },
         "Stray Round 1": {
-          "Intake": 7,
+          "Intake": 5,
           "AIR": 1076263,
           "SML": 39842,
           "CSML": "OBC-10170"
@@ -58,7 +58,7 @@
           "CSML": "OBC-10357"
         },
         "Stray Round 1": {
-          "Intake": 12,
+          "Intake": 7,
           "AIR": 870129,
           "SML": 36701,
           "CSML": "SC-5062"
@@ -88,7 +88,7 @@
           "CSML": "SC-5819"
         },
         "Stray Round 1": {
-          "Intake": 12,
+          "Intake": 4,
           "AIR": 930908,
           "SML": 37831,
           "CSML": "SC-5274"
@@ -118,7 +118,7 @@
           "CSML": "OBC-10267"
         },
         "Stray Round 1": {
-          "Intake": 13,
+          "Intake": 9,
           "AIR": 1008578,
           "SML": 39058,
           "CSML": "OBC-9847"
@@ -178,7 +178,7 @@
           "CSML": "SC-5783"
         },
         "Stray Round 1": {
-          "Intake": 7,
+          "Intake": 2,
           "AIR": null,
           "SML": null,
           "CSML": null
@@ -208,7 +208,7 @@
           "CSML": null
         },
         "Stray Round 1": {
-          "Intake": 10,
+          "Intake": 3,
           "AIR": 1000203,
           "SML": 38951,
           "CSML": "SC-5479"
@@ -238,7 +238,7 @@
           "CSML": "SEBC-3667"
         },
         "Stray Round 1": {
-          "Intake": 3,
+          "Intake": 1,
           "AIR": null,
           "SML": null,
           "CSML": null
@@ -268,7 +268,7 @@
           "CSML": "SC-5625"
         },
         "Stray Round 1": {
-          "Intake": 8,
+          "Intake": 2,
           "AIR": 1110839,
           "SML": 40172,
           "CSML": "OBC-10302"
@@ -298,7 +298,7 @@
           "CSML": null
         },
         "Stray Round 1": {
-          "Intake": 5,
+          "Intake": 4,
           "AIR": 937097,
           "SML": 37938,
           "CSML": "NT(C)-1764"
@@ -358,7 +358,7 @@
           "CSML": "OBC-10190"
         },
         "Stray Round 1": {
-          "Intake": 10,
+          "Intake": 6,
           "AIR": 1098377,
           "SML": 40049,
           "CSML": "OBC-10253"
@@ -448,7 +448,7 @@
           "CSML": "OBC-10259"
         },
         "Stray Round 1": {
-          "Intake": 8,
+          "Intake": 4,
           "AIR": 1138216,
           "SML": 40437,
           "CSML": "OBC-10392"
@@ -476,12 +476,6 @@
           "AIR": 649611,
           "SML": 31564,
           "CSML": "OBC-8036"
-        },
-        "Stray Round 1": {
-          "Intake": 2,
-          "AIR": null,
-          "SML": null,
-          "CSML": null
         }
       }
     },
@@ -508,7 +502,7 @@
           "CSML": "OBC-10188"
         },
         "Stray Round 1": {
-          "Intake": 9,
+          "Intake": 8,
           "AIR": 1058905,
           "SML": 39641,
           "CSML": "OBC-10080"
@@ -538,7 +532,7 @@
           "CSML": "SC-5840"
         },
         "Stray Round 1": {
-          "Intake": 10,
+          "Intake": 9,
           "AIR": 1142959,
           "SML": 40482,
           "CSML": "OBC-10405"
@@ -565,12 +559,6 @@
           "Intake": 2,
           "AIR": 858962,
           "SML": 36462,
-          "CSML": null
-        },
-        "Stray Round 1": {
-          "Intake": 2,
-          "AIR": null,
-          "SML": null,
           "CSML": null
         }
       }
@@ -628,7 +616,7 @@
           "CSML": "NT(B)-926"
         },
         "Stray Round 1": {
-          "Intake": 11,
+          "Intake": 10,
           "AIR": 1174277,
           "SML": 40760,
           "CSML": "OBC-10516"
@@ -658,7 +646,7 @@
           "CSML": "OBC-10508"
         },
         "Stray Round 1": {
-          "Intake": 7,
+          "Intake": 4,
           "AIR": 895590,
           "SML": 37174,
           "CSML": null
@@ -688,10 +676,25 @@
           "CSML": "SEBC-3866"
         },
         "Stray Round 1": {
-          "Intake": 7,
+          "Intake": 2,
           "AIR": 960388,
           "SML": 38328,
           "CSML": "SC-5369"
+        }
+      }
+    },
+    {
+      "code": "2212",
+      "name": "Ranjeet Deshmukh Dental College, Nagpur",
+      "establishment": 1996,
+      "fees": "495000",
+      "type": "Private",
+      "rounds": {
+        "Stray Round 1": {
+          "Intake": 9,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     }
