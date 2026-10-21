@@ -13,24 +13,40 @@
         "type": "Govt",
         "rounds": {
           "Round 1": {
-            "Intake": 20,
+            "Intake": 18,
             "AIR": 34466,
-            "AIR_PWD": 1023883
+            "AIR_PWD": 1023883,
+            "OPEN_AIR": 25169,
+            "OPEN_AIR_PWD": 830211,
+            "Allotted": 20,
+            "Intake_PWD": 2
           },
           "Round 2": {
             "Intake": 7,
             "AIR": 36196,
-            "AIR_PWD": 863547
+            "AIR_PWD": 863547,
+            "OPEN_AIR": 18253,
+            "OPEN_AIR_PWD": 706841,
+            "Allotted": 19,
+            "Intake_PWD": 1
           },
           "Round 3": {
-            "Intake": 5,
+            "Intake": 4,
             "AIR": 35054,
-            "AIR_PWD": 983486
+            "AIR_PWD": 983486,
+            "OPEN_AIR": 31443,
+            "OPEN_AIR_PWD": 983486,
+            "Allotted": 16,
+            "Intake_PWD": 1
           },
           "Stray Vacancy Round": {
-            "Intake": 7,
-            "AIR": null,
-            "AIR_PWD": null
+            "Intake": 5,
+            "AIR": 30327,
+            "AIR_PWD": 959617,
+            "OPEN_AIR": 29013,
+            "OPEN_AIR_PWD": 950520,
+            "Allotted": 7,
+            "Intake_PWD": 2
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -48,24 +64,40 @@
         "type": "Govt",
         "rounds": {
           "Round 1": {
-            "Intake": 17,
+            "Intake": 16,
             "AIR": 35976,
-            "AIR_PWD": 925077
+            "AIR_PWD": 925077,
+            "OPEN_AIR": 28336,
+            "OPEN_AIR_PWD": 925077,
+            "Allotted": 17,
+            "Intake_PWD": 1
           },
           "Round 2": {
             "Intake": 5,
             "AIR": 36229,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 32370,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 17,
+            "Intake_PWD": null
           },
           "Round 3": {
-            "Intake": 4,
+            "Intake": 3,
             "AIR": 33388,
-            "AIR_PWD": 950194
+            "AIR_PWD": 950194,
+            "OPEN_AIR": 16232,
+            "OPEN_AIR_PWD": 950194,
+            "Allotted": 14,
+            "Intake_PWD": 1
           },
           "Stray Vacancy Round": {
-            "Intake": 5,
-            "AIR": null,
-            "AIR_PWD": null
+            "Intake": 4,
+            "AIR": 34342,
+            "AIR_PWD": 1026157,
+            "OPEN_AIR": 32279,
+            "OPEN_AIR_PWD": 1026157,
+            "Allotted": 5,
+            "Intake_PWD": 1
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -83,24 +115,40 @@
         "type": "Govt",
         "rounds": {
           "Round 1": {
-            "Intake": 25,
+            "Intake": 23,
             "AIR": 30155,
-            "AIR_PWD": 706841
+            "AIR_PWD": 706841,
+            "OPEN_AIR": 2839,
+            "OPEN_AIR_PWD": 496611,
+            "Allotted": 25,
+            "Intake_PWD": 2
           },
           "Round 2": {
             "Intake": 15,
             "AIR": 32324,
-            "AIR_PWD": 921208
+            "AIR_PWD": 921208,
+            "OPEN_AIR": 6837,
+            "OPEN_AIR_PWD": 916060,
+            "Allotted": 24,
+            "Intake_PWD": 2
           },
           "Round 3": {
-            "Intake": 10,
+            "Intake": 9,
             "AIR": 33142,
-            "AIR_PWD": 1068748
+            "AIR_PWD": 1068748,
+            "OPEN_AIR": 19919,
+            "OPEN_AIR_PWD": 1068748,
+            "Allotted": 21,
+            "Intake_PWD": 1
           },
           "Stray Vacancy Round": {
             "Intake": 5,
-            "AIR": null,
-            "AIR_PWD": null
+            "AIR": 30215,
+            "AIR_PWD": null,
+            "OPEN_AIR": 29289,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 5,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -122,22 +170,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
-            "AIR": 33100,
-            "AIR_PWD": null
+            "AIR": null,
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -157,22 +221,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -190,24 +270,40 @@
         "type": "Govt",
         "rounds": {
           "Round 1": {
-            "Intake": 17,
+            "Intake": 16,
             "AIR": 33664,
-            "AIR_PWD": 906893
+            "AIR_PWD": 906893,
+            "OPEN_AIR": 30406,
+            "OPEN_AIR_PWD": 906893,
+            "Allotted": 17,
+            "Intake_PWD": 1
           },
           "Round 2": {
             "Intake": 6,
             "AIR": 33344,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 32337,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 16,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": 3,
             "AIR": 33569,
-            "AIR_PWD": 1157400
+            "AIR_PWD": 1157400,
+            "OPEN_AIR": 33529,
+            "OPEN_AIR_PWD": 1157400,
+            "Allotted": 15,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -229,22 +325,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -264,22 +376,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -299,22 +427,38 @@
           "Round 1": {
             "Intake": 6,
             "AIR": 34836,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 30422,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 6,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": 4,
             "AIR": 35413,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 33163,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 6,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": 1,
             "AIR": 34950,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 34950,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 5,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": 1,
-            "AIR": null,
-            "AIR_PWD": null
+            "AIR": 31752,
+            "AIR_PWD": null,
+            "OPEN_AIR": 31752,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -336,22 +480,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -371,22 +531,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -404,24 +580,40 @@
         "type": "Govt",
         "rounds": {
           "Round 1": {
-            "Intake": 10,
+            "Intake": 9,
             "AIR": 137907,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 112513,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 9,
+            "Intake_PWD": 1
           },
           "Round 2": {
             "Intake": 6,
             "AIR": 144388,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 55365,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 9,
+            "Intake_PWD": 1
           },
           "Round 3": {
-            "Intake": 5,
+            "Intake": 4,
             "AIR": 150308,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 129515,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 8,
+            "Intake_PWD": 1
           },
           "Stray Vacancy Round": {
-            "Intake": 2,
-            "AIR": null,
-            "AIR_PWD": null
+            "Intake": 1,
+            "AIR": 129676,
+            "AIR_PWD": null,
+            "OPEN_AIR": 129676,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1,
+            "Intake_PWD": 1
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -443,22 +635,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -478,22 +686,38 @@
           "Round 1": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": null,
             "AIR": null,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": null,
+            "OPEN_AIR_PWD": null,
+            "Allotted": null,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
@@ -513,22 +737,38 @@
           "Round 1": {
             "Intake": 5,
             "AIR": 148369,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 133394,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 5,
+            "Intake_PWD": null
           },
           "Round 2": {
             "Intake": 3,
             "AIR": 169225,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 119137,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 5,
+            "Intake_PWD": null
           },
           "Round 3": {
             "Intake": 2,
             "AIR": 173106,
-            "AIR_PWD": null
+            "AIR_PWD": null,
+            "OPEN_AIR": 155128,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 5,
+            "Intake_PWD": null
           },
           "Stray Vacancy Round": {
             "Intake": 3,
-            "AIR": null,
-            "AIR_PWD": null
+            "AIR": 148369,
+            "AIR_PWD": null,
+            "OPEN_AIR": 145594,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 3,
+            "Intake_PWD": null
           },
           "Special Stray Vacancy Round": {
             "Intake": null,
