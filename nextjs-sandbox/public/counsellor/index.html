@@ -1240,6 +1240,15 @@
         o.value = 'stray-asc'; o.textContent = 'Stray Round: Low to High'; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
       }
+      const hasStraySml = colleges.some(c => {
+        const src = isHPData ? Object.values(c.categories || {}).map(v => v || {}) : [c.rounds || {}];
+        return src.some(rs => { const k = strayKeyOf(rs); return k && rs[k] && rs[k].SML != null && rs[k].SML !== ''; });
+      });
+      if (hasStraySml) {
+        const o = document.createElement('option');
+        o.value = 'sml-stray-asc'; o.textContent = 'Stray Round SML: Low to High'; o.dataset.sml = '1';
+        sel.insertBefore(o, feesOpt);
+      }
       sel.value = currentSort;
     }
 
@@ -1272,6 +1281,12 @@
       }
 
       function smlFor(college, roundName) {
+        if (roundName === '__stray__') {
+          const rs = isHP ? ((college.categories || {})[Object.keys(college.categories || {})[0]] || {}) : (college.rounds || {});
+          const k = strayKeyOf(rs);
+          const rr = k ? rs[k] : null;
+          return (rr && rr.SML != null && rr.SML !== '') ? parseInt(rr.SML, 10) : null;
+        }
         const r = college.rounds && college.rounds[roundName];
         return (r && r.SML != null && r.SML !== '') ? parseInt(r.SML, 10) : null;
       }
@@ -1290,6 +1305,7 @@
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
         case 'stray-asc': roundKey = '__stray__'; dir = 1; break;
+        case 'sml-stray-asc': roundKey = '__stray__'; useSml = true; break;
         case 'fees-asc': useFees = true; dir = 1; break;
         case 'r1-asc':
         default: roundKey = 'Round 1'; dir = 1; break;
