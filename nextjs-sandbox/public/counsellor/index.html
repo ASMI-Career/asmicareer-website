@@ -1210,9 +1210,9 @@
       renderTable();
     }
 
-    // First stray-round key of a college's rounds object (ignores "Special Stray").
-    function strayKeyOf(rounds) {
-      return Object.keys(rounds || {}).find(k => /stray/i.test(k) && !/special/i.test(k)) || null;
+    // Stray-round keys of a college's rounds object (ignores "Special Stray").
+    function strayKeysOf(rounds) {
+      return Object.keys(rounds || {}).filter(k => /stray/i.test(k) && !/special/i.test(k));
     }
 
     // SML sort options only make sense where the data carries SML (Maharashtra / Open States); add them per loaded dataset.
@@ -1229,26 +1229,28 @@
         o.value = `sml${n}-asc`; o.textContent = `Round ${n} SML: Low to High`; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
       });
-      // Stray round sort: only where some college carries a stray-round AIR (round key differs by counselling: "Stray Round", "Stray Round 1", "Stray Vacancy Round").
+      // Stray round sorts: one AIR option and one SML option per stray round present in the data (keys differ by counselling:
+      // "Stray Round", "Stray Round 1/2", "Stray Vacancy Round").
       const isHPData = !!(data && data.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
-      const hasStray = colleges.some(c => {
+      const strayAir = new Set(), straySml = new Set();
+      colleges.forEach(c => {
         const src = isHPData ? Object.values(c.categories || {}).map(v => v || {}) : [c.rounds || {}];
-        return src.some(rs => { const k = strayKeyOf(rs); return k && rs[k] && rs[k].AIR != null && rs[k].AIR !== ''; });
+        src.forEach(rs => strayKeysOf(rs).forEach(k => {
+          const r = rs[k] || {};
+          if (r.AIR != null && r.AIR !== '') strayAir.add(k);
+          if (r.SML != null && r.SML !== '') straySml.add(k);
+        }));
       });
-      if (hasStray) {
+      [...strayAir].sort().forEach(k => {
         const o = document.createElement('option');
-        o.value = 'stray-asc'; o.textContent = 'Stray Round: Low to High'; o.dataset.sml = '1';
+        o.value = 'stray|' + k; o.textContent = k + ': Low to High'; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
-      }
-      const hasStraySml = colleges.some(c => {
-        const src = isHPData ? Object.values(c.categories || {}).map(v => v || {}) : [c.rounds || {}];
-        return src.some(rs => { const k = strayKeyOf(rs); return k && rs[k] && rs[k].SML != null && rs[k].SML !== ''; });
       });
-      if (hasStraySml) {
+      [...straySml].sort().forEach(k => {
         const o = document.createElement('option');
-        o.value = 'sml-stray-asc'; o.textContent = 'Stray Round SML: Low to High'; o.dataset.sml = '1';
+        o.value = 'smlstray|' + k; o.textContent = k + ' SML: Low to High'; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
-      }
+      });
       sel.value = currentSort;
     }
 
@@ -1257,10 +1259,9 @@
       const isHP = !!(currentData && currentData.counselling === 'OPEN' && colleges[0] && colleges[0].categories);
 
       function airFor(college, roundName) {
-        if (roundName === '__stray__') {
+        if (roundName.startsWith('__stray__')) {
           const rs = isHP ? ((college.categories || {})[Object.keys(college.categories || {})[0]] || {}) : (college.rounds || {});
-          const k = strayKeyOf(rs);
-          const rr = k ? rs[k] : null;
+          const rr = rs[roundName.slice(9)] || null;
           return (rr && rr.AIR != null && rr.AIR !== '') ? parseInt(rr.AIR, 10) : null;
         }
         if (isHP) {
@@ -1281,10 +1282,9 @@
       }
 
       function smlFor(college, roundName) {
-        if (roundName === '__stray__') {
+        if (roundName.startsWith('__stray__')) {
           const rs = isHP ? ((college.categories || {})[Object.keys(college.categories || {})[0]] || {}) : (college.rounds || {});
-          const k = strayKeyOf(rs);
-          const rr = k ? rs[k] : null;
+          const rr = rs[roundName.slice(9)] || null;
           return (rr && rr.SML != null && rr.SML !== '') ? parseInt(rr.SML, 10) : null;
         }
         const r = college.rounds && college.rounds[roundName];
@@ -1297,15 +1297,16 @@
       }
 
       let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false;
-      switch (currentSort) {
+      if (currentSort.startsWith('stray|')) { roundKey = '__stray__' + currentSort.slice(6); }
+      else if (currentSort.startsWith('smlstray|')) { roundKey = '__stray__' + currentSort.slice(9); useSml = true; }
+      else switch (currentSort) {
         case 'sml1-asc': roundKey = 'Round 1'; useSml = true; break;
         case 'sml2-asc': roundKey = 'Round 2'; useSml = true; break;
         case 'sml3-asc': roundKey = 'Round 3'; useSml = true; break;
         case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
-        case 'stray-asc': roundKey = '__stray__'; dir = 1; break;
-        case 'sml-stray-asc': roundKey = '__stray__'; useSml = true; break;
+
         case 'fees-asc': useFees = true; dir = 1; break;
         case 'r1-asc':
         default: roundKey = 'Round 1'; dir = 1; break;
