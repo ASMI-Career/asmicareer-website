@@ -1798,7 +1798,7 @@ export default function StudentDashboard() {
                             <a href={`/medical/colleges/${college.slug}`} target="_blank" rel="noreferrer"
                               key={college.slug} className="college-card">
                               <div className="college-img-placeholder" style={{ position: 'relative' }}>
-                                  {(() => { const imgSrc = college.image || college.cover_image || college.img || college.thumbnail; return imgSrc ? (
+                                  {(() => { const imgSrc = college.photo || college.image || college.cover_image || college.img || college.thumbnail; return imgSrc ? (
                                   <img
                                     src={imgSrc}
                                     alt={college.name}
@@ -1806,7 +1806,7 @@ export default function StudentDashboard() {
                                     onError={e => { e.currentTarget.style.display = 'none'; }}
                                   />
                                 ) : null; })()}
-                                {!(college.image || college.cover_image || college.img || college.thumbnail) && (
+                                {!(college.photo || college.image || college.cover_image || college.img || college.thumbnail) && (
                                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', textAlign: 'center' }}>
                                     <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', lineHeight: 1.3 }}>{college.name}</span>
                                   </div>

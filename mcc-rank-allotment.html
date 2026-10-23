@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rank-wise Allotted Colleges | ASMI Career</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap');
+  :root{--b1:#2a0a5e;--b2:#410775;--b3:#50098a;--brand:#50098a;--brand-dark:#2c0450;--gold:#ffd700;--bg:#f4f1fb;--card:#fff;--line:#e7e2f3;--ink:#1d1530;--muted:#6c6483;--faint:#b9b3c8}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-text-size-adjust:100%}
+  a{color:var(--brand)}
+  .wrap{max-width:1500px;margin:0 auto;padding:0 20px}
+  .num,.rk,td.n{font-family:'Inter',system-ui,sans-serif;font-variant-numeric:tabular-nums lining-nums}
+  .hero{background:linear-gradient(105deg,#240652 0%,#410775 48%,#50098a 100%);color:#fff}
+  .hero-row{display:flex;align-items:center;gap:26px;padding:22px 0;flex-wrap:wrap}
+  .logo{height:110px;width:auto;max-width:170px;background:#fff;border-radius:18px;padding:9px 12px;object-fit:contain;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .hero h1{margin:0 0 6px;font-size:2rem;line-height:1.12}.hero h1 span{color:var(--gold)}
+  .hero p{margin:0;color:#e2d2ff}.hero p.s1{color:#fff;font-weight:800}
+  .help{margin-left:auto;background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;border-radius:14px;padding:13px 20px;box-shadow:0 8px 22px rgba(0,0,0,.25);white-space:nowrap}
+  .help b{display:block;font-size:.86rem}.help a{color:#2c0450;text-decoration:none;font-weight:800;font-size:1.02rem}
+  .back{display:inline-flex;gap:8px;align-items:center;color:#fff;text-decoration:none;font-weight:700;font-size:.88rem;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 16px;margin-bottom:10px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin:20px 0 14px;box-shadow:0 4px 18px rgba(65,7,117,.06)}
+  .panel h2{margin:0 0 4px;font-size:1.3rem;color:var(--brand-dark)}
+  .panel .sub{color:var(--muted);font-size:.84rem;margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px 16px;align-items:end}
+  .f{grid-column:span 3;min-width:0}.f.w2{grid-column:span 2}.f.w4{grid-column:span 4}
+  label,.lbl{display:block;font-size:.8rem;font-weight:700;margin-bottom:7px}
+  input,select{width:100%;font:500 .95rem 'Montserrat',system-ui,sans-serif;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  input:focus,select:focus{outline:2px solid #ffd700;border-color:var(--brand)}
+  .go{width:100%;display:flex;gap:8px;align-items:center;justify-content:center;background:linear-gradient(120deg,#ffd700,#ffb800);color:#2c0450;border:0;border-radius:12px;padding:13px 16px;font:800 .95rem 'Montserrat',system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(255,184,0,.4)}
+  .journey{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 14px}
+  .jc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:150px}
+  .jc.none{background:#faf8fe;color:var(--muted)}
+  .jc .r{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .jc .c{font-weight:800;font-size:.95rem;line-height:1.3}.jc .c a{color:var(--ink);text-decoration:none}.jc .c a:hover{text-decoration:underline}
+  .jc .m{font-size:.8rem;color:var(--muted)}
+  .pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:800}
+  .st-Fresh{background:#dff5e8;color:#12804a}.st-Upgraded{background:#e1ecff;color:#1b57b8}.st-Retained{background:#f1ebfc;color:#4a1a99}.st-Kept{background:#fff0cc;color:#8a5a00}
+  .tbl{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:auto;box-shadow:0 4px 18px rgba(65,7,117,.05)}
+  table{border-collapse:collapse;width:100%;min-width:980px}
+  th{position:sticky;top:0;background:linear-gradient(180deg,#4a1a99,#2f0a68);color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:13px 12px;text-align:left}
+  td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:.88rem;vertical-align:middle}
+  tbody tr:nth-child(even) td{background:#faf8fe}tbody tr:hover td{background:#f1ebfc}
+  td.college a{font-weight:700;color:var(--ink);text-decoration:none}td.college a:hover{text-decoration:underline}
+  td.college small{display:block;color:var(--muted);margin-top:2px}
+  tr.hit td{background:#fff7d6 !important}
+  .count{display:flex;gap:12px;align-items:baseline;margin:6px 2px 10px;font-weight:600}.count b{font-size:1.5rem;font-family:'Inter',sans-serif}
+  .note{color:var(--muted);font-size:.8rem;margin:14px 2px 30px;line-height:1.6}
+  .empty{padding:40px 16px;text-align:center;color:var(--muted)}
+  @media(max-width:900px){.f,.f.w2,.f.w4{grid-column:span 6}.journey{grid-template-columns:1fr 1fr}.help{margin-left:0;width:100%}}
+  @media(max-width:560px){.wrap{padding:0 14px}.f,.f.w2,.f.w4{grid-column:span 12}.journey{grid-template-columns:1fr}.hero h1{font-size:1.5rem}.logo{height:84px}}
+</style>
+</head>
+<body>
+<div class="hero"><div class="wrap">
+  <div class="hero-row">
+    <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
+    <div>
+      <a class="back" href="/mcc-cutoff.html">&larr; Cutoff App</a>
+      <h1>Rank-wise Allotted Colleges <span>2026</span></h1>
+      <p class="s1">MCC NEET UG &bull; MBBS &amp; BDS</p>
+      <p>See the college allotted to any All India Rank, round by round</p>
+    </div>
+    <div class="help"><b>ASMI Helpline</b><a href="tel:+917410019074">7410019074</a> / <a href="tel:+917410019075">75</a> / <a href="tel:+917410019076">76</a> / <a href="tel:+917410019077">77</a></div>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <section class="panel">
+    <h2>Find By Rank</h2>
+    <p class="sub">Type a NEET All India Rank to see where that rank was allotted in Round 1, 2, 3 and the Stray round, or show the ranks around it.</p>
+    <div class="grid">
+      <div class="f"><label for="rk">Your NEET AIR</label><input id="rk" type="text" inputmode="numeric" placeholder="e.g. 15000" autocomplete="off"></div>
+      <div class="f"><label for="near">Show Ranks</label><select id="near"><option value="0">This Rank Only</option><option value="10">Around ±10</option><option value="25">Around ±25</option><option value="50">Around ±50</option><option value="100">Around ±100</option><option value="250">Around ±250</option></select></div>
+      <div class="f w2"><label for="rd">Round</label><select id="rd"></select></div>
+      <div class="f w2"><label for="co">Course</label><select id="co"><option value="">MBBS &amp; BDS</option><option value="0">MBBS</option><option value="1">BDS</option></select></div>
+      <div class="f w2"><label for="qt">Quota</label><select id="qt"></select></div>
+      <div class="f w2"><label for="stt">Status</label><select id="stt"></select></div>
+      <div class="f w2"><button class="go" id="go" type="button">Search</button></div>
+    </div>
+  </section>
+
+  <div id="journey"></div>
+  <div class="count" id="count" hidden><b id="n">0</b><span id="nl">allotments</span></div>
+  <div class="tbl" id="tblwrap" hidden>
+    <table><thead><tr><th>AIR</th><th>Round</th><th>College</th><th>Course</th><th>Quota</th><th>Category</th><th>Status</th></tr></thead><tbody id="body"></tbody></table>
+  </div>
+  <div class="empty" id="hint">Enter a rank above to see its allotments.</div>
+  <p class="note"><b>How to read:</b> every candidate in the official MCC allotment lists appears once per round. <b>Fresh</b> = a new seat in that round, <b>Upgraded</b> = moved to a better choice, <b>Retained</b> = kept the earlier seat, <b>Kept Seat</b> = did not fill fresh choices in Round 3 and kept the seat. A rank that is missing from a round did not hold a seat after that round (or was not in the list). Only MBBS and BDS seats are shown; the candidate's score and personal details are not. Source: official MCC allotment lists, UG Counselling 2026.</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Number(n).toLocaleString("en-IN");
+let D=null;
+const stClass=s=>"st-"+s.split(" ")[0];
+const collegeUrl=(c,course)=>`/mcc-college.html?c=${encodeURIComponent(c[3])}&t=GOVT_${course}&co=${course}`;
+
+function fillSelects(){
+  $("rd").innerHTML='<option value="">All 4 Rounds</option>'+D.rounds.map(([k,l])=>`<option value="${k}">${l}</option>`).join("");
+  const MAIN=["All India","Open Seat","Self Financed Merit","NRI"], rank=x=>{const i=MAIN.indexOf(x);return i>=0?i:/Internal|Domicile/.test(x)?100:10;};
+  const q=D.quotas.map((x,i)=>[x,i]).sort((a,b)=>rank(a[0])-rank(b[0])||a[0].localeCompare(b[0]));
+  $("qt").innerHTML='<option value="">All Quotas</option>'+q.map(([x,i])=>`<option value="${i}">${esc(x)}</option>`).join("");
+  $("stt").innerHTML='<option value="">All Status</option>'+D.status.map((x,i)=>`<option value="${i}">${x}</option>`).join("");
+}
+
+function rowsFor(lo,hi){
+  const out=[], co=$("co").value, qt=$("qt").value, st=$("stt").value, rd=$("rd").value;
+  for(const [k,label] of D.rounds){
+    if(rd&&rd!==k) continue;
+    for(const r of D.data[k]){
+      if(r[0]<lo) continue; if(r[0]>hi) break;           // rows are sorted by rank
+      if(co!==""&&r[2]!==+co) continue; if(qt!==""&&r[3]!==+qt) continue; if(st!==""&&r[5]!==+st) continue;
+      out.push({rank:r[0],round:k,label,c:D.colleges[r[1]],course:D.courses[r[2]],quota:D.quotas[r[3]],cat:D.categories[r[4]],st:D.status[r[5]]});
+    }
+  }
+  const order={r1:0,r2:1,r3:2,r4:3};
+  return out.sort((a,b)=>a.rank-b.rank||order[a.round]-order[b.round]);
+}
+const where=c=>esc(c[1])+(c[2]&&c[2]!==c[1]?" · "+esc(c[2]):"");
+
+function search(){
+  if(!D) return;
+  const rk=parseInt($("rk").value.replace(/\D/g,"")), near=+$("near").value;
+  try{history.replaceState(null,"",location.pathname+(rk?`?rk=${rk}${near?"&n="+near:""}`:""));}catch(e){}
+  $("journey").innerHTML="";
+  if(!(rk>0)){ $("hint").hidden=false; $("hint").textContent="Enter a rank above to see its allotments."; $("count").hidden=true; $("tblwrap").hidden=true; return; }
+  // the exact rank, one card per round
+  const own=rowsFor(rk,rk), by={}; own.forEach(r=>by[r.round]=r);
+  const rounds=D.rounds.filter(([k])=>!$("rd").value||$("rd").value===k);
+  $("journey").innerHTML=`<div class="journey">`+rounds.map(([k,l])=>{
+    const r=by[k];
+    return r?`<div class="jc"><div class="r">${l}</div><div class="c"><a href="${collegeUrl(r.c,r.course)}">${esc(r.c[0])}</a></div><div class="m">${where(r.c)}</div><div class="m">${r.course} · ${esc(r.quota)} · ${esc(r.cat)}</div><div><span class="pill ${stClass(r.st)}">${r.st}</span></div></div>`
+      :`<div class="jc none"><div class="r">${l}</div><div class="c">No allotment</div><div class="m">AIR ${fmt(rk)} is not in this round's list${$("co").value!==""||$("qt").value!==""||$("stt").value!==""?" for the chosen filters":""}.</div></div>`;
+  }).join("")+`</div>`;
+  if(!near){ $("count").hidden=true; $("tblwrap").hidden=true; $("hint").hidden=true; return; }
+  const list=rowsFor(Math.max(1,rk-near),rk+near);
+  $("count").hidden=false; $("n").textContent=fmt(list.length); $("nl").textContent=`allotments between AIR ${fmt(Math.max(1,rk-near))} and ${fmt(rk+near)}`+(list.length>600?" (first 600 shown)":"");
+  $("tblwrap").hidden=!list.length; $("hint").hidden=!!list.length; if(!list.length) $("hint").textContent="No allotments found for these filters.";
+  $("body").innerHTML=list.slice(0,600).map(r=>`<tr class="${r.rank===rk?"hit":""}"><td class="n"><b>${fmt(r.rank)}</b></td><td>${r.label}</td><td class="college"><a href="${collegeUrl(r.c,r.course)}">${esc(r.c[0])}</a><small>${where(r.c)}</small></td><td>${r.course}</td><td>${esc(r.quota)}</td><td>${esc(r.cat)}</td><td><span class="pill ${stClass(r.st)}">${r.st}</span></td></tr>`).join("");
+}
+
+async function init(){
+  const q=new URLSearchParams(location.search||(function(){try{return localStorage.getItem("asmi_rq")||""}catch(e){return ""}})());
+  try{ D=await fetch("/data/allotments/MCC/2026/rankwise.json").then(r=>{if(!r.ok)throw 0;return r.json();}); }
+  catch(e){ $("hint").textContent="Could not load the allotment data. Please refresh."; return; }
+  fillSelects();
+  if(q.get("rk")) $("rk").value=q.get("rk"); if(q.get("n")) $("near").value=q.get("n");
+  $("go").onclick=search;
+  ["near","rd","co","qt","stt"].forEach(id=>$(id).onchange=search);
+  $("rk").addEventListener("keydown",e=>{if(e.key==="Enter")search();});
+  $("rk").addEventListener("input",e=>{e.target.value=e.target.value.replace(/\D/g,"").slice(0,8);});
+  search();
+}
+init();
+</script>
+</body>
+</html>
