@@ -177,7 +177,7 @@ body.appmode{height:100vh;height:100dvh;display:flex;flex-direction:column;overf
 <script>
 /* One entry per region. To publish a new region: set status to 'live' and give it the explorer url. */
 var REGIONS=[
- {name:'All India',slug:'all-india',mono:'AI',desc:'MCC 2026 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
+ {name:'All India',slug:'all-india',mono:'AI',desc:'MCC 2025 counselling, Rounds 1 to 3 plus stray. All India Quota, deemed universities and more.',status:'live',url:'/tools/all-india-pg-cutoff-explorer'},
  {name:'Seat Matrix',slug:'seat-matrix',mono:'SM',desc:'MCC 2026 Round 1 seat matrix: seats by college, branch and category. AIQ, Deemed University, Central University and DNB.',status:'live',url:'/tools/pg-seat-matrix'},
  {name:'Andhra Pradesh',slug:'andhra-pradesh',mono:'AP',desc:'2025-26 Dr. NTR UHS management quota: seat matrix and allotments for Phases 1 to 3 plus stray. All India Rank.',status:'live',url:'/tools/andhra-pradesh-pg-cutoff-explorer'},
  {name:'Bihar',slug:'bihar',mono:'BR',desc:'2025 Bihar PGMAC allotment lists, Rounds 1 to 3 plus stray. All India Rank.',status:'live',url:'/tools/bihar-pg-cutoff-explorer'},
@@ -270,7 +270,7 @@ REGIONS.forEach(function(r){
  function drawTabs(active){drawMenu(active);tabs.innerHTML='';tabs.appendChild(mkTab('Overview','#',!active));REGIONS.forEach(function(r){if(r.status==='live')tabs.appendChild(mkTab(r.name,'#'+r.slug,active===r.slug))});
   var on=tabs.querySelector('[aria-current]');if(on&&on.scrollIntoView)on.scrollIntoView({block:'nearest',inline:'center'})}
  /* a fresh iframe per open keeps the browser Back button working (re-pointing one iframe adds history entries) */
- var VER='20261016o'; /* bump on every data/design change so browsers never show an old explorer */
+ var VER='20261023a'; /* bump on every data/design change so browsers never show an old explorer */
  function openFrame(url,name){
   efw.innerHTML='';var f=document.createElement('iframe');f.title=name+' PG cutoff explorer';var shown=false;
   function reveal(){if(shown)return;shown=true;f.style.visibility='visible';load.hidden=true}
