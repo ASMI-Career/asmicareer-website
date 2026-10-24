@@ -49,6 +49,19 @@
   .hp { position:absolute; left:-9999px; }
   #thanks { display:none; text-align:center; padding:30px 10px; }
   #thanks h2 { font-family:'Montserrat',sans-serif; margin:0 0 10px; }
+  .cta { text-align:left; border:1.5px solid #e3dcf0; border-radius:12px; padding:16px; margin-top:16px; }
+  .cta h3 { font-family:'Montserrat',sans-serif; font-size:1rem; margin:0 0 6px; }
+  .cta p { margin:0; font-size:.88rem; }
+  .cta .btn { margin-top:12px; }
+  .btn.wa { background:#1f9d4d; color:#fff; }
+  .office { border-top:1px solid #ece6f5; margin-top:14px; padding-top:12px; }
+  .office .o-city { font-family:'Montserrat',sans-serif; font-weight:800; font-size:.95rem; }
+  .office .o-area { color:var(--purple); font-weight:600; font-size:.85rem; }
+  .office .o-addr { font-size:.85rem; margin:4px 0 0; line-height:1.4; }
+  .acts { display:flex; gap:8px; }
+  .acts .btn { margin-top:10px; padding:11px 8px; font-size:.85rem; flex:1; white-space:nowrap; }
+  .acts .btn.alt { flex:1.6; }
+  .dir { display:inline-block; margin-top:10px; color:var(--purple); font-weight:600; font-size:.88rem; }
   footer { text-align:center; font-size:.75rem; opacity:.65; padding:0 16px 30px; }
 </style>
 </head>
@@ -139,6 +152,18 @@
       <h2>Thank you!</h2>
       <p id="thanksMsg"></p>
       <a id="payBtn" class="btn hidden" href="#" target="_blank" rel="noopener">Pay now</a>
+      <div id="groupCard" class="cta hidden">
+        <h3>Join your branch WhatsApp group</h3>
+        <p>Haven't joined yet? Join your branch group to get schedule updates.</p>
+        <a id="groupBtn" class="btn wa" href="#" target="_blank" rel="noopener">Join group</a>
+      </div>
+
+      <div class="cta">
+        <h3>Want to meet and discuss with us?</h3>
+        <p>Visit our Andheri or Thane office.</p>
+        <div id="offices"></div>
+      </div>
+
       <a class="btn alt" href="/">Explore ASMI Career</a>
     </div>
   </div>
@@ -150,10 +175,49 @@
 var ENDPOINT    = "https://script.google.com/macros/s/AKfycbzdT7p6ysww5wQVp2v3iUPdG3oaOjKSpHIjCemh2HhQfHMD-lK3ArZNbqbyAilciRoO/exec";   // Apps Script Web app (ACE Registrations sheet)
 var PAYMENT_URL = "https://rzp.io/rzp/asmicareer";   // Razorpay link, used for the Rs. 500 package only.
 var JEE_FEE     = 500;  // TEMPORARY placeholder for "ASMI fills JEE form" fee. Update when confirmed.
+// WhatsApp group link per ACE branch (thank-you screen). A branch missing here hides the group card.
+var BRANCH_GROUPS = {
+  'Vile Parle': 'https://chat.whatsapp.com/JcFVo6p8hcD8A9Awl8P6KO',
+  'Matunga':    'https://chat.whatsapp.com/JcFVo6p8hcD8A9Awl8P6KO',
+  'Ghatkopar':  'https://chat.whatsapp.com/CgsYHy2Fyz393xf7tFoqP7',
+  'Mulund':     'https://chat.whatsapp.com/CgsYHy2Fyz393xf7tFoqP7'
+};
+// Office details, copied from the Contact us page (app/medical/contact/page.js).
+var OFFICES = [
+  { city: 'Mumbai', area: 'Andheri East',
+    address: '42, 4th Floor, A Wing, Silver Astra, J.B. Nagar, Andheri East, Mumbai',
+    phone: '7410019077',
+    whatsapp: 'https://wa.me/917410019077?text=Hi%2C%20I%20want%20to%20connect%20to%20Mumbai',
+    maps: 'https://maps.app.goo.gl/1UQpxoTs4msmVXiH8' },
+  { city: 'Thane', area: 'Thane West',
+    address: '411, 4th Floor, Shah Avenue, Gokhale Road, Besides Mango Stationary, Naupada, Thane West',
+    phone: '7410019075',
+    whatsapp: 'https://wa.me/917410019075?text=Hi%2C%20I%20want%20to%20connect%20to%20Thane',
+    maps: 'https://maps.app.goo.gl/9va5LoADHXwLUwBq9' }
+];
 // ==============================
 
 var f = document.getElementById('f');
 document.getElementById('jeeFeeText').textContent = 'Additional charges apply (Rs. ' + JEE_FEE + ').';
+
+// Office cards (static data, no student details involved)
+(function () {
+  var box = document.getElementById('offices');
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+  function link(cls, href, text, ext) { var a = el('a', cls, text); a.href = href; if (ext) { a.target = '_blank'; a.rel = 'noopener'; } return a; }
+  OFFICES.forEach(function (o) {
+    var d = el('div', 'office');
+    d.appendChild(el('div', 'o-city', o.city));
+    d.appendChild(el('div', 'o-area', o.area));
+    d.appendChild(el('p', 'o-addr', o.address));
+    var acts = el('div', 'acts');
+    acts.appendChild(link('btn alt', 'tel:' + o.phone, 'Call ' + o.phone));
+    acts.appendChild(link('btn wa', o.whatsapp, 'WhatsApp', true));
+    d.appendChild(acts);
+    d.appendChild(link('dir', o.maps, 'Get Directions', true));
+    box.appendChild(d);
+  });
+})();
 
 function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
 function setErr(id, msg) { document.getElementById('e-' + id).textContent = msg || ''; }
@@ -189,6 +253,7 @@ f.addEventListener('submit', function (ev) {
   if (!ENDPOINT) { fe.textContent = 'Form is not connected yet. Please contact ASMI Career.'; return; }
 
   var enrolled = val('enrolled');
+  var selBranch = f.branch.value;
   var plan = enrolled === 'Yes' ? 'Covered' : val('plan');
   var payload = {
     email: f.email.value.trim(), name: f.name.value.trim(), mobile: f.mobile.value.trim(),
@@ -209,6 +274,9 @@ f.addEventListener('submit', function (ev) {
       if (val('jee') === 'Yes - ASMI to fill') msg += ' Our team will also contact you about JEE form filling.';
       document.getElementById('thanksMsg').textContent = msg;
       if (pay && PAYMENT_URL) { var p = document.getElementById('payBtn'); p.href = PAYMENT_URL; p.textContent = 'Pay Rs. ' + plan + ' now'; show('payBtn', true); }
+      var gl = Object.prototype.hasOwnProperty.call(BRANCH_GROUPS, selBranch) ? BRANCH_GROUPS[selBranch] : '';
+      if (gl) { var g = document.getElementById('groupBtn'); g.href = gl; g.textContent = 'Join ' + selBranch + ' group'; }
+      show('groupCard', !!gl);
       show('formWrap', false);
       document.getElementById('thanks').style.display = 'block';
       window.scrollTo(0, 0);
