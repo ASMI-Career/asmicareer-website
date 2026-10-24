@@ -273,9 +273,9 @@ f.addEventListener('submit', function (ev) {
 
   // text/plain avoids a CORS preflight, which Apps Script does not handle.
   fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
-    .then(function (r) { return r.json(); })
+    .then(function (r) { return r.text().then(function (t) { try { return JSON.parse(t); } catch (e) { var x = new Error('bad reply'); x.code = 'BAD_REPLY'; x.http = r.status; x.body = t.slice(0, 200); throw x; } }); })
     .then(function (res) {
-      if (!res.ok) throw new Error(res.error || 'failed');
+      if (!res.ok) { var x = new Error(res.error || 'failed'); x.code = 'SERVER'; throw x; }
       var msg, pay = false; // pay: send the student to the Razorpay page after the thank-you message
       if (plan === 'Covered') msg = 'You are registered. We will message you on WhatsApp once the schedule at your branch is finalised.';
       else if (plan === '300') msg = 'You are registered. Please pay Rs. 300 on the day of photo click at your branch. We will message you on WhatsApp once the schedule is finalised.';
@@ -290,9 +290,11 @@ f.addEventListener('submit', function (ev) {
       document.getElementById('thanks').style.display = 'block';
       window.scrollTo(0, 0);
     })
-    .catch(function () {
+    .catch(function (err) {
+      console.error('ACE submit failed:', err && err.code, err && err.message, err && err.http, err && err.body);
+      var why = err && err.code === 'SERVER' ? 'server rejected it: ' + err.message : err && err.code === 'BAD_REPLY' ? 'unexpected server reply' : 'could not reach server';
       btn.disabled = false; btn.textContent = regLabel();
-      fe.textContent = 'Could not submit. Please check your internet and try again.';
+      fe.textContent = 'Could not submit (' + why + '). Please check your internet and try again.';
     });
 });
 </script>
