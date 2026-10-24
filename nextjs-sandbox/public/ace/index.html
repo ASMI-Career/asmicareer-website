@@ -147,7 +147,7 @@
           </label>
           <div class="error" id="e-consent"></div>
 
-          <div id="payNote" class="ok hidden">Heads-up: after you register, you will be taken to our secure Razorpay payment page to pay Rs. 499.</div>
+          <div id="payNote" class="ok hidden">Heads-up: after you register, you will be taken straight to our secure Razorpay payment page to pay Rs. 499.</div>
           <button type="submit" id="btn">Register</button>
           <div class="error" id="formError" role="alert"></div>
         </div>
@@ -276,13 +276,14 @@ f.addEventListener('submit', function (ev) {
     .then(function (r) { return r.text().then(function (t) { try { return JSON.parse(t); } catch (e) { var x = new Error('bad reply'); x.code = 'BAD_REPLY'; x.http = r.status; x.body = t.slice(0, 200); throw x; } }); })
     .then(function (res) {
       if (!res.ok) { var x = new Error(res.error || 'failed'); x.code = 'SERVER'; throw x; }
-      var msg, pay = false; // pay: send the student to the Razorpay page after the thank-you message
+      // Rs. 499: go straight to Razorpay, no thank-you screen (row is already saved at this point)
+      if (plan === '499' && PAYMENT_URL) { btn.textContent = 'Taking you to payment…'; window.location.href = PAYMENT_URL; return; }
+      var msg;
       if (plan === 'Covered') msg = 'You are registered. We will message you on WhatsApp once the schedule at your branch is finalised.';
       else if (plan === '300') msg = 'You are registered. Please pay Rs. 300 on the day of photo click at your branch. We will message you on WhatsApp once the schedule is finalised.';
-      else { pay = true; msg = 'You are registered for the Rs. 499 package. Taking you to the payment page now. Please complete the payment to confirm.'; if (!PAYMENT_URL) msg = 'You are registered for the Rs. 499 package. Our team will share the payment link with you on WhatsApp.'; }
+      else msg = 'You are registered for the Rs. 499 package. Our team will share the payment link with you on WhatsApp.'; // only if PAYMENT_URL is empty
       if (val('jee') === 'Yes - ASMI to fill') msg += ' Our team will also contact you about JEE form filling.';
       document.getElementById('thanksMsg').textContent = msg;
-      if (pay && PAYMENT_URL) setTimeout(function () { window.location.href = PAYMENT_URL; }, 4000);
       var gl = Object.prototype.hasOwnProperty.call(BRANCH_GROUPS, selBranch) ? BRANCH_GROUPS[selBranch] : '';
       if (gl) { var g = document.getElementById('groupBtn'); g.href = gl; g.textContent = 'Join ' + selBranch + ' group'; }
       show('groupCard', !!gl);
