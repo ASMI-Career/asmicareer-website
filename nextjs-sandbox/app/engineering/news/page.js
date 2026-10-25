@@ -48,6 +48,14 @@ const TAG_CFG = {
   'RESULT':      { bg: 'rgba(52, 211, 153, 0.12)', color: '#34d399', border: 'rgba(52, 211, 153, 0.25)' },
   'ASMI SEMINAR':{ bg: 'rgba(255, 215, 0, 0.12)', color: '#ffd700', border: 'rgba(255, 215, 0, 0.25)' },
   'NOTICE':      { bg: 'rgba(255, 255, 255, 0.06)', color: 'rgba(255, 255, 255, 0.75)', border: 'rgba(255, 255, 255, 0.12)' },
+  'APPLICATION DEADLINE':  { bg: 'rgba(239, 68, 68, 0.15)', color: '#ef5350', border: 'rgba(239, 68, 68, 0.25)' },
+  'CORRECTION WINDOW':     { bg: 'rgba(249, 115, 22, 0.15)', color: '#fb923c', border: 'rgba(249, 115, 22, 0.25)' },
+  'ADMIT CARD':            { bg: 'rgba(0, 200, 180, 0.12)', color: '#00C8B4', border: 'rgba(0, 200, 180, 0.25)' },
+  'MERIT LIST':            { bg: 'rgba(52, 211, 153, 0.12)', color: '#34d399', border: 'rgba(52, 211, 153, 0.25)' },
+  'COUNSELLING':           { bg: 'rgba(244, 114, 182, 0.12)', color: '#f472b6', border: 'rgba(244, 114, 182, 0.25)' },
+  'REGISTRATION DEADLINE': { bg: 'rgba(244, 114, 182, 0.12)', color: '#f472b6', border: 'rgba(244, 114, 182, 0.25)' },
+  'SEAT MATRIX':           { bg: 'rgba(244, 114, 182, 0.12)', color: '#f472b6', border: 'rgba(244, 114, 182, 0.25)' },
+  'ALLOTMENT':             { bg: 'rgba(244, 114, 182, 0.12)', color: '#f472b6', border: 'rgba(244, 114, 182, 0.25)' },
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
 
@@ -71,8 +79,8 @@ export default function EngineeringNewsPage() {
 
   const filterEvents = () => {
     if (filter === 'all')       return events;
-    if (filter === 'deadlines') return events.filter(e => e.type === 'deadline' || e.tag === 'URGENT');
-    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || e.tag === 'EXAM DATE' || e.tag === 'RESULT');
+    if (filter === 'deadlines') return events.filter(e => e.type === 'deadline' || ['URGENT','APPLICATION DEADLINE','REGISTRATION DEADLINE','CORRECTION WINDOW'].includes(e.tag));
+    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || ['EXAM DATE','ADMIT CARD','RESULT','MERIT LIST'].includes(e.tag));
     if (filter === 'seminars')  return events.filter(e => e.type === 'asmi' || e.tag === 'ASMI SEMINAR');
     return events;
   };
@@ -196,7 +204,7 @@ export default function EngineeringNewsPage() {
                 {filtered.map((e, i) => {
                   const cfg = getCfg(e.tag);
                   const d   = daysUntil(e.date);
-                  const isUrgent = e.type === 'deadline' || e.tag === 'URGENT';
+                  const isUrgent = e.type === 'deadline' || ['URGENT','APPLICATION DEADLINE','REGISTRATION DEADLINE','CORRECTION WINDOW'].includes(e.tag);
                   return (
                     <div className={`en-card ${isUrgent ? 'en-card-urgent' : ''}`} key={i}>
                       {/* top date strip */}
