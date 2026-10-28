@@ -1468,6 +1468,9 @@
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
       const isMAFSU = currentData.counselling === 'MAFSU'; // closing Region Merit / State Merit / NEET marks instead of AIR
+      const mafsuQ = isMAFSU ? String(currentData.institution_type || '').split('_')[1] : '';
+      const mafsuShowRegion = mafsuQ === 'REGION';                       // Region quota: Region Merit only
+      const mafsuShowState = mafsuQ === 'STATE' || mafsuQ === 'MGMT';    // State / Management: State Merit only (NRI: neither)
 
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
@@ -1527,7 +1530,7 @@
         const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
         let cols = 2;
-        if (isMAFSU) cols = 4;
+        if (isMAFSU) cols = 2 + ((mafsuShowRegion || mafsuShowState) ? 1 : 0);
         else if (isKarnataka) cols = 2;
         else if (isKeralaMQ) cols = 3;
         else if (showPWD) cols = 3;
@@ -1539,8 +1542,8 @@
         headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
 
         if (isMAFSU) {
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">Region Merit</th>`;
-          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">State Merit</th>`;
+          if (mafsuShowRegion) headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">Region Merit</th>`;
+          if (mafsuShowState) headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">State Merit</th>`;
           headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">NEET Marks</th>`;
           return;
         }
@@ -1713,8 +1716,8 @@
 
           if (isMAFSU) {
             const fmt = v => (v === null || v === undefined || v === '') ? '-' : Number(v).toLocaleString('en-IN');
-            html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.REGION_MERIT)}</td>`;
-            html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.STATE_MERIT)}</td>`;
+            if (mafsuShowRegion) html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.REGION_MERIT)}</td>`;
+            if (mafsuShowState) html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.STATE_MERIT)}</td>`;
             html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${fmt(rData.NEET_MARKS)}</td>`;
             return;
           }
