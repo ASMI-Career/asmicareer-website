@@ -1485,7 +1485,7 @@
       let roundKeys = [];
       if (isHP) {
          const cats = Object.keys(workingColleges[0].categories || {});
-         if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
+         if (cats.length > 0) { const seenR = new Set(); roundKeys = []; (workingColleges || []).forEach(c => Object.values(c.categories || {}).forEach(cr => Object.keys(cr || {}).forEach(r => { if (!seenR.has(r)) { seenR.add(r); roundKeys.push(r); } }))); }
       } else {
          {
 
@@ -2185,7 +2185,7 @@
       let roundKeys = [];
       if (isHP) {
         const cats = Object.keys(workingColleges[0].categories || {});
-        if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
+        if (cats.length > 0) { const seenR = new Set(); roundKeys = []; (workingColleges || []).forEach(c => Object.values(c.categories || {}).forEach(cr => Object.keys(cr || {}).forEach(r => { if (!seenR.has(r)) { seenR.add(r); roundKeys.push(r); } }))); }
       } else {
         {
 
@@ -2331,7 +2331,7 @@
       let roundKeys = [];
       if (isHP) {
         const cats = Object.keys(workingColleges[0].categories || {});
-        if (cats.length > 0) roundKeys = Object.keys(workingColleges[0].categories[cats[0]] || {});
+        if (cats.length > 0) { const seenR = new Set(); roundKeys = []; (workingColleges || []).forEach(c => Object.values(c.categories || {}).forEach(cr => Object.keys(cr || {}).forEach(r => { if (!seenR.has(r)) { seenR.add(r); roundKeys.push(r); } }))); }
       } else {
         {
 
