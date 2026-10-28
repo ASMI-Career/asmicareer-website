@@ -20,6 +20,8 @@
     .tool-layout { display: flex; height: calc(100vh - 89px); overflow: hidden; }
     .left-col { flex: 1 1 0%; min-width: 0; overflow-y: auto; border-right: 1px solid rgba(10,22,40,0.10); }
     .right-col { flex: 0 0 32%; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+    .tool-layout.pref-hidden .right-col { display: none; }
+    .tool-layout.pref-hidden .left-col { border-right: none; }
 
     .add-btn {
       font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800;
@@ -65,7 +67,7 @@
             <img src="/asmi-logo.png" alt="ASMI Logo" class="h-9 w-auto">
             <div>
               <h1 class="text-2xl font-bold tracking-tight text-gray-950">Counsellor — Engineering Preference List Builder</h1>
-              <p class="text-sm text-gray-500 mt-1">JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
+              <p id="header-sub" class="text-sm text-gray-500 mt-1">JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
             </div>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-3">
@@ -74,10 +76,18 @@
               <input id="collegeSearch" type="text" placeholder="Search institute, branch..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00A896]/20 focus:border-[#00A896]/50 transition-all text-sm custom-shadow">
             </div>
             <div class="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
-                <button class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2025">2025</button>
-                <button class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold" disabled title="Data coming soon">2024</button>
+              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto" id="counselling-switch">
+                <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="JOSAA">JoSAA</button>
+                <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="MH">Maharashtra CAP</button>
               </div>
+              <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
+                <button id="year-label" class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2025">2025</button>
+                <button id="year-prev" class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold" disabled title="Data coming soon">2024</button>
+              </div>
+              <button id="togglePrefBtn" class="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-white border border-gray-200 custom-shadow text-sm font-bold text-[#0a1628] whitespace-nowrap hover:border-[#00A896] transition" title="Show or hide the preference list">
+                <iconify-icon id="togglePrefIcon" icon="lucide:panel-right-close"></iconify-icon>
+                <span id="togglePrefLabel">Hide list</span>
+              </button>
               <div class="h-11 w-11 rounded-full bg-[#0a1628] text-[#00C8B4] flex items-center justify-center font-bold flex-shrink-0">CN</div>
             </div>
           </div>
@@ -93,8 +103,8 @@
           <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
             <div class="xl:col-span-8 bg-white rounded-3xl border border-gray-100 custom-shadow p-6">
               <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Counselling</p>
-              <h2 class="text-xl font-bold text-gray-950 mt-1">JoSAA — Joint Seat Allocation Authority</h2>
-              <p class="text-sm text-gray-500 mt-1">IITs · NITs · IIITs · GFTIs &middot; B.Tech / B.Arch programs</p>
+              <h2 id="counselling-title" class="text-xl font-bold text-gray-950 mt-1">JoSAA — Joint Seat Allocation Authority</h2>
+              <p id="counselling-sub" class="text-sm text-gray-500 mt-1">IITs · NITs · IIITs · GFTIs &middot; B.Tech / B.Arch programs</p>
             </div>
 
             <div class="xl:col-span-4 bg-gradient-to-br from-[#0a1628] to-[#0d1f35] rounded-3xl custom-shadow p-6 text-white overflow-hidden relative">
@@ -106,7 +116,7 @@
                       <p class="text-4xl font-bold tracking-tight" id="rank-value">—</p>
                       <span id="rank-sync-badge" class="mb-2 px-2.5 py-1 rounded-lg bg-[#00A896] text-[#0a1628] text-[10px] font-bold uppercase hidden">Synced</span>
                     </div>
-                    <p class="text-sm text-white/60 mt-2">Pre-loaded from student token. Per-round chances shown below.</p>
+                    <p id="rank-hint" class="text-sm text-white/60 mt-2">Pre-loaded from student token. Per-round chances shown below.</p>
                   </div>
                   <div class="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center">
                     <iconify-icon icon="lucide:target" class="text-2xl text-[#00C8B4]"></iconify-icon>
@@ -136,7 +146,7 @@
               <div class="flex flex-wrap gap-2" id="category-chips"></div>
             </div>
             <div class="flex flex-wrap gap-8">
-              <div>
+              <div id="gender-block">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Gender</p>
                 <div class="flex flex-wrap gap-2" id="gender-chips"></div>
               </div>
@@ -144,7 +154,7 @@
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Institute type</p>
                 <div class="flex flex-wrap gap-2" id="itype-chips"></div>
               </div>
-              <div>
+              <div id="pwd-block">
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">PwD</p>
                 <div class="flex flex-wrap gap-2" id="pwd-chips"></div>
               </div>
@@ -185,15 +195,7 @@
             <div style="max-height:60vh; overflow:auto;">
               <table class="data-table w-full text-sm" id="dataTable">
                 <thead>
-                  <tr>
-                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Institute</th>
-                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Type</th>
-                    <th class="px-4 py-3 text-left text-xs font-bold uppercase">Program</th>
-                    <th class="px-4 py-3 text-right text-xs font-bold uppercase">Opening</th>
-                    <th class="px-4 py-3 text-right text-xs font-bold uppercase">Closing</th>
-                    <th class="px-4 py-3 text-center text-xs font-bold uppercase">Chance</th>
-                    <th class="px-4 py-3 text-center text-xs font-bold uppercase"></th>
-                  </tr>
+                  <tr id="tableHeadRow"></tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
               </table>
@@ -228,7 +230,7 @@
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
   const YEAR = 2025;
 
-  const QUOTAS = [
+  const JOSAA_QUOTAS = [
     { key: 'all-india',   label: 'All India' },
     { key: 'home-state',  label: 'Home State' },
     { key: 'other-state', label: 'Other State' },
@@ -236,27 +238,57 @@
     { key: 'jk',          label: 'J&K' },
     { key: 'ladakh',      label: 'Ladakh' },
   ];
-  const CATEGORIES = [
+  const JOSAA_CATEGORIES = [
     { key: 'OPEN',    label: 'Open' },
     { key: 'EWS',     label: 'EWS' },
     { key: 'OBC-NCL', label: 'OBC-NCL' },
     { key: 'SC',      label: 'SC' },
     { key: 'ST',      label: 'ST' },
   ];
-  const GENDERS = [
+  const JOSAA_GENDERS = [
     { key: 'all',         label: 'Gender-Neutral' },
     { key: 'female-only', label: 'Female-Only' },
   ];
-  const ITYPES = [
+  const JOSAA_ITYPES = [
     { key: 'ALL',  label: 'All' },
     { key: 'IIT',  label: 'IIT' },
     { key: 'NIT',  label: 'NIT' },
     { key: 'IIIT', label: 'IIIT' },
     { key: 'GFTI', label: 'GFTI' },
   ];
-  const ROUNDS = ['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'];
+
+  const COUNSELLINGS = {
+    JOSAA: {
+      year: 2025,
+      base: '/data/cutoffs/JOSAA/2025',
+      title: 'JoSAA — Joint Seat Allocation Authority',
+      sub: 'IITs · NITs · IIITs · GFTIs · B.Tech / B.Arch programs',
+      header: 'JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
+      rankLabel: 'JEE RANK',
+      rankPlaceholder: 'Enter CRL rank manually',
+      rankHint: 'Pre-loaded from student token. Per-round chances shown below.',
+      rounds: ['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'],
+      defaultRound: 'Round 6',
+      defaults: { quota: 'all-india', category: 'OPEN' },
+    },
+    MH: {
+      year: 2026,
+      base: '/data/cutoffs/MH_ENGG/2026',
+      manifest: '/data/cutoffs/MH_ENGG/2026/manifest.json',
+      title: 'Maharashtra CAP — State CET Cell',
+      sub: 'MHT-CET based admissions · Maharashtra engineering colleges · closing merit number with percentile',
+      header: 'Maharashtra CAP 2026 · Round 1 closing merit number and percentile — build a ranked preference list for the student.',
+      rankLabel: 'MH STATE MERIT NO.',
+      rankPlaceholder: 'Enter MHT-CET merit number',
+      rankHint: 'Enter the State merit number (All India quota: AI merit number). Chances are based on Round 1 closing merit.',
+      rounds: ['Round 1'],
+      defaultRound: 'Round 1',
+      defaults: { quota: 'state-level', category: 'OPEN' },
+    },
+  };
 
   let state = {
+    counselling: 'JOSAA',
     quota: 'all-india',
     category: 'OPEN',
     gender: 'all',
@@ -268,34 +300,137 @@
     branches: [],
   };
   let RANK = null;
+  const RANKS = { JOSAA: null, MH: null };
+  let TOKEN_RANK_SYNCED = false;
+  let MH_MANIFEST = null;
   let PAGE_TOKEN = null;
   let currentColleges = [];
   let preferenceList = [];
   let branchOptions = [];
   let branchSearch = '';
 
+  const isMH = () => state.counselling === 'MH';
+  const cfg = () => COUNSELLINGS[state.counselling];
+
+  function quotaList() {
+    return isMH() ? MH_MANIFEST.quotas.map(q => ({ key: q.key, label: q.label })) : JOSAA_QUOTAS;
+  }
+  function categoryList() {
+    if (!isMH()) return JOSAA_CATEGORIES;
+    const q = MH_MANIFEST.quotas.find(q => q.key === state.quota);
+    return q ? q.categories : [];
+  }
+  function genderList() {
+    if (!isMH()) return JOSAA_GENDERS;
+    const c = categoryList().find(c => c.key === state.category);
+    const avail = c ? c.genders : ['all'];
+    return [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => avail.includes(g.key));
+  }
+  function itypeList() {
+    if (!isMH()) return JOSAA_ITYPES;
+    return [{ key: 'ALL', label: 'All' }].concat(MH_MANIFEST.instituteTypes.map(t => ({ key: t, label: t })));
+  }
+
+  function ensureValidSelection() {
+    if (!isMH()) return;
+    const cats = categoryList();
+    if (!cats.some(c => c.key === state.category)) state.category = cats.length ? cats[0].key : '';
+    if (!genderList().some(g => g.key === state.gender)) state.gender = 'all';
+  }
+
   function renderChips(containerId, items, activeKey, onClick) {
     const el = document.getElementById(containerId);
-    el.innerHTML = items.map(it =>
-      `<button class="chip ${it.key === activeKey ? 'active' : ''}" data-key="${it.key}">${it.label}</button>`
-    ).join('');
+    const grouped = items.some(it => it.group) && new Set(items.map(it => it.group)).size > 1;
+    let last = null;
+    el.innerHTML = items.map(it => {
+      let head = '';
+      if (grouped && it.group !== last) {
+        head = `<div class="w-full text-[10px] font-bold text-gray-400 uppercase tracking-widest ${last === null ? '' : 'mt-2'}">${it.group}</div>`;
+        last = it.group;
+      }
+      return head + `<button class="chip ${it.key === activeKey ? 'active' : ''}" data-key="${it.key}">${it.label}</button>`;
+    }).join('');
     el.querySelectorAll('.chip').forEach(btn => {
       btn.addEventListener('click', () => onClick(btn.dataset.key));
     });
   }
 
   function renderAllChips() {
-    renderChips('quota-chips', QUOTAS, state.quota, k => { state.quota = k; loadData(); renderAllChips(); });
-    renderChips('category-chips', CATEGORIES, state.category, k => { state.category = k; loadData(); renderAllChips(); });
-    renderChips('gender-chips', GENDERS, state.gender, k => { state.gender = k; loadData(); renderAllChips(); });
-    renderChips('itype-chips', ITYPES, state.itype, k => { state.itype = k; renderTable(); renderAllChips(); });
+    renderChips('quota-chips', quotaList(), state.quota, k => { state.quota = k; ensureValidSelection(); loadData(); renderAllChips(); });
+    renderChips('category-chips', categoryList(), state.category, k => { state.category = k; ensureValidSelection(); loadData(); renderAllChips(); });
+    const genders = genderList();
+    document.getElementById('gender-block').classList.toggle('hidden', isMH() && genders.length < 2);
+    renderChips('gender-chips', genders, state.gender, k => { state.gender = k; loadData(); renderAllChips(); });
+    renderChips('itype-chips', itypeList(), state.itype, k => { state.itype = k; renderTable(); renderAllChips(); });
+    document.getElementById('pwd-block').classList.toggle('hidden', isMH());
     renderChips('pwd-chips', [{key:'no',label:'No'},{key:'yes',label:'Yes'}], state.pwd ? 'yes' : 'no', k => { state.pwd = (k === 'yes'); renderTable(); renderAllChips(); });
   }
 
   function populateRoundSelect() {
     const sel = document.getElementById('roundSelect');
-    sel.innerHTML = ROUNDS.map(r => `<option value="${r}" ${r === state.round ? 'selected' : ''}>${r}</option>`).join('');
-    sel.addEventListener('change', () => { state.round = sel.value; renderTable(); });
+    sel.innerHTML = cfg().rounds.map(r => `<option value="${r}" ${r === state.round ? 'selected' : ''}>${r}</option>`).join('');
+  }
+
+  function renderTableHead() {
+    const th = (cls, t, title) => `<th class="px-4 py-3 ${cls} text-xs font-bold uppercase"${title ? ` title="${title}"` : ''}>${t}</th>`;
+    const cols = isMH()
+      ? [th('text-left','Institute'), th('text-left','Type'), th('text-left','Program'), th('text-right','Closing merit'),
+         th('text-right','Closing %ile','MHT-CET percentile (All India quota: JEE score or MHT-CET percentile)'), th('text-center','Chance'), th('text-center','')]
+      : [th('text-left','Institute'), th('text-left','Type'), th('text-left','Program'), th('text-right','Opening'),
+         th('text-right','Closing'), th('text-center','Chance'), th('text-center','')];
+    document.getElementById('tableHeadRow').innerHTML = cols.join('');
+  }
+
+  function setCounsellingButtons() {
+    document.querySelectorAll('.counselling-btn').forEach(b => {
+      const on = b.dataset.c === state.counselling;
+      b.className = 'counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap ' + (on ? 'bg-[#0a1628] text-[#00C8B4]' : 'text-gray-400 hover:text-[#0a1628]');
+    });
+  }
+
+  async function switchCounselling(key) {
+    if (key === 'MH' && !MH_MANIFEST) {
+      try {
+        const res = await fetch(COUNSELLINGS.MH.manifest);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        MH_MANIFEST = await res.json();
+      } catch (e) {
+        console.warn('Maharashtra manifest failed', e);
+        alert('Could not load Maharashtra CAP data. Please retry.');
+        return;
+      }
+    }
+    RANKS[state.counselling] = RANK;
+    state.counselling = key;
+    const c = cfg();
+    state.quota = c.defaults.quota;
+    state.category = c.defaults.category;
+    state.gender = 'all';
+    state.itype = 'ALL';
+    state.pwd = false;
+    state.round = c.defaultRound;
+    state.branches = [];
+    RANK = RANKS[key];
+
+    document.getElementById('header-sub').textContent = c.header;
+    document.getElementById('counselling-title').textContent = c.title;
+    document.getElementById('counselling-sub').textContent = c.sub;
+    document.getElementById('year-label').textContent = c.year;
+    document.getElementById('year-prev').textContent = c.year - 1;
+    document.getElementById('rank-label').textContent = c.rankLabel;
+    document.getElementById('rank-hint').textContent = c.rankHint;
+    const mr = document.getElementById('manualRank');
+    mr.placeholder = c.rankPlaceholder;
+    mr.value = RANK != null ? RANK : '';
+    document.getElementById('rank-value').textContent = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
+    document.getElementById('rank-sync-badge').classList.toggle('hidden', !(key === 'JOSAA' && RANK != null && TOKEN_RANK_SYNCED));
+
+    setCounsellingButtons();
+    ensureValidSelection();
+    renderAllChips();
+    populateRoundSelect();
+    renderTableHead();
+    await loadData();
   }
 
   function updateBranchOptions() {
@@ -353,7 +488,7 @@
   }
 
   async function loadData() {
-    const url = `/data/cutoffs/JOSAA/${YEAR}/${state.quota}/${state.category}/${state.gender}.json`;
+    const url = `${cfg().base}/${state.quota}/${state.category}/${state.gender}.json`;
     try {
       const res = await fetch(url);
       if (!res.ok) { currentColleges = []; updateBranchOptions(); renderTable(); return; }
@@ -369,10 +504,10 @@
 
   function getRankForRound(entry, round) {
     const r = entry && entry.rounds ? entry.rounds[round] : null;
-    if (!r) return { open: null, close: null, prep: false };
+    if (!r) return { open: null, close: null, prep: false, pct: null };
     const closeKey = state.pwd ? 'AIR_PWD' : 'AIR';
     const openKey = state.pwd ? 'Opening_PWD' : 'Opening';
-    return { open: r[openKey] ?? null, close: r[closeKey] ?? null, prep: !!r.prep };
+    return { open: r[openKey] ?? null, close: r[closeKey] ?? null, prep: !!r.prep, pct: r.pct ?? null };
   }
 
   function getChance(closingRank) {
@@ -395,8 +530,8 @@
     }
 
     rows = rows.map(c => {
-      const { open, close, prep } = getRankForRound(c, state.round);
-      return { c, open, close, prep, chance: getChance(close) };
+      const { open, close, prep, pct } = getRankForRound(c, state.round);
+      return { c, open, close, prep, pct, chance: getChance(close) };
     });
 
     if (state.sort === 'rank_asc') rows.sort((a,b) => (a.close ?? Infinity) - (b.close ?? Infinity));
@@ -414,24 +549,38 @@
 
     const tbody = document.getElementById('tableBody');
     if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the 2025 JoSAA data.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2025 JoSAA'} data.</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = rows.map(({c, open, close, prep, chance}) => {
+    tbody.innerHTML = rows.map(({c, open, close, prep, pct, chance}) => {
       const id = prefId(c);
       const added = preferenceList.some(p => p.id === id);
+      const fmt = v => v != null ? v.toLocaleString('en-IN') : '—';
+      const chanceCell = chance ? `<span class="chance-pill badge-${chance.key}">${chance.label}</span>` : '<span class="text-gray-300 text-xs">—</span>';
+      const addBtn = `<button class="add-btn ${added ? 'added' : ''}" data-id="${esc(id)}">${added ? '✓ Added' : '+ Add'}</button>`;
+      if (isMH()) {
+        const sub = [c.status, c.homeUniversity && c.homeUniversity !== 'Autonomous Institute' ? 'Home Univ: ' + c.homeUniversity : null, c.exam ? 'Merit exam: ' + c.exam : null].filter(Boolean).join(' · ');
+        return `
+        <tr class="${added ? 'added-row' : ''}">
+          <td class="px-4 py-3 font-semibold text-gray-800">${esc(c.name)}${sub ? `<div class="text-[11px] font-normal text-gray-400 mt-0.5">${esc(sub)}</div>` : ''}</td>
+          <td class="px-4 py-3 text-gray-500">${esc(c.type)}</td>
+          <td class="px-4 py-3 text-gray-600">${esc(c.program)}</td>
+          <td class="px-4 py-3 text-right font-bold text-gray-800">${fmt(close)}</td>
+          <td class="px-4 py-3 text-right text-gray-500">${pct != null ? pct.toFixed(4) : '—'}</td>
+          <td class="px-4 py-3 text-center">${chanceCell}</td>
+          <td class="px-4 py-3 text-center">${addBtn}</td>
+        </tr>`;
+      }
       return `
         <tr class="${added ? 'added-row' : ''}">
           <td class="px-4 py-3 font-semibold text-gray-800">${c.name}</td>
           <td class="px-4 py-3 text-gray-500">${c.type}</td>
           <td class="px-4 py-3 text-gray-600">${c.program}${prep ? ' <span class="text-[10px] text-amber-600 font-bold">(Prep)</span>' : ''}</td>
-          <td class="px-4 py-3 text-right text-gray-500">${open != null ? open.toLocaleString('en-IN') : '—'}</td>
-          <td class="px-4 py-3 text-right font-bold text-gray-800">${close != null ? close.toLocaleString('en-IN') : '—'}</td>
-          <td class="px-4 py-3 text-center">${chance ? `<span class="chance-pill badge-${chance.key}">${chance.label}</span>` : '<span class="text-gray-300 text-xs">—</span>'}</td>
-          <td class="px-4 py-3 text-center">
-            <button class="add-btn ${added ? 'added' : ''}" data-id="${id}">${added ? '✓ Added' : '+ Add'}</button>
-          </td>
+          <td class="px-4 py-3 text-right text-gray-500">${fmt(open)}</td>
+          <td class="px-4 py-3 text-right font-bold text-gray-800">${fmt(close)}</td>
+          <td class="px-4 py-3 text-center">${chanceCell}</td>
+          <td class="px-4 py-3 text-center">${addBtn}</td>
         </tr>`;
     }).join('');
 
@@ -440,7 +589,19 @@
     });
   }
 
-  function prefId(c) { return `${c.name}__${c.program}`; }
+  function esc(s) { return String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+  function prefId(c) { return c.choiceCode ? `MH__${c.choiceCode}__${c.exam || ''}` : `${c.name}__${c.program}`; }
+
+  function categoryLabelNow() {
+    const k = state.category;
+    const found = categoryList().find(x => x.key === k);
+    return found ? found.label : k;
+  }
+  function quotaLabelNow() {
+    const found = quotaList().find(x => x.key === state.quota);
+    return found ? found.label : state.quota;
+  }
 
   function toggleAdd(id, rows) {
     const idx = preferenceList.findIndex(p => p.id === id);
@@ -456,6 +617,12 @@
           program: found.c.program,
           close: found.close,
           chance: found.chance ? found.chance.label : '—',
+          counselling: isMH() ? 'Maharashtra CAP' : 'JoSAA',
+          year: cfg().year,
+          round: state.round,
+          quota: quotaLabelNow(),
+          category: categoryLabelNow(),
+          pct: found.pct,
         });
       }
     }
@@ -463,8 +630,20 @@
     renderPrefList();
   }
 
+  function setPrefHidden(hidden) {
+    document.querySelector('.tool-layout').classList.toggle('pref-hidden', hidden);
+    document.getElementById('togglePrefIcon').setAttribute('icon', hidden ? 'lucide:panel-right-open' : 'lucide:panel-right-close');
+    updatePrefToggleLabel();
+    try { localStorage.setItem('asmiPrefHidden', hidden ? '1' : '0'); } catch (e) {}
+  }
+  function updatePrefToggleLabel() {
+    const hidden = document.querySelector('.tool-layout').classList.contains('pref-hidden');
+    document.getElementById('togglePrefLabel').textContent = hidden ? `Show list (${preferenceList.length})` : 'Hide list';
+  }
+
   function renderPrefList() {
     document.getElementById('prefCount').textContent = preferenceList.length;
+    updatePrefToggleLabel();
     const el = document.getElementById('prefList');
     if (preferenceList.length === 0) {
       el.innerHTML = `<div class="pref-empty">No colleges added yet.<br>Click "Add" in the table to build the preference list.</div>`;
@@ -475,7 +654,7 @@
         <div class="rank-badge">${i+1}</div>
         <div class="flex-1">
           <div class="pref-name">${p.name}</div>
-          <div class="pref-sub">${p.program} &middot; ${p.type} &middot; Closing ${p.close != null ? p.close.toLocaleString('en-IN') : '—'} &middot; ${p.chance}</div>
+          <div class="pref-sub">${p.program} &middot; ${p.type} &middot; ${p.counselling === 'Maharashtra CAP' ? 'MH ' : ''}Closing ${p.close != null ? p.close.toLocaleString('en-IN') : '—'} &middot; ${p.chance}</div>
         </div>
         <iconify-icon icon="lucide:x" class="pref-remove" data-id="${p.id}"></iconify-icon>
       </div>
@@ -493,10 +672,15 @@
     if (preferenceList.length === 0) { alert('Add at least one college to the preference list first.'); return; }
     const rows = preferenceList.map((p, i) => ({
       'Pref No.': i + 1,
+      'Counselling': `${p.counselling || 'JoSAA'} ${p.year || 2025}`,
       'Institute': p.name,
       'Type': p.type,
       'Program': p.program,
-      [`Closing Rank (2025, ${state.round})`]: p.close,
+      'Quota': p.quota || '',
+      'Category': p.category || '',
+      'Round': p.round || '',
+      'Closing Rank / Merit': p.close,
+      'Closing Percentile': p.pct != null ? p.pct : '',
       'Chance': p.chance,
     }));
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -534,6 +718,7 @@
           const rawRank = json.data.rank || json.data.jee_rank || json.data.crl_rank;
           if (rawRank && rawRank !== 0) {
             RANK = parseInt(rawRank, 10);
+            TOKEN_RANK_SYNCED = true;
             document.getElementById('rank-value').textContent = `#${RANK.toLocaleString('en-IN')}`;
             document.getElementById('rank-sync-badge').classList.remove('hidden');
             document.getElementById('manualRank').value = RANK;
@@ -554,10 +739,17 @@
     document.getElementById('exportBtn').addEventListener('click', exportExcel);
     document.getElementById('saveBtn').addEventListener('click', saveToStudent);
 
-    renderAllChips();
-    populateRoundSelect();
+    document.getElementById('roundSelect').addEventListener('change', (e) => { state.round = e.target.value; renderTable(); });
+    document.querySelectorAll('.counselling-btn').forEach(b => {
+      b.addEventListener('click', () => { if (b.dataset.c !== state.counselling) switchCounselling(b.dataset.c); });
+    });
+    document.getElementById('togglePrefBtn').addEventListener('click', () => {
+      setPrefHidden(!document.querySelector('.tool-layout').classList.contains('pref-hidden'));
+    });
+    try { if (localStorage.getItem('asmiPrefHidden') === '1') setPrefHidden(true); } catch (e) {}
     initBranchDropdown();
-    await loadData();
+    const wanted = (params.get('c') || params.get('counselling') || '').toUpperCase();
+    await switchCounselling(wanted === 'MH' ? 'MH' : 'JOSAA');
   }
 
   initUI();
