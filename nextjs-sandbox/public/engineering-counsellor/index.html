@@ -277,10 +277,10 @@
       manifest: '/data/cutoffs/MH_ENGG/2026/manifest.json',
       title: 'Maharashtra CAP — State CET Cell',
       sub: 'MHT-CET based admissions · Maharashtra engineering colleges · closing merit number with percentile',
-      header: 'Maharashtra CAP 2026 · Round 1 closing merit number and percentile — build a ranked preference list for the student.',
+      header: 'Maharashtra CAP 2026 · round-wise closing merit number, percentile and vacant seats — build a ranked preference list for the student.',
       rankLabel: 'MH STATE MERIT NO.',
       rankPlaceholder: 'Enter MHT-CET merit number',
-      rankHint: 'Enter the State merit number (All India quota: AI merit number). Chances are based on Round 1 closing merit.',
+      rankHint: 'Enter the State merit number (All India quota: AI merit number). Chances are based on the closing merit of the selected round.',
       rounds: ['Round 1'],
       defaultRound: 'Round 1',
       defaults: { quota: 'state-level', category: 'OPEN' },
@@ -303,6 +303,7 @@
   const RANKS = { JOSAA: null, MH: null };
   let TOKEN_RANK_SYNCED = false;
   let MH_MANIFEST = null;
+  let MH_INTAKE = {};
   let PAGE_TOKEN = null;
   let currentColleges = [];
   let preferenceList = [];
@@ -375,7 +376,9 @@
     const th = (cls, t, title) => `<th class="px-4 py-3 ${cls} text-xs font-bold uppercase"${title ? ` title="${title}"` : ''}>${t}</th>`;
     const cols = isMH()
       ? [th('text-left','Institute'), th('text-left','Type'), th('text-left','Program'), th('text-right','Closing merit'),
-         th('text-right','Closing %ile','MHT-CET percentile (All India quota: JEE score or MHT-CET percentile)'), th('text-center','Chance'), th('text-center','')]
+         th('text-right','Closing %ile','MHT-CET percentile (All India quota: JEE score or MHT-CET percentile)'),
+         th('text-right','Vacant seats','Vacant seats for the selected quota, category and gender in the selected round (from the CET Cell seat matrix)'),
+         th('text-center','Chance'), th('text-center','')]
       : [th('text-left','Institute'), th('text-left','Type'), th('text-left','Program'), th('text-right','Opening'),
          th('text-right','Closing'), th('text-center','Chance'), th('text-center','')];
     document.getElementById('tableHeadRow').innerHTML = cols.join('');
@@ -394,6 +397,12 @@
         const res = await fetch(COUNSELLINGS.MH.manifest);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         MH_MANIFEST = await res.json();
+        COUNSELLINGS.MH.rounds = MH_MANIFEST.rounds;
+        COUNSELLINGS.MH.defaultRound = MH_MANIFEST.rounds[MH_MANIFEST.rounds.length - 1];
+        try {
+          const ir = await fetch(COUNSELLINGS.MH.base + '/intake.json');
+          if (ir.ok) MH_INTAKE = await ir.json();
+        } catch (e2) { console.warn('Intake load failed', e2); }
       } catch (e) {
         console.warn('Maharashtra manifest failed', e);
         alert('Could not load Maharashtra CAP data. Please retry.');
@@ -504,10 +513,10 @@
 
   function getRankForRound(entry, round) {
     const r = entry && entry.rounds ? entry.rounds[round] : null;
-    if (!r) return { open: null, close: null, prep: false, pct: null };
+    if (!r) return { open: null, close: null, prep: false, pct: null, seats: null };
     const closeKey = state.pwd ? 'AIR_PWD' : 'AIR';
     const openKey = state.pwd ? 'Opening_PWD' : 'Opening';
-    return { open: r[openKey] ?? null, close: r[closeKey] ?? null, prep: !!r.prep, pct: r.pct ?? null };
+    return { open: r[openKey] ?? null, close: r[closeKey] ?? null, prep: !!r.prep, pct: r.pct ?? null, seats: r.seats ?? null };
   }
 
   function getChance(closingRank) {
@@ -530,9 +539,10 @@
     }
 
     rows = rows.map(c => {
-      const { open, close, prep, pct } = getRankForRound(c, state.round);
-      return { c, open, close, prep, pct, chance: getChance(close) };
+      const { open, close, prep, pct, seats } = getRankForRound(c, state.round);
+      return { c, open, close, prep, pct, seats, chance: getChance(close) };
     });
+    if (isMH()) rows = rows.filter(r => r.close != null);
 
     if (state.sort === 'rank_asc') rows.sort((a,b) => (a.close ?? Infinity) - (b.close ?? Infinity));
     else if (state.sort === 'rank_desc') rows.sort((a,b) => (b.close ?? -Infinity) - (a.close ?? -Infinity));
@@ -549,11 +559,11 @@
 
     const tbody = document.getElementById('tableBody');
     if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2025 JoSAA'} data.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2025 JoSAA'} data.</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = rows.map(({c, open, close, prep, pct, chance}) => {
+    tbody.innerHTML = rows.map(({c, open, close, prep, pct, seats, chance}) => {
       const id = prefId(c);
       const added = preferenceList.some(p => p.id === id);
       const fmt = v => v != null ? v.toLocaleString('en-IN') : '—';
@@ -565,9 +575,10 @@
         <tr class="${added ? 'added-row' : ''}">
           <td class="px-4 py-3 font-semibold text-gray-800">${esc(c.name)}${sub ? `<div class="text-[11px] font-normal text-gray-400 mt-0.5">${esc(sub)}</div>` : ''}</td>
           <td class="px-4 py-3 text-gray-500">${esc(c.type)}</td>
-          <td class="px-4 py-3 text-gray-600">${esc(c.program)}</td>
+          <td class="px-4 py-3 text-gray-600">${esc(c.program)}${intakeLine(c)}</td>
           <td class="px-4 py-3 text-right font-bold text-gray-800">${fmt(close)}</td>
           <td class="px-4 py-3 text-right text-gray-500">${pct != null ? pct.toFixed(4) : '—'}</td>
+          <td class="px-4 py-3 text-right text-gray-700 font-semibold">${seats != null ? seats : '—'}</td>
           <td class="px-4 py-3 text-center">${chanceCell}</td>
           <td class="px-4 py-3 text-center">${addBtn}</td>
         </tr>`;
@@ -589,9 +600,18 @@
     });
   }
 
+  function intakeLine(c) {
+    const t = (MH_INTAKE[state.round] || {})[c.choiceCode];
+    if (!t) return '';
+    const parts = [];
+    if (t.SI != null) parts.push('Intake ' + t.SI);
+    if (t.vacant != null) parts.push('Vacant ' + t.vacant);
+    return parts.length ? `<div class="text-[11px] text-gray-400 mt-0.5">${parts.join(' · ')}</div>` : '';
+  }
+
   function esc(s) { return String(s ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 
-  function prefId(c) { return c.choiceCode ? `MH__${c.choiceCode}__${c.exam || ''}` : `${c.name}__${c.program}`; }
+  function prefId(c) { return c.choiceCode ? `MH__${c.choiceCode}__${c.exam || ''}__${c.seat || ''}__${c.variantNo || ''}` : `${c.name}__${c.program}`; }
 
   function categoryLabelNow() {
     const k = state.category;

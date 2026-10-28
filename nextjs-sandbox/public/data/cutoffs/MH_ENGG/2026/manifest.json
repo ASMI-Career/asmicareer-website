@@ -2,7 +2,15 @@
  "counselling": "MH_ENGG",
  "year": 2026,
  "rounds": [
-  "Round 1"
+  "Round 1",
+  "Round 2",
+  "Round 3",
+  "Round 4"
+ ],
+ "intakeRounds": [
+  "Round 2",
+  "Round 3",
+  "Round 4"
  ],
  "quotas": [
   {
@@ -17,7 +25,7 @@
       "all",
       "female-only"
      ],
-     "count": 980
+     "count": 985
     },
     {
      "key": "SC",
@@ -27,7 +35,7 @@
       "all",
       "female-only"
      ],
-     "count": 690
+     "count": 716
     },
     {
      "key": "ST",
@@ -37,7 +45,7 @@
       "all",
       "female-only"
      ],
-     "count": 408
+     "count": 694
     },
     {
      "key": "VJ",
@@ -47,7 +55,7 @@
       "all",
       "female-only"
      ],
-     "count": 577
+     "count": 625
     },
     {
      "key": "NT1",
@@ -57,7 +65,7 @@
       "all",
       "female-only"
      ],
-     "count": 556
+     "count": 590
     },
     {
      "key": "NT2",
@@ -67,7 +75,7 @@
       "all",
       "female-only"
      ],
-     "count": 636
+     "count": 660
     },
     {
      "key": "NT3",
@@ -77,7 +85,7 @@
       "all",
       "female-only"
      ],
-     "count": 468
+     "count": 545
     },
     {
      "key": "OBC",
@@ -87,7 +95,7 @@
       "all",
       "female-only"
      ],
-     "count": 714
+     "count": 724
     },
     {
      "key": "SEBC",
@@ -97,7 +105,7 @@
       "all",
       "female-only"
      ],
-     "count": 654
+     "count": 710
     },
     {
      "key": "EWS",
@@ -106,7 +114,7 @@
      "genders": [
       "all"
      ],
-     "count": 1428
+     "count": 1520
     },
     {
      "key": "TFWS",
@@ -115,7 +123,7 @@
      "genders": [
       "all"
      ],
-     "count": 1936
+     "count": 1965
     },
     {
      "key": "ORPHAN-I",
@@ -124,7 +132,7 @@
      "genders": [
       "all"
      ],
-     "count": 47
+     "count": 548
     },
     {
      "key": "ORPHAN-N",
@@ -133,7 +141,7 @@
      "genders": [
       "all"
      ],
-     "count": 60
+     "count": 564
     },
     {
      "key": "PWD-OPEN",
@@ -142,7 +150,7 @@
      "genders": [
       "all"
      ],
-     "count": 215
+     "count": 684
     },
     {
      "key": "PWD-SC",
@@ -151,11 +159,29 @@
      "genders": [
       "all"
      ],
-     "count": 26
+     "count": 323
     },
     {
      "key": "PWD-ST",
      "label": "PWD · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2
+    },
+    {
+     "key": "PWD-NT2",
+     "label": "PWD · NT-C (NT2)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-NT3",
+     "label": "PWD · NT-D (NT3)",
      "group": "PWD seats",
      "genders": [
       "all"
@@ -169,7 +195,7 @@
      "genders": [
       "all"
      ],
-     "count": 97
+     "count": 524
     },
     {
      "key": "PWD-SEBC",
@@ -178,7 +204,7 @@
      "genders": [
       "all"
      ],
-     "count": 24
+     "count": 224
     },
     {
      "key": "PWD-R-SC",
@@ -187,7 +213,7 @@
      "genders": [
       "all"
      ],
-     "count": 7
+     "count": 9
     },
     {
      "key": "PWD-R-ST",
@@ -196,7 +222,7 @@
      "genders": [
       "all"
      ],
-     "count": 2
+     "count": 4
     },
     {
      "key": "PWD-R-VJ",
@@ -205,7 +231,7 @@
      "genders": [
       "all"
      ],
-     "count": 6
+     "count": 7
     },
     {
      "key": "PWD-R-NT1",
@@ -214,7 +240,7 @@
      "genders": [
       "all"
      ],
-     "count": 7
+     "count": 10
     },
     {
      "key": "PWD-R-NT2",
@@ -241,7 +267,7 @@
      "genders": [
       "all"
      ],
-     "count": 57
+     "count": 68
     },
     {
      "key": "PWD-R-SEBC",
@@ -250,7 +276,7 @@
      "genders": [
       "all"
      ],
-     "count": 6
+     "count": 8
     },
     {
      "key": "DEF-OPEN",
@@ -259,7 +285,7 @@
      "genders": [
       "all"
      ],
-     "count": 796
+     "count": 1528
     },
     {
      "key": "DEF-SC",
@@ -268,11 +294,29 @@
      "genders": [
       "all"
      ],
-     "count": 115
+     "count": 520
     },
     {
      "key": "DEF-ST",
      "label": "Defence · ST",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2
+    },
+    {
+     "key": "DEF-NT2",
+     "label": "Defence · NT-C (NT2)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "DEF-NT3",
+     "label": "Defence · NT-D (NT3)",
      "group": "Defence seats",
      "genders": [
       "all"
@@ -286,7 +330,7 @@
      "genders": [
       "all"
      ],
-     "count": 370
+     "count": 1090
     },
     {
      "key": "DEF-SEBC",
@@ -295,7 +339,7 @@
      "genders": [
       "all"
      ],
-     "count": 145
+     "count": 375
     },
     {
      "key": "DEF-R-SC",
@@ -304,7 +348,7 @@
      "genders": [
       "all"
      ],
-     "count": 13
+     "count": 22
     },
     {
      "key": "DEF-R-ST",
@@ -322,7 +366,7 @@
      "genders": [
       "all"
      ],
-     "count": 6
+     "count": 8
     },
     {
      "key": "DEF-R-NT1",
@@ -340,7 +384,7 @@
      "genders": [
       "all"
      ],
-     "count": 24
+     "count": 29
     },
     {
      "key": "DEF-R-NT3",
@@ -349,7 +393,7 @@
      "genders": [
       "all"
      ],
-     "count": 20
+     "count": 24
     },
     {
      "key": "DEF-R-OBC",
@@ -358,7 +402,7 @@
      "genders": [
       "all"
      ],
-     "count": 174
+     "count": 217
     },
     {
      "key": "DEF-R-SEBC",
@@ -367,7 +411,7 @@
      "genders": [
       "all"
      ],
-     "count": 119
+     "count": 147
     }
    ]
   },
@@ -383,7 +427,7 @@
       "all",
       "female-only"
      ],
-     "count": 1286
+     "count": 1318
     },
     {
      "key": "SC",
@@ -393,7 +437,7 @@
       "all",
       "female-only"
      ],
-     "count": 832
+     "count": 943
     },
     {
      "key": "ST",
@@ -403,7 +447,7 @@
       "all",
       "female-only"
      ],
-     "count": 214
+     "count": 817
     },
     {
      "key": "VJ",
@@ -413,183 +457,11 @@
       "all",
       "female-only"
      ],
-     "count": 413
+     "count": 568
     },
     {
      "key": "NT1",
      "label": "NT-B (NT1)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 475
-    },
-    {
-     "key": "NT2",
-     "label": "NT-C (NT2)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 577
-    },
-    {
-     "key": "NT3",
-     "label": "NT-D (NT3)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 342
-    },
-    {
-     "key": "OBC",
-     "label": "OBC",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 959
-    },
-    {
-     "key": "SEBC",
-     "label": "SEBC",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 744
-    },
-    {
-     "key": "PWD-OPEN",
-     "label": "PWD · Open",
-     "group": "PWD seats",
-     "genders": [
-      "all"
-     ],
-     "count": 62
-    },
-    {
-     "key": "PWD-OBC",
-     "label": "PWD · OBC",
-     "group": "PWD seats",
-     "genders": [
-      "all"
-     ],
-     "count": 4
-    },
-    {
-     "key": "PWD-R-ST",
-     "label": "PWD common-reserved · ST",
-     "group": "PWD seats",
-     "genders": [
-      "all"
-     ],
-     "count": 1
-    },
-    {
-     "key": "PWD-R-OBC",
-     "label": "PWD common-reserved · OBC",
-     "group": "PWD seats",
-     "genders": [
-      "all"
-     ],
-     "count": 3
-    }
-   ]
-  },
-  {
-   "key": "other-than-home-university",
-   "label": "Other Than Home University",
-   "categories": [
-    {
-     "key": "OPEN",
-     "label": "Open",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 1221
-    },
-    {
-     "key": "SC",
-     "label": "SC",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 672
-    },
-    {
-     "key": "ST",
-     "label": "ST",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 154
-    },
-    {
-     "key": "VJ",
-     "label": "VJ/DT",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 315
-    },
-    {
-     "key": "NT1",
-     "label": "NT-B (NT1)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 218
-    },
-    {
-     "key": "NT2",
-     "label": "NT-C (NT2)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 304
-    },
-    {
-     "key": "NT3",
-     "label": "NT-D (NT3)",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 199
-    },
-    {
-     "key": "OBC",
-     "label": "OBC",
-     "group": "Main",
-     "genders": [
-      "all",
-      "female-only"
-     ],
-     "count": 784
-    },
-    {
-     "key": "SEBC",
-     "label": "SEBC",
      "group": "Main",
      "genders": [
       "all",
@@ -598,13 +470,53 @@
      "count": 601
     },
     {
+     "key": "NT2",
+     "label": "NT-C (NT2)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 704
+    },
+    {
+     "key": "NT3",
+     "label": "NT-D (NT3)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 478
+    },
+    {
+     "key": "OBC",
+     "label": "OBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 1006
+    },
+    {
+     "key": "SEBC",
+     "label": "SEBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 900
+    },
+    {
      "key": "PWD-OPEN",
      "label": "PWD · Open",
      "group": "PWD seats",
      "genders": [
       "all"
      ],
-     "count": 20
+     "count": 828
     },
     {
      "key": "PWD-SC",
@@ -613,7 +525,7 @@
      "genders": [
       "all"
      ],
-     "count": 1
+     "count": 198
     },
     {
      "key": "PWD-OBC",
@@ -622,7 +534,16 @@
      "genders": [
       "all"
      ],
-     "count": 3
+     "count": 567
+    },
+    {
+     "key": "PWD-SEBC",
+     "label": "PWD · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 144
     },
     {
      "key": "PWD-R-SC",
@@ -649,7 +570,166 @@
      "genders": [
       "all"
      ],
-     "count": 7
+     "count": 5
+    }
+   ]
+  },
+  {
+   "key": "other-than-home-university",
+   "label": "Other Than Home University",
+   "categories": [
+    {
+     "key": "OPEN",
+     "label": "Open",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 1273
+    },
+    {
+     "key": "SC",
+     "label": "SC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 783
+    },
+    {
+     "key": "ST",
+     "label": "ST",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 562
+    },
+    {
+     "key": "VJ",
+     "label": "VJ/DT",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 393
+    },
+    {
+     "key": "NT1",
+     "label": "NT-B (NT1)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 286
+    },
+    {
+     "key": "NT2",
+     "label": "NT-C (NT2)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 389
+    },
+    {
+     "key": "NT3",
+     "label": "NT-D (NT3)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 279
+    },
+    {
+     "key": "OBC",
+     "label": "OBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 858
+    },
+    {
+     "key": "SEBC",
+     "label": "SEBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 717
+    },
+    {
+     "key": "PWD-OPEN",
+     "label": "PWD · Open",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 76
+    },
+    {
+     "key": "PWD-SC",
+     "label": "PWD · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 14
+    },
+    {
+     "key": "PWD-OBC",
+     "label": "PWD · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 33
+    },
+    {
+     "key": "PWD-SEBC",
+     "label": "PWD · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 11
+    },
+    {
+     "key": "PWD-R-SC",
+     "label": "PWD common-reserved · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-ST",
+     "label": "PWD common-reserved · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-OBC",
+     "label": "PWD common-reserved · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 8
     },
     {
      "key": "PWD-R-SEBC",
@@ -658,7 +738,7 @@
      "genders": [
       "all"
      ],
-     "count": 1
+     "count": 2
     }
    ]
   },
@@ -673,7 +753,7 @@
      "genders": [
       "all"
      ],
-     "count": 309
+     "count": 372
     }
    ]
   },
@@ -688,7 +768,7 @@
      "genders": [
       "all"
      ],
-     "count": 2004
+     "count": 2378
     }
    ]
   }
@@ -706,22 +786,22 @@
   "University Department": 24,
   "Government": 35,
   "Un-Aided Autonomous": 642,
-  "Un-Aided": 1116,
+  "Un-Aided": 1140,
   "Un-Aided Autonomous Linguistic Minority - Hindi": 127,
   "Government-Aided Autonomous": 28,
   "University Managed Autonomous": 1,
   "Un-Aided Religious Minority - Muslim": 43,
   "Un-Aided Religious Minority - Jain": 16,
   "Un-Aided Linguistic Minority - Gujarathi": 12,
-  "University": 22,
+  "University": 23,
   "University Managed (Un-Aided)": 7,
-  "Deemed University Autonomous": 8,
+  "Deemed to be University Autonomous": 8,
   "Un-Aided Linguistic Minority - Hindi": 38,
   "Un-Aided Autonomous Linguistic Minority - Gujarathi(Jain)": 8,
   "Un-Aided Linguistic Minority - Sindhi": 7,
   "Un-Aided Autonomous Religious Minority - Christian": 39,
   "Un-Aided Autonomous Linguistic Minority - Sindhi": 12,
-  "Un-Aided Autonomous Linguistic Minority - Gujarathi": 17,
+  "Un-Aided Autonomous Linguistic Minority - Gujarathi": 21,
   "Un-Aided Autonomous Religious Minority - Roman Catholics": 4,
   "Un-Aided Linguistic Minority - Punjabi": 7,
   "Un-Aided Autonomous Linguistic Minority - Tamil": 7,
