@@ -1,0 +1,87 @@
+{
+ "counselling": "MAFSU",
+ "institution_type": "GOVT_REGION",
+ "year": 2026,
+ "category": "VJ_DT_A",
+ "sub_type": "GEN_BOTH",
+ "colleges": [
+  {
+   "name": "Nagpur Veterinary College, Nagpur",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 1,
+     "REGION_MERIT": 13,
+     "STATE_MERIT": 94,
+     "NEET_MARKS": 490
+    }
+   }
+  },
+  {
+   "name": "College of Veterinary & Animal Sciences, Akola",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 1,
+     "REGION_MERIT": 74,
+     "STATE_MERIT": 404,
+     "NEET_MARKS": 455
+    }
+   }
+  },
+  {
+   "name": "Mumbai Veterinary College, Mumbai",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": null,
+     "REGION_MERIT": null,
+     "STATE_MERIT": null,
+     "NEET_MARKS": null
+    }
+   }
+  },
+  {
+   "name": "Krantisingh Nana Patil College of Veterinary Science, Shirwal",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 1,
+     "REGION_MERIT": 63,
+     "STATE_MERIT": 190,
+     "NEET_MARKS": 479
+    }
+   }
+  },
+  {
+   "name": "College of Veterinary & Animal Sciences, Parbhani",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 1,
+     "REGION_MERIT": 73,
+     "STATE_MERIT": 178,
+     "NEET_MARKS": 480
+    }
+   }
+  },
+  {
+   "name": "College of Veterinary & Animal Sciences, Udgir",
+   "state": "Maharashtra",
+   "type": "Govt",
+   "rounds": {
+    "Round 1": {
+     "Intake": 1,
+     "REGION_MERIT": 76,
+     "STATE_MERIT": 183,
+     "NEET_MARKS": 479
+    }
+   }
+  }
+ ]
+}

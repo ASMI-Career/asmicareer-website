@@ -585,14 +585,50 @@
       AACCC: { title: 'AACCC', subtitle: 'Central AYUSH counselling · Rounds 1-3 · 2026' },
       DEEMED_BPTH: { title: 'Deemed BPTH', subtitle: 'Deemed universities · BPTH' },
       VCI:   { title: 'VCI', subtitle: 'Veterinary Council · 15% AIQ' },
-      MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences' }
+      MAFSU: { title: 'MAFSU', subtitle: 'Maharashtra Animal & Fishery Sciences · Round 1 · 2026' }
     };
-    const NEW_COUNSELLINGS = ['DEEMED_BPTH', 'MAFSU']; // no filters/data yet
+    const NEW_COUNSELLINGS = ['DEEMED_BPTH']; // no filters/data yet
     const VCI_INST_TYPES = [
       { id: 'GOVT_BVSC', label: 'Govt BVSc' },
       { id: 'PRIVATE_BVSC', label: 'Private BVSc' }
     ];
     const VCI_CATS = ['OPEN', 'EWS', 'OBC', 'SC', 'ST'];
+    // MAFSU (Maharashtra Animal & Fishery Sciences Univ.) BVSc: selectedInstType = INST_QUOTA, then category + sub-type files
+    const MAFSU_INSTS = [{ id: 'GOVT', label: 'Govt BVSc' }, { id: 'PRIVATE', label: 'Private BVSc' }];
+    const MAFSU_QUOTAS = [
+      { id: 'STATE', label: 'State Merit' }, { id: 'REGION', label: 'Region Merit' }, { id: 'MGMT', label: 'Management' },
+      { id: 'NRIINDIA', label: 'NRI (India)' }, { id: 'NRIABROAD', label: 'NRI (Abroad)' }
+    ];
+    const MAFSU_CAT_LABELS = { OPEN: 'Open', OBC: 'OBC', SC: 'SC', ST: 'ST', SEBC: 'SEBC', EWS: 'EWS', VJ_DT_A: 'VJ/DT(A)', NT_B: 'NT(B)', NT_C: 'NT(C)', NT_D: 'NT(D)', ALL: 'All' };
+    const MAFSU_SUB_LABELS = { GEN_BOTH: 'General', GEN_GIRL: 'Girls', AG_BOTH: 'Agriculturist', PAP_BOTH: 'Project Affected', DP_BOTH: 'Defence Personnel', FF_BOTH: 'Freedom Fighter', ALL: 'All' };
+    let mafsuIndex = null, mafsuIndexYear = null, mafsuSub = 'GEN_BOTH';
+    const mafsuInst = () => selectedInstType.split('_')[0];
+    const mafsuQuota = () => selectedInstType.split('_')[1];
+    const mafsuSubLabel = id => id.endsWith('_PH') ? mafsuSubLabel(id.slice(0, -3)) + ' (PH)' : (MAFSU_SUB_LABELS[id] || id.replace(/_BOTH$/, '').replace(/_GIRL$/, ' Girls').replace(/_/g, ' '));
+    async function ensureMafsuIndex() {
+      if (mafsuIndex && mafsuIndexYear === currentYear) return;
+      try { const r = await fetch(`/data/cutoffs/MAFSU/${currentYear}/index.json`); mafsuIndex = r.ok ? await r.json() : {}; } catch (e) { mafsuIndex = {}; }
+      mafsuIndexYear = currentYear;
+    }
+    // keep inst/quota/category/sub on files that exist; fall back to the first available
+    function fixMafsuSelection() {
+      const idx = mafsuIndex || {};
+      if (!idx[selectedInstType]) {
+        const keys = Object.keys(idx).filter(k => k.startsWith(mafsuInst() + '_'));
+        if (keys.length) selectedInstType = keys.includes(mafsuInst() + '_STATE') ? mafsuInst() + '_STATE' : keys[0];
+      }
+      const cats = Object.keys(idx[selectedInstType] || {});
+      if (cats.length && !cats.includes(selectedCategory)) selectedCategory = cats.includes('OPEN') ? 'OPEN' : cats[0];
+      const subs = (idx[selectedInstType] || {})[selectedCategory] || [];
+      if (subs.length && !subs.includes(mafsuSub)) mafsuSub = subs.includes('GEN_BOTH') ? 'GEN_BOTH' : subs[0];
+    }
+    async function setMafsu(kind, val) {
+      if (kind === 'inst') selectedInstType = val + '_' + mafsuQuota();
+      else if (kind === 'quota') selectedInstType = mafsuInst() + '_' + val;
+      else if (kind === 'cat') selectedCategory = val;
+      else if (kind === 'sub') mafsuSub = val;
+      await ensureMafsuIndex(); fixMafsuSelection(); renderFilters(); loadData();
+    }
     // AACCC (AYUSH) closing ranks: instType = COURSE_QUOTA, one file per allotted category
     const AACCC_COURSES = [
       { id: 'BAMS', label: 'BAMS' }, { id: 'BHMS', label: 'BHMS' }, { id: 'BUMS', label: 'BUMS' },
@@ -765,6 +801,10 @@
       } else if (c === 'VCI') {
         selectedInstType = 'GOVT_BVSC';
         selectedCategory = 'OPEN';
+      } else if (c === 'MAFSU') {
+        selectedInstType = 'GOVT_STATE';
+        selectedCategory = 'OPEN';
+        mafsuSub = 'GEN_BOTH';
       } else if (c === 'AACCC') {
         selectedInstType = 'BAMS_AG';
         selectedCategory = 'OPEN';
@@ -797,6 +837,9 @@
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
           subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
+        } else if (c === 'MAFSU') {
+          titleEl.textContent = 'MAFSU — BVSc Round 1 2026 Allotment';
+          subtitleEl.textContent = 'Closing Region Merit / State Merit / NEET marks of candidates allotted in Round 1 · Intake = seats in that category bucket';
         } else if (c === 'AACCC') {
           titleEl.textContent = 'AACCC — Round 1, 2 & 3 2026 Allotment';
           subtitleEl.textContent = 'Intake = seat matrix of each round (incl. PwD) · AIR = last rank allotted in each round';
@@ -1009,6 +1052,7 @@
          else if (selectedCounselling === 'OPEN') summary = `${selectedState} &middot; ${selectedCategory}`;
          else if (selectedCounselling === 'MH') summary = `${mhQuota.replace(/_/g, ' ')} &middot; ${mhCategory} &middot; ${mhSubType}`;
          else if (selectedCounselling === 'AACCC') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
+         else if (selectedCounselling === 'MAFSU') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory} &middot; ${mafsuSub}`;
          else if (selectedCounselling === 'VCI') summary = `${selectedInstType.replace(/_/g, ' ')} &middot; ${selectedCategory}`;
          else summary = COUNSELLING_CARDS[selectedCounselling].title;
 
@@ -1037,6 +1081,25 @@
          html += `</div>`;
 
          html += stateFilterHtml();
+      } else if (selectedCounselling === 'MAFSU') {
+         const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
+         const idx = mafsuIndex || {};
+         const btn = (sel, fn, label) => `<button class="px-4 py-2 rounded-full ${pill(sel)} text-sm font-bold transition-all" onclick="${fn}">${label}</button>`;
+         html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
+         MAFSU_INSTS.forEach(t => { html += btn(mafsuInst() === t.id, `setMafsu('inst','${t.id}')`, t.label); });
+         html += `</div><p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quota</p><div class="flex flex-wrap gap-2 mb-6">`;
+         MAFSU_QUOTAS.filter(q => idx[mafsuInst() + '_' + q.id]).forEach(q => { html += btn(mafsuQuota() === q.id, `setMafsu('quota','${q.id}')`, q.label); });
+         html += `</div>`;
+         const mCats = Object.keys(idx[selectedInstType] || {});
+         if (mCats.length && !(mCats.length === 1 && mCats[0] === 'ALL')) {
+           html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Category</p><div class="flex flex-wrap gap-2 mb-6">`;
+           mCats.forEach(c => { html += btn(selectedCategory === c, `setMafsu('cat','${c}')`, MAFSU_CAT_LABELS[c] || c); });
+           html += `</div>`;
+           const mSubs = (idx[selectedInstType] || {})[selectedCategory] || [];
+           html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Sub-Type</p><div class="flex flex-wrap gap-2">`;
+           mSubs.forEach(sb => { html += btn(mafsuSub === sb, `setMafsu('sub','${sb}')`, mafsuSubLabel(sb)); });
+           html += `</div>`;
+         }
       } else if (selectedCounselling === 'VCI') {
          const pill = sel => sel ? 'bg-[#1A0040] text-white shadow-lg shadow-[#1A0040]/15' : 'bg-gray-50 text-gray-700 hover:bg-[#1A0040]/[0.08] hover:text-[#1A0040]';
          html += `<p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Institution Type</p><div class="flex flex-wrap gap-2 mb-6">`;
@@ -1344,6 +1407,9 @@
          url = `/data/cutoffs/MH/${currentYear}/${mhQuota}/${mhCategory}/${mhSubType}.json`;
       } else if (selectedCounselling === 'AACCC') {
          url = `/data/cutoffs/AACCC/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
+      } else if (selectedCounselling === 'MAFSU') {
+         await ensureMafsuIndex(); fixMafsuSelection(); renderFilters();
+         url = `/data/cutoffs/MAFSU/${currentYear}/${selectedInstType}/${selectedCategory}/${mafsuSub}.json`;
       } else if (selectedCounselling === 'VCI') {
          url = `/data/cutoffs/VCI/${currentYear}/${selectedInstType}/${selectedCategory}.json`;
       } else {
@@ -1401,6 +1467,7 @@
       const isMCC = ['MCC', 'VCI', 'AACCC'].includes(currentData.counselling); // VCI shares MCC's table shape (state per college, AIR + AIR(PWD))
       const isDeemed = isMCC && currentData.institution_type && currentData.institution_type.includes('DEEMED');
       const isOPEN = currentData.counselling === 'OPEN';
+      const isMAFSU = currentData.counselling === 'MAFSU'; // closing Region Merit / State Merit / NEET marks instead of AIR
 
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
@@ -1460,7 +1527,8 @@
         const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
         let cols = 2;
-        if (isKarnataka) cols = 2;
+        if (isMAFSU) cols = 4;
+        else if (isKarnataka) cols = 2;
         else if (isKeralaMQ) cols = 3;
         else if (showPWD) cols = 3;
         else if (showCSML) cols = 4;
@@ -1470,6 +1538,12 @@
 
         headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-l border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[70px] w-[70px]">Intake</th>`;
 
+        if (isMAFSU) {
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">Region Merit</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">State Merit</th>`;
+          headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] border-r border-[#d9d5ff] ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">NEET Marks</th>`;
+          return;
+        }
         const airBorderL = isKeralaMQ ? 'border-l border-[#d9d5ff]' : '';
         headerRow2 += `<th class="px-4 py-3 text-right font-bold uppercase text-[11px] ${airBorderL} ${strayClass}" ${displayStyle} min-w-[80px] w-[80px]">AIR</th>`;
 
@@ -1597,7 +1671,7 @@
         // Maharashtra-only, so hardcode it here. MCC's state lives per-college
         // (college.state), never at top level — currentData.state is undefined
         // for MCC responses. OPEN keeps reading currentData.state (per-state fetch).
-        const displayState = isMH ? 'Maharashtra' : (isMCC ? (college.state || '') : (currentData.state || ''));
+        const displayState = (isMH || isMAFSU) ? 'Maharashtra' : (isMCC ? (college.state || '') : (currentData.state || ''));
         const meta = `${displayState} · ${college.type || ''} · ${feesDisplay}`;
         const addBtnHtml = `<button class="add-btn" onclick="addToPreferences(this, '${escAttr(college.name)}', '${escAttr(meta)}', '${escAttr(displayState)}', '${escAttr(college.type || '')}', '${escAttr(selectedCategory || mhCategory || '')}', '${escAttr(feesDisplay)}', '${escAttr(roundAirs.r1air)}', '${escAttr(roundAirs.r2air)}', '${escAttr(roundAirs.r3air)}', '${bestChance ? bestChance.key : ''}', '${bestChance ? bestChance.label : ''}')">+</button>`;
 
@@ -1637,6 +1711,13 @@
 
           html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${intake || '-'}</td>`;
 
+          if (isMAFSU) {
+            const fmt = v => (v === null || v === undefined || v === '') ? '-' : Number(v).toLocaleString('en-IN');
+            html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.REGION_MERIT)}</td>`;
+            html += `<td class="px-4 py-4 text-right font-bold text-gray-950 ${strayClass}" ${displayStyle}>${fmt(rData.STATE_MERIT)}</td>`;
+            html += `<td class="px-4 py-4 text-right text-gray-500 ${strayClass}" ${displayStyle}>${fmt(rData.NEET_MARKS)}</td>`;
+            return;
+          }
           html += `<td class="px-4 py-4 text-right font-bold ${textClass} ${cellBg} ${strayClass}" ${displayStyle}>${air ? parseInt(air).toLocaleString('en-IN') : '-'} ${tagHtml}</td>`;
 
           if (showPWD) {
