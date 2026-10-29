@@ -70,8 +70,8 @@ export default function Footer({ tagline, isEngineering = false }) {
             <Link href={isEngineering ? "/engineering/counselling" : "/medical/counselling"} className="footer-link">Counselling</Link>
             <Link href={isEngineering ? "/engineering/services" : "/medical/services"} className="footer-link">Services</Link>
             <Link href={isEngineering ? "/engineering#packages" : "/medical/packages"} className="footer-link">Packages</Link>
-            <Link href={isEngineering ? "/tools/engineering-cutoff-explorer" : "/tools/cutoff-explorer"} className="footer-link">Cutoff Explorer</Link>
-            <Link href={isEngineering ? "/tools/engineering-college-predictor" : "/tools/rank-predictor/"} className="footer-link">Rank Predictor</Link>
+            {!isEngineering && <Link href="/tools/cutoff-explorer" className="footer-link">Cutoff Explorer</Link>}
+            {!isEngineering && <Link href="/tools/rank-predictor/" className="footer-link">Rank Predictor</Link>}
             <Link href={isEngineering ? "/engineering/resources" : "/medical/resources"} className="footer-link">Resources</Link>
           </div>
   
@@ -79,8 +79,8 @@ export default function Footer({ tagline, isEngineering = false }) {
             <span className="footer-col-header">Explore</span>
             <Link href={isEngineering ? "/engineering/colleges" : "/medical/colleges"} className="footer-link">Universities</Link>
             <Link href={isEngineering ? "/engineering#events" : "/medical#events"} className="footer-link">Updates &amp; Events</Link>
-            <Link href={isEngineering ? "/engineering#dreams-heading" : "/medical#dreams-heading"} className="footer-link">Success Stories</Link>
-            <Link href={isEngineering ? "/engineering#faqs" : "/medical#faqs"} className="footer-link">FAQs</Link>
+            <Link href={isEngineering ? "/engineering#testi-heading" : "/medical#dreams-heading"} className="footer-link">Success Stories</Link>
+            <Link href={isEngineering ? "/engineering#faq-heading" : "/medical#faqs"} className="footer-link">FAQs</Link>
             <a
               href="https://www.youtube.com/@ASMICareervideo"
               className="footer-link"
