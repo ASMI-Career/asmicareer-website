@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import './footer.css';
 
-export default function Footer({ tagline = "Guiding Futures, Building Doctors", isEngineering = false }) {
+export default function Footer({ tagline, isEngineering = false }) {
+  tagline = tagline || (isEngineering
+    ? "Your Dreams. Your Engineering Journey. Our Guidance."
+    : "Guiding Futures, Building Doctors");
   return (
     <footer className="footer" role="contentinfo">
       <div className="footer-inner">
