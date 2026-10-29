@@ -923,7 +923,7 @@ export default function EngineeringPortal() {
       
       </div>
       
-      <Footer tagline="Guiding Futures, Building Engineers" isEngineering={true} />
+      <Footer isEngineering={true} />
     </>
   );
 }

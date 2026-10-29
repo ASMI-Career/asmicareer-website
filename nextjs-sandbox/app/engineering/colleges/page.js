@@ -165,15 +165,6 @@ export default function EngineeringCollegesDirectory() {
               />
               <span className="col-checkbox-text">Engineering</span>
             </label>
-            <label className="col-checkbox-label disabled">
-              <input
-                type="checkbox"
-                checked={false}
-                disabled
-                className="col-checkbox"
-              />
-              <span className="col-checkbox-text">Medical <small style={{ opacity: 0.6 }}>(Disabled)</small></span>
-            </label>
           </div>
 
           {/* State Filter */}
