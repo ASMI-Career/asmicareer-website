@@ -20,6 +20,12 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 189756,
+          "SML": 3541,
+          "CSML": "SEBC-585"
         }
       }
     },
@@ -38,6 +44,12 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 118305,
+          "SML": 1334,
+          "CSML": "SEBC-255"
         }
       }
     },
@@ -51,6 +63,34 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        }
+      }
+    },
+    {
+      "code": "3120",
+      "name": "Gangadhar Shastri Gune Ayurved Mahavidyalaya, Ahmednagar",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 144260,
+          "SML": 2084,
+          "CSML": "SEBC-371"
+        }
+      }
+    },
+    {
+      "code": "3191",
+      "name": "Government Ayurvedic Mahavidyalaya, Baramati",
+      "establishment": 2022,
+      "fees": "63100",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 111762,
+          "SML": 1149,
+          "CSML": "SEBC-213"
         }
       }
     }

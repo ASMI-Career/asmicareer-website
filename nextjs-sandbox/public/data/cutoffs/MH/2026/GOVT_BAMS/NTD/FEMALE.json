@@ -60,6 +60,12 @@
           "Intake": 0,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 129629,
+          "SML": 1656,
+          "CSML": "NTD-90"
         }
       }
     },
@@ -118,6 +124,12 @@
           "AIR": 147676,
           "SML": 1959,
           "CSML": "NTD-108"
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 166637,
+          "SML": 2810,
+          "CSML": "NTD-145"
         }
       }
     },
@@ -137,6 +149,40 @@
           "Intake": 0,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 205318,
+          "SML": 4054,
+          "CSML": "NTD-193"
+        }
+      }
+    },
+    {
+      "code": "3107",
+      "name": "Ayurved Shikshan Mandal's Ashtang Ayurved Mahavidyalaya, Pune",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 136254,
+          "SML": 1859,
+          "CSML": "NTD-104"
+        }
+      }
+    },
+    {
+      "code": "3120",
+      "name": "Gangadhar Shastri Gune Ayurved Mahavidyalaya, Ahmednagar",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 151171,
+          "SML": 2320,
+          "CSML": "NTD-125"
         }
       }
     }
