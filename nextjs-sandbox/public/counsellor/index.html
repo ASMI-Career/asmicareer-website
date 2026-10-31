@@ -1314,6 +1314,24 @@
         o.value = 'smlstray|' + k; o.textContent = k + ' SML: Low to High'; o.dataset.sml = '1';
         sel.insertBefore(o, feesOpt);
       });
+      if (data && data.counselling === 'MAFSU') {
+        const q = String(data.institution_type || '').split('_')[1];
+        const field = q === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
+        const label = q === 'REGION' ? 'Region Merit' : 'State Merit';
+        if (field && !['NRIINDIA', 'NRIABROAD'].includes(q)) {
+          [3, 2, 1].forEach(n => {
+            const has = colleges.some(c => { const r = c.rounds && c.rounds['Round ' + n]; return r && r[field] != null && r[field] !== ''; });
+            if (!has) return;
+            const o = document.createElement('option');
+            o.value = `merit${n}-asc`; o.textContent = `Round ${n} ${label}: Low to High`; o.dataset.sml = '1';
+            sel.insertBefore(o, sel.firstChild);
+          });
+        }
+      }
+      if (/^merit\d-asc$/.test(currentSort) && !sel.querySelector(`option[value="${currentSort}"]`)) {
+        const firstMerit = sel.querySelector('option[value^="merit"]');
+        currentSort = firstMerit ? firstMerit.value : 'name-asc';
+      }
       sel.value = currentSort;
     }
 
@@ -1359,9 +1377,13 @@
         return list.sort((a, b) => dirName * (a.name || '').localeCompare(b.name || '', 'en', { sensitivity: 'base' }));
       }
 
-      let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false;
+      let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false, meritField = null;
       if (currentSort.startsWith('stray|')) { roundKey = '__stray__' + currentSort.slice(6); }
       else if (currentSort.startsWith('smlstray|')) { roundKey = '__stray__' + currentSort.slice(9); useSml = true; }
+      else if (/^merit\d-asc$/.test(currentSort)) {   // MAFSU: closing merit number, lowest first
+        roundKey = 'Round ' + currentSort[5];
+        meritField = String((currentData && currentData.institution_type) || '').split('_')[1] === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
+      }
       else switch (currentSort) {
         case 'sml1-asc': roundKey = 'Round 1'; useSml = true; break;
         case 'sml2-asc': roundKey = 'Round 2'; useSml = true; break;
@@ -1376,8 +1398,9 @@
       }
 
       list.sort((a, b) => {
-        const va = useFees ? feesFor(a) : useSml ? smlFor(a, roundKey) : airFor(a, roundKey);
-        const vb = useFees ? feesFor(b) : useSml ? smlFor(b, roundKey) : airFor(b, roundKey);
+        const meritFor = c => { const r = c.rounds && c.rounds[roundKey]; return (r && r[meritField] != null && r[meritField] !== '') ? Number(r[meritField]) : null; };
+        const va = meritField ? meritFor(a) : useFees ? feesFor(a) : useSml ? smlFor(a, roundKey) : airFor(a, roundKey);
+        const vb = meritField ? meritFor(b) : useFees ? feesFor(b) : useSml ? smlFor(b, roundKey) : airFor(b, roundKey);
         const aNull = va == null, bNull = vb == null;
         if (aNull && bNull) return 0;
         if (aNull) return 1;  // nulls always sort to the end
@@ -1393,9 +1416,9 @@
       tbody.innerHTML = `<tr><td colspan="20" class="px-4 py-8 text-center text-gray-500 animate-pulse">Loading data...</td></tr>`;
 
       // Default sort on every fresh fetch (College Name: A to Z)
-      currentSort = 'name-asc';
+      currentSort = selectedCounselling === 'MAFSU' ? 'merit1-asc' : 'name-asc';  // MAFSU: by merit number (options are added once the data loads)
       const sortSelectEl = document.getElementById('sortSelect');
-      if (sortSelectEl) sortSelectEl.value = 'name-asc';
+      if (sortSelectEl && currentSort === 'name-asc') sortSelectEl.value = 'name-asc';
 
       let url = '';
       if (selectedCounselling === 'MCC') {
