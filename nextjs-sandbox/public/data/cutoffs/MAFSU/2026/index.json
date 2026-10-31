@@ -13,7 +13,8 @@
   "EWS": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "FF_BOTH"
   ],
   "NT_B": [
    "AG_BOTH",
@@ -23,7 +24,8 @@
   "NT_C": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "FF_BOTH"
   ],
   "NT_D": [
    "AG_BOTH",
@@ -35,20 +37,24 @@
    "AG_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "DP_BOTH",
+   "FF_BOTH"
   ],
   "OPEN": [
    "AG_BOTH",
    "DP_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "FF_BOTH"
   ],
   "SC": [
    "AG_BOTH",
    "DP_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ],
   "SEBC": [
    "AG_BOTH",
@@ -60,18 +66,23 @@
   "ST": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "DP_BOTH",
+   "FF_BOTH",
+   "PAP_BOTH"
   ],
   "VJ_DT_A": [
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ]
  },
  "GOVT_STATE": {
   "EWS": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ],
   "NT_B": [
    "DP_BOTH",
@@ -91,7 +102,8 @@
    "DP_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "FF_BOTH"
   ],
   "OPEN": [
    "AG_BOTH",
@@ -133,7 +145,8 @@
   "EWS": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ],
   "NT_B": [
    "GEN_BOTH",
@@ -150,25 +163,30 @@
   "OBC": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "FF_BOTH"
   ],
   "OPEN": [
    "AG_BOTH",
    "DP_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "FF_BOTH"
   ],
   "SC": [
    "AG_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "DP_BOTH",
+   "FF_BOTH"
   ],
   "SEBC": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ],
   "ST": [
    "GEN_BOTH",
@@ -181,7 +199,8 @@
  "PRIVATE_STATE": {
   "EWS": [
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "DP_BOTH"
   ],
   "NT_B": [
    "GEN_BOTH"
@@ -202,7 +221,8 @@
    "AG_BOTH",
    "GEN_BOTH",
    "GEN_GIRL",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "FF_BOTH"
   ],
   "SC": [
    "AG_BOTH",
@@ -212,11 +232,13 @@
   "SEBC": [
    "AG_BOTH",
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "FF_BOTH"
   ],
   "ST": [
    "GEN_BOTH",
-   "GEN_GIRL"
+   "GEN_GIRL",
+   "PAP_BOTH"
   ],
   "VJ_DT_A": [
    "GEN_BOTH",
