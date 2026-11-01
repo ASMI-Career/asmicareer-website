@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './dashboard.css';
 
 // ── Helper functions ──────────────────────────────────────────────────────────
@@ -36,6 +36,98 @@ const formatFees = (feesStr) => {
   const lakhs = (rawFee / 100000).toFixed(2);
   return `₹${lakhs} L / yr`;
 };
+
+// ── Per-student browser cache ─────────────────────────────────────────────────
+// Everything this page remembers in the browser is keyed by the student's token, so data cached for one
+// student is never shown for another token. (Before this, name/rank/score/shortlist/checklist were stored
+// under shared keys and leaked to whoever opened the next link on the same device.)
+const TOKEN_RE = /^[A-Za-z0-9_-]{3,64}$/;
+const cacheKey = (token, field) => `asmi_student:${token}:${field}`;
+const readCache = (token, field) => {
+  try { const raw = localStorage.getItem(cacheKey(token, field)); return raw === null ? null : JSON.parse(raw); } catch (e) { return null; }
+};
+const writeCache = (token, field, value) => {
+  try { localStorage.setItem(cacheKey(token, field), JSON.stringify(value)); } catch (e) { /* storage blocked: cache is best-effort */ }
+};
+const clearCache = (token) => {
+  try { ['name', 'rank', 'score', 'shortlist', 'checklist'].forEach(f => localStorage.removeItem(cacheKey(token, f))); } catch (e) { /* ignore */ }
+};
+// Removes the old shared (un-keyed) keys written by earlier versions of this page. Nothing else reads them.
+// 'asmi-checklist' is NOT removed: the public documents-checklist tool still uses it.
+const purgeLegacyCache = () => {
+  try { ['name', 'rank', 'score', 'shortlist'].forEach(k => localStorage.removeItem(k)); } catch (e) { /* ignore */ }
+};
+
+// ── Shortlist shape (matches the counsellor tools and the Apps Script): { MCC: [], MH: [], OPEN: [] } ──
+const SHORTLIST_GROUPS = ['MCC', 'MH', 'OPEN'];
+const normalizeGroups = (raw) => {
+  const base = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? { ...raw } : {};   // unknown keys are kept untouched
+  SHORTLIST_GROUPS.forEach(g => {
+    base[g] = (Array.isArray(base[g]) ? base[g] : [])
+      .map(c => (typeof c === 'string' ? { name: c } : c))
+      .filter(c => c && typeof c === 'object' && c.name);
+  });
+  return base;
+};
+const groupNames = (groups) => Array.from(new Set(SHORTLIST_GROUPS.flatMap(g => groups[g].map(c => c.name))));
+// Which counselling list a college belongs to. Predictor/cutoff rows carry pool or quota; the institutes directory does not.
+const shortlistGroupFor = (c) => {
+  const quota = String(c.quota || '').toLowerCase();
+  if (c.pool === 'MCC AIQ' || quota === 'aiq') return 'MCC';
+  if (c.pool === 'MH State' || quota === 'state') return 'MH';
+  if (c.pool === 'Open State' || quota === 'open state') return 'OPEN';
+  if (c.state === 'Maharashtra') return 'MH';           // institutes directory: heuristic, the counsellor can re-group
+  return c.type === 'Private' ? 'OPEN' : 'MCC';
+};
+const shortlistItemFor = (name, c) => ({
+  name, meta: '', state: c.state || '', type: c.type || '', quota: c.quota || '', fees: c.fees != null ? String(c.fees) : '',
+  chancelabel: c.chance || '',
+});
+const removeFromGroups = (groups, name) => {
+  const next = { ...groups };
+  SHORTLIST_GROUPS.forEach(g => { next[g] = groups[g].filter(c => c.name !== name); });
+  return next;
+};
+const addToGroups = (groups, name, entry) => {
+  if (groupNames(groups).includes(name)) return groups;
+  const g = shortlistGroupFor(entry);
+  return { ...groups, [g]: [...groups[g], shortlistItemFor(name, entry)] };
+};
+
+// ── Shown instead of the dashboard when there is no valid student link ───────
+function TokenGate({ state }) {
+  const wrap = { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: 16 };
+  const card = { maxWidth: 460, width: '100%', textAlign: 'center', marginBottom: 0 };
+  // Explicit colours: other global stylesheets also define generic button classes.
+  const primaryBtn = { display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', background: '#1A0040', color: '#ffffff', border: 'none', borderRadius: 12, padding: 12, fontSize: 13, fontWeight: 700, textDecoration: 'none', cursor: 'pointer', fontFamily: 'inherit' };
+  return (
+    <div className="student-body">
+      <div style={wrap}>
+        <div className="tool-card" style={card} role={state === 'checking' ? 'status' : 'alert'}>
+          <img src="/asmi-logo.png" alt="ASMI Logo" style={{ height: 44, marginBottom: 20 }} />
+          {state === 'checking' && <h2 className="section-title">Loading your dashboard…</h2>}
+          {state === 'invalid' && (
+            <>
+              <h2 className="section-title">This link is not valid</h2>
+              <p className="section-sub">We could not find a student record for this link. Please contact your ASMI counsellor and ask for a new dashboard link.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                <a href="tel:7410019074" style={primaryBtn}>Call ASMI Helpline: 7410019074</a>
+                <a href="https://wa.me/917410019074" target="_blank" rel="noreferrer" className="btn-outline-navy">Message us on WhatsApp</a>
+              </div>
+            </>
+          )}
+          {state === 'error' && (
+            <>
+              <h2 className="section-title">We could not load your dashboard</h2>
+              <p className="section-sub">Please check your internet connection and try again. If it keeps happening, contact your ASMI counsellor.</p>
+              <button style={{ ...primaryBtn, marginTop: 20 }} onClick={() => window.location.reload()}>Try again</button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ── Document Schema ───────────────────────────────────────────────────────────
 const DOCS = {
@@ -148,7 +240,9 @@ export default function StudentDashboard() {
   const [studentName, setStudentName] = useState('Student');
   const [studentRank, setStudentRank] = useState(null);
   const [studentScore, setStudentScore] = useState(null);
-  const [shortlist, setShortlist] = useState([]);
+  const [shortlistGroups, setShortlistGroups] = useState(() => normalizeGroups(null)); // { MCC, MH, OPEN }
+  const shortlist = groupNames(shortlistGroups);   // college names, in group order (what the UI lists)
+  const [authState, setAuthState] = useState('checking'); // 'checking' | 'ok' | 'invalid' | 'error'
   const [deadlines, setDeadlines] = useState([]);
   const [collegeData, setCollegeData] = useState([]);
   const [collegesList, setCollegesList] = useState([]);
@@ -241,44 +335,48 @@ export default function StudentDashboard() {
       if (tab) setActiveTab(tab);
 
       if (localStorage.getItem('sidebar_collapsed')) setSidebarCollapsed(true);
-      setStudentName(localStorage.getItem('name') || 'Student');
-      const savedRank = localStorage.getItem('rank');
-      if (savedRank) setStudentRank(parseInt(savedRank, 10));
-      const savedScore = localStorage.getItem('score');
-      if (savedScore) setStudentScore(parseInt(savedScore, 10));
+      purgeLegacyCache();
 
-      try {
-        const sList = JSON.parse(localStorage.getItem('shortlist')) || [];
-        setShortlist(sList.map(c => typeof c === 'object' ? c.name : c));
-      } catch(e) {}
-
-      try {
-        const saved = JSON.parse(localStorage.getItem('asmi-checklist') || '{}');
-        setCheckedDocs(new Set(saved.checked || []));
-        setDocCategory(saved.category || 'General');
-        setDocQuota(saved.quota || 'State');
-      } catch(e) {}
-
-      // params already defined at top of useEffect
-      const token = params.get('token');
-      if (token && token.trim() !== '') {
+      // A student record is only shown for a valid token, and cached data is read per token only.
+      const token = (params.get('token') || '').trim();
+      if (!TOKEN_RE.test(token)) {
+        setAuthState('invalid');
+      } else {
         setCurrentToken(token);
+        const cName = readCache(token, 'name');
+        const cRank = readCache(token, 'rank');
+        const cScore = readCache(token, 'score');
+        const cList = readCache(token, 'shortlist');
+        const cDocs = readCache(token, 'checklist');
+        const hasCache = [cName, cRank, cScore, cList, cDocs].some(v => v !== null);
+        if (cName) setStudentName(cName);
+        if (cRank) setStudentRank(parseInt(cRank, 10));
+        if (cScore) setStudentScore(parseInt(cScore, 10));
+        if (cList) setShortlistGroups(normalizeGroups(cList));
+        if (cDocs) {
+          setCheckedDocs(new Set(cDocs.checked || []));
+          setDocCategory(cDocs.category || 'General');
+          setDocQuota(cDocs.quota || 'State');
+        }
+        setAuthState(hasCache ? 'ok' : 'checking');
         fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`)
           .then(res => res.json())
           .then(res => {
             if (res.success && res.data) {
+              setAuthState('ok');
               const s = res.data;
               console.log('[ASMI] student data:', s);
-              if (s.name) { setStudentName(s.name); localStorage.setItem('name', s.name); }
+              if (s.name) { setStudentName(s.name); writeCache(token, 'name', s.name); }
               const rawRank = s.rank || s.neet_rank || s.air;
               const rawScore = s.score || s.neet_score;
               const parsedRank = (rawRank && rawRank !== 0) ? parseInt(rawRank, 10) : null;
               const parsedScore = (rawScore && rawScore !== 0) ? parseInt(rawScore, 10) : null;
-              if (parsedRank)  { setStudentRank(parsedRank);   localStorage.setItem('rank', parsedRank); }
-              if (parsedScore) { setStudentScore(parsedScore); localStorage.setItem('score', parsedScore); setCpScoreInput(String(parsedScore)); }
-              if (s.colleges || s.shortlist) {
-                const sl = (s.colleges || s.shortlist || []).map(c => typeof c === 'object' ? c.name : c);
-                setShortlist(sl); localStorage.setItem('shortlist', JSON.stringify(sl));
+              if (parsedRank)  { setStudentRank(parsedRank);   writeCache(token, 'rank', parsedRank); }
+              if (parsedScore) { setStudentScore(parsedScore); writeCache(token, 'score', parsedScore); setCpScoreInput(String(parsedScore)); }
+              // The sheet's grouped shortlist is returned as `saved_colleges` ({ MCC, MH, OPEN }).
+              if (s.saved_colleges !== undefined) {
+                const groups = normalizeGroups(s.saved_colleges);
+                setShortlistGroups(groups); writeCache(token, 'shortlist', groups);
               }
               if (s.category) {
                 const cat = String(s.category).toUpperCase();
@@ -289,10 +387,7 @@ export default function StudentDashboard() {
                   : 'General';
                 setDocCategory(resolvedCat);
                 setStudentCategory(resolvedCat);
-                try {
-                  const saved = JSON.parse(localStorage.getItem('asmi-checklist') || '{}');
-                  localStorage.setItem('asmi-checklist', JSON.stringify({ ...saved, category: resolvedCat }));
-                } catch(e) {}
+                writeCache(token, 'checklist', { ...(readCache(token, 'checklist') || {}), category: resolvedCat });
               }
               if (s.quota) {
                 const q = String(s.quota).toUpperCase();
@@ -328,16 +423,25 @@ export default function StudentDashboard() {
                   if (parsed.checked) {
                     const restored = new Set(parsed.checked);
                     setCheckedDocs(restored);
-                    localStorage.setItem('asmi-checklist', JSON.stringify({
+                    writeCache(token, 'checklist', {
                       checked: Array.from(restored),
                       category: parsed.category || docCategory,
                       quota: parsed.quota || docQuota,
-                    }));
+                    });
                   }
                 } catch(e) { console.warn('Doc status parse failed:', e); }
               }
+            } else if (/not[ _]?found/i.test(String((res && res.error) || ''))) {
+              // The sheet does not know this token: show the "link not valid" page and forget anything cached for it.
+              clearCache(token);
+              setAuthState('invalid');
+            } else if (!hasCache) {
+              setAuthState('error');
             }
-          }).catch(err => console.warn('Profile fetch failed:', err));
+          }).catch(err => {
+            console.warn('Profile fetch failed:', err);
+            if (!hasCache) setAuthState('error');
+          });
       }
     }
 
@@ -454,7 +558,7 @@ export default function StudentDashboard() {
   const saveChecklist = (set, cat, quota) => {
     setCheckedDocs(set);
     const payload = { checked: Array.from(set), category: cat, quota };
-    localStorage.setItem('asmi-checklist', JSON.stringify(payload));
+    if (currentToken) writeCache(currentToken, 'checklist', payload);
     // Write to sheet for cross-device persistence (requires Apps Script action=saveDocStatus)
     if (currentToken) {
       fetch(`${APPS_SCRIPT_URL}?action=saveDocStatus&token=${encodeURIComponent(currentToken)}&data=${encodeURIComponent(JSON.stringify(payload))}`)
@@ -746,10 +850,44 @@ export default function StudentDashboard() {
     localStorage.setItem('sidebar_collapsed', next ? '1' : '');
   };
 
-  const handleToggleShortlist = (name) => {
-    const next = shortlist.includes(name) ? shortlist.filter(n => n !== name) : [...shortlist, name];
-    setShortlist(next);
-    localStorage.setItem('shortlist', JSON.stringify(next));
+  // Saves the shortlist to the sheet (Apps Script action `saveShortlist`, grouped { MCC, MH, OPEN } like the counsellor tools).
+  // The same change is applied on top of the sheet's latest copy first, so a list the counsellor saved in the meantime is not
+  // overwritten by an old one. Saves run one after another. A failed save is silent (like the documents checklist); the cache keeps the edit.
+  const saveQueue = useRef({ chain: Promise.resolve(), pending: 0 });
+  const saveShortlistToSheet = (token, op, localNext) => {
+    const q = saveQueue.current;
+    q.pending += 1;
+    q.chain = q.chain.then(async () => {
+      try {
+        let merged = localNext;
+        try {
+          const latest = await (await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`)).json();
+          if (latest && latest.success && latest.data) merged = op(normalizeGroups(latest.data.saved_colleges));
+        } catch (e) { /* offline or unreadable: save our own copy */ }
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'saveShortlist', token, colleges: merged }),
+        });
+        const json = await res.json();
+        if (!(json && json.success)) throw new Error('save rejected: ' + JSON.stringify(json));
+        if (q.pending === 1) { setShortlistGroups(merged); writeCache(token, 'shortlist', merged); } // last queued save: show what the sheet now holds
+      } catch (e) {
+        console.warn('Shortlist save failed:', e);
+      } finally {
+        q.pending -= 1;
+      }
+    });
+  };
+
+  const handleToggleShortlist = (name, entry = {}) => {
+    const adding = !shortlist.includes(name);
+    const op = (groups) => (adding ? addToGroups(groups, name, entry) : removeFromGroups(groups, name));
+    const next = op(shortlistGroups);
+    setShortlistGroups(next);
+    if (!currentToken) return;
+    writeCache(currentToken, 'shortlist', next);
+    saveShortlistToSheet(currentToken, op, next);
   };
 
   const getCountdown = (dateStr) => {
@@ -842,6 +980,8 @@ export default function StudentDashboard() {
     if (total < 100) return `₹${parseFloat(total.toFixed(1))}L`;
     return `₹${(total / 100).toFixed(2)}Cr`;
   };
+
+  if (authState !== 'ok') return <TokenGate state={authState} />;
 
   return (
     <div className="student-body">
@@ -957,7 +1097,7 @@ export default function StudentDashboard() {
                         </div>
                         <div className="rank-badge">
                           <span className="rank-badge-label">NEET AIR RANK</span>
-                          <span className="rank-badge-value">—</span>
+                          <span className="rank-badge-value">{studentRank ? studentRank.toLocaleString('en-IN') : '—'}</span>
                         </div>
                         <div className="rank-badge">
                           <span className="rank-badge-label">CATEGORY</span>
@@ -1372,7 +1512,7 @@ export default function StudentDashboard() {
                                       </td>
                                       <td><span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>{c.chance}</span></td>
                                       <td>
-                                        <button onClick={() => handleToggleShortlist(c.name)} className="chip" style={{ fontSize: 11 }}>
+                                        <button onClick={() => handleToggleShortlist(c.name, c)} className="chip" style={{ fontSize: 11 }}>
                                           {shortlist.includes(c.name) ? '★ Saved' : '☆ Save'}
                                         </button>
                                       </td>
@@ -1574,7 +1714,7 @@ export default function StudentDashboard() {
                                           <span className={c.chanceClass} style={{ whiteSpace: 'nowrap' }}>{c.chance}</span>
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
-                                          <button onClick={() => handleToggleShortlist(c.name)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: shortlist.includes(c.name) ? '#FFD700' : 'rgba(26, 0, 64, 0.2)', padding: '4px', lineHeight: 1, transition: 'color 0.15s' }}>
+                                          <button onClick={() => handleToggleShortlist(c.name, c)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: shortlist.includes(c.name) ? '#FFD700' : 'rgba(26, 0, 64, 0.2)', padding: '4px', lineHeight: 1, transition: 'color 0.15s' }}>
                                             {shortlist.includes(c.name) ? '★' : '☆'}
                                           </button>
                                         </td>
@@ -1638,7 +1778,7 @@ export default function StudentDashboard() {
                               <td><span className="tag tag-gold">{c.quota || 'All India'}</span></td>
                               <td style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.cutoff?.toLocaleString() || '—'}</td>
                               <td>
-                                <button onClick={() => handleToggleShortlist(c.name)} className="chip" style={{ fontSize: 11 }}>
+                                <button onClick={() => handleToggleShortlist(c.name, c)} className="chip" style={{ fontSize: 11 }}>
                                   {shortlist.includes(c.name) ? '★ Saved' : '☆ Save'}
                                 </button>
                               </td>
@@ -1819,7 +1959,7 @@ export default function StudentDashboard() {
                                     ★ {college.asmi_pulse_score}/5
                                   </span>
                                 )}
-                                <button onClick={e => { e.preventDefault(); e.stopPropagation(); handleToggleShortlist(college.name); }}
+                                <button onClick={e => { e.preventDefault(); e.stopPropagation(); handleToggleShortlist(college.name, college); }}
                                   style={{ position: 'absolute', bottom: 10, right: 10, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.9)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: isShortlisted ? '#dc2626' : 'var(--navy)' }}>
                                   {isShortlisted ? '♥' : '♡'}
                                 </button>
