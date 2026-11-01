@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import { LEAD_ENDPOINT, EMPTY_ATTR, readAttribution, cleanMobile, isValidMobile, MOBILE_ERROR, looksLikeToken } from '../../../lib/leadForm';
 
 export default function InquiryPage() {
   const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ export default function InquiryPage() {
   const [token, setToken] = useState('---');
   const [errorMsg, setErrorMsg] = useState(null);
   const [errors, setErrors] = useState({});
+  const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
 
 
   const branchDetails = {
@@ -47,11 +49,14 @@ export default function InquiryPage() {
       
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
+      setAttribution(readAttribution());
     }
   }, []);
 
+  const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? cleanMobile(value) : value });
   };
 
   const toggleCourse = (course) => {
@@ -72,18 +77,14 @@ export default function InquiryPage() {
 
   function validateForm(data) {
     const newErrors = {};
-    if (!data.studentContact || data.studentContact.length !== 10) {
-      newErrors.studentContact = 'Please enter a valid 10-digit mobile number';
+    if (!data.fullName.trim()) newErrors.fullName = 'Please enter the student\'s full name';
+    if (!isValidMobile(data.studentContact)) newErrors.studentContact = MOBILE_ERROR;
+    if (!data.neetRank || !Number.isInteger(Number(data.neetRank)) || Number(data.neetRank) < 1) {
+      newErrors.neetRank = 'Please enter a valid NEET Rank (AIR), whole number';
     }
-    if (!data.neetRank || Number(data.neetRank) < 1) {
-      newErrors.neetRank = 'Please enter a valid NEET Rank (AIR)';
-    }
-    if (data.fatherContact && data.fatherContact.length !== 10) {
-      newErrors.fatherContact = 'Please enter a valid 10-digit number';
-    }
-    if (data.motherContact && data.motherContact.length !== 10) {
-      newErrors.motherContact = 'Please enter a valid 10-digit number';
-    }
+    if (!data.city.trim()) newErrors.city = 'Please enter your current city';
+    if (data.fatherContact && !isValidMobile(data.fatherContact)) newErrors.fatherContact = MOBILE_ERROR;
+    if (data.motherContact && !isValidMobile(data.motherContact)) newErrors.motherContact = MOBILE_ERROR;
     return newErrors;
   }
 
@@ -98,19 +99,21 @@ export default function InquiryPage() {
     setIsLoading(true);
     setErrorMsg(null);
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
-
     const data = new URLSearchParams();
     data.append('source', source);
+    data.append('branch', source);
+    data.append('stream', 'Medical');
     Object.keys(formData).forEach(key => {
       data.append(key, formData[key]);
     });
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
+    Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
 
-    fetch(scriptURL, { method: 'POST', body: data })
+    fetch(LEAD_ENDPOINT, { method: 'POST', body: data })
       .then(response => response.text())
       .then(tokenText => {
+        if (!looksLikeToken(tokenText)) throw new Error('Server rejected submission: ' + String(tokenText).slice(0, 120));
         const generatedToken = tokenText.trim();
         setToken(generatedToken);
         setShowModal(true);
@@ -219,30 +222,34 @@ export default function InquiryPage() {
                   <h2 className="form-heading">Admission Inquiry</h2>
                   <p className="form-sub">Welcome to ASMI Career! Please provide your academic and contact details below.</p>
       
-                  <form id="inquiryForm" onSubmit={handleSubmit}>
+                  <form id="inquiryForm" onSubmit={handleSubmit} noValidate>
+                      {Object.keys(attribution).map(k => <input key={k} type="hidden" name={k} value={attribution[k]} readOnly />)}
+                      <input type="hidden" name="stream" value="Medical" readOnly />
+                      <input type="hidden" name="branch" value={source} readOnly />
                       <div className="form-grid">
                           <div className="col-span-2">
                               <label className="field-label">Full Name</label>
-                              <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={handleInputChange} required/>
+                              <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={e => { handleInputChange(e); if (errors.fullName) setErrors({...errors, fullName: ''}); }} required/>
+                              {errors.fullName && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fullName}</p>}
                           </div>
                           <div>
                               <label className="field-label">NEET Rank (AIR)</label>
-                              <input name="neetRank" className="field-input" placeholder="All India Rank" type="number" min={1} value={formData.neetRank} onChange={e => { handleInputChange(e); if (errors.neetRank) setErrors({...errors, neetRank: ''}); }} required/>
+                              <input name="neetRank" className="field-input" placeholder="All India Rank" type="number" inputMode="numeric" step={1} min={1} value={formData.neetRank} onChange={e => { handleInputChange(e); if (errors.neetRank) setErrors({...errors, neetRank: ''}); }} required/>
                               {errors.neetRank && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.neetRank}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
                               {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
                               {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
                               {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
@@ -251,7 +258,8 @@ export default function InquiryPage() {
                           </div>
                           <div>
                               <label className="field-label">City</label>
-                              <input name="city" className="field-input" placeholder="Current city" type="text" value={formData.city} onChange={handleInputChange} required/>
+                              <input name="city" className="field-input" placeholder="Current city" type="text" value={formData.city} onChange={e => { handleInputChange(e); if (errors.city) setErrors({...errors, city: ''}); }} required/>
+                              {errors.city && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.city}</p>}
                           </div>
                           <div className="col-span-2">
                               <label className="field-label">Category</label>
@@ -282,10 +290,10 @@ export default function InquiryPage() {
                           <span className="section-lbl">Estimated Budget Range</span>
                           <div className="budget-grid">
                               {[
-                                { key: 'Govt 1-2L', val: 'Govt 1–2L' },
-                                { key: 'Private 7-15L', val: 'Private 7–20L' },
-                                { key: 'Deemed 18-30L', val: 'Deemed 10–35L' },
-                                { key: 'NRI / Management 40-50L', val: 'NRI / Management 20–60L' }
+                                { key: 'Govt 1–2L', val: 'Govt 1–2L' },
+                                { key: 'Private 7–20L', val: 'Private 7–20L' },
+                                { key: 'Deemed 10–35L', val: 'Deemed 10–35L' },
+                                { key: 'NRI / Management 20–60L', val: 'NRI / Management 20–60L' }
                               ].map(b => (
                                 <label key={b.key} className={'budget-pill ' + (selectedBudgets.includes(b.key) ? 'selected' : '')} onClick={() => toggleBudget(b.key)}>
                                   <span>{b.val}</span>

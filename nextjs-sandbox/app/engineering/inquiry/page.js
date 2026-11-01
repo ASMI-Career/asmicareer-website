@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 import './inquiry.css';
+import { LEAD_ENDPOINT, EMPTY_ATTR, readAttribution, cleanMobile, isValidMobile, MOBILE_ERROR, looksLikeToken } from '../../../lib/leadForm';
 
 const engineeringNavLinks = [
   { label: 'Colleges', href: '/engineering/colleges' },
@@ -37,6 +38,8 @@ export default function EngineeringInquiryPage() {
   const [showModal, setShowModal] = useState(false);
   const [token, setToken] = useState('---');
   const [errorMsg, setErrorMsg] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
 
   const branchDetails = {
     'andheri':       { phone: '7410019077', address: '42, 4th Floor, A Wing, Silver Astra, J. B. Nagar, Andheri East.' },
@@ -57,11 +60,15 @@ export default function EngineeringInquiryPage() {
       
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
+      setAttribution(readAttribution());
     }
   }, []);
 
+  const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? cleanMobile(value) : value });
+    if (errors[name]) setErrors({ ...errors, [name]: '' });
   };
 
   const toggleCourse = (course) => {
@@ -80,26 +87,46 @@ export default function EngineeringInquiryPage() {
     }
   };
 
+  function validateForm(data) {
+    const newErrors = {};
+    if (!data.fullName.trim()) newErrors.fullName = 'Please enter the student\'s full name';
+    const pct = Number(data.entranceScore);
+    if (data.entranceScore === '' || Number.isNaN(pct) || pct <= 0 || pct > 100) {
+      newErrors.entranceScore = 'Enter your JEE / MHT-CET percentile as a number between 0 and 100 (e.g. 98.5)';
+    }
+    if (!isValidMobile(data.studentContact)) newErrors.studentContact = MOBILE_ERROR;
+    if (!data.city.trim()) newErrors.city = 'Please enter your current city';
+    if (data.fatherContact && !isValidMobile(data.fatherContact)) newErrors.fatherContact = MOBILE_ERROR;
+    if (data.motherContact && !isValidMobile(data.motherContact)) newErrors.motherContact = MOBILE_ERROR;
+    return newErrors;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const validationErrors = validateForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     setIsLoading(true);
     setErrorMsg(null);
 
-    // Using the same endpoint or a different one for engineering?
-    // Using the original for now but appending an identifier
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
-
     const data = new URLSearchParams();
-    data.append('source', source + ' (Engineering)');
+    data.append('source', source);
+    data.append('branch', source);
+    data.append('stream', 'Engineering');
     Object.keys(formData).forEach(key => {
       data.append(key, formData[key]);
     });
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
+    Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
 
-    fetch(scriptURL, { method: 'POST', body: data })
+    fetch(LEAD_ENDPOINT, { method: 'POST', body: data })
       .then(response => response.text())
       .then(tokenText => {
+        if (!looksLikeToken(tokenText)) throw new Error('Server rejected submission: ' + String(tokenText).slice(0, 120));
         const generatedToken = tokenText.trim();
         setToken(generatedToken);
         setShowModal(true);
@@ -208,27 +235,35 @@ export default function EngineeringInquiryPage() {
                   <h2 className="form-heading">Engineering Admission Inquiry</h2>
                   <p className="form-sub">Welcome to ASMI Career! Please provide your academic and contact details below.</p>
       
-                  <form id="inquiryForm" onSubmit={handleSubmit}>
+                  <form id="inquiryForm" onSubmit={handleSubmit} noValidate>
+                      {Object.keys(attribution).map(k => <input key={k} type="hidden" name={k} value={attribution[k]} readOnly />)}
+                      <input type="hidden" name="stream" value="Engineering" readOnly />
+                      <input type="hidden" name="branch" value={source} readOnly />
                       <div className="form-grid">
                           <div className="col-span-2">
                               <label className="field-label">Full Name</label>
                               <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={handleInputChange} required/>
+                              {errors.fullName && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fullName}</p>}
                           </div>
                           <div>
                               <label className="field-label">JEE / MHT-CET Percentile</label>
-                              <input name="entranceScore" className="field-input" placeholder="E.g., 98.5" type="text" value={formData.entranceScore} onChange={handleInputChange} required/>
+                              <input name="entranceScore" className="field-input" placeholder="E.g., 98.5" type="text" inputMode="decimal" value={formData.entranceScore} onChange={handleInputChange} required/>
+                              {errors.entranceScore && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.entranceScore}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={handleInputChange} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.studentContact} onChange={handleInputChange} required/>
+                              {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={handleInputChange}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.fatherContact} onChange={handleInputChange}/>
+                              {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={handleInputChange}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.motherContact} onChange={handleInputChange}/>
+                              {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Coaching Class</label>
@@ -237,6 +272,7 @@ export default function EngineeringInquiryPage() {
                           <div>
                               <label className="field-label">City</label>
                               <input name="city" className="field-input" placeholder="Current city" type="text" value={formData.city} onChange={handleInputChange} required/>
+                              {errors.city && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.city}</p>}
                           </div>
                           <div className="col-span-2">
                               <label className="field-label">Category</label>
@@ -267,9 +303,9 @@ export default function EngineeringInquiryPage() {
                           <span className="section-lbl">Estimated Budget Range (4 Years)</span>
                           <div className="budget-grid">
                               {[
-                                { key: 'Govt 1-3L', val: 'Govt 1–3L' },
-                                { key: 'Private 5-10L', val: 'Private 5–10L' },
-                                { key: 'Private/Deemed 10-20L', val: 'Private/Deemed 10–20L' },
+                                { key: 'Govt 1–3L', val: 'Govt 1–3L' },
+                                { key: 'Private 5–10L', val: 'Private 5–10L' },
+                                { key: 'Private/Deemed 10–20L', val: 'Private/Deemed 10–20L' },
                                 { key: 'Management 20L+', val: 'Management 20L+' }
                               ].map(b => (
                                 <label key={b.key} className={'budget-pill ' + (selectedBudgets.includes(b.key) ? 'selected' : '')} onClick={() => toggleBudget(b.key)}>

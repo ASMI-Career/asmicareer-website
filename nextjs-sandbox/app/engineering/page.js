@@ -653,7 +653,7 @@ export default function EngineeringPortal() {
                       <span className="tool-icon" aria-hidden="true">🧠</span>
                       <div className="tool-title">Branch Assessment</div>
                       <p className="tool-body">Take our scientific 31-question assessment and get an instant AI-powered compatibility report.</p>
-                      <a href="/tools/branch-assessment" className="tool-cta">Start Assessment →</a>
+                      <a href="/tools/branch-assessment/" className="tool-cta">Start Assessment →</a>
                   </div>
       
                   <div className="tool-card">
@@ -916,7 +916,7 @@ export default function EngineeringPortal() {
               <p className="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
               <div className="cta-buttons animate">
                   <a href="/engineering/inquiry" className="cta-btn-primary">Book My Free Session →</a>
-                  <a href="#" className="cta-btn-secondary">WhatsApp Us →</a>
+                  <a href="https://wa.me/917410019074?text=Hi%2C%20I%20want%20to%20know%20more%20about%20ASMI%20engineering%20counselling." target="_blank" rel="noopener noreferrer" className="cta-btn-secondary">WhatsApp Us →</a>
               </div>
           </div>
       </section>

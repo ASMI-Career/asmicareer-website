@@ -3,6 +3,7 @@ import "./globals.css";
 import "./medical/medical.css";
 import "./engineering/engineering.css";
 import "./medical/inquiry/inquiry.css";
+import AttributionCapture from "./components/AttributionCapture";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
         <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js" async></script>
       </head>
       <body>
+        <AttributionCapture />
         {children}
       </body>
     </html>
