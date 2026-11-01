@@ -4,7 +4,7 @@ import { useState } from 'react';
 import './dashboard.css';
 import { streamFromLocation, getStreamConfig, endpointFor } from './config';
 import useShell from './hooks/useShell';
-import useDocuments from './hooks/useDocuments';
+import useDocuments, { useDocumentSections } from './hooks/useDocuments';
 import useShortlist from './hooks/useShortlist';
 import usePredictor from './hooks/usePredictor';
 import useCutoffExplorer from './hooks/useCutoffExplorer';
@@ -42,6 +42,7 @@ export default function StudentDashboard() {
     setShortlistGroups: shortlistApi.setShortlistGroups,
     setCpScoreInput: predictor.setCpScoreInput,
   });
+  const docSections = useDocumentSections({ config, checkedDocs: docs.checkedDocs, docCategory: docs.docCategory, docQuota: docs.docQuota, studentTracks: student.studentTracks });
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
   if (student.authState !== 'ok') return <TokenGate state={student.authState} />;
@@ -49,7 +50,7 @@ export default function StudentDashboard() {
   // A link like ?tab=predictor on a stream without that module falls back (Medical keeps its old behaviour for unknown tabs).
   const activeTab = (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? shell.activeTab : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog };
+  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog };
 
   return (
     <Shell {...ctx}>

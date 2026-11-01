@@ -3,6 +3,7 @@ export default function Dashboard(props) {
   const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
   const dash = config.dashboard;
   const dlRules = config.deadlines;
+  const slText = dash.shortlistText;
   // The shortlist and checklist shortcuts only appear when the stream has the module they open.
   const hasEditTab = config.modules.includes(dash.shortlistEditTab);
   const hasChecklist = config.modules.includes('checklist');
@@ -68,8 +69,8 @@ export default function Dashboard(props) {
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '6px 14px', fontSize: 13, color: 'white', fontWeight: 500 }}>
                         <span>
                           {shortlist.length === 0
-                            ? 'No colleges shortlisted yet'
-                            : `${shortlist.length} college${shortlist.length !== 1 ? 's' : ''} shortlisted`}
+                            ? slText.heroNone
+                            : `${shortlist.length} ${shortlist.length !== 1 ? slText.heroMany : slText.heroOne} shortlisted`}
                         </span>
                         {deadlines.length > 0 && (
                           <>
@@ -152,7 +153,7 @@ export default function Dashboard(props) {
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {shortlist.length === 0 ? (
-                          <div className="empty-state">No colleges shortlisted yet.</div>
+                          <div className="empty-state">{slText.cardNone}</div>
                         ) : shortlist.slice(0, 5).map((name, i) => (
                           <div key={i} className="shortlist-item">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -166,12 +167,12 @@ export default function Dashboard(props) {
                         ))}
                         {shortlist.length > 5 && (
                           <div style={{ fontSize: 12, color: 'var(--text-400)', textAlign: 'center', padding: '8px 0' }}>
-                            +{shortlist.length - 5} more colleges
+                            +{shortlist.length - 5} more {slText.more}
                           </div>
                         )}
                         {hasEditTab && <button onClick={() => setActiveTab(dash.shortlistEditTab)}
                           style={{ width: '100%', marginTop: 4, padding: '10px', border: '2px dashed var(--border)', borderRadius: 'var(--radius-md)', background: 'transparent', color: 'var(--text-400)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                          + Add More Colleges
+                          {slText.add}
                         </button>}
                       </div>
                     </div>
