@@ -1,7 +1,9 @@
 import { formatFees } from '../lib/format';
 
 export default function Institutes(props) {
-  const { collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
+  const { config, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
+  const inst = config.institutes;
+  const Card = inst.detailHref ? 'a' : 'div';   // link to a detail page only when the stream has one
   const uniqueStates = Array.from(new Set(collegesList.map(c => c.state).filter(Boolean))).sort();
   const filteredStatesList = uniqueStates.filter(s => s.toLowerCase().includes(instStateSearch.toLowerCase()));
 
@@ -21,15 +23,15 @@ export default function Institutes(props) {
 
   return (
               <div>
-                <h2 className="section-title">🏫 Institutes Directory</h2>
-                <p className="section-sub">Browse and filter medical colleges across India.</p>
+                <h2 className="section-title">{inst.title}</h2>
+                <p className="section-sub">{inst.subtitle}</p>
 
                 {/* Tab pills */}
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-                  {['All', 'Private', 'Government', 'Deemed', 'AIIMS', 'JIPMER', 'Central'].map(tab => (
+                  {inst.tabTypes.map(tab => (
                     <button key={tab} onClick={() => setInstTabType(tab)}
                       className={`chip ${instTabType === tab ? 'active' : ''}`}>
-                      {tab === 'All' ? 'All Colleges' : tab}
+                      {tab === 'All' ? inst.tabAllLabel : tab}
                     </button>
                   ))}
                 </div>
@@ -73,27 +75,14 @@ export default function Institutes(props) {
                     <div className="filter-section">
                       <div className="form-label">College Type</div>
                       <select className="form-select" value={instType} onChange={e => setInstType(e.target.value)} style={{ fontSize: 12 }}>
-                        <option value="All">All Colleges</option>
-                        <option value="AIIMS">AIIMS</option>
-                        <option value="Government">Government</option>
-                        <option value="Private">Private</option>
-                        <option value="Deemed">Deemed</option>
-                        <option value="JIPMER">JIPMER</option>
-                        <option value="Central">Central</option>
-                        <option value="AFMC">AFMC</option>
-                        <option value="Govt. Society">Govt. Society</option>
+                        {inst.typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
 
                     <div className="filter-section">
                       <div className="form-label">Course</div>
                       <select className="form-select" value={instCourse} onChange={e => setInstCourse(e.target.value)} style={{ fontSize: 12 }}>
-                        <option value="All">All Courses</option>
-                        <option value="MBBS">MBBS</option>
-                        <option value="BDS">BDS</option>
-                        <option value="BPTH">BPTH</option>
-                        <option value="BAMS">BAMS</option>
-                        <option value="BHMS">BHMS</option>
+                        {inst.courseOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
 
@@ -129,7 +118,7 @@ export default function Institutes(props) {
                         {getFilteredCollegesList().slice(0, 48).map(college => {
                           const isShortlisted = shortlist.includes(college.name);
                           return (
-                            <a href={`/medical/colleges/${college.slug}`} target="_blank" rel="noreferrer"
+                            <Card {...(inst.detailHref ? { href: inst.detailHref.replace('{slug}', college.slug), target: '_blank', rel: 'noreferrer' } : {})}
                               key={college.slug} className="college-card">
                               <div className="college-img-placeholder" style={{ position: 'relative' }}>
                                   {(() => { const imgSrc = college.photo || college.image || college.cover_image || college.img || college.thumbnail; return imgSrc ? (
@@ -165,11 +154,11 @@ export default function Institutes(props) {
                                 </div>
                                 <div className="college-name">{college.name}</div>
                                 <div className="college-stats">
-                                  {college.seats ? `${college.seats} ${college.course || 'MBBS'} seats` : ''}
+                                  {college.seats ? `${college.seats} ${college.course || inst.defaultCourse} seats` : ''}
                                   {college.annual_fees ? ` · ${formatFees(college.annual_fees)}` : ''}
                                 </div>
                               </div>
-                            </a>
+                            </Card>
                           );
                         })}
                       </div>

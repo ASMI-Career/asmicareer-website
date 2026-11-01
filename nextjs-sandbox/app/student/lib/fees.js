@@ -1,5 +1,5 @@
 // Fee display helpers. feeStr and budgetStr read the fee map, so they are built from it.
-export function makeFeeFormatters(feeMap) {
+export function makeFeeFormatters(feeMap, feesCfg) {
   // ── Fee formatters ──────────────────────────────────────────────────────────
   const feeStr = (name) => {
     const f = parseFloat(feeMap[name]);
@@ -20,7 +20,7 @@ export function makeFeeFormatters(feeMap) {
   const budgetStr = (name, course) => {
     const f = parseFloat(feeMap[name]);
     if (isNaN(f) || f === 0) return '—';
-    const mult = course === 'BDS' ? 4 : course === 'BPTH' ? 4 : 4.5;
+    const mult = feesCfg.yearsByCourse[course] ?? feesCfg.defaultYears;   // years of study, from the stream config
     const total = f * mult;
     if (total < 1)   return `₹${Math.round(total * 100)}K`;
     if (total < 100) return `₹${parseFloat(total.toFixed(1))}L`;

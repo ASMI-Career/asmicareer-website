@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import DOCS from '../data/docs.json';
-import { APPS_SCRIPT_URL } from '../lib/config';
+import medicalDocs from '../data/docs.json';
+
+// Document lists by stream (the file is named in config.documents.data).
+const DOC_SETS = { medical: medicalDocs };
 import { writeCache } from '../lib/cache';
 
 // currentToken: the student's token (empty until it has been read from the link)
-export default function useDocuments(currentToken) {
+export default function useDocuments({ config, endpoint, currentToken }) {
+  const DOCS = DOC_SETS[config.documents.data] || { sections: [], category: {}, quota: {} };
   const [checkedDocs, setCheckedDocs] = useState(new Set());
-  const [docCategory, setDocCategory] = useState('General');
-  const [docQuota, setDocQuota] = useState('State');
+  const [docCategory, setDocCategory] = useState(config.documents.defaults.category);
+  const [docQuota, setDocQuota] = useState(config.documents.defaults.quota);
 
   // Checklist helpers
   const saveChecklist = (set, cat, quota) => {
@@ -16,7 +19,7 @@ export default function useDocuments(currentToken) {
     if (currentToken) writeCache(currentToken, 'checklist', payload);
     // Write to sheet for cross-device persistence (requires Apps Script action=saveDocStatus)
     if (currentToken) {
-      fetch(`${APPS_SCRIPT_URL}?action=saveDocStatus&token=${encodeURIComponent(currentToken)}&data=${encodeURIComponent(JSON.stringify(payload))}`)
+      fetch(`${endpoint}?action=saveDocStatus&token=${encodeURIComponent(currentToken)}&data=${encodeURIComponent(JSON.stringify(payload))}`)
         .catch(() => {}); // silent fail — localStorage remains fallback
     }
   };

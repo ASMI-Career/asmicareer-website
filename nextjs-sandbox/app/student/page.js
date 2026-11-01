@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import './dashboard.css';
+import { streamFromLocation, getStreamConfig, endpointFor } from './config';
 import useShell from './hooks/useShell';
 import useDocuments from './hooks/useDocuments';
 import useShortlist from './hooks/useShortlist';
@@ -22,33 +23,41 @@ import Documents from './components/Documents';
 // tab (filters, inputs) is still there after switching tabs. Each tab is a component that receives everything as props.
 export default function StudentDashboard() {
   const [currentToken, setCurrentToken] = useState('');   // read from the link by useStudent; also needed by the documents and shortlist hooks
+  // The stream (medical / engineering) comes from the token prefix in the link and does not change while the page is open.
+  const [streamId] = useState(streamFromLocation);
+  const config = getStreamConfig(streamId);
+  const endpoint = endpointFor(streamId);
 
   const shell = useShell();
-  const docs = useDocuments(currentToken);
-  const shortlistApi = useShortlist(currentToken);
-  const predictor = usePredictor();
+  const docs = useDocuments({ config, endpoint, currentToken });
+  const shortlistApi = useShortlist({ config, endpoint, currentToken });
+  const predictor = usePredictor({ config });
   const cutoff = useCutoffExplorer();
   const institutes = useInstitutes();
   const student = useStudent({
+    config, endpoint,
     setCurrentToken,
     setCheckedDocs: docs.setCheckedDocs, setDocCategory: docs.setDocCategory, setDocQuota: docs.setDocQuota,
     docCategory: docs.docCategory, docQuota: docs.docQuota,
     setShortlistGroups: shortlistApi.setShortlistGroups,
     setCpScoreInput: predictor.setCpScoreInput,
   });
-  const catalog = useCatalog(student.studentCategory);
+  const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
   if (student.authState !== 'ok') return <TokenGate state={student.authState} />;
 
-  const ctx = { currentToken, ...shell, ...docs, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog };
+  // A link like ?tab=predictor on a stream without that module falls back (Medical keeps its old behaviour for unknown tabs).
+  const activeTab = (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? shell.activeTab : config.unknownTabFallback;
+
+  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog };
 
   return (
     <Shell {...ctx}>
-      {ctx.activeTab === 'dashboard' && <Dashboard {...ctx} />}
-      {ctx.activeTab === 'predictor' && <Predictor {...ctx} />}
-      {ctx.activeTab === 'cutoff' && <CutoffExplorer {...ctx} />}
-      {ctx.activeTab === 'institutes' && <Institutes {...ctx} />}
-      {ctx.activeTab === 'checklist' && <Documents {...ctx} />}
+      {activeTab === 'dashboard' && <Dashboard {...ctx} />}
+      {activeTab === 'predictor' && config.modules.includes('predictor') && <Predictor {...ctx} />}
+      {activeTab === 'cutoff' && config.modules.includes('cutoff') && <CutoffExplorer {...ctx} />}
+      {activeTab === 'institutes' && config.modules.includes('institutes') && <Institutes {...ctx} />}
+      {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
     </Shell>
   );
 }

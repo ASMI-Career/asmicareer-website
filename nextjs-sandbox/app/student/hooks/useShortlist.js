@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react';
-import { APPS_SCRIPT_URL } from '../lib/config';
 import { writeCache } from '../lib/cache';
-import { normalizeGroups, groupNames, addToGroups, removeFromGroups } from '../lib/shortlist';
+import { makeShortlist } from '../lib/shortlist';
 
-export default function useShortlist(currentToken) {
-  const [shortlistGroups, setShortlistGroups] = useState(() => normalizeGroups(null)); // { MCC, MH, OPEN }
+export default function useShortlist({ config, endpoint, currentToken }) {
+  const { normalizeGroups, groupNames, addToGroups, removeFromGroups } = makeShortlist(config.shortlist);
+  const [shortlistGroups, setShortlistGroups] = useState(() => normalizeGroups(null)); // { <group>: [] } (Medical: MCC, MH, OPEN)
   const shortlist = groupNames(shortlistGroups);   // college names, in group order (what the UI lists)
 
   // Saves the shortlist to the sheet (Apps Script action `saveShortlist`, grouped { MCC, MH, OPEN } like the counsellor tools).
@@ -18,10 +18,10 @@ export default function useShortlist(currentToken) {
       try {
         let merged = localNext;
         try {
-          const latest = await (await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`)).json();
+          const latest = await (await fetch(`${endpoint}?action=getStudent&token=${encodeURIComponent(token)}`)).json();
           if (latest && latest.success && latest.data) merged = op(normalizeGroups(latest.data.saved_colleges));
         } catch (e) { /* offline or unreadable: save our own copy */ }
-        const res = await fetch(APPS_SCRIPT_URL, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: 'saveShortlist', token, colleges: merged }),

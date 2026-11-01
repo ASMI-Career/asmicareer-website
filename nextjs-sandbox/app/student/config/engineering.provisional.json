@@ -1,0 +1,77 @@
+{
+  "_status": "PROVISIONAL — DRAFT. Not signed off. Must be reviewed and approved by the engineering lead before launch. Every value marked [CONFIRM] in _confirm is an assumption.",
+  "_confirm": [
+    "[CONFIRM] Tracks: JoSAA and Maharashtra CAP only (no other state CETs).",
+    "[CONFIRM] Stage names and order (7 stages).",
+    "[CONFIRM] Header role has no exam year; add one (e.g. 2027) once the lead decides which cycle the dashboard is for.",
+    "[CONFIRM] Badges: percentile + category only (no rank badge, because the dashboard workbook has no rank column).",
+    "[CONFIRM] A student with no track recorded sees events for ALL tracks.",
+    "[CONFIRM] Category values and how they map to document groups.",
+    "[CONFIRM] Deadlines: past events hidden, 5 shown, tentative events marked."
+  ],
+  "id": "engineering",
+  "modules": ["dashboard"],
+  "nav": [
+    { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
+    { "id": "predictor",  "label": "Predictor",  "icon": "lucide:bar-chart-3" },
+    { "id": "cutoff",     "label": "Cutoff Explorer", "icon": "lucide:search" },
+    { "id": "institutes", "label": "Institutes", "icon": "lucide:building-2" },
+    { "id": "checklist",  "label": "Documents",  "icon": "lucide:file-text" }
+  ],
+  "unknownTabFallback": "dashboard",
+  "tracks": [
+    { "id": "JoSAA", "label": "JoSAA" },
+    { "id": "Maharashtra CAP", "label": "Maharashtra CAP" }
+  ],
+  "student": {
+    "defaultName": "Student",
+    "logRecord": false,
+    "scoreParse": "float",
+    "branchFromToken": false,
+    "counsellorDefaults": { "name": "ASMI Counsellor", "whatsapp": "917410019074", "branch": "ASMI Career Network" },
+    "stages": ["Enquiry", "Profile Complete", "Counselling Started", "Shortlist Ready", "Preferences Filed", "Allotted", "Admitted"],
+    "defaultProgress": "stages",
+    "categoryRules": {
+      "rules": [
+        { "contains": ["OBC"], "value": "OBC" },
+        { "contains": ["SEBC"], "value": "SEBC" },
+        { "contains": ["SC"],  "value": "SC" },
+        { "contains": ["ST"],  "value": "ST" },
+        { "contains": ["EWS"], "value": "EWS" },
+        { "contains": ["VJ", "NT", "SBC", "OTHER"], "value": "VJ/NT/SBC" }
+      ],
+      "default": "General"
+    },
+    "quotaRules": null
+  },
+  "dashboard": {
+    "headerRole": "Engineering Aspirant",
+    "heroSubtitle": "Your engineering admission journey is in progress. Keep going!",
+    "badges": [
+      { "label": "PERCENTILE", "field": "score" },
+      { "label": "CATEGORY",   "field": "category" }
+    ],
+    "categoryLabels": { "General": "General / UR" },
+    "redTagKeywords": ["URGENT"],
+    "newsUrl": "https://asmicareer.in/engineering/news",
+    "shortlistIcon": "🎓",
+    "shortlistEditTab": "institutes",
+    "deadlineCount": 5,
+    "actionRequiredDocId": null
+  },
+  "deadlines": { "keepPastResults": false, "useExpiryDate": false, "requireTrackMatch": true, "showTentative": true },
+  "documents": { "data": null, "subtitle": "Track every document you need for engineering counselling and admission.", "defaults": { "category": "General", "quota": "" }, "quotaLabel": "", "quotas": [] },
+  "shortlist": { "groups": ["JOSAA", "CAP"], "groupRules": { "byPoolOrQuota": [], "byState": {}, "privateGroup": "CAP", "defaultGroup": "CAP" } },
+  "predictor": null,
+  "cutoff": null,
+  "institutes": null,
+  "fees": { "yearsByCourse": {}, "defaultYears": 4 },
+  "catalog": {
+    "events": ["/data/events.json"],
+    "rankDb": null,
+    "colleges": null,
+    "asmiDb": null,
+    "feeMap": null,
+    "cutoff": null
+  }
+}

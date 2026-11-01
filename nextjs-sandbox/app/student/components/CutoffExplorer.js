@@ -1,13 +1,13 @@
 
 export default function CutoffExplorer(props) {
-  const { ceCollegeSearch, ceSingleCollege, ceState, ceViewMode, collegeData, handleToggleShortlist, setCeCollegeSearch, setCeSingleCollege, setCeState, setCeViewMode, shortlist } = props;
+  const { config, ceCollegeSearch, ceSingleCollege, ceState, ceViewMode, collegeData, handleToggleShortlist, setCeCollegeSearch, setCeSingleCollege, setCeState, setCeViewMode, shortlist } = props;
   const ceStates   = Array.from(new Set(collegeData.map(c => c.state))).sort();
   const ceColleges = Array.from(new Set(collegeData.map(c => c.name))).sort();
 
   return (
               <div className="tool-card">
-                <h2 className="section-title">📈 Cutoff Explorer</h2>
-                <p className="section-sub">Browse historical closing ranks for medical colleges across states and quotas.</p>
+                <h2 className="section-title">{config.cutoff.title}</h2>
+                <p className="section-sub">{config.cutoff.subtitle}</p>
 
                 <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
                   <button className={`chip ${ceViewMode === 'database' ? 'active' : ''}`} onClick={() => setCeViewMode('database')}>Browse Database</button>
@@ -32,7 +32,7 @@ export default function CutoffExplorer(props) {
                     <div className="table-container">
                       <table className="dense-table">
                         <thead className="predictor-header"><tr>
-                          <th>Institute</th><th>State</th><th>Quota</th><th>Closing Rank (AIR)</th><th>Action</th>
+                          <th>Institute</th><th>State</th><th>Quota</th><th>{config.cutoff.rankLabel}</th><th>Action</th>
                         </tr></thead>
                         <tbody>
                           {collegeData.filter(c => {
@@ -70,7 +70,7 @@ export default function CutoffExplorer(props) {
                         <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--navy)', marginBottom: 16 }}>{ceSingleCollege}</h3>
                         <div className="table-container">
                           <table className="dense-table">
-                            <thead className="predictor-header"><tr><th>Quota</th><th>State</th><th>Fees</th><th>Closing Rank (AIR)</th></tr></thead>
+                            <thead className="predictor-header"><tr><th>Quota</th><th>State</th><th>Fees</th><th>{config.cutoff.rankLabel}</th></tr></thead>
                             <tbody>
                               {collegeData.filter(c => c.name === ceSingleCollege).map((c, i) => (
                                 <tr key={i}>

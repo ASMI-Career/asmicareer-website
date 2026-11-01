@@ -1,6 +1,16 @@
 
 export default function Dashboard(props) {
-  const { allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
+  const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
+  const dash = config.dashboard;
+  const dlRules = config.deadlines;
+  // The shortlist and checklist shortcuts only appear when the stream has the module they open.
+  const hasEditTab = config.modules.includes(dash.shortlistEditTab);
+  const hasChecklist = config.modules.includes('checklist');
+  const badgeValue = (field) => {
+    if (field === 'score') return studentScore || '—';
+    if (field === 'rank') return studentRank ? studentRank.toLocaleString('en-IN') : '—';
+    return studentCategory ? (dash.categoryLabels[studentCategory] || studentCategory) : '—';
+  };
   const getCountdown = (dateStr) => {
     const diff = new Date(dateStr) - new Date();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -20,7 +30,7 @@ export default function Dashboard(props) {
   const getDeadlineTag = (tag) => {
     const t = (tag || '').toUpperCase();
     if (t.includes('EXAM')) return 'tag-blue';
-    if (t.includes('URGENT') || t.includes('NEET')) return 'tag-red';
+    if (dash.redTagKeywords.some(k => t.includes(k))) return 'tag-red';
     if (t.includes('REG')) return 'tag-purple';
     return 'tag-gold';
   };
@@ -46,20 +56,14 @@ export default function Dashboard(props) {
                   <section className="hero-card">
                     <div>
                       <h1 className="hero-greeting">Welcome back, {studentName.split(' ')[0]} 👋</h1>
-                      <p className="hero-subtitle">Your journey to MBBS 2026 is in progress. Keep going!</p>
+                      <p className="hero-subtitle">{dash.heroSubtitle}</p>
                       <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
-                        <div className="rank-badge">
-                          <span className="rank-badge-label">NEET SCORE</span>
-                          <span className="rank-badge-value">{studentScore || '—'}</span>
-                        </div>
-                        <div className="rank-badge">
-                          <span className="rank-badge-label">NEET AIR RANK</span>
-                          <span className="rank-badge-value">{studentRank ? studentRank.toLocaleString('en-IN') : '—'}</span>
-                        </div>
-                        <div className="rank-badge">
-                          <span className="rank-badge-label">CATEGORY</span>
-                          <span className="rank-badge-value">{studentCategory ? (studentCategory === 'General' ? 'General / UR' : studentCategory) : '—'}</span>
-                        </div>
+                        {dash.badges.map(b => (
+                          <div className="rank-badge" key={b.field}>
+                            <span className="rank-badge-label">{b.label}</span>
+                            <span className="rank-badge-value">{badgeValue(b.field)}</span>
+                          </div>
+                        ))}
                       </div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 14, background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '6px 14px', fontSize: 13, color: 'white', fontWeight: 500 }}>
                         <span>
@@ -111,12 +115,12 @@ export default function Dashboard(props) {
                         <div className="card-title">
                           <span>📅</span> Upcoming Deadlines
                         </div>
-                        <a href="https://asmicareer.in/medical/news" target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
+                        <a href={dash.newsUrl} target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {deadlines.length === 0 ? (
                           <div className="empty-state">No upcoming deadlines.</div>
-                        ) : deadlines.slice(0, 4).map((dl, i) => {
+                        ) : deadlines.slice(0, dash.deadlineCount).map((dl, i) => {
                           const cd = getCountdown(dl.date);
                           return (
                             <div key={i} className="deadline-item">
@@ -129,6 +133,7 @@ export default function Dashboard(props) {
                                 <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 5 }}>
                                   <span className={`tag ${getDeadlineTag(dl.tag)}`}>{dl.tag}</span>
                                   <span style={{ fontSize: 10, color: 'var(--text-400)', fontWeight: 600 }}>{cd.text}</span>
+                                  {dlRules.showTentative && dl.status === 'tentative' && <span className="tag tag-gold">TENTATIVE</span>}
                                 </div>
                               </div>
                             </div>
@@ -143,7 +148,7 @@ export default function Dashboard(props) {
                         <div className="card-title">
                           <span style={{ color: '#d97706' }}>★</span> My Shortlist
                         </div>
-                        <button className="card-action" onClick={() => setActiveTab('predictor')}>Edit List</button>
+                        {hasEditTab && <button className="card-action" onClick={() => setActiveTab(dash.shortlistEditTab)}>Edit List</button>}
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         {shortlist.length === 0 ? (
@@ -152,7 +157,7 @@ export default function Dashboard(props) {
                           <div key={i} className="shortlist-item">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                               <div className={`shortlist-icon tag ${iconColors[i % iconColors.length]}`}
-                                style={{ background: undefined, border: undefined }}>🏥</div>
+                                style={{ background: undefined, border: undefined }}>{dash.shortlistIcon}</div>
                               <span className="shortlist-name">{name}</span>
                             </div>
                             <button onClick={() => handleToggleShortlist(name)}
@@ -164,10 +169,10 @@ export default function Dashboard(props) {
                             +{shortlist.length - 5} more colleges
                           </div>
                         )}
-                        <button onClick={() => setActiveTab('predictor')}
+                        {hasEditTab && <button onClick={() => setActiveTab(dash.shortlistEditTab)}
                           style={{ width: '100%', marginTop: 4, padding: '10px', border: '2px dashed var(--border)', borderRadius: 'var(--radius-md)', background: 'transparent', color: 'var(--text-400)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           + Add More Colleges
-                        </button>
+                        </button>}
                       </div>
                     </div>
                   </div>
@@ -199,6 +204,7 @@ export default function Dashboard(props) {
                   </section>
 
                   {/* Document Status */}
+                  {allIds.length > 0 && (
                   <div className="card-sm" style={{ padding: 24 }}>
                     <div className="card-header">
                       <div className="card-title">Document Status</div>
@@ -229,7 +235,7 @@ export default function Dashboard(props) {
                               <div style={{ fontSize: 13, fontWeight: 700, color: done ? 'var(--text-900)' : 'var(--text-400)' }}>
                                 {doc.label}
                               </div>
-                              {!done && doc.id === 'neet-admit' && (
+                              {!done && doc.id === dash.actionRequiredDocId && (
                                 <div style={{ fontSize: 10, color: 'var(--reach-color)', fontWeight: 700, textTransform: 'uppercase', marginTop: 2 }}>
                                   Action Required
                                 </div>
@@ -239,14 +245,15 @@ export default function Dashboard(props) {
                         );
                       })}
                     </div>
-                    <button onClick={() => setActiveTab('checklist')}
+                    {hasChecklist && <button onClick={() => setActiveTab('checklist')}
                       style={{ width: '100%', marginTop: 20, padding: 10, border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'transparent', color: 'var(--text-500)', fontSize: 12, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
                       onMouseOver={e => e.target.style.background = 'var(--bg-subtle)'}
                       onMouseOut={e => e.target.style.background = 'transparent'}
                     >
                       View Full Checklist →
-                    </button>
+                    </button>}
                   </div>
+                  )}
 
 
                 </div>
