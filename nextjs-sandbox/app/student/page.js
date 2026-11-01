@@ -9,6 +9,7 @@ import useShortlist from './hooks/useShortlist';
 import usePredictor from './hooks/usePredictor';
 import useCutoffExplorer from './hooks/useCutoffExplorer';
 import useInstitutes from './hooks/useInstitutes';
+import useEngCutoff from './hooks/useEngCutoff';
 import useStudent from './hooks/useStudent';
 import useCatalog from './hooks/useCatalog';
 import TokenGate from './components/TokenGate';
@@ -16,6 +17,7 @@ import Shell from './components/Shell';
 import Dashboard from './components/Dashboard';
 import Predictor from './components/Predictor';
 import CutoffExplorer from './components/CutoffExplorer';
+import EngineeringCutoff from './components/EngineeringCutoff';
 import Institutes from './components/Institutes';
 import Documents from './components/Documents';
 
@@ -51,6 +53,7 @@ export default function StudentDashboard() {
     setCpScoreInput: predictor.setCpScoreInput,
   });
   const docSections = useDocumentSections({ config, checkedDocs: docs.checkedDocs, docCategory: docs.docCategory, docQuota: docs.docQuota, studentTracks: student.studentTracks });
+  const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' });
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
   if (student.authState !== 'ok') return <TokenGate state={student.authState} />;
@@ -58,13 +61,13 @@ export default function StudentDashboard() {
   // A link like ?tab=predictor on a stream without that module falls back (Medical keeps its old behaviour for unknown tabs).
   const activeTab = (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? shell.activeTab : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog };
+  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff };
 
   return (
     <Shell {...ctx}>
       {activeTab === 'dashboard' && <Dashboard {...ctx} />}
       {activeTab === 'predictor' && config.modules.includes('predictor') && <Predictor {...ctx} />}
-      {activeTab === 'cutoff' && config.modules.includes('cutoff') && <CutoffExplorer {...ctx} />}
+      {activeTab === 'cutoff' && config.modules.includes('cutoff') && (config.engineeringCutoff ? <EngineeringCutoff {...ctx} /> : <CutoffExplorer {...ctx} />)}
       {activeTab === 'institutes' && config.modules.includes('institutes') && <Institutes {...ctx} />}
       {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
     </Shell>
