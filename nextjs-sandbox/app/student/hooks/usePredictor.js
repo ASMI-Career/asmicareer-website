@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function usePredictor() {
+export default function usePredictor({ config }) {
   const [predictorScore, setPredictorScore] = useState('');
   const [predictedRank, setPredictedRank] = useState(null);
   const [cpInputMode, setCpInputMode] = useState('rank');
@@ -17,7 +17,7 @@ export default function usePredictor() {
   const [cpScoreState, setCpScoreState] = useState('All');
   const [cpScoreSort, setCpScoreSort] = useState('chance');
   const [cpCategory, setCpCategory] = useState('Open');
-  const [cpScoreCourse, setCpScoreCourse] = useState('MBBS');
+  const [cpScoreCourse, setCpScoreCourse] = useState(config.predictor ? config.predictor.mainCourse : '');
   const [cpPoolFilter, setCpPoolFilter] = useState('All');
   const [cpTypeFilter, setCpTypeFilter] = useState('All');
 

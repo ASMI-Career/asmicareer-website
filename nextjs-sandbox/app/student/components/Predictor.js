@@ -4,8 +4,9 @@ import { makeFeeFormatters } from '../lib/fees';
 const RANK_SCORES = Object.keys(RANK_DATA).map(Number).sort((a,b) => b - a);
 
 export default function Predictor(props) {
-  const { asmiDb, cpCategory, cpInputMode, cpMaxBudget, cpPoolFilter, cpQuota, cpRankInput, cpScoreCourse, cpScoreInput, cpScoreSort, cpScoreState, cpSearchFilter, cpSelectedStates, cpSelectedTypes, cpSortBy, cpStateSearch, cpTypeFilter, cutoffDbData, feeMap, handleToggleShortlist, predictedRank, predictorScore, setCpCategory, setCpInputMode, setCpMaxBudget, setCpPoolFilter, setCpQuota, setCpRankInput, setCpScoreCourse, setCpScoreInput, setCpScoreSort, setCpScoreState, setCpSearchFilter, setCpSelectedStates, setCpSelectedTypes, setCpSortBy, setCpStateSearch, setCpTypeFilter, setPredictedRank, setPredictorScore, shortlist } = props;
-  const { feeStr, feeStrAIR, budgetStr } = makeFeeFormatters(feeMap);
+  const { config, asmiDb, cpCategory, cpInputMode, cpMaxBudget, cpPoolFilter, cpQuota, cpRankInput, cpScoreCourse, cpScoreInput, cpScoreSort, cpScoreState, cpSearchFilter, cpSelectedStates, cpSelectedTypes, cpSortBy, cpStateSearch, cpTypeFilter, cutoffDbData, feeMap, handleToggleShortlist, predictedRank, predictorScore, setCpCategory, setCpInputMode, setCpMaxBudget, setCpPoolFilter, setCpQuota, setCpRankInput, setCpScoreCourse, setCpScoreInput, setCpScoreSort, setCpScoreState, setCpSearchFilter, setCpSelectedStates, setCpSelectedTypes, setCpSortBy, setCpStateSearch, setCpTypeFilter, setPredictedRank, setPredictorScore, shortlist } = props;
+  const { feeStr, feeStrAIR, budgetStr } = makeFeeFormatters(feeMap, config.fees);
+  const pc = config.predictor;   // everything NEET/MBBS specific (limits, rules, labels, pools) comes from the stream config
 
   function getRankFromScore(score) {
     if (RANK_DATA[score]) return RANK_DATA[score];
@@ -25,8 +26,8 @@ export default function Predictor(props) {
   // Predictors
   const handlePredictRank = () => {
     const score = parseInt(predictorScore, 10);
-    if (isNaN(score) || score < 200 || score > 720) { alert('Enter a valid NEET score between 200 and 720.'); return; }
-    setPredictedRank(getRankFromScore(Math.max(100, score - 20)));
+    if (isNaN(score) || score < pc.scoreMin || score > pc.scoreMax) { alert(pc.scoreInvalidMessage); return; }
+    setPredictedRank(getRankFromScore(Math.max(pc.scoreFloor, score - pc.scoreAdjust)));
   };
 
   // ── Chance label (mirrors the live Cutoff Explorer tool) ──────────────────
@@ -35,9 +36,9 @@ export default function Predictor(props) {
   // Low   = closing rank ≥ your rank * 0.92  (slight stretch, within 8%)
   // (records outside Low range are excluded from results)
   const getChance = (cutoff, rank) => {
-    if (cutoff >= rank * 1.10) return { label: 'High',   cls: 'badge-safe',       sort: 0 };
+    if (cutoff >= rank * pc.chanceBands.high) return { label: 'High',   cls: 'badge-safe',       sort: 0 };
     if (cutoff >= rank)        return { label: 'Med',    cls: 'badge-likely',     sort: 1 };
-    if (cutoff >= rank * 0.92) return { label: 'Low',    cls: 'badge-borderline', sort: 2 };
+    if (cutoff >= rank * pc.chanceBands.low) return { label: 'Low',    cls: 'badge-borderline', sort: 2 };
     return null; // excluded
   };
 
@@ -85,10 +86,10 @@ export default function Predictor(props) {
   };
 
   const prob = (score, cutoff) => {
-    const gap = score - (cutoff + 20);
-    if (gap >= 15)  return { key: 'safe',       label: 'Safe',        cls: 'badge-safe' };
-    if (gap >= 0)   return { key: 'likely',     label: 'Likely',      cls: 'badge-likely' };
-    if (gap >= -10) return { key: 'borderline', label: 'Borderline',  cls: 'badge-borderline' };
+    const gap = score - (cutoff + pc.prob.projection);
+    if (gap >= pc.prob.safe)  return { key: 'safe',       label: 'Safe',        cls: 'badge-safe' };
+    if (gap >= pc.prob.likely)   return { key: 'likely',     label: 'Likely',      cls: 'badge-likely' };
+    if (gap >= pc.prob.borderline) return { key: 'borderline', label: 'Borderline',  cls: 'badge-borderline' };
     return                 { key: 'reach',      label: 'Out of Reach', cls: 'badge-reach' };
   };
 
@@ -137,12 +138,12 @@ export default function Predictor(props) {
         openCutoff: openC,
         catCutoff: catC,
         cutoff: bestC,
-        projected: bestC + 20,
+        projected: bestC + pc.prob.projection,
         chance: p.label,
         chanceKey: p.key,
         chanceClass: p.cls,
-        state: 'Maharashtra',
-        pool: 'MH State',
+        state: pc.mhState,
+        pool: pc.pools.mh,
         type: listType === 'mh_govt' ? 'Government' : 'Private'
       });
     });
@@ -175,21 +176,21 @@ export default function Predictor(props) {
           openCutoff: openC,
           catCutoff: catC,
           cutoff: bestC,
-          projected: bestC + 20,
+          projected: bestC + pc.prob.projection,
           state: stateMap.get(name) || 'India',
           chance: p.label,
           chanceKey: p.key,
           chanceClass: p.cls,
-          pool: 'MCC AIQ',
+          pool: pc.pools.mcc,
           type
         });
       });
     };
 
     addColleges('AIQ', course, 'aiq', 'Government');
-    if (course === 'MBBS') {
-      addColleges('AIIMS', 'MBBS', 'aiims', 'Government');
-      addColleges('JIPMER', 'MBBS', 'jipmer', 'Government');
+    if (course === pc.mainCourse) {
+      addColleges('AIIMS', pc.mainCourse, 'aiims', 'Government');
+      addColleges('JIPMER', pc.mainCourse, 'jipmer', 'Government');
     }
     addColleges('CENTRAL', course, 'central', 'Government');
     addColleges('DEEMED', course, 'deemed', 'Deemed');
@@ -198,7 +199,7 @@ export default function Predictor(props) {
   };
 
   const getOpenStateCollegesList = (course, score) => {
-    if (course !== 'MBBS') return [];
+    if (course !== pc.mainCourse) return [];
     const results = [];
     const OPEN_STATES = ['KA', 'TS', 'TN', 'UP', 'KL', 'AP', 'HR', 'WB', 'BR', 'UK', 'CG', 'JH', 'HP', 'PY', 'TR', 'MN', 'ML', 'SK'];
     const STATE_LABELS = {
@@ -209,11 +210,11 @@ export default function Predictor(props) {
     };
 
     OPEN_STATES.forEach(stKey => {
-      if (!asmiDb || !asmiDb[stKey] || !asmiDb[stKey]['MBBS']) return;
+      if (!asmiDb || !asmiDb[stKey] || !asmiDb[stKey][pc.mainCourse]) return;
       const seen = new Map();
       
       ['open_pvt', 'mgmt_quota'].forEach(listType => {
-        const d = asmiDb[stKey]['MBBS']['OPEN'];
+        const d = asmiDb[stKey][pc.mainCourse]['OPEN'];
         if (!d || !d[listType]) return;
         d[listType].forEach(col => {
           const p = prob(score, col.c);
@@ -223,11 +224,11 @@ export default function Predictor(props) {
             catCutoff: null,
             state: STATE_LABELS[stKey] || stKey,
             cutoff: col.c,
-            projected: col.c + 20,
+            projected: col.c + pc.prob.projection,
             chance: p.label,
             chanceKey: p.key,
             chanceClass: p.cls,
-            pool: 'Open State',
+            pool: pc.pools.open,
             type: 'Private'
           };
           if (!seen.has(col.n)) {
@@ -244,7 +245,7 @@ export default function Predictor(props) {
 
   const getScorePredictedColleges = () => {
     const score = parseInt(cpScoreInput, 10);
-    if (isNaN(score) || score < 200 || score > 720 || !asmiDb) return [];
+    if (isNaN(score) || score < pc.scoreMin || score > pc.scoreMax || !asmiDb) return [];
     
     const course = cpScoreCourse;
     const userCat = cpCategory;
@@ -264,7 +265,7 @@ export default function Predictor(props) {
     results.push(...mccColleges);
     
     // 3. Open State Pool
-    if (course === 'MBBS') {
+    if (course === pc.mainCourse) {
       const openStateColleges = getOpenStateCollegesList(course, score);
       results.push(...openStateColleges);
     }
@@ -298,10 +299,10 @@ export default function Predictor(props) {
               <div>
                 {/* Rank Predictor */}
                 <div className="tool-card">
-                  <h2 className="section-title">📊 NEET Rank Predictor</h2>
-                  <p className="section-sub">Convert your tentative NEET Score into an estimated All India Rank.</p>
+                  <h2 className="section-title">{pc.title}</h2>
+                  <p className="section-sub">{pc.subtitle}</p>
                   <div style={{ display: 'flex', gap: 10, maxWidth: 440 }}>
-                    <input type="number" placeholder="Enter Score (200–720)" className="form-input"
+                    <input type="number" placeholder={pc.scorePlaceholder} className="form-input"
                       value={predictorScore} onChange={e => setPredictorScore(e.target.value)} />
                     <button onClick={handlePredictRank} className="btn-gold">Predict</button>
                   </div>
@@ -318,9 +319,9 @@ export default function Predictor(props) {
                   <h2 className="section-title">🔮 College Predictor</h2>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
                     <button className={`chip ${cpInputMode === 'rank' ? 'active' : ''}`}
-                      onClick={() => { setCpInputMode('rank'); setCpQuota('All'); }}>Use NEET AIR</button>
+                      onClick={() => { setCpInputMode('rank'); setCpQuota('All'); }}>{pc.modeLabels.rank}</button>
                     <button className={`chip ${cpInputMode === 'score' ? 'active' : ''}`}
-                      onClick={() => { setCpInputMode('score'); setCpQuota('All'); }}>Use NEET Score</button>
+                      onClick={() => { setCpInputMode('score'); setCpQuota('All'); }}>{pc.modeLabels.score}</button>
                   </div>
 
                   {/* ── RANK TAB: full Cutoff Explorer layout ── */}
@@ -365,11 +366,7 @@ export default function Predictor(props) {
                           <div className="filter-section">
                             <div className="form-label">Quota</div>
                             <select className="form-select" value={cpQuota} onChange={e => setCpQuota(e.target.value)} style={{ fontSize: 12 }}>
-                              <option value="All">All Quotas</option>
-                              <option value="AIQ">All India Quota (AIQ)</option>
-                              <option value="State">State Quota</option>
-                              <option value="Open State">Open State Quota</option>
-                              <option value="IP">Institutional / Private</option>
+                              {pc.quotaOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                             </select>
                           </div>
 
@@ -530,14 +527,13 @@ export default function Predictor(props) {
                         {/* Score tab filters */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
                           <div className="form-group">
-                            <label className="form-label">NEET Score</label>
-                            <input type="number" placeholder="e.g. 620" className="form-input" value={cpScoreInput} onChange={e => setCpScoreInput(e.target.value)} />
+                            <label className="form-label">{pc.scoreLabel}</label>
+                            <input type="number" placeholder={pc.scoreExample} className="form-input" value={cpScoreInput} onChange={e => setCpScoreInput(e.target.value)} />
                           </div>
                           <div className="form-group">
                             <label className="form-label">Course</label>
                             <select className="form-select" value={cpScoreCourse} onChange={e => setCpScoreCourse(e.target.value)}>
-                              <option value="MBBS">MBBS</option>
-                              <option value="BDS">BDS</option>
+                              {pc.courses.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
                           </div>
                           <div className="form-group">
@@ -561,14 +557,14 @@ export default function Predictor(props) {
                         {/* State + Sort row */}
                         {(() => {
                           const scoreResults = (cpScoreInput && !isNaN(parseInt(cpScoreInput,10)) && asmiDb) ? (() => {
-                            const score=parseInt(cpScoreInput,10); if(score<200||score>720) return [];
+                            const score=parseInt(cpScoreInput,10); if(score<pc.scoreMin||score>pc.scoreMax) return [];
                             const tmp=[]; const course=cpScoreCourse; const userCat=cpCategory;
                             if(asmiDb.MH&&asmiDb.MH[course]) {
                               tmp.push(...getMHCollegesList(course,'mh_govt',userCat,score),...getMHCollegesList(course,'mh_pvt',userCat,score));
                               if(userCat==='IQ') tmp.push(...getMHCollegesList(course,'mh_iq',userCat,score));
                             }
                             tmp.push(...getMCCCollegesList(course,userCat,score));
-                            if(course==='MBBS') tmp.push(...getOpenStateCollegesList(course,score));
+                            if(course===pc.mainCourse) tmp.push(...getOpenStateCollegesList(course,score));
                             return tmp;
                           })() : [];
                           const stateOptions = ['All', ...Array.from(new Set(scoreResults.map(c=>c.state).filter(Boolean))).sort()];
@@ -599,12 +595,7 @@ export default function Predictor(props) {
                           <div>
                             <div className="form-label" style={{ marginBottom: 6 }}>Pool</div>
                             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                              {[
-                                { key: 'All', label: 'All Pools' },
-                                { key: 'MH State', label: 'MH State' },
-                                { key: 'MCC AIQ', label: 'MCC AIQ' },
-                                { key: 'Open State', label: 'Open State' }
-                              ].map(p => (
+                              {pc.poolFilters.map(p => (
                                 <button key={p.key} className={`chip ${cpPoolFilter === p.key ? 'active' : ''}`} onClick={() => setCpPoolFilter(p.key)}>
                                   {p.label}
                                 </button>
@@ -615,12 +606,7 @@ export default function Predictor(props) {
                           <div>
                             <div className="form-label" style={{ marginBottom: 6 }}>Institution Type</div>
                             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                              {[
-                                { key: 'All', label: 'All Types' },
-                                { key: 'Government', label: 'Government' },
-                                { key: 'Private', label: 'Private' },
-                                { key: 'Deemed', label: 'Deemed' }
-                              ].map(t => (
+                              {pc.typeFilters.map(t => (
                                 <button key={t.key} className={`chip ${cpTypeFilter === t.key ? 'active' : ''}`} onClick={() => setCpTypeFilter(t.key)}>
                                   {t.label}
                                 </button>
@@ -633,9 +619,9 @@ export default function Predictor(props) {
                         {(!cpScoreInput || isNaN(parseInt(cpScoreInput, 10))) ? (
                           <div style={{ border: '2px dashed var(--border)', borderRadius: 'var(--radius-lg)', padding: '48px 24px', textAlign: 'center' }}>
                             <div style={{ fontSize: 36, marginBottom: 12 }}>🎯</div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>Enter Your NEET Score to Start</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-900)', marginBottom: 6 }}>{pc.scoreHeadline}</div>
                             <div style={{ fontSize: 13, color: 'var(--text-400)', maxWidth: 280, margin: '0 auto' }}>
-                              Type your NEET score (200-720) above to see matching colleges and admission chances.
+                              {pc.scoreHint}
                             </div>
                           </div>
                         ) : results.length === 0 ? (
@@ -689,7 +675,7 @@ export default function Predictor(props) {
                                           {c.openCutoff != null ? (
                                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                                               <span style={{ fontWeight: 800, color: 'var(--navy)' }}>{c.openCutoff}</span>
-                                              {goldPill(c.openCutoff + 20)}
+                                              {goldPill(c.openCutoff + pc.prob.projection)}
                                             </div>
                                           ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
                                         </td>
@@ -698,7 +684,7 @@ export default function Predictor(props) {
                                             {c.catCutoff != null ? (
                                               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                                                 <span style={{ fontWeight: 800, color: 'var(--purple)' }}>{c.catCutoff}</span>
-                                                {goldPill(c.catCutoff + 20)}
+                                                {goldPill(c.catCutoff + pc.prob.projection)}
                                               </div>
                                             ) : <span style={{ color: 'rgba(26,0,64,0.3)' }}>—</span>}
                                           </td>

@@ -20,6 +20,15 @@ export default function TokenGate({ state }) {
               </div>
             </>
           )}
+          {state === 'unavailable' && (
+            <>
+              <h2 className="section-title">Your dashboard is not open yet</h2>
+              <p className="section-sub">This dashboard has not been switched on yet. Please contact your ASMI counsellor and we will let you know when it is ready.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                <a href="tel:7410019074" style={primaryBtn}>Call ASMI Helpline: 7410019074</a>
+              </div>
+            </>
+          )}
           {state === 'error' && (
             <>
               <h2 className="section-title">We could not load your dashboard</h2>

@@ -1,25 +1,29 @@
 
 export default function Documents(props) {
-  const { allIds, checkedDocs, docCategory, docQuota, doneCount, pct, saveChecklist, sectionsToRender, setCheckedDocs, setDocQuota, toggleDoc } = props;
+  const { config, allIds, checkedDocs, docCategory, docQuota, doneCount, pct, saveChecklist, sectionsToRender, setCheckedDocs, setDocQuota, toggleDoc } = props;
 
+
+  const docCfg = config.documents;
 
   return (
               <div className="tool-card">
                 <h2 className="section-title">📋 Documents Checklist</h2>
-                <p className="section-sub">Track every document you need for MBBS counselling and admission.</p>
+                <p className="section-sub">{docCfg.subtitle}</p>
 
                 {/* Quota selector only — category is fixed from token */}
+                {docCfg.quotas.length > 0 && (
                 <div style={{ marginBottom: 24 }}>
-                  <div className="form-label" style={{ marginBottom: 8 }}>Quota Type</div>
+                  <div className="form-label" style={{ marginBottom: 8 }}>{docCfg.quotaLabel}</div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {['State', 'AIQ', 'Management'].map(q => (
+                    {docCfg.quotas.map(({ value: q, label }) => (
                       <button key={q} className={`chip ${docQuota === q ? 'active' : ''}`}
                         onClick={() => { setDocQuota(q); saveChecklist(checkedDocs, docCategory, q); }}>
-                        {q === 'State' ? 'State Quota (Maharashtra)' : q === 'AIQ' ? 'All India Quota (AIQ)' : 'Management / NRI'}
+                        {label}
                       </button>
                     ))}
                   </div>
                 </div>
+                )}
 
                 {/* Progress */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>

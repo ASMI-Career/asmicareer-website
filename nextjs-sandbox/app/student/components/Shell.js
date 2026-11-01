@@ -1,13 +1,8 @@
-// ── Nav items ─────────────────────────────────────────────────────────────────
-const NAV_ITEMS = [
-  { id: 'dashboard',  label: 'Dashboard',      icon: 'lucide:layout-dashboard' },
-  { id: 'predictor',  label: 'Predictor',       icon: 'lucide:bar-chart-3'      },
-  { id: 'cutoff',     label: 'Cutoff Explorer', icon: 'lucide:search'           },
-  { id: 'institutes', label: 'Institutes',      icon: 'lucide:building-2'       },
-  { id: 'checklist',  label: 'Documents',       icon: 'lucide:file-text'        },
-];
 export default function Shell(props) {
-  const { children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar } = props;
+  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar } = props;
+
+  // Only the modules this stream has appear in the menus.
+  const navItems = config.nav.filter(item => config.modules.includes(item.id));
 
   return (
     <div className="student-body">
@@ -20,45 +15,18 @@ export default function Shell(props) {
           </div>
 
           <nav className="sidebar-nav">
-            <button
-              onClick={() => setActiveTab('dashboard')}
-              className={`nav-link${activeTab === 'dashboard' ? ' active' : ''}`}
-            >
-              <iconify-icon icon="lucide:layout-dashboard" className="nav-icon"></iconify-icon>
-              <span>Dashboard</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('predictor')}
-              className={`nav-link${activeTab === 'predictor' ? ' active' : ''}`}
-            >
-              <iconify-icon icon="lucide:bar-chart-3" className="nav-icon"></iconify-icon>
-              <span>Predictor</span>
-            </button>
-
-            <button
-              onClick={() => { window.location.href = '/cutoff_explorer.html' + window.location.search; }}
-              className={`nav-link${activeTab === 'cutoff' ? ' active' : ''}`}
-            >
-              <iconify-icon icon="lucide:search" className="nav-icon"></iconify-icon>
-              <span>Cutoff Explorer</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('institutes')}
-              className={`nav-link${activeTab === 'institutes' ? ' active' : ''}`}
-            >
-              <iconify-icon icon="lucide:building-2" className="nav-icon"></iconify-icon>
-              <span>Institutes</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('checklist')}
-              className={`nav-link${activeTab === 'checklist' ? ' active' : ''}`}
-            >
-              <iconify-icon icon="lucide:file-text" className="nav-icon"></iconify-icon>
-              <span>Documents</span>
-            </button>
+            {navItems.map(item => (
+              <button
+                key={item.id}
+                onClick={item.externalHref
+                  ? () => { window.location.href = item.externalHref + window.location.search; }
+                  : () => setActiveTab(item.id)}
+                className={`nav-link${activeTab === item.id ? ' active' : ''}`}
+              >
+                <iconify-icon icon={item.icon} className="nav-icon"></iconify-icon>
+                <span>{item.label}</span>
+              </button>
+            ))}
 
             <div className="nav-section-label" style={{marginTop: '24px'}}>Account</div>
 
@@ -92,7 +60,7 @@ export default function Shell(props) {
               <div className="header-user">
                 <div className="header-user-info">
                   <div className="header-user-name">{studentName}</div>
-                  <div className="header-user-role">NEET Aspirant 2026</div>
+                  <div className="header-user-role">{config.dashboard.headerRole}</div>
                 </div>
                 <div className="user-avatar">{initials}</div>
               </div>
@@ -107,10 +75,10 @@ export default function Shell(props) {
 
         {/* Mobile bottom nav */}
         <nav className="mobile-bottom-nav">
-          {NAV_ITEMS.map(item => (
+          {navItems.map(item => (
             <button key={item.id} onClick={() => {
-              if (item.id === 'cutoff') {
-                window.location.href = '/cutoff_explorer.html' + window.location.search;
+              if (item.externalHref) {
+                window.location.href = item.externalHref + window.location.search;
               } else {
                 setActiveTab(item.id);
               }
