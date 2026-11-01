@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 import './inquiry.css';
-import { getLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR_INDIA, parsePercentile, percentileError, looksLikeToken } from '../../../lib/leadForm';
+import { getEngineeringLeadTarget, ENGINEERING_NEW_SCRIPT, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR_INDIA, parsePercentile, percentileError, looksLikeToken } from '../../../lib/leadForm';
 import TestModeBanner from '../../components/TestModeBanner';
 
 const engineeringNavLinks = [
@@ -19,17 +19,42 @@ const engineeringNavLinks = [
   { label: 'Contact Us', href: '/engineering/contact' },
 ];
 
+const INITIAL_FORM = {
+  fullName: '',
+  entranceScore: '',
+  studentContact: '',
+  fatherContact: '',
+  motherContact: '',
+  coachingClass: '',
+  city: '',
+  category: 'General',
+  // Fields below are only shown/sent when the NEW engineering lead script is configured
+  // (NEXT_PUBLIC_ENGINEERING_LEAD_URL, see apps-script/engineering-leads/README.md).
+  scoreExam: '',
+  jeeMainRank: '',
+  jeeAdvancedRank: '',
+  examsAppearing: '',
+  homeState: '',
+  classStatus: '',
+  nearestBranch: 'Online',
+  consent: false,
+  website_url: '', // honeypot: real users never see or fill this
+};
+
+// Value for the "Nearest Branch" dropdown (matches the branch links ?source=pune etc.).
+const BRANCH_OPTIONS = [
+  { value: 'Andheri', label: 'Mumbai – Andheri' },
+  { value: 'Thane', label: 'Thane' },
+  { value: 'Pune', label: 'Pune' },
+  { value: 'Kolhapur', label: 'Kolhapur' },
+  { value: 'Sangli', label: 'Sangli' },
+  { value: 'Sambhajinagar', label: 'Ch. Sambhajinagar' },
+  { value: 'Online', label: 'Online / Not sure' },
+];
+
 export default function EngineeringInquiryPage() {
-  const [formData, setFormData] = useState({
-    fullName: '',
-    entranceScore: '',
-    studentContact: '',
-    fatherContact: '',
-    motherContact: '',
-    coachingClass: '',
-    city: '',
-    category: 'General',
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [isDuplicate, setIsDuplicate] = useState(false);
   
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedBudgets, setSelectedBudgets] = useState([]);
@@ -63,14 +88,16 @@ export default function EngineeringInquiryPage() {
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
       setAttribution(readAttribution());
-      setLeadTarget(getLeadTarget());
+      setLeadTarget(getEngineeringLeadTarget());
+      const preselected = BRANCH_OPTIONS.find(b => b.value.toLowerCase() === currentSource.toLowerCase());
+      if (preselected) setFormData(prev => ({ ...prev, nearestBranch: preselected.value }));
     }
   }, []);
 
   const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? sanitizePhoneInput(value) : value });
+    const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : (PHONE_FIELDS.includes(name) ? sanitizePhoneInput(value) : value) });
     if (errors[name]) setErrors({ ...errors, [name]: '' });
   };
 
@@ -98,8 +125,73 @@ export default function EngineeringInquiryPage() {
     if (!data.city.trim()) newErrors.city = 'Please enter your current city';
     if (data.fatherContact && !normalizePhone(data.fatherContact, false)) newErrors.fatherContact = PHONE_ERROR_INDIA;
     if (data.motherContact && !normalizePhone(data.motherContact, false)) newErrors.motherContact = PHONE_ERROR_INDIA;
+    if (ENGINEERING_NEW_SCRIPT) {
+      if (!data.scoreExam) newErrors.scoreExam = 'Please choose which exam this percentile is for';
+      if (data.jeeMainRank.trim() && !/^[\d,\s]+$/.test(data.jeeMainRank)) newErrors.jeeMainRank = 'Enter the rank as a number, for example 12345';
+      if (data.jeeAdvancedRank.trim() && !/^[\d,\s]+$/.test(data.jeeAdvancedRank)) newErrors.jeeAdvancedRank = 'Enter the rank as a number, for example 4500';
+      if (!data.consent) newErrors.consent = 'Please tick the box so our counsellor can contact you';
+    }
     return newErrors;
   }
+
+  // NEW engineering lead script: field names match the sheet headers (apps-script/engineering-leads).
+  // Phones/percentile are sent in the cleaned form validated above.
+  const submitToNewScript = (target) => {
+    const data = new URLSearchParams();
+    data.append('Full Name', formData.fullName.trim());
+    data.append('Student Contact', normalizePhone(formData.studentContact, false));
+    data.append('Father Contact', normalizePhone(formData.fatherContact, false));
+    data.append('Mother Contact', normalizePhone(formData.motherContact, false));
+    data.append('Coaching Class', formData.coachingClass.trim());
+    data.append('City', formData.city.trim());
+    data.append('Category', formData.category);
+    data.append('Courses', selectedCourses.join(', '));
+    data.append('Budget', selectedBudgets.join(', '));
+    data.append('Nearest Branch', formData.nearestBranch);
+    data.append('Entrance Percentile', String(parsePercentile(formData.entranceScore)));
+    data.append('Score Exam', formData.scoreExam);
+    data.append('JEE Main Rank (CRL)', formData.jeeMainRank.trim());
+    data.append('JEE Advanced Rank', formData.jeeAdvancedRank.trim());
+    data.append('Exams Appearing', formData.examsAppearing.trim());
+    data.append('Home State', formData.homeState.trim());
+    data.append('Class Status', formData.classStatus);
+    data.append('Source', source.toLowerCase() === 'seminar' ? 'Seminar' : 'Website');
+    data.append('utm_source', attribution.utm_source);
+    data.append('utm_medium', attribution.utm_medium);
+    data.append('utm_campaign', attribution.utm_campaign);
+    data.append('gclid', attribution.gclid);
+    data.append('Plan', 'Explore'); // the server ignores anything else; paid plans are set by staff
+    data.append('Consent', formData.consent ? 'Yes' : 'No');
+    data.append('website_url', formData.website_url);
+
+    fetch(target.endpoint, { method: 'POST', body: data })
+      .then(response => response.text())
+      .then(text => {
+        let res = null;
+        try { res = JSON.parse(text); } catch (parseErr) { /* handled below */ }
+        if (!res) throw new Error('Unexpected response from lead script');
+        if (res.ok === false) {
+          const first = res.errors && res.errors[0];
+          setIsLoading(false);
+          setErrorMsg(first ? first.message : (res.message || 'Submission failed. Please try again.'));
+          setTimeout(() => setErrorMsg(null), 8000);
+          return; // keep what the student typed so they can fix it
+        }
+        setToken(res.token || '');
+        setIsDuplicate(!!res.duplicate);
+        setShowModal(true);
+        setFormData({ ...INITIAL_FORM, nearestBranch: formData.nearestBranch });
+        setSelectedCourses([]);
+        setSelectedBudgets([]);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Network Error!', error);
+        setIsLoading(false);
+        setErrorMsg('Submission Failed. Try Again.');
+        setTimeout(() => setErrorMsg(null), 4000);
+      });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -113,7 +205,7 @@ export default function EngineeringInquiryPage() {
     setErrorMsg(null);
 
     // Preview / local builds must never post to the live lead sheet (see lib/leadForm.js).
-    const target = getLeadTarget();
+    const target = getEngineeringLeadTarget();
     setLeadTarget(target);
     if (!target.endpoint) {
       setToken(TEST_TOKEN);
@@ -121,6 +213,8 @@ export default function EngineeringInquiryPage() {
       setIsLoading(false);
       return;
     }
+
+    if (target.newScript) { submitToNewScript(target); return; }
 
     const data = new URLSearchParams();
     // Keep the legacy suffix: the ORIGINAL Apps Script only understands this (it falls back to the Online tab),
@@ -149,16 +243,7 @@ export default function EngineeringInquiryPage() {
         const generatedToken = tokenText.trim();
         setToken(generatedToken);
         setShowModal(true);
-        setFormData({
-          fullName: '',
-          entranceScore: '',
-          studentContact: '',
-          fatherContact: '',
-          motherContact: '',
-          coachingClass: '',
-          city: '',
-          category: 'General',
-        });
+        setFormData({ ...INITIAL_FORM, nearestBranch: formData.nearestBranch });
         setSelectedCourses([]);
         setSelectedBudgets([]);
         setIsLoading(false);
@@ -309,6 +394,56 @@ export default function EngineeringInquiryPage() {
                           </div>
                       </div>
       
+                      {ENGINEERING_NEW_SCRIPT && (
+                      <div className="form-grid" style={{ marginBottom: '28px' }}>
+                          <div>
+                              <label className="field-label">Which exam is this percentile for?</label>
+                              <select name="scoreExam" className="field-select" value={formData.scoreExam} onChange={handleInputChange}>
+                                  <option value="">— Select —</option>
+                                  <option value="JEE Main">JEE Main</option>
+                                  <option value="MHT-CET">MHT-CET</option>
+                                  <option value="Other State CET">Other State CET</option>
+                              </select>
+                              {errors.scoreExam && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.scoreExam}</p>}
+                          </div>
+                          <div>
+                              <label className="field-label">Nearest ASMI Branch</label>
+                              <select name="nearestBranch" className="field-select" value={formData.nearestBranch} onChange={handleInputChange}>
+                                  {BRANCH_OPTIONS.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
+                              </select>
+                          </div>
+                          <div>
+                              <label className="field-label">JEE Main Rank (CRL) — optional</label>
+                              <input name="jeeMainRank" className="field-input" placeholder="E.g., 12345" type="text" inputMode="numeric" value={formData.jeeMainRank} onChange={handleInputChange}/>
+                              {errors.jeeMainRank && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.jeeMainRank}</p>}
+                          </div>
+                          <div>
+                              <label className="field-label">JEE Advanced Rank — optional</label>
+                              <input name="jeeAdvancedRank" className="field-input" placeholder="E.g., 4500" type="text" inputMode="numeric" value={formData.jeeAdvancedRank} onChange={handleInputChange}/>
+                              {errors.jeeAdvancedRank && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.jeeAdvancedRank}</p>}
+                          </div>
+                          <div>
+                              <label className="field-label">Exams Appearing In</label>
+                              <input name="examsAppearing" className="field-input" placeholder="E.g., JEE Main, MHT-CET, BITSAT" type="text" value={formData.examsAppearing} onChange={handleInputChange}/>
+                          </div>
+                          <div>
+                              <label className="field-label">Class Status</label>
+                              <select name="classStatus" className="field-select" value={formData.classStatus} onChange={handleInputChange}>
+                                  <option value="">— Select —</option>
+                                  <option value="Class 12 appearing">Class 12 – appearing</option>
+                                  <option value="Class 12 passed">Class 12 – passed</option>
+                                  <option value="Repeater / dropper">Repeater / dropper</option>
+                                  <option value="Diploma">Diploma</option>
+                                  <option value="Other">Other</option>
+                              </select>
+                          </div>
+                          <div className="col-span-2">
+                              <label className="field-label">Home State</label>
+                              <input name="homeState" className="field-input" placeholder="E.g., Maharashtra" type="text" value={formData.homeState} onChange={handleInputChange}/>
+                          </div>
+                      </div>
+                      )}
+
                       <div style={{ marginBottom: '28px' }}>
                           <span className="section-lbl">Desired Branch (Select Multiple)</span>
                           <div className="course-pills">
@@ -336,6 +471,25 @@ export default function EngineeringInquiryPage() {
                           </div>
                       </div>
       
+                      {ENGINEERING_NEW_SCRIPT && (
+                      <>
+                      {/* Honeypot: hidden from people, bots tend to fill it. The server drops such submissions. */}
+                      <div style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }} aria-hidden="true">
+                          <label>Leave this empty
+                              <input name="website_url" type="text" tabIndex={-1} autoComplete="off" value={formData.website_url} onChange={handleInputChange}/>
+                          </label>
+                      </div>
+                      {/* Consent wording is a DRAFT: have it reviewed before launch. */}
+                      <div style={{ marginBottom: '24px' }}>
+                          <label style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, lineHeight: 1.5, cursor: 'pointer' }}>
+                              <input name="consent" type="checkbox" checked={formData.consent} onChange={handleInputChange} style={{ marginTop: 3 }}/>
+                              <span>I agree that ASMI Career may contact me and my parents by call, SMS and WhatsApp about engineering counselling, and store the details I have shared for this purpose.</span>
+                          </label>
+                          {errors.consent && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.consent}</p>}
+                      </div>
+                      </>
+                      )}
+
                       <div>
                           {!isLoading && !errorMsg && (
                             <button id="submitBtn" type="submit" className="submit-btn">
@@ -369,12 +523,14 @@ export default function EngineeringInquiryPage() {
             <div className="modal-card">
                 <span className="material-symbols-outlined modal-icon">check_circle</span>
                 <h2 className="modal-heading">Thank You!</h2>
-                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : 'Welcome to ASMI Engineering. Your details are registered.'}</p>
-                <div className="modal-token-box">
-                    <span className="modal-token-lbl">Your Token Number</span>
-                    <span id="tokenDisplay">{token}</span>
-                </div>
-                <p className="modal-msg">Please take a seat. A counsellor will call your token shortly.</p>
+                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : isDuplicate ? 'We already have your details from today. Your original token is below.' : 'Welcome to ASMI Engineering. Your details are registered.'}</p>
+                {token && (
+                  <div className="modal-token-box">
+                      <span className="modal-token-lbl">Your Token Number</span>
+                      <span id="tokenDisplay">{token}</span>
+                  </div>
+                )}
+                <p className="modal-msg">{token ? 'Please take a seat. A counsellor will call your token shortly.' : 'A counsellor will contact you shortly.'}</p>
                 <button onClick={() => setShowModal(false)} className="modal-close">Close</button>
             </div>
         </div>

@@ -35,6 +35,26 @@ export function getLeadTarget() {
   };
 }
 
+// ── Engineering lead script (apps-script/engineering-leads) ─────────────
+// When NEXT_PUBLIC_ENGINEERING_LEAD_URL is set at build time the engineering form shows the extra fields and posts
+// the new payload there. When it is empty nothing changes: the form uses getLeadTarget() and the old payload.
+// Same preview safety as above: on a non-live host a TEST MODE banner is shown. Point preview builds at a script
+// that is attached to COPIES of the sheets (Cloudflare lets production and preview use different variable values).
+export const ENGINEERING_LEAD_URL = process.env.NEXT_PUBLIC_ENGINEERING_LEAD_URL || '';
+export const ENGINEERING_NEW_SCRIPT = !!ENGINEERING_LEAD_URL;
+
+export function getEngineeringLeadTarget() {
+  if (!ENGINEERING_NEW_SCRIPT) return { ...getLeadTarget(), newScript: false };
+  const host = typeof window !== 'undefined' ? window.location.hostname : '';
+  const isProd = PRODUCTION_HOSTS.includes(host);
+  return {
+    endpoint: ENGINEERING_LEAD_URL,
+    newScript: true,
+    testMode: !isProd,
+    label: isProd ? '' : 'TEST MODE: submissions go to the TEST endpoint, not the live lead sheet.',
+  };
+}
+
 export const TEST_TOKEN = 'TEST-NOT-SENT';
 
 // ── Marketing attribution (utm_* + gclid) ───────────────────────────────
