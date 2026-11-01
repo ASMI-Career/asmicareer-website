@@ -1447,3 +1447,31 @@ input[type="range"]::-moz-range-thumb {
 .tb-govt    { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
 .tb-private { background: var(--primary-bg); color: var(--navy); border-color: var(--primary-border); }
 .tb-deemed  { background: #f5f3ff; color: #6d28d9; border-color: #ddd6fe; }
+
+
+/* ══════════════════════════════════════════════
+   ENGINEERING THEME — same layout, colours of asmicareer.in/engineering
+   (teal #00C8B4 / #00A896 on navy #0a1628). Applies only when page.js sets data-stream="engineering".
+   ══════════════════════════════════════════════ */
+:root[data-stream="engineering"] {
+  --primary: #0a1628;           /* dashboard.css later re-declares --primary as the dark navy; keep that role */
+  --primary-accent: #00A896;
+  --highlight: #00897b;
+  --primary-light: #5eead4;
+  --primary-bg: rgba(0, 200, 180, 0.10);
+  --primary-border: rgba(0, 200, 180, 0.28);
+
+  --navy: #0a1628;
+  --navy-mid: #0d1f35;
+
+  --purple: #00A896;
+  --purple-light: #00C8B4;
+  --purple-bg: #e6faf7;
+  --purple-border: #bdeee8;
+  --purple-text: #00897b;
+  --purple-header: #effcfa;
+}
+:root[data-stream="engineering"] .hero-card { background: linear-gradient(135deg, #0a1628 0%, #0d1f35 55%, #00A896 140%); }
+:root[data-stream="engineering"] .step-circle.completed { background: #00C8B4 !important; border-color: #00C8B4 !important; color: #0a1628 !important; }
+:root[data-stream="engineering"] .step-circle.active { border-color: #00C8B4 !important; color: #00A896 !important; box-shadow: 0 0 0 4px rgba(0, 200, 180, 0.18); }
+:root[data-stream="engineering"] .progress-line-fill { background: #00C8B4 !important; }
