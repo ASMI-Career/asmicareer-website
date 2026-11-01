@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './dashboard.css';
 import { streamFromLocation, getStreamConfig, endpointFor } from './config';
 import useShell from './hooks/useShell';
@@ -27,6 +27,14 @@ export default function StudentDashboard() {
   const [streamId] = useState(streamFromLocation);
   const config = getStreamConfig(streamId);
   const endpoint = endpointFor(streamId);
+
+  // Engineering gets its own colours (see the [data-stream="engineering"] block at the end of dashboard.css).
+  // Medical sets nothing, so its page is exactly as before.
+  useEffect(() => {
+    if (config.id !== 'engineering') return undefined;
+    document.documentElement.setAttribute('data-stream', 'engineering');
+    return () => document.documentElement.removeAttribute('data-stream');
+  }, [config.id]);
 
   const shell = useShell();
   const docs = useDocuments({ config, endpoint, currentToken });
