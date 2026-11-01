@@ -54,3 +54,48 @@ export function roundValues(entry, round, pwd) {
 export const fmtNum = (v) => (v != null ? Number(v).toLocaleString('en-IN') : '—');
 
 export const parseRank = (s) => { const n = parseInt(String(s || '').replace(/[^0-9]/g, ''), 10); return n > 0 ? n : null; };
+
+// ── Percentile -> rank estimates (used by the engineering Predictor) ─────────────────────────────────────────────
+// JEE Main: NTA publishes a percentile, not a rank. Rank is roughly (100 - percentile)% of all candidates, so the number of
+// candidates matters. It is set in the config (engineeringPredictor.jeeMainCandidates) and is an ESTIMATE: not an NTA figure.
+export function estimateMainRank(percentile, candidates) {
+  const p = Number(percentile);
+  if (!(p >= 0 && p <= 100) || !(candidates > 0)) return null;
+  return Math.max(1, Math.round(((100 - p) / 100) * candidates));
+}
+
+// Maharashtra: no formula needed. Last year's results list a closing percentile next to every closing merit number, so the
+// percentile -> merit relation is read straight from them. Median of the merit numbers whose closing percentile is close to
+// the student's (window widens until at least 6 points are found). Returns { merit, inRange } or null without data.
+export function buildMhCurve(colleges) {
+  const seen = new Set(); const pairs = [];
+  for (const c of colleges || []) for (const r of Object.values(c.rounds || {})) {
+    if (r && r.AIR > 0 && r.pct > 0) { const k = r.pct + '|' + r.AIR; if (!seen.has(k)) { seen.add(k); pairs.push([r.pct, r.AIR]); } }
+  }
+  return pairs.length >= 50 ? pairs.sort((a, b) => a[0] - b[0]) : null;   // ascending percentile
+}
+export function estimateMhMerit(percentile, pairs) {
+  const p = Number(percentile);
+  if (!pairs || !(p > 0 && p <= 100)) return null;
+  const lo = pairs[0][0], hi = pairs[pairs.length - 1][0];
+  const inRange = p >= lo && p <= hi;
+  const q = Math.min(Math.max(p, lo), hi);
+  let w = 0.05, near = [];
+  while (w <= 20) { near = pairs.filter(x => Math.abs(x[0] - q) <= w); if (near.length >= 6) break; w *= 2; }
+  if (!near.length) return null;
+  const m = near.map(x => x[1]).sort((a, b) => a - b);
+  return { merit: m[Math.floor(m.length / 2)], inRange };
+}
+
+// JoSAA closing ranks for every category except Open are CATEGORY ranks (checked against the data: OBC-NCL closings are about 0.39x the
+// Open ones, EWS 0.16x, SC 0.22x, ST 0.11x). So a reserved-category student must compare their category rank, not their CRL.
+export const isReservedJosaa = (counselling, categoryKey) => counselling !== 'MH' && !!categoryKey && categoryKey !== 'OPEN';
+
+// Rough category rank from a CRL estimate: CRL x the category's share of candidates. A shortcut for students who only know a percentile;
+// the shares are set in the config and are estimates.
+export function estimateCategoryRank(crl, categoryKey, shares) {
+  if (crl == null) return null;
+  if (!categoryKey || categoryKey === 'OPEN') return crl;
+  const s = shares && shares[categoryKey];
+  return s > 0 ? Math.max(1, Math.round(crl * s)) : null;
+}

@@ -18,6 +18,7 @@ import Dashboard from './components/Dashboard';
 import Predictor from './components/Predictor';
 import CutoffExplorer from './components/CutoffExplorer';
 import EngineeringCutoff from './components/EngineeringCutoff';
+import EngineeringPredictor from './components/EngineeringPredictor';
 import Institutes from './components/Institutes';
 import Documents from './components/Documents';
 
@@ -53,7 +54,7 @@ export default function StudentDashboard() {
     setCpScoreInput: predictor.setCpScoreInput,
   });
   const docSections = useDocumentSections({ config, checkedDocs: docs.checkedDocs, docCategory: docs.docCategory, docQuota: docs.docQuota, studentTracks: student.studentTracks });
-  const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' });
+  const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' || shell.activeTab === 'predictor' });
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
   if (student.authState !== 'ok') return <TokenGate state={student.authState} />;
@@ -66,7 +67,7 @@ export default function StudentDashboard() {
   return (
     <Shell {...ctx}>
       {activeTab === 'dashboard' && <Dashboard {...ctx} />}
-      {activeTab === 'predictor' && config.modules.includes('predictor') && <Predictor {...ctx} />}
+      {activeTab === 'predictor' && config.modules.includes('predictor') && (config.engineeringPredictor ? <EngineeringPredictor {...ctx} /> : <Predictor {...ctx} />)}
       {activeTab === 'cutoff' && config.modules.includes('cutoff') && (config.engineeringCutoff ? <EngineeringCutoff {...ctx} /> : <CutoffExplorer {...ctx} />)}
       {activeTab === 'institutes' && config.modules.includes('institutes') && <Institutes {...ctx} />}
       {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
