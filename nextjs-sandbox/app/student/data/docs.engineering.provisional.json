@@ -1,0 +1,104 @@
+{
+  "_status": "PROVISIONAL — DRAFT document list. The GROUP names follow the engineering lead's list (exam score cards, Class 10/12, domicile, caste + validity, non-creamy layer, EWS/income, disability, identity/photos, registration/verification slips). The individual documents, copy counts and notes below are a draft and must be confirmed by the engineering lead.",
+  "sections": [
+    {
+      "title": "Entrance Exam Score Cards",
+      "docs": [
+        { "id": "jee-main-scorecard", "label": "JEE Main Scorecard / Rank Letter", "copies": "Original + 2 self-attested photocopies" },
+        { "id": "jee-adv-scorecard",  "label": "JEE Advanced Scorecard / Rank Letter", "copies": "Original + 2 self-attested photocopies", "note": "Only if you appeared for JEE Advanced" },
+        { "id": "mht-cet-scorecard",  "label": "MHT-CET Scorecard", "copies": "Original + 2 self-attested photocopies", "note": "Needed for Maharashtra CAP" }
+      ]
+    },
+    {
+      "title": "Class 10 & Class 12",
+      "docs": [
+        { "id": "cls10-mark", "label": "Class 10 Marksheet", "copies": "Original + 3 attested photocopies", "note": "Also used as date of birth proof" },
+        { "id": "cls10-cert", "label": "Class 10 Passing Certificate", "copies": "Original + 3 attested photocopies" },
+        { "id": "cls12-mark", "label": "Class 12 Marksheet", "copies": "Original + 3 attested photocopies" },
+        { "id": "cls12-cert", "label": "Class 12 Passing Certificate / School Leaving Certificate", "copies": "Original + 3 attested photocopies" }
+      ]
+    },
+    {
+      "title": "Domicile",
+      "docs": [
+        { "id": "domicile", "label": "Domicile / Nativity Certificate", "copies": "Original + 2 attested photocopies", "note": "Needed for home-state and Maharashtra seats" }
+      ]
+    },
+    {
+      "title": "Identity & Photographs",
+      "docs": [
+        { "id": "aadhaar-self",   "label": "Aadhaar Card — Student", "copies": "Original + 3 self-attested photocopies" },
+        { "id": "aadhaar-parent", "label": "Aadhaar Card — Parent", "copies": "Original + 2 self-attested photocopies" },
+        { "id": "photos",         "label": "Passport-size Photographs", "copies": "10–15 recent, white background" }
+      ]
+    },
+    {
+      "title": "Disability (only if applicable)",
+      "docs": [
+        { "id": "pwd-cert", "label": "Disability Certificate / UDID Card", "copies": "Original + 2 attested photocopies", "note": "Only if you are claiming a PwD seat" }
+      ]
+    }
+  ],
+  "category": {
+    "SC": [
+      { "title": "Caste Certificate + Validity (SC)", "docs": [
+        { "id": "caste-sc",    "label": "Caste Certificate (SC)", "copies": "Original + 2 attested photocopies" },
+        { "id": "validity-sc", "label": "Caste Validity Certificate", "copies": "Original + 1 photocopy" }
+      ] }
+    ],
+    "ST": [
+      { "title": "Tribe Certificate + Validity (ST)", "docs": [
+        { "id": "tribe-st",    "label": "Tribe Certificate (ST)", "copies": "Original + 2 attested photocopies" },
+        { "id": "validity-st", "label": "Tribe Validity Certificate", "copies": "Original + 1 photocopy" }
+      ] }
+    ],
+    "OBC": [
+      { "title": "Caste Certificate + Validity (OBC)", "docs": [
+        { "id": "caste-obc",    "label": "OBC Certificate", "copies": "Original + 2 attested photocopies" },
+        { "id": "validity-obc", "label": "Caste Validity Certificate", "copies": "Original + 1 photocopy" }
+      ] },
+      { "title": "Non-Creamy Layer", "docs": [
+        { "id": "ncl-obc", "label": "Non-Creamy Layer (NCL) Certificate", "copies": "Original + 2 attested photocopies", "note": "Must be recent (check the validity period for the current year)" }
+      ] }
+    ],
+    "SEBC": [
+      { "title": "Caste Certificate + Validity (SEBC)", "docs": [
+        { "id": "caste-sebc",    "label": "SEBC Certificate", "copies": "Original + 2 attested photocopies" },
+        { "id": "validity-sebc", "label": "Caste Validity Certificate", "copies": "Original + 1 photocopy" }
+      ] },
+      { "title": "Non-Creamy Layer", "docs": [
+        { "id": "ncl-sebc", "label": "Non-Creamy Layer (NCL) Certificate", "copies": "Original + 2 attested photocopies" }
+      ] }
+    ],
+    "VJ/NT/SBC": [
+      { "title": "Caste Certificate + Validity (VJ / NT / SBC)", "docs": [
+        { "id": "caste-vjnt",    "label": "Caste Certificate (VJ / NT / SBC)", "copies": "Original + 2 attested photocopies" },
+        { "id": "validity-vjnt", "label": "Caste Validity Certificate", "copies": "Original + 1 photocopy" }
+      ] },
+      { "title": "Non-Creamy Layer", "docs": [
+        { "id": "ncl-vjnt", "label": "Non-Creamy Layer (NCL) Certificate", "copies": "Original + 2 attested photocopies" }
+      ] }
+    ],
+    "EWS": [
+      { "title": "EWS / Income", "docs": [
+        { "id": "ews-cert",    "label": "EWS Certificate", "copies": "Original + 2 attested photocopies", "note": "Current financial year" },
+        { "id": "income-cert", "label": "Income Certificate", "copies": "Original + 1 photocopy" }
+      ] }
+    ]
+  },
+  "track": {
+    "JoSAA": { "title": "JoSAA Registration & Verification", "docs": [
+      { "id": "josaa-reg-slip",    "label": "JoSAA Registration Confirmation", "copies": "2 printouts" },
+      { "id": "josaa-choice-slip", "label": "JoSAA Choice Filling / Locking Slip", "copies": "2 printouts" },
+      { "id": "josaa-allotment",   "label": "JoSAA Seat Allotment Letter", "copies": "Original + 2 printouts" },
+      { "id": "josaa-reporting",   "label": "JoSAA Reporting / Verification Slip", "copies": "Original + 1 photocopy" }
+    ] },
+    "Maharashtra CAP": { "title": "Maharashtra CAP Registration & Verification", "docs": [
+      { "id": "cap-application",   "label": "CAP Application Form Printout", "copies": "2 printouts" },
+      { "id": "cap-verification",  "label": "CAP Document Verification Receipt", "copies": "Original + 1 photocopy" },
+      { "id": "cap-allotment",     "label": "CAP Seat Allotment Letter", "copies": "Original + 2 printouts" },
+      { "id": "cap-fee-receipt",   "label": "CAP Admission Fee Receipt", "copies": "Original + 1 photocopy" }
+    ] }
+  },
+  "quota": {}
+}

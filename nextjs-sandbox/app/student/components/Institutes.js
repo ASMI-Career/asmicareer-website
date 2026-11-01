@@ -1,8 +1,15 @@
+import { useState } from 'react';
 import { formatFees } from '../lib/format';
+import AddChoicePanel from './AddChoicePanel';
 
 export default function Institutes(props) {
-  const { config, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
+  const { config, shortlistGroups, studentTracks, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
   const inst = config.institutes;
+  // Engineering: a choice needs branch + seat type, so the heart opens a small form instead of toggling straight away.
+  const [pendingCollege, setPendingCollege] = useState(null);
+  const isShortlistedFor = (college) => config.shortlist.askDetails
+    ? Object.values(shortlistGroups).some(arr => Array.isArray(arr) && arr.some(i => i && i.institute === college.name))
+    : shortlist.includes(college.name);
   const Card = inst.detailHref ? 'a' : 'div';   // link to a detail page only when the stream has one
   const uniqueStates = Array.from(new Set(collegesList.map(c => c.state).filter(Boolean))).sort();
   const filteredStatesList = uniqueStates.filter(s => s.toLowerCase().includes(instStateSearch.toLowerCase()));
@@ -111,12 +118,17 @@ export default function Institutes(props) {
                     <div style={{ fontSize: 13, color: 'var(--text-500)', marginBottom: 16 }}>
                       Showing <strong style={{ color: 'var(--text-900)' }}>{getFilteredCollegesList().length}</strong> college{getFilteredCollegesList().length !== 1 ? 's' : ''} matching your criteria.
                     </div>
+                    {config.shortlist.askDetails && pendingCollege && (
+                      <AddChoicePanel college={pendingCollege} config={config} studentTracks={studentTracks} shortlist={shortlist}
+                        onAdd={(label, entry) => { handleToggleShortlist(label, entry); setPendingCollege(null); }}
+                        onCancel={() => setPendingCollege(null)} />
+                    )}
                     {getFilteredCollegesList().length === 0 ? (
                       <div className="card-sm empty-state">No colleges found. Try adjusting your filters.</div>
                     ) : (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
                         {getFilteredCollegesList().slice(0, 48).map(college => {
-                          const isShortlisted = shortlist.includes(college.name);
+                          const isShortlisted = isShortlistedFor(college);
                           return (
                             <Card {...(inst.detailHref ? { href: inst.detailHref.replace('{slug}', college.slug), target: '_blank', rel: 'noreferrer' } : {})}
                               key={college.slug} className="college-card">
@@ -142,7 +154,7 @@ export default function Institutes(props) {
                                     ★ {college.asmi_pulse_score}/5
                                   </span>
                                 )}
-                                <button onClick={e => { e.preventDefault(); e.stopPropagation(); handleToggleShortlist(college.name, college); }}
+                                <button onClick={e => { e.preventDefault(); e.stopPropagation(); if (config.shortlist.askDetails) setPendingCollege(college); else handleToggleShortlist(college.name, college); }}
                                   style={{ position: 'absolute', bottom: 10, right: 10, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.9)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: isShortlisted ? '#dc2626' : 'var(--navy)' }}>
                                   {isShortlisted ? '♥' : '♡'}
                                 </button>

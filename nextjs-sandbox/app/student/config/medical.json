@@ -53,6 +53,7 @@
     "newsUrl": "https://asmicareer.in/medical/news",
     "shortlistIcon": "🏥",
     "shortlistEditTab": "predictor",
+    "shortlistText": { "heroNone": "No colleges shortlisted yet", "heroOne": "college", "heroMany": "colleges", "cardNone": "No colleges shortlisted yet.", "more": "colleges", "add": "+ Add More Colleges" },
     "deadlineCount": 4,
     "actionRequiredDocId": "neet-admit"
   },
@@ -69,6 +70,8 @@
     ]
   },
   "shortlist": {
+    "itemMode": "name",
+    "askDetails": false,
     "groups": ["MCC", "MH", "OPEN"],
     "groupRules": {
       "byPoolOrQuota": [
