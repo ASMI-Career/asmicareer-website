@@ -32,7 +32,7 @@
 //  If your sheet says something different, change the VALUE on the right, nothing else.
 // ════════════════════════════════════════════════════════════════
 
-var SCRIPT_VERSION = '1.0.0';
+var SCRIPT_VERSION = '1.1.0';
 
 var ENQUIRY_TABS     = ['Online', 'Andheri', 'Thane', 'Pune', 'Sangli', 'Kolhapur', 'Sambhajinagar', 'Seminar'];
 var NEVER_WRITE_TABS = ['All Leads'];            // formula tab: refused even if routing ever pointed at it
@@ -126,6 +126,25 @@ var BRANCH_ALIASES = [
   ['sambhajinagar', 'Sambhajinagar'], ['sambhaji', 'Sambhajinagar'], ['aurangabad', 'Sambhajinagar']
 ];
 
+// Columns the student DASHBOARD PAGE reads and writes (same "Student Dashboard" tab). Kept separate from DASHBOARD_HEADERS so the
+// lead flow keeps working even if these columns have not been added yet. Assumed names: change the VALUE if your sheet differs.
+var STUDENT_HEADERS = {
+  token:              'Token',
+  stream:             'Stream',
+  name:               'Name',
+  score:              'Score',
+  category:           'Category',
+  stage:              'Stage',
+  tracks:             'Tracks',
+  counsellorName:     'Counsellor Name',
+  counsellorWhatsapp: 'Counsellor WhatsApp',
+  whatsappGroupLink:  'WhatsApp Group Link',
+  savedShortlist:     'Saved Shortlist',
+  documentStatus:     'Document Status'
+};
+var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true };
+var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
+
 var TOKEN_PREFIX   = 'ENG-';
 var TOKEN_LENGTH   = 10;
 var TOKEN_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';   // 31 chars; no I, L, O, 0, 1 (easy to read aloud)
@@ -147,6 +166,12 @@ var TEXT_FORMAT = '@', GENERAL_FORMAT = 'General', DATE_FORMAT = 'yyyy-mm-dd hh:
 
 function doPost(e) {
   try {
+    // The student dashboard saves with a JSON body ({ action: 'saveShortlist', token, colleges }); the lead form posts form fields.
+    var body = parseJsonBody_(e);
+    if (body && body.action) {
+      if (!DASH_ACTIONS[body.action]) return json_({ error: 'invalid_action' });
+      return json_(dashboardAction_(body.action, body.token, body));
+    }
     return json_(handleSubmission_((e && e.parameter) || {}));
   } catch (err) {
     log_('doPost crashed before the lead could be handled: ' + describeError_(err));
@@ -155,8 +180,18 @@ function doPost(e) {
   }
 }
 
-/** Health check only. Exposes nothing about sheets or configuration. */
-function doGet() {
+/**
+ * GET ?action=getStudent&token=...            -> the student's dashboard data
+ * GET ?action=saveDocStatus&token=...&data=.. -> saves the document checklist (same call the Medical dashboard makes)
+ * GET with no action                          -> health check only. Exposes nothing about sheets or configuration.
+ * (saveShortlist is POST only.)
+ */
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.action) {
+    if (p.action === 'getStudent' || p.action === 'saveDocStatus') return json_(dashboardAction_(p.action, p.token, { data: p.data }));
+    return json_({ error: 'invalid_action' });
+  }
   return json_({ ok: true, service: 'asmi-engineering-leads', version: SCRIPT_VERSION });
 }
 
@@ -381,7 +416,10 @@ function verifyHeaders() {
   });
   var dsh = dashSS.getSheetByName(DASHBOARD_TAB);
   if (!dsh) problems.push('Dashboard tab not found: ' + DASHBOARD_TAB);
-  else { try { resolveHeaders_(dsh, DASHBOARD_HEADERS, 'Dashboard/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); } }
+  else {
+    try { resolveHeaders_(dsh, DASHBOARD_HEADERS, 'Dashboard/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
+    try { resolveHeaders_(dsh, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
+  }
 
   NEVER_WRITE_TABS.forEach(function (t) {
     if (!enqSS.getSheetByName(t)) log_('Note: formula tab "' + t + '" not found (fine; we never write it).');
@@ -395,6 +433,145 @@ function verifyHeaders() {
   }
   log_('verifyHeaders OK: all ' + ENQUIRY_TABS.length + ' enquiry tabs + dashboard tab have every required header.');
   return { ok: true, problems: [] };
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  STUDENT DASHBOARD ACTIONS  (getStudent / saveShortlist / saveDocStatus)
+//  For the Engineering Dashboard workbook, "Student Dashboard" tab. Columns by header name (STUDENT_HEADERS).
+// ════════════════════════════════════════════════════════════════
+
+function parseJsonBody_(e) {
+  try {
+    var c = e && e.postData && e.postData.contents;
+    if (typeof c === 'string' && /^\s*\{/.test(c)) { var o = JSON.parse(c); return (o && typeof o === 'object') ? o : null; }
+  } catch (err) { /* not JSON: it is a normal form post */ }
+  return null;
+}
+
+/** Always returns a plain object, never throws. Error codes: not_found, invalid_input, busy, server_error. */
+function dashboardAction_(action, token, payload) {
+  try {
+    var tok = String(token === undefined || token === null ? '' : token).trim();
+    if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };            // wrong shape: never even looks at the sheet
+
+    var cfg = getConfig_();
+    var sheet = SpreadsheetApp.openById(cfg.dashboardId).getSheetByName(DASHBOARD_TAB);
+    if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
+    var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB);
+
+    var row = findTokenRow_(sheet, cols.token, tok);
+    if (!row) return { error: 'not_found' };
+    // This script only serves engineering students: a Medical (or blank) Stream behind an ENG- token is "not found".
+    if (String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+
+    if (action === 'getStudent') return { success: true, data: readStudent_(sheet, row, cols) };
+
+    var lock = LockService.getScriptLock();
+    var locked = false;
+    try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+    if (!locked) return { error: 'busy' };
+    try {
+      if (action === 'saveShortlist') {
+        var v = validateShortlist_(payload && payload.colleges);
+        if (!v) return { error: 'invalid_input' };
+        sheet.getRange(row, cols.savedShortlist).setNumberFormat(TEXT_FORMAT).setValue(v.json);   // text format: nothing is read as a formula
+        return { success: true, count: v.count };
+      }
+      if (action === 'saveDocStatus') {
+        var d = validateDocStatus_(payload && payload.data);
+        if (!d) return { error: 'invalid_input' };
+        sheet.getRange(row, cols.documentStatus).setNumberFormat(TEXT_FORMAT).setValue(d);
+        return { success: true };
+      }
+    } finally {
+      lock.releaseLock();
+    }
+    return { error: 'invalid_action' };
+  } catch (err) {
+    log_('Dashboard action ' + action + ' failed: ' + describeError_(err));
+    notifyError_(err && err.name === 'HeaderError' ? 'Dashboard page: missing/ambiguous sheet header' : 'Dashboard action failed', describeError_(err));
+    return { error: 'server_error' };       // no details to the browser
+  }
+}
+
+/** Row number of the exact token (trimmed), or 0. Reads only the Token column. */
+function findTokenRow_(sheet, tokenCol, token) {
+  var last = sheet.getLastRow();
+  if (last <= HEADER_ROW) return 0;
+  var vals = sheet.getRange(HEADER_ROW + 1, tokenCol, last - HEADER_ROW, 1).getValues();
+  for (var i = 0; i < vals.length; i++) if (String(vals[i][0]).trim() === token) return HEADER_ROW + 1 + i;
+  return 0;
+}
+
+/** The ONLY fields the page uses. Add a field here only when the page needs it. Never a student or parent phone number. */
+function readStudent_(sheet, row, cols) {
+  var vals = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+  var v = function (key) { var x = vals[cols[key] - 1]; return (x === null || x === undefined) ? '' : x; };
+  var score = v('score'), scoreNum = (score === '' ? null : Number(score));
+  return {
+    name:                String(v('name')).trim(),
+    score:               (scoreNum !== null && isFinite(scoreNum)) ? scoreNum : null,     // a number, decimals kept (percentile 98.37)
+    category:            String(v('category')).trim(),
+    stage:               String(v('stage')).trim(),
+    tracks:              splitTracks_(v('tracks')),
+    counsellor_name:     String(v('counsellorName')).trim(),
+    counsellor_whatsapp: String(v('counsellorWhatsapp')).replace(/\D/g, ''),               // the COUNSELLOR's number, digits only (the page's "Call the Advisor" button)
+    whatsapp_group_link: safeHttpUrl_(v('whatsappGroupLink')),
+    saved_colleges:      parseJsonObject_(v('savedShortlist')),
+    document_status:     validDocStatusString_(v('documentStatus'))
+  };
+}
+
+function splitTracks_(raw) {
+  return String(raw === null || raw === undefined ? '' : raw).split(/[,;|]/)
+    .map(function (t) { return cleanText_(t, 40); }).filter(function (t) { return t; }).slice(0, 10);
+}
+function safeHttpUrl_(raw) { var u = String(raw === null || raw === undefined ? '' : raw).trim(); return /^https?:\/\/[^\s]+$/i.test(u) && u.length <= 500 ? u : ''; }
+function parseJsonObject_(raw) {
+  try { var o = JSON.parse(String(raw)); return (o && typeof o === 'object' && !Array.isArray(o)) ? o : {}; } catch (e) { return {}; }
+}
+function validDocStatusString_(raw) {
+  var s = String(raw === null || raw === undefined ? '' : raw).trim();
+  if (!s) return null;
+  var norm = validateDocStatus_(s);
+  return norm || null;
+}
+
+/** colleges must be { group: [ {item}, ... ], ... }. Returns { json, count } or null. Item fields are page-defined (institute, branch, seatType, ...). */
+function validateShortlist_(c) {
+  if (!c || typeof c !== 'object' || Array.isArray(c)) return null;
+  var keys = Object.keys(c);
+  if (keys.length > SHORTLIST_MAX_GROUPS) return null;
+  var out = {}, total = 0;
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i], arr = c[k];
+    if (!/^[A-Za-z0-9_-]{1,30}$/.test(k) || !Array.isArray(arr)) return null;
+    total += arr.length;
+    if (total > SHORTLIST_MAX_ITEMS) return null;
+    for (var j = 0; j < arr.length; j++) {
+      var it = arr[j];
+      if (!it || typeof it !== 'object' || Array.isArray(it) || JSON.stringify(it).length > SHORTLIST_ITEM_MAX_CHARS) return null;
+    }
+    out[k] = arr;
+  }
+  var json = JSON.stringify(out);
+  if (json.length > SHORTLIST_MAX_CHARS) return null;
+  return { json: json, count: total };
+}
+
+/** raw = JSON string or object { checked: [ids], category, quota }. Returns the normalised JSON string, or null. */
+function validateDocStatus_(raw) {
+  var o;
+  try { o = (typeof raw === 'string') ? JSON.parse(raw) : raw; } catch (e) { return null; }
+  if (!o || typeof o !== 'object' || Array.isArray(o) || !Array.isArray(o.checked) || o.checked.length > DOC_MAX_IDS) return null;
+  var seen = {}, checked = [];
+  for (var i = 0; i < o.checked.length; i++) {
+    var id = o.checked[i];
+    if (typeof id !== 'string' || !/^[A-Za-z0-9_.-]{1,60}$/.test(id)) return null;
+    if (!seen[id]) { seen[id] = true; checked.push(id); }
+  }
+  return JSON.stringify({ checked: checked, category: cleanText_(o.category, 30), quota: cleanText_(o.quota, 30) });
 }
 
 
