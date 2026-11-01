@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
 import './inquiry.css';
-import { LEAD_ENDPOINT, EMPTY_ATTR, readAttribution, cleanMobile, isValidMobile, MOBILE_ERROR, looksLikeToken } from '../../../lib/leadForm';
+import { getLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR_INDIA, parsePercentile, percentileError, looksLikeToken } from '../../../lib/leadForm';
+import TestModeBanner from '../../components/TestModeBanner';
 
 const engineeringNavLinks = [
   { label: 'Colleges', href: '/engineering/colleges' },
@@ -40,6 +41,7 @@ export default function EngineeringInquiryPage() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [errors, setErrors] = useState({});
   const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
+  const [leadTarget, setLeadTarget] = useState(null); // where submissions go (TEST MODE banner on non-live hosts)
 
   const branchDetails = {
     'andheri':       { phone: '7410019077', address: '42, 4th Floor, A Wing, Silver Astra, J. B. Nagar, Andheri East.' },
@@ -61,13 +63,14 @@ export default function EngineeringInquiryPage() {
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
       setAttribution(readAttribution());
+      setLeadTarget(getLeadTarget());
     }
   }, []);
 
   const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? cleanMobile(value) : value });
+    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? sanitizePhoneInput(value) : value });
     if (errors[name]) setErrors({ ...errors, [name]: '' });
   };
 
@@ -90,14 +93,11 @@ export default function EngineeringInquiryPage() {
   function validateForm(data) {
     const newErrors = {};
     if (!data.fullName.trim()) newErrors.fullName = 'Please enter the student\'s full name';
-    const pct = Number(data.entranceScore);
-    if (data.entranceScore === '' || Number.isNaN(pct) || pct <= 0 || pct > 100) {
-      newErrors.entranceScore = 'Enter your JEE / MHT-CET percentile as a number between 0 and 100 (e.g. 98.5)';
-    }
-    if (!isValidMobile(data.studentContact)) newErrors.studentContact = MOBILE_ERROR;
+    if (parsePercentile(data.entranceScore) === null) newErrors.entranceScore = percentileError(data.entranceScore);
+    if (!normalizePhone(data.studentContact, false)) newErrors.studentContact = PHONE_ERROR_INDIA;
     if (!data.city.trim()) newErrors.city = 'Please enter your current city';
-    if (data.fatherContact && !isValidMobile(data.fatherContact)) newErrors.fatherContact = MOBILE_ERROR;
-    if (data.motherContact && !isValidMobile(data.motherContact)) newErrors.motherContact = MOBILE_ERROR;
+    if (data.fatherContact && !normalizePhone(data.fatherContact, false)) newErrors.fatherContact = PHONE_ERROR_INDIA;
+    if (data.motherContact && !normalizePhone(data.motherContact, false)) newErrors.motherContact = PHONE_ERROR_INDIA;
     return newErrors;
   }
 
@@ -112,18 +112,37 @@ export default function EngineeringInquiryPage() {
     setIsLoading(true);
     setErrorMsg(null);
 
+    // Preview / local builds must never post to the live lead sheet (see lib/leadForm.js).
+    const target = getLeadTarget();
+    setLeadTarget(target);
+    if (!target.endpoint) {
+      setToken(TEST_TOKEN);
+      setShowModal(true);
+      setIsLoading(false);
+      return;
+    }
+
     const data = new URLSearchParams();
-    data.append('source', source);
+    // Keep the legacy suffix: the ORIGINAL Apps Script only understands this (it falls back to the Online tab),
+    // the new script prefers stream/branch below.
+    data.append('source', source + ' (Engineering)');
     data.append('branch', source);
     data.append('stream', 'Engineering');
-    Object.keys(formData).forEach(key => {
-      data.append(key, formData[key]);
+    const cleaned = {
+      ...formData,
+      studentContact: normalizePhone(formData.studentContact, false),
+      fatherContact: normalizePhone(formData.fatherContact, false),
+      motherContact: normalizePhone(formData.motherContact, false),
+      entranceScore: String(parsePercentile(formData.entranceScore)),
+    };
+    Object.keys(cleaned).forEach(key => {
+      data.append(key, cleaned[key]);
     });
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
     Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
 
-    fetch(LEAD_ENDPOINT, { method: 'POST', body: data })
+    fetch(target.endpoint, { method: 'POST', body: data })
       .then(response => response.text())
       .then(tokenText => {
         if (!looksLikeToken(tokenText)) throw new Error('Server rejected submission: ' + String(tokenText).slice(0, 120));
@@ -154,6 +173,7 @@ export default function EngineeringInquiryPage() {
 
   return (
     <div className="inquiryPortal">
+      <TestModeBanner target={leadTarget} />
       <div className="bg-deco"></div>
       <div className="bg-grid"></div>
       
@@ -246,23 +266,24 @@ export default function EngineeringInquiryPage() {
                               {errors.fullName && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fullName}</p>}
                           </div>
                           <div>
-                              <label className="field-label">JEE / MHT-CET Percentile</label>
-                              <input name="entranceScore" className="field-input" placeholder="E.g., 98.5" type="text" inputMode="decimal" value={formData.entranceScore} onChange={handleInputChange} required/>
+                              <label className="field-label">JEE / MHT-CET Percentile (0.01 to 100)</label>
+                              <input name="entranceScore" className="field-input" placeholder="E.g., 98.5" type="text" inputMode="decimal" aria-describedby="entranceScoreHint" value={formData.entranceScore} onChange={handleInputChange} required/>
+                              <p id="entranceScoreHint" style={{fontSize:'12px',opacity:0.75,marginTop:'4px'}}>Enter your percentile (for example 98.5). This is not your rank.</p>
                               {errors.entranceScore && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.entranceScore}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.studentContact} onChange={handleInputChange} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.studentContact} onChange={handleInputChange} required/>
                               {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.fatherContact} onChange={handleInputChange}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.fatherContact} onChange={handleInputChange}/>
                               {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.motherContact} onChange={handleInputChange}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.motherContact} onChange={handleInputChange}/>
                               {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
@@ -348,7 +369,7 @@ export default function EngineeringInquiryPage() {
             <div className="modal-card">
                 <span className="material-symbols-outlined modal-icon">check_circle</span>
                 <h2 className="modal-heading">Thank You!</h2>
-                <p className="modal-sub">Welcome to ASMI Engineering. Your details are registered.</p>
+                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : 'Welcome to ASMI Engineering. Your details are registered.'}</p>
                 <div className="modal-token-box">
                     <span className="modal-token-lbl">Your Token Number</span>
                     <span id="tokenDisplay">{token}</span>

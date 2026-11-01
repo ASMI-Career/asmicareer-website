@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
-import { LEAD_ENDPOINT, EMPTY_ATTR, readAttribution, cleanMobile, isValidMobile, MOBILE_ERROR, looksLikeToken } from '../../../lib/leadForm';
+import { getLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR, looksLikeToken } from '../../../lib/leadForm';
+import TestModeBanner from '../../components/TestModeBanner';
 
 export default function InquiryPage() {
   const [formData, setFormData] = useState({
@@ -28,6 +29,7 @@ export default function InquiryPage() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [errors, setErrors] = useState({});
   const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
+  const [leadTarget, setLeadTarget] = useState(null); // where submissions go (TEST MODE banner on non-live hosts)
 
 
   const branchDetails = {
@@ -50,13 +52,14 @@ export default function InquiryPage() {
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
       setAttribution(readAttribution());
+      setLeadTarget(getLeadTarget());
     }
   }, []);
 
   const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? cleanMobile(value) : value });
+    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? sanitizePhoneInput(value) : value });
   };
 
   const toggleCourse = (course) => {
@@ -78,13 +81,13 @@ export default function InquiryPage() {
   function validateForm(data) {
     const newErrors = {};
     if (!data.fullName.trim()) newErrors.fullName = 'Please enter the student\'s full name';
-    if (!isValidMobile(data.studentContact)) newErrors.studentContact = MOBILE_ERROR;
+    if (!normalizePhone(data.studentContact)) newErrors.studentContact = PHONE_ERROR;
     if (!data.neetRank || !Number.isInteger(Number(data.neetRank)) || Number(data.neetRank) < 1) {
       newErrors.neetRank = 'Please enter a valid NEET Rank (AIR), whole number';
     }
     if (!data.city.trim()) newErrors.city = 'Please enter your current city';
-    if (data.fatherContact && !isValidMobile(data.fatherContact)) newErrors.fatherContact = MOBILE_ERROR;
-    if (data.motherContact && !isValidMobile(data.motherContact)) newErrors.motherContact = MOBILE_ERROR;
+    if (data.fatherContact && !normalizePhone(data.fatherContact)) newErrors.fatherContact = PHONE_ERROR;
+    if (data.motherContact && !normalizePhone(data.motherContact)) newErrors.motherContact = PHONE_ERROR;
     return newErrors;
   }
 
@@ -99,18 +102,34 @@ export default function InquiryPage() {
     setIsLoading(true);
     setErrorMsg(null);
 
+    // Preview / local builds must never post to the live lead sheet (see lib/leadForm.js).
+    const target = getLeadTarget();
+    setLeadTarget(target);
+    if (!target.endpoint) {
+      setToken(TEST_TOKEN);
+      setShowModal(true);
+      setIsLoading(false);
+      return;
+    }
+
     const data = new URLSearchParams();
     data.append('source', source);
     data.append('branch', source);
     data.append('stream', 'Medical');
-    Object.keys(formData).forEach(key => {
-      data.append(key, formData[key]);
+    const cleaned = {
+      ...formData,
+      studentContact: normalizePhone(formData.studentContact),
+      fatherContact: normalizePhone(formData.fatherContact),
+      motherContact: normalizePhone(formData.motherContact),
+    };
+    Object.keys(cleaned).forEach(key => {
+      data.append(key, cleaned[key]);
     });
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
     Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
 
-    fetch(LEAD_ENDPOINT, { method: 'POST', body: data })
+    fetch(target.endpoint, { method: 'POST', body: data })
       .then(response => response.text())
       .then(tokenText => {
         if (!looksLikeToken(tokenText)) throw new Error('Server rejected submission: ' + String(tokenText).slice(0, 120));
@@ -141,6 +160,7 @@ export default function InquiryPage() {
 
   return (
     <div className="inquiryPortal">
+      <TestModeBanner target={leadTarget} />
       <div className="bg-deco"></div>
       <div className="bg-grid"></div>
       
@@ -239,17 +259,17 @@ export default function InquiryPage() {
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
                               {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
                               {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={16} value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
                               {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
@@ -335,13 +355,13 @@ export default function InquiryPage() {
             <div className="modal-card">
                 <span className="material-symbols-outlined modal-icon">check_circle</span>
                 <h2 className="modal-heading">Thank You!</h2>
-                <p className="modal-sub">Welcome to ASMI. Your details are registered.</p>
+                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : 'Welcome to ASMI. Your details are registered.'}</p>
                 <div className="modal-token-box">
                     <span className="modal-token-lbl">Your Token Number</span>
                     <span id="tokenDisplay">{token}</span>
                 </div>
                 <p className="modal-msg">{['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) ? 'Please take a seat. A counsellor will call your token shortly.' : 'Your Personalized Medical Admission Health Report will be shared within 24 hours.'}</p>
-                {!['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
+                {token !== TEST_TOKEN && !['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
                   <a
                     href={`/slide4_recommended.html?token=${encodeURIComponent(token)}&download=1`}
                     target="_blank"
