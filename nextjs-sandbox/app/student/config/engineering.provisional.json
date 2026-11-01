@@ -98,7 +98,7 @@
   },
   "fees": { "yearsByCourse": {}, "defaultYears": 4 },
   "catalog": {
-    "events": ["/data/events.json"],
+    "events": ["/data/events.json", "/data/engineeringEvents.json"],
     "rankDb": null,
     "colleges": "/data/engineering-colleges.json",
     "asmiDb": null,
