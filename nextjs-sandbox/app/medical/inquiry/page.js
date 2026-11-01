@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import { getLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR, looksLikeToken } from '../../../lib/leadForm';
+import TestModeBanner from '../../components/TestModeBanner';
 
 export default function InquiryPage() {
   const [formData, setFormData] = useState({
@@ -26,6 +28,8 @@ export default function InquiryPage() {
   const [token, setToken] = useState('---');
   const [errorMsg, setErrorMsg] = useState(null);
   const [errors, setErrors] = useState({});
+  const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
+  const [leadTarget, setLeadTarget] = useState(null); // where submissions go (TEST MODE banner on non-live hosts)
 
 
   const branchDetails = {
@@ -47,11 +51,15 @@ export default function InquiryPage() {
       
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
+      setAttribution(readAttribution());
+      setLeadTarget(getLeadTarget());
     }
   }, []);
 
+  const PHONE_FIELDS = ['studentContact', 'fatherContact', 'motherContact'];
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: PHONE_FIELDS.includes(name) ? sanitizePhoneInput(value) : value });
   };
 
   const toggleCourse = (course) => {
@@ -72,18 +80,14 @@ export default function InquiryPage() {
 
   function validateForm(data) {
     const newErrors = {};
-    if (!data.studentContact || data.studentContact.length !== 10) {
-      newErrors.studentContact = 'Please enter a valid 10-digit mobile number';
+    if (!data.fullName.trim()) newErrors.fullName = 'Please enter the student\'s full name';
+    if (!normalizePhone(data.studentContact)) newErrors.studentContact = PHONE_ERROR;
+    if (!data.neetRank || !Number.isInteger(Number(data.neetRank)) || Number(data.neetRank) < 1) {
+      newErrors.neetRank = 'Please enter a valid NEET Rank (AIR), whole number';
     }
-    if (!data.neetRank || Number(data.neetRank) < 1) {
-      newErrors.neetRank = 'Please enter a valid NEET Rank (AIR)';
-    }
-    if (data.fatherContact && data.fatherContact.length !== 10) {
-      newErrors.fatherContact = 'Please enter a valid 10-digit number';
-    }
-    if (data.motherContact && data.motherContact.length !== 10) {
-      newErrors.motherContact = 'Please enter a valid 10-digit number';
-    }
+    if (!data.city.trim()) newErrors.city = 'Please enter your current city';
+    if (data.fatherContact && !normalizePhone(data.fatherContact)) newErrors.fatherContact = PHONE_ERROR;
+    if (data.motherContact && !normalizePhone(data.motherContact)) newErrors.motherContact = PHONE_ERROR;
     return newErrors;
   }
 
@@ -98,19 +102,37 @@ export default function InquiryPage() {
     setIsLoading(true);
     setErrorMsg(null);
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz_0k81uo0WOYsHaghxqlMBBdJMmc0c4TzYDjnLpsqtQ2yhzhPkVlfmxZ_mmVrh_pls/exec';
+    // Preview / local builds must never post to the live lead sheet (see lib/leadForm.js).
+    const target = getLeadTarget();
+    setLeadTarget(target);
+    if (!target.endpoint) {
+      setToken(TEST_TOKEN);
+      setShowModal(true);
+      setIsLoading(false);
+      return;
+    }
 
     const data = new URLSearchParams();
     data.append('source', source);
-    Object.keys(formData).forEach(key => {
-      data.append(key, formData[key]);
+    data.append('branch', source);
+    data.append('stream', 'Medical');
+    const cleaned = {
+      ...formData,
+      studentContact: normalizePhone(formData.studentContact),
+      fatherContact: normalizePhone(formData.fatherContact),
+      motherContact: normalizePhone(formData.motherContact),
+    };
+    Object.keys(cleaned).forEach(key => {
+      data.append(key, cleaned[key]);
     });
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
+    Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
 
-    fetch(scriptURL, { method: 'POST', body: data })
+    fetch(target.endpoint, { method: 'POST', body: data })
       .then(response => response.text())
       .then(tokenText => {
+        if (!looksLikeToken(tokenText)) throw new Error('Server rejected submission: ' + String(tokenText).slice(0, 120));
         const generatedToken = tokenText.trim();
         setToken(generatedToken);
         setShowModal(true);
@@ -138,6 +160,7 @@ export default function InquiryPage() {
 
   return (
     <div className="inquiryPortal">
+      <TestModeBanner target={leadTarget} />
       <div className="bg-deco"></div>
       <div className="bg-grid"></div>
       
@@ -219,30 +242,34 @@ export default function InquiryPage() {
                   <h2 className="form-heading">Admission Inquiry</h2>
                   <p className="form-sub">Welcome to ASMI Career! Please provide your academic and contact details below.</p>
       
-                  <form id="inquiryForm" onSubmit={handleSubmit}>
+                  <form id="inquiryForm" onSubmit={handleSubmit} noValidate>
+                      {Object.keys(attribution).map(k => <input key={k} type="hidden" name={k} value={attribution[k]} readOnly />)}
+                      <input type="hidden" name="stream" value="Medical" readOnly />
+                      <input type="hidden" name="branch" value={source} readOnly />
                       <div className="form-grid">
                           <div className="col-span-2">
                               <label className="field-label">Full Name</label>
-                              <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={handleInputChange} required/>
+                              <input name="fullName" className="field-input" placeholder="Enter student's full name" type="text" value={formData.fullName} onChange={e => { handleInputChange(e); if (errors.fullName) setErrors({...errors, fullName: ''}); }} required/>
+                              {errors.fullName && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fullName}</p>}
                           </div>
                           <div>
                               <label className="field-label">NEET Rank (AIR)</label>
-                              <input name="neetRank" className="field-input" placeholder="All India Rank" type="number" min={1} value={formData.neetRank} onChange={e => { handleInputChange(e); if (errors.neetRank) setErrors({...errors, neetRank: ''}); }} required/>
+                              <input name="neetRank" className="field-input" placeholder="All India Rank" type="number" inputMode="numeric" step={1} min={1} value={formData.neetRank} onChange={e => { handleInputChange(e); if (errors.neetRank) setErrors({...errors, neetRank: ''}); }} required/>
                               {errors.neetRank && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.neetRank}</p>}
                           </div>
                           <div>
                               <label className="field-label">Student Contact No.</label>
-                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
+                              <input name="studentContact" className="field-input" placeholder="10-digit mobile number" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.studentContact} onChange={e => { handleInputChange(e); if (errors.studentContact) setErrors({...errors, studentContact: ''}); }} required/>
                               {errors.studentContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.studentContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Father Contact No.</label>
-                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
+                              <input name="fatherContact" className="field-input" placeholder="Father's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.fatherContact} onChange={e => { handleInputChange(e); if (errors.fatherContact) setErrors({...errors, fatherContact: ''}); }}/>
                               {errors.fatherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.fatherContact}</p>}
                           </div>
                           <div>
                               <label className="field-label">Mother Contact No.</label>
-                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" maxLength={10} pattern="[0-9]{10}" value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
+                              <input name="motherContact" className="field-input" placeholder="Mother's number (optional)" type="tel" inputMode="numeric" autoComplete="tel-national" maxLength={24} value={formData.motherContact} onChange={e => { handleInputChange(e); if (errors.motherContact) setErrors({...errors, motherContact: ''}); }}/>
                               {errors.motherContact && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.motherContact}</p>}
                           </div>
                           <div>
@@ -251,7 +278,8 @@ export default function InquiryPage() {
                           </div>
                           <div>
                               <label className="field-label">City</label>
-                              <input name="city" className="field-input" placeholder="Current city" type="text" value={formData.city} onChange={handleInputChange} required/>
+                              <input name="city" className="field-input" placeholder="Current city" type="text" value={formData.city} onChange={e => { handleInputChange(e); if (errors.city) setErrors({...errors, city: ''}); }} required/>
+                              {errors.city && <p style={{color:'red',fontSize:'12px',marginTop:'4px'}}>{errors.city}</p>}
                           </div>
                           <div className="col-span-2">
                               <label className="field-label">Category</label>
@@ -282,10 +310,10 @@ export default function InquiryPage() {
                           <span className="section-lbl">Estimated Budget Range</span>
                           <div className="budget-grid">
                               {[
-                                { key: 'Govt 1-2L', val: 'Govt 1–2L' },
-                                { key: 'Private 7-15L', val: 'Private 7–20L' },
-                                { key: 'Deemed 18-30L', val: 'Deemed 10–35L' },
-                                { key: 'NRI / Management 40-50L', val: 'NRI / Management 20–60L' }
+                                { key: 'Govt 1–2L', val: 'Govt 1–2L' },
+                                { key: 'Private 7–20L', val: 'Private 7–20L' },
+                                { key: 'Deemed 10–35L', val: 'Deemed 10–35L' },
+                                { key: 'NRI / Management 20–60L', val: 'NRI / Management 20–60L' }
                               ].map(b => (
                                 <label key={b.key} className={'budget-pill ' + (selectedBudgets.includes(b.key) ? 'selected' : '')} onClick={() => toggleBudget(b.key)}>
                                   <span>{b.val}</span>
@@ -327,13 +355,13 @@ export default function InquiryPage() {
             <div className="modal-card">
                 <span className="material-symbols-outlined modal-icon">check_circle</span>
                 <h2 className="modal-heading">Thank You!</h2>
-                <p className="modal-sub">Welcome to ASMI. Your details are registered.</p>
+                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : 'Welcome to ASMI. Your details are registered.'}</p>
                 <div className="modal-token-box">
                     <span className="modal-token-lbl">Your Token Number</span>
                     <span id="tokenDisplay">{token}</span>
                 </div>
                 <p className="modal-msg">{['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) ? 'Please take a seat. A counsellor will call your token shortly.' : 'Your Personalized Medical Admission Health Report will be shared within 24 hours.'}</p>
-                {!['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
+                {token !== TEST_TOKEN && !['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
                   <a
                     href={`/slide4_recommended.html?token=${encodeURIComponent(token)}&download=1`}
                     target="_blank"

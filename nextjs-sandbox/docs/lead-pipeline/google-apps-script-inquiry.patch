@@ -1,0 +1,380 @@
+--- /home/user/asmicareer-website/google-apps-script-inquiry.js	2026-11-01 06:54:00.824331595 +0000
++++ /tmp/claude-0/-home-user-asmicareer-website/e212764b-5ff4-58eb-8d75-4e0c61fe316c/scratchpad/proposed/google-apps-script-inquiry.js	2026-11-01 07:37:28.815392215 +0000
+@@ -48,6 +48,11 @@
+ // ── CONFIGURATION ─────────────────────────────────────────────
+ var DASHBOARD_URL = "https://asmicareer.in/dashboard.html";
+ 
++// Engineering leads go to their own tab (see getEngineeringSheet_). Medical leads keep
++// using the branch tabs below. "Engineering" is listed so token look-ups (doGet,
++// saveShortlist, backfill) also search it.
++var ENGINEERING_SHEET = "Engineering";
++
+ var BRANCH_SHEETS = [
+   "Online",
+   "Andheri",
+@@ -56,7 +61,8 @@
+   "Kolhapur",
+   "Sangli",
+   "Sambhajinagar",
+-  "Seminar"
++  "Seminar",
++  "Engineering"
+ ];
+ 
+ var BRANCH_PREFIXES = {
+@@ -67,9 +73,18 @@
+   "kolhapur":      "KOL",
+   "sangli":        "SAN",
+   "sambhajinagar": "SAM",
+-  "seminar":       "SEM"
++  "seminar":       "SEM",
++  "engineering":   "ENG"
+ };
+ 
++// ── LEAD ALERTS ───────────────────────────────────────────────
++// Inbox(es) that get an email for every new lead. Comma-separated for several.
++// LEFT EMPTY ON PURPOSE: fill in the counsellor inbox before deploying.
++// Empty = no email is sent (the lead is still saved).
++var LEAD_ALERT_EMAIL = "";
++// Seminar walk-ins can be hundreds per event; email quota is ~100/day (free Gmail) or ~1500/day (Workspace).
++var ALERT_ON_SEMINAR = false;
++
+ // Column positions (1-indexed)
+ var COL_TIMESTAMP        = 1;  // A
+ var COL_TOKEN            = 2;  // B
+@@ -88,6 +103,15 @@
+ var COL_SHORTLIST        = 15; // O ← Saved Shortlist JSON (Seminar sheet: "Remark" — see note above)
+ // P is occupied in Online sheet — skip to Q
+ var COL_DOWNLOAD_LINK    = 17; // Q ← PDF Report Download
++// New lead-tracking columns (R onward, nothing existing is moved)
++var COL_STREAM           = 18; // R ← Medical / Engineering
++var COL_LEAD_BRANCH      = 19; // S ← Andheri / Thane / Online / ...
++var COL_ENTRANCE_SCORE   = 20; // T ← JEE / MHT-CET percentile (engineering). Kept apart from E so rank stays numeric.
++var COL_UTM_SOURCE       = 21; // U
++var COL_UTM_MEDIUM       = 22; // V
++var COL_UTM_CAMPAIGN     = 23; // W
++var COL_GCLID            = 24; // X
++var LEAD_HEADERS = ["Stream", "Branch", "Entrance Score", "utm_source", "utm_medium", "utm_campaign", "gclid"];
+ 
+ 
+ // ════════════════════════════════════════════════════════════════
+@@ -151,42 +175,73 @@
+     }
+ 
+     // ── Handle New Student Inquiry Form ──
++    var p = e.parameter;
+ 
+-    // 1. Identify source
+-    var rawSource  = e.parameter.source || "Online";
+-    var sourceName = rawSource.charAt(0).toUpperCase() + rawSource.slice(1).toLowerCase();
++    // 1. Stream + branch. New forms send stream/branch. Old cached pages and the legacy
++    //    static forms send source = "Online (Engineering)" - still routed correctly.
++    var rawSource   = String(p.branch || p.source || "Online").trim();
++    var isEngineering = String(p.stream || "").toLowerCase() === "engineering" ||
++                        /\(engineering\)\s*$/i.test(String(p.source || ""));
++    var branchName  = normalizeBranch_(rawSource.replace(/\s*\(engineering\)\s*$/i, ""));
++    var streamName  = isEngineering ? "Engineering" : "Medical";
++
++    // 2. Validate (the website validates too, but this endpoint is public)
++    // India: 10 digits starting 6-9 (a +91 / 91 / 0 prefix is stripped).
++    // Other countries (MEDICAL leads only, e.g. NRI quota): "+" + country code, 8-15 digits in total,
++    // stored as "+<digits>". Engineering leads accept Indian numbers only.
++    var allowIntl    = !isEngineering;
++    var studentPhone = normalizePhone_(p.studentContact, allowIntl);
++    var fatherPhone  = normalizePhone_(p.fatherContact, allowIntl);
++    var motherPhone  = normalizePhone_(p.motherContact, allowIntl);
++    if (!String(p.fullName || "").trim())  throw new Error("Name is required");
++    if (!studentPhone)                     throw new Error("Invalid student mobile number");
++    if (String(p.fatherContact || "").trim() && !fatherPhone) throw new Error("Invalid father mobile number");
++    if (String(p.motherContact || "").trim() && !motherPhone) throw new Error("Invalid mother mobile number");
++
++    var neetRank      = "";
++    var entranceScore = "";
++    if (isEngineering) {
++      // new form: entranceScore (percentile). legacy static form: jeeRank (free text)
++      entranceScore = String(p.entranceScore || p.jeeRank || "").trim();
++      if (!entranceScore) throw new Error("Entrance score is required");
++      if (p.entranceScore) {
++        var pctText = String(p.entranceScore).replace("%", "").replace(",", ".").trim();
++        var pct = /^[0-9]{1,3}([.][0-9]{1,6})?$/.test(pctText) ? parseFloat(pctText) : NaN;
++        if (isNaN(pct) || pct <= 0 || pct > 100) throw new Error("Entrance percentile must be between 0.01 and 100");
++        entranceScore = String(pct);
++      }
++    } else {
++      neetRank = String(p.neetRank || "").trim();
++      // Seminar walk-ins (events/verify page) are checked in before results exist, so rank is optional there.
++      if (branchName !== "Seminar" && !(parseInt(neetRank, 10) > 0)) throw new Error("NEET rank is required");
++    }
+ 
+-    // 2. Select matching tab
+-    var sheet = ss.getSheetByName(sourceName);
++    // 3. Select the tab: engineering -> its own tab; medical -> branch tab (fallback Online)
++    var sheet = isEngineering ? getEngineeringSheet_(ss) : ss.getSheetByName(branchName);
+     if (!sheet) {
+       sheet      = ss.getSheetByName("Online");
+-      sourceName = "Online";
++      branchName = "Online";
+     }
+ 
+-    // 3. Determine branch prefix
+-    var prefix      = "ONL";
+-    var lowerSource = sourceName.toLowerCase();
+-    if (BRANCH_PREFIXES[lowerSource]) {
+-      prefix = BRANCH_PREFIXES[lowerSource];
+-    }
++    // 4. Determine token prefix
++    var prefix = isEngineering ? BRANCH_PREFIXES["engineering"]
++                               : (BRANCH_PREFIXES[branchName.toLowerCase()] || "ONL");
+ 
+-    // 4. Get form values
++    // 5. Append row first (token placeholder empty). Columns A-L are unchanged.
+     var timestamp = new Date();
+-    var courses   = e.parameter.courses || "";
+-    var budget    = e.parameter.budget  || "";
+-
+-    // 5. Append row first (token placeholder empty)
++    var courses   = p.courses || "";
++    var budget    = p.budget  || "";
+     sheet.appendRow([
+       timestamp,
+       "",   // token — filled in step 6
+-      e.parameter.fullName       || "",
+-      e.parameter.studentContact || "",
+-      e.parameter.neetRank       || "",
+-      e.parameter.fatherContact  || "",
+-      e.parameter.motherContact  || "",
+-      e.parameter.coachingClass  || "",
+-      e.parameter.city           || "",
+-      e.parameter.category       || "",
++      p.fullName       || "",
++      studentPhone,
++      neetRank,                    // E: NEET rank (blank for engineering; see T)
++      fatherPhone,
++      motherPhone,
++      p.coachingClass  || "",
++      p.city           || "",
++      p.category       || "",
+       courses,
+       budget
+     ]);
+@@ -202,12 +257,47 @@
+     // 7. Write token into column B
+     sheet.getRange(newRow, COL_TOKEN).setValue(tokenNumber);
+ 
++    // 7a. A number starting with "+" would be read by Sheets as a number and lose its "+":
++    //     force those cells to plain text. Indian 10-digit numbers are left exactly as before.
++    if (studentPhone.charAt(0) === "+") sheet.getRange(newRow, COL_STUDENT_CONTACT).setNumberFormat("@").setValue(studentPhone);
++    if (fatherPhone.charAt(0)  === "+") sheet.getRange(newRow, COL_FATHER_CONTACT).setNumberFormat("@").setValue(fatherPhone);
++    if (motherPhone.charAt(0)  === "+") sheet.getRange(newRow, COL_MOTHER_CONTACT).setNumberFormat("@").setValue(motherPhone);
++
++    // 7b. Stream / branch / entrance score / campaign tracking (columns R-X).
++    //     Skipped (and logged) if the tab already uses R-X for something else, so we never mix data in.
++    var trackingFree = ensureLeadHeaders_(sheet);
++    var utm = {
++      source:   String(p.utm_source   || "").trim(),
++      medium:   String(p.utm_medium   || "").trim(),
++      campaign: String(p.utm_campaign || "").trim(),
++      gclid:    String(p.gclid        || "").trim()
++    };
++    if (trackingFree) {
++      sheet.getRange(newRow, COL_STREAM, 1, 7).setValues([[
++        streamName, branchName, entranceScore, utm.source, utm.medium, utm.campaign, utm.gclid
++      ]]);
++    } else {
++      console.log("Columns R-X on '" + sheet.getName() + "' are in use - tracking columns NOT written for " + tokenNumber);
++    }
++
+     // 8. Add all links
+     addDashboardLink(sheet, newRow, tokenNumber);
+     addCounsellingLink(sheet, newRow, tokenNumber);
+     addDownloadLink(sheet, newRow, tokenNumber);
+ 
+-    // 9. Return token to the form
++    // 9. Alerts. Never allowed to break the response: the lead is already saved.
++    var lead = {
++      token: tokenNumber, name: String(p.fullName || "").trim(), phone: studentPhone,
++      stream: streamName, branch: branchName,
++      score: isEngineering ? entranceScore : neetRank,
++      scoreLabel: isEngineering ? "JEE / MHT-CET percentile" : "NEET rank (AIR)",
++      city: p.city || "", category: p.category || "", courses: courses, budget: budget,
++      utm: utm, sheet: sheet.getName()
++    };
++    try { sendLeadEmail_(lead); }     catch (mailErr) { console.log("sendLeadEmail_ error: " + mailErr); }
++    try { sendWhatsAppAlert_(lead); } catch (waErr)   { console.log("sendWhatsAppAlert_ error: " + waErr); }
++
++    // 10. Return token to the form
+     return ContentService
+       .createTextOutput(tokenNumber)
+       .setMimeType(ContentService.MimeType.TEXT);
+@@ -248,7 +338,7 @@
+       var lastRow = sheet.getLastRow();
+       if (lastRow < 2) continue;
+ 
+-      var colsToFetch = Math.max(COL_SHORTLIST, sheet.getLastColumn());
++      var colsToFetch = Math.max(COL_GCLID, sheet.getLastColumn());
+       if (colsToFetch > sheet.getMaxColumns()) {
+         sheet.insertColumnsAfter(sheet.getMaxColumns(), colsToFetch - sheet.getMaxColumns());
+       }
+@@ -291,6 +381,9 @@
+       budget:         String(foundData[COL_BUDGET          - 1]).trim(),
+       shortlist:      parsedShortlist,
+       branch:         foundSheet,
++      stream:         String(foundData[COL_STREAM         - 1] || "").trim(),
++      leadBranch:     String(foundData[COL_LEAD_BRANCH    - 1] || "").trim(),
++      entranceScore:  String(foundData[COL_ENTRANCE_SCORE - 1] || "").trim(),
+       timestamp:      foundData[COL_TIMESTAMP - 1]
+                         ? Utilities.formatDate(
+                             new Date(foundData[COL_TIMESTAMP - 1]),
+@@ -319,6 +412,152 @@
+ }
+ 
+ 
++// ═══════════════════════════════════════════════════════════
++//  Lead helpers: normalising, engineering tab, alerts
++// ═══════════════════════════════════════════════════════════
++
++// "ANDHERI" / "andheri " -> "Andheri"; anything unknown -> "Online"
++function normalizeBranch_(raw) {
++  var want = String(raw || "").trim().toLowerCase();
++  for (var i = 0; i < BRANCH_SHEETS.length; i++) {
++    if (BRANCH_SHEETS[i] === ENGINEERING_SHEET) continue;   // not a branch
++    if (BRANCH_SHEETS[i].toLowerCase() === want) return BRANCH_SHEETS[i];
++  }
++  return "Online";
++}
++
++// Returns the normalised phone number, or "" if invalid.
++//   India:  "+91 98765 43210" / "98765-43210" / "098765 43210"  -> "9876543210"  (10 digits, starts 6-9)
++//   Abroad: "+971 50 123 4567" / "+1 415 555 2671" / "+44 20 7946 0958" -> "+971501234567" (8-15 digits total)
++//   A non-Indian number without the leading "+" is rejected (indistinguishable from a typo).
++//   allowIntl=false (engineering leads): non-Indian numbers are rejected even with a "+".
++function normalizePhone_(v, allowIntl) {
++  var s = String(v || "").replace(/[^0-9+]/g, "");
++  var hasPlus = s.charAt(0) === "+";
++  var d = s.replace(/[+]/g, "");
++  if (hasPlus) {
++    if (d.indexOf("91") === 0) {
++      d = d.slice(2);
++      return /^[6-9][0-9]{9}$/.test(d) ? d : "";
++    }
++    return allowIntl && /^[1-9][0-9]{7,14}$/.test(d) ? "+" + d : "";
++  }
++  if (d.length === 12 && d.indexOf("91") === 0) d = d.slice(2);
++  else if (d.length === 11 && d.charAt(0) === "0") d = d.slice(1);
++  return /^[6-9][0-9]{9}$/.test(d) ? d : "";
++}
++
++// Creates the Engineering tab on first use, with the same A-L headers as "Online".
++function getEngineeringSheet_(ss) {
++  var sh = ss.getSheetByName(ENGINEERING_SHEET);
++  if (sh) return sh;
++  sh = ss.insertSheet(ENGINEERING_SHEET);
++  var online = ss.getSheetByName("Online");
++  if (online && online.getLastColumn() >= 12) {
++    online.getRange(1, 1, 1, 12).copyTo(sh.getRange(1, 1, 1, 12));
++  } else {
++    sh.getRange(1, 1, 1, 12).setValues([[
++      "Timestamp", "Token", "Full Name", "Student Contact", "NEET Rank", "Father Contact",
++      "Mother Contact", "Coaching Class", "City", "Category", "Courses", "Budget"
++    ]]);
++  }
++  sh.getRange(1, COL_NEET_RANK).setValue("NEET Rank (n/a - see Entrance Score)");
++  return sh;
++}
++
++// Writes the R-X headers once per tab. Returns true if R-X belong to us (safe to write),
++// false if something else already uses R1:X1 (then nothing is written there).
++function ensureLeadHeaders_(sheet) {
++  // Reading a range outside the grid throws in Sheets, so make sure columns R-X exist first.
++  if (COL_GCLID > sheet.getMaxColumns()) {
++    sheet.insertColumnsAfter(sheet.getMaxColumns(), COL_GCLID - sheet.getMaxColumns());
++  }
++  var existing = sheet.getRange(1, COL_STREAM, 1, LEAD_HEADERS.length).getValues()[0];
++  var used = false;
++  for (var i = 0; i < existing.length; i++) if (String(existing[i]).trim() !== "") used = true;
++  if (used) return String(existing[0]).trim() === LEAD_HEADERS[0];   // already our headers
++  var hdr = sheet.getRange(1, COL_STREAM, 1, LEAD_HEADERS.length);
++  hdr.setValues([LEAD_HEADERS]);
++  hdr.setFontWeight("bold");
++  hdr.setBackground("#1a0040");
++  hdr.setFontColor("#FFD700");
++  hdr.setHorizontalAlignment("center");
++  return true;
++}
++
++// READ-ONLY. Run once from the Apps Script editor on the sheet COPY before deploying:
++// lists, per tab, how many non-empty cells already exist in columns R-X. Everything
++// should say 0 (or only our own headers). Nothing is written.
++function auditLeadColumns() {
++  var ss = SpreadsheetApp.getActiveSpreadsheet();
++  var names = BRANCH_SHEETS.slice();
++  var report = [];
++  for (var i = 0; i < names.length; i++) {
++    var sh = ss.getSheetByName(names[i]);
++    if (!sh) { report.push(names[i] + ": (tab not found)"); continue; }
++    var last = sh.getLastRow();
++    var maxC = sh.getMaxColumns();
++    if (last < 1 || maxC < COL_STREAM) { report.push(names[i] + ": 0 cells in R-X"); continue; }
++    var width = Math.min(LEAD_HEADERS.length, maxC - COL_STREAM + 1);
++    var vals = sh.getRange(1, COL_STREAM, last, width).getValues();
++    var n = 0;
++    for (var r = 0; r < vals.length; r++) for (var c = 0; c < vals[r].length; c++) if (String(vals[r][c]).trim() !== "") n++;
++    report.push(names[i] + ": " + n + " non-empty cell(s) in R-X");
++  }
++  console.log(report.join("\n"));
++  return report;
++}
++
++// Email alert to the counsellor inbox: name, phone, score, branch, source.
++function sendLeadEmail_(lead) {
++  var to = String(LEAD_ALERT_EMAIL || "").trim();
++  if (!to) { console.log("LEAD_ALERT_EMAIL is empty - email alert skipped"); return; }
++  if (lead.branch === "Seminar" && !ALERT_ON_SEMINAR) return;
++
++  var src = [];
++  if (lead.utm.source)   src.push("utm_source="   + lead.utm.source);
++  if (lead.utm.medium)   src.push("utm_medium="   + lead.utm.medium);
++  if (lead.utm.campaign) src.push("utm_campaign=" + lead.utm.campaign);
++  if (lead.utm.gclid)    src.push("gclid="        + lead.utm.gclid);
++
++  var body = [
++    "New " + lead.stream + " lead",
++    "",
++    "Name:    " + lead.name,
++    "Phone:   " + lead.phone,
++    lead.scoreLabel + ": " + lead.score,
++    "Branch:  " + lead.branch,
++    "Source:  " + (src.length ? src.join(", ") : "direct / no campaign tags"),
++    "",
++    "City: " + lead.city + "   Category: " + lead.category,
++    "Courses: " + lead.courses,
++    "Budget: " + lead.budget,
++    "",
++    "Token: " + lead.token + "   (sheet tab: " + lead.sheet + ")",
++    "Counselling view: " + DASHBOARD_URL + "?token=" + encodeURIComponent(lead.token) + "&mode=counsel"
++  ].join("\n");
++
++  MailApp.sendEmail({
++    to: to,
++    subject: "[New lead] " + lead.name + " - " + lead.stream + " - " + lead.branch,
++    body: body,
++    name: "ASMI Lead Alerts"
++  });
++}
++
++// ──────────────────────────────────────────────────────────
++//  >>> WHATSAPP ALERT HOOK (not implemented yet) <<<
++//  Called once per new lead, after the row is saved and the email is sent.
++//  To add WhatsApp later, fill this in with UrlFetchApp.fetch(...) to your
++//  WhatsApp Business API provider, using the `lead` fields
++//  (name, phone, stream, branch, score, token, utm).
++//  Errors here are caught by the caller and cannot break lead capture.
++// ──────────────────────────────────────────────────────────
++function sendWhatsAppAlert_(lead) {
++  // TODO(WhatsApp): intentionally empty.
++}
++
++
+ // ════════════════════════════════════════════════════════════════
+ //  Helper — Adds sales pitch dashboard link to column M
+ // ════════════════════════════════════════════════════════════════
