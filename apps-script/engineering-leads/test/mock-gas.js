@@ -34,6 +34,10 @@ class MockRange {
     }
     return this;
   }
+  // single-cell forms of the real Range API
+  getValue() { return this.getValues()[0][0]; }
+  setValue(v) { return this.setValues([[v]]); }
+  setNumberFormat(f) { return this.setNumberFormats([[f]]); }
   setNumberFormats(f) {
     this._check();
     for (let i = 0; i < this.nr; i++) for (let j = 0; j < this.nc; j++) this.sheet.formats[(this.r + i) + ',' + (this.c + j)] = f[i][j];
@@ -130,7 +134,10 @@ function buildEnvironment(options = {}) {
   allLeads._set(2, 1, '=QUERY({Online!A:C;Andheri!A:C},"select *")');   // formula tab: must never be written
   allLeads.writeLog.length = 0;
 
-  const dashHeaders = ['Counsellor Name', 'Stage'].concat(Object.values(DASH)).concat(['Document Status']);
+  // The dashboard tab: lead-flow columns + the columns the dashboard PAGE reads, plus unrelated columns around them.
+  // 'Student Phone' and 'Parent Notes' are DECOYS: the page's data must never include them.
+  const STUDENT = get('STUDENT_HEADERS');
+  const dashHeaders = ['Parent Notes', 'Student Phone'].concat(Array.from(new Set(Object.values(DASH).concat(Object.values(STUDENT))))).concat(['Admin Remarks']);
   const dash = new MockSpreadsheet(DASH_ID);
   const dsheet = dash.add(new MockSheet('Student Dashboard', dashHeaders, options.sheetOpts));
 

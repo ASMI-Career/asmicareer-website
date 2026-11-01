@@ -469,7 +469,9 @@ test('21 no phone numbers anywhere in the Dashboard workbook', () => {
   env.submit(good({ 'Student Contact': '9876543210', 'Father Contact': '9123456780', 'Mother Contact': '+44 7911 123456' }));
   const blob = JSON.stringify(env.dsheet.rows);
   ['9876543210', '9123456780', '447911123456', '7911123456'].forEach(n => assert.ok(!blob.includes(n), 'dashboard must not contain ' + n));
-  assert.strictEqual(env.dsheet.rows[0].filter(h => /contact|phone|mobile/i.test(h)).length, 0);
+  // the script itself is configured with no phone column for the Dashboard (the sheet may hold unrelated decoy columns)
+  const D = env.get('DASHBOARD_HEADERS'), SH = env.get('STUDENT_HEADERS');
+  assert.strictEqual(Object.values(D).concat(Object.values(SH)).filter(h => /contact|phone|mobile/i.test(h)).length, 0);
   const enq = env.enq.getSheetByName('Pune').obj(2);
   assert.strictEqual(enq['Father Contact'], '9123456780');
   assert.strictEqual(enq['Mother Contact'], '+447911123456');
@@ -579,6 +581,164 @@ test('28 website form sends exactly the field names the script reads (static che
   assert.ok(lib.includes('process.env.NEXT_PUBLIC_ENGINEERING_LEAD_URL'), 'endpoint comes from an env var, not hard-coded');
   assert.ok(!/AKfycb[\w-]+/.test(src), 'page.js must not hard-code any script deployment URL (the live one lives only in lib/leadForm.js)');
   return 'all ' + mustSend.length + ' names present in the form and recognised by the script';
+});
+
+// ─────────────────────────────────────────────────────────────── 11. student dashboard actions (getStudent / saveShortlist / saveDocStatus)
+const TOK = 'ENG-ABCDEFGH23';
+const ALLOWED_KEYS = ['category', 'counsellor_name', 'counsellor_whatsapp', 'document_status', 'name', 'saved_colleges', 'score', 'stage', 'tracks', 'whatsapp_group_link'];
+const setCell = (sheet, row, header, value) => sheet._set(row, sheet.rows[0].indexOf(header) + 1, value);
+function seedStudent(env, row = 2, over = {}) {
+  const v = Object.assign({
+    'Token': TOK, 'Stream': 'Engineering', 'Name': 'Aarav Deshmukh', 'Score': 98.37, 'Category': 'OBC-NCL', 'Stage': 'Counselling Started',
+    'Tracks': 'JoSAA, Maharashtra CAP', 'Counsellor Name': 'Engg Counsellor', 'Counsellor WhatsApp': '+91 90000-00003',
+    'WhatsApp Group Link': 'https://chat.whatsapp.com/abc123',
+    'Saved Shortlist': JSON.stringify({ JOSAA: [{ institute: 'Demo Institute Alpha', branch: 'Computer Science', seatType: 'AI' }], CAP: [] }),
+    'Document Status': JSON.stringify({ checked: ['jee-scorecard'], category: 'OBC', quota: '' }),
+    'Student Phone': '9876543210', 'Parent Notes': 'father 9123456780', 'Admin Remarks': 'secret-admin-note',
+  }, over);
+  Object.keys(v).forEach(h => setCell(env.dsheet, row, h, v[h]));
+}
+const getStudent = (env, token) => JSON.parse(env.ctx.doGet({ parameter: { action: 'getStudent', token } }).getContent());
+const postJson = (env, body) => JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify(body) } }).getContent());
+const saveDoc = (env, token, data) => JSON.parse(env.ctx.doGet({ parameter: { action: 'saveDocStatus', token, data } }).getContent());
+const snapshot = env => JSON.stringify(env.dsheet.rows);
+
+test('29 getStudent: only the fields the page uses; decimals kept; never a student/parent phone', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  const res = getStudent(env, TOK);
+  assert.strictEqual(res.success, true);
+  assert.deepStrictEqual(Object.keys(res.data).sort(), ALLOWED_KEYS);
+  assert.strictEqual(res.data.score, 98.37);
+  assert.strictEqual(typeof res.data.score, 'number');
+  assert.deepStrictEqual(Array.from(res.data.tracks), ['JoSAA', 'Maharashtra CAP']);
+  assert.strictEqual(res.data.name, 'Aarav Deshmukh');
+  assert.strictEqual(res.data.stage, 'Counselling Started');
+  assert.strictEqual(res.data.counsellor_whatsapp, '919000000003');
+  assert.strictEqual(res.data.whatsapp_group_link, 'https://chat.whatsapp.com/abc123');
+  assert.deepStrictEqual(Array.from(res.data.saved_colleges.JOSAA).map(i => i.institute), ['Demo Institute Alpha']);
+  assert.strictEqual(JSON.parse(res.data.document_status).checked[0], 'jee-scorecard');
+  const blob = JSON.stringify(res);
+  ['9876543210', '9123456780', 'secret-admin-note', 'father', 'Student Phone', 'Parent Notes'].forEach(x => assert.ok(!blob.includes(x), 'must not leak ' + x));
+  return 'exactly 10 fields; no decoy columns; score 98.37 stays a number';
+});
+
+test('30 token validated server-side: bad shape, unknown, wrong stream => not_found', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  for (const bad of ['', undefined, null, '<script>', 'ASMI-MUM-001', '26-ENG-001', 'eng-abcdefgh23', 'ENG-SHORT', 'ENG-ABCDEFGH2I', 'ENG-ABCDEFGH23X', 'ENG-ABCDEFGH23; DROP']) {
+    assert.deepStrictEqual(getStudent(env, bad), { error: 'not_found' }, 'bad token ' + String(bad));
+  }
+  assert.deepStrictEqual(getStudent(env, 'ENG-JKMNPQRS45'), { error: 'not_found' }, 'well-formed but unknown');
+  assert.strictEqual(getStudent(env, '  ' + TOK + '\n').success, true, 'surrounding whitespace is trimmed');
+  setCell(env.dsheet, 2, 'Stream', 'Medical');
+  assert.deepStrictEqual(getStudent(env, TOK), { error: 'not_found' }, 'a Medical row is never served here');
+  setCell(env.dsheet, 2, 'Stream', '');
+  assert.deepStrictEqual(getStudent(env, TOK), { error: 'not_found' }, 'blank stream is not served');
+  setCell(env.dsheet, 2, 'Stream', ' engineering '); setCell(env.dsheet, 2, 'Token', ' ' + TOK + ' ');
+  assert.strictEqual(getStudent(env, TOK).success, true, 'case/space-insensitive stream and token cell');
+  return '11 malformed forms, unknown token, Medical/blank stream => not_found; trimming works';
+});
+
+test('31 messy cells never break or leak: corrupt JSON, bad score, unsafe link', () => {
+  const env = buildEnvironment(); seedStudent(env, 2, { 'Saved Shortlist': '{not json', 'Document Status': 'oops', 'Score': 'n/a', 'WhatsApp Group Link': 'javascript:alert(1)', 'Tracks': '' });
+  const d = getStudent(env, TOK).data;
+  assert.deepStrictEqual(d.saved_colleges, {}); assert.strictEqual(d.document_status, null); assert.strictEqual(d.score, null);
+  assert.strictEqual(d.whatsapp_group_link, ''); assert.deepStrictEqual(Array.from(d.tracks), []);
+  setCell(env.dsheet, 2, 'Saved Shortlist', '[1,2,3]'); setCell(env.dsheet, 2, 'Score', '');
+  const d2 = getStudent(env, TOK).data; assert.deepStrictEqual(d2.saved_colleges, {}); assert.strictEqual(d2.score, null);
+  return 'safe defaults';
+});
+
+test('32 missing page header: server_error with no details, loud email; the lead flow still works', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  env.dsheet.rows[0][env.dashHeaders.indexOf('Saved Shortlist')] = 'Shortlist JSON';
+  const res = getStudent(env, TOK);
+  assert.deepStrictEqual(res, { error: 'server_error' });
+  const mail = env.state.mails.find(m => /SETUP\/ERROR/.test(m.subject));
+  assert.ok(mail && /Saved Shortlist/.test(mail.body), 'admin email names the header');
+  assert.ok(env.state.logs.some(l => /MISSING: "Saved Shortlist"/.test(l)));
+  assert.ok(!JSON.stringify(res).includes('Saved Shortlist'));
+  assert.strictEqual(env.submit(good({ 'Student Contact': '9876500077' })).ok, true, 'lead intake unaffected');
+  assert.strictEqual(postJson(env, { action: 'saveShortlist', token: TOK, colleges: { JOSAA: [] } }).error, 'server_error');
+  return 'getStudent/saveShortlist fail closed; lead flow keeps working';
+});
+
+test('33 saveShortlist: valid grouped list is saved as text, nothing else changes; bad shapes rejected', () => {
+  const env = buildEnvironment(); seedStudent(env); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Name': 'Other Student', 'Saved Shortlist': '' });
+  const before = JSON.parse(snapshot(env));
+  const list = { JOSAA: [{ institute: 'IIT Bombay', branch: 'CSE', seatType: 'AI', name: '=HYPERLINK("http://x.invalid","hi")' }], CAP: [{ institute: 'VJTI', branch: 'IT', seatType: 'State Level' }] };
+  const res = postJson(env, { action: 'saveShortlist', token: TOK, colleges: list });
+  assert.deepStrictEqual(res, { success: true, count: 2 });
+  assert.deepStrictEqual(JSON.parse(env.dsheet.cell(2, 'Saved Shortlist')), list);
+  assert.strictEqual(env.dsheet.formats['2,' + (env.dashHeaders.indexOf('Saved Shortlist') + 1)], '@', 'plain-text cell');
+  assert.strictEqual(getStudent(env, TOK).data.saved_colleges.CAP[0].institute, 'VJTI');
+  // every other cell identical
+  const after = JSON.parse(snapshot(env)); const col = env.dashHeaders.indexOf('Saved Shortlist');
+  after[1][col] = before[1][col];
+  assert.deepStrictEqual(after, before, 'only the Saved Shortlist cell of that student changed');
+  const bad = [[], 'x', null, { JOSAA: 'x' }, { JOSAA: [1] }, { JOSAA: [[1]] }, { 'bad key!': [] }, { JOSAA: [null] },
+    { JOSAA: new Array(301).fill({ a: 1 }) }, { JOSAA: [{ a: 'x'.repeat(2100) }] }, Object.fromEntries(Array.from({ length: 11 }, (_, i) => ['G' + i, []]))];
+  bad.forEach((b, i) => assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', token: TOK, colleges: b }), { error: 'invalid_input' }, 'bad shape #' + i));
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', token: 'ENG-JKMNPQRS99', colleges: list }), { error: 'not_found' });
+  assert.deepStrictEqual(JSON.parse(env.dsheet.cell(2, 'Saved Shortlist')), list, 'rejected requests changed nothing');
+  return 'saved + read back; one cell changed; 11 bad shapes and an unknown token rejected without writing';
+});
+
+test('34 saveDocStatus: validated and normalised; bad input rejected', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  const ok = saveDoc(env, TOK, JSON.stringify({ checked: ['jee-scorecard', 'cls10-mark', 'cls10-mark'], category: 'OBC', quota: '' }));
+  assert.deepStrictEqual(ok, { success: true });
+  assert.deepStrictEqual(JSON.parse(env.dsheet.cell(2, 'Document Status')), { checked: ['jee-scorecard', 'cls10-mark'], category: 'OBC', quota: '' });
+  const before = snapshot(env);
+  for (const bad of ['not json', '{}', JSON.stringify({ checked: 'x' }), JSON.stringify({ checked: ['<b>x</b>'] }), JSON.stringify({ checked: [1] }), JSON.stringify({ checked: new Array(501).fill('a') }), JSON.stringify([1]), undefined, ''])
+    assert.deepStrictEqual(saveDoc(env, TOK, bad), { error: 'invalid_input' }, 'bad ' + String(bad).slice(0, 30));
+  assert.deepStrictEqual(saveDoc(env, 'ENG-JKMNPQRS45', JSON.stringify({ checked: [] })), { error: 'not_found' });
+  assert.strictEqual(snapshot(env), before, 'nothing changed by rejected requests');
+  return 'dedupes ids, rejects odd characters/shape/size, unknown token not_found';
+});
+
+test('35 routing: health check, unknown actions, saveShortlist is POST-only; lead form posts still reach the lead flow', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  assert.deepStrictEqual(Object.keys(JSON.parse(env.ctx.doGet({ parameter: {} }).getContent())).sort(), ['ok', 'service', 'version']);
+  assert.deepStrictEqual(JSON.parse(env.ctx.doGet({ parameter: { action: 'bogus', token: TOK } }).getContent()), { error: 'invalid_action' });
+  assert.deepStrictEqual(JSON.parse(env.ctx.doGet({ parameter: { action: 'saveShortlist', token: TOK } }).getContent()), { error: 'invalid_action' });
+  assert.deepStrictEqual(postJson(env, { action: 'deleteEverything', token: TOK }), { error: 'invalid_action' });
+  const lead = env.submit(good({ 'Student Contact': '9876500088' }));      // urlencoded form fields, no JSON body
+  assert.strictEqual(lead.ok, true); assert.match(lead.token, /^ENG-/);
+  return 'dashboard calls and lead posts do not interfere';
+});
+
+test('36 writes take the lock: busy => nothing written; lock released after a failed write', () => {
+  let env = buildEnvironment(); seedStudent(env);
+  const before = snapshot(env); env.state.lockBusy = true;
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', token: TOK, colleges: { JOSAA: [] } }), { error: 'busy' });
+  assert.strictEqual(snapshot(env), before);
+  env = buildEnvironment(); seedStudent(env); env.dsheet.failOnSetValues = 0;
+  const range = env.dsheet.getRange; let thrown = false;
+  env.dsheet.getRange = function (...a) { const r = range.apply(this, a); const sv = r.setValue; r.setValue = function () { thrown = true; throw new Error('Mock: boom'); }; return r; };
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', token: TOK, colleges: { JOSAA: [] } }), { error: 'server_error' });
+  assert.ok(thrown); assert.strictEqual(env.state.lockAcquired, env.state.lockReleased); assert.strictEqual(env.state.lockHeld, false);
+  return 'busy lock -> busy, no write; failed write -> server_error and lock released';
+});
+
+test('37 columns by header name: a fully reversed column order gives the same answers', () => {
+  const env = buildEnvironment(); seedStudent(env);
+  const ref = getStudent(env, TOK);
+  env.dsheet.rows = env.dsheet.rows.map(r => { const c = r.slice(); while (c.length < env.dashHeaders.length) c.push(''); return c.reverse(); });
+  assert.deepStrictEqual(getStudent(env, TOK), ref);
+  const list = { CAP: [{ institute: 'VJTI', branch: 'IT', seatType: 'State Level' }] };
+  assert.strictEqual(postJson(env, { action: 'saveShortlist', token: TOK, colleges: list }).success, true);
+  assert.deepStrictEqual(JSON.parse(env.dsheet.cell(2, 'Saved Shortlist')), list);
+  return 'identical results with reversed columns';
+});
+
+test('38 verifyHeaders also checks the page columns and says which are missing', () => {
+  const env = buildEnvironment();
+  assert.strictEqual(env.ctx.verifyHeaders().ok, true);
+  env.dsheet.rows[0][env.dashHeaders.indexOf('Tracks')] = ''; env.dsheet.rows[0][env.dashHeaders.indexOf('Counsellor WhatsApp')] = 'x';
+  const r = env.ctx.verifyHeaders();
+  assert.strictEqual(r.ok, false);
+  assert.ok(r.problems.some(p => /Student dashboard page/.test(p) && /"Tracks"/.test(p) && /"Counsellor WhatsApp"/.test(p)));
+  return 'both missing page headers reported in one message';
 });
 
 // ─────────────────────────────────────────────────────────────── runner
