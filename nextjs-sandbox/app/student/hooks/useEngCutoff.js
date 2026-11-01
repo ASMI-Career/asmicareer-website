@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, cfgFor, defaultCategory } from '../lib/engCutoff';
+import { JOSAA, MH, cfgFor, defaultCategory, buildMhCurve } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -17,6 +17,10 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const [mainRank, setMainRank] = useState('');     // JEE Main CRL
   const [advRank, setAdvRank] = useState('');       // JEE Advanced CRL
   const [mhMerit, setMhMerit] = useState('');       // MHT-CET state merit number
+  const [pMode, setPMode] = useState('percentile');   // Predictor: 'percentile' or 'rank'
+  const [mainPct, setMainPct] = useState('');        // Predictor: JEE Main percentile
+  const [mhPct, setMhPct] = useState('');            // Predictor: MHT-CET percentile
+  const [mhCurve, setMhCurve] = useState(null);      // percentile -> merit pairs from last year's Maharashtra results
   const [visible, setVisible] = useState(40);
   const [manifest, setManifest] = useState(null);
   const [intake, setIntake] = useState({});
@@ -33,6 +37,14 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     fetch(MH.intake).then(r => (r.ok ? r.json() : {})).then(j => { if (live) setIntake(j || {}); }).catch(() => {});
     return () => { live = false; };
   }, [enabled, active, counselling, manifest]);
+
+  // Predictor only: last year's Open (state level) results give the percentile -> merit relation for Maharashtra.
+  useEffect(() => {
+    if (!enabled || !active || counselling !== 'MH' || mhCurve) return;
+    let live = true;
+    fetch(`${MH.base}/state-level/OPEN/all.json`).then(r => r.json()).then(j => { if (live) setMhCurve(buildMhCurve(j.colleges)); }).catch(() => {});
+    return () => { live = false; };
+  }, [enabled, active, counselling, mhCurve]);
 
   const mhQuota = manifest ? manifest.quotas.find(q => q.key === quota) : null;
   const mhCategories = mhQuota ? mhQuota.categories : [];
@@ -79,6 +91,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     ecRound: round, setEcRound: setRound, ecSearch: search, setEcSearch: (v) => { setSearch(v); setVisible(40); },
     ecSort: sort, setEcSort: setSort, ecPwd: pwd, setEcPwd: setPwd,
     ecMainRank: mainRank, setEcMainRank: setMainRank, ecAdvRank: advRank, setEcAdvRank: setAdvRank, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
+    ecPMode: pMode, setEcPMode: setPMode, ecMainPct: mainPct, setEcMainPct: setMainPct, ecMhPct: mhPct, setEcMhPct: setMhPct, ecMhCurve: mhCurve,
     ecVisible: visible, ecShowMore: () => setVisible(v => v + 40),
     ecManifest: manifest, ecIntake: intake, ecData: data, ecMhCategories: mhCategories, ecMhGenders: mhGenders,
   };

@@ -13,7 +13,7 @@
     "[CONFIRM] OBC students are shown as OBC-NCL."
   ],
   "id": "engineering",
-  "modules": ["dashboard", "cutoff", "institutes", "checklist"],
+  "modules": ["dashboard", "predictor", "cutoff", "institutes", "checklist"],
   "nav": [
     { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
     { "id": "predictor",  "label": "Predictor",  "icon": "lucide:bar-chart-3" },
@@ -82,6 +82,13 @@
   },
   "predictor": null,
   "cutoff": null,
+  "engineeringPredictor": {
+    "_confirm": "[CONFIRM] jeeMainCandidates is an ESTIMATE of the number of JEE Main candidates, used to turn a percentile into a rank (rank = (100 - percentile)% x candidates). It is not an NTA figure. Set it from the latest official number. [CONFIRM] categoryShare is the assumed share of candidates in each category, used only to turn an estimated CRL into a rough category rank (JoSAA closing ranks for reserved categories are category ranks); replace with official counts.",
+    "title": "College Predictor",
+    "subtitle": "Enter the percentile you expect (or your rank) and see which engineering colleges and branches you could get.",
+    "jeeMainCandidates": 1400000,
+    "categoryShare": { "EWS": 0.12, "OBC-NCL": 0.34, "SC": 0.16, "ST": 0.07 }
+  },
   "engineeringCutoff": {
     "title": "Cutoff Explorer",
     "subtitle": "See last year's opening and closing ranks for engineering colleges and branches, round by round."
