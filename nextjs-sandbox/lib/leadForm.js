@@ -40,6 +40,7 @@ export function getLeadTarget() {
 // the new payload there. When it is empty nothing changes: the form uses getLeadTarget() and the old payload.
 // Same preview safety as above: on a non-live host a TEST MODE banner is shown. Point preview builds at a script
 // that is attached to COPIES of the sheets (Cloudflare lets production and preview use different variable values).
+// Read at BUILD time: after changing this variable in Cloudflare, a new build is required.
 export const ENGINEERING_LEAD_URL = process.env.NEXT_PUBLIC_ENGINEERING_LEAD_URL || '';
 export const ENGINEERING_NEW_SCRIPT = !!ENGINEERING_LEAD_URL;
 
