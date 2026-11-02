@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { JOSAA, MH, cfgFor, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
+import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
 
 // Engineering Predictor: the student enters the percentile they expect (or the rank, if they know it), we estimate the rank,
 // and list the colleges and branches that rank could get, using last year's closing ranks (the same data as the Cutoff Explorer).
@@ -22,7 +22,7 @@ export default function EngineeringPredictor(props) {
   const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
   const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
   const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
-  const quotaLabel = (quotas.find(q => q.key === ecQuota) || {}).label || ecQuota;
+  const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
 
   // ── the student's rank ──
   const advRank = parseRank(ecAdvRank);
@@ -56,9 +56,9 @@ export default function EngineeringPredictor(props) {
   let rows = all.filter(r => (showOut || r.chance.key !== 'out') && (show === 'all' || r.chance.key === show));
   rows.sort((a, b) => a.close - b.close);
 
-  const labelOf = (c) => `${c.name} — ${c.program} (${quotaLabel})`;
+  const labelOf = (c) => `${c.name} — ${c.program} (${qLabel(c)})`;
   const isIn = (c) => shortlist.includes(labelOf(c));
-  const toggle = (c) => handleToggleShortlist(labelOf(c), { name: c.name, institute: c.name, branch: c.program, seatType: quotaLabel, track: base.track, type: c.type });
+  const toggle = (c) => handleToggleShortlist(labelOf(c), { name: c.name, institute: c.name, branch: c.program, seatType: qLabel(c), track: base.track, type: c.type });
   const openInExplorer = () => { if (!isMH && mainRank != null) setEcMainRank(String(mainRank)); if (isMH && merit != null) setEcMhMerit(String(merit)); setActiveTab('cutoff'); };
 
   const field = { fontFamily: 'inherit' };
@@ -112,7 +112,13 @@ export default function EngineeringPredictor(props) {
           )}
         </div>
         {aiMerit && mode === 'percentile' && <p style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 8 }}>For the All India quota, enter your merit number. A percentile cannot be turned into a rank for this quota.</p>}
-        {!isMH && <p style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 8 }}>Quota: All India covers IITs, IIITs and many NIT seats. Choose Home State for NITs and GFTIs in your own home state, and Other State for all the others.</p>}
+        {!isMH && <p style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 8 }}>
+          {ecQuota === 'home-state'
+            ? 'Home State seats count only for NITs and GFTIs in your own home state. Use the search box to find the one in your state. For every other NIT, use Other State.'
+            : ecQuota === 'combined'
+              ? 'Shows IITs, IIITs and GFTIs (All India seats) together with NITs outside your home state (Other State seats). Applying to the NIT in your own home state? Choose Home State instead.'
+              : 'JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India; NITs are only under Home State or Other State.'}
+        </p>}
         {haveRank && (
           <div style={{ marginTop: 14, fontSize: 14, color: 'var(--text-900)' }}>
             {!isMH && crlEst != null && <div>Estimated <b>JEE Main CRL rank: about {fmt(crlEst)}</b> (from your percentile)</div>}
@@ -158,7 +164,7 @@ export default function EngineeringPredictor(props) {
                 {rows.slice(0, ecVisible).map((r, i) => {
                   const c = r.c, inList = isIn(c);
                   return (
-                    <tr key={`${c.choiceCode || c.name}-${c.program}-${i}`}>
+                    <tr key={`${c.choiceCode || c.name}-${c.program}-${c._quota}-${i}`}>
                       <td style={{ fontWeight: 700, color: 'var(--text-900)', minWidth: 200 }}>{c.name}</td>
                       <td style={{ minWidth: 180 }}>{c.program}</td>
                       <td><span className="tag tag-gold">{c.type}</span></td>

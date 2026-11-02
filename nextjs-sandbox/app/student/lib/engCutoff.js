@@ -7,6 +7,7 @@ export const JOSAA = {
   rounds: ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'],
   defaultRound: 'Round 6',
   quotas: [
+    { key: 'combined', label: 'All India + Other State (recommended)' },
     { key: 'all-india', label: 'All India' }, { key: 'home-state', label: 'Home State' }, { key: 'other-state', label: 'Other State' },
     { key: 'goa', label: 'Goa' }, { key: 'jk', label: 'J&K' }, { key: 'ladakh', label: 'Ladakh' },
   ],
@@ -99,3 +100,12 @@ export function estimateCategoryRank(crl, categoryKey, shares) {
   const s = shares && shares[categoryKey];
   return s > 0 ? Math.max(1, Math.round(crl * s)) : null;
 }
+
+// JoSAA seats come in separate quotas: IITs, IIITs and most GFTIs are "All India"; NITs (and some GFTIs) are only under
+// "Home State" or "Other State". "combined" loads All India + Other State together so a student sees every kind of institute
+// (checked in the data: all-india = IIT/IIIT/GFTI, other-state = NIT/GFTI, home-state = NIT/GFTI).
+export const COMBINED_PARTS = ['all-india', 'other-state'];
+export const quotaLabelOf = (counselling, key, manifest) => {
+  const list = counselling === 'MH' ? (manifest ? manifest.quotas : []) : JOSAA.quotas;
+  const q = list.find(x => x.key === key); return q ? q.label : key;
+};
