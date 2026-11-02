@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { streamMatches } from '../../../lib/events';
 import './news.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
@@ -114,7 +115,7 @@ export default function NewsPage() {
     fetch('/data/events.json')
       .then(r => r.json())
       .then(data => {
-        const active = data.filter(e => !isExpired(e));
+        const active = data.filter(e => streamMatches(e, 'medical')).filter(e => !isExpired(e));   // events for this stream or 'all' (no stream = medical)
         active.sort((a, b) => new Date(a.date) - new Date(b.date));
         setEvents(active);
         setLoading(false);

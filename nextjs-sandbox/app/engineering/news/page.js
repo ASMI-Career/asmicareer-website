@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { streamMatches, mergeEvents } from '../../../lib/events';
 import './news.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
@@ -66,9 +67,13 @@ export default function EngineeringNewsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/data/engineeringEvents.json')
-      .then(r => r.json())
-      .then(data => {
+    // Engineering news = events.json events for the engineering stream (or 'all') + the older engineeringEvents.json list.
+    Promise.all([
+      fetch('/data/events.json').then(r => r.json()).then(list => list.filter(e => streamMatches(e, 'engineering'))).catch(() => []),
+      fetch('/data/engineeringEvents.json').then(r => r.json()).catch(() => []),
+    ])
+      .then(([tagged, legacy]) => {
+        const data = mergeEvents(tagged, legacy);
         const active = data.filter(e => !isExpired(e));
         active.sort((a, b) => new Date(a.date) - new Date(b.date));
         setEvents(active);

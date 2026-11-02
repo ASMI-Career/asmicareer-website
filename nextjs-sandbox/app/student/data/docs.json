@@ -1,0 +1,213 @@
+{
+  "sections": [
+    {
+      "title": "Academic Documents",
+      "docs": [
+        {
+          "id": "neet-admit",
+          "label": "NEET Admit Card",
+          "copies": "Original + 2 self-attested photocopies"
+        },
+        {
+          "id": "neet-score",
+          "label": "NEET Scorecard / Rank Letter",
+          "copies": "Original + 2 self-attested photocopies"
+        },
+        {
+          "id": "cls10-mark",
+          "label": "Class 10 Marksheet",
+          "copies": "Original + 3 attested photocopies",
+          "note": "Required as date of birth proof"
+        },
+        {
+          "id": "cls10-cert",
+          "label": "Class 10 Passing Certificate",
+          "copies": "Original + 3 attested photocopies"
+        },
+        {
+          "id": "cls12-mark",
+          "label": "Class 12 Marksheet",
+          "copies": "Original + 3 attested photocopies"
+        },
+        {
+          "id": "cls12-cert",
+          "label": "Class 12 Passing Certificate / School Leaving",
+          "copies": "Original + 3 attested photocopies"
+        }
+      ]
+    },
+    {
+      "title": "Identity & Address Proof",
+      "docs": [
+        {
+          "id": "aadhar-self",
+          "label": "Aadhaar Card — Student",
+          "copies": "Original + 3 self-attested photocopies"
+        },
+        {
+          "id": "aadhar-father",
+          "label": "Aadhaar Card — Father",
+          "copies": "Original + 2 self-attested photocopies"
+        },
+        {
+          "id": "aadhar-mother",
+          "label": "Aadhaar Card — Mother",
+          "copies": "Original + 2 self-attested photocopies"
+        },
+        {
+          "id": "photos",
+          "label": "Passport-size Photographs",
+          "copies": "10–15 recent, white background",
+          "note": "Same set as used in NEET application form"
+        }
+      ]
+    },
+    {
+      "title": "School / College Certificates",
+      "docs": [
+        {
+          "id": "tc",
+          "label": "Transfer Certificate (TC)",
+          "copies": "Original + 2 attested photocopies"
+        },
+        {
+          "id": "migration",
+          "label": "Migration Certificate",
+          "copies": "Original + 1 photocopy",
+          "note": "Required if schooling was outside Maharashtra"
+        },
+        {
+          "id": "character",
+          "label": "Character Certificate",
+          "copies": "Original (from last institution)"
+        }
+      ]
+    },
+    {
+      "title": "Medical Certificate",
+      "docs": [
+        {
+          "id": "medical-fit",
+          "label": "Medical Fitness Certificate",
+          "copies": "Original on doctor's letterhead",
+          "note": "From a registered MBBS doctor"
+        }
+      ]
+    }
+  ],
+  "category": {
+    "OBC": {
+      "title": "OBC Category Documents",
+      "docs": [
+        {
+          "id": "obc-cert",
+          "label": "OBC Certificate",
+          "copies": "Original + 2 attested photocopies",
+          "note": "Central format for AIQ; state format for State Quota"
+        },
+        {
+          "id": "ncl-cert",
+          "label": "Non-Creamy Layer (NCL) Certificate",
+          "copies": "Original + 2 attested photocopies",
+          "note": "Must be issued within the last 1 year; annual family income below ₹8 lakh"
+        }
+      ]
+    },
+    "SC": {
+      "title": "SC Category Documents",
+      "docs": [
+        {
+          "id": "caste-sc",
+          "label": "Caste Certificate (SC)",
+          "copies": "Original + 2 attested photocopies"
+        },
+        {
+          "id": "validity-sc",
+          "label": "Caste Validity Certificate",
+          "copies": "Original + 1 photocopy",
+          "note": "Maharashtra: issued by District Caste Scrutiny Committee"
+        }
+      ]
+    },
+    "ST": {
+      "title": "ST Category Documents",
+      "docs": [
+        {
+          "id": "tribe-st",
+          "label": "Tribe Certificate (ST)",
+          "copies": "Original + 2 attested photocopies"
+        },
+        {
+          "id": "validity-st",
+          "label": "Tribe Validity Certificate",
+          "copies": "Original + 1 photocopy",
+          "note": "Maharashtra: issued by District Caste Scrutiny Committee"
+        }
+      ]
+    },
+    "EWS": {
+      "title": "EWS Category Documents",
+      "docs": [
+        {
+          "id": "ews-cert",
+          "label": "EWS Certificate",
+          "copies": "Original + 2 attested photocopies",
+          "note": "Current financial year; issued by Tehsildar or SDO"
+        },
+        {
+          "id": "income-cert",
+          "label": "Income Certificate",
+          "copies": "Original + 1 photocopy",
+          "note": "Annual family income below ₹8 lakh"
+        }
+      ]
+    }
+  },
+  "quota": {
+    "AIQ": {
+      "title": "All India Quota (AIQ) Documents",
+      "docs": [
+        {
+          "id": "mcc-reg",
+          "label": "MCC Registration Printout",
+          "copies": "2 photocopies",
+          "note": "Print from the MCC NEET UG counselling portal"
+        },
+        {
+          "id": "mcc-allotment",
+          "label": "AIQ Seat Allotment Letter",
+          "copies": "Original + 2 photocopies",
+          "note": "Download from MCC portal after seat allotment round"
+        }
+      ]
+    },
+    "State": {
+      "title": "State Quota (Maharashtra) Documents",
+      "docs": [
+        {
+          "id": "domicile",
+          "label": "Maharashtra Domicile / Nativity Certificate",
+          "copies": "Original + 2 attested photocopies",
+          "note": "Issued by Tehsildar or SDO; family requires 15+ years Maharashtra residence"
+        }
+      ]
+    },
+    "Management": {
+      "title": "Management / NRI Quota Documents",
+      "docs": [
+        {
+          "id": "mgmt-allotment",
+          "label": "Management / NRI Seat Allotment Letter",
+          "copies": "Original + 2 photocopies",
+          "note": "From college trust or state management quota authority"
+        },
+        {
+          "id": "fee-receipt",
+          "label": "Fee Payment Receipt",
+          "copies": "2 photocopies",
+          "note": "If partial fee was collected at time of allotment"
+        }
+      ]
+    }
+  }
+}

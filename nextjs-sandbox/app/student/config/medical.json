@@ -1,0 +1,207 @@
+{
+  "id": "medical",
+  "modules": ["dashboard", "predictor", "cutoff", "institutes", "checklist"],
+  "nav": [
+    { "id": "dashboard",  "label": "Dashboard",       "icon": "lucide:layout-dashboard" },
+    { "id": "predictor",  "label": "Predictor",       "icon": "lucide:bar-chart-3" },
+    { "id": "cutoff",     "label": "Cutoff Explorer", "icon": "lucide:search", "externalHref": "/cutoff_explorer.html" },
+    { "id": "institutes", "label": "Institutes",      "icon": "lucide:building-2" },
+    { "id": "checklist",  "label": "Documents",       "icon": "lucide:file-text" }
+  ],
+  "unknownTabFallback": null,
+  "tracks": [],
+  "student": {
+    "defaultName": "Student",
+    "logRecord": true,
+    "scoreParse": "int",
+    "branchFromToken": true,
+    "counsellorDefaults": { "name": "ASMI Counsellor", "whatsapp": "917410019074", "branch": "ASMI Career Network" },
+    "stages": ["Enrolled", "Documents Verified", "Counselled", "Preferences Filed", "Round 1", "Allotted"],
+    "defaultProgress": [
+      { "id": 1, "label": "Profile",     "status": "completed" },
+      { "id": 2, "label": "Counselling", "status": "active" },
+      { "id": 3, "label": "Shortlist",   "status": "pending" },
+      { "id": 4, "label": "Admission",   "status": "pending" }
+    ],
+    "categoryRules": {
+      "rules": [
+        { "contains": ["OBC"], "value": "OBC" },
+        { "contains": ["SC"],  "value": "SC" },
+        { "contains": ["ST"],  "value": "ST" },
+        { "contains": ["EWS"], "value": "EWS" }
+      ],
+      "default": "General"
+    },
+    "quotaRules": {
+      "rules": [
+        { "contains": ["AIQ"], "value": "AIQ" },
+        { "contains": ["MQ", "MANAGEMENT", "NRI"], "value": "Management" }
+      ],
+      "default": "State"
+    }
+  },
+  "dashboard": {
+    "headerRole": "NEET Aspirant 2026",
+    "heroSubtitle": "Your journey to MBBS 2026 is in progress. Keep going!",
+    "badges": [
+      { "label": "NEET SCORE",    "field": "score" },
+      { "label": "NEET AIR RANK", "field": "rank" },
+      { "label": "CATEGORY",      "field": "category" }
+    ],
+    "categoryLabels": { "General": "General / UR" },
+    "redTagKeywords": ["URGENT", "NEET"],
+    "newsUrl": "https://asmicareer.in/medical/news",
+    "shortlistIcon": "🏥",
+    "shortlistEditTab": "predictor",
+    "shortlistText": { "heroNone": "No colleges shortlisted yet", "heroOne": "college", "heroMany": "colleges", "cardNone": "No colleges shortlisted yet.", "more": "colleges", "add": "+ Add More Colleges" },
+    "deadlineCount": 4,
+    "actionRequiredDocId": "neet-admit"
+  },
+  "deadlines": { "keepPastResults": true, "useExpiryDate": true, "requireTrackMatch": false, "showTentative": false },
+  "documents": {
+    "data": "medical",
+    "subtitle": "Track every document you need for MBBS counselling and admission.",
+    "defaults": { "category": "General", "quota": "State" },
+    "quotaLabel": "Quota Type",
+    "quotas": [
+      { "value": "State",      "label": "State Quota (Maharashtra)" },
+      { "value": "AIQ",        "label": "All India Quota (AIQ)" },
+      { "value": "Management", "label": "Management / NRI" }
+    ]
+  },
+  "shortlist": {
+    "itemMode": "name",
+    "askDetails": false,
+    "groups": ["MCC", "MH", "OPEN"],
+    "groupRules": {
+      "byPoolOrQuota": [
+        { "group": "MCC",  "pool": "MCC AIQ",    "quota": "aiq" },
+        { "group": "MH",   "pool": "MH State",   "quota": "state" },
+        { "group": "OPEN", "pool": "Open State", "quota": "open state" }
+      ],
+      "byState": { "Maharashtra": "MH" },
+      "privateGroup": "OPEN",
+      "defaultGroup": "MCC"
+    }
+  },
+  "predictor": {
+    "title": "📊 NEET Rank Predictor",
+    "subtitle": "Convert your tentative NEET Score into an estimated All India Rank.",
+    "scoreMin": 200,
+    "scoreMax": 720,
+    "scoreInvalidMessage": "Enter a valid NEET score between 200 and 720.",
+    "scorePlaceholder": "Enter Score (200–720)",
+    "scoreExample": "e.g. 620",
+    "scoreLabel": "NEET Score",
+    "scoreAdjust": 20,
+    "scoreFloor": 100,
+    "modeLabels": { "rank": "Use NEET AIR", "score": "Use NEET Score" },
+    "scoreHeadline": "Enter Your NEET Score to Start",
+    "scoreHint": "Type your NEET score (200-720) above to see matching colleges and admission chances.",
+    "chanceBands": { "high": 1.1, "low": 0.92 },
+    "prob": { "projection": 20, "safe": 15, "likely": 0, "borderline": -10 },
+    "mainCourse": "MBBS",
+    "courses": ["MBBS", "BDS"],
+    "pools": { "mh": "MH State", "mcc": "MCC AIQ", "open": "Open State" },
+    "mhState": "Maharashtra",
+    "quotaOptions": [
+      { "value": "All",        "label": "All Quotas" },
+      { "value": "AIQ",        "label": "All India Quota (AIQ)" },
+      { "value": "State",      "label": "State Quota" },
+      { "value": "Open State", "label": "Open State Quota" },
+      { "value": "IP",         "label": "Institutional / Private" }
+    ],
+    "poolFilters": [
+      { "key": "All",        "label": "All Pools" },
+      { "key": "MH State",   "label": "MH State" },
+      { "key": "MCC AIQ",    "label": "MCC AIQ" },
+      { "key": "Open State", "label": "Open State" }
+    ],
+    "typeFilters": [
+      { "key": "All",        "label": "All Types" },
+      { "key": "Government", "label": "Government" },
+      { "key": "Private",    "label": "Private" },
+      { "key": "Deemed",     "label": "Deemed" }
+    ]
+  },
+  "cutoff": {
+    "title": "📈 Cutoff Explorer",
+    "subtitle": "Browse historical closing ranks for medical colleges across states and quotas.",
+    "rankLabel": "Closing Rank (AIR)"
+  },
+  "institutes": {
+    "title": "🏫 Institutes Directory",
+    "subtitle": "Browse and filter medical colleges across India.",
+    "tabTypes": ["All", "Private", "Government", "Deemed", "AIIMS", "JIPMER", "Central"],
+    "tabAllLabel": "All Colleges",
+    "typeOptions": [
+      { "value": "All", "label": "All Colleges" },
+      { "value": "AIIMS", "label": "AIIMS" },
+      { "value": "Government", "label": "Government" },
+      { "value": "Private", "label": "Private" },
+      { "value": "Deemed", "label": "Deemed" },
+      { "value": "JIPMER", "label": "JIPMER" },
+      { "value": "Central", "label": "Central" },
+      { "value": "AFMC", "label": "AFMC" },
+      { "value": "Govt. Society", "label": "Govt. Society" }
+    ],
+    "courseOptions": [
+      { "value": "All", "label": "All Courses" },
+      { "value": "MBBS", "label": "MBBS" },
+      { "value": "BDS", "label": "BDS" },
+      { "value": "BPTH", "label": "BPTH" },
+      { "value": "BAMS", "label": "BAMS" },
+      { "value": "BHMS", "label": "BHMS" }
+    ],
+    "defaultCourse": "MBBS",
+    "detailHref": "/medical/colleges/{slug}"
+  },
+  "fees": { "yearsByCourse": { "BDS": 4, "BPTH": 4 }, "defaultYears": 4.5 },
+  "catalog": {
+    "events": ["/data/events.json"],
+    "rankDb": "/data/rank_db.json",
+    "colleges": "/data/colleges.json",
+    "asmiDb": "/data/asmi_db.json",
+    "feeMap": "/fee_map.json",
+    "cutoff": {
+      "mcc": {
+        "base": "/data/cutoffs/MCC/2025",
+        "folders": [
+          { "key": "GOVT_MBBS",    "type": "Government" },
+          { "key": "AIIMS_MBBS",   "type": "AIIMS" },
+          { "key": "JIPMER_MBBS",  "type": "Government" },
+          { "key": "CENTRAL_MBBS", "type": "Government" },
+          { "key": "DEEMED_MBBS",  "type": "Deemed" }
+        ],
+        "pool": "MCC AIQ",
+        "quota": "AIQ"
+      },
+      "mh": {
+        "base": "/data/cutoffs/MH/2025",
+        "folders": [
+          { "key": "GOVT_MBBS",    "type": "Government" },
+          { "key": "PRIVATE_MBBS", "type": "Private" }
+        ],
+        "file": "GENERAL.json",
+        "state": "Maharashtra",
+        "pool": "MH State",
+        "quota": "State"
+      },
+      "openStates": {
+        "base": "/data/cutoffs/OPEN/2025",
+        "file": "MQ.json",
+        "type": "Private",
+        "pool": "Open State",
+        "quota": "Open State",
+        "states": {
+          "Karnataka": "Karnataka", "Telangana": "Telangana", "Tamil_Nadu": "Tamil Nadu",
+          "Uttar_Pradesh": "Uttar Pradesh", "Kerala": "Kerala", "Andhra_Pradesh": "Andhra Pradesh",
+          "Haryana": "Haryana", "West_Bengal": "West Bengal", "Bihar": "Bihar",
+          "Uttarakhand": "Uttarakhand", "Chhattisgarh": "Chhattisgarh", "Jharkhand": "Jharkhand",
+          "Himachal_Pradesh": "Himachal Pradesh", "Pondicherry": "Pondicherry",
+          "Manipur": "Manipur", "Meghalaya": "Meghalaya", "Sikkim": "Sikkim"
+        }
+      }
+    }
+  }
+}
