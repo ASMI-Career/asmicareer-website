@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, cfgFor, defaultCategory, buildMhCurve } from '../lib/engCutoff';
+import { JOSAA, MH, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
 export default function useEngCutoff({ config, studentCategory, active }) {
   const enabled = !!(config && config.engineeringCutoff);
   const [counselling, setCounselling] = useState('JOSAA');
-  const [quota, setQuota] = useState('all-india');
+  const [quota, setQuota] = useState('combined');
   const [category, setCategory] = useState('');
   const [gender, setGender] = useState('all');
   const [itype, setItype] = useState('ALL');
@@ -67,16 +67,18 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     if (counselling === 'MH' && !manifest) return;
     const id = ++seq.current;
     setData(d => ({ ...d, loading: true, error: false }));
-    fetch(`${cfgFor(counselling).base}/${quota}/${category}/${gender}.json`)
+    const parts = (counselling === 'JOSAA' && quota === 'combined') ? COMBINED_PARTS : [quota];
+    Promise.all(parts.map(q => fetch(`${cfgFor(counselling).base}/${q}/${category}/${gender}.json`)
       .then(r => { if (r.status === 404) return { colleges: [] }; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(j => { if (id === seq.current) { setData({ loading: false, error: false, colleges: j.colleges || [] }); setVisible(40); } })
+      .then(j => (j.colleges || []).map(c => ({ ...c, _quota: q })))))
+      .then(lists => { if (id === seq.current) { setData({ loading: false, error: false, colleges: [].concat(...lists) }); setVisible(40); } })
       .catch(() => { if (id === seq.current) setData({ loading: false, error: true, colleges: [] }); });
   }, [enabled, active, counselling, quota, category, gender, manifest]);
 
   const switchCounselling = (key) => {
     if (key === counselling) return;
     touched.current = false;
-    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : 'all-india'); setCategory(''); setGender('all'); setItype('ALL');
+    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : 'combined'); setCategory(''); setGender('all'); setItype('ALL');
     setRound(key === 'MH' ? (manifest ? manifest.rounds[manifest.rounds.length - 1] : 'Round 1') : JOSAA.defaultRound);
     setPwd(false); setVisible(40);
   };

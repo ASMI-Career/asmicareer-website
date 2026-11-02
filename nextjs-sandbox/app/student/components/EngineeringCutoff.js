@@ -1,4 +1,4 @@
-import { JOSAA, MH, cfgFor, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
+import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
 
 // Engineering Cutoff Explorer (student view). Same data as the counsellor tool; every filter is a plain dropdown,
 // last year's closing ranks are shown per round, and a student who enters their rank sees Safe / Likely / Borderline / Out of reach.
@@ -18,7 +18,7 @@ export default function EngineeringCutoff(props) {
   const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
   const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
   const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
-  const quotaLabel = (quotas.find(q => q.key === ecQuota) || {}).label || ecQuota;
+  const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
   const track = base.track;
   const reserved = isReservedJosaa(cs, ecCategory);
   const catLabel = (categories.find(c => c.key === ecCategory) || {}).label || ecCategory;
@@ -37,9 +37,9 @@ export default function EngineeringCutoff(props) {
   const counts = { safe: 0, likely: 0, borderline: 0, out: 0 };
   if (haveRank) rows.forEach(r => { if (r.chance) counts[r.chance.key] += 1; });
 
-  const labelOf = (c) => `${c.name} — ${c.program} (${quotaLabel})`;
+  const labelOf = (c) => `${c.name} — ${c.program} (${qLabel(c)})`;
   const isIn = (c) => shortlist.includes(labelOf(c));
-  const toggle = (c) => handleToggleShortlist(labelOf(c), { name: c.name, institute: c.name, branch: c.program, seatType: quotaLabel, track, type: c.type });
+  const toggle = (c) => handleToggleShortlist(labelOf(c), { name: c.name, institute: c.name, branch: c.program, seatType: qLabel(c), track, type: c.type });
 
   const field = { fontFamily: 'inherit' };
   const pill = (r) => r.chance ? (r.chance.key === 'out' ? <span className="chance-out">Out of reach</span> : <span className={`chance-${r.chance.key}`}>{r.chance.label}</span>) : <span style={{ color: 'var(--text-300)' }}>—</span>;
@@ -57,7 +57,7 @@ export default function EngineeringCutoff(props) {
       <p style={{ fontSize: 12, color: 'var(--text-500)', marginBottom: 16 }}>
         {isMH
           ? `Maharashtra CAP ${MH.year}: closing merit number and percentile for each round. Merit number = your rank in the Maharashtra state merit list.`
-          : `JoSAA ${JOSAA.year}: opening and closing ranks for each round. IIT ranks are JEE Advanced ranks; NIT, IIIT and GFTI ranks are JEE Main ranks. For every category except Open the ranks are category ranks (shown on your scorecard), not all-India ranks.`}
+          : `JoSAA ${JOSAA.year}: opening and closing ranks for each round. IIT ranks are JEE Advanced ranks; NIT, IIIT and GFTI ranks are JEE Main ranks. For every category except Open the ranks are category ranks (shown on your scorecard), not all-India ranks. JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India, while NITs are under Home State or Other State; the default view shows All India and Other State together.`}
         {' '}Last year&apos;s ranks are a guide, not a promise: cutoffs change every year.
       </p>
 
@@ -123,7 +123,7 @@ export default function EngineeringCutoff(props) {
               {rows.slice(0, ecVisible).map((r, i) => {
                 const c = r.c, inList = isIn(c), tk = isMH ? intakeOf(c) : null;
                 return (
-                  <tr key={`${c.choiceCode || c.name}-${c.program}-${i}`}>
+                  <tr key={`${c.choiceCode || c.name}-${c.program}-${c._quota}-${i}`}>
                     <td style={{ fontWeight: 700, color: 'var(--text-900)', minWidth: 200 }}>{c.name}{isMH && c.homeUniversity && c.homeUniversity !== 'Autonomous Institute' && <div style={{ fontSize: 11, fontWeight: 400, color: 'var(--text-500)' }}>Home university: {c.homeUniversity}</div>}</td>
                     <td style={{ minWidth: 180 }}>{c.program}{r.prep && <span style={{ fontSize: 10, color: '#b45309', fontWeight: 700 }}> (Prep)</span>}</td>
                     <td><span className="tag tag-gold">{c.type}</span></td>
