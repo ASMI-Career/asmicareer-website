@@ -245,5 +245,73 @@
    "GEN_BOTH",
    "GEN_GIRL"
   ]
+ },
+ "GOVT_COMBINED": {
+  "NT_B": [
+   "GEN_BOTH"
+  ],
+  "NT_C": [
+   "GEN_GIRL"
+  ],
+  "OBC": [
+   "GEN_BOTH",
+   "GEN_GIRL",
+   "PAP_BOTH"
+  ],
+  "OPEN": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "SC": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "SEBC": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "ST": [
+   "DP_BOTH",
+   "GEN_BOTH"
+  ],
+  "VJ_DT_A": [
+   "GEN_BOTH"
+  ]
+ },
+ "PRIVATE_COMBINED": {
+  "EWS": [
+   "DP_BOTH",
+   "PAP_BOTH"
+  ],
+  "NT_B": [
+   "GEN_BOTH"
+  ],
+  "NT_D": [
+   "GEN_GIRL"
+  ],
+  "OBC": [
+   "AG_BOTH",
+   "FF_BOTH",
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "OPEN": [
+   "AG_BOTH",
+   "DP_BOTH",
+   "GEN_BOTH"
+  ],
+  "SC": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "SEBC": [
+   "FF_BOTH",
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "ST": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ]
  }
 }

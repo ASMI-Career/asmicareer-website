@@ -596,7 +596,7 @@
     // MAFSU (Maharashtra Animal & Fishery Sciences Univ.) BVSc: selectedInstType = INST_QUOTA, then category + sub-type files
     const MAFSU_INSTS = [{ id: 'GOVT', label: 'Govt BVSc' }, { id: 'PRIVATE', label: 'Private BVSc' }];
     const MAFSU_QUOTAS = [
-      { id: 'STATE', label: 'State Merit' }, { id: 'REGION', label: 'Region Merit' }, { id: 'MGMT', label: 'Management' },
+      { id: 'STATE', label: 'State Merit' }, { id: 'REGION', label: 'Region Merit' }, { id: 'COMBINED', label: 'Combined (Round 3)' }, { id: 'MGMT', label: 'Management' },
       { id: 'NRIINDIA', label: 'NRI (India)' }, { id: 'NRIABROAD', label: 'NRI (Abroad)' }
     ];
     const MAFSU_CAT_LABELS = { OPEN: 'Open', OBC: 'OBC', SC: 'SC', ST: 'ST', SEBC: 'SEBC', EWS: 'EWS', VJ_DT_A: 'VJ/DT(A)', NT_B: 'NT(B)', NT_C: 'NT(C)', NT_D: 'NT(D)', ALL: 'All' };
@@ -1495,7 +1495,7 @@
       const isMAFSU = currentData.counselling === 'MAFSU'; // closing Region Merit / State Merit / NEET marks instead of AIR
       const mafsuQ = isMAFSU ? String(currentData.institution_type || '').split('_')[1] : '';
       const mafsuShowRegion = mafsuQ === 'REGION';                       // Region quota: Region Merit only
-      const mafsuShowState = mafsuQ === 'STATE' || mafsuQ === 'MGMT';    // State / Management: State Merit only (NRI: neither)
+      const mafsuShowState = mafsuQ === 'STATE' || mafsuQ === 'MGMT' || mafsuQ === 'COMBINED';    // State / Management / Combined (Round 3): State Merit only (NRI: neither)
 
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
