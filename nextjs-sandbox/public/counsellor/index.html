@@ -706,7 +706,7 @@
     ];
     // Veterinary (BVSc) open-state data: separate state list + quota keys, stored under OPEN_BVSC/
     const OPEN_VET_STATES = ['Himachal Pradesh', 'Haryana', 'Madhya Pradesh', 'Pondicherry', 'Punjab', 'Rajasthan', 'Telangana', 'Uttar Pradesh'];
-    const OPEN_VET_QUOTAS = { 'Himachal Pradesh': ['GOVT'], 'Punjab': ['GOVT', 'PRIVATE'], 'Telangana': ['GOVT'], 'Uttar Pradesh': ['IVRI_BAREILLY_REGULAR', 'IVRI_BAREILLY_PAYMENT', 'BHU_MIRZAPUR'] }; // others default to PRIVATE
+    const OPEN_VET_QUOTAS = { 'Himachal Pradesh': ['GOVT'], 'Punjab': ['GOVT', 'PRIVATE'], 'Telangana': ['GOVT'], 'Pondicherry': ['GOVT'], 'Madhya Pradesh': ['GOVT'], 'Uttar Pradesh': ['IVRI_BAREILLY_REGULAR', 'IVRI_BAREILLY_PAYMENT', 'BHU_MIRZAPUR'] }; // others default to PRIVATE
     const OPEN_VET_CATS = Object.fromEntries(OPEN_VET_STATES.map(s => [s.replace(/ /g, '_'), OPEN_VET_QUOTAS[s] || ['PRIVATE']])); // per-state seat-type pills (Govt / Private colleges)
     const openStates = () => selectedGroup === 'VET' ? OPEN_VET_STATES : OPEN_STATES;
     const openCats = folder => (selectedGroup === 'VET' ? OPEN_VET_CATS : OPEN_STATE_CATS)[folder];
