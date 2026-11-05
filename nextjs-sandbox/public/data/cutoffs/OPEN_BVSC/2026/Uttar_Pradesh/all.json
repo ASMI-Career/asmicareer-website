@@ -3,23 +3,215 @@
     "counselling": "OPEN",
     "state": "Uttar Pradesh",
     "year": 2026,
-    "quota": "PRIVATE",
+    "quota": "IVRI_BAREILLY_REGULAR",
+    "colleges": [
+      {
+        "code": null,
+        "name": "ICAR - Indian Veterinary Research Institute, Bareilly",
+        "establishment": 1889,
+        "fees": "41500",
+        "type": "Govt",
+        "categories": {
+          "Open": {
+            "Round 1": {
+              "Intake": 17,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "OBC": {
+            "Round 1": {
+              "Intake": 11,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "SC": {
+            "Round 1": {
+              "Intake": 6,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "ST": {
+            "Round 1": {
+              "Intake": 3,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "EWS": {
+            "Round 1": {
+              "Intake": 4,
+              "AIR": null,
+              "SML": null
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Uttar Pradesh",
+    "year": 2026,
+    "quota": "IVRI_BAREILLY_PAYMENT",
+    "colleges": [
+      {
+        "code": null,
+        "name": "ICAR - Indian Veterinary Research Institute, Bareilly",
+        "establishment": 1889,
+        "fees": "500000",
+        "type": "Govt",
+        "categories": {
+          "Open": {
+            "Round 1": {
+              "Intake": 4,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "OBC": {
+            "Round 1": {
+              "Intake": 2,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "SC": {
+            "Round 1": {
+              "Intake": 1,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "ST": {
+            "Round 1": {
+              "Intake": 1,
+              "AIR": null,
+              "SML": null
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "counselling": "OPEN",
+    "state": "Uttar Pradesh",
+    "year": 2026,
+    "quota": "BHU_MIRZAPUR",
     "colleges": [
       {
         "code": null,
         "name": "Faculty of Veterinary and Animal Sciences, Banaras Hindu University, Barkachha",
         "establishment": 2015,
         "fees": "56089",
-        "type": "Government",
-        "rounds": {}
-      },
-      {
-        "code": null,
-        "name": "ICAR - Indian Veterinary Research Institute, Bareilly",
-        "establishment": 1889,
-        "fees": "500000",
-        "type": "Government",
-        "rounds": {}
+        "type": "Govt",
+        "categories": {
+          "Open": {
+            "Round 1": {
+              "Intake": 20,
+              "AIR": 44110,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 46531,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "OBC": {
+            "Round 1": {
+              "Intake": 14,
+              "AIR": 48934,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 54936,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": 56104,
+              "SML": null
+            }
+          },
+          "SC": {
+            "Round 1": {
+              "Intake": 8,
+              "AIR": 181813,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 191262,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": 193812,
+              "SML": null
+            }
+          },
+          "ST": {
+            "Round 1": {
+              "Intake": 4,
+              "AIR": 172758,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 198034,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": 211389,
+              "SML": null
+            }
+          },
+          "EWS": {
+            "Round 1": {
+              "Intake": 5,
+              "AIR": 55377,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 57985,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": null,
+              "SML": null
+            }
+          },
+          "PWD": {
+            "Round 1": {
+              "Intake": 3,
+              "AIR": null,
+              "SML": null
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": null,
+              "SML": null
+            },
+            "Round 3": {
+              "Intake": null,
+              "AIR": null,
+              "SML": null
+            }
+          }
+        }
       }
     ]
   }

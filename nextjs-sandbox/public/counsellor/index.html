@@ -705,8 +705,9 @@
       'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
     ];
     // Veterinary (BVSc) open-state data: separate state list + quota keys, stored under OPEN_BVSC/
-    const OPEN_VET_STATES = ['Himachal Pradesh', 'Haryana', 'Madhya Pradesh', 'Pondicherry', 'Punjab', 'Rajasthan', 'Telangana', 'Uttar Pradesh', 'Uttarakhand'];
-    const OPEN_VET_CATS = Object.fromEntries(OPEN_VET_STATES.map(s => [s.replace(/ /g, '_'), ['PRIVATE']]));
+    const OPEN_VET_STATES = ['Himachal Pradesh', 'Haryana', 'Madhya Pradesh', 'Pondicherry', 'Punjab', 'Rajasthan', 'Telangana', 'Uttar Pradesh'];
+    const OPEN_VET_QUOTAS = { 'Himachal Pradesh': ['GOVT'], 'Punjab': ['GOVT', 'PRIVATE'], 'Telangana': ['GOVT'], 'Uttar Pradesh': ['IVRI_BAREILLY_REGULAR', 'IVRI_BAREILLY_PAYMENT', 'BHU_MIRZAPUR'] }; // others default to PRIVATE
+    const OPEN_VET_CATS = Object.fromEntries(OPEN_VET_STATES.map(s => [s.replace(/ /g, '_'), OPEN_VET_QUOTAS[s] || ['PRIVATE']])); // per-state seat-type pills (Govt / Private colleges)
     const openStates = () => selectedGroup === 'VET' ? OPEN_VET_STATES : OPEN_STATES;
     const openCats = folder => (selectedGroup === 'VET' ? OPEN_VET_CATS : OPEN_STATE_CATS)[folder];
     const openRoot = () => selectedGroup === 'AYUSH' ? 'OPEN_AYUSH' : selectedGroup === 'VET' ? 'OPEN_BVSC' : 'OPEN';
@@ -815,7 +816,7 @@
         mhSubType = 'GENERAL';
       } else if (c === 'OPEN') {
         selectedState = selectedGroup === 'VET' ? OPEN_VET_STATES[0] : 'Karnataka';
-        selectedCategory = selectedGroup === 'VET' ? 'PRIVATE' : 'MQ';
+        selectedCategory = selectedGroup === 'VET' ? openCats(OPEN_VET_STATES[0].replace(/ /g, '_'))[0] : 'MQ';
       }
 
       const titleEl = document.getElementById('counselling-title');
@@ -837,7 +838,7 @@
           subtitleEl.textContent = `Maharashtra State Quota · Govt & Private · ${courseLabel} seats`;
         } else if (c === 'OPEN') {
           titleEl.textContent = 'Open States — Management Quota';
-          subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
+          subtitleEl.textContent = selectedGroup === 'VET' ? OPEN_VET_STATES.length + ' states · Govt & Private colleges · BVSc seats' : '17 states · MQ & NRI quota · MBBS seats';
         } else if (c === 'MAFSU') {
           titleEl.textContent = 'MAFSU — BVSc Round 1 2026 Allotment';
           subtitleEl.textContent = 'Closing Region Merit / State Merit / NEET marks of candidates allotted in Round 1 · Intake = seats in that category bucket';
@@ -1002,7 +1003,7 @@
       }
       const grp = COURSE_GROUPS.find(g => g.id === selectedGroup);
       const cards = grp.cards.map(id => ({ id, ...COUNSELLING_CARDS[id] }));
-      if (selectedGroup === 'VET') cards.forEach(c => { if (c.id === 'OPEN') c.subtitle = OPEN_VET_STATES.length + ' states · Private colleges'; });
+      if (selectedGroup === 'VET') cards.forEach(c => { if (c.id === 'OPEN') c.subtitle = OPEN_VET_STATES.length + ' states · Govt & Private colleges'; });
       container.className = 'grid grid-cols-1 gap-3 ' + (cards.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3');
 
       container.innerHTML = cards.map(c => {

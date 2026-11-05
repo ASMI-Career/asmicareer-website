@@ -1,0 +1,52 @@
+{
+  "counselling": "OPEN",
+  "state": "Uttar Pradesh",
+  "year": 2026,
+  "quota": "IVRI_BAREILLY_REGULAR",
+  "colleges": [
+    {
+      "code": null,
+      "name": "ICAR - Indian Veterinary Research Institute, Bareilly",
+      "establishment": 1889,
+      "fees": "41500",
+      "type": "Govt",
+      "categories": {
+        "Open": {
+          "Round 1": {
+            "Intake": 17,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "OBC": {
+          "Round 1": {
+            "Intake": 11,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "SC": {
+          "Round 1": {
+            "Intake": 6,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "ST": {
+          "Round 1": {
+            "Intake": 3,
+            "AIR": null,
+            "SML": null
+          }
+        },
+        "EWS": {
+          "Round 1": {
+            "Intake": 4,
+            "AIR": null,
+            "SML": null
+          }
+        }
+      }
+    }
+  ]
+}

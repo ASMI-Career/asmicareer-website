@@ -8,17 +8,15 @@
       "code": null,
       "name": "Khalsa College of Veterinary and Animal Sciences, Amritsar",
       "establishment": 2009,
-      "fees": "1026260",
+      "fees": "875000",
       "type": "Private",
-      "rounds": {}
-    },
-    {
-      "code": null,
-      "name": "College of Veterinary Science, Ludhiana",
-      "establishment": 1969,
-      "fees": "805000",
-      "type": "Private",
-      "rounds": {}
+      "rounds": {
+        "Round 1": {
+          "Intake": 15,
+          "AIR": null,
+          "SML": null
+        }
+      }
     }
   ]
 }

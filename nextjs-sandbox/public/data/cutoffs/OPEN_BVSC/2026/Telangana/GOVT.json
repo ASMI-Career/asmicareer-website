@@ -1,0 +1,50 @@
+{
+  "counselling": "OPEN",
+  "state": "Telangana",
+  "year": 2026,
+  "quota": "GOVT",
+  "colleges": [
+    {
+      "code": null,
+      "name": "College of Veterinary Science, Hyderabad",
+      "establishment": 1946,
+      "fees": "1000000",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 4,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "College of Veterinary Science, Korutla",
+      "establishment": 2008,
+      "fees": "1000000",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "College of Veterinary Science, Warangal",
+      "establishment": 2018,
+      "fees": "1000000",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 2,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}
