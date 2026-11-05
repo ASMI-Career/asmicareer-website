@@ -100,10 +100,13 @@
           "Intake_PWD": 1
         },
         "Special Stray Vacancy Round": {
-          "Intake": 1,
-          "AIR": null,
+          "Intake": null,
+          "AIR": 28899,
           "AIR_PWD": null,
-          "Intake_PWD": 1
+          "Intake_PWD": 1,
+          "OPEN_AIR": 28899,
+          "OPEN_AIR_PWD": null,
+          "Allotted": 1
         }
       }
     },

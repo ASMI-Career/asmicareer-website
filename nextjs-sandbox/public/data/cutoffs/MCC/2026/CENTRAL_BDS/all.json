@@ -50,9 +50,12 @@
           },
           "Special Stray Vacancy Round": {
             "Intake": 1,
-            "AIR": null,
+            "AIR": 28730,
             "AIR_PWD": null,
-            "Intake_PWD": null
+            "Intake_PWD": null,
+            "OPEN_AIR": 28730,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1
           }
         }
       },
@@ -102,9 +105,12 @@
           },
           "Special Stray Vacancy Round": {
             "Intake": 1,
-            "AIR": null,
+            "AIR": 30166,
             "AIR_PWD": null,
-            "Intake_PWD": null
+            "Intake_PWD": null,
+            "OPEN_AIR": 30166,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1
           }
         }
       },
@@ -618,10 +624,13 @@
             "Intake_PWD": 1
           },
           "Special Stray Vacancy Round": {
-            "Intake": 1,
-            "AIR": null,
+            "Intake": null,
+            "AIR": 129722,
             "AIR_PWD": null,
-            "Intake_PWD": 1
+            "Intake_PWD": 1,
+            "OPEN_AIR": 129722,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1
           }
         }
       }
@@ -775,9 +784,12 @@
           },
           "Special Stray Vacancy Round": {
             "Intake": 1,
-            "AIR": null,
+            "AIR": 185909,
             "AIR_PWD": null,
-            "Intake_PWD": null
+            "Intake_PWD": null,
+            "OPEN_AIR": 185909,
+            "OPEN_AIR_PWD": null,
+            "Allotted": 1
           }
         }
       }
