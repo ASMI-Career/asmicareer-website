@@ -1,0 +1,39 @@
+[
+  {
+    "counselling": "OPEN",
+    "state": "Dadra Nagar Haveli",
+    "year": 2026,
+    "quota": "MQ",
+    "colleges": [
+      {
+        "code": null,
+        "name": "NAMO Medical Education and Research Institute, Silvassa",
+        "establishment": 2019,
+        "fees": "15,00,000",
+        "type": "Govt",
+        "rounds": {
+          "Round 1": {
+            "Intake": 15,
+            "AIR": 141492,
+            "SML": 17
+          },
+          "Round 2": {
+            "Intake": 8,
+            "AIR": 230534,
+            "SML": 12
+          },
+          "Round 3": {
+            "Intake": 5,
+            "AIR": 177831,
+            "SML": 5
+          },
+          "Stray Round": {
+            "Intake": 11,
+            "AIR": 180126,
+            "SML": 16
+          }
+        }
+      }
+    ]
+  }
+]
