@@ -20,6 +20,12 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 103637,
+          "SML": 913,
+          "CSML": "OBC-301"
         }
       }
     },
@@ -38,6 +44,12 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": null,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -56,6 +68,12 @@
           "Intake": 1,
           "AIR": null,
           "SML": null
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 154623,
+          "SML": 2427,
+          "CSML": "OBC-798"
         }
       }
     },
@@ -69,6 +87,20 @@
           "Intake": 2,
           "AIR": null,
           "SML": null
+        }
+      }
+    },
+    {
+      "code": "3239",
+      "name": "DMM Ayurved Mahavidyalaya, Yavatmal",
+      "establishment": 1961,
+      "fees": "94650",
+      "rounds": {
+        "Round 3": {
+          "Intake": null,
+          "AIR": 175289,
+          "SML": 3079,
+          "CSML": "OBC-1005"
         }
       }
     }

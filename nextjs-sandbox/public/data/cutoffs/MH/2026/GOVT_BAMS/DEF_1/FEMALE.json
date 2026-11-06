@@ -20,6 +20,12 @@
           "Intake": 0,
           "AIR": 115874,
           "SML": 1095
+        },
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 167642,
+          "SML": 2848,
+          "CSML": "DT-VJ(A)-107"
         }
       }
     },
@@ -38,6 +44,12 @@
           "Intake": 0,
           "AIR": 167642,
           "SML": 2566
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 184532,
+          "SML": 3372,
+          "CSML": "OBC-1094"
         }
       }
     },
@@ -110,6 +122,12 @@
           "Intake": 0,
           "AIR": 195360,
           "SML": 3411
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 281165,
+          "SML": 6635,
+          "CSML": "OBC-2038"
         }
       }
     },
@@ -128,6 +146,12 @@
           "Intake": 0,
           "AIR": 184532,
           "SML": 3080
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 198071,
+          "SML": 3815,
+          "CSML": "OBC-1206"
         }
       }
     },
@@ -218,6 +242,40 @@
           "Intake": 1,
           "AIR": 213139,
           "SML": 4000
+        },
+        "Round 3": {
+          "Intake": null,
+          "AIR": 253617,
+          "SML": 5707,
+          "CSML": "D1"
+        }
+      }
+    },
+    {
+      "code": "3171",
+      "name": "Government Ayurvedic College, Kagal, Kolhapur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 242444,
+          "SML": 5322,
+          "CSML": "D1"
+        }
+      }
+    },
+    {
+      "code": "3233",
+      "name": "Shree Ayurvedic Mahavidyalaya, Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 3": {
+          "Intake": 1,
+          "AIR": 195360,
+          "SML": 3724,
+          "CSML": "OBC-1185"
         }
       }
     }

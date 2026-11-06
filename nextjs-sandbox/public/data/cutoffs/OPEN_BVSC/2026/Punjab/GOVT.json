@@ -1,0 +1,36 @@
+{
+  "counselling": "OPEN",
+  "state": "Punjab",
+  "year": 2026,
+  "quota": "GOVT",
+  "colleges": [
+    {
+      "code": null,
+      "name": "College of Veterinary Science, Ludhiana",
+      "establishment": 1969,
+      "fees": "1000000",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 10,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    },
+    {
+      "code": null,
+      "name": "College of Veterinary Science, Rampura Phul, Bathinda",
+      "establishment": null,
+      "fees": "900000",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 12,
+          "AIR": null,
+          "SML": null
+        }
+      }
+    }
+  ]
+}

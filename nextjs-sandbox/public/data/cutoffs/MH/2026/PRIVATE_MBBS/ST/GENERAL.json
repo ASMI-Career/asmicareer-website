@@ -223,7 +223,7 @@
       "code": "1105",
       "name": "K J Somaiya Medical College, Mumbai",
       "establishment": 1991,
-      "fees": "1,09,091",
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 3,
@@ -247,7 +247,7 @@
       "code": "1276",
       "name": "Malati Multispeciality Hospital & Medical College, Akola",
       "establishment": 2025,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 1,
@@ -335,7 +335,7 @@
       "code": "1143",
       "name": "Prakash Institute of Medical Sciences, Sangli",
       "establishment": 2016,
-      "fees": "0",
+      "fees": "8,64,000",
       "rounds": {
         "Round 1": {
           "Intake": 3,
@@ -451,7 +451,7 @@
       "code": "1175",
       "name": "Smt. Sakhubai Narayanrao Katkade, Ahilyanagar",
       "establishment": 2025,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 3,
@@ -483,7 +483,7 @@
       "code": "1377",
       "name": "B.S.P. Medical College and Hospital, Sambhajinagar",
       "establishment": null,
-      "fees": null,
+      "fees": "0",
       "rounds": {
         "Round 1": {
           "Intake": 4,
@@ -535,7 +535,7 @@
       "code": "1147",
       "name": "Vedanta Medical College, Palghar",
       "establishment": 2017,
-      "fees": "0",
+      "fees": "17,13,000",
       "rounds": {
         "Round 1": {
           "Intake": 3,
@@ -566,6 +566,15 @@
           "AIR": 529723,
           "SML": 27652,
           "CSML": "ST-1190"
+        },
+        "Stray Round 3": {
+          "Intake": 2,
+          "AIR": 568782,
+          "SML": 29048,
+          "CSML": "ST-1310"
+        },
+        "Special Stray Round 1": {
+          "Intake": 1
         }
       }
     },
@@ -573,7 +582,7 @@
       "code": "1135",
       "name": "Dr. V.V.P.F.'s Medical College, Ahilyanagar",
       "establishment": 2003,
-      "fees": "1795000",
+      "fees": "17,95,000",
       "type": "Private",
       "rounds": {
         "Round 1": {
@@ -604,7 +613,7 @@
       "code": "1223",
       "name": "N.K.P. Salve Medical College, Nagpur",
       "establishment": 1990,
-      "fees": "2075000",
+      "fees": "20,75,000",
       "type": "Private",
       "rounds": {
         "Round 1": {
@@ -634,6 +643,15 @@
           "AIR": 578982,
           "SML": 29343,
           "CSML": "ST-1334"
+        },
+        "Stray Round 3": {
+          "Intake": 5,
+          "AIR": 788799,
+          "SML": 34970,
+          "CSML": "ST-1794"
+        },
+        "Special Stray Round 1": {
+          "Intake": 4
         }
       }
     },
@@ -641,7 +659,7 @@
       "code": "1136",
       "name": "Smt. Kashibai Navale Medical College & General Hospital, Pune",
       "establishment": 2007,
-      "fees": "13,04,500",
+      "fees": "0",
       "rounds": {
         "Round 3": {
           "Intake": 1,

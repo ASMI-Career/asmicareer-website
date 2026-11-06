@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
@@ -44,6 +44,33 @@ export default function EngineeringPortal() {
       .catch(err => console.warn('Events feed unavailable:', err));
   }, []);
   
+  const BSCREENS = [
+    { key: 'dashboard',  url: 'asmicareer.in/student' },
+    { key: 'predictor',  url: 'asmicareer.in/student?tab=predictor' },
+    { key: 'cutoffs',    url: 'asmicareer.in/student?tab=cutoff' },
+    { key: 'institutes', url: 'asmicareer.in/student?tab=institutes' },
+    { key: 'documents',  url: 'asmicareer.in/student?tab=checklist' },
+  ];
+  const dmViewRef = useRef(null);
+  // The preview screens are drawn 1100px wide and scaled down to whatever width the hero card has.
+  useEffect(() => {
+    const el = dmViewRef.current; if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const apply = () => el.style.setProperty('--dm-scale', String(el.clientWidth / 1100));
+    apply();
+    const ro = new ResizeObserver(apply); ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const [activeScreen, setActiveScreen] = useState(0);
+  const screenTimerRef = useRef(null);
+  useEffect(() => {
+    screenTimerRef.current = setInterval(() => { setActiveScreen(prev => (prev + 1) % BSCREENS.length); }, 5000);
+    return () => clearInterval(screenTimerRef.current);
+  }, []);
+  function handleScreenHover() { clearInterval(screenTimerRef.current); }
+  function handleScreenLeave() {
+    screenTimerRef.current = setInterval(() => { setActiveScreen(prev => (prev + 1) % BSCREENS.length); }, 5000);
+  }
+
   const uniTrackRef = useRef(null);
 
   // IntersectionObserver for reveal animation
@@ -204,56 +231,272 @@ export default function EngineeringPortal() {
                       transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                       className="hero-card"
                   >
-      
-                      <div className="card-top-row">
-                          <span className="card-pill-grey">Expert mentors</span>
-                          <span className="card-top-bold">100+ Counsellors</span>
-                      </div>
-      
-                      <div className="card-inner">
-      
-                          <div className="card-inner-header">
-                              <span className="card-inner-title">Your College Matches</span>
-                              <span className="card-ai-pill">AI · Live</span>
+                      <div className="card-inner dm-frame" onMouseEnter={handleScreenHover} onMouseLeave={handleScreenLeave}>
+                          <div className="dm-bar">
+                              <span className="dm-dots" aria-hidden="true">
+                                  <span className="dm-dot dm-dot-red"></span>
+                                  <span className="dm-dot dm-dot-yellow"></span>
+                                  <span className="dm-dot dm-dot-green"></span>
+                              </span>
+                              <span className="dm-url">{BSCREENS[activeScreen].url}</span>
                           </div>
-      
-                          <div className="rank-display">
-                              <div className="rank-label">JEE RANK</div>
-                              <div className="rank-number">8,432</div>
-                              <div className="rank-sub">CRL · JEE Main 2026</div>
+                          <div className="dm-viewport" ref={dmViewRef}>
+                              <AnimatePresence mode="wait">
+                                  {activeScreen === 0 && (
+                                      <motion.div key="dashboard" className="dm-slide" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-dashboard">
+                                              <div className="dm-welcome">
+                                                  <h1 className="dm-welcome-h1">Welcome back, Sahil 👋</h1>
+                                                  <p className="dm-welcome-sub">Your engineering admission journey is in progress. Keep going!</p>
+                                                  <div className="dm-stat-badges">
+                                                      <div className="dm-stat-badge"><span className="dm-stat-badge-lbl">PERCENTILE</span><span className="dm-stat-badge-val">96.50</span></div>
+                                                      <div className="dm-stat-badge"><span className="dm-stat-badge-lbl">CATEGORY</span><span className="dm-stat-badge-val">OBC-NCL</span></div>
+                                                  </div>
+                                                  <div className="dm-pill-row">3 choices shortlisted &nbsp;|&nbsp; Next: JEE Main Session 1 Admit Card on 13 Jan</div>
+                                                  <div className="dm-stepper">
+                                                      <div className="dm-stepper-track"></div>
+                                                      <div className="dm-stepper-fill" style={{ width: '40%' }}></div>
+                                                      <div className="dm-step completed"><span className="dm-step-circle">✓</span><span className="dm-step-lbl">Profile</span></div>
+                                                      <div className="dm-step active"><span className="dm-step-circle">2</span><span className="dm-step-lbl">Counselling</span></div>
+                                                      <div className="dm-step pending"><span className="dm-step-circle">3</span><span className="dm-step-lbl">Shortlist</span></div>
+                                                      <div className="dm-step pending"><span className="dm-step-circle">4</span><span className="dm-step-lbl">Admission</span></div>
+                                                  </div>
+                                              </div>
+                                              <div className="dm-dash-grid">
+                                                  <div className="dm-dash-left">
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header"><span className="dm-card-title">📅 Upcoming Deadlines</span></div>
+                                                          <div className="dm-list">
+                                                              <div className="dm-deadline-item"><span className="dm-deadline-date">NOV<br />22</span><div className="dm-deadline-body"><span className="dm-deadline-title">JEE Main 2027 Session 1 — Online Application</span><span className="dm-deadline-tag dm-deadline-tag-soon">APPLICATION DEADLINE</span></div></div>
+                                                              <div className="dm-deadline-item"><span className="dm-deadline-date">NOV<br />29</span><div className="dm-deadline-body"><span className="dm-deadline-title">Correction in Application Form</span><span className="dm-deadline-tag dm-deadline-tag-open">CORRECTION WINDOW</span></div></div>
+                                                              <div className="dm-deadline-item"><span className="dm-deadline-date">JAN<br />13</span><div className="dm-deadline-body"><span className="dm-deadline-title">JEE Main 2027 Session 1 — Admit Card</span><span className="dm-deadline-tag dm-deadline-tag-open">ADMIT CARD</span></div></div>
+                                                          </div>
+                                                      </div>
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header"><span className="dm-card-title">★ My Shortlist</span></div>
+                                                          <div className="dm-list">
+                                                              <div className="dm-shortlist-item">🎓 IIIT Pune — Computer Science</div>
+                                                              <div className="dm-shortlist-item">🎓 COEP Pune — Mechanical</div>
+                                                              <div className="dm-shortlist-item">🎓 VJTI Mumbai — Electronics</div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="dm-dash-right">
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-title" style={{ marginBottom: 14 }}>My Personal Advisor</div>
+                                                          <div className="dm-advisor-row">
+                                                              <span className="advisor-avatar dm-avatar" aria-hidden="true">AC</span>
+                                                              <div><div className="dm-advisor-name">ASMI Counsellor</div><div className="dm-advisor-branch">📍 Mumbai Branch Office</div></div>
+                                                          </div>
+                                                          <div className="dm-advisor-btns"><span className="advisor-btn-fill dm-advisor-btn">📞 Call the Advisor</span><span className="advisor-btn-outline dm-advisor-btn">💬 Ask in Group</span></div>
+                                                      </div>
+                                                      <div className="dm-card">
+                                                          <div className="dm-card-header"><span className="dm-card-title">Document Status</span><span className="dm-card-badge">3/23 DONE</span></div>
+                                                          <div className="dm-checklist-mini">
+                                                              <div className="dm-doc-row"><span className="checklist-check">✓</span>JEE Main Scorecard</div>
+                                                              <div className="dm-doc-row"><span className="checklist-check">✓</span>Class 12 Admit Card</div>
+                                                              <div className="dm-doc-row"><span className="dm-doc-pending"></span>Class 10 Marksheet</div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                                  {activeScreen === 1 && (
+                                      <motion.div key="predictor" className="dm-slide" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-predictor">
+                                              <div className="dm-page-header">College Predictor</div>
+                                              <div className="dm-toggle-row">
+                                                  <span className="dm-toggle-btn active">I know my percentile</span>
+                                                  <span className="dm-toggle-btn">I know my rank</span>
+                                              </div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill">JEE Main percentile: 96.5</span>
+                                                  <span className="dm-filter-pill">Category: OBC-NCL</span>
+                                                  <span className="dm-filter-pill">Quota: All India</span>
+                                                  <span className="dm-filter-pill">Round 6</span>
+                                              </div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill dm-filter-pill-active">All</span>
+                                                  <span className="dm-filter-pill">Safe</span>
+                                                  <span className="dm-filter-pill">Likely</span>
+                                                  <span className="dm-filter-pill">Borderline</span>
+                                              </div>
+                                              <div className="dm-results-count">Estimated OBC-NCL category rank: <strong>about 16,660</strong></div>
+                                              <table className="dm-table">
+                                                  <thead><tr><th>Institute · Branch</th><th>Last year closing</th><th>Chance</th></tr></thead>
+                                                  <tbody>
+                                                      <tr>
+                                                          <td className="dm-college-cell">IIIT Ranchi — Computer Science <span className="dm-tb dm-tb-govt">IIIT</span></td>
+                                                          <td>14,896</td>
+                                                          <td><span className="chance-badge dm-chance-border">Borderline</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">IIIT Kalyani — Computer Science <span className="dm-tb dm-tb-govt">IIIT</span></td>
+                                                          <td>17,088</td>
+                                                          <td><span className="chance-badge dm-chance-likely">Likely</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">IIIT Kalyani — Electronics & Comm. <span className="dm-tb dm-tb-govt">IIIT</span></td>
+                                                          <td>17,862</td>
+                                                          <td><span className="chance-badge dm-chance-likely">Likely</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">BIT Mesra — Mechanical <span className="dm-tb dm-tb-deemed">GFTI</span></td>
+                                                          <td>19,111</td>
+                                                          <td><span className="chance-badge chance-high">Safe</span></td>
+                                                      </tr>
+                                                      <tr>
+                                                          <td className="dm-college-cell">Puducherry Tech. University — Computer Science <span className="dm-tb dm-tb-deemed">GFTI</span></td>
+                                                          <td>20,031</td>
+                                                          <td><span className="chance-badge chance-high">Safe</span></td>
+                                                      </tr>
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                                  {activeScreen === 2 && (
+                                      <motion.div key="cutoffs" className="dm-slide" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-cutoffs">
+                                              <div className="dm-page-header">Cutoff Explorer</div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill dm-filter-pill-active">JoSAA 2025</span>
+                                                  <span className="dm-filter-pill">Maharashtra CAP 2026</span>
+                                              </div>
+                                              <div className="dm-counsel-cards">
+                                                  <div className="dm-counsel-card dm-counsel-card-active">All India</div>
+                                                  <div className="dm-counsel-card">Home State</div>
+                                                  <div className="dm-counsel-card">Other State</div>
+                                              </div>
+                                              <div className="dm-cutoff-grid">
+                                                  <div className="dm-cutoff-left">
+                                                      <div className="dm-filter-row">
+                                                          <span className="dm-filter-pill dm-filter-pill-active">All Types</span>
+                                                          <span className="dm-filter-pill">IIT</span>
+                                                          <span className="dm-filter-pill">IIIT</span>
+                                                          <span className="dm-filter-pill">GFTI</span>
+                                                      </div>
+                                                      <table className="dm-table dm-cutoff-table">
+                                                          <thead><tr><th>Institute</th><th>Branch</th><th>Opening</th><th>Closing</th></tr></thead>
+                                                          <tbody>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">BIT Mesra</td><td>Computer Science</td><td>4,741</td><td>7,881</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">IIIT Pune</td><td>Computer Science</td><td>5,417</td><td>8,439</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">IIIT Ranchi</td><td>Computer Science</td><td>11,287</td><td>14,896</td>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td className="dm-college-cell">IIIT Kalyani</td><td>Computer Science</td><td>13,866</td><td>17,088</td>
+                                                              </tr>
+                                                          </tbody>
+                                                      </table>
+                                                  </div>
+                                                  <div className="dm-cutoff-right">
+                                                      <div className="rank-panel-dark dm-rank-panel">
+                                                          <div className="rank-panel-label">YOUR CATEGORY RANK</div>
+                                                          <div className="rank-panel-number">#16,660</div>
+                                                          <div className="rank-panel-tiles">
+                                                              <div className="rank-panel-tile"><span className="rank-panel-tile-num rank-tile-safe">156</span><span className="rank-panel-tile-lbl">Safe</span></div>
+                                                              <div className="rank-panel-tile"><span className="rank-panel-tile-num rank-tile-likely">23</span><span className="rank-panel-tile-lbl">Likely</span></div>
+                                                              <div className="rank-panel-tile"><span className="rank-panel-tile-num rank-tile-border">27</span><span className="rank-panel-tile-lbl">Border</span></div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                                  {activeScreen === 3 && (
+                                      <motion.div key="institutes" className="dm-slide" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-institutes">
+                                              <div className="dm-page-header">Institutes Directory</div>
+                                              <div className="dm-filter-row">
+                                                  <span className="dm-filter-pill dm-filter-pill-active">All Colleges</span>
+                                                  <span className="dm-filter-pill">IIT</span>
+                                                  <span className="dm-filter-pill">NIT</span>
+                                                  <span className="dm-filter-pill">IIIT</span>
+                                                  <span className="dm-filter-pill">Government</span>
+                                                  <span className="dm-filter-pill">Deemed</span>
+                                                  <span className="dm-filter-pill">Private</span>
+                                              </div>
+                                              <div className="dm-results-count"><strong>34</strong> colleges matching</div>
+                                              <div className="dm-institute-grid">
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img"><span className="dm-institute-heart" aria-hidden="true">♡</span><span className="dm-institute-img-name">IIT Bombay</span></div>
+                                                      <div className="dm-institute-body"><div className="dm-institute-tags">📍 MUMBAI &nbsp;·&nbsp; 🎓 IIT</div><div className="dm-institute-name">IIT Bombay</div><div className="dm-institute-seats">1,360 B.Tech seats</div></div>
+                                                  </div>
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img"><span className="dm-institute-heart" aria-hidden="true">♡</span><span className="dm-institute-img-name">College of Engineering Pune</span></div>
+                                                      <div className="dm-institute-body"><div className="dm-institute-tags">📍 PUNE &nbsp;·&nbsp; 🎓 GOVERNMENT</div><div className="dm-institute-name">College of Engineering Pune</div><div className="dm-institute-seats">800 B.Tech seats</div></div>
+                                                  </div>
+                                                  <div className="dm-institute-card">
+                                                      <div className="dm-institute-img"><span className="dm-institute-heart dm-institute-heart-active" aria-hidden="true">♥</span><span className="dm-institute-img-name">VJTI Mumbai</span></div>
+                                                      <div className="dm-institute-body"><div className="dm-institute-tags">📍 MUMBAI &nbsp;·&nbsp; 🎓 GOVERNMENT</div><div className="dm-institute-name">VJTI Mumbai</div><div className="dm-institute-seats">600 B.Tech seats</div></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                                  {activeScreen === 4 && (
+                                      <motion.div key="documents" className="dm-slide" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                                      <div className="dm-scale">
+                                          <div className="dm-screen dm-documents">
+                                              <div className="dm-page-header">Documents Checklist</div>
+                                              <div className="dm-toggle-row">
+                                                  <span className="dm-toggle-btn">General / UR</span>
+                                                  <span className="dm-toggle-btn active">OBC-NCL</span>
+                                                  <span className="dm-toggle-btn">SC / ST</span>
+                                              </div>
+                                              <div className="dm-progress-card">
+                                                  <div className="dm-progress-track"><div className="dm-progress-fill" style={{ width: '22%' }}></div></div>
+                                                  <div className="dm-progress-label">5/23 ready · 22%</div>
+                                              </div>
+                                              <div className="dm-doc-section-label">Academic Documents</div>
+                                              <div className="dm-doc-list">
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="checklist-check">✓</span>
+                                                      <span className="dm-doc-list-label">JEE Main Scorecard / Rank Letter</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="checklist-check">✓</span>
+                                                      <span className="dm-doc-list-label">JEE Advanced Scorecard / Rank Letter</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="dm-doc-pending"></span>
+                                                      <span className="dm-doc-list-label">Class 12 Marksheet</span>
+                                                  </div>
+                                                  <div className="dm-doc-list-row">
+                                                      <span className="dm-doc-pending"></span>
+                                                      <span className="dm-doc-list-label">Class 10 Marksheet</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      </motion.div>
+                                  )}
+                              </AnimatePresence>
                           </div>
-      
-                          <ul className="college-list" aria-label="College matches">
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot teal" aria-hidden="true"></span>
-                                      <span className="college-name">IIT Bombay — CS</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-possible">Possible</span>
-                              </li>
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot green" aria-hidden="true"></span>
-                                      <span className="college-name">NIT Trichy — ECE</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-likely">Likely ✓</span>
-                              </li>
-                              <li className="college-item">
-                                  <div className="college-dot-name">
-                                      <span className="college-dot blue" aria-hidden="true"></span>
-                                      <span className="college-name">BITS Pilani — Mech</span>
-                                  </div>
-                                  <span className="likelihood-pill pill-safe">Safe Seat</span>
-                              </li>
-                          </ul>
-      
+                          <div className="dm-footer">
+                              <div className="card-state-dots" aria-hidden="true">
+                                  {BSCREENS.map((s, i) => (
+                                      <span key={s.key} className={`card-state-dot${i === activeScreen ? ' active' : ''}`}></span>
+                                  ))}
+                              </div>
+                          </div>
                       </div>
-      
-                      <div className="card-bottom-row">
-                          <span className="card-bottom-label">Success rate</span>
-                          <span className="card-bottom-bold">90%+ students</span>
-                      </div>
-      
                   </motion.div>
               </div>
       
@@ -653,7 +896,7 @@ export default function EngineeringPortal() {
                       <span className="tool-icon" aria-hidden="true">🧠</span>
                       <div className="tool-title">Branch Assessment</div>
                       <p className="tool-body">Take our scientific 31-question assessment and get an instant AI-powered compatibility report.</p>
-                      <a href="/tools/branch-assessment" className="tool-cta">Start Assessment →</a>
+                      <a href="/tools/branch-assessment/" className="tool-cta">Start Assessment →</a>
                   </div>
       
                   <div className="tool-card">
@@ -916,14 +1159,14 @@ export default function EngineeringPortal() {
               <p className="cta-sub animate">Book a FREE 1-to-1 with an ASMI Counsellor. Talk to a real mentor in under 24 hours. No payment. No obligation. Just clarity.</p>
               <div className="cta-buttons animate">
                   <a href="/engineering/inquiry" className="cta-btn-primary">Book My Free Session →</a>
-                  <a href="#" className="cta-btn-secondary">WhatsApp Us →</a>
+                  <a href="https://wa.me/917410019074?text=Hi%2C%20I%20want%20to%20know%20more%20about%20ASMI%20engineering%20counselling." target="_blank" rel="noopener noreferrer" className="cta-btn-secondary">WhatsApp Us →</a>
               </div>
           </div>
       </section>
       
       </div>
       
-      <Footer tagline="Guiding Futures, Building Engineers" isEngineering={true} />
+      <Footer isEngineering={true} />
     </>
   );
 }

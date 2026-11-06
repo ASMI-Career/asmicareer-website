@@ -3,31 +3,70 @@
     "counselling": "OPEN",
     "state": "Madhya Pradesh",
     "year": 2026,
-    "quota": "PRIVATE",
+    "quota": "GOVT",
     "colleges": [
       {
         "code": null,
         "name": "College of Veterinary Science and Animal Husbandry, Jabalpur",
-        "establishment": null,
-        "fees": null,
-        "type": "Private",
-        "rounds": {}
+        "establishment": 1948,
+        "fees": "283860",
+        "type": "Govt",
+        "categories": {
+          "UR X": {
+            "Round 1": {
+              "Intake": 4,
+              "AIR": 68019,
+              "SML": 9
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 69912,
+              "SML": 12
+            }
+          }
+        }
       },
       {
         "code": null,
         "name": "College of Veterinary Science and Animal Husbandry, Mhow",
-        "establishment": null,
-        "fees": null,
-        "type": "Private",
-        "rounds": {}
+        "establishment": 1955,
+        "fees": "283860",
+        "type": "Govt",
+        "categories": {
+          "UR X": {
+            "Round 1": {
+              "Intake": 3,
+              "AIR": 73864,
+              "SML": 18
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 71369,
+              "SML": 15
+            }
+          }
+        }
       },
       {
         "code": null,
         "name": "College of Veterinary Science and Animal Husbandry, Rewa",
-        "establishment": null,
-        "fees": null,
-        "type": "Private",
-        "rounds": {}
+        "establishment": 2007,
+        "fees": "283860",
+        "type": "Govt",
+        "categories": {
+          "UR X": {
+            "Round 1": {
+              "Intake": 4,
+              "AIR": 75647,
+              "SML": 24
+            },
+            "Round 2": {
+              "Intake": null,
+              "AIR": 75958,
+              "SML": 26
+            }
+          }
+        }
       }
     ]
   }

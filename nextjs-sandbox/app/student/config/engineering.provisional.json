@@ -1,0 +1,119 @@
+{
+  "_status": "PROVISIONAL — DRAFT. Not signed off. Must be reviewed and approved by the engineering lead before launch. Every value marked [CONFIRM] in _confirm is an assumption.",
+  "_confirm": [
+    "[CONFIRM] Tracks: JoSAA and Maharashtra CAP only (no other state CETs).",
+    "[CONFIRM] Stage names and order (7 stages).",
+    "[CONFIRM] Header role has no exam year; add one (e.g. 2027) once the lead decides which cycle the dashboard is for.",
+    "[CONFIRM] Badges: percentile + category only (no rank badge, because the dashboard workbook has no rank column).",
+    "[CONFIRM] A student with no track recorded sees events for ALL tracks.",
+    "[CONFIRM] Category values and how they map to document groups.",
+    "[CONFIRM] Deadlines: past events hidden, 5 shown, tentative events marked.",
+    "[CONFIRM] Shortlist item = institute + branch + seat type; grouped JOSAA / CAP by the track chosen; seat-type names copied from the engineering counsellor tool.",
+    "[CONFIRM] Documents: see data/docs.engineering.provisional.json (group names from the lead; individual documents are a draft).",
+    "[CONFIRM] OBC students are shown as OBC-NCL."
+  ],
+  "id": "engineering",
+  "modules": ["dashboard", "predictor", "cutoff", "institutes", "checklist"],
+  "nav": [
+    { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
+    { "id": "predictor",  "label": "Predictor",  "icon": "lucide:bar-chart-3" },
+    { "id": "cutoff",     "label": "Cutoff Explorer", "icon": "lucide:search" },
+    { "id": "institutes", "label": "Institutes", "icon": "lucide:building-2" },
+    { "id": "checklist",  "label": "Documents",  "icon": "lucide:file-text" }
+  ],
+  "unknownTabFallback": "dashboard",
+  "tracks": [
+    { "id": "JoSAA", "label": "JoSAA" },
+    { "id": "Maharashtra CAP", "label": "Maharashtra CAP" }
+  ],
+  "student": {
+    "defaultName": "Student",
+    "logRecord": false,
+    "scoreParse": "float",
+    "branchFromToken": false,
+    "counsellorDefaults": { "name": "ASMI Counsellor", "whatsapp": "917410019074", "branch": "ASMI Career Network" },
+    "stages": ["Enquiry", "Profile Complete", "Counselling Started", "Shortlist Ready", "Preferences Filed", "Allotted", "Admitted"],
+    "defaultProgress": "stages",
+    "categoryRules": {
+      "rules": [
+        { "contains": ["OBC"], "value": "OBC" },
+        { "contains": ["SEBC"], "value": "SEBC" },
+        { "contains": ["SC"],  "value": "SC" },
+        { "contains": ["ST"],  "value": "ST" },
+        { "contains": ["EWS"], "value": "EWS" },
+        { "contains": ["VJ", "NT", "SBC", "OTHER"], "value": "VJ/NT/SBC" }
+      ],
+      "default": "General"
+    },
+    "quotaRules": null
+  },
+  "dashboard": {
+    "headerRole": "Engineering Aspirant",
+    "heroSubtitle": "Your engineering admission journey is in progress. Keep going!",
+    "badges": [
+      { "label": "PERCENTILE", "field": "score" },
+      { "label": "CATEGORY",   "field": "category" }
+    ],
+    "categoryLabels": { "General": "General / UR", "OBC": "OBC-NCL" },
+    "redTagKeywords": ["URGENT"],
+    "newsUrl": "https://asmicareer.in/engineering/news",
+    "shortlistIcon": "🎓",
+    "shortlistEditTab": "institutes",
+    "shortlistText": { "heroNone": "No choices shortlisted yet", "heroOne": "choice", "heroMany": "choices", "cardNone": "No choices shortlisted yet.", "more": "choices", "add": "+ Add More Choices" },
+    "deadlineCount": 5,
+    "actionRequiredDocId": null
+  },
+  "deadlines": { "keepPastResults": false, "useExpiryDate": false, "requireTrackMatch": true, "showTentative": true },
+  "documents": { "data": "engineering", "subtitle": "Track every document you need for engineering counselling and admission.", "defaults": { "category": "General", "quota": "" }, "quotaLabel": "", "quotas": [] },
+  "shortlist": {
+    "itemMode": "choice",
+    "askDetails": true,
+    "groups": ["JOSAA", "CAP"],
+    "groupRules": { "byTrack": { "JoSAA": "JOSAA", "Maharashtra CAP": "CAP" }, "byPoolOrQuota": [], "byState": {}, "privateGroup": "CAP", "defaultGroup": "CAP" },
+    "branchSuggestions": [
+      "Computer Science and Engineering", "Information Technology", "Artificial Intelligence and Data Science",
+      "Electronics and Telecommunication Engineering", "Electronics and Communication Engineering",
+      "Mechanical Engineering", "Civil Engineering", "Electrical Engineering", "Chemical Engineering"
+    ],
+    "seatTypes": {
+      "JoSAA": ["All India", "Home State", "Other State", "Goa", "J&K", "Ladakh"],
+      "Maharashtra CAP": ["State Level", "Home University", "Other Than Home University", "Minority", "All India"]
+    }
+  },
+  "predictor": null,
+  "cutoff": null,
+  "engineeringPredictor": {
+    "_confirm": "[CONFIRM] jeeMainCandidates is an ESTIMATE of the number of JEE Main candidates, used to turn a percentile into a rank (rank = (100 - percentile)% x candidates). It is not an NTA figure. Set it from the latest official number. [CONFIRM] categoryShare is the assumed share of candidates in each category, used only to turn an estimated CRL into a rough category rank (JoSAA closing ranks for reserved categories are category ranks); replace with official counts.",
+    "title": "College Predictor",
+    "subtitle": "Enter the percentile you expect (or your rank) and see which engineering colleges and branches you could get.",
+    "jeeMainCandidates": 1400000,
+    "categoryShare": { "EWS": 0.12, "OBC-NCL": 0.34, "SC": 0.16, "ST": 0.07 }
+  },
+  "engineeringCutoff": {
+    "title": "Cutoff Explorer",
+    "subtitle": "See last year's opening and closing ranks for engineering colleges and branches, round by round."
+  },
+  "institutes": {
+    "title": "🏫 Institutes Directory",
+    "subtitle": "Browse and filter engineering colleges across India.",
+    "tabTypes": ["All", "IIT", "NIT", "IIIT", "Government", "Deemed", "Private"],
+    "tabAllLabel": "All Colleges",
+    "typeOptions": [
+      { "value": "All", "label": "All Colleges" }, { "value": "IIT", "label": "IIT" }, { "value": "NIT", "label": "NIT" },
+      { "value": "IIIT", "label": "IIIT" }, { "value": "Government", "label": "Government" },
+      { "value": "Deemed", "label": "Deemed" }, { "value": "Private", "label": "Private" }
+    ],
+    "courseOptions": [ { "value": "All", "label": "All Courses" }, { "value": "BTech", "label": "BTech" } ],
+    "defaultCourse": "BTech",
+    "detailHref": null
+  },
+  "fees": { "yearsByCourse": {}, "defaultYears": 4 },
+  "catalog": {
+    "events": ["/data/events.json", "/data/engineeringEvents.json"],
+    "rankDb": null,
+    "colleges": "/data/engineering-colleges.json",
+    "asmiDb": null,
+    "feeMap": null,
+    "cutoff": null
+  }
+}

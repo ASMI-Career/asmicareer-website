@@ -1,0 +1,832 @@
+{
+ "counselling": "MH_ENGG",
+ "year": 2026,
+ "rounds": [
+  "Round 1",
+  "Round 2",
+  "Round 3",
+  "Round 4"
+ ],
+ "intakeRounds": [
+  "Round 2",
+  "Round 3",
+  "Round 4"
+ ],
+ "quotas": [
+  {
+   "key": "state-level",
+   "label": "State Level",
+   "categories": [
+    {
+     "key": "OPEN",
+     "label": "Open",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 985
+    },
+    {
+     "key": "SC",
+     "label": "SC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 716
+    },
+    {
+     "key": "ST",
+     "label": "ST",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 694
+    },
+    {
+     "key": "VJ",
+     "label": "VJ/DT",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 625
+    },
+    {
+     "key": "NT1",
+     "label": "NT-B (NT1)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 590
+    },
+    {
+     "key": "NT2",
+     "label": "NT-C (NT2)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 660
+    },
+    {
+     "key": "NT3",
+     "label": "NT-D (NT3)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 545
+    },
+    {
+     "key": "OBC",
+     "label": "OBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 724
+    },
+    {
+     "key": "SEBC",
+     "label": "SEBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 710
+    },
+    {
+     "key": "EWS",
+     "label": "EWS",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1520
+    },
+    {
+     "key": "TFWS",
+     "label": "TFWS",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1965
+    },
+    {
+     "key": "ORPHAN-I",
+     "label": "Orphan (Institutional)",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 548
+    },
+    {
+     "key": "ORPHAN-N",
+     "label": "Orphan (Non-Inst.)",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 564
+    },
+    {
+     "key": "PWD-OPEN",
+     "label": "PWD · Open",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 684
+    },
+    {
+     "key": "PWD-SC",
+     "label": "PWD · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 323
+    },
+    {
+     "key": "PWD-ST",
+     "label": "PWD · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2
+    },
+    {
+     "key": "PWD-NT2",
+     "label": "PWD · NT-C (NT2)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-NT3",
+     "label": "PWD · NT-D (NT3)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-OBC",
+     "label": "PWD · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 524
+    },
+    {
+     "key": "PWD-SEBC",
+     "label": "PWD · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 224
+    },
+    {
+     "key": "PWD-R-SC",
+     "label": "PWD common-reserved · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 9
+    },
+    {
+     "key": "PWD-R-ST",
+     "label": "PWD common-reserved · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 4
+    },
+    {
+     "key": "PWD-R-VJ",
+     "label": "PWD common-reserved · VJ/DT",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 7
+    },
+    {
+     "key": "PWD-R-NT1",
+     "label": "PWD common-reserved · NT-B (NT1)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 10
+    },
+    {
+     "key": "PWD-R-NT2",
+     "label": "PWD common-reserved · NT-C (NT2)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 5
+    },
+    {
+     "key": "PWD-R-NT3",
+     "label": "PWD common-reserved · NT-D (NT3)",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 3
+    },
+    {
+     "key": "PWD-R-OBC",
+     "label": "PWD common-reserved · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 68
+    },
+    {
+     "key": "PWD-R-SEBC",
+     "label": "PWD common-reserved · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 8
+    },
+    {
+     "key": "DEF-OPEN",
+     "label": "Defence · Open",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1528
+    },
+    {
+     "key": "DEF-SC",
+     "label": "Defence · SC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 520
+    },
+    {
+     "key": "DEF-ST",
+     "label": "Defence · ST",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2
+    },
+    {
+     "key": "DEF-NT2",
+     "label": "Defence · NT-C (NT2)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "DEF-NT3",
+     "label": "Defence · NT-D (NT3)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "DEF-OBC",
+     "label": "Defence · OBC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1090
+    },
+    {
+     "key": "DEF-SEBC",
+     "label": "Defence · SEBC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 375
+    },
+    {
+     "key": "DEF-R-SC",
+     "label": "Defence common-reserved · SC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 22
+    },
+    {
+     "key": "DEF-R-ST",
+     "label": "Defence common-reserved · ST",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "DEF-R-VJ",
+     "label": "Defence common-reserved · VJ/DT",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 8
+    },
+    {
+     "key": "DEF-R-NT1",
+     "label": "Defence common-reserved · NT-B (NT1)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 3
+    },
+    {
+     "key": "DEF-R-NT2",
+     "label": "Defence common-reserved · NT-C (NT2)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 29
+    },
+    {
+     "key": "DEF-R-NT3",
+     "label": "Defence common-reserved · NT-D (NT3)",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 24
+    },
+    {
+     "key": "DEF-R-OBC",
+     "label": "Defence common-reserved · OBC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 217
+    },
+    {
+     "key": "DEF-R-SEBC",
+     "label": "Defence common-reserved · SEBC",
+     "group": "Defence seats",
+     "genders": [
+      "all"
+     ],
+     "count": 147
+    }
+   ]
+  },
+  {
+   "key": "home-university",
+   "label": "Home University",
+   "categories": [
+    {
+     "key": "OPEN",
+     "label": "Open",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 1318
+    },
+    {
+     "key": "SC",
+     "label": "SC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 943
+    },
+    {
+     "key": "ST",
+     "label": "ST",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 817
+    },
+    {
+     "key": "VJ",
+     "label": "VJ/DT",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 568
+    },
+    {
+     "key": "NT1",
+     "label": "NT-B (NT1)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 601
+    },
+    {
+     "key": "NT2",
+     "label": "NT-C (NT2)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 704
+    },
+    {
+     "key": "NT3",
+     "label": "NT-D (NT3)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 478
+    },
+    {
+     "key": "OBC",
+     "label": "OBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 1006
+    },
+    {
+     "key": "SEBC",
+     "label": "SEBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 900
+    },
+    {
+     "key": "PWD-OPEN",
+     "label": "PWD · Open",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 828
+    },
+    {
+     "key": "PWD-SC",
+     "label": "PWD · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 198
+    },
+    {
+     "key": "PWD-OBC",
+     "label": "PWD · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 567
+    },
+    {
+     "key": "PWD-SEBC",
+     "label": "PWD · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 144
+    },
+    {
+     "key": "PWD-R-SC",
+     "label": "PWD common-reserved · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-ST",
+     "label": "PWD common-reserved · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-OBC",
+     "label": "PWD common-reserved · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 5
+    }
+   ]
+  },
+  {
+   "key": "other-than-home-university",
+   "label": "Other Than Home University",
+   "categories": [
+    {
+     "key": "OPEN",
+     "label": "Open",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 1273
+    },
+    {
+     "key": "SC",
+     "label": "SC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 783
+    },
+    {
+     "key": "ST",
+     "label": "ST",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 562
+    },
+    {
+     "key": "VJ",
+     "label": "VJ/DT",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 393
+    },
+    {
+     "key": "NT1",
+     "label": "NT-B (NT1)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 286
+    },
+    {
+     "key": "NT2",
+     "label": "NT-C (NT2)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 389
+    },
+    {
+     "key": "NT3",
+     "label": "NT-D (NT3)",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 279
+    },
+    {
+     "key": "OBC",
+     "label": "OBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 858
+    },
+    {
+     "key": "SEBC",
+     "label": "SEBC",
+     "group": "Main",
+     "genders": [
+      "all",
+      "female-only"
+     ],
+     "count": 717
+    },
+    {
+     "key": "PWD-OPEN",
+     "label": "PWD · Open",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 76
+    },
+    {
+     "key": "PWD-SC",
+     "label": "PWD · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 14
+    },
+    {
+     "key": "PWD-OBC",
+     "label": "PWD · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 33
+    },
+    {
+     "key": "PWD-SEBC",
+     "label": "PWD · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 11
+    },
+    {
+     "key": "PWD-R-SC",
+     "label": "PWD common-reserved · SC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-ST",
+     "label": "PWD common-reserved · ST",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 1
+    },
+    {
+     "key": "PWD-R-OBC",
+     "label": "PWD common-reserved · OBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 8
+    },
+    {
+     "key": "PWD-R-SEBC",
+     "label": "PWD common-reserved · SEBC",
+     "group": "PWD seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2
+    }
+   ]
+  },
+  {
+   "key": "minority",
+   "label": "Minority",
+   "categories": [
+    {
+     "key": "MINORITY",
+     "label": "Minority",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 372
+    }
+   ]
+  },
+  {
+   "key": "all-india",
+   "label": "All India",
+   "categories": [
+    {
+     "key": "ALL",
+     "label": "All India Seats",
+     "group": "Other seats",
+     "genders": [
+      "all"
+     ],
+     "count": 2378
+    }
+   ]
+  }
+ ],
+ "instituteTypes": [
+  "Govt",
+  "Govt-Aided",
+  "University",
+  "Un-Aided",
+  "Minority",
+  "Deemed"
+ ],
+ "statuses": {
+  "Government Autonomous": 24,
+  "University Department": 24,
+  "Government": 35,
+  "Un-Aided Autonomous": 642,
+  "Un-Aided": 1140,
+  "Un-Aided Autonomous Linguistic Minority - Hindi": 127,
+  "Government-Aided Autonomous": 28,
+  "University Managed Autonomous": 1,
+  "Un-Aided Religious Minority - Muslim": 43,
+  "Un-Aided Religious Minority - Jain": 16,
+  "Un-Aided Linguistic Minority - Gujarathi": 12,
+  "University": 23,
+  "University Managed (Un-Aided)": 7,
+  "Deemed to be University Autonomous": 8,
+  "Un-Aided Linguistic Minority - Hindi": 38,
+  "Un-Aided Autonomous Linguistic Minority - Gujarathi(Jain)": 8,
+  "Un-Aided Linguistic Minority - Sindhi": 7,
+  "Un-Aided Autonomous Religious Minority - Christian": 39,
+  "Un-Aided Autonomous Linguistic Minority - Sindhi": 12,
+  "Un-Aided Autonomous Linguistic Minority - Gujarathi": 21,
+  "Un-Aided Autonomous Religious Minority - Roman Catholics": 4,
+  "Un-Aided Linguistic Minority - Punjabi": 7,
+  "Un-Aided Autonomous Linguistic Minority - Tamil": 7,
+  "Un-Aided Autonomous Linguistic Minority - Malyalam": 7,
+  "Un-Aided Autonomous Religious Minority - Muslim": 7,
+  "University Managed": 4,
+  "Un-Aided Linguistic Minority - Gujar": 7,
+  "Un-Aided Autonomous Religious Minority - Jain": 12,
+  "Un-Aided Religious Minority - Christian": 5,
+  "University Autonomous": 18
+ },
+ "homeUniversities": [
+  "Autonomous Institute",
+  "Deemed to be University",
+  "Dr. Babasaheb Ambedkar Marathwada University",
+  "Dr. Babasaheb Ambedkar Technological University,Lonere",
+  "Gondwana University",
+  "Kavayitri Bahinabai Chaudhari North Maharashtra University, Jalgaon",
+  "Mumbai University",
+  "Punyashlok Ahilyadevi Holkar Solapur University",
+  "Rashtrasant Tukadoji Maharaj Nagpur University",
+  "SNDT Women's University",
+  "Sant Gadge Baba Amravati University",
+  "Savitribai Phule Pune University",
+  "Shivaji University",
+  "Swami Ramanand Teerth Marathwada University, Nanded"
+ ]
+}

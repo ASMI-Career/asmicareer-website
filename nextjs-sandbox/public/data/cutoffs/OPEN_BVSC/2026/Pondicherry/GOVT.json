@@ -1,0 +1,32 @@
+{
+  "counselling": "OPEN",
+  "state": "Pondicherry",
+  "year": 2026,
+  "quota": "GOVT",
+  "colleges": [
+    {
+      "code": null,
+      "name": "Rajiv Gandhi Institute of Veterinary Education and Research, Puducherry",
+      "establishment": 1994,
+      "fees": "846600",
+      "type": "Govt",
+      "rounds": {
+        "Round 1": {
+          "Intake": 22,
+          "AIR": 148267,
+          "SML": 352
+        },
+        "Round 2": {
+          "Intake": 12,
+          "AIR": 272300,
+          "SML": 1178
+        },
+        "Round 3": {
+          "Intake": 4,
+          "AIR": 315324,
+          "SML": 1464
+        }
+      }
+    }
+  ]
+}
