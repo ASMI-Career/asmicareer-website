@@ -294,7 +294,7 @@ function inr(v){return '\u20b9'+Number(v).toLocaleString('en-IN')}
 function feeFor(g){var v=(D.fee[g.inst]||{})[g.subj];if(!v)return 0;if(g.qt==='State')return (g.sub==='Minority'?v.mi:v.g)||0;if(g.qt==='Institute Quota (I.Q.)')return v.mm||v.m||0;if(g.qt==='NRI')return v.n||0;return 0}
 var FEEB=[['f1','Up to \u20b95 lakh'],['f2','\u20b95 to 10 lakh'],['f3','\u20b910 to 25 lakh'],['f4','Above \u20b925 lakh'],['fna','Fee not listed']];
 function feeBand(f){if(!f)return 'fna';return f<=500000?'f1':(f<=1000000?'f2':(f<=2500000?'f3':'f4'))}
-function feecell(g){if(!g.fee)return '<td class="n fee">\u2013</td>';return '<td class="n fee" title="Fee for this college and branch as per the Maharashtra private college fee sheet ('+(g.qt==='State'?(g.sub==='Minority'?'minority quota':'government quota seat'):(g.qt==='NRI'?'NRI quota':'management quota'))+')">'+inr(g.fee)+'</td>'}
+function feecell(g){if(!g.fee)return '<td class="n fee">\u2013</td>';return '<td class="n fee" title="'+(YEAR===2026?'2026-27 tuition + development fee, as supplied by the college (':'Fee for this college and branch as per the Maharashtra private college fee sheet (')+''+(g.qt==='State'?(g.sub==='Minority'?'minority quota':'government quota seat'):(g.qt==='NRI'?'NRI quota':'management quota'))+')">'+inr(g.fee)+'</td>'}
 function nf(v){var r=Math.round(v*1000)/1000;return Number.isInteger(r)?r.toLocaleString('en-IN'):String(r)}
 buildL();
 var LIM=150,shown=LIM;
@@ -467,7 +467,7 @@ window.addEventListener('resize',sticky);
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 if(window.innerWidth<=640)$('fx').removeAttribute('open');
 var YEAR=2026,D26=null;
-var YN={2026:'<b>2026 Round 1.</b> Closing SML is the lowest-ranked (highest SML) candidate allotted in the provisional selection list dated 05/11/2026 for each college, branch, quota and category. Closing AIR is the highest AIR among those allotted, taken from the provisional state merit list dated 02/11/2026. Seats come from the CET Cell seat matrices dated 02/11/2026 (government, private and diploma). Fees are not shown for 2026 yet.'};
+var YN={2026:'<b>2026 Round 1.</b> Closing SML is the lowest-ranked (highest SML) candidate allotted in the provisional selection list dated 05/11/2026 for each college, branch, quota and category. Closing AIR is the highest AIR among those allotted, taken from the provisional state merit list dated 02/11/2026. Seats come from the CET Cell seat matrices dated 02/11/2026 (government, private and diploma). Fee is the 2026-27 tuition plus development fee from the fee documents the colleges supplied (20 private colleges). A dash means no fee document yet (Bombay Hospital, K.J. Somaiya, Swasthiyog), a free subject, or an NRI fee quoted in dollars. Hostel, university and deposit charges are not included.'};
 function setYearUi(y){
  Array.prototype.forEach.call($('yrs').querySelectorAll('button'),function(b){b.setAttribute('aria-selected',String(+b.getAttribute('data-y')===y))});
  var yn=$('ynote'),fn=$('fnote');if(yn){yn.hidden=!YN[y];yn.innerHTML=YN[y]||''}if(fn)fn.hidden=(y!==2025);
@@ -481,7 +481,7 @@ function loadYear(y){
  if(y===2025){useData(D25,2025);return}
  if(D26){useData(D26,2026);return}
  $('body').innerHTML='<tr><td colspan="30" class="empty">Loading 2026 data...</td></tr>';
- fetch('/data/cutoffs/MH/pg-2026-maharashtra.json?v=20261106b').then(function(r){return r.json()}).then(function(d){D26=d;useData(d,2026)}).catch(function(){$('body').innerHTML='<tr><td colspan="30" class="empty">Could not load 2026 data.</td></tr>'});
+ fetch('/data/cutoffs/MH/pg-2026-maharashtra.json?v=20261106c').then(function(r){return r.json()}).then(function(d){D26=d;useData(d,2026)}).catch(function(){$('body').innerHTML='<tr><td colspan="30" class="empty">Could not load 2026 data.</td></tr>'});
 }
 $('yrs').addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button[data-y]');if(!b)return;var y=+b.getAttribute('data-y');if(y!==YEAR)loadYear(y)});
 loadYear(2026);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sticky);
