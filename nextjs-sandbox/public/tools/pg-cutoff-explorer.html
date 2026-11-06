@@ -467,7 +467,7 @@ window.addEventListener('resize',sticky);
 $('more').addEventListener('click',function(){shown+=LIM;render()});
 if(window.innerWidth<=640)$('fx').removeAttribute('open');
 var YEAR=2026,D26=null;
-var YN={2026:'<b>2026 Round 1.</b> Closing SML is the lowest-ranked (highest SML) candidate allotted in the provisional selection list dated 05/11/2026 for each college, branch, quota and category. Closing AIR is the highest AIR among those allotted, taken from the provisional state merit list dated 02/11/2026. Seats come from the CET Cell seat matrices dated 02/11/2026 (government, private and diploma). Fee is the 2026-27 tuition plus development fee from the fee documents the colleges supplied (22 private colleges). A dash means no fee document yet (Bombay Hospital), a free subject, or an NRI fee quoted in dollars. Hostel, university and deposit charges are not included.'};
+var YN={2026:'<b>2026 Round 1.</b> Closing SML is the lowest-ranked (highest SML) candidate allotted in the provisional selection list dated 05/11/2026 for each college, branch, quota and category. Closing AIR is the highest AIR among those allotted, taken from the provisional state merit list dated 02/11/2026. Seats come from the CET Cell seat matrices dated 02/11/2026 (government, private and diploma). Fee is the 2026-27 tuition plus development fee from the fee documents the colleges supplied (23 private colleges; the Bombay Hospital fee of ₹11,00,000 is as advised by the college, not from a fee document). A dash means a free subject, or an NRI fee quoted in dollars. Hostel, university and deposit charges are not included.'};
 function setYearUi(y){
  Array.prototype.forEach.call($('yrs').querySelectorAll('button'),function(b){b.setAttribute('aria-selected',String(+b.getAttribute('data-y')===y))});
  var yn=$('ynote'),fn=$('fnote');if(yn){yn.hidden=!YN[y];yn.innerHTML=YN[y]||''}if(fn)fn.hidden=(y!==2025);
@@ -481,7 +481,7 @@ function loadYear(y){
  if(y===2025){useData(D25,2025);return}
  if(D26){useData(D26,2026);return}
  $('body').innerHTML='<tr><td colspan="30" class="empty">Loading 2026 data...</td></tr>';
- fetch('/data/cutoffs/MH/pg-2026-maharashtra.json?v=20261106e').then(function(r){return r.json()}).then(function(d){D26=d;useData(d,2026)}).catch(function(){$('body').innerHTML='<tr><td colspan="30" class="empty">Could not load 2026 data.</td></tr>'});
+ fetch('/data/cutoffs/MH/pg-2026-maharashtra.json?v=20261106f').then(function(r){return r.json()}).then(function(d){D26=d;useData(d,2026)}).catch(function(){$('body').innerHTML='<tr><td colspan="30" class="empty">Could not load 2026 data.</td></tr>'});
 }
 $('yrs').addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button[data-y]');if(!b)return;var y=+b.getAttribute('data-y');if(y!==YEAR)loadYear(y)});
 loadYear(2026);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sticky);
