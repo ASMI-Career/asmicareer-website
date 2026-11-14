@@ -596,10 +596,10 @@
     // MAFSU (Maharashtra Animal & Fishery Sciences Univ.) BVSc: selectedInstType = INST_QUOTA, then category + sub-type files
     const MAFSU_INSTS = [{ id: 'GOVT', label: 'Govt BVSc' }, { id: 'PRIVATE', label: 'Private BVSc' }];
     const MAFSU_QUOTAS = [
-      { id: 'STATE', label: 'State Merit' }, { id: 'REGION', label: 'Region Merit' }, { id: 'COMBINED', label: 'Combined (Round 3)' }, { id: 'MGMT', label: 'Management' },
+      { id: 'STATE', label: 'State Merit' }, { id: 'REGION', label: 'Region Merit' }, { id: 'COMBINED', label: 'Combined (Round 3)' }, { id: 'SPECIAL', label: 'Special Round' }, { id: 'MGMT', label: 'Management' },
       { id: 'NRIINDIA', label: 'NRI (India)' }, { id: 'NRIABROAD', label: 'NRI (Abroad)' }
     ];
-    const MAFSU_CAT_LABELS = { OPEN: 'Open', OBC: 'OBC', SC: 'SC', ST: 'ST', SEBC: 'SEBC', EWS: 'EWS', VJ_DT_A: 'VJ/DT(A)', NT_B: 'NT(B)', NT_C: 'NT(C)', NT_D: 'NT(D)', ALL: 'All' };
+    const MAFSU_CAT_LABELS = { OPEN: 'Open', OBC: 'OBC', SC: 'SC', ST: 'ST', SEBC: 'SEBC', EWS: 'EWS', VJ_DT_A: 'VJ/DT(A)', NT_B: 'NT(B)', NT_C: 'NT(C)', NT_D: 'NT(D)', VCI: 'VCI Quota', MGMT: 'Management Quota', NRI: 'NRI Quota', ALL: 'All' };
     const MAFSU_SUB_LABELS = { GEN_BOTH: 'General', GEN_GIRL: 'Girls', AG_BOTH: 'Agriculturist', PAP_BOTH: 'Project Affected', DP_BOTH: 'Defence Personnel', FF_BOTH: 'Freedom Fighter', ALL: 'All' };
     let mafsuIndex = null, mafsuIndexYear = null, mafsuSub = 'GEN_BOTH';
     const mafsuInst = () => selectedInstType.split('_')[0];
@@ -1321,16 +1321,17 @@
         const field = q === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
         const label = q === 'REGION' ? 'Region Merit' : 'State Merit';
         if (field && !['NRIINDIA', 'NRIABROAD'].includes(q)) {
-          [3, 2, 1].forEach(n => {
-            const has = colleges.some(c => { const r = c.rounds && c.rounds['Round ' + n]; return r && r[field] != null && r[field] !== ''; });
+          ['S', 3, 2, 1].forEach(n => {
+            const rname = n === 'S' ? 'Special Round' : 'Round ' + n;
+            const has = colleges.some(c => { const r = c.rounds && c.rounds[rname]; return r && r[field] != null && r[field] !== ''; });
             if (!has) return;
             const o = document.createElement('option');
-            o.value = `merit${n}-asc`; o.textContent = `Round ${n} ${label}: Low to High`; o.dataset.sml = '1';
+            o.value = `merit${n}-asc`; o.textContent = `${rname} ${label}: Low to High`; o.dataset.sml = '1';
             sel.insertBefore(o, sel.firstChild);
           });
         }
       }
-      if (/^merit\d-asc$/.test(currentSort) && !sel.querySelector(`option[value="${currentSort}"]`)) {
+      if (/^merit[\dS]-asc$/.test(currentSort) && !sel.querySelector(`option[value="${currentSort}"]`)) {
         const firstMerit = sel.querySelector('option[value^="merit"]');
         currentSort = firstMerit ? firstMerit.value : 'name-asc';
       }
@@ -1382,8 +1383,8 @@
       let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false, meritField = null;
       if (currentSort.startsWith('stray|')) { roundKey = '__stray__' + currentSort.slice(6); }
       else if (currentSort.startsWith('smlstray|')) { roundKey = '__stray__' + currentSort.slice(9); useSml = true; }
-      else if (/^merit\d-asc$/.test(currentSort)) {   // MAFSU: closing merit number, lowest first
-        roundKey = 'Round ' + currentSort[5];
+      else if (/^merit[\dS]-asc$/.test(currentSort)) {   // MAFSU: closing merit number, lowest first
+        roundKey = currentSort[5] === 'S' ? 'Special Round' : 'Round ' + currentSort[5];
         meritField = String((currentData && currentData.institution_type) || '').split('_')[1] === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
       }
       else switch (currentSort) {
@@ -1495,7 +1496,7 @@
       const isMAFSU = currentData.counselling === 'MAFSU'; // closing Region Merit / State Merit / NEET marks instead of AIR
       const mafsuQ = isMAFSU ? String(currentData.institution_type || '').split('_')[1] : '';
       const mafsuShowRegion = mafsuQ === 'REGION';                       // Region quota: Region Merit only
-      const mafsuShowState = mafsuQ === 'STATE' || mafsuQ === 'MGMT' || mafsuQ === 'COMBINED';    // State / Management / Combined (Round 3): State Merit only (NRI: neither)
+      const mafsuShowState = mafsuQ === 'STATE' || mafsuQ === 'MGMT' || mafsuQ === 'COMBINED' || mafsuQ === 'SPECIAL';    // State / Management / Combined (Round 3): State Merit only (NRI: neither)
 
       const isHP = !!(isOPEN && currentData.colleges[0] && currentData.colleges[0].categories);
       const isKeralaMQ = (isOPEN && currentData.state === 'Kerala' && currentData.quota === 'MQ');
@@ -1550,7 +1551,7 @@
 
       roundKeys.forEach((round) => {
         const rl = round.toLowerCase();
-        const isStray = rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended') || rl.includes('round 4') || rl.includes('round4');
+        const isStray = !isMAFSU && (rl.includes('stray') || rl.includes('special') || rl.includes('additional') || rl.includes('extended') || rl.includes('round 4') || rl.includes('round4'));
         const strayClass = isStray ? 'stray-col' : '';
         const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
@@ -1673,7 +1674,7 @@
                 else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
                 else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
 
-                const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4');
+                const isStray = !isMAFSU && (round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4'));
                 const strayClass = isStray ? 'stray-col' : '';
                 const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 
@@ -1733,7 +1734,7 @@
           else if (chance && chance.key === 'borderline') { cellBg = 'bg-amber-50'; textClass = 'text-amber-800'; tagHtml = `<span class="ml-1 px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px]">Border</span>`; borderCount++; }
           else if (chance && chance.key === 'out_of_reach') { textClass = 'text-gray-500'; }
 
-          const isStray = round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4');
+          const isStray = !isMAFSU && (round.toLowerCase().includes('stray') || round.toLowerCase().includes('special') || round.toLowerCase().includes('additional') || round.toLowerCase().includes('extended') || round.toLowerCase().includes('round 4') || round.toLowerCase().includes('round4'));
           const strayClass = isStray ? 'stray-col' : '';
           const displayStyle = (isStray && !strayVisible) ? 'style="display:none;"' : '';
 

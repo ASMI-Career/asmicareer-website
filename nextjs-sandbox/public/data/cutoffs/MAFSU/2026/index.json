@@ -313,5 +313,53 @@
    "GEN_BOTH",
    "GEN_GIRL"
   ]
+ },
+ "GOVT_SPECIAL": {
+  "NRI": [
+   "ALL"
+  ],
+  "NT_B": [
+   "GEN_BOTH"
+  ],
+  "OPEN": [
+   "GEN_BOTH"
+  ],
+  "SC": [
+   "GEN_BOTH"
+  ],
+  "SEBC": [
+   "GEN_BOTH"
+  ],
+  "VCI": [
+   "GEN_BOTH"
+  ]
+ },
+ "PRIVATE_SPECIAL": {
+  "EWS": [
+   "DP_BOTH",
+   "PAP_BOTH"
+  ],
+  "MGMT": [
+   "ALL"
+  ],
+  "NT_D": [
+   "GEN_GIRL"
+  ],
+  "OBC": [
+   "AG_BOTH",
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "OPEN": [
+   "DP_BOTH",
+   "GEN_BOTH"
+  ],
+  "SC": [
+   "GEN_BOTH",
+   "GEN_GIRL"
+  ],
+  "SEBC": [
+   "FF_BOTH"
+  ]
  }
 }
