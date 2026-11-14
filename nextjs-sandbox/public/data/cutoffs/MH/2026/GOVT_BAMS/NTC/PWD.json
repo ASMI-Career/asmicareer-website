@@ -29,7 +29,10 @@
           "CSML": "NTC-51"
         },
         "Round 4": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 101279,
+          "SML": 841,
+          "CSML": "NTC-54"
         }
       }
     },
@@ -68,6 +71,12 @@
           "AIR": 151312,
           "SML": 2326,
           "CSML": "NTC-173"
+        },
+        "Round 4": {
+          "Intake": null,
+          "AIR": 163006,
+          "SML": 2692,
+          "CSML": "NTC-200"
         }
       }
     },
@@ -106,6 +115,20 @@
           "AIR": 1024185,
           "SML": 31692,
           "CSML": "NTC-1798"
+        }
+      }
+    },
+    {
+      "code": 3106,
+      "name": "Bhaisaheb Sawant Ayurved Mhavidyalaya, Sawantwadi, Sindhudurg",
+      "establishment": 1984,
+      "fees": "63100",
+      "rounds": {
+        "Round 4": {
+          "Intake": null,
+          "AIR": 153334,
+          "SML": 2393,
+          "CSML": "NTC-177"
         }
       }
     }
