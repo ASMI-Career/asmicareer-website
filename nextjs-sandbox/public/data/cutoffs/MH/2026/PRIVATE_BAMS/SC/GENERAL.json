@@ -1110,7 +1110,10 @@
           "CSML": "SC-740"
         },
         "Round 4": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 319619,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -1493,7 +1496,10 @@
           "CSML": "SC-1214"
         },
         "Round 4": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 439223,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -1635,6 +1641,12 @@
           "AIR": 432047,
           "SML": 12468,
           "CSML": "SC-1461"
+        },
+        "Round 4": {
+          "Intake": null,
+          "AIR": 475007,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -3259,6 +3271,20 @@
           "AIR": 479204,
           "SML": 14508,
           "CSML": "SC-1769"
+        }
+      }
+    },
+    {
+      "code": "3355",
+      "name": "Ramrao Patil Ayurved College & Rugnalaya, Parbhani",
+      "establishment": 2000,
+      "fees": null,
+      "rounds": {
+        "Round 4": {
+          "Intake": null,
+          "AIR": 571790,
+          "SML": 18320,
+          "CSML": "SC-2351"
         }
       }
     }

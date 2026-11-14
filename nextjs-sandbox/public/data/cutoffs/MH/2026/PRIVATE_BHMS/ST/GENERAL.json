@@ -31,9 +31,9 @@
         },
         "Round 4": {
           "Intake": 1,
-          "AIR": 915773,
-          "SML": 29250,
-          "CSML": "ST-1298"
+          "AIR": 928048,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -160,7 +160,10 @@
           "CSML": "ST-809"
         },
         "Round 4": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 737407,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -1286,6 +1289,20 @@
           "AIR": 1168330,
           "SML": 33855,
           "CSML": "ST-1628"
+        }
+      }
+    },
+    {
+      "code": "4224",
+      "name": "Antrabharti Homoeopathy Medical College, Nagpur",
+      "establishment": null,
+      "fees": null,
+      "rounds": {
+        "Round 4": {
+          "Intake": null,
+          "AIR": 881400,
+          "SML": 28381,
+          "CSML": "ST-1244"
         }
       }
     }

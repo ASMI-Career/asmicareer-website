@@ -2435,7 +2435,10 @@
           "CSML": "SEBC-2027"
         },
         "Round 4": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 518847,
+          "SML": null,
+          "CSML": null
         }
       }
     },
@@ -2882,6 +2885,20 @@
           "AIR": 485952,
           "SML": 14784,
           "CSML": "SEBC-1987"
+        }
+      }
+    },
+    {
+      "code": "3355",
+      "name": "Ramrao Patil Ayurved College & Rugnalaya, Parbhani",
+      "establishment": 2000,
+      "fees": null,
+      "rounds": {
+        "Round 4": {
+          "Intake": null,
+          "AIR": 524744,
+          "SML": 16403,
+          "CSML": "SEBC-2158"
         }
       }
     }
