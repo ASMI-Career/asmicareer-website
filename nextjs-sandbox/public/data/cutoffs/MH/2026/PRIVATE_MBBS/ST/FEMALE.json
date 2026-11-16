@@ -574,7 +574,10 @@
           "CSML": "ST-1148"
         },
         "Special Stray Round 2": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 729728,
+          "SML": 33922,
+          "CSML": "ST-1695"
         }
       }
     },
@@ -603,6 +606,21 @@
           "AIR": 349378,
           "SML": 20579,
           "CSML": "ST-489"
+        }
+      }
+    },
+    {
+      "code": "1181",
+      "name": "Ideal Institute of Medical Science, Wada, Palghar",
+      "establishment": null,
+      "fees": null,
+      "type": "Private",
+      "rounds": {
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 358600,
+          "SML": 21026,
+          "CSML": "ST-522"
         }
       }
     }

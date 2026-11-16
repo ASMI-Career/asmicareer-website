@@ -88,7 +88,16 @@
           "CSML": null
         },
         "Special Stray Round 2": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 336964,
+          "SML": 20115,
+          "CSML": "OBC-5306"
+        },
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 1006237,
+          "SML": 39437,
+          "CSML": "OBC-9940"
         }
       }
     },
@@ -193,7 +202,16 @@
           "CSML": null
         },
         "Special Stray Round 2": {
-          "Intake": 4
+          "Intake": 4,
+          "AIR": 1069452,
+          "SML": 40172,
+          "CSML": "OBC-10244"
+        },
+        "Special Stray Round 3": {
+          "Intake": 2,
+          "AIR": 876348,
+          "SML": 37162,
+          "CSML": "OBC-9391"
         }
       }
     },
@@ -244,7 +262,16 @@
           "CSML": null
         },
         "Special Stray Round 2": {
-          "Intake": 4
+          "Intake": 4,
+          "AIR": 1052730,
+          "SML": 39998,
+          "CSML": "OBC-10171"
+        },
+        "Special Stray Round 3": {
+          "Intake": 3,
+          "AIR": 895863,
+          "SML": 37535,
+          "CSML": null
         }
       }
     },
@@ -895,7 +922,10 @@
           "CSML": null
         },
         "Special Stray Round 2": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 1131673,
+          "SML": 40809,
+          "CSML": "OBC-10490"
         }
       }
     },
@@ -956,7 +986,16 @@
           "CSML": "OBC-10140"
         },
         "Special Stray Round 2": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 151852,
+          "SML": 10990,
+          "CSML": "OBC-3045"
+        },
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 1073568,
+          "SML": 40235,
+          "CSML": "NT(C)-1885"
         }
       }
     },
@@ -1037,6 +1076,21 @@
           "AIR": 1120974,
           "SML": 40261,
           "CSML": "OBC-10338"
+        }
+      }
+    },
+    {
+      "code": "1181",
+      "name": "Ideal Institute of Medical Science, Wada, Palghar",
+      "establishment": null,
+      "fees": null,
+      "type": "Private",
+      "rounds": {
+        "Special Stray Round 3": {
+          "Intake": 8,
+          "AIR": 1003939,
+          "SML": 39410,
+          "CSML": "OBC-9930"
         }
       }
     }
