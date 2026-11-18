@@ -137,7 +137,7 @@ export default function DocumentChecklistPage() {
       <div className="dc-hero">
         <div className="dc-hero-bg"></div>
         <div className="dc-hero-inner">
-          <Link href="/resources" className="inline-flex items-center gap-1.5 text-xs font-semibold mb-5 text-white/50 hover:text-white transition-colors" style={{ textDecoration: 'none' }}>
+          <Link href="/medical/resources" className="inline-flex items-center gap-1.5 text-xs font-semibold mb-5 text-white/50 hover:text-white transition-colors" style={{ textDecoration: 'none' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_back</span> All Resources
           </Link>
           <br />

@@ -98,7 +98,7 @@ export default function PrivacyPage() {
 
           <div className="legal-section">
             <h2>11. Contact</h2>
-            <p>For privacy-related queries: <a href="mailto:contact@asmicareer.com">contact@asmicareer.com</a> · 7410019074 · <Link href="/contact">Find your nearest branch</Link></p>
+            <p>For privacy-related queries: <a href="mailto:contact@asmicareer.com">contact@asmicareer.com</a> · 7410019074 · <Link href="/medical/contact">Find your nearest branch</Link></p>
           </div>
 
         </div>
