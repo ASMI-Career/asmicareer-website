@@ -102,5 +102,5 @@ export default function useCatalog({ config, studentCategory, studentTracks }) {
     loadCutoffData();
   }, [studentCategory]);
 
-  return { deadlines, collegeData, collegesList, asmiDb, feeMap, cutoffDbData };
+  return { deadlines, events, collegeData, collegesList, asmiDb, feeMap, cutoffDbData };
 }

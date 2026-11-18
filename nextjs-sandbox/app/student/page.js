@@ -21,6 +21,8 @@ import EngineeringCutoff from './components/EngineeringCutoff';
 import EngineeringPredictor from './components/EngineeringPredictor';
 import Institutes from './components/Institutes';
 import Documents from './components/Documents';
+import Deadlines from './components/Deadlines';
+import Tutorials from './components/Tutorials';
 
 // The student dashboard page. All state lives in the hooks below, which are always called, so what a student typed in one
 // tab (filters, inputs) is still there after switching tabs. Each tab is a component that receives everything as props.
@@ -71,6 +73,8 @@ export default function StudentDashboard() {
       {activeTab === 'cutoff' && config.modules.includes('cutoff') && (config.engineeringCutoff ? <EngineeringCutoff {...ctx} /> : <CutoffExplorer {...ctx} />)}
       {activeTab === 'institutes' && config.modules.includes('institutes') && <Institutes {...ctx} />}
       {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
+      {activeTab === 'deadlines' && config.modules.includes('deadlines') && <Deadlines {...ctx} />}
+      {activeTab === 'tutorials' && config.modules.includes('tutorials') && <Tutorials {...ctx} />}
     </Shell>
   );
 }
