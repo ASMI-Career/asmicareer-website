@@ -204,7 +204,7 @@ export default function Dashboard(props) {
                       </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                      <a href={`tel:${counsellorWhatsapp && counsellorWhatsapp.trim() ? counsellorWhatsapp.replace(/\D/g, '') : '7410019077'}`} className="btn-whatsapp">
+                      <a href={`tel:${counsellorWhatsapp && counsellorWhatsapp.trim() ? counsellorWhatsapp.replace(/\D/g, '') : (dash.helpline || '7410019077')}`} className="btn-whatsapp">
                         📞 Call the Advisor
                       </a>
                       {showAdvisorWhatsApp && (

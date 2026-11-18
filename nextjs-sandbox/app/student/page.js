@@ -59,7 +59,7 @@ export default function StudentDashboard() {
   const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' || shell.activeTab === 'predictor' });
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
-  if (student.authState !== 'ok') return <TokenGate state={student.authState} />;
+  if (student.authState !== 'ok') return <TokenGate state={student.authState} helpline={config.dashboard.helpline} />;
 
   // A link like ?tab=predictor on a stream without that module falls back (Medical keeps its old behaviour for unknown tabs).
   const activeTab = (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? shell.activeTab : config.unknownTabFallback;

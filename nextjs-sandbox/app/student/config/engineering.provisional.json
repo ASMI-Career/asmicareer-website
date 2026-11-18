@@ -33,7 +33,7 @@
     "logRecord": false,
     "scoreParse": "float",
     "branchFromToken": false,
-    "counsellorDefaults": { "name": "ASMI Counsellor", "whatsapp": "917410019074", "branch": "ASMI Career Network" },
+    "counsellorDefaults": { "name": "ASMI Counsellor", "whatsapp": "917410019075", "branch": "ASMI Career Network" },
     "stages": ["Enquiry", "Profile Complete", "Counselling Started", "Shortlist Ready", "Preferences Filed", "Allotted", "Admitted"],
     "defaultProgress": "stages",
     "categoryRules": {
@@ -60,6 +60,7 @@
     "redTagKeywords": ["URGENT"],
     "newsUrl": "https://asmicareer.in/engineering/news",
     "viewAllTab": "deadlines",
+    "helpline": "7410019075",
     "advisorWhatsApp": true,
     "shortlistIcon": "🎓",
     "shortlistEditTab": "institutes",
