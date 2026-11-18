@@ -18,6 +18,7 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
   const [studentCategory, setStudentCategory] = useState(null); // null = not yet set from token
   const [counsellorName, setCounsellorName] = useState(sc.counsellorDefaults.name);
   const [counsellorWhatsapp, setCounsellorWhatsapp] = useState(sc.counsellorDefaults.whatsapp);
+  const [hasCounsellorWhatsapp, setHasCounsellorWhatsapp] = useState(false);   // true only when the sheet returned a number (not the config default)
   const [whatsappGroupLink, setWhatsappGroupLink] = useState('');
   const [counsellorBranch, setCounsellorBranch] = useState(sc.counsellorDefaults.branch);
   const [progressSteps, setProgressSteps] = useState(Array.isArray(sc.defaultProgress)
@@ -94,7 +95,7 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
               const cName = s.counsellor_name || s.counsellorName || s.counselor_name || s.counselorName;
               if (cName) setCounsellorName(cName);
               const cWa = s.counsellor_whatsapp || s.counsellorWhatsapp || s.counselor_whatsapp || s.counselorWhatsapp;
-              if (cWa) setCounsellorWhatsapp(String(cWa));
+              if (cWa) { setCounsellorWhatsapp(String(cWa)); setHasCounsellorWhatsapp(true); }
               const wGroup = s.whatsapp_group_link || s.whatsappGroupLink || s.whatsapp_group;
               if (wGroup) setWhatsappGroupLink(wGroup);
               setCounsellorBranch(sc.branchFromToken ? getBranchFromToken(token) : sc.counsellorDefaults.branch);
@@ -134,5 +135,5 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
   const initials = studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   const counsellorInitials = counsellorName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
-  return { studentName, studentRank, studentScore, authState, studentCategory, counsellorName, counsellorWhatsapp, whatsappGroupLink, counsellorBranch, progressSteps, studentTracks, initials, counsellorInitials };
+  return { studentName, studentRank, studentScore, authState, studentCategory, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, whatsappGroupLink, counsellorBranch, progressSteps, studentTracks, initials, counsellorInitials };
 }

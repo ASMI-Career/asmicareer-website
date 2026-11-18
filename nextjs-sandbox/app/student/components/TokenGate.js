@@ -1,5 +1,6 @@
 // ── Shown instead of the dashboard when there is no valid student link ───────
-export default function TokenGate({ state }) {
+export default function TokenGate({ state, helpline }) {
+  const number = helpline || '7410019074';   // engineering sets its own helpline in its config; Medical keeps this one
   const wrap = { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: 16 };
   const card = { maxWidth: 460, width: '100%', textAlign: 'center', marginBottom: 0 };
   // Explicit colours: other global stylesheets also define generic button classes.
@@ -15,8 +16,8 @@ export default function TokenGate({ state }) {
               <h2 className="section-title">This link is not valid</h2>
               <p className="section-sub">We could not find a student record for this link. Please contact your ASMI counsellor and ask for a new dashboard link.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                <a href="tel:7410019074" style={primaryBtn}>Call ASMI Helpline: 7410019074</a>
-                <a href="https://wa.me/917410019074" target="_blank" rel="noreferrer" className="btn-outline-navy">Message us on WhatsApp</a>
+                <a href={`tel:${number}`} style={primaryBtn}>{`Call ASMI Helpline: ${number}`}</a>
+                <a href={`https://wa.me/91${number}`} target="_blank" rel="noreferrer" className="btn-outline-navy">Message us on WhatsApp</a>
               </div>
             </>
           )}
@@ -25,7 +26,7 @@ export default function TokenGate({ state }) {
               <h2 className="section-title">Your dashboard is not open yet</h2>
               <p className="section-sub">This dashboard has not been switched on yet. Please contact your ASMI counsellor and we will let you know when it is ready.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                <a href="tel:7410019074" style={primaryBtn}>Call ASMI Helpline: 7410019074</a>
+                <a href={`tel:${number}`} style={primaryBtn}>{`Call ASMI Helpline: ${number}`}</a>
               </div>
             </>
           )}
