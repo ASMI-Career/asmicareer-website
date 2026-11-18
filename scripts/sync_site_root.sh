@@ -7,8 +7,9 @@ cp $S/mcc-cutoff.html $S/mcc-college.html $S/mcc-seat-matrix.html $S/mcc-rank-al
 mkdir -p neetug2026cutoff $S/neetug2026cutoff
 cp $S/mcc-cutoff.html neetug2026cutoff/index.html
 cp $S/mcc-cutoff.html $S/neetug2026cutoff/index.html
-rm -rf data/cutoffs/MCC/2026 data/seat-matrix/MCC/2026 data/allotments/MCC/2026
+rm -rf data/cutoffs/MCC/2026 data/seat-matrix/MCC/2026 data/allotments/MCC/2026 data/bundles
 mkdir -p data/cutoffs/MCC data/seat-matrix/MCC data/allotments/MCC
 cp -r $S/data/cutoffs/MCC/2026 data/cutoffs/MCC/
 cp -r $S/data/seat-matrix/MCC/2026 data/seat-matrix/MCC/
 cp -r $S/data/allotments/MCC/2026 data/allotments/MCC/
+cp -r $S/data/bundles data/
