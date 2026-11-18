@@ -131,7 +131,7 @@ export default function ServicesPage() {
             Not sold separately. Not billed per round.
             One enrolment — complete support until you report to college.
           </p>
-          <Link href="/packages" className="svc-hero-link">View Packages & Pricing →</Link>
+          <Link href="/medical/packages" className="svc-hero-link">View Packages & Pricing →</Link>
         </div>
       </section>
 
@@ -165,7 +165,7 @@ export default function ServicesPage() {
           <p className="svc-cta-sub">Starting from ₹10,000. Pricing varies by branch.</p>
           <div className="svc-cta-btns">
             <Link href="/inquiry" className="svc-cta-btn-primary">Book Free Counselling →</Link>
-            <Link href="/packages" className="svc-cta-btn-secondary">View Packages</Link>
+            <Link href="/medical/packages" className="svc-cta-btn-secondary">View Packages</Link>
           </div>
         </div>
       </section>
