@@ -1,4 +1,4 @@
-// Turns a YouTube link into a video ID. Accepts watch?v=ID, youtu.be/ID and /shorts/ID (with or without www / m.).
+// Turns a YouTube link into a video ID. Accepts watch?v=ID, youtu.be/ID, /shorts/ID and /live/ID (a recorded live stream), with or without www / m.
 // Returns null for anything else, so the caller can skip the item.
 const ID_RE = /^[A-Za-z0-9_-]{11}$/;
 export function youtubeId(url) {
@@ -10,7 +10,7 @@ export function youtubeId(url) {
   if (host === 'youtu.be') id = u.pathname.slice(1).split('/')[0];
   else if (host === 'youtube.com') {
     if (u.pathname === '/watch') id = u.searchParams.get('v');
-    else if (u.pathname.startsWith('/shorts/')) id = u.pathname.split('/')[2];
+    else if (u.pathname.startsWith('/shorts/') || u.pathname.startsWith('/live/')) id = u.pathname.split('/')[2];
   }
   return id && ID_RE.test(id) ? id : null;
 }
