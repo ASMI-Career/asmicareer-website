@@ -1321,8 +1321,8 @@
         const field = q === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
         const label = q === 'REGION' ? 'Region Merit' : 'State Merit';
         if (field && !['NRIINDIA', 'NRIABROAD'].includes(q)) {
-          ['S', 3, 2, 1].forEach(n => {
-            const rname = n === 'S' ? 'Special Round' : 'Round ' + n;
+          ['T', 'S', 3, 2, 1].forEach(n => {
+            const rname = n === 'T' ? 'Special Round 2' : n === 'S' ? 'Special Round' : 'Round ' + n;
             const has = colleges.some(c => { const r = c.rounds && c.rounds[rname]; return r && r[field] != null && r[field] !== ''; });
             if (!has) return;
             const o = document.createElement('option');
@@ -1331,7 +1331,7 @@
           });
         }
       }
-      if (/^merit[\dS]-asc$/.test(currentSort) && !sel.querySelector(`option[value="${currentSort}"]`)) {
+      if (/^merit[\dST]-asc$/.test(currentSort) && !sel.querySelector(`option[value="${currentSort}"]`)) {
         const firstMerit = sel.querySelector('option[value^="merit"]');
         currentSort = firstMerit ? firstMerit.value : 'name-asc';
       }
@@ -1383,8 +1383,8 @@
       let roundKey = 'Round 1', dir = 1, useFees = false, useSml = false, meritField = null;
       if (currentSort.startsWith('stray|')) { roundKey = '__stray__' + currentSort.slice(6); }
       else if (currentSort.startsWith('smlstray|')) { roundKey = '__stray__' + currentSort.slice(9); useSml = true; }
-      else if (/^merit[\dS]-asc$/.test(currentSort)) {   // MAFSU: closing merit number, lowest first
-        roundKey = currentSort[5] === 'S' ? 'Special Round' : 'Round ' + currentSort[5];
+      else if (/^merit[\dST]-asc$/.test(currentSort)) {   // MAFSU: closing merit number, lowest first
+        roundKey = currentSort[5] === 'T' ? 'Special Round 2' : currentSort[5] === 'S' ? 'Special Round' : 'Round ' + currentSort[5];
         meritField = String((currentData && currentData.institution_type) || '').split('_')[1] === 'REGION' ? 'REGION_MERIT' : 'STATE_MERIT';
       }
       else switch (currentSort) {

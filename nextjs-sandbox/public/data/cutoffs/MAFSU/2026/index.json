@@ -322,7 +322,8 @@
    "GEN_BOTH"
   ],
   "OPEN": [
-   "GEN_BOTH"
+   "GEN_BOTH",
+   "GEN_GIRL"
   ],
   "SC": [
    "GEN_BOTH"
@@ -332,12 +333,16 @@
   ],
   "VCI": [
    "GEN_BOTH"
+  ],
+  "ST": [
+   "FF_BOTH"
   ]
  },
  "PRIVATE_SPECIAL": {
   "EWS": [
    "DP_BOTH",
-   "PAP_BOTH"
+   "PAP_BOTH",
+   "GEN_GIRL"
   ],
   "MGMT": [
    "ALL"
