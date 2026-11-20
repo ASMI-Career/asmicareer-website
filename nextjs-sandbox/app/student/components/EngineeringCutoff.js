@@ -1,4 +1,4 @@
-import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
 
 // Engineering Cutoff Explorer (student view). Same data as the counsellor tool; every filter is a plain dropdown,
 // last year's closing ranks are shown per round, and a student who enters their rank sees Safe / Likely / Borderline / Out of reach.
@@ -13,11 +13,11 @@ export default function EngineeringCutoff(props) {
   const ec = config.engineeringCutoff;
   const isMH = cs === 'MH';
   const base = cfgFor(cs);
-  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : JOSAA.quotas;
-  const categories = isMH ? ecMhCategories : JOSAA.categories;
-  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
-  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
-  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
+  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : base.quotas;
+  const categories = isMH ? ecMhCategories : base.categories;
+  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : base.genders;
+  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : base.itypes;
+  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : base.rounds;
   const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
   const track = base.track;
   const reserved = isReservedJosaa(cs, ecCategory);
@@ -53,10 +53,13 @@ export default function EngineeringCutoff(props) {
       <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
         <button className={`chip ${cs === 'JOSAA' ? 'active' : ''}`} onClick={() => ecSwitch('JOSAA')}>JoSAA {JOSAA.year}</button>
         <button className={`chip ${cs === 'MH' ? 'active' : ''}`} onClick={() => ecSwitch('MH')}>Maharashtra CAP {MH.year}</button>
+        <button className={`chip ${cs === 'CSAB' ? 'active' : ''}`} onClick={() => ecSwitch('CSAB')}>CSAB Special {CSAB.year}</button>
       </div>
       <p style={{ fontSize: 12, color: 'var(--text-500)', marginBottom: 16 }}>
         {isMH
           ? `Maharashtra CAP ${MH.year}: closing merit number and percentile for each round. Merit number = your rank in the Maharashtra state merit list.`
+          : cs === 'CSAB'
+          ? `CSAB Special ${CSAB.year} (the round after JoSAA): opening and closing ranks for NITs, IIITs and GFTIs. Every rank here is an All India CRL rank, including OBC-NCL, EWS, SC and ST, so compare your CRL rank, not your category rank. DASA quotas are for foreign nationals, PIO/OCI and Gulf-returned candidates.`
           : `JoSAA ${JOSAA.year}: opening and closing ranks for each round. IIT ranks are JEE Advanced ranks; NIT, IIIT and GFTI ranks are JEE Main ranks. For every category except Open the ranks are category ranks (shown on your scorecard), not all-India ranks. JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India, while NITs are under Home State or Other State; the default view shows All India and Other State together.`}
         {' '}Last year&apos;s ranks are a guide, not a promise: cutoffs change every year.
       </p>

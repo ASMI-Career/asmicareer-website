@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
 
 // Engineering Predictor: the student enters the percentile they expect (or the rank, if they know it), we estimate the rank,
 // and list the colleges and branches that rank could get, using last year's closing ranks (the same data as the Cutoff Explorer).
@@ -17,11 +17,11 @@ export default function EngineeringPredictor(props) {
   const [show, setShow] = useState('all');          // all | safe | likely | borderline
   const [showOut, setShowOut] = useState(false);
 
-  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : JOSAA.quotas;
-  const categories = isMH ? ecMhCategories : JOSAA.categories;
-  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
-  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
-  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
+  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : base.quotas;
+  const categories = isMH ? ecMhCategories : base.categories;
+  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : base.genders;
+  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : base.itypes;
+  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : base.rounds;
   const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
 
   // ── the student's rank ──
@@ -74,6 +74,7 @@ export default function EngineeringPredictor(props) {
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
         <button className={`chip ${cs === 'JOSAA' ? 'active' : ''}`} onClick={() => ecSwitch('JOSAA')}>JEE Main / JEE Advanced (JoSAA)</button>
         <button className={`chip ${cs === 'MH' ? 'active' : ''}`} onClick={() => ecSwitch('MH')}>MHT-CET (Maharashtra CAP)</button>
+        <button className={`chip ${cs === 'CSAB' ? 'active' : ''}`} onClick={() => ecSwitch('CSAB')}>JEE Main (CSAB Special)</button>
       </div>
 
       <div style={{ background: 'var(--primary-bg)', border: '1px solid var(--primary-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 18 }}>
@@ -117,7 +118,9 @@ export default function EngineeringPredictor(props) {
             ? 'Home State seats count only for NITs and GFTIs in your own home state. Use the search box to find the one in your state. For every other NIT, use Other State.'
             : ecQuota === 'combined'
               ? 'Shows IITs, IIITs and GFTIs (All India seats) together with NITs outside your home state (Other State seats). Applying to the NIT in your own home state? Choose Home State instead.'
-              : 'JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India; NITs are only under Home State or Other State.'}
+              : cs === 'CSAB'
+                ? 'CSAB Special seats are NITs, IIITs and GFTIs. Ranks are All India CRL ranks for every category. DASA quotas are for foreign nationals, PIO/OCI and Gulf-returned candidates.'
+                : 'JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India; NITs are only under Home State or Other State.'}
         </p>}
         {haveRank && (
           <div style={{ marginTop: 14, fontSize: 14, color: 'var(--text-900)' }}>

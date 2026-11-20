@@ -18,6 +18,23 @@ export const JOSAA = {
   itypes: ['IIT', 'NIT', 'IIIT', 'GFTI'],
 };
 
+// CSAB Special Round (after JoSAA): NITs, IIITs and GFTIs only. Same file layout as JoSAA, but every rank is an All India CRL rank
+// (including reserved categories), and it adds the DASA quotas.
+export const CSAB = {
+  id: 'CSAB', track: 'CSAB', label: 'CSAB Special', year: 2026,
+  base: '/data/cutoffs/CSAB/2026',
+  rounds: ['Round 1', 'Round 2'],
+  defaultRound: 'Round 2',
+  defaultQuota: 'all-india',
+  quotas: [
+    { key: 'all-india', label: 'All India' }, { key: 'home-state', label: 'Home State' }, { key: 'other-state', label: 'Other State' },
+    { key: 'goa', label: 'Goa' }, { key: 'jk', label: 'J&K' }, { key: 'ladakh', label: 'Ladakh' },
+    { key: 'dasa-ciwg', label: 'DASA (CIWG)' }, { key: 'dasa-non-ciwg', label: 'DASA (Non-CIWG)' },
+  ],
+  categories: JOSAA.categories, genders: JOSAA.genders,
+  itypes: ['NIT', 'IIIT', 'GFTI'],
+};
+
 export const MH = {
   id: 'MH', track: 'Maharashtra CAP', label: 'Maharashtra CAP', year: 2026,
   base: '/data/cutoffs/MH_ENGG/2026',
@@ -26,7 +43,7 @@ export const MH = {
   defaultQuota: 'state-level',
 };
 
-export const cfgFor = (counselling) => (counselling === 'MH' ? MH : JOSAA);
+export const cfgFor = (counselling) => (counselling === 'MH' ? MH : counselling === 'CSAB' ? CSAB : JOSAA);
 
 // The student's category (from the sheet, mapped by the config rules) -> the file category for each counselling.
 export function defaultCategory(counselling, studentCategory, availableKeys) {
@@ -90,7 +107,7 @@ export function estimateMhMerit(percentile, pairs) {
 
 // JoSAA closing ranks for every category except Open are CATEGORY ranks (checked against the data: OBC-NCL closings are about 0.39x the
 // Open ones, EWS 0.16x, SC 0.22x, ST 0.11x). So a reserved-category student must compare their category rank, not their CRL.
-export const isReservedJosaa = (counselling, categoryKey) => counselling !== 'MH' && !!categoryKey && categoryKey !== 'OPEN';
+export const isReservedJosaa = (counselling, categoryKey) => counselling === 'JOSAA' && !!categoryKey && categoryKey !== 'OPEN';
 
 // Rough category rank from a CRL estimate: CRL x the category's share of candidates. A shortcut for students who only know a percentile;
 // the shares are set in the config and are estimates.
@@ -106,6 +123,6 @@ export function estimateCategoryRank(crl, categoryKey, shares) {
 // (checked in the data: all-india = IIT/IIIT/GFTI, other-state = NIT/GFTI, home-state = NIT/GFTI).
 export const COMBINED_PARTS = ['all-india', 'other-state'];
 export const quotaLabelOf = (counselling, key, manifest) => {
-  const list = counselling === 'MH' ? (manifest ? manifest.quotas : []) : JOSAA.quotas;
+  const list = counselling === 'MH' ? (manifest ? manifest.quotas : []) : cfgFor(counselling).quotas;
   const q = list.find(x => x.key === key); return q ? q.label : key;
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -53,7 +53,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   // Pick the student's own category the first time, and whenever the options change underneath the current choice.
   useEffect(() => {
     if (!enabled) return;
-    const keys = counselling === 'MH' ? mhCategories.map(c => c.key) : JOSAA.categories.map(c => c.key);
+    const keys = counselling === 'MH' ? mhCategories.map(c => c.key) : cfgFor(counselling).categories.map(c => c.key);
     if (counselling === 'MH' && !manifest) return;
     const want = defaultCategory(counselling, studentCategory, keys);
     if (!touched.current) { if (category !== want) setCategory(want); }
@@ -78,8 +78,8 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const switchCounselling = (key) => {
     if (key === counselling) return;
     touched.current = false;
-    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : 'combined'); setCategory(''); setGender('all'); setItype('ALL');
-    setRound(key === 'MH' ? (manifest ? manifest.rounds[manifest.rounds.length - 1] : 'Round 1') : JOSAA.defaultRound);
+    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : key === 'CSAB' ? CSAB.defaultQuota : 'combined'); setCategory(''); setGender('all'); setItype('ALL');
+    setRound(key === 'MH' ? (manifest ? manifest.rounds[manifest.rounds.length - 1] : 'Round 1') : cfgFor(key).defaultRound);
     setPwd(false); setVisible(40);
   };
   // Once the Maharashtra manifest arrives, start on its last round.
