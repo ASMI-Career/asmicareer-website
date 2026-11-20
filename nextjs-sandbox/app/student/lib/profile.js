@@ -75,10 +75,9 @@ export function examBadge(profile, score, profileSupported) {
 export function prefillFrom(profile) {
   const out = {};
   if (!profile) return out;
-  const reserved = profile.category && profile.category !== 'General';
-  const rankText = (v) => (v ? String(v) : '');
-  const mainRank = reserved ? rankText(profile.category_rank) : rankText(profile.jee_main_crl_rank);   // reserved categories compare category ranks
-  if (mainRank) out.mainRank = mainRank;
+  // Both ranks are handed over; the Predictor picks per track. JoSAA compares reserved categories by CATEGORY rank, CSAB and the rest by CRL.
+  if (profile.jee_main_crl_rank) out.mainCrl = String(profile.jee_main_crl_rank);
+  if (profile.category_rank) out.mainCat = String(profile.category_rank);
   if (profile.jee_adv_rank) out.advRank = String(profile.jee_adv_rank);
   if (profile.jee_main_percentile) out.mainPct = String(profile.jee_main_percentile);
   if (profile.mhtcet_percentile) out.mhPct = String(profile.mhtcet_percentile);

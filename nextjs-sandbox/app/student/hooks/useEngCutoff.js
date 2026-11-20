@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS, isReservedJosaa } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -27,6 +27,9 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const [data, setData] = useState({ loading: false, error: false, colleges: [] });
   const seq = useRef(0);
   const touched = useRef(false);   // the student changed the category themselves
+  const rankTouched = useRef(false);   // the student typed their own rank: the profile no longer overwrites it
+  const profRanks = useRef({});        // from the profile: { mainCrl, mainCat }
+  const [profTick, setProfTick] = useState(0);
 
   // Maharashtra needs its manifest (quotas, categories, rounds, institute types) before it can show anything.
   useEffect(() => {
@@ -87,12 +90,19 @@ export default function useEngCutoff({ config, studentCategory, active }) {
 
   // Profile prefill: only the values the student has filled in are passed; nothing else is touched. The category follows studentCategory.
   const prefill = (v) => {
-    if (v.mainRank !== undefined) setMainRank(v.mainRank);
+    profRanks.current = { mainCrl: v.mainCrl || '', mainCat: v.mainCat || '' }; setProfTick(t => t + 1);
     if (v.advRank !== undefined) setAdvRank(v.advRank);
     if (v.mainPct !== undefined) setMainPct(v.mainPct);
     if (v.mhPct !== undefined) setMhPct(v.mhPct);
     if (v.pwd) setPwd(true);
   };
+  // The rank box means CATEGORY rank for a reserved category on JoSAA, and CRL on every other track (CSAB, which is by JEE Main CRL only).
+  useEffect(() => {
+    if (!enabled || rankTouched.current) return;
+    const { mainCrl = '', mainCat = '' } = profRanks.current;
+    if (!mainCrl && !mainCat) return;
+    setMainRank(isReservedJosaa(counselling, category) ? mainCat : mainCrl);
+  }, [enabled, counselling, category, profTick]);
 
   return {
     ecPrefill: prefill, ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
@@ -101,7 +111,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     ecGender: gender, setEcGender: setGender, ecItype: itype, setEcItype: (v) => { setItype(v); setVisible(40); },
     ecRound: round, setEcRound: setRound, ecSearch: search, setEcSearch: (v) => { setSearch(v); setVisible(40); },
     ecSort: sort, setEcSort: setSort, ecPwd: pwd, setEcPwd: setPwd,
-    ecMainRank: mainRank, setEcMainRank: setMainRank, ecAdvRank: advRank, setEcAdvRank: setAdvRank, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
+    ecMainRank: mainRank, setEcMainRank: (v) => { rankTouched.current = true; setMainRank(v); }, ecAdvRank: advRank, setEcAdvRank: setAdvRank, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
     ecPMode: pMode, setEcPMode: setPMode, ecMainPct: mainPct, setEcMainPct: setMainPct, ecMhPct: mhPct, setEcMhPct: setMhPct, ecMhCurve: mhCurve,
     ecVisible: visible, ecShowMore: () => setVisible(v => v + 40),
     ecManifest: manifest, ecIntake: intake, ecData: data, ecMhCategories: mhCategories, ecMhGenders: mhGenders,

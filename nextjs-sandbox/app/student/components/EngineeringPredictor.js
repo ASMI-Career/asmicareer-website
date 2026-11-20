@@ -25,7 +25,7 @@ export default function EngineeringPredictor(props) {
   const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
 
   // ── the student's rank ──
-  const advRank = parseRank(ecAdvRank);
+  const advRank = cs === 'CSAB' ? null : parseRank(ecAdvRank);   // CSAB is by JEE Main CRL only: no Advanced rank
   const aiMerit = isMH && ecQuota === 'all-india';          // All India merit numbers are on a different list: no percentile estimate for them
   const reserved = isReservedJosaa(cs, ecCategory);          // reserved categories are compared by CATEGORY rank in JoSAA
   const catLabel = (categories.find(c => c.key === ecCategory) || {}).label || ecCategory;
@@ -91,7 +91,7 @@ export default function EngineeringPredictor(props) {
             <div className="form-group"><label className="form-label">{reserved ? `JEE Main category rank (${catLabel}), from your scorecard` : 'JEE Main CRL rank'}</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 45000" value={ecMainRank} onChange={e => setEcMainRank(e.target.value)} /></div>
           )}
-          {!isMH && (
+          {!isMH && cs !== 'CSAB' && (
             <div className="form-group"><label className="form-label">{reserved ? `JEE Advanced category rank (${catLabel}), IITs only` : 'JEE Advanced CRL rank (only for IITs)'}</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="optional, e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
           )}
