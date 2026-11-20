@@ -596,7 +596,10 @@
           "CSML": "OBC-5568"
         },
         "Special Stray Round 1": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 228826,
+          "SML": 15108,
+          "CSML": "OBC-4086"
         }
       }
     },
@@ -685,7 +688,22 @@
           "CSML": "OBC-8463"
         },
         "Special Stray Round 1": {
-          "Intake": 4
+          "Intake": 4,
+          "AIR": 553380,
+          "SML": 28664,
+          "CSML": "OBC-7323"
+        },
+        "Special Stray Round 2": {
+          "Intake": 3,
+          "AIR": 702548,
+          "SML": 33181,
+          "CSML": "OBC-8431"
+        },
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 316718,
+          "SML": 19245,
+          "CSML": "OBC-5084"
         }
       }
     },
@@ -714,6 +732,21 @@
           "AIR": 96729,
           "SML": 7349,
           "CSML": "OBC-2050"
+        }
+      }
+    },
+    {
+      "code": "1181",
+      "name": "Ideal Institute of Medical Science, Wada, Palghar",
+      "establishment": 2026,
+      "fees": "4,63,637",
+      "type": "Private",
+      "rounds": {
+        "Special Stray Round 3": {
+          "Intake": 4,
+          "AIR": 96499,
+          "SML": 7331,
+          "CSML": "EWS-687"
         }
       }
     }

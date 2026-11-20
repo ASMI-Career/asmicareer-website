@@ -406,6 +406,23 @@
   th.open{background:linear-gradient(180deg,#5a22ad,#3a0f80) !important}
   .mc-cat .op{display:block;font-size:.68rem;font-weight:600;color:#6d3bd2;margin-top:1px}
   .head-links{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}.head-links .guide-btn{margin-left:0;text-decoration:none}
+  /* counselling selector */
+  .cs-bar{margin:14px 0 6px;display:flex;flex-direction:column;gap:10px}
+  .cs-groups{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .cs-group{border:1.5px solid #50098a;background:#fff;color:#50098a;border-radius:999px;padding:9px 18px;font:800 .84rem 'Montserrat',system-ui,sans-serif;cursor:pointer}
+  .cs-group.active{background:#410775;border-color:#410775;color:#ffd700}
+  .cs-cards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .cs-card{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:10px 18px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer;text-align:left;font-family:'Montserrat',system-ui,sans-serif;min-width:190px;box-shadow:0 2px 10px rgba(65,7,117,.06)}
+  .cs-card b{font-size:.95rem;color:var(--brand-dark)}.cs-card span{font-size:.72rem;color:var(--muted);font-weight:500}
+  .cs-card.active{background:linear-gradient(120deg,#ffd700,#ffb800);border-color:#ffb800}.cs-card.active span{color:#2c0450}
+  .cs-card.soon{opacity:.7}
+  .rank-cell small.sml{color:#6d3bd2;font-weight:600}
+  .guide-box.wide{max-width:1000px}
+  .dfacts{display:flex;flex-wrap:wrap;gap:8px 26px;margin:0 0 14px;font-weight:700;font-size:.9rem}.dfacts i{display:block;font-style:normal;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .dscroll{overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .dtbl{border-collapse:collapse;width:100%;min-width:520px}.dtbl th{background:linear-gradient(180deg,#4a1a99,#2f0a68);color:#fff;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:10px;text-align:center}.dtbl th:first-child,.dtbl td:first-child{text-align:left}
+  .dtbl th small{display:block;font-weight:600;opacity:.8;text-transform:none}.dtbl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:center;font-size:.86rem}.dtbl tr.sel td{background:#fff7d6}
+  @media(max-width:760px){.cs-groups,.cs-cards{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}.cs-group,.cs-card{flex:none}}
 </style>
 </head>
 <body>
@@ -414,9 +431,9 @@
   <div class="wrap hero-row">
     <img class="logo" src="/asmi-logo.png" alt="ASMI Career">
     <div class="hero-title">
-      <h1>All India Quota <span>Cutoff 2026</span></h1>
-      <p class="sub1">MCC NEET UG • MBBS &amp; BDS</p>
-      <p class="sub2">Closing rank, round by round</p>
+      <h1 id="heroH1">All India Quota <span>Cutoff 2026</span></h1>
+      <p class="sub1" id="heroSub1">MCC NEET UG &bull; MBBS &amp; BDS</p>
+      <p class="sub2" id="heroSub2">Closing rank, round by round</p>
     </div>
     <div class="tagline">Right Guidance<br>Brighter Tomorrow</div>
     <div class="source-card">
@@ -427,6 +444,11 @@
 </div>
 
 <div class="wrap">
+  <div class="cs-bar">
+    <div class="cs-groups" id="csGroups"></div>
+    <div class="cs-cards" id="csCards"></div>
+  </div>
+
   <div class="pills bar" id="fType"></div>
 
   <div class="filters">
@@ -447,7 +469,7 @@
       <div class="hint-eg">e.g. AIIMS Delhi, VMMC, 15000</div>
     </div>
     <div class="f s2 f-search airbox">
-      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>Your NEET AIR</div>
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg><span id="rankTitle">Your NEET AIR</span></div>
       <input id="rank" type="text" inputmode="numeric" placeholder="e.g. 15000" autocomplete="off">
     </div>
     <button type="button" class="filter-toggle m-only" id="filterToggle">More Filters</button>
@@ -474,6 +496,10 @@
     <div class="f s9">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Category</div>
       <div class="seg" id="fCat"></div>
+    </div>
+    <div class="f s9" id="subWrap" style="display:none">
+      <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Seat Type</div>
+      <div class="seg" id="fSub"></div>
     </div>
     <div class="f s5" id="nriWrap" style="display:none">
       <div class="f-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>Deemed Seat Quota</div>
@@ -528,29 +554,15 @@
 
   <div class="table-wrap">
     <table id="tbl" style="min-width:1480px">
-      <thead><tr>
-        <th class="idx nosort">#</th>
-        <th class="college" data-key="name">College<small>Name and state</small></th>
-        <th class="num" data-key="est">Est. year</th>
-        <th data-key="course">Course</th>
-        <th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list">Fees / Year</th>
-        <th class="num round open" data-key="r1o">Round 1<small>Opening AIR</small></th>
-        <th class="num round" data-key="r1">Round 1<small>Closing AIR</small></th>
-        <th class="num round open" data-key="r2o">Round 2<small>Opening AIR</small></th>
-        <th class="num round" data-key="r2">Round 2<small>Closing AIR</small></th>
-        <th class="num round open" data-key="r3o">Round 3<small>Opening AIR</small></th>
-        <th class="num round" data-key="r3">Round 3<small>Closing AIR</small></th>
-        <th class="num round open" data-key="r4o">Stray<small>Opening AIR</small></th>
-        <th class="num round" data-key="r4">Stray<small>Closing AIR</small></th>
-        <th class="num round lowest" data-key="lc" title="Highest AIR allotted in any of the 4 rounds: the last rank that still got a seat">Lowest Cutoff<small>of 4 rounds</small></th>
-        <th class="num nosort">Actions</th>
-      </tr></thead>
+      <thead><tr id="headRow"></tr></thead>
       <tbody id="body"></tbody>
     </table>
     <div class="empty" id="empty" style="display:none">No colleges match these filters. Try clearing one.</div>
   </div>
   <div class="cards" id="cards"></div>
   <div class="empty m-only" id="cardsEmpty" style="display:none">No colleges match these filters. Try clearing one.</div>
+
+  <div class="guide-bg" id="detail" hidden><div class="guide-box wide"><div class="guide-head"><b id="detailTitle">College</b><button type="button" id="detailClose" aria-label="Close">×</button></div><div class="guide-body" id="detailBody"></div></div></div>
 
   <div class="guide-bg" id="guide" hidden><div class="guide-box"><div class="guide-head"><b>Quick Guide</b><button type="button" id="guideClose" aria-label="Close">×</button></div><div class="guide-body" id="guideBody"></div></div></div>
 
@@ -577,13 +589,13 @@ const TYPE_ICON={Government:"building",Deemed:"cap",AIIMS:"building",JIPMER:"pin
 const QUOTA_BY_TYPE={Government:"All India Quota",AIIMS:"Open Seat Quota",JIPMER:"Open Seat Quota","Central University":"Open Seat Quota",Deemed:"Self Financed Merit Seat"};
 const QUOTA_ORDER=["All India Quota","Open Seat Quota","Self Financed Merit Seat","NRI Quota","Delhi University Quota","IP University Quota","ESI Quota","AMU Self Finance (All India)","Muslim Quota","Delhi NCR CW Quota (DU)","Delhi NCR CW Quota (IP)","Foreign Country Quota","AMU Quota","AMU Self Finance (Internal)","Jamia Internal Quota","Puducherry UT Domicile (Internal)"];
 const isMain=c=>c.itype!=="OTHER"||c.quota==="All India Quota";
-const ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
-const RLABEL=r=>r==="Stray Vacancy Round"?"Stray":r;
-const RSORT={r1:"Round 1",r2:"Round 2",r3:"Round 3",r4:"Stray Vacancy Round",r1o:"Round 1",r2o:"Round 2",r3o:"Round 3",r4o:"Stray Vacancy Round"};
+let ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
+const RLABEL=r=>String(r).replace("Stray Vacancy Round","Stray").replace(/^Special Stray Round\s*(\d*)/,(m,n)=>"Special Stray"+(n?" "+n:"")).replace(/^Stray Round\s*(\d*)/,(m,n)=>"Stray"+(n?" "+n:""));
+const rIndex=key=>{const m=/^r(\d+)(o?)$/.exec(key);return m&&ROUNDS[+m[1]-1]?{r:ROUNDS[+m[1]-1],open:!!m[2]}:null;};   // sort keys: r1 = closing of the 1st round, r1o = its opening
 const CATS=[["OPEN","General"],["OBC","OBC"],["EWS","EWS"],["SC","SC"],["ST","ST"]];
 const CAT_LABEL={...Object.fromEntries(CATS),WOMEN:"Women",NRI:"NRI",MINORITY:"Minority",MINORITY_MUSLIM:"Muslim Minority",MINORITY_JAIN:"Jain Minority"};
 const MINORITIES=[["","None"],["MINORITY_MUSLIM","Muslim"],["MINORITY_JAIN","Jain"]];
-const ROUND_OPTS=[["","Any Round"],["Round 1","Round 1"],["Round 2","Round 2"],["Round 3","Round 3"],["Stray Vacancy Round","Stray"]];
+const roundOpts=()=>[["","Any Round"],...ROUNDS.map(r=>[r,RLABEL(r)])];
 const FEES=[["any","Any Fee"],["0-100000","Up to ₹1 L"],["100000-500000","₹1–5 L"],["500000-1500000","₹5–15 L"],["1500000-2500000","₹15–25 L"],["2500000-","Above ₹25 L"]];
 const CH_LABEL={safe:"Safe",likely:"Likely",border:"Borderline",out:"Out of reach"};
 // the cutoff files spell some states two ways; use the seat matrix spelling so the State filter has one entry each
@@ -603,9 +615,28 @@ function mergeRounds(a,b){
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const DEFAULTS={type:new Set(),state:new Set(),district:new Set(),quota:new Set(),course:"",cat:"OPEN",minority:"",round:"",pwd:"no",fee:"any",show:"all"};
+const DEFAULTS={type:new Set(),state:new Set(),district:new Set(),quota:new Set(),course:"",cat:"OPEN",minority:"",sub:"",round:"",pwd:"no",fee:"any",show:"all"};
 const F={...DEFAULTS,type:new Set(),state:new Set(),district:new Set(),quota:new Set()};
 let TYPE_REDRAW=()=>{}, COLLEGES=[], VIEW=[], sortKey="rl", sortAsc=true;
+
+/* ---------- counselling modes: the same list for MCC, Maharashtra, Open States, AYUSH and Veterinary ---------- */
+const GROUPS=[
+  {id:"MED",label:"MBBS / BDS",cards:["MCC","MH","OPEN"],mh:["MBBS","BDS"]},
+  {id:"AYUSH",label:"AYUSH (BAMS / BHMS / BUMS)",cards:["AACCC","MH","OPEN"],mh:["BAMS","BHMS","BUMS","AYUSH"]},
+  {id:"BPTH",label:"BPTH",cards:["MH","DEEMED_BPTH"],mh:["BPTH"]},
+  {id:"VET",label:"Veterinary (BVSc)",cards:["VCI","MAFSU","OPEN"],mh:[]}];
+const CARDS={MCC:{title:"MCC AIQ",sub:"All India Quota · Govt colleges"},MH:{title:"MH State",sub:"Maharashtra CAP · Govt & Private"},OPEN:{title:"Open States",sub:"State counselling · MQ & NRI quota"},
+  AACCC:{title:"AACCC",sub:"Central AYUSH counselling"},VCI:{title:"VCI",sub:"Veterinary Council · 15% AIQ"},MAFSU:{title:"MAFSU",sub:"Maharashtra Animal & Fishery Sciences"},DEEMED_BPTH:{title:"Deemed BPTH",sub:"Deemed universities · BPTH"}};
+let CS="MCC", GROUP="MED", META=null, AR=[], MH_SEL={course:"MBBS",type:"GOVT"};
+const isMCC=()=>CS==="MCC";
+const metricLabel=()=>isMCC()?"AIR":(META&&META.metric&&META.metric.label)||"AIR";
+const CAT_NICE={OPEN:"Open",ALL:"All",VJ_DT_A:"VJ/DT(A)",NT_B:"NT(B)",NT_C:"NT(C)",NT_D:"NT(D)",NT1:"NT 1",NT2:"NT 2",NT3:"NT 3",DEF_1:"Defence 1",DEF_2:"Defence 2",DEF_3:"Defence 3",MKB:"MKB",VCI:"VCI Quota",MGMT:"Management",NRI:"NRI"};
+const catLabel=id=>isMCC()?(CAT_LABEL[id]||id):(CAT_NICE[id]||String(id).replace(/_/g," "));
+const SUB_NICE={GENERAL:"General",FEMALE:"Female",PWD:"PwD",ORPHAN:"Orphan",HA_GENERAL:"HA General",HA_FEMALE:"HA Female",GEN_BOTH:"General",GEN_GIRL:"Girls",AG_BOTH:"Agriculturist",PAP_BOTH:"Project Affected",DP_BOTH:"Defence Personnel",FF_BOTH:"Freedom Fighter"};
+const subLabel=id=>id.endsWith("_PH")?subLabel(id.slice(0,-3))+" (PH)":(SUB_NICE[id]||String(id).replace(/_BOTH$/,"").replace(/_/g," "));
+const PALETTE=["#1f9d63","#d19a00","#2a6fd0","#d6366b","#0f766e","#7c3aed","#c2410c"];
+const colorOf=t=>TYPE_COLORS[t]||PALETTE[[...String(t)].reduce((a,c)=>a+c.charCodeAt(0),0)%PALETTE.length];
+const hasSubs=()=>!isMCC()&&META&&((META.subs[F.cat]||[]).filter(x=>x!=="").length>0);
 
 const rankOf=rd=>rd?(F.pwd==="yes"?rd.AIR_PWD:rd.AIR):null;
 const seatsOf=rd=>rd?(F.pwd==="yes"?rd.Intake_PWD:rd.Intake):null;   // regular seats (NO) or PwD seats (PH) of the seat matrix
@@ -619,11 +650,11 @@ const feeText=c=>{
 };
 const myRank=()=>{const v=parseInt($("rank").value.replace(/\D/g,""));return v>0?v:null;};
 function chance(R,v){ if(R==null||v==null) return null; if(R<=v*0.88) return "safe"; if(R<=v) return "likely"; if(R<=v*1.12) return "border"; return "out"; }
-function ec(){ if(F.minority) return F.minority; if(F.quota.size===1&&F.quota.has("NRI Quota")) return "NRI"; return F.cat; }
+function ec(){ if(!isMCC()) return F.cat+"|"+(F.sub||""); if(F.minority) return F.minority; if(F.quota.size===1&&F.quota.has("NRI Quota")) return "NRI"; return F.cat; }
 const rankSet=(c,cat)=>{const e=c.cats[cat];return e?ROUNDS.map(r=>({r,v:rankOf(e[r])})).filter(x=>x.v!=null):[];};
-const lowest=c=>{const a=rankSet(c,ec());return a.length?a.reduce((m,x)=>x.v>m.v?x:m):null;};   // highest AIR allotted in any round = the last rank that still got a seat
-function latest(c){const e=c.cats[ec()];for(const r of ["Stray Vacancy Round","Round 3","Round 2","Round 1"]){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
-function hasData(c,cat){const e=c.cats[cat];return !!e&&ROUNDS.some(r=>rankOf(e[r])!=null);}
+const lowest=c=>{const a=rankSet(c,ec());return a.length?a.reduce((m,x)=>x.v>m.v?x:m):null;};   // highest rank allotted in any round = the last rank that still got a seat
+function latest(c){const e=c.cats[ec()];for(const r of [...ROUNDS].reverse()){const v=rankOf(e&&e[r]);if(v!=null)return {v,r};}return null;}
+function hasData(c,cat){const e=c.cats[cat];return !!e&&ROUNDS.some(r=>{const d=e[r];return d&&(rankOf(d)!=null||(!isMCC()&&d.Intake!=null));});}
 const detailUrl=c=>`/mcc-college.html?c=${encodeURIComponent(c.code)}&q=${encodeURIComponent(c.quota)}&co=${c.course}&t=${c.itype}&ca=${ec()}&pw=${F.pwd}${myRank()?"&rk="+myRank():""}`;
 
 function feeOk(c){
@@ -634,17 +665,19 @@ function feeOk(c){
 function matches(c,R){
   if(F.type.size&&!F.type.has(c.type)) return false;
   if(F.state.size&&!F.state.has(c.state)) return false;
-  if(F.district.size&&!F.district.has(c.district)) return false;
-  if(F.minority){ if(c.itype==="OTHER") return false; }
-  else if(F.quota.size){ if(!(F.quota.has(c.quota)||(F.quota.has("NRI Quota")&&c.cats.NRI))) return false; }
-  else if(c.itype==="OTHER"&&!(c.quota==="All India Quota"||(F.cat==="WOMEN"&&c.quota==="Muslim Quota"))) return false;
+  if(isMCC()){
+    if(F.district.size&&!F.district.has(c.district)) return false;
+    if(F.minority){ if(c.itype==="OTHER") return false; }
+    else if(F.quota.size){ if(!(F.quota.has(c.quota)||(F.quota.has("NRI Quota")&&c.cats.NRI))) return false; }
+    else if(c.itype==="OTHER"&&!(c.quota==="All India Quota"||(F.cat==="WOMEN"&&c.quota==="Muslim Quota"))) return false;
+  }else if(F.quota.size&&!F.quota.has(c.quota)) return false;
   if(F.round){const e=c.cats[ec()];if(!(e&&rankOf(e[F.round])!=null)) return false;}
   if(F.course&&c.course!==F.course) return false;
   if(!hasData(c,ec())) return false;
   if(!feeOk(c)) return false;
   if(F.show==="reach"){const l=latest(c);const ch=l&&chance(R,l.v);if(!ch||ch==="out") return false;}
   const q=$("search").value.trim().toLowerCase();
-  if(q&&!(c.name+" "+c.state+" "+c.city+" "+c.district+" "+c.code+" "+c.quota).toLowerCase().includes(q)) return false;
+  if(q&&!(c.name+" "+c.state+" "+(c.city||"")+" "+(c.district||"")+" "+(c.code||"")+" "+(c.quota||"")).toLowerCase().includes(q)) return false;
   return true;
 }
 
@@ -652,22 +685,45 @@ function openCell(e,r){
   const v=openOf(e&&e[r]);
   return v==null?'<td class="rank-cell open none">—</td>':`<td class="rank-cell open"><b>${fmt(v)}</b></td>`;
 }
+// extra numbers some counsellings carry: state merit list (SML / CSML) or NEET marks
+function extraTxt(rd){
+  if(!rd||isMCC()) return "";
+  let t="";
+  if(rd.SML!=null&&rd.SML!=="") t+=`<small class="sml">SML ${esc(fmt(rd.SML)||rd.SML)}</small>`;
+  if(rd.CSML!=null&&rd.CSML!=="") t+=`<small class="sml">CSML ${esc(rd.CSML)}</small>`;
+  if(rd.NEET_MARKS!=null&&rd.NEET_MARKS!=="") t+=`<small class="sml">Marks ${esc(rd.NEET_MARKS)}</small>`;
+  return t;
+}
 function rankCell(e,r,R){
   const rd=e&&e[r], v=rankOf(rd);
   if(v==null) return `<td class="rank-cell none" title="Seats were offered in this round but nobody new was allotted.">—${seatsOf(rd)?`<small>${seatsOf(rd)} seat${seatsOf(rd)>1?"s":""}</small>`:""}</td>`;
   const ch=chance(R,v);
-  return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${seatsOf(rd)?`<small>${seatsOf(rd)} seat${seatsOf(rd)>1?"s":""}</small>`:""}</td>`;
+  return `<td class="rank-cell${ch?" ch-"+ch:""}"><b>${fmt(v)}</b>${seatsOf(rd)?`<small>${seatsOf(rd)} seat${seatsOf(rd)>1?"s":""}</small>`:""}${extraTxt(rd)}</td>`;
+}
+
+// the table header follows the rounds that have data for what is on screen
+function buildHead(){
+  const mcc=isMCC(), lbl=metricLabel();
+  const rs=AR.map(r=>{const k=ROUNDS.indexOf(r)+1;return (mcc?`<th class="num round open" data-key="r${k}o">${RLABEL(r)}<small>Opening AIR</small></th>`:"")+`<th class="num round" data-key="r${k}">${RLABEL(r)}<small>Closing ${lbl}</small></th>`;}).join("");
+  $("headRow").innerHTML=`<th class="idx nosort">#</th><th class="college" data-key="name">College<small>Name and state</small></th><th class="num" data-key="est">Est. year</th><th data-key="course">Course</th><th data-key="fee" style="text-align:right" title="Annual fee as per ASMI fee list">Fees / Year</th>${rs}<th class="num round lowest" data-key="lc" title="Highest ${lbl} allotted in any round: the last number that still got a seat">Lowest Cutoff<small>of ${AR.length} round${AR.length>1?"s":""}</small></th><th class="num nosort">Actions</th>`;
+  $("tbl").style.minWidth=(760+AR.length*(mcc?200:112))+"px";
+  const cur=$("headRow").querySelector(`th[data-key="${sortKey}"]`); if(cur){cur.classList.add("sorted");if(sortAsc)cur.classList.add("asc");}
 }
 
 function render(){
   const R=myRank();
-  $("rankLink").href="/mcc-rank-allotment.html"+(R?"?rk="+R:"");
-  const deemedOk=!F.type.size||F.type.has("Deemed");
-  if(!deemedOk&&F.minority) F.minority="";
-  $("minWrap").style.display=deemedOk?"":"none"; seg("fMinority",MINORITIES,"minority");
+  const mcc=isMCC();
+  $("rankLink").style.display=$("seatLink").style.display=mcc?"":"none";
+  if(mcc) $("rankLink").href="/mcc-rank-allotment.html"+(R?"?rk="+R:"");
+  $("minWrap").style.display=mcc?"":"none";
+  const deemedOk=mcc&&(!F.type.size||F.type.has("Deemed"));
+  if(mcc){
+    if(!deemedOk&&F.minority) F.minority="";
+    $("minWrap").style.display=deemedOk?"":"none"; seg("fMinority",MINORITIES,"minority");
+  }
   if(MS.fQuota) MS.fQuota.refresh(true);
   drawCats();
-  const deemedOnly=F.type.size>0&&[...F.type].every(t=>t==="Deemed");
+  const deemedOnly=mcc&&F.type.size>0&&[...F.type].every(t=>t==="Deemed");
   $("nriWrap").style.display=deemedOnly?"":"none";
   if(deemedOnly){
     const nri=F.quota.size===1&&F.quota.has("NRI Quota");
@@ -675,7 +731,7 @@ function render(){
     el.innerHTML=[["","Self Financed Merit"],["NRI Quota","NRI"]].map(([v,l])=>`<button type="button" data-v="${v}" class="${(v==="NRI Quota")===nri?"active":""}">${l}</button>`).join("");
     el.querySelectorAll("button").forEach(b=>b.onclick=()=>{F.quota.clear();if(b.dataset.v)F.quota.add(b.dataset.v);render();});
   }
-  $("fCat").classList.toggle("dim",ec()!==F.cat);
+  $("fCat").classList.toggle("dim",mcc&&ec()!==F.cat);
   VIEW=COLLEGES.filter(c=>matches(c,R));
   const val=c=>{
     if(sortKey==="name") return c.name.toLowerCase();
@@ -684,7 +740,8 @@ function render(){
     if(sortKey==="course") return c.course;
     if(sortKey==="rl"){const l=latest(c);return l?l.v:null;}
     if(sortKey==="lc"){const w=lowest(c);return w?w.v:null;}
-    const e=c.cats[ec()]; return /o$/.test(sortKey)?openOf(e&&e[RSORT[sortKey]]):rankOf(e&&e[RSORT[sortKey]]);
+    const ri=rIndex(sortKey); if(!ri) return null;
+    const e=c.cats[ec()]; return ri.open?openOf(e&&e[ri.r]):rankOf(e&&e[ri.r]);
   };
   VIEW.sort((a,b)=>{
     if(R&&sortKey==="rl"){   // with a rank entered, colleges within reach come before those out of reach
@@ -696,39 +753,48 @@ function render(){
     if(typeof x==="string"){x=x.toLowerCase();y=String(y).toLowerCase();}
     return ((x<y?-1:x>y?1:0)||a.name.localeCompare(b.name))*(sortAsc?1:-1);
   });
+  // rounds shown: all four for MCC, otherwise only the rounds that have something for the colleges on screen
+  AR=mcc?ROUNDS:ROUNDS.filter(r=>VIEW.some(c=>{const d=(c.cats[ec()]||{})[r];return d&&(rankOf(d)!=null||d.Intake!=null);}));
+  if(!AR.length&&!mcc) AR=ROUNDS.slice(0,1);
+  buildHead();
   $("rowCount").textContent=VIEW.length.toLocaleString();
   $("legend").style.display=R?"flex":"none";
   const reach=R?VIEW.filter(c=>{const l=latest(c);const ch=l&&chance(R,l.v);return ch&&ch!=="out";}).length:0;
   $("reachInfo").textContent=R?`· ${reach.toLocaleString()} within your reach`:"";
   const note=$("infoNote");
   if(F.minority){note.style.display="block";note.textContent=(F.minority==="MINORITY_JAIN"?"Jain":"Muslim")+" minority seats exist in deemed universities only.";}
-  else if(ec()==="NRI"){note.style.display="block";note.textContent="NRI cutoffs: deemed universities, plus the NRI seats of AMU and Jamia.";}
-  else if(F.cat==="WOMEN"){note.style.display="block";note.textContent="Women: the Muslim Women seats of the Muslim Quota (Jamia Millia Islamia). Pick the Muslim Quota in the Quota filter.";}
-  else if(F.cat!=="OPEN"&&F.type.size===1&&F.type.has("Deemed")){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
+  else if(mcc&&ec()==="NRI"){note.style.display="block";note.textContent="NRI cutoffs: deemed universities, plus the NRI seats of AMU and Jamia.";}
+  else if(mcc&&F.cat==="WOMEN"){note.style.display="block";note.textContent="Women: the Muslim Women seats of the Muslim Quota (Jamia Millia Islamia). Pick the Muslim Quota in the Quota filter.";}
+  else if(mcc&&F.cat!=="OPEN"&&F.type.size===1&&F.type.has("Deemed")){note.style.display="block";note.textContent="Deemed universities have no category reservation. Pick General to see their cutoff.";}
+  else if(!mcc&&META&&META.metric&&META.metric.note){note.style.display="block";note.textContent=META.metric.note;}
   else if(F.fee!=="any"){note.style.display="block";note.textContent="Fee filter uses the annual fee in Indian rupees. Colleges without a listed fee are hidden.";}
   else note.style.display="none";
+  const emptyMsg=META&&META.empty?"Data for this counselling is coming soon.":"No colleges match these filters. Try clearing one.";
+  $("empty").textContent=emptyMsg; $("cardsEmpty").textContent=emptyMsg;
   $("empty").style.display=VIEW.length?"none":"block";
   $("tbl").style.display=VIEW.length?"table":"none";
   const html=[], cards=[];
+  const capt=mcc?`Closing All India Rank · ${esc(CAT_LABEL[ec()]||ec())}${F.pwd==="yes"?" (PwD)":""}`:`Closing ${esc(metricLabel())} · ${esc(catLabel(F.cat))}${F.sub?" · "+esc(subLabel(F.sub)):""}${F.pwd==="yes"?" (PwD)":""}`;
   VIEW.forEach((c,i)=>{
-    const e=c.cats[ec()], l=latest(c), ch=R&&l?chance(R,l.v):null, url=detailUrl(c), lw=lowest(c);
+    const e=c.cats[ec()], l=latest(c), ch=R&&l?chance(R,l.v):null, lw=lowest(c);
+    const url=mcc?detailUrl(c):"#", dattr=mcc?"":` data-detail="${i}"`;
     const badge=ch?`<span class="chance ch-${ch}">${CH_LABEL[ch]}</span>`:"";
-    const sub=esc(c.state)+(c.district&&c.district!==c.state?" · "+esc(c.district):"");
+    const sub=esc(c.state)+(c.district&&c.district!==c.state?" · "+esc(c.district):"")+(!mcc&&c.quota&&META&&META.quotas.length>1?" · "+esc(c.quota):"");
     html.push(`<tr><td class="idx">${i+1}</td>
-      <td class="college"><a class="cname cname-link" href="${url}" title="${esc(c.name)}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</td>
+      <td class="college"><a class="cname cname-link" href="${url}"${dattr} title="${esc(c.name)}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</td>
       <td class="est">${c.est||'<span class="none">–</span>'}</td>
       <td>${esc(c.course)}</td>
       <td class="fee">${feeText(c)}</td>
-      ${ROUNDS.map(r=>openCell(e,r)+rankCell(e,r,R)).join("")}
+      ${AR.map(r=>(mcc?openCell(e,r):"")+rankCell(e,r,R)).join("")}
       <td class="rank-cell lowest">${lw?`<b>${fmt(lw.v)}</b><small>${RLABEL(lw.r)}</small>`:"—"}</td>
-      <td class="act"><a class="view-btn" href="${url}">${IC.eye}View Details</a></td></tr>`);
-    const rounds=ROUNDS.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${openOf(rd)!=null?`<small class="op">Opening ${fmt(openOf(rd))}</small>`:""}${seatsOf(rd)?`<small>${seatsOf(rd)+" seat"+(seatsOf(rd)>1?"s":"")}</small>`:""}</div>`;}).join("");
-    cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}">${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${TYPE_COLORS[c.type]}">${esc(c.type)}</span></div>
+      <td class="act"><a class="view-btn" href="${url}"${dattr}>${IC.eye}View Details</a></td></tr>`);
+    const rounds=AR.map(r=>{const rd=e&&e[r],v=rankOf(rd),k=chance(R,v);return `<div class="mc-cat${v==null?" zero":""}${k?" ch-"+k:""}"><i>${RLABEL(r)}</i><b>${v==null?"—":fmt(v)}</b>${mcc&&openOf(rd)!=null?`<small class="op">Opening ${fmt(openOf(rd))}</small>`:""}${seatsOf(rd)?`<small>${seatsOf(rd)+" seat"+(seatsOf(rd)>1?"s":"")}</small>`:""}${extraTxt(rd)}</div>`;}).join("");
+    cards.push(`<article class="mcard"><div class="mc-head"><div class="mc-name"><a class="cname cname-link" href="${url}"${dattr}>${esc(c.name)}</a><div class="cstate">${sub}</div>${badge}</div><span class="type-chip" style="background:${colorOf(c.type)}">${esc(c.type)}</span></div>
       <div class="mc-facts"><span><i>Course</i>${esc(c.course)}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / Year</i>${feeText(c)}</span></div>
-      <div class="mc-quota">Closing All India Rank · ${esc(CAT_LABEL[ec()])}${F.pwd==="yes"?" (PwD)":""}</div>
+      <div class="mc-quota">${capt}</div>
       <div class="mc-cats" style="grid-template-columns:repeat(2,1fr)">${rounds}</div>
       <div class="mc-low"><i>Lowest Cutoff</i><b>${lw?fmt(lw.v):"—"}</b>${lw?`<span>${RLABEL(lw.r)}</span>`:""}</div>
-      <a class="view-btn" href="${url}">${IC.eye}View Details</a></article>`);
+      <a class="view-btn" href="${url}"${dattr}>${IC.eye}View Details</a></article>`);
   });
   $("body").innerHTML=html.join("");
   $("cards").innerHTML=cards.join("");
@@ -745,12 +811,14 @@ function updateFilterCount(){
 /* ---------- filters live in the link, so Back from a college page and shared links keep them ---------- */
 function saveState(){
   const p=new URLSearchParams();
-  if(F.type.size) p.set("t",[...F.type].join("|"));
+  if(!isMCC()){p.set("cs",CS);p.set("gr",GROUP);if(CS==="MH"){p.set("mc",MH_SEL.course);p.set("mt",MH_SEL.type);}}
+  if(F.type.size&&isMCC()) p.set("t",[...F.type].join("|"));
   if(F.state.size) p.set("s",[...F.state].join("|"));
   if(F.district.size) p.set("di",[...F.district].join("|"));
   if(F.quota.size) p.set("qu",[...F.quota].join("|"));
-  if(F.course) p.set("co",F.course);
-  if(F.cat!==DEFAULTS.cat) p.set("ca",F.cat);
+  if(F.course&&!(CS==="MH")) p.set("co",F.course);
+  if(isMCC()?F.cat!==DEFAULTS.cat:F.cat!==defaultCat()) p.set("ca",F.cat);
+  if(!isMCC()&&F.sub&&F.sub!==defaultSub(F.cat)) p.set("sb",F.sub);
   if(F.minority) p.set("mi",F.minority);
   if(F.round) p.set("rd",F.round);
   if(F.pwd!==DEFAULTS.pwd) p.set("pw",F.pwd);
@@ -764,19 +832,37 @@ function saveState(){
 }
 function loadState(){
   const p=new URLSearchParams(location.search), set=k=>new Set((p.get(k)||"").split("|").filter(Boolean));
-  F.type=set("t"); F.state=set("s"); F.district=set("di"); F.quota=set("qu");
-  F.course=["MBBS","BDS"].includes(p.get("co"))?p.get("co"):"";
-  const ca=/^NRI/.test(p.get("ca")||"")?"NRI":p.get("ca");   // older links used NRI1 / NRI2
-  F.cat=CATS.some(x=>x[0]===ca)||ca==="WOMEN"?ca:"OPEN";
-  if(ca==="NRI") F.quota.add("NRI Quota");                       // older links
-  F.minority=["MINORITY_MUSLIM","MINORITY_JAIN"].includes(p.get("mi"))?p.get("mi"):(ca==="MINORITY"?"MINORITY_MUSLIM":"");
+  F.state=set("s"); F.district=set("di"); F.quota=set("qu");
+  if(isMCC()){
+    F.type=set("t");
+    F.course=["MBBS","BDS"].includes(p.get("co"))?p.get("co"):"";
+    const ca=/^NRI/.test(p.get("ca")||"")?"NRI":p.get("ca");   // older links used NRI1 / NRI2
+    F.cat=CATS.some(x=>x[0]===ca)||ca==="WOMEN"?ca:"OPEN";
+    if(ca==="NRI") F.quota.add("NRI Quota");                       // older links
+    F.minority=["MINORITY_MUSLIM","MINORITY_JAIN"].includes(p.get("mi"))?p.get("mi"):(ca==="MINORITY"?"MINORITY_MUSLIM":"");
+  }else{
+    F.course=META&&META.courses.includes(p.get("co"))?p.get("co"):"";
+    F.cat=META&&META.cats.includes(p.get("ca"))?p.get("ca"):defaultCat();
+    F.sub=META&&(META.subs[F.cat]||[]).includes(p.get("sb"))?p.get("sb"):defaultSub(F.cat);
+    F.state=new Set([...F.state].filter(x=>META&&META.states.includes(x))); F.quota=new Set([...F.quota].filter(x=>META&&META.quotas.includes(x)));
+  }
   F.round=ROUNDS.includes(p.get("rd"))?p.get("rd"):"";
   F.pwd=p.get("pw")==="yes"?"yes":"no";
   F.fee=FEES.some(x=>x[0]===p.get("fee"))?p.get("fee"):"any";
   F.show=p.get("sh")==="reach"?"reach":"all";
   $("search").value=p.get("q")||""; $("rank").value=p.get("rk")||"";
   const so=(p.get("so")||"rl:1").split(":"); sortKey=so[0]||"rl"; sortAsc=so[1]!=="0";
-  if(![...$("mSort").options].some(o=>o.value===sortKey+":"+(sortAsc?1:0))) $("mSort").value="rl:1"; else $("mSort").value=sortKey+":"+(sortAsc?1:0);
+  buildSort();
+  if(![...$("mSort").options].some(o=>o.value===sortKey+":"+(sortAsc?1:0))){sortKey="rl";sortAsc=true;}
+  $("mSort").value=sortKey+":"+(sortAsc?1:0);
+}
+const defaultCat=()=>META&&META.cats.length?(META.cats.includes("OPEN")?"OPEN":META.cats[0]):"OPEN";
+const defaultSub=cat=>{const l=META&&META.subs[cat]||[];return l.includes("GENERAL")?"GENERAL":l.includes("GEN_BOTH")?"GEN_BOTH":(l[0]||"");};
+function buildSort(){
+  const o=[["rl:1","Sort: Latest round rank (best first)"]];
+  ROUNDS.forEach((r,i)=>o.push([`r${i+1}:1`,`Sort: ${RLABEL(r)} ${isMCC()?"closing ":""}rank (best first)`]));
+  o.push(["lc:1","Sort: Lowest cutoff (best first)"],["name:1","Sort: College Name (A–Z)"],["fee:1","Sort: Fees (low to high)"]);
+  $("mSort").innerHTML=o.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 }
 
 /* ---------- controls ---------- */
@@ -800,53 +886,149 @@ function msInit(id,key,allLabel,optionsFn,onChange){
 }
 document.addEventListener("click",e=>{if(!e.target.closest(".ms"))document.querySelectorAll(".ms-panel").forEach(x=>x.hidden=true);});
 
-function drawCats(){if(F.cat==="WOMEN"&&!F.quota.has("Muslim Quota")) F.cat="OPEN"; seg("fCat",F.quota.has("Muslim Quota")?[...CATS,["WOMEN","Women"]]:CATS,"cat");}
-function seg(id,items,key){
+function drawCats(){
+  if(isMCC()){
+    if(F.cat==="WOMEN"&&!F.quota.has("Muslim Quota")) F.cat="OPEN";
+    seg("fCat",F.quota.has("Muslim Quota")?[...CATS,["WOMEN","Women"]]:CATS,"cat");
+    $("subWrap").style.display="none"; return;
+  }
+  seg("fCat",(META?META.cats:[]).map(c=>[c,catLabel(c)]),"cat",()=>{F.sub=defaultSub(F.cat);});
+  const subs=(META&&META.subs[F.cat]||[]).filter(x=>x!=="");
+  $("subWrap").style.display=subs.length>1?"":"none";
+  if(subs.length>1) seg("fSub",subs.map(x=>[x,subLabel(x)]),"sub");
+}
+function seg(id,items,key,before){
   const el=$(id);
   el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${F[key]===v?"active":""}">${esc(l)}</button>`).join("");
-  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{F[key]=b.dataset.v;el.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));render();});
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{F[key]=b.dataset.v;if(before)before();el.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));render();});
 }
 
 function typeBar(counts){
   const el=$("fType"), seg=$("fTypeSeg");
-  const items=[["","All Colleges",COLLEGES.filter(isMain).length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
+  let items;
+  if(CS==="MH"){   // Government / Private are separate files: these tabs choose which one is shown
+    const types=[...new Set(MH_TYPES(MH_SEL.course))];
+    items=types.map(t=>[t,t==="AIQ"?"All India Quota":t==="GOVT"?"Government":"Private",null,t==="PRIVATE"?"cap":"building"]);
+  }else if(isMCC()) items=[["","All Colleges",COLLEGES.filter(isMain).length,"building"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t,counts[t],TYPE_ICON[t]])];
+  else items=[["","All Colleges",COLLEGES.length,"building"],...Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).map(t=>[t,t,counts[t],/private|deemed|unaided/i.test(t)?"cap":"building"])];
+  const act=v=>CS==="MH"?MH_SEL.type===v:(v===""?F.type.size===0:F.type.has(v));
+  const pick=v=>{ if(CS==="MH"){ if(v!==MH_SEL.type) setMH(MH_SEL.course,v); } else { if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v); draw(); render(); } };
   const draw=()=>{
-    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${(v===""?F.type.size===0:F.type.has(v))?" active":""}" data-v="${esc(v)}" style="--c:${TYPE_COLORS[v]||"#50098a"}"><span class="tt-ic">${IC[ic]}</span><span class="tt-tx"><b>${esc(l)}</b><span class="count">${n}</span></span></button>`).join("");
-    el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(v==="")F.type.clear();else F.type.has(v)?F.type.delete(v):F.type.add(v);draw();render();});
-    seg.innerHTML=[["","All"],...TYPE_ORDER.filter(t=>counts[t]).map(t=>[t,t])].map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${(v===""?F.type.size===0:(F.type.size===1&&F.type.has(v)))?"active":""}">${esc(l)}</button>`).join("");
-    seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;F.type.clear();if(v)F.type.add(v);draw();render();});
+    el.innerHTML=items.map(([v,l,n,ic])=>`<button type="button" class="type-tab${act(v)?" active":""}" data-v="${esc(v)}" style="--c:${colorOf(v||"All")}"><span class="tt-ic">${IC[ic]||IC.building}</span><span class="tt-tx"><b>${esc(l)}</b>${n!=null?`<span class="count">${n}</span>`:""}</span></button>`).join("");
+    el.querySelectorAll("button").forEach(b=>b.onclick=()=>pick(b.dataset.v));
+    const segItems=CS==="MH"?items.map(([v,l])=>[v,l]):[["","All"],...items.filter(i=>i[0]!=="").map(([v,l])=>[v,l])];
+    seg.innerHTML=segItems.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${CS==="MH"?(MH_SEL.type===v?"active":""):((v===""?F.type.size===0:(F.type.size===1&&F.type.has(v)))?"active":"")}">${esc(l)}</button>`).join("");
+    seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{const v=b.dataset.v;if(CS==="MH"){pick(v);return;}F.type.clear();if(v)F.type.add(v);draw();render();});
   };
   TYPE_REDRAW=draw; draw();
 }
 
+const MH_FILES={MBBS:["GOVT","PRIVATE"],BDS:["GOVT","PRIVATE"],BAMS:["GOVT","PRIVATE"],BHMS:["GOVT","PRIVATE"],BUMS:["GOVT","PRIVATE"],BPTH:["GOVT","PRIVATE"],AYUSH:["AIQ"]};
+const MH_TYPES=course=>MH_FILES[course]||[];
+const mhCourses=()=>GROUPS.find(g=>g.id===GROUP).mh;
+const MH_COURSE_LABEL={AYUSH:"AYUSH AIQ"};
+const MCC_GUIDE=$("guideSrc").innerHTML;
+const OTHER_GUIDE=`<b>How to read:</b> the closing number is the rank (or merit number) of the last candidate allotted a seat in that college, category and round. Smaller = harder to get. "n seats" is the intake of that round. A dash means nothing was allotted in that round. <b>Lowest Cutoff</b> is the highest number allotted in any round, the last one that still got a seat.<br>
+<b>SML / CSML</b> are the state merit list and category merit list numbers shown for Maharashtra and the Open States. <b>Your chances:</b> enter your NEET rank (or the merit number for MAFSU). Safe = at least 12% better than the closing number, Likely = at or better, Borderline = within 12% above, Out of reach = further away. This is a guide, not a guarantee.<br>
+Open <b>View Details</b> to see every category and round of a college. Source: the same counselling data ASMI Counsellor uses.`;
+
+function bundleName(){
+  if(CS==="MH") return MH_SEL.type==="AIQ"?"mh_AYUSH_AIQ":`mh_${MH_SEL.type}_${MH_SEL.course}`;
+  if(CS==="OPEN") return GROUP==="VET"?"open_bvsc":GROUP==="AYUSH"?"open_ayush":"open_med";
+  return CS.toLowerCase();
+}
+async function loadBundle(){
+  META=null;
+  const soon=CS==="DEEMED_BPTH"||(CS==="OPEN"&&GROUP==="AYUSH");   // no data yet, nothing to fetch
+  if(!soon) try{ const r=await fetch(`/data/bundles/2026/${bundleName()}.json`); if(!r.ok) throw new Error("no bundle"); META=await r.json(); }catch(e){ META=null; }
+  if(!META) META={metric:{label:"AIR"},rounds:[],cats:[],subs:{},types:[],courses:[],states:[],quotas:[],hasPwd:false,colleges:[],empty:true};
+  ROUNDS=META.rounds.length?META.rounds:["Round 1"];
+  COLLEGES=META.colleges.map(c=>({...c,city:"",district:"",itype:CS,code:c.code||""}));
+  F.cat=defaultCat(); F.sub=defaultSub(F.cat);
+}
+
 const svg=(p)=>`<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+function segCustom(id,items,active,onPick){
+  const el=$(id);
+  el.innerHTML=items.map(([v,l])=>`<button type="button" data-v="${esc(v)}" class="${v===active?"active":""}">${esc(l)}</button>`).join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>onPick(b.dataset.v));
+}
 function buildUI(){
-  const base=COLLEGES.filter(isMain), states=new Set(base.map(c=>c.state)), mb=base.filter(c=>c.course==="MBBS").length, bd=base.filter(c=>c.course==="BDS").length;
+  const mcc=isMCC();
   $("collegeList").innerHTML=[...new Set(COLLEGES.map(c=>c.name))].sort().map(n=>`<option value="${esc(n)}">`).join("");
+  const base=mcc?COLLEGES.filter(isMain):COLLEGES, states=[...new Set(base.map(c=>c.state))];
   const counts={};base.forEach(c=>counts[c.type]=(counts[c.type]||0)+1);
   typeBar(counts);
-  seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
-  drawCats(); seg("fMinority",MINORITIES,"minority"); seg("fRound",ROUND_OPTS,"round");
+  if(mcc) seg("fCourse",[["","All"],["MBBS","MBBS"],["BDS","BDS"]],"course");
+  else if(CS==="MH") segCustom("fCourse",mhCourses().map(c=>[c,MH_COURSE_LABEL[c]||c]),MH_SEL.course,v=>setMH(v,MH_TYPES(v).includes(MH_SEL.type)?MH_SEL.type:MH_TYPES(v)[0]));
+  else seg("fCourse",[["","All"],...(META?META.courses:[]).map(c=>[c,c])],"course");
+  drawCats();
+  if(mcc) seg("fMinority",MINORITIES,"minority");
+  seg("fRound",roundOpts(),"round");
   seg("fFee",FEES,"fee");
   seg("fPwd",[["no","No"],["yes","Yes"]],"pwd");
   seg("fShow",[["all","All Colleges"],["reach","Within My Reach"]],"show");
-  msInit("fState","state","All States / UTs",()=>[...states].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
+  msInit("fState","state",mcc?"All States / UTs":"All States",()=>[...states].sort(),()=>MS.fDistrict&&MS.fDistrict.refresh(true));
   msInit("fDistrict","district","All Districts",()=>[...new Set(COLLEGES.filter(c=>!F.state.size||F.state.has(c.state)).map(c=>c.district).filter(Boolean))].sort());
   msInit("fQuota","quota","All Quotas",()=>{
+    if(!mcc) return META?META.quotas:[];
     if(F.type.size&&[...F.type].every(t=>t==="Deemed")) return ["Self Financed Merit Seat","NRI Quota"];
     return QUOTA_ORDER.filter(q=>COLLEGES.some(c=>c.quota===q)).concat([...new Set(COLLEGES.map(c=>c.quota))].filter(q=>!QUOTA_ORDER.includes(q)).sort());
   },()=>{drawCats();});
+  const vis=(id,on)=>{const f=$(id).closest(".f");if(f)f.style.display=on?"":"none";};
+  vis("fDistrict",mcc); vis("fState",mcc||states.length>1); vis("fQuota",mcc||(META&&META.quotas.length>1));
+  vis("fCourse",mcc||CS==="MH"||(META&&META.courses.length>1)); vis("fPwd",mcc||(META&&META.hasPwd)); vis("fCat",mcc||(META&&META.cats.length>1));
+  vis("fTypeSeg",mcc||CS==="MH"||(META&&META.types.length>1)); vis("fRound",ROUNDS.length>1);
+  $("rankTitle").textContent=CS==="MAFSU"?"Your Merit No.":mcc?"Your NEET AIR":"Your NEET Rank";
+  $("search").placeholder=mcc?"Search College, District or MCC Code":"Search College, State or Quota";
+  buildSort(); $("mSort").value=sortKey+":"+(sortAsc?1:0);
 }
 
-function reset(){
+function setHero(){
+  const g=GROUPS.find(x=>x.id===GROUP);
+  if(isMCC()){ $("heroH1").innerHTML='All India Quota <span>Cutoff 2026</span>'; $("heroSub1").textContent="MCC NEET UG • MBBS & BDS"; $("heroSub2").textContent="Closing rank, round by round"; }
+  else{
+    $("heroH1").innerHTML=esc(CARDS[CS].title)+" <span>Cutoff 2026</span>";
+    $("heroSub1").textContent=g.label+(CS==="MH"?" • "+(MH_COURSE_LABEL[MH_SEL.course]||MH_SEL.course):"");
+    $("heroSub2").textContent=CARDS[CS].sub;
+  }
+  $("guideSrc").innerHTML=isMCC()?MCC_GUIDE:OTHER_GUIDE;
+}
+function drawCsBar(){
+  $("csGroups").innerHTML=GROUPS.map(g=>`<button type="button" class="cs-group${g.id===GROUP?" active":""}" data-g="${g.id}">${esc(g.label)}</button>`).join("");
+  const g=GROUPS.find(x=>x.id===GROUP);
+  $("csCards").innerHTML=g.cards.map(id=>{const c=CARDS[id],soon=id==="DEEMED_BPTH"||(id==="OPEN"&&GROUP==="AYUSH");return `<button type="button" class="cs-card${id===CS?" active":""}${soon?" soon":""}" data-c="${id}"><b>${esc(c.title)}</b><span>${soon?"Data coming soon":esc(c.sub)}</span></button>`;}).join("");
+  $("csGroups").querySelectorAll("button").forEach(b=>b.onclick=()=>{const ng=GROUPS.find(x=>x.id===b.dataset.g);GROUP=ng.id;useCounselling(ng.cards[0],{group:ng.id});});
+  $("csCards").querySelectorAll("button").forEach(b=>b.onclick=()=>{if(b.dataset.c!==CS) useCounselling(b.dataset.c);});
+}
+async function useCounselling(cs,opts={}){
+  CS=cs; if(opts.group) GROUP=opts.group;
+  if(CS==="MH"){const cl=mhCourses(); if(!cl.includes(MH_SEL.course)) MH_SEL.course=cl[0]; if(!MH_TYPES(MH_SEL.course).includes(MH_SEL.type)) MH_SEL.type=MH_TYPES(MH_SEL.course)[0];}
   Object.assign(F,{...DEFAULTS,type:new Set(),state:new Set(),district:new Set(),quota:new Set()});
-  $("search").value=""; $("rank").value=""; sortKey="rl"; sortAsc=true; $("mSort").value="rl:1";
-  document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));
-  buildUI(); render();
+  $("search").value=""; sortKey="rl"; sortAsc=true;
+  $("body").innerHTML='<tr><td colspan="15" class="empty">Loading cutoffs…</td></tr>'; $("cards").innerHTML="";
+  if(isMCC()) await loadMCC(); else await loadBundle();
+  if(opts.fromUrl) loadState();
+  setHero(); drawCsBar(); buildUI(); render();
+}
+async function setMH(course,type){ MH_SEL.course=course; MH_SEL.type=type; await useCounselling("MH"); }
+
+/* ---------- details of one college (other counsellings): every category and round ---------- */
+function openDetail(c){
+  const keys=Object.keys(c.cats).sort((a,b)=>{const [ca,sa]=a.split("|"),[cb,sb]=b.split("|");return (META.cats.indexOf(ca)-META.cats.indexOf(cb))||((META.subs[ca]||[]).indexOf(sa)-(META.subs[cb]||[]).indexOf(sb));});
+  const rs=ROUNDS.filter(r=>keys.some(k=>c.cats[k][r]));
+  const cellOf=d=>{ if(!d) return '<td class="rank-cell none">—</td>'; const v=d.AIR; return `<td class="rank-cell${v==null?" none":""}">${v==null?"—":"<b>"+fmt(v)+"</b>"}${d.Intake!=null?`<small>${d.Intake} seat${d.Intake>1?"s":""}</small>`:""}${extraTxt(d)}</td>`; };
+  $("detailTitle").textContent=c.name;
+  $("detailBody").innerHTML=`<div class="dfacts"><span><i>State</i>${esc(c.state)}</span><span><i>Type</i>${esc(c.type||"–")}</span><span><i>Course</i>${esc(c.course)}</span><span><i>Quota</i>${esc(c.quota||"–")}</span><span><i>Est.</i>${c.est||"–"}</span><span><i>Fees / Year</i>${feeText(c)}</span></div>
+    <div class="dscroll"><table class="dtbl"><thead><tr><th>Category</th>${rs.map(r=>`<th>${RLABEL(r)}<small>Closing ${esc(metricLabel())}</small></th>`).join("")}</tr></thead><tbody>${keys.map(k=>{const [cat,sub]=k.split("|");return `<tr class="${k===ec()?"sel":""}"><td>${esc(catLabel(cat))}${sub?` <small>${esc(subLabel(sub))}</small>`:""}</td>${rs.map(r=>cellOf(c.cats[k][r])).join("")}</tr>`;}).join("")}</tbody></table></div>`;
+  $("detail").hidden=false;
 }
 
-async function init(){
-  $("body").innerHTML='<tr><td colspan="15" class="empty">Loading cutoffs…</td></tr>';
+function reset(){ $("rank").value=""; useCounselling(CS); }
+
+async function loadMCC(){
+  META=null; ROUNDS=["Round 1","Round 2","Round 3","Stray Vacancy Round"];
+  if(MCC_CACHE){ COLLEGES=MCC_CACHE; return; }
   try{
     const [index,other,...files]=await Promise.all([
       fetch("/data/cutoffs/MCC/2026/college-index.json").then(r=>r.ok?r.json():{}).catch(()=>({})),
@@ -867,8 +1049,18 @@ async function init(){
       map.set("OTHER|"+e.code+"|"+e.course+"|"+e.quota,{code:e.code,name:e.name,state:normState(e.state),city:(index[e.code]||{}).city||"",district:(index[e.code]||{}).district||"",quota:e.quota,est:e.establishment,fees:e.fees,type:e.type,course:e.course,itype:"OTHER",cats:e.cats});
     });
     COLLEGES=[...map.values()].filter(c=>Object.values(c.cats).some(e=>ROUNDS.some(r=>e[r]&&(e[r].AIR!=null||e[r].AIR_PWD!=null))));
-  }catch(e){$("body").innerHTML='<tr><td colspan="15" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';return;}
-  loadState(); buildUI(); render();
+    MCC_CACHE=COLLEGES;
+  }catch(e){COLLEGES=[];$("body").innerHTML='<tr><td colspan="15" class="empty">Could not load the cutoff data. Please refresh.</td></tr>';}
+}
+let MCC_CACHE=null;
+
+async function init(){
+  const p=new URLSearchParams(location.search), cs=p.get("cs");
+  if(cs&&CARDS[cs]&&cs!=="MCC"){
+    CS=cs; GROUP=GROUPS.some(g=>g.id===p.get("gr"))?p.get("gr"):GROUPS.find(g=>g.cards.includes(cs)).id;
+    if(CS==="MH"){ if(mhCourses().includes(p.get("mc"))) MH_SEL.course=p.get("mc"); else MH_SEL.course=mhCourses()[0]; MH_SEL.type=MH_TYPES(MH_SEL.course).includes(p.get("mt"))?p.get("mt"):MH_TYPES(MH_SEL.course)[0]; }
+  }
+  await useCounselling(CS,{fromUrl:true});
 }
 
 $("search").addEventListener("input",render);
@@ -881,11 +1073,15 @@ $("guide").onclick=e=>{if(e.target.id==="guide")$("guide").hidden=true;};
 const setView=v=>{document.body.classList.toggle("cardview",v==="card");$("vTable").classList.toggle("on",v!=="card");$("vCard").classList.toggle("on",v==="card");};
 $("vTable").onclick=()=>setView("table"); $("vCard").onclick=()=>setView("card");
 $("filterToggle").onclick=()=>{document.querySelector(".filters").classList.toggle("open");updateFilterCount();};
-$("mSort").onchange=e=>{const [k,a]=e.target.value.split(":");sortKey=k;sortAsc=a==="1";document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));render();};
-document.querySelectorAll("thead th[data-key]").forEach(th=>th.onclick=()=>{
+$("mSort").onchange=e=>{const [k,a]=e.target.value.split(":");sortKey=k;sortAsc=a==="1";render();};
+$("headRow").addEventListener("click",e=>{
+  const th=e.target.closest("th[data-key]"); if(!th) return;
   const k=th.dataset.key;if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true;}
-  document.querySelectorAll("thead th").forEach(t=>t.classList.remove("sorted","asc"));th.classList.add("sorted");if(sortAsc)th.classList.add("asc");
   const opt=k+":"+(sortAsc?1:0);if([...$("mSort").options].some(o=>o.value===opt))$("mSort").value=opt;render();});
+const detailClick=e=>{const a=e.target.closest("[data-detail]"); if(!a) return; e.preventDefault(); const c=VIEW[+a.dataset.detail]; if(c) openDetail(c);};
+$("body").addEventListener("click",detailClick); $("cards").addEventListener("click",detailClick);
+$("detailClose").onclick=()=>{$("detail").hidden=true;};
+$("detail").onclick=e=>{if(e.target.id==="detail")$("detail").hidden=true;};
 
 init();
 </script>

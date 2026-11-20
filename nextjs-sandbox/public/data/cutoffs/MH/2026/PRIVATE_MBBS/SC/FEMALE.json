@@ -618,7 +618,22 @@
           "CSML": "SC-3604"
         },
         "Special Stray Round 1": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 459109,
+          "SML": 25140,
+          "CSML": "SC-3105"
+        },
+        "Special Stray Round 2": {
+          "Intake": 1,
+          "AIR": 621234,
+          "SML": 30899,
+          "CSML": "SC-4073"
+        },
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 617276,
+          "SML": 30785,
+          "CSML": "SC-4048"
         }
       }
     },
@@ -647,6 +662,21 @@
           "AIR": 170708,
           "SML": 12076,
           "CSML": "SC-909"
+        }
+      }
+    },
+    {
+      "code": "1181",
+      "name": "Ideal Institute of Medical Science, Wada, Palghar",
+      "establishment": 2026,
+      "fees": "0",
+      "type": "Private",
+      "rounds": {
+        "Special Stray Round 3": {
+          "Intake": 1,
+          "AIR": 169342,
+          "SML": 12006,
+          "CSML": "SC-896"
         }
       }
     }

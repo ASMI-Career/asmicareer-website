@@ -46,7 +46,10 @@
           "CSML": "OBC-9198"
         },
         "Special Stray Round 1": {
-          "Intake": 1
+          "Intake": 1,
+          "AIR": 416170,
+          "SML": 23400,
+          "CSML": "EWS-1912"
         }
       }
     },
@@ -133,7 +136,19 @@
           "CSML": null
         },
         "Special Stray Round 1": {
-          "Intake": 3
+          "Intake": 3,
+          "AIR": 929232,
+          "SML": 38179,
+          "CSML": null
+        },
+        "Special Stray Round 2": {
+          "Intake": 2
+        },
+        "Special Stray Round 3": {
+          "Intake": 2,
+          "AIR": 993740,
+          "SML": 39270,
+          "CSML": null
         }
       }
     },
@@ -220,7 +235,10 @@
           "CSML": "OBC-10263"
         },
         "Special Stray Round 1": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 922591,
+          "SML": 38063,
+          "CSML": "OBC-9613"
         }
       }
     },
@@ -265,7 +283,16 @@
           "CSML": null
         },
         "Special Stray Round 1": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 925758,
+          "SML": 38126,
+          "CSML": null
+        },
+        "Special Stray Round 2": {
+          "Intake": 1
+        },
+        "Special Stray Round 3": {
+          "Intake": 1
         }
       }
     },
@@ -670,7 +697,10 @@
           "CSML": "SC-4923"
         },
         "Special Stray Round 1": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 985278,
+          "SML": 39136,
+          "CSML": "SC-5486"
         }
       }
     },
@@ -715,7 +745,10 @@
           "CSML": null
         },
         "Special Stray Round 1": {
-          "Intake": 4
+          "Intake": 4,
+          "AIR": 1133914,
+          "SML": 40835,
+          "CSML": "OBC-10499"
         }
       }
     },
@@ -784,7 +817,16 @@
           "CSML": "ST-2082"
         },
         "Special Stray Round 1": {
-          "Intake": 3
+          "Intake": 3,
+          "AIR": 1107730,
+          "SML": 40568,
+          "CSML": "OBC-10406"
+        },
+        "Special Stray Round 2": {
+          "Intake": 1,
+          "AIR": 814895,
+          "SML": 35825,
+          "CSML": null
         }
       }
     },
@@ -871,7 +913,16 @@
           "CSML": "OBC-10292"
         },
         "Special Stray Round 1": {
-          "Intake": 2
+          "Intake": 2,
+          "AIR": 1044415,
+          "SML": 39892,
+          "CSML": "SC-5649"
+        },
+        "Special Stray Round 2": {
+          "Intake": 1,
+          "AIR": 967261,
+          "SML": 38835,
+          "CSML": "OBC-9795"
         }
       }
     },
@@ -932,6 +983,18 @@
         },
         "Special Stray Round 1": {
           "Intake": 8
+        },
+        "Special Stray Round 2": {
+          "Intake": 8,
+          "AIR": 1143524,
+          "SML": 40927,
+          "CSML": "SC-5929"
+        },
+        "Special Stray Round 3": {
+          "Intake": 7,
+          "AIR": 1180849,
+          "SML": 41275,
+          "CSML": "NT(B)-959"
         }
       }
     }

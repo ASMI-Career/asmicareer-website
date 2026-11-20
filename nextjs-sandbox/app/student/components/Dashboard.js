@@ -1,8 +1,14 @@
+import { isClosed } from '../lib/dates';
+import { getWhatsAppLink } from '../lib/format';
 
 export default function Dashboard(props) {
-  const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
+  const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
   const dash = config.dashboard;
   const dlRules = config.deadlines;
+  // Engineering only (set in its config): "View All" opens the in-app Deadlines tab, rows get an Apply Now button, the advisor gets a WhatsApp button.
+  const viewAllInApp = !!dash.viewAllTab && config.modules.includes(dash.viewAllTab);
+  const waDigits = String(counsellorWhatsapp || '').replace(/\D/g, '');
+  const showAdvisorWhatsApp = !!dash.advisorWhatsApp && hasCounsellorWhatsapp && waDigits.length >= 7;
   const slText = dash.shortlistText;
   // The shortlist and checklist shortcuts only appear when the stream has the module they open.
   const hasEditTab = config.modules.includes(dash.shortlistEditTab);
@@ -116,7 +122,9 @@ export default function Dashboard(props) {
                         <div className="card-title">
                           <span>📅</span> Upcoming Deadlines
                         </div>
-                        <a href={dash.newsUrl} target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>
+                        {viewAllInApp
+                          ? <button className="card-action" onClick={() => setActiveTab(dash.viewAllTab)}>View All</button>
+                          : <a href={dash.newsUrl} target="_blank" rel="noreferrer" className="card-action" style={{ textDecoration: 'none' }}>View All</a>}
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                         {deadlines.length === 0 ? (
@@ -136,6 +144,9 @@ export default function Dashboard(props) {
                                   <span style={{ fontSize: 10, color: 'var(--text-400)', fontWeight: 600 }}>{cd.text}</span>
                                   {dlRules.showTentative && dl.status === 'tentative' && <span className="tag tag-gold">TENTATIVE</span>}
                                 </div>
+                                {dlRules.applyButton && dl.link && !isClosed(dl.date) && (
+                                  <a className="dl-apply" href={dl.link} target="_blank" rel="noopener noreferrer">{dl.cta || 'Apply Now'}</a>
+                                )}
                               </div>
                             </div>
                           );
@@ -193,9 +204,14 @@ export default function Dashboard(props) {
                       </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
-                      <a href={`tel:${counsellorWhatsapp && counsellorWhatsapp.trim() ? counsellorWhatsapp.replace(/\D/g, '') : '7410019077'}`} className="btn-whatsapp">
+                      <a href={`tel:${counsellorWhatsapp && counsellorWhatsapp.trim() ? counsellorWhatsapp.replace(/\D/g, '') : (dash.helpline || '7410019077')}`} className="btn-whatsapp">
                         📞 Call the Advisor
                       </a>
+                      {showAdvisorWhatsApp && (
+                        <a href={`${getWhatsAppLink(counsellorWhatsapp)}?text=${encodeURIComponent(`Hi, I'm ${studentName} from the ASMI dashboard.`)}`} target="_blank" rel="noopener noreferrer" className="btn-wa-chat">
+                          💬 WhatsApp the Advisor
+                        </a>
+                      )}
                       {whatsappGroupLink && whatsappGroupLink.trim() !== '' && (
                         <a href={whatsappGroupLink} target="_blank" rel="noreferrer" className="btn-outline-navy">
                           💬 Ask in Group

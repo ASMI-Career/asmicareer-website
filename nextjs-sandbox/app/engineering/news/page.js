@@ -60,6 +60,74 @@ const TAG_CFG = {
 };
 const getCfg = tag => TAG_CFG[tag] || TAG_CFG['NOTICE'];
 
+const CATEGORY_CFG = {
+  exam:        { label: 'Exam',           icon: '📋' },
+  counselling: { label: 'Counselling',    icon: '🎯' },
+  asmi:        { label: 'ASMI Seminars',  icon: '🎓' },
+};
+const CATEGORY_ORDER = ['exam', 'counselling', 'asmi'];
+
+const COUNSELLING_TAGS = ['COUNSELLING', 'REGISTRATION DEADLINE', 'SEAT MATRIX', 'ALLOTMENT', 'MERIT LIST'];
+// Entries without an explicit category fall into a section by their tag
+function categoryOf(e) {
+  if (e.category) return e.category;
+  if (e.type === 'asmi' || e.tag === 'ASMI SEMINAR') return 'asmi';
+  if (COUNSELLING_TAGS.includes(e.tag)) return 'counselling';
+  return 'exam';
+}
+
+function EventCard({ e }) {
+  const cfg = getCfg(e.tag);
+  const d   = daysUntil(e.date);
+  const isUrgent = e.type === 'deadline' || ['URGENT','APPLICATION DEADLINE','REGISTRATION DEADLINE','CORRECTION WINDOW'].includes(e.tag);
+  return (
+    <div className={`en-card ${isUrgent ? 'en-card-urgent' : ''}`}>
+      {/* top date strip */}
+      <div className="en-card-top">
+        <div className="en-card-datebox">
+          <span className="en-cd-day">{new Date(e.date).getDate()}</span>
+          <span className="en-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
+          <span className="en-cd-yr">{new Date(e.date).getFullYear()}</span>
+        </div>
+        {d >= 0 && d <= 7 && (
+          <span className={`en-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
+            {d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : `${d}d left`}
+          </span>
+        )}
+      </div>
+
+      {/* body */}
+      <div className="en-card-body">
+        <span
+          className="en-card-tag"
+          style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
+        >
+          {e.tag}
+        </span>
+        <h3 className="en-card-title">{e.title}</h3>
+        <p className="en-card-date-display">{e.display_date}</p>
+      </div>
+
+      {/* footer */}
+      <div className="en-card-footer">
+        {e.link && (
+          <a href={e.link} target="_blank" rel="noopener noreferrer" className="en-card-btn-primary">
+            {e.cta || 'Apply Now'}
+          </a>
+        )}
+        {e.pdf && (
+          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="en-card-btn-sec">
+            📄 View Notice
+          </a>
+        )}
+        {!e.link && !e.pdf && (
+          <span className="en-card-nolink">Date noted — no action needed</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── main component ──────────────────────────────────────── */
 export default function EngineeringNewsPage() {
   const [events, setEvents] = useState([]);
@@ -83,11 +151,8 @@ export default function EngineeringNewsPage() {
   }, []);
 
   const filterEvents = () => {
-    if (filter === 'all')       return events;
-    if (filter === 'deadlines') return events.filter(e => e.type === 'deadline' || ['URGENT','APPLICATION DEADLINE','REGISTRATION DEADLINE','CORRECTION WINDOW'].includes(e.tag));
-    if (filter === 'exams')     return events.filter(e => e.type === 'exam' || ['EXAM DATE','ADMIT CARD','RESULT','MERIT LIST'].includes(e.tag));
-    if (filter === 'seminars')  return events.filter(e => e.type === 'asmi' || e.tag === 'ASMI SEMINAR');
-    return events;
+    if (filter === 'all') return events;
+    return events.filter(e => categoryOf(e) === filter);
   };
 
   const filtered   = filterEvents();
@@ -179,10 +244,10 @@ export default function EngineeringNewsPage() {
             {/* FILTER TABS */}
             <div className="en-filters">
               {[
-                { id: 'all',       label: 'All' },
-                { id: 'deadlines', label: '🔴 Deadlines' },
-                { id: 'exams',     label: '📋 Exam Dates / Results' },
-                { id: 'seminars',  label: '🎓 ASMI Seminars' },
+                { id: 'all',         label: 'All' },
+                { id: 'exam',        label: '📋 Exam' },
+                { id: 'counselling', label: '🎯 Counselling' },
+                { id: 'asmi',        label: '🎓 ASMI Seminars' },
               ].map(f => (
                 <button
                   key={f.id}
@@ -203,60 +268,26 @@ export default function EngineeringNewsPage() {
               </div>
             )}
 
-            {/* CARDS GRID */}
-            {!loading && filtered.length > 0 && (
-              <div className="en-grid">
-                {filtered.map((e, i) => {
-                  const cfg = getCfg(e.tag);
-                  const d   = daysUntil(e.date);
-                  const isUrgent = e.type === 'deadline' || ['URGENT','APPLICATION DEADLINE','REGISTRATION DEADLINE','CORRECTION WINDOW'].includes(e.tag);
-                  return (
-                    <div className={`en-card ${isUrgent ? 'en-card-urgent' : ''}`} key={i}>
-                      {/* top date strip */}
-                      <div className="en-card-top">
-                        <div className="en-card-datebox">
-                          <span className="en-cd-day">{new Date(e.date).getDate()}</span>
-                          <span className="en-cd-mon">{new Date(e.date).toLocaleDateString('en-IN', { month: 'short' }).toUpperCase()}</span>
-                          <span className="en-cd-yr">{new Date(e.date).getFullYear()}</span>
-                        </div>
-                        {d >= 0 && d <= 7 && (
-                          <span className={`en-card-urgency ${d === 0 ? 'today' : d <= 2 ? 'hot' : 'soon'}`}>
-                            {d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : `${d}d left`}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* body */}
-                      <div className="en-card-body">
-                        <span
-                          className="en-card-tag"
-                          style={{ color: cfg.color, background: cfg.bg, border: `1px solid ${cfg.border}` }}
-                        >
-                          {e.tag}
-                        </span>
-                        <h3 className="en-card-title">{e.title}</h3>
-                        <p className="en-card-date-display">{e.display_date}</p>
-                      </div>
-
-                      {/* footer */}
-                      <div className="en-card-footer">
-                        {e.link && (
-                          <a href={e.link} target="_blank" rel="noopener noreferrer" className="en-card-btn-primary">
-                            {e.cta || 'Apply Now'}
-                          </a>
-                        )}
-                        {e.pdf && (
-                          <a href={e.pdf} target="_blank" rel="noopener noreferrer" className="en-card-btn-sec">
-                            📄 View Notice
-                          </a>
-                        )}
-                        {!e.link && !e.pdf && (
-                          <span className="en-card-nolink">Date noted — no action needed</span>
-                        )}
-                      </div>
+            {/* CARDS: grouped into sections on "All", flat grid on a single filter */}
+            {!loading && filtered.length > 0 && filter === 'all' && (
+              CATEGORY_ORDER.map(cat => {
+                const group = filtered.filter(e => categoryOf(e) === cat);
+                if (group.length === 0) return null;
+                const c = CATEGORY_CFG[cat];
+                return (
+                  <div className="en-category-group" key={cat}>
+                    <h3 className="en-category-heading">{c.icon} {c.label}</h3>
+                    <div className="en-grid">
+                      {group.map((e, i) => <EventCard e={e} key={i} />)}
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })
+            )}
+
+            {!loading && filtered.length > 0 && filter !== 'all' && (
+              <div className="en-grid">
+                {filtered.map((e, i) => <EventCard e={e} key={i} />)}
               </div>
             )}
           </div>
