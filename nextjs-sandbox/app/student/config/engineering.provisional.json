@@ -14,13 +14,14 @@
   ],
   "id": "engineering",
   "profile": { "enabled": true },
-  "modules": ["dashboard", "deadlines", "predictor", "cutoff", "institutes", "checklist", "tutorials"],
+  "modules": ["dashboard", "deadlines", "predictor", "cutoff", "institutes", "branchGuide", "checklist", "tutorials"],
   "nav": [
     { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
     { "id": "deadlines",  "label": "Deadlines",  "icon": "lucide:calendar-days" },
     { "id": "predictor",  "label": "Predictor",  "icon": "lucide:bar-chart-3" },
     { "id": "cutoff",     "label": "Cutoff Explorer", "icon": "lucide:search" },
     { "id": "institutes", "label": "Institutes", "icon": "lucide:building-2" },
+    { "id": "branchGuide", "label": "Branch Guide", "icon": "lucide:compass" },
     { "id": "checklist",  "label": "Documents",  "icon": "lucide:file-text" },
     { "id": "tutorials",  "label": "Tutorials",  "icon": "lucide:play-circle" }
   ],

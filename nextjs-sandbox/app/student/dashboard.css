@@ -1617,3 +1617,14 @@ input[type="range"]::-moz-range-thumb {
   :root[data-stream="engineering"] .pf-card { padding: 14px; }
   :root[data-stream="engineering"] .pf-field .form-input, :root[data-stream="engineering"] .pf-field .form-select { font-size: 16px; }
 }
+
+/* Branch Guide (embedded assessment) */
+:root[data-stream="engineering"] .bg-wrap { max-width: 980px; margin: 0 auto; }
+:root[data-stream="engineering"] .bg-title { font-size: 22px; font-weight: 800; color: var(--text-900); margin: 0 0 4px; }
+:root[data-stream="engineering"] .bg-sub { font-size: 13px; color: var(--text-500); margin: 0 0 14px; }
+:root[data-stream="engineering"] .bg-card { position: relative; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: #0a1628; }
+:root[data-stream="engineering"] .bg-frame { display: block; width: 100%; height: max(640px, calc(100vh - 230px)); border: 0; }
+:root[data-stream="engineering"] .bg-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.7); font-size: 14px; font-weight: 600; }
+@media (max-width: 640px) {
+  :root[data-stream="engineering"] .bg-frame { height: max(640px, calc(100vh - 290px)); }
+}

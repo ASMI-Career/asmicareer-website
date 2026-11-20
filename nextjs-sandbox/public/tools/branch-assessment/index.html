@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Engineering Branch Assessment 2026 | ASMI Career</title>
+<title>Engineering Branch Assessment 2027 | ASMI Career</title>
+<script>try{if(new URLSearchParams(location.search).get('embed')==='1')document.documentElement.classList.add('embed')}catch(e){}</script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -897,6 +898,13 @@
     .nav-row { flex-direction: column-reverse; }
     .btn { width: 100%; text-align: center; }
   }
+
+  /* ── Embedded in the student dashboard (?embed=1). Nothing below applies without it. ── */
+  html.embed #mainNav, html.embed .hero-stats, html.embed .cta-card { display: none !important; }
+  html.embed .hero { padding: 28px 20px 8px; }
+  html.embed .form-container { margin-top: 8px; }
+  html.embed .progress-wrap { padding-top: 16px; }
+  html.embed .field:has(> #q1), html.embed .field:has(> #q2), html.embed .field:has(> #q3) { display: none; }
 </style>
 </head>
 <body>
@@ -1252,7 +1260,7 @@
       <h3>Ready for the next step?</h3>
       <p>ASMI counsellors will help you match these branches with the right colleges, cutoffs, and admission strategy — specific to your score and city.</p>
       <div class="cta-btns">
-        <a href="https://wa.me/917410019077?text=Hi%2C%20I%20completed%20the%20Engineering%20Branch%20Assessment%20and%20would%20like%20counselling." class="btn-white" target="_blank">Talk to a Counsellor</a>
+        <a href="https://wa.me/917410019075?text=Hi%2C%20I%20completed%20the%20Engineering%20Branch%20Assessment%20and%20would%20like%20counselling." class="btn-white" target="_blank">Talk to a Counsellor</a>
         <a href="https://asmicareer.com" class="btn-outline-white" target="_blank">Visit asmicareer.com</a>
       </div>
       <p style="color:rgba(255,255,255,0.45); font-size:12px; margin-top:20px; margin-bottom:0;">Mumbai: 7410019077 · Thane: 7410019075</p>
@@ -1443,7 +1451,10 @@ function validateSection(n) {
     const name = document.getElementById('q1').value.trim();
     const mobile = document.getElementById('q2').value.trim();
     const board = document.querySelector('input[name="q4"]:checked');
-    if (!name || !mobile || !board) {
+    const embed = document.documentElement.classList.contains('embed');
+    // Embedded in the dashboard the name, mobile and city are not asked; only the board is required.
+    if (embed ? !board : (!name || !mobile || !board)) {
+      if (embed) document.getElementById('err-1').textContent = 'Please select your board before continuing.';
       document.getElementById('err-1').classList.add('show');
       return false;
     }
@@ -1722,7 +1733,11 @@ Write the report directly addressing ${data.name.split(' ')[0]} by first name. B
 
     const reportEl = document.getElementById('aiReportContent');
     if (text) {
-      reportEl.innerHTML = `<div class="ai-report-text">${text}</div>`;
+      const box = document.createElement('div');
+      box.className = 'ai-report-text';
+      box.textContent = text;           // plain text; .ai-report-text already has white-space: pre-wrap for the line breaks
+      reportEl.innerHTML = '';
+      reportEl.appendChild(box);
     } else {
       reportEl.innerHTML = `<p style="color:var(--text-muted); font-size:14px;">Report generation encountered an issue. Please speak with an ASMI counsellor for a personalised analysis.</p>`;
     }
@@ -1733,6 +1748,26 @@ Write the report directly addressing ${data.name.split(' ')[0]} by first name. B
 
 // Init
 buildLikertCards();
+
+// ===== Embedded in the student dashboard: profile arrives by postMessage (same origin only). No mobile number is sent or read. =====
+if (document.documentElement.classList.contains('embed')) {
+  const q1 = document.getElementById('q1');
+  q1.value = 'Student';   // never empty, so the first-name split at the results step cannot fail
+  const clean = v => (typeof v === 'string' ? v.replace(/[\u0000-\u001F\u007F]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 100) : '');
+  window.addEventListener('message', function (e) {
+    if (e.origin !== window.location.origin) return;
+    const d = e.data;
+    if (!d || typeof d !== 'object' || d.type !== 'asmi-profile') return;
+    q1.value = clean(d.name) || 'Student';
+    const expected = clean(d.expected);
+    if (expected) {
+      document.getElementById('q6').value = expected;
+      document.querySelectorAll('input[name="q5"]').forEach(function (box) {
+        if (expected.indexOf(box.value + ' ') === 0) box.checked = true;   // only when it starts with an option's exact value, e.g. "JEE Main 99.68 percentile"
+      });
+    }
+  });
+}
 </script>
 </body>
 </html>
