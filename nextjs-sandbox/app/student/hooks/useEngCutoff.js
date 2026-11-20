@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, fetchCutoffRecords, fetchMhManifest } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -38,7 +38,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   useEffect(() => {
     if (!enabled || !active || counselling !== 'MH' || manifest) return;
     let live = true;
-    fetch(MH.manifest).then(r => r.json()).then(m => { if (live) setManifest(m); })
+    fetchMhManifest().then(m => { if (live) setManifest(m); })
       .catch(() => { if (live) setData({ loading: false, error: true, colleges: [] }); });
     fetch(MH.intake).then(r => (r.ok ? r.json() : {})).then(j => { if (live) setIntake(j || {}); }).catch(() => {});
     return () => { live = false; };
@@ -73,11 +73,8 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     if (counselling === 'MH' && !manifest) return;
     const id = ++seq.current;
     setData(d => ({ ...d, loading: true, error: false }));
-    const parts = (counselling === 'JOSAA' && quota === 'combined') ? COMBINED_PARTS : [quota];
-    Promise.all(parts.map(q => fetch(`${cfgFor(counselling).base}/${q}/${category}/${gender}.json`)
-      .then(r => { if (r.status === 404) return { colleges: [] }; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(j => (j.colleges || []).map(c => ({ ...c, _quota: q })))))
-      .then(lists => { if (id === seq.current) { setData({ loading: false, error: false, colleges: [].concat(...lists) }); setVisible(40); } })
+    fetchCutoffRecords(counselling, quota, category, gender)
+      .then(colleges => { if (id === seq.current) { setData({ loading: false, error: false, colleges }); setVisible(40); } })
       .catch(() => { if (id === seq.current) setData({ loading: false, error: true, colleges: [] }); });
   }, [enabled, active, counselling, quota, category, gender, manifest]);
 

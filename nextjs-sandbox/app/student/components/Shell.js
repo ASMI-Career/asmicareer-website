@@ -1,8 +1,17 @@
+import { useEffect } from 'react';
+
 export default function Shell(props) {
   const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported } = props;
 
   // Only the modules this stream has appear in the menus.
   const navItems = config.nav.filter(item => config.modules.includes(item.id));
+
+  // A bottom bar with more tabs than fit scrolls sideways; keep the open tab in view. A bar that fits is left alone (Medical).
+  useEffect(() => {
+    const nav = document.querySelector('.mobile-bottom-nav');
+    const on = nav && nav.querySelector('.mobile-nav-item.active');
+    if (nav && on && nav.scrollWidth > nav.clientWidth + 1) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
+  }, [activeTab]);
 
   return (
     <div className="student-body">

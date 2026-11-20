@@ -45,6 +45,17 @@ export const MH = {
 
 export const cfgFor = (counselling) => (counselling === 'MH' ? MH : counselling === 'CSAB' ? CSAB : JOSAA);
 
+// The files for one selection, fetched and tagged with the quota they came from. Used by the Cutoff Explorer and the Preference List.
+// JoSAA "combined" loads All India + Other State together. A missing file (404) is an empty list.
+export async function fetchCutoffRecords(counselling, quota, category, gender) {
+  const parts = (counselling === 'JOSAA' && quota === 'combined') ? COMBINED_PARTS : [quota];
+  const lists = await Promise.all(parts.map(q => fetch(`${cfgFor(counselling).base}/${q}/${category}/${gender}.json`)
+    .then(r => { if (r.status === 404) return { colleges: [] }; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => (j.colleges || []).map(c => ({ ...c, _quota: q })))));
+  return [].concat(...lists);
+}
+export const fetchMhManifest = () => fetch(MH.manifest).then(r => r.json());
+
 // The student's category (from the sheet, mapped by the config rules) -> the file category for each counselling.
 export function defaultCategory(counselling, studentCategory, availableKeys) {
   const has = (k) => !availableKeys || availableKeys.includes(k);

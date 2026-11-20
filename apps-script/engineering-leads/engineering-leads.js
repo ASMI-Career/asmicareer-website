@@ -36,6 +36,14 @@
 var PROFILE_EDIT_ENABLED = true;
 
 // ════════════════════════════════════════════════════════════════
+//  PREFERENCE LIST SAVING SWITCH
+//  true  = the dashboard's Preference List is saved to the "Preference Lists" tab (savePreferenceList works).
+//  false = savePreferenceList answers {ok:false, error:"locked"} and the list becomes read-only in the dashboard.
+//          After changing this: Deploy -> Manage deployments -> New version.
+// ════════════════════════════════════════════════════════════════
+var PREF_LIST_EDIT_ENABLED = true;
+
+// ════════════════════════════════════════════════════════════════
 //  CONFIG — header NAMES (matched case/space-insensitively, must match exactly otherwise)
 //  If your sheet says something different, change the VALUE on the right, nothing else.
 // ════════════════════════════════════════════════════════════════
@@ -150,7 +158,7 @@ var STUDENT_HEADERS = {
   savedShortlist:     'Saved Shortlist',
   documentStatus:     'Document Status'
 };
-var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true, saveProfile: true };
+var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true, saveProfile: true, savePreferenceList: true, getPreferenceList: true };
 var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
 
 var TOKEN_PREFIX   = 'ENG-';
@@ -180,7 +188,7 @@ function doPost(e) {
       if (!DASH_ACTIONS[body.action]) return json_({ error: 'invalid_action' });
       var out = dashboardAction_(body.action, body.token, body);
       // saveProfile answers { ok: true, profile } or { ok: false, error }; the early exits (not_found ...) are put into that shape too.
-      if (body.action === 'saveProfile' && out && out.ok === undefined) out = { ok: false, error: out.error || 'server_error' };
+      if ((body.action === 'saveProfile' || body.action === 'savePreferenceList') && out && out.ok === undefined) out = { ok: false, error: out.error || 'server_error' };
       return json_(out);
     }
     return json_(handleSubmission_((e && e.parameter) || {}));
@@ -201,6 +209,10 @@ function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.action) {
     if (p.action === 'getStudent' || p.action === 'saveDocStatus') return json_(dashboardAction_(p.action, p.token, { data: p.data }));
+    if (p.action === 'getPreferenceList') {                       // GET: token, counselling (JOSAA or CAP)
+      var got = dashboardAction_('getPreferenceList', p.token, { counselling: p.counselling });
+      return json_(got && got.ok === undefined ? { ok: false, error: got.error || 'server_error' } : got);
+    }
     return json_({ error: 'invalid_action' });
   }
   return json_({ ok: true, service: 'asmi-engineering-leads', version: SCRIPT_VERSION });
@@ -430,7 +442,9 @@ function verifyHeaders() {
   else {
     try { resolveHeaders_(dsh, DASHBOARD_HEADERS, 'Dashboard/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
     try { resolveHeaders_(dsh, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
-    try { profileColumns_(dsh, true); } catch (e) { problems.push(e.message); }   // the optional MHT-CET SML Rank header is not required here
+    try { profileColumns_(dsh, true); } catch (e) { problems.push(e.message); }
+    var psh = dashSS.getSheetByName(PREF_TAB);
+    if (psh) { try { resolveHeaders_(psh, PREF_COLS, 'Preference Lists/' + PREF_TAB); } catch (e) { problems.push(e.message); } }   // the tab is created on the first save   // the optional MHT-CET SML Rank header is not required here
   }
 
   NEVER_WRITE_TABS.forEach(function (t) {
@@ -468,6 +482,7 @@ function dashboardAction_(action, token, payload) {
     if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };            // wrong shape: never even looks at the sheet
 
     if (action === 'saveProfile' && !PROFILE_EDIT_ENABLED) return { error: 'locked' };   // the switch at the top of the file
+    if (action === 'savePreferenceList' && !PREF_LIST_EDIT_ENABLED) return { error: 'locked' };
 
     var cfg = getConfig_();
     var dashSS = SpreadsheetApp.openById(cfg.dashboardId);
@@ -482,6 +497,8 @@ function dashboardAction_(action, token, payload) {
 
     if (action === 'getStudent') return { success: true, data: readStudent_(sheet, row, cols) };
     if (action === 'saveProfile') return saveProfile_(dashSS, sheet, cols, row, tok, payload && payload.profile);   // has its own rate limit and lock
+    if (action === 'savePreferenceList') return savePreferenceList_(dashSS, tok, payload);                          // has its own rate limit and lock
+    if (action === 'getPreferenceList') return getPreferenceList_(dashSS, tok, payload && payload.counselling);
 
     var lock = LockService.getScriptLock();
     var locked = false;
@@ -551,7 +568,8 @@ function readStudent_(sheet, row, cols) {
     mhtcet_percentile:   pv.mhtcet_percentile,
     mhtcet_sml:          pv.mhtcet_sml,
     desired_branches:    pv.desired_branches,
-    profile_locked:      !PROFILE_EDIT_ENABLED
+    profile_locked:      !PROFILE_EDIT_ENABLED,
+    pref_list_enabled:   true                                    // this script knows the Preference List actions (added with savePreferenceList)
   };
 }
 
@@ -908,6 +926,171 @@ function saveProfile_(ss, sheet, cols, row, tok, profile) {
   } finally {
     lock.releaseLock();
   }
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  PREFERENCE LISTS  (savePreferenceList / getPreferenceList)
+//  Tab "Preference Lists" in the DASHBOARD workbook, created on the first save. One row per choice. Replace-all per student + counselling.
+// ════════════════════════════════════════════════════════════════
+
+var PREF_TAB = 'Preference Lists';
+var PREF_COLS = {
+  token: 'Token', counselling: 'Counselling', position: 'Position', institute: 'Institute', program: 'Program',
+  quota: 'Quota', gender: 'Gender', choiceCode: 'ChoiceCode', tag: 'Tag', updatedAt: 'UpdatedAt'
+};
+var PREF_HEADER_ORDER = ['token', 'counselling', 'position', 'institute', 'program', 'quota', 'gender', 'choiceCode', 'tag', 'updatedAt'];
+var PREF_COUNSELLINGS = ['JOSAA', 'CAP'];
+var PREF_MAX_ITEMS = 300;
+var PREF_STR_MAX = 150;
+var PREF_RATE_LIMIT = 60;                  // saves per token per hour
+var PREF_RATE_WINDOW_S = 3600;
+var PREF_LOCK_WAIT_MS = 10000;
+var PREF_ITEM_KEYS = { institute: true, program: true, quota: true, gender: true, choiceCode: true, tag: true };
+var PREF_TAG_RE = /^(PICK:)?(safe|likely|borderline|dream|out|none|missing)$/;
+
+function prefRateOk_(tok) {
+  try {
+    var cache = CacheService.getScriptCache();
+    var key = 'pls_' + tok + '_' + Math.floor(now_().getTime() / (PREF_RATE_WINDOW_S * 1000));
+    var n = Number(cache.get(key) || 0);
+    if (n >= PREF_RATE_LIMIT) return false;
+    cache.put(key, String(n + 1), PREF_RATE_WINDOW_S);
+    return true;
+  } catch (e) {
+    log_('Preference list rate-limit cache unavailable: ' + describeError_(e));
+    return true;
+  }
+}
+
+/** Strict: returns { ok:true, rows:[{...}] } or { ok:false, message }. Nothing is written unless every item passes. */
+function validatePrefList_(payload) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return { ok: false, message: 'Send an object.' };
+  if (typeof payload.counselling !== 'string' || PREF_COUNSELLINGS.indexOf(payload.counselling) === -1) return { ok: false, message: 'counselling must be JOSAA or CAP.' };
+  var items = payload.items;
+  if (!Array.isArray(items)) return { ok: false, message: 'items must be a list.' };
+  if (items.length > PREF_MAX_ITEMS) return { ok: false, message: 'At most ' + PREF_MAX_ITEMS + ' choices.' };
+  var rows = [];
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i], label = 'Item ' + (i + 1) + ': ';
+    if (!it || typeof it !== 'object' || Array.isArray(it)) return { ok: false, message: label + 'must be an object.' };
+    var keys = Object.keys(it);
+    for (var k = 0; k < keys.length; k++) if (!PREF_ITEM_KEYS[keys[k]]) return { ok: false, message: label + 'unknown field "' + String(keys[k]).substring(0, 30) + '".' };
+    var out = {};
+    var names = Object.keys(PREF_ITEM_KEYS);
+    for (var n = 0; n < names.length; n++) {
+      var v = it[names[n]];
+      if (v === undefined || v === null) v = '';
+      if (typeof v !== 'string') return { ok: false, message: label + names[n] + ' must be text.' };
+      if (v.length > PREF_STR_MAX) return { ok: false, message: label + names[n] + ' is too long.' };
+      if (/[\u0000-\u001F\u007F]/.test(v)) return { ok: false, message: label + names[n] + ' has invalid characters.' };
+      out[names[n]] = v.replace(/^\s+|\s+$/g, '');
+    }
+    if (!out.institute || !out.program || !out.quota) return { ok: false, message: label + 'institute, program and quota are required.' };
+    if (out.gender === '') out.gender = 'all';
+    if (out.gender !== 'all' && out.gender !== 'female-only') return { ok: false, message: label + 'gender must be all or female-only.' };
+    if (out.choiceCode && !/^[A-Za-z0-9_-]+$/.test(out.choiceCode)) return { ok: false, message: label + 'invalid choice code.' };
+    if (!PREF_TAG_RE.test(out.tag)) return { ok: false, message: label + 'invalid tag.' };
+    rows.push(out);
+  }
+  return { ok: true, rows: rows, counselling: payload.counselling };
+}
+
+function prefSheet_(ss, create) {
+  var sh = ss.getSheetByName(PREF_TAB);
+  if (sh || !create) return sh;
+  sh = ss.insertSheet(PREF_TAB);
+  var head = PREF_HEADER_ORDER.map(function (k) { return PREF_COLS[k]; });
+  sh.getRange(HEADER_ROW, 1, 1, head.length).setNumberFormats([head.map(function () { return TEXT_FORMAT; })]).setValues([head]);
+  return sh;
+}
+
+/**
+ * Replace-all for this student + counselling, under the script lock: every existing row of that token + counselling is deleted
+ * (contiguous runs, bottom up, so non-contiguous rows are handled and row numbers never shift under us), then the new rows are appended
+ * in one batch per column. Returns { ok:true, count } | { ok:false, error: 'rate_limited' | 'validation' | 'busy', message? }.
+ */
+function savePreferenceList_(ss, tok, payload) {
+  if (!prefRateOk_(tok)) return { ok: false, error: 'rate_limited' };
+  var v = validatePrefList_(payload);
+  if (!v.ok) return { ok: false, error: 'validation', message: v.message };
+
+  var lock = LockService.getScriptLock();
+  var locked = false;
+  try { locked = lock.tryLock(PREF_LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+  if (!locked) return { ok: false, error: 'busy' };
+  try {
+    var sheet = prefSheet_(ss, true);
+    var cols = resolveHeaders_(sheet, PREF_COLS, 'Preference Lists/' + PREF_TAB);
+
+    // 1. delete this student's rows for this counselling
+    var last = sheet.getLastRow();
+    if (last > HEADER_ROW) {
+      var n = last - HEADER_ROW;
+      var toks = sheet.getRange(HEADER_ROW + 1, cols.token, n, 1).getValues();
+      var cons = sheet.getRange(HEADER_ROW + 1, cols.counselling, n, 1).getValues();
+      var runs = [], run = null;
+      for (var i = 0; i < n; i++) {
+        var hit = String(toks[i][0]).trim() === tok && String(cons[i][0]).trim() === v.counselling;
+        if (hit) { if (run && run.start + run.count === HEADER_ROW + 1 + i) run.count++; else { run = { start: HEADER_ROW + 1 + i, count: 1 }; runs.push(run); } }
+      }
+      for (var r = runs.length - 1; r >= 0; r--) sheet.deleteRows(runs[r].start, runs[r].count);
+    }
+
+    // 2. append the new rows
+    var rows = v.rows;
+    if (rows.length) {
+      var start = lastDataRow_(sheet, [cols.token]) + 1;
+      var need = start + rows.length - 1, maxNeeded = 0;
+      PREF_HEADER_ORDER.forEach(function (k) { if (cols[k] > maxNeeded) maxNeeded = cols[k]; });
+      if (need > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), need - sheet.getMaxRows());
+      if (maxNeeded > sheet.getMaxColumns()) sheet.insertColumnsAfter(sheet.getMaxColumns(), maxNeeded - sheet.getMaxColumns());
+      var at = now_();
+      var values = {
+        token:       rows.map(function () { return [tok]; }),
+        counselling: rows.map(function () { return [v.counselling]; }),
+        position:    rows.map(function (x, i) { return [i + 1]; }),
+        institute:   rows.map(function (x) { return [x.institute]; }),
+        program:     rows.map(function (x) { return [x.program]; }),
+        quota:       rows.map(function (x) { return [x.quota]; }),
+        gender:      rows.map(function (x) { return [x.gender]; }),
+        choiceCode:  rows.map(function (x) { return [x.choiceCode]; }),
+        tag:         rows.map(function (x) { return [x.tag]; }),
+        updatedAt:   rows.map(function () { return [at]; })
+      };
+      PREF_HEADER_ORDER.forEach(function (k) {
+        var fmt = (k === 'position') ? GENERAL_FORMAT : (k === 'updatedAt' ? DATE_FORMAT : TEXT_FORMAT);   // text format: nothing is read as a formula
+        var range = sheet.getRange(start, cols[k], rows.length, 1);
+        range.setNumberFormats(rows.map(function () { return [fmt]; }));
+        range.setValues(values[k]);
+      });
+    }
+    return { ok: true, count: rows.length };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/** GET: the saved list of one student + counselling, in position order. A missing tab is an empty list. */
+function getPreferenceList_(ss, tok, counselling) {
+  var c = String(counselling === undefined || counselling === null ? '' : counselling).trim();
+  if (PREF_COUNSELLINGS.indexOf(c) === -1) return { ok: false, error: 'validation' };
+  var sheet = prefSheet_(ss, false);
+  var items = [];
+  if (sheet && sheet.getLastRow() > HEADER_ROW) {
+    var cols = resolveHeaders_(sheet, PREF_COLS, 'Preference Lists/' + PREF_TAB);
+    var n = sheet.getLastRow() - HEADER_ROW;
+    var vals = sheet.getRange(HEADER_ROW + 1, 1, n, sheet.getLastColumn()).getValues();
+    var s = function (row, k) { var x = row[cols[k] - 1]; return (x === null || x === undefined) ? '' : String(x); };
+    vals.forEach(function (row) {
+      if (s(row, 'token').trim() !== tok || s(row, 'counselling').trim() !== c) return;
+      items.push({ position: Number(row[cols.position - 1]) || 0, institute: s(row, 'institute'), program: s(row, 'program'), quota: s(row, 'quota'),
+        gender: s(row, 'gender') || 'all', choiceCode: s(row, 'choiceCode'), tag: s(row, 'tag') });
+    });
+    items.sort(function (a, b) { return a.position - b.position; });
+    items = items.slice(0, PREF_MAX_ITEMS);
+  }
+  return { ok: true, counselling: c, items: items, locked: !PREF_LIST_EDIT_ENABLED };
 }
 
 

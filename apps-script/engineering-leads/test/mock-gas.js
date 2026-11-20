@@ -63,6 +63,7 @@ class MockSheet {
   getLastColumn() { let m = 0; this.rows.forEach(r => r.forEach((v, i) => { if (String(v) !== '') m = Math.max(m, i + 1); })); return m; }
   getMaxRows() { return this.maxRows; }
   getMaxColumns() { return this.maxCols; }
+  deleteRows(start, n) { if (start < 1 || n < 1) throw new Error('Mock: bad deleteRows'); this.rows.splice(start - 1, n); this.deletedRows = (this.deletedRows || 0) + n; }
   insertRowsAfter(after, n) { this.maxRows += n; this.insertedRows += n; }
   insertColumnsAfter(after, n) { this.maxCols += n; }
   getRange(r, c, nr = 1, nc = 1) { return new MockRange(this, r, c, nr, nc); }

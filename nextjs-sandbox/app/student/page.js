@@ -10,6 +10,7 @@ import usePredictor from './hooks/usePredictor';
 import useCutoffExplorer from './hooks/useCutoffExplorer';
 import useInstitutes from './hooks/useInstitutes';
 import useEngCutoff from './hooks/useEngCutoff';
+import usePrefList from './hooks/usePrefList';
 import useProfile from './hooks/useProfile';
 import useStudent from './hooks/useStudent';
 import useCatalog from './hooks/useCatalog';
@@ -26,6 +27,7 @@ import Deadlines from './components/Deadlines';
 import Tutorials from './components/Tutorials';
 import Settings from './components/Settings';
 import BranchGuide from './components/BranchGuide';
+import PreferenceList from './components/PreferenceList';
 
 // The student dashboard page. All state lives in the hooks below, which are always called, so what a student typed in one
 // tab (filters, inputs) is still there after switching tabs. Each tab is a component that receives everything as props.
@@ -62,7 +64,8 @@ export default function StudentDashboard() {
   });
   const docSections = useDocumentSections({ config, checkedDocs: docs.checkedDocs, docCategory: docs.docCategory, docQuota: docs.docQuota, studentTracks: student.studentTracks });
   const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' || shell.activeTab === 'predictor' });
-  profileApi.profileSinks.current.prefill = engCutoff.ecPrefill;
+  const prefList = usePrefList({ config, endpoint, currentToken, active: shell.activeTab === 'preferenceList', studentCategory: student.studentCategory, profile: profileApi.profile, prefListEnabled: profileApi.prefListEnabled, shortlistGroups: shortlistApi.shortlistGroups });
+  profileApi.profileSinks.current.prefill = (v) => { engCutoff.ecPrefill(v); prefList.plPrefill(v); };
   profileApi.profileSinks.current.student = student.applyProfileToStudent;
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
@@ -73,7 +76,7 @@ export default function StudentDashboard() {
   const settingsOpen = shell.activeTab === 'settings' && profileApi.profileSupported;
   const activeTab = settingsOpen ? 'settings' : (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? (shell.activeTab === 'settings' ? (config.unknownTabFallback || 'dashboard') : shell.activeTab) : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...profileApi };
+  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...prefList, ...profileApi };
 
   return (
     <Shell {...ctx}>
@@ -84,6 +87,7 @@ export default function StudentDashboard() {
       {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
       {activeTab === 'deadlines' && config.modules.includes('deadlines') && <Deadlines {...ctx} />}
       {activeTab === 'settings' && <Settings {...ctx} />}
+      {activeTab === 'preferenceList' && config.modules.includes('preferenceList') && config.preferenceList && <PreferenceList {...ctx} />}
       {activeTab === 'branchGuide' && config.modules.includes('branchGuide') && <BranchGuide {...ctx} />}
       {activeTab === 'tutorials' && config.modules.includes('tutorials') && <Tutorials {...ctx} />}
     </Shell>

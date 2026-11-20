@@ -9,6 +9,7 @@ export default function useProfile({ config, endpoint, currentToken }) {
   const [profile, setProfile] = useState(null);       // the saved values, in the script's field names
   const [supported, setSupported] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [prefListEnabled, setPrefListEnabled] = useState(false);   // the script knows the Preference List actions (it says so in getStudent)
   const sinks = useRef({});
   const enabled = !!(config.profile && config.profile.enabled);
 
@@ -27,6 +28,7 @@ export default function useProfile({ config, endpoint, currentToken }) {
 
   // Called by useStudent with the getStudent data.
   const onSheet = (s) => {
+    if (s && s.pref_list_enabled === true) setPrefListEnabled(true);
     if (!enabled || !s || typeof s.profile_locked !== 'boolean') return;
     const p = fromSheet(s);
     setSupported(true); setLocked(s.profile_locked); setProfile(p);
@@ -48,5 +50,5 @@ export default function useProfile({ config, endpoint, currentToken }) {
     return { ok: false, error: res.error || 'server_error', fields: res.fields };
   };
 
-  return { profile, profileSupported: enabled && supported, profileLocked: locked, saveProfile: save, profileOnSheet: onSheet, profileSinks: sinks };
+  return { prefListEnabled, profile, profileSupported: enabled && supported, profileLocked: locked, saveProfile: save, profileOnSheet: onSheet, profileSinks: sinks };
 }
