@@ -33,8 +33,9 @@ def type_of(n):
     return 'GFTI'
 
 def rank(v):
-    s = re.sub(r'[^0-9.]', '', str(v))
-    return int(float(s)) if s else None
+    s = str(v).strip().rstrip('Pp')          # PwD ranks end in 'P'; some CSAB ranks arrive in scientific notation (1.19904e+006)
+    s = re.sub(r'[^0-9.eE+-]', '', s)
+    return int(round(float(s))) if s else None
 
 wb = openpyxl.load_workbook(SRC, read_only=True)
 rows = list(wb[[n for n in wb.sheetnames if n.startswith('All Rounds')][0]].iter_rows(values_only=True))[1:]
