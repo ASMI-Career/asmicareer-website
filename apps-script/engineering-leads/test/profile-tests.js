@@ -103,6 +103,22 @@ test('P9 getStudent reads messy profile cells safely; no phone leak', () => {
   assert.ok(!JSON.stringify(d).includes('9876543210'));
   return 'ok';
 });
+test('P10 MHT-CET SML rank: saved as a whole number, validated, header optional', () => {
+  const env = buildEnvironment(); seed(env);
+  const r = save(env, { mhtcet_sml: '12345' }); assert.strictEqual(r.ok, true); assert.strictEqual(r.profile.mhtcet_sml, 12345);
+  assert.strictEqual(env.dsheet.cell(2, 'MHT-CET SML Rank'), 12345); assert.strictEqual(typeof env.dsheet.cell(2, 'MHT-CET SML Rank'), 'number');
+  for (const bad of ['0', '1.5', 'abc', '10000000', '-3']) { env.state.cache = {}; assert.strictEqual(save(env, { mhtcet_sml: bad }).error, 'validation', bad); }
+  assert.strictEqual(save(env, { mhtcet_sml: '' }).profile.mhtcet_sml, null);
+  assert.strictEqual(get(env).mhtcet_sml, null);
+  // the column is not in the sheet yet: everything else still saves, only this field refuses; verifyHeaders stays OK
+  const e2 = buildEnvironment({ noProfileCols: false }); seed(e2);
+  const i = e2.dsheet.rows[0].indexOf('MHT-CET SML Rank'); e2.dsheet.rows[0][i] = '';
+  assert.strictEqual(save(e2, { gender: 'Male' }).ok, true, 'other fields still save');
+  assert.strictEqual(save(e2, { mhtcet_sml: '500' }).error, 'server_error');
+  assert.strictEqual(get(e2).mhtcet_sml, null);
+  assert.strictEqual(e2.ctx.verifyHeaders().ok, true, 'verifyHeaders does not demand the optional header');
+  return 'ok';
+});
 let p = 0, f = 0;
 for (const t of tests) { try { const n = t.f(); p++; console.log('PASS ' + t.n + (n ? '\n      -> ' + n : '')); } catch (e) { f++; console.log('FAIL ' + t.n + '\n      -> ' + e.message.split('\n')[0]); if (process.env.VERBOSE) console.log(e.stack); } }
 console.log(`\n${p} passed, ${f} failed, ${tests.length} total`); process.exit(f ? 1 : 0);

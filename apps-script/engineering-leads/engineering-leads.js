@@ -430,7 +430,7 @@ function verifyHeaders() {
   else {
     try { resolveHeaders_(dsh, DASHBOARD_HEADERS, 'Dashboard/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
     try { resolveHeaders_(dsh, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
-    try { resolveHeaders_(dsh, PROFILE_HEADERS, 'Student profile/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
+    try { profileColumns_(dsh, true); } catch (e) { problems.push(e.message); }   // the optional MHT-CET SML Rank header is not required here
   }
 
   NEVER_WRITE_TABS.forEach(function (t) {
@@ -548,6 +548,7 @@ function readStudent_(sheet, row, cols) {
     category_rank:       pv.category_rank,
     jee_adv_rank:        pv.jee_adv_rank,
     mhtcet_percentile:   pv.mhtcet_percentile,
+    mhtcet_sml:          pv.mhtcet_sml,
     desired_branches:    pv.desired_branches,
     profile_locked:      !PROFILE_EDIT_ENABLED
   };
@@ -621,9 +622,11 @@ var PROFILE_HEADERS = {
   categoryRank:      'Category Rank',
   jeeAdvRank:        'JEE Advanced Rank',
   mhtcetPercentile:  'MHT-CET Percentile',
+  mhtcetSml:         'MHT-CET SML Rank',            // state merit list number. Optional column: only saving this field needs it
   desiredBranches:   'Desired Branches'            // stored as comma-separated text, at most PROFILE_MAX_BRANCHES items
 };
 
+var PROFILE_OPTIONAL      = { mhtcetSml: true };    // header may be missing; every other profile header is required
 var PROFILE_LOG_TAB       = 'Profile Log';
 var PROFILE_RATE_LIMIT    = 20;                    // saveProfile calls per token per hour
 var PROFILE_RATE_WINDOW_S = 3600;
@@ -659,6 +662,7 @@ var PROFILE_FIELDS = [
   { key: 'category_rank',       src: 'profile', col: 'categoryRank',      type: 'rank' },
   { key: 'jee_adv_rank',        src: 'profile', col: 'jeeAdvRank',        type: 'rank' },
   { key: 'mhtcet_percentile',   src: 'profile', col: 'mhtcetPercentile',  type: 'percentile' },
+  { key: 'mhtcet_sml',          src: 'profile', col: 'mhtcetSml',         type: 'rank' },
   { key: 'desired_branches',    src: 'profile', col: 'desiredBranches',   type: 'branches' }
 ];
 // PROFILE_HEADERS has no 'pwd' key above by accident of ordering: keep it in sync here.
@@ -674,7 +678,7 @@ function profileColumns_(sheet, strict) {
   Object.keys(PROFILE_HEADERS).forEach(function (k) {
     var hits = index[normHeader_(PROFILE_HEADERS[k])] || [];
     if (hits.length === 1) cols[k] = hits[0];
-    else if (hits.length === 0) missing.push('"' + PROFILE_HEADERS[k] + '"');
+    else if (hits.length === 0) { if (!PROFILE_OPTIONAL[k]) missing.push('"' + PROFILE_HEADERS[k] + '"'); }
     else ambiguous.push('"' + PROFILE_HEADERS[k] + '" (appears ' + hits.length + ' times)');
   });
   if (strict && (missing.length || ambiguous.length)) {
@@ -741,6 +745,7 @@ function profileView_(vals, cols, pcols) {
     category_rank:       rankOrNull_(p('categoryRank')),
     jee_adv_rank:        rankOrNull_(p('jeeAdvRank')),
     mhtcet_percentile:   numOrNull_(p('mhtcetPercentile')),
+    mhtcet_sml:          rankOrNull_(p('mhtcetSml')),
     desired_branches:    splitBranches_(p('desiredBranches'))
   };
 }
@@ -873,6 +878,11 @@ function saveProfile_(ss, sheet, cols, row, tok, profile) {
       var f = profileFieldByKey_(key);
       var col = f.src === 'student' ? cols[f.col] : pcols[f.col];
       var nw = v.values[key];
+      if (!col) {                                                              // an optional header that is not in the sheet
+        var herr = new Error('Header problem in Student profile/' + DASHBOARD_TAB + '. MISSING: "' + PROFILE_HEADERS[f.col] + '" (needed to save this field).');
+        herr.name = 'HeaderError';
+        throw herr;
+      }
       if (sameProfileCell_(vals[col - 1], nw)) return;                         // only changed cells are written
       changes.push({ key: key, col: col, value: nw, oldDisplay: displayCell_(vals[col - 1]), newDisplay: displayCell_(nw) });
     });

@@ -7,9 +7,9 @@ const SECTIONS = [
     ['home_state', 'Home state'], ['home_university', 'Home university (if any)'], ['minority', 'Minority status (if any)'] ] },
   { title: 'Exam results', hint: 'Fill what you have. Leave the rest blank.', fields: [
     ['jee_main_percentile', 'JEE Main percentile'], ['jee_main_crl_rank', 'JEE Main CRL rank'], ['category_rank', 'JEE Main category rank (reserved categories)'],
-    ['jee_adv_rank', 'JEE Advanced rank'], ['mhtcet_percentile', 'MHT-CET percentile'] ] },
+    ['jee_adv_rank', 'JEE Advanced rank'], ['mhtcet_percentile', 'MHT-CET percentile'], ['mhtcet_sml', 'MHT-CET SML rank (state merit list)'] ] },
 ];
-const PLACEHOLDER = { jee_main_percentile: 'e.g. 97.85', mhtcet_percentile: 'e.g. 96.40', jee_main_crl_rank: 'e.g. 12000', category_rank: 'e.g. 4500', jee_adv_rank: 'e.g. 3000', home_university: 'e.g. Mumbai University', minority: 'e.g. Muslim, Jain' };
+const PLACEHOLDER = { jee_main_percentile: 'e.g. 97.85', mhtcet_percentile: 'e.g. 96.40', mhtcet_sml: 'e.g. 8500', jee_main_crl_rank: 'e.g. 12000', category_rank: 'e.g. 4500', jee_adv_rank: 'e.g. 3000', home_university: 'e.g. Mumbai University', minority: 'e.g. Muslim, Jain' };
 
 // Engineering profile screen. Students edit everything themselves while the script's switch is on; when it is off (locked) the same
 // values are shown read-only. Save sends only the changed fields.

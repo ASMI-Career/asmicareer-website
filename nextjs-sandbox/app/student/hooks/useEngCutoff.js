@@ -94,6 +94,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     if (v.advRank !== undefined) setAdvRank(v.advRank);
     if (v.mainPct !== undefined) setMainPct(v.mainPct);
     if (v.mhPct !== undefined) setMhPct(v.mhPct);
+    if (v.mhMerit !== undefined) setMhMerit(v.mhMerit);
     if (v.pwd) setPwd(true);
   };
   // The rank box means CATEGORY rank for a reserved category on JoSAA, and CRL on every other track (CSAB, which is by JEE Main CRL only).
