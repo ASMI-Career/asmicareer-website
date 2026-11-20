@@ -25,7 +25,7 @@ const good = (over = {}) => Object.assign({
 const errFields = res => (res.errors || []).map(e => e.field);
 const totalLeadRows = env => Array.from(env.get('ENQUIRY_TABS')).reduce((n, t) => n + leadRows(env.enq.getSheetByName(t)).length, 0);
 const tabsWithLeads = env => Array.from(env.get('ENQUIRY_TABS')).filter(t => leadRows(env.enq.getSheetByName(t)).length > 0);
-const dashRows = env => leadRows(env.dsheet, 'Token', 'Name');
+const dashRows = env => leadRows(env.dsheet, 'Token', 'Student Name');
 
 // ─────────────────────────────────────────────────────────────── 1. happy path
 test('01 happy path: Pune lead lands in Pune, dashboard row created, formulas untouched', env0 => {
@@ -60,7 +60,7 @@ test('01 happy path: Pune lead lands in Pune, dashboard row created, formulas un
   const d = env.dsheet.obj(dr[0]);
   assert.strictEqual(d['Token'], res.token);
   assert.strictEqual(d['Inquiry Token'], res.token);
-  assert.strictEqual(d['Name'], 'Aarav Deshmukh');
+  assert.strictEqual(d['Student Name'], 'Aarav Deshmukh');
   assert.strictEqual(d['Score'], 98.37);
   assert.strictEqual(d['Stream'], 'Engineering');
   assert.strictEqual(d['Plan'], 'Explore');
@@ -284,8 +284,8 @@ test('10 tokens: format, uniqueness, not sequential, collision re-roll in BOTH w
     return res;
   };
   rig(e => { const s = e.enq.getSheetByName('Andheri'); s._set(2, e.enqHeaders.indexOf('Token') + 1, 'ENG-AAAAAAAAAA'); s._set(2, e.enqHeaders.indexOf('Full Name') + 1, 'X Y'); });   // enquiry workbook
-  rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Name') + 1, 'X Y'); });                    // dashboard Token
-  rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Inquiry Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Name') + 1, 'X Y'); });             // dashboard Inquiry Token
+  rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Student Name') + 1, 'X Y'); });                    // dashboard Token
+  rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Inquiry Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Student Name') + 1, 'X Y'); });             // dashboard Inquiry Token
   return `300 unique tokens, ascending share ${share.toFixed(2)}, collision re-rolled for enquiry / dashboard Token / dashboard Inquiry Token`;
 });
 
@@ -589,7 +589,7 @@ const ALLOWED_KEYS = ['category', 'counsellor_name', 'counsellor_whatsapp', 'doc
 const setCell = (sheet, row, header, value) => sheet._set(row, sheet.rows[0].indexOf(header) + 1, value);
 function seedStudent(env, row = 2, over = {}) {
   const v = Object.assign({
-    'Token': TOK, 'Stream': 'Engineering', 'Name': 'Aarav Deshmukh', 'Score': 98.37, 'Category': 'OBC-NCL', 'Stage': 'Counselling Started',
+    'Token': TOK, 'Stream': 'Engineering', 'Student Name': 'Aarav Deshmukh', 'Score': 98.37, 'Category': 'OBC-NCL', 'Stage': 'Counselling Started',
     'Tracks': 'JoSAA, Maharashtra CAP', 'Counsellor Name': 'Engg Counsellor', 'Counsellor WhatsApp': '+91 90000-00003',
     'WhatsApp Group Link': 'https://chat.whatsapp.com/abc123',
     'Saved Shortlist': JSON.stringify({ JOSAA: [{ institute: 'Demo Institute Alpha', branch: 'Computer Science', seatType: 'AI' }], CAP: [] }),
@@ -663,7 +663,7 @@ test('32 missing page header: server_error with no details, loud email; the lead
 });
 
 test('33 saveShortlist: valid grouped list is saved as text, nothing else changes; bad shapes rejected', () => {
-  const env = buildEnvironment(); seedStudent(env); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Name': 'Other Student', 'Saved Shortlist': '' });
+  const env = buildEnvironment(); seedStudent(env); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Student Name': 'Other Student', 'Saved Shortlist': '' });
   const before = JSON.parse(snapshot(env));
   const list = { JOSAA: [{ institute: 'IIT Bombay', branch: 'CSE', seatType: 'AI', name: '=HYPERLINK("http://x.invalid","hi")' }], CAP: [{ institute: 'VJTI', branch: 'IT', seatType: 'State Level' }] };
   const res = postJson(env, { action: 'saveShortlist', token: TOK, colleges: list });

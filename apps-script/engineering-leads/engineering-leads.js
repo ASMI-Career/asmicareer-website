@@ -72,7 +72,7 @@ var ENQUIRY_HEADERS = {
 var DASHBOARD_HEADERS = {
   token:        'Token',
   dateAdded:    'Date Added',
-  name:         'Name',
+  name:         'Student Name',
   score:        'Score',
   stream:       'Stream',
   plan:         'Plan',
@@ -131,7 +131,7 @@ var BRANCH_ALIASES = [
 var STUDENT_HEADERS = {
   token:              'Token',
   stream:             'Stream',
-  name:               'Name',
+  name:               'Student Name',
   score:              'Score',
   category:           'Category',
   stage:              'Stage',
