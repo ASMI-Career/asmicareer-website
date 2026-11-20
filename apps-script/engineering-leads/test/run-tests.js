@@ -38,8 +38,8 @@ test('01 happy path: Pune lead lands in Pune, dashboard row created, formulas un
   const r = leadRows(pune)[0];
   assert.strictEqual(r, 2, 'goes to the first empty DATA row even though formulas fill rows 2-60 in another column');
   const row = pune.obj(r);
-  assert.strictEqual(row['Token'], res.token);
-  assert.strictEqual(row['Full Name'], 'Aarav Deshmukh');
+  assert.strictEqual(row['Token Number'], res.token);
+  assert.strictEqual(row['Student Name'], 'Aarav Deshmukh');
   assert.strictEqual(row['Student Contact'], '9876543210');
   assert.strictEqual(row['Entrance Percentile'], 98.37);
   assert.strictEqual(typeof row['Entrance Percentile'], 'number');
@@ -245,7 +245,7 @@ test('09 duplicates: a Medical-style token is flagged but never reused', () => {
   const env = buildEnvironment();
   const pune = env.enq.getSheetByName('Pune');
   const set = (h, v) => pune._set(2, env.enqHeaders.indexOf(h) + 1, v);
-  set('Timestamp', new Date(env.state.clock.getTime() - 3600 * 1000)); set('Token', '26-PUN-045'); set('Full Name', 'Old Medical Lead'); set('Student Contact', '9876543210');
+  set('Timestamp', new Date(env.state.clock.getTime() - 3600 * 1000)); set('Token Number', '26-PUN-045'); set('Student Name', 'Old Medical Lead'); set('Student Contact', '9876543210');
   const res = env.submit(good({ 'Student Contact': '9876543210' }));
   assert.strictEqual(res.duplicate, true);
   assert.match(res.token, /^ENG-/, 'new ENG token, not the medical one');
@@ -283,7 +283,7 @@ test('10 tokens: format, uniqueness, not sequential, collision re-roll in BOTH w
     assert.ok(calls >= 2, 'RNG called again after collision');
     return res;
   };
-  rig(e => { const s = e.enq.getSheetByName('Andheri'); s._set(2, e.enqHeaders.indexOf('Token') + 1, 'ENG-AAAAAAAAAA'); s._set(2, e.enqHeaders.indexOf('Full Name') + 1, 'X Y'); });   // enquiry workbook
+  rig(e => { const s = e.enq.getSheetByName('Andheri'); s._set(2, e.enqHeaders.indexOf('Token Number') + 1, 'ENG-AAAAAAAAAA'); s._set(2, e.enqHeaders.indexOf('Student Name') + 1, 'X Y'); });   // enquiry workbook
   rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Student Name') + 1, 'X Y'); });                    // dashboard Token
   rig(e => { e.dsheet._set(2, e.dashHeaders.indexOf('Inquiry Token') + 1, 'ENG-AAAAAAAAAA'); e.dsheet._set(2, e.dashHeaders.indexOf('Student Name') + 1, 'X Y'); });             // dashboard Inquiry Token
   return `300 unique tokens, ascending share ${share.toFixed(2)}, collision re-rolled for enquiry / dashboard Token / dashboard Inquiry Token`;
@@ -294,8 +294,8 @@ test('11 headers by name: shuffled order, extra columns, case/space variants all
   const env = buildEnvironment();
   // rename a header with odd spacing/case in the Pune tab; still found
   const pune = env.enq.getSheetByName('Pune');
-  const idx = env.enqHeaders.indexOf('Full Name');
-  pune.rows[0][idx] = '  full   NAME ';
+  const idx = env.enqHeaders.indexOf('Student Name');
+  pune.rows[0][idx] = '  student   NAME ';
   const res = env.submit(good());
   assert.strictEqual(res.ok, true);
   assert.strictEqual(pune._get(2, idx + 1), 'Aarav Deshmukh');
@@ -498,7 +498,7 @@ test('23 honeypot and formula-injection text', () => {
   const pune = env.enq.getSheetByName('Pune');
   const row = pune.obj(2);
   assert.strictEqual(row['City'], '=HYPERLINK("http://x.invalid","click")', 'stored literally as text');
-  ['City', 'utm_campaign', 'Coaching Class', 'Home State', 'Student Contact', 'Full Name'].forEach(h => {
+  ['City', 'utm_campaign', 'Coaching Class', 'Home State', 'Student Contact', 'Student Name'].forEach(h => {
     assert.strictEqual(pune.formats['2,' + (env.enqHeaders.indexOf(h) + 1)], '@', h + ' cell is forced to plain-text format');
   });
   return 'bot dropped silently; risky strings stored with plain-text format requested (MOCK: cannot prove Sheets honours it)';
@@ -530,11 +530,11 @@ test('24 configuration: IDs only from Script Properties; missing/invalid IDs fai
 test('25 sheet growth: when the tab has no free rows left, rows are inserted', () => {
   const env = buildEnvironment({ sheetOpts: { maxRows: 61 } });     // 60 formula rows fill the sheet
   const pune = env.enq.getSheetByName('Pune');
-  for (let r = 2; r <= 61; r++) { pune._set(r, env.enqHeaders.indexOf('Token') + 1, 'ENG-ZZZZZZZZ' + String(10 + r)); pune._set(r, env.enqHeaders.indexOf('Full Name') + 1, 'Filler'); }
+  for (let r = 2; r <= 61; r++) { pune._set(r, env.enqHeaders.indexOf('Token Number') + 1, 'ENG-ZZZZZZZZ' + String(10 + r)); pune._set(r, env.enqHeaders.indexOf('Student Name') + 1, 'Filler'); }
   const res = env.submit(good());
   assert.strictEqual(res.ok, true);
   assert.ok(pune.insertedRows >= 1);
-  assert.strictEqual(pune.obj(62)['Token'], res.token);
+  assert.strictEqual(pune.obj(62)['Token Number'], res.token);
   return 'wrote to row 62 after inserting rows';
 });
 

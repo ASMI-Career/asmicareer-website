@@ -160,7 +160,7 @@ function buildEnvironment(options = {}) {
 }
 
 /** All data rows (row 2+) of a tab that carry a Token or Full Name, ignoring formula-only rows. */
-function leadRows(sheet, tokenHeader = 'Token', nameHeader = 'Full Name') {
+function leadRows(sheet, tokenHeader = 'Token Number', nameHeader = 'Student Name') {
   const out = [];
   for (let r = 2; r <= sheet.rows.length; r++) {
     if (String(sheet.cell(r, tokenHeader)) !== '' || String(sheet.cell(r, nameHeader)) !== '') out.push(r);

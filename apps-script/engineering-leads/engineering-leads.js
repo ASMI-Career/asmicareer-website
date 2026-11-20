@@ -49,15 +49,15 @@ var HEADER_ROW       = 1;
 
 var ENQUIRY_HEADERS = {
   timestamp:      'Timestamp',
-  token:          'Token',
-  fullName:       'Full Name',
+  token:          'Token Number',                 // matches the live Enquiry sheet
+  fullName:       'Student Name',
   studentContact: 'Student Contact',
   fatherContact:  'Father Contact',
   motherContact:  'Mother Contact',
   coaching:       'Coaching Class',
   city:           'City',
   category:       'Category',
-  courses:        'Courses',
+  courses:        'Desired Branches',
   budget:         'Budget',
   nearestBranch:  'Nearest Branch',
   percentile:     'Entrance Percentile',
