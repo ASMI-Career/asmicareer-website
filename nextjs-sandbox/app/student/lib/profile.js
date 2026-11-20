@@ -16,7 +16,7 @@ export const MAX_BRANCHES = 6;
 export const FIELDS = {
   name: { kind: 'name' }, category: { kind: 'enum', list: CATEGORIES }, gender: { kind: 'enum', list: GENDERS }, pwd: { kind: 'enum', list: YES_NO },
   home_state: { kind: 'enum', list: STATES }, home_university: { kind: 'text' }, minority: { kind: 'text' },
-  jee_main_percentile: { kind: 'pct' }, jee_main_crl_rank: { kind: 'rank' }, category_rank: { kind: 'rank' }, jee_adv_rank: { kind: 'rank' },
+  jee_main_percentile: { kind: 'pct' }, jee_main_crl_rank: { kind: 'rank' }, category_rank: { kind: 'rank' }, jee_adv_rank: { kind: 'rank' }, jee_adv_category_rank: { kind: 'rank' },
   mhtcet_percentile: { kind: 'pct' }, mhtcet_sml: { kind: 'rank' }, desired_branches: { kind: 'branches' },
 };
 export const FIELD_KEYS = Object.keys(FIELDS);
@@ -78,7 +78,8 @@ export function prefillFrom(profile) {
   // Both ranks are handed over; the Predictor picks per track. JoSAA compares reserved categories by CATEGORY rank, CSAB and the rest by CRL.
   if (profile.jee_main_crl_rank) out.mainCrl = String(profile.jee_main_crl_rank);
   if (profile.category_rank) out.mainCat = String(profile.category_rank);
-  if (profile.jee_adv_rank) out.advRank = String(profile.jee_adv_rank);
+  if (profile.jee_adv_rank) out.advCrl = String(profile.jee_adv_rank);                       // IITs: reserved categories compare their CATEGORY rank
+  if (profile.jee_adv_category_rank) out.advCat = String(profile.jee_adv_category_rank);
   if (profile.jee_main_percentile) out.mainPct = String(profile.jee_main_percentile);
   if (profile.mhtcet_percentile) out.mhPct = String(profile.mhtcet_percentile);
   if (profile.mhtcet_sml) out.mhMerit = String(profile.mhtcet_sml);   // Maharashtra state merit number (SML rank)

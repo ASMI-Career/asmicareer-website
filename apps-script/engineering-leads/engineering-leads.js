@@ -547,6 +547,7 @@ function readStudent_(sheet, row, cols) {
     jee_main_crl_rank:   pv.jee_main_crl_rank,
     category_rank:       pv.category_rank,
     jee_adv_rank:        pv.jee_adv_rank,
+    jee_adv_category_rank: pv.jee_adv_category_rank,
     mhtcet_percentile:   pv.mhtcet_percentile,
     mhtcet_sml:          pv.mhtcet_sml,
     desired_branches:    pv.desired_branches,
@@ -621,12 +622,13 @@ var PROFILE_HEADERS = {
   jeeMainCrlRank:    'JEE Main CRL Rank',
   categoryRank:      'Category Rank',
   jeeAdvRank:        'JEE Advanced Rank',
+  jeeAdvCategoryRank: 'JEE Advanced Category Rank',   // Optional column: only saving this field needs it
   mhtcetPercentile:  'MHT-CET Percentile',
   mhtcetSml:         'MHT-CET SML Rank',            // state merit list number. Optional column: only saving this field needs it
   desiredBranches:   'Desired Branches'            // stored as comma-separated text, at most PROFILE_MAX_BRANCHES items
 };
 
-var PROFILE_OPTIONAL      = { mhtcetSml: true };    // header may be missing; every other profile header is required
+var PROFILE_OPTIONAL      = { mhtcetSml: true, jeeAdvCategoryRank: true };    // header may be missing; every other profile header is required
 var PROFILE_LOG_TAB       = 'Profile Log';
 var PROFILE_RATE_LIMIT    = 20;                    // saveProfile calls per token per hour
 var PROFILE_RATE_WINDOW_S = 3600;
@@ -661,6 +663,7 @@ var PROFILE_FIELDS = [
   { key: 'jee_main_crl_rank',   src: 'profile', col: 'jeeMainCrlRank',    type: 'rank' },
   { key: 'category_rank',       src: 'profile', col: 'categoryRank',      type: 'rank' },
   { key: 'jee_adv_rank',        src: 'profile', col: 'jeeAdvRank',        type: 'rank' },
+  { key: 'jee_adv_category_rank', src: 'profile', col: 'jeeAdvCategoryRank', type: 'rank' },
   { key: 'mhtcet_percentile',   src: 'profile', col: 'mhtcetPercentile',  type: 'percentile' },
   { key: 'mhtcet_sml',          src: 'profile', col: 'mhtcetSml',         type: 'rank' },
   { key: 'desired_branches',    src: 'profile', col: 'desiredBranches',   type: 'branches' }
@@ -744,6 +747,7 @@ function profileView_(vals, cols, pcols) {
     jee_main_crl_rank:   rankOrNull_(p('jeeMainCrlRank')),
     category_rank:       rankOrNull_(p('categoryRank')),
     jee_adv_rank:        rankOrNull_(p('jeeAdvRank')),
+    jee_adv_category_rank: rankOrNull_(p('jeeAdvCategoryRank')),
     mhtcet_percentile:   numOrNull_(p('mhtcetPercentile')),
     mhtcet_sml:          rankOrNull_(p('mhtcetSml')),
     desired_branches:    splitBranches_(p('desiredBranches'))

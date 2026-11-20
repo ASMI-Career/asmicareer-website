@@ -119,6 +119,16 @@ test('P10 MHT-CET SML rank: saved as a whole number, validated, header optional'
   assert.strictEqual(e2.ctx.verifyHeaders().ok, true, 'verifyHeaders does not demand the optional header');
   return 'ok';
 });
+test('P11 JEE Advanced category rank: saved as a whole number, header optional', () => {
+  const env = buildEnvironment(); seed(env);
+  const r = save(env, { jee_adv_category_rank: '320' }); assert.strictEqual(r.ok, true); assert.strictEqual(r.profile.jee_adv_category_rank, 320);
+  assert.strictEqual(env.dsheet.cell(2, 'JEE Advanced Category Rank'), 320);
+  env.state.cache = {}; assert.strictEqual(save(env, { jee_adv_category_rank: '0' }).error, 'validation');
+  const e2 = buildEnvironment(); seed(e2); e2.dsheet.rows[0][e2.dsheet.rows[0].indexOf('JEE Advanced Category Rank')] = '';
+  assert.strictEqual(save(e2, { gender: 'Male' }).ok, true); assert.strictEqual(save(e2, { jee_adv_category_rank: '5' }).error, 'server_error');
+  assert.strictEqual(e2.ctx.verifyHeaders().ok, true);
+  return 'ok';
+});
 let p = 0, f = 0;
 for (const t of tests) { try { const n = t.f(); p++; console.log('PASS ' + t.n + (n ? '\n      -> ' + n : '')); } catch (e) { f++; console.log('FAIL ' + t.n + '\n      -> ' + e.message.split('\n')[0]); if (process.env.VERBOSE) console.log(e.stack); } }
 console.log(`\n${p} passed, ${f} failed, ${tests.length} total`); process.exit(f ? 1 : 0);
