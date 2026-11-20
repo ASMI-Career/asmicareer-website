@@ -10,6 +10,7 @@ import usePredictor from './hooks/usePredictor';
 import useCutoffExplorer from './hooks/useCutoffExplorer';
 import useInstitutes from './hooks/useInstitutes';
 import useEngCutoff from './hooks/useEngCutoff';
+import useProfile from './hooks/useProfile';
 import useStudent from './hooks/useStudent';
 import useCatalog from './hooks/useCatalog';
 import TokenGate from './components/TokenGate';
@@ -23,6 +24,7 @@ import Institutes from './components/Institutes';
 import Documents from './components/Documents';
 import Deadlines from './components/Deadlines';
 import Tutorials from './components/Tutorials';
+import Settings from './components/Settings';
 
 // The student dashboard page. All state lives in the hooks below, which are always called, so what a student typed in one
 // tab (filters, inputs) is still there after switching tabs. Each tab is a component that receives everything as props.
@@ -47,6 +49,7 @@ export default function StudentDashboard() {
   const predictor = usePredictor({ config });
   const cutoff = useCutoffExplorer();
   const institutes = useInstitutes();
+  const profileApi = useProfile({ config, endpoint, currentToken });
   const student = useStudent({
     config, endpoint,
     setCurrentToken,
@@ -54,17 +57,22 @@ export default function StudentDashboard() {
     docCategory: docs.docCategory, docQuota: docs.docQuota,
     setShortlistGroups: shortlistApi.setShortlistGroups,
     setCpScoreInput: predictor.setCpScoreInput,
+    onProfile: profileApi.profileOnSheet,
   });
   const docSections = useDocumentSections({ config, checkedDocs: docs.checkedDocs, docCategory: docs.docCategory, docQuota: docs.docQuota, studentTracks: student.studentTracks });
   const engCutoff = useEngCutoff({ config, studentCategory: student.studentCategory, active: shell.activeTab === 'cutoff' || shell.activeTab === 'predictor' });
+  profileApi.profileSinks.current.prefill = engCutoff.ecPrefill;
+  profileApi.profileSinks.current.student = student.applyProfileToStudent;
   const catalog = useCatalog({ config, studentCategory: student.studentCategory, studentTracks: student.studentTracks });
 
   if (student.authState !== 'ok') return <TokenGate state={student.authState} helpline={config.dashboard.helpline} />;
 
   // A link like ?tab=predictor on a stream without that module falls back (Medical keeps its old behaviour for unknown tabs).
-  const activeTab = (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? shell.activeTab : config.unknownTabFallback;
+  // 'settings' is not a nav module: it exists only for streams with the profile switched on, and only once the script answered with profile_locked.
+  const settingsOpen = shell.activeTab === 'settings' && profileApi.profileSupported;
+  const activeTab = settingsOpen ? 'settings' : (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? (shell.activeTab === 'settings' ? (config.unknownTabFallback || 'dashboard') : shell.activeTab) : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff };
+  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...profileApi };
 
   return (
     <Shell {...ctx}>
@@ -74,6 +82,7 @@ export default function StudentDashboard() {
       {activeTab === 'institutes' && config.modules.includes('institutes') && <Institutes {...ctx} />}
       {activeTab === 'checklist' && config.modules.includes('checklist') && <Documents {...ctx} />}
       {activeTab === 'deadlines' && config.modules.includes('deadlines') && <Deadlines {...ctx} />}
+      {activeTab === 'settings' && <Settings {...ctx} />}
       {activeTab === 'tutorials' && config.modules.includes('tutorials') && <Tutorials {...ctx} />}
     </Shell>
   );

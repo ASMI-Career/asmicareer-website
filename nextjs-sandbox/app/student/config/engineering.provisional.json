@@ -13,6 +13,7 @@
     "[CONFIRM] OBC students are shown as OBC-NCL."
   ],
   "id": "engineering",
+  "profile": { "enabled": true },
   "modules": ["dashboard", "deadlines", "predictor", "cutoff", "institutes", "checklist", "tutorials"],
   "nav": [
     { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
@@ -53,7 +54,7 @@
     "headerRole": "Engineering Aspirant",
     "heroSubtitle": "Your engineering admission journey is in progress. Keep going!",
     "badges": [
-      { "label": "PERCENTILE", "field": "score" },
+      { "label": "PERCENTILE", "field": "examScore" },
       { "label": "CATEGORY",   "field": "category" }
     ],
     "categoryLabels": { "General": "General / UR", "OBC": "OBC-NCL" },

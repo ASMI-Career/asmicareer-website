@@ -1587,3 +1587,33 @@ input[type="range"]::-moz-range-thumb {
   :root[data-stream="engineering"] .dl-row > .dl-actions { padding-left: 12px; }
   :root[data-stream="engineering"] .dl-bar { height: 3px; }
 }
+
+/* Engineering profile (Settings) */
+:root[data-stream="engineering"] .header-user-link { cursor: pointer; }
+:root[data-stream="engineering"] .pf-wrap { max-width: 860px; margin: 0 auto; padding-bottom: 96px; }
+:root[data-stream="engineering"] .pf-title { font-size: 22px; font-weight: 800; color: var(--text-900); margin: 0 0 4px; }
+:root[data-stream="engineering"] .pf-sub { font-size: 13px; color: var(--text-500); margin: 0 0 18px; }
+:root[data-stream="engineering"] .pf-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 16px; }
+:root[data-stream="engineering"] .pf-card-title { font-size: 15px; font-weight: 800; margin: 0 0 2px; color: var(--text-900); }
+:root[data-stream="engineering"] .pf-card-hint { font-size: 12px; color: var(--text-500); margin: 0 0 14px; }
+:root[data-stream="engineering"] .pf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+:root[data-stream="engineering"] .pf-field .form-input:disabled, :root[data-stream="engineering"] .pf-field .form-select:disabled { background: var(--bg-subtle, #f5f5f5); color: var(--text-700); opacity: 1; }
+:root[data-stream="engineering"] .pf-field [aria-invalid="true"] { border-color: #c0392b; }
+:root[data-stream="engineering"] .pf-error { font-size: 12px; font-weight: 600; color: #c0392b; margin-top: 4px; }
+:root[data-stream="engineering"] .pf-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+:root[data-stream="engineering"] .pf-none { font-size: 12px; color: var(--text-500); }
+:root[data-stream="engineering"] .pf-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 100px; background: var(--primary-bg); border: 1px solid var(--primary-border); font-size: 12px; font-weight: 700; color: var(--text-900); }
+:root[data-stream="engineering"] .pf-chip-x { border: none; background: none; cursor: pointer; font-size: 11px; color: var(--text-500); padding: 2px 4px; min-width: 24px; min-height: 24px; }
+:root[data-stream="engineering"] .pf-add { display: flex; gap: 8px; align-items: center; }
+:root[data-stream="engineering"] .pf-bar { position: sticky; bottom: 0; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 12px 0; background: var(--bg-page, #fff); border-top: 1px solid var(--border); }
+:root[data-stream="engineering"] .pf-save { padding: 11px 22px; border-radius: 100px; border: none; background: var(--primary-accent, #00A896); color: #fff; font-weight: 800; font-size: 14px; font-family: inherit; cursor: pointer; }
+:root[data-stream="engineering"] .pf-save:disabled { opacity: 0.45; cursor: not-allowed; }
+:root[data-stream="engineering"] .pf-status { font-size: 12px; font-weight: 600; color: var(--text-500); }
+:root[data-stream="engineering"] .pf-status[data-kind="ok"] { color: #1e8449; }
+:root[data-stream="engineering"] .pf-status[data-kind="error"] { color: #c0392b; }
+@media (max-width: 640px) {
+  :root[data-stream="engineering"] .pf-grid { grid-template-columns: minmax(0, 1fr); }
+  :root[data-stream="engineering"] .pf-bar { bottom: 64px; }
+  :root[data-stream="engineering"] .pf-card { padding: 14px; }
+  :root[data-stream="engineering"] .pf-field .form-input, :root[data-stream="engineering"] .pf-field .form-select { font-size: 16px; }
+}

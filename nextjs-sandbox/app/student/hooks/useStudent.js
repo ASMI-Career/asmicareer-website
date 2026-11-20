@@ -6,7 +6,7 @@ import { getBranchFromToken } from '../lib/format';
 
 // Resolves the token in the link, loads the student (cache first, then the sheet) and hands the pieces the other hooks own to their setters.
 // The effect runs once, so it uses the values of the first render, exactly like before the split.
-export default function useStudent({ config, endpoint, setCurrentToken, setCheckedDocs, setDocCategory, setDocQuota, docCategory, docQuota, setShortlistGroups, setCpScoreInput }) {
+export default function useStudent({ config, endpoint, setCurrentToken, setCheckedDocs, setDocCategory, setDocQuota, docCategory, docQuota, setShortlistGroups, setCpScoreInput, onProfile }) {
   const sc = config.student;
   const { normalizeGroups } = makeShortlist(config.shortlist);
   // Medical keeps whole numbers (NEET score); engineering keeps decimals (percentile 98.37).
@@ -61,6 +61,7 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
               setAuthState('ok');
               const s = res.data;
               if (sc.logRecord) console.log('[ASMI] student data:', s);
+              if (onProfile) onProfile(s);
               if (s.name) { setStudentName(s.name); writeCache(token, 'name', s.name); }
               const rawRank = s.rank || s.neet_rank || s.air;
               const rawScore = s.score || s.neet_score;
@@ -132,8 +133,19 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
     }
   }, []);
 
+  // After a profile save: bring name, category and the checklist category in line with what the sheet now holds.
+  const applyProfileToStudent = (p) => {
+    const token = new URLSearchParams(window.location.search).get('token') || '';
+    if (p.name) { setStudentName(p.name); writeCache(token, 'name', p.name); }
+    if (p.category) {
+      const cat = applyRules(p.category, sc.categoryRules);
+      setDocCategory(cat); setStudentCategory(cat);
+      writeCache(token, 'checklist', { ...(readCache(token, 'checklist') || {}), category: cat });
+    }
+  };
+
   const initials = studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   const counsellorInitials = counsellorName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
-  return { studentName, studentRank, studentScore, authState, studentCategory, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, whatsappGroupLink, counsellorBranch, progressSteps, studentTracks, initials, counsellorInitials };
+  return { studentName, studentRank, studentScore, authState, studentCategory, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, whatsappGroupLink, counsellorBranch, progressSteps, studentTracks, initials, counsellorInitials, applyProfileToStudent };
 }

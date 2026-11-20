@@ -85,8 +85,17 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   // Once the Maharashtra manifest arrives, start on its last round.
   useEffect(() => { if (counselling === 'MH' && manifest && !manifest.rounds.includes(round)) setRound(manifest.rounds[manifest.rounds.length - 1]); }, [counselling, manifest, round]);
 
+  // Profile prefill: only the values the student has filled in are passed; nothing else is touched. The category follows studentCategory.
+  const prefill = (v) => {
+    if (v.mainRank !== undefined) setMainRank(v.mainRank);
+    if (v.advRank !== undefined) setAdvRank(v.advRank);
+    if (v.mainPct !== undefined) setMainPct(v.mainPct);
+    if (v.mhPct !== undefined) setMhPct(v.mhPct);
+    if (v.pwd) setPwd(true);
+  };
+
   return {
-    ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
+    ecPrefill: prefill, ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
     ecQuota: quota, setEcQuota: (v) => { touched.current = false; setQuota(v); setCategory(''); },
     ecCategory: category, setEcCategory: (v) => { touched.current = true; setCategory(v); },
     ecGender: gender, setEcGender: setGender, ecItype: itype, setEcItype: (v) => { setItype(v); setVisible(40); },
