@@ -67,7 +67,7 @@
             <img src="/asmi-logo.png" alt="ASMI Logo" class="h-9 w-auto">
             <div>
               <h1 class="text-2xl font-bold tracking-tight text-gray-950">Counsellor — Engineering Preference List Builder</h1>
-              <p id="header-sub" class="text-sm text-gray-500 mt-1">JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
+              <p id="header-sub" class="text-sm text-gray-500 mt-1">JoSAA 2026 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
             </div>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-3">
@@ -81,7 +81,7 @@
                 <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="MH">Maharashtra CAP</button>
               </div>
               <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
-                <button id="year-label" class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2025">2025</button>
+                <button id="year-label" class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2026">2026</button>
                 <button id="year-prev" class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold" disabled title="Data coming soon">2024</button>
               </div>
               <button id="togglePrefBtn" class="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-white border border-gray-200 custom-shadow text-sm font-bold text-[#0a1628] whitespace-nowrap hover:border-[#00A896] transition" title="Show or hide the preference list">
@@ -228,7 +228,7 @@
 
 <script>
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
-  const YEAR = 2025;
+  const YEAR = 2026;
 
   const JOSAA_QUOTAS = [
     { key: 'all-india',   label: 'All India' },
@@ -259,16 +259,16 @@
 
   const COUNSELLINGS = {
     JOSAA: {
-      year: 2025,
-      base: '/data/cutoffs/JOSAA/2025',
+      year: 2026,
+      base: '/data/cutoffs/JOSAA/2026',
       title: 'JoSAA — Joint Seat Allocation Authority',
       sub: 'IITs · NITs · IIITs · GFTIs · B.Tech / B.Arch programs',
-      header: 'JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
+      header: 'JoSAA 2026 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
       rankLabel: 'JEE RANK',
       rankPlaceholder: 'Enter CRL rank manually',
       rankHint: 'Pre-loaded from student token. Per-round chances shown below.',
-      rounds: ['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'],
-      defaultRound: 'Round 6',
+      rounds: ['Round 1','Round 2','Round 3','Round 4','Round 5'],
+      defaultRound: 'Round 5',
       defaults: { quota: 'all-india', category: 'OPEN' },
     },
     MH: {
@@ -294,7 +294,7 @@
     gender: 'all',
     itype: 'ALL',
     pwd: false,
-    round: 'Round 6',
+    round: 'Round 5',
     sort: 'rank_asc',
     search: '',
     branches: [],
@@ -559,7 +559,7 @@
 
     const tbody = document.getElementById('tableBody');
     if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2025 JoSAA'} data.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2026 JoSAA'} data.</td></tr>`;
       return;
     }
 
@@ -692,7 +692,7 @@
     if (preferenceList.length === 0) { alert('Add at least one college to the preference list first.'); return; }
     const rows = preferenceList.map((p, i) => ({
       'Pref No.': i + 1,
-      'Counselling': `${p.counselling || 'JoSAA'} ${p.year || 2025}`,
+      'Counselling': `${p.counselling || 'JoSAA'} ${p.year || 2026}`,
       'Institute': p.name,
       'Type': p.type,
       'Program': p.program,

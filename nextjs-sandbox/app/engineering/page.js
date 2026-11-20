@@ -318,7 +318,7 @@ export default function EngineeringPortal() {
                                                   <span className="dm-filter-pill">JEE Main percentile: 96.5</span>
                                                   <span className="dm-filter-pill">Category: OBC-NCL</span>
                                                   <span className="dm-filter-pill">Quota: All India</span>
-                                                  <span className="dm-filter-pill">Round 6</span>
+                                                  <span className="dm-filter-pill">Round 5</span>
                                               </div>
                                               <div className="dm-filter-row">
                                                   <span className="dm-filter-pill dm-filter-pill-active">All</span>
@@ -367,7 +367,7 @@ export default function EngineeringPortal() {
                                           <div className="dm-screen dm-cutoffs">
                                               <div className="dm-page-header">Cutoff Explorer</div>
                                               <div className="dm-filter-row">
-                                                  <span className="dm-filter-pill dm-filter-pill-active">JoSAA 2025</span>
+                                                  <span className="dm-filter-pill dm-filter-pill-active">JoSAA 2026</span>
                                                   <span className="dm-filter-pill">Maharashtra CAP 2026</span>
                                               </div>
                                               <div className="dm-counsel-cards">
@@ -1071,7 +1071,7 @@ export default function EngineeringPortal() {
                       </div>
                       <div className="resource-content">
                           <div className="resource-title">JoSAA Round-wise Cutoff PDF 2025</div>
-                          <p className="resource-body">All IIT, NIT, IIIT cutoffs from JoSAA 2025 — round by round.</p>
+                          <p className="resource-body">All IIT, NIT, IIIT cutoffs from JoSAA 2026 — round by round.</p>
                           <div className="resource-footer">
                               <span className="resource-meta">PDF · 2.1 MB</span>
                               <a href="#" className="resource-cta-btn">Get it Now ↓</a>

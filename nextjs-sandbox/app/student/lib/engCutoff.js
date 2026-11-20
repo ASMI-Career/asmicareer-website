@@ -1,11 +1,11 @@
-// Engineering Cutoff Explorer: the same JoSAA 2025 and Maharashtra CAP 2026 files the counsellor tool
+// Engineering Cutoff Explorer: the same JoSAA 2026 and Maharashtra CAP 2026 files the counsellor tool
 // (public/engineering-counsellor) reads, shown in a student-friendly way. Nothing here is Medical.
 
 export const JOSAA = {
-  id: 'JOSAA', track: 'JoSAA', label: 'JoSAA', year: 2025,
-  base: '/data/cutoffs/JOSAA/2025',
-  rounds: ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'],
-  defaultRound: 'Round 6',
+  id: 'JOSAA', track: 'JoSAA', label: 'JoSAA', year: 2026,
+  base: '/data/cutoffs/JOSAA/2026',
+  rounds: ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5'],
+  defaultRound: 'Round 5',
   quotas: [
     { key: 'combined', label: 'All India + Other State (recommended)' },
     { key: 'all-india', label: 'All India' }, { key: 'home-state', label: 'Home State' }, { key: 'other-state', label: 'Other State' },
