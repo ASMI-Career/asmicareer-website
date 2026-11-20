@@ -585,7 +585,7 @@ test('28 website form sends exactly the field names the script reads (static che
 
 // ─────────────────────────────────────────────────────────────── 11. student dashboard actions (getStudent / saveShortlist / saveDocStatus)
 const TOK = 'ENG-ABCDEFGH23';
-const ALLOWED_KEYS = ['category', 'counsellor_name', 'counsellor_whatsapp', 'document_status', 'name', 'saved_colleges', 'score', 'stage', 'tracks', 'whatsapp_group_link'];
+const ALLOWED_KEYS = ['category', 'category_rank', 'counsellor_name', 'counsellor_whatsapp', 'desired_branches', 'document_status', 'gender', 'home_state', 'home_university', 'jee_adv_rank', 'jee_main_crl_rank', 'jee_main_percentile', 'mhtcet_percentile', 'minority', 'name', 'profile_locked', 'pwd', 'saved_colleges', 'score', 'stage', 'tracks', 'whatsapp_group_link'];
 const setCell = (sheet, row, header, value) => sheet._set(row, sheet.rows[0].indexOf(header) + 1, value);
 function seedStudent(env, row = 2, over = {}) {
   const v = Object.assign({

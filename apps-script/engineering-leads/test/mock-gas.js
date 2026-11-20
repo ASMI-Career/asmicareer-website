@@ -35,6 +35,7 @@ class MockRange {
     return this;
   }
   // single-cell forms of the real Range API
+  getFormula() { const v = this.sheet._get(this.r, this.c); return (typeof v === 'string' && v.charAt(0) === '=') ? v : ''; }
   getValue() { return this.getValues()[0][0]; }
   setValue(v) { return this.setValues([[v]]); }
   setNumberFormat(f) { return this.setNumberFormats([[f]]); }
@@ -75,13 +76,14 @@ class MockSpreadsheet {
   constructor(id) { this.id = id; this.sheets = {}; }
   add(sheet) { this.sheets[sheet.name] = sheet; return sheet; }
   getSheetByName(n) { return this.sheets[n] || null; }
+  insertSheet(name) { if (this.sheets[name]) throw new Error('Mock: sheet exists'); return this.add(new MockSheet(name, [''], { maxCols: 10 })); }
 }
 
 function buildEnvironment(options = {}) {
   const code = fs.readFileSync(SCRIPT_PATH, 'utf8');
   const state = {
     logs: [], mails: [], props: {}, lockAcquired: 0, lockReleased: 0, lockHeld: false, lockBusy: false,
-    mailThrows: false, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
+    mailThrows: false, cache: {}, cacheThrows: false, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
   };
 
   const ctx = vm.createContext({
@@ -100,6 +102,9 @@ function buildEnvironment(options = {}) {
         tryLock: () => { if (state.lockBusy || state.lockHeld) return false; state.lockHeld = true; state.lockAcquired++; return true; },
         releaseLock: () => { state.lockHeld = false; state.lockReleased++; }
       })
+    },
+    CacheService: {
+      getScriptCache: () => { if (state.cacheThrows) throw new Error('Mock: cache unavailable'); return { get: k => (k in state.cache ? state.cache[k] : null), put: (k, v) => { state.cache[k] = String(v); } }; }
     },
     PropertiesService: {
       getScriptProperties: () => ({
@@ -137,7 +142,8 @@ function buildEnvironment(options = {}) {
   // The dashboard tab: lead-flow columns + the columns the dashboard PAGE reads, plus unrelated columns around them.
   // 'Student Phone' and 'Parent Notes' are DECOYS: the page's data must never include them.
   const STUDENT = get('STUDENT_HEADERS');
-  const dashHeaders = ['Parent Notes', 'Student Phone'].concat(Array.from(new Set(Object.values(DASH).concat(Object.values(STUDENT))))).concat(['Admin Remarks']);
+  const PROFILE = get('PROFILE_HEADERS');
+  const dashHeaders = ['Parent Notes', 'Student Phone'].concat(Array.from(new Set(Object.values(DASH).concat(Object.values(STUDENT)).concat(options.noProfileCols ? [] : Object.values(PROFILE))))).concat(['Admin Remarks']);
   const dash = new MockSpreadsheet(DASH_ID);
   const dsheet = dash.add(new MockSheet('Student Dashboard', dashHeaders, options.sheetOpts));
 

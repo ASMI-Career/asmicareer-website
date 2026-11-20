@@ -28,11 +28,19 @@
  */
 
 // ════════════════════════════════════════════════════════════════
+//  STUDENT PROFILE EDITING SWITCH
+//  true  = students can edit their profile in the dashboard's Settings (saveProfile works).
+//  false = saveProfile answers {ok:false, error:"locked"} and getStudent returns profile_locked:true,
+//          so the dashboard shows the profile read-only. After changing this: Deploy -> Manage deployments -> New version.
+// ════════════════════════════════════════════════════════════════
+var PROFILE_EDIT_ENABLED = true;
+
+// ════════════════════════════════════════════════════════════════
 //  CONFIG — header NAMES (matched case/space-insensitively, must match exactly otherwise)
 //  If your sheet says something different, change the VALUE on the right, nothing else.
 // ════════════════════════════════════════════════════════════════
 
-var SCRIPT_VERSION = '1.1.0';
+var SCRIPT_VERSION = '1.2.0';
 
 var ENQUIRY_TABS     = ['Online', 'Andheri', 'Thane', 'Pune', 'Sangli', 'Kolhapur', 'Sambhajinagar', 'Seminar'];
 var NEVER_WRITE_TABS = ['All Leads'];            // formula tab: refused even if routing ever pointed at it
@@ -142,7 +150,7 @@ var STUDENT_HEADERS = {
   savedShortlist:     'Saved Shortlist',
   documentStatus:     'Document Status'
 };
-var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true };
+var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true, saveProfile: true };
 var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
 
 var TOKEN_PREFIX   = 'ENG-';
@@ -170,7 +178,10 @@ function doPost(e) {
     var body = parseJsonBody_(e);
     if (body && body.action) {
       if (!DASH_ACTIONS[body.action]) return json_({ error: 'invalid_action' });
-      return json_(dashboardAction_(body.action, body.token, body));
+      var out = dashboardAction_(body.action, body.token, body);
+      // saveProfile answers { ok: true, profile } or { ok: false, error }; the early exits (not_found ...) are put into that shape too.
+      if (body.action === 'saveProfile' && out && out.ok === undefined) out = { ok: false, error: out.error || 'server_error' };
+      return json_(out);
     }
     return json_(handleSubmission_((e && e.parameter) || {}));
   } catch (err) {
@@ -419,6 +430,7 @@ function verifyHeaders() {
   else {
     try { resolveHeaders_(dsh, DASHBOARD_HEADERS, 'Dashboard/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
     try { resolveHeaders_(dsh, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
+    try { resolveHeaders_(dsh, PROFILE_HEADERS, 'Student profile/' + DASHBOARD_TAB); } catch (e) { problems.push(e.message); }
   }
 
   NEVER_WRITE_TABS.forEach(function (t) {
@@ -449,14 +461,17 @@ function parseJsonBody_(e) {
   return null;
 }
 
-/** Always returns a plain object, never throws. Error codes: not_found, invalid_input, busy, server_error. */
+/** Always returns a plain object, never throws. Error codes: not_found, invalid_input, busy, locked, rate_limited, validation, server_error. */
 function dashboardAction_(action, token, payload) {
   try {
     var tok = String(token === undefined || token === null ? '' : token).trim();
     if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };            // wrong shape: never even looks at the sheet
 
+    if (action === 'saveProfile' && !PROFILE_EDIT_ENABLED) return { error: 'locked' };   // the switch at the top of the file
+
     var cfg = getConfig_();
-    var sheet = SpreadsheetApp.openById(cfg.dashboardId).getSheetByName(DASHBOARD_TAB);
+    var dashSS = SpreadsheetApp.openById(cfg.dashboardId);
+    var sheet = dashSS.getSheetByName(DASHBOARD_TAB);
     if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
     var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB);
 
@@ -466,6 +481,7 @@ function dashboardAction_(action, token, payload) {
     if (String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
 
     if (action === 'getStudent') return { success: true, data: readStudent_(sheet, row, cols) };
+    if (action === 'saveProfile') return saveProfile_(dashSS, sheet, cols, row, tok, payload && payload.profile);   // has its own rate limit and lock
 
     var lock = LockService.getScriptLock();
     var locked = false;
@@ -509,6 +525,7 @@ function readStudent_(sheet, row, cols) {
   var vals = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
   var v = function (key) { var x = vals[cols[key] - 1]; return (x === null || x === undefined) ? '' : x; };
   var score = v('score'), scoreNum = (score === '' ? null : Number(score));
+  var pv = profileView_(vals, cols, profileColumns_(sheet, false));
   return {
     name:                String(v('name')).trim(),
     score:               (scoreNum !== null && isFinite(scoreNum)) ? scoreNum : null,     // a number, decimals kept (percentile 98.37)
@@ -519,7 +536,20 @@ function readStudent_(sheet, row, cols) {
     counsellor_whatsapp: String(v('counsellorWhatsapp')).replace(/\D/g, ''),               // the COUNSELLOR's number, digits only (the page's "Call the Advisor" button)
     whatsapp_group_link: safeHttpUrl_(v('whatsappGroupLink')),
     saved_colleges:      parseJsonObject_(v('savedShortlist')),
-    document_status:     validDocStatusString_(v('documentStatus'))
+    document_status:     validDocStatusString_(v('documentStatus')),
+    // ── profile fields (added in 1.2.0). Missing columns give blank values; nothing here can break the fields above. ──
+    gender:              pv.gender,
+    pwd:                 pv.pwd,
+    home_state:          pv.home_state,
+    home_university:     pv.home_university,
+    minority:            pv.minority,
+    jee_main_percentile: pv.jee_main_percentile,
+    jee_main_crl_rank:   pv.jee_main_crl_rank,
+    category_rank:       pv.category_rank,
+    jee_adv_rank:        pv.jee_adv_rank,
+    mhtcet_percentile:   pv.mhtcet_percentile,
+    desired_branches:    pv.desired_branches,
+    profile_locked:      !PROFILE_EDIT_ENABLED
   };
 }
 
@@ -572,6 +602,298 @@ function validateDocStatus_(raw) {
     if (!seen[id]) { seen[id] = true; checked.push(id); }
   }
   return JSON.stringify({ checked: checked, category: cleanText_(o.category, 30), quota: cleanText_(o.quota, 30) });
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  STUDENT PROFILE  (saveProfile, and the profile fields that getStudent returns)
+//  Same "Student Dashboard" tab. Columns are found by header name. The student may change ONLY the fields in PROFILE_FIELDS.
+// ════════════════════════════════════════════════════════════════
+
+var PROFILE_HEADERS = {
+  gender:            'Gender',
+  pwd:               'PwD',
+  homeState:         'Home State',
+  homeUniversity:    'Home University',
+  minority:          'Minority',
+  jeeMainPercentile: 'JEE Main Percentile',
+  jeeMainCrlRank:    'JEE Main CRL Rank',
+  categoryRank:      'Category Rank',
+  jeeAdvRank:        'JEE Advanced Rank',
+  mhtcetPercentile:  'MHT-CET Percentile',
+  desiredBranches:   'Desired Branches'            // stored as comma-separated text, at most PROFILE_MAX_BRANCHES items
+};
+
+var PROFILE_LOG_TAB       = 'Profile Log';
+var PROFILE_RATE_LIMIT    = 20;                    // saveProfile calls per token per hour
+var PROFILE_RATE_WINDOW_S = 3600;
+var PROFILE_LOCK_WAIT_MS  = 10000;
+var PROFILE_TEXT_MAX      = 100;
+var PROFILE_NAME_MAX      = 80;
+var PROFILE_RANK_MAX      = 9999999;
+var PROFILE_MAX_BRANCHES  = 6;
+
+var PROFILE_GENDERS    = ['Male', 'Female', 'Other', 'Prefer not to say'];
+var PROFILE_YES_NO     = ['Yes', 'No'];
+// The dashboard's own category names (config categoryRules gives General, OBC, SEBC, SC, ST, EWS, VJ/NT/SBC and shows OBC as "OBC-NCL").
+// This is the only list saveProfile accepts. The sheet's older values (OPEN, OBC ...) are mapped to it on READ (normCategoryRead_).
+var PROFILE_CATEGORIES = ['General', 'OBC-NCL', 'SEBC', 'SC', 'ST', 'EWS', 'VJ/NT/SBC'];
+var PROFILE_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
+  'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan',
+  'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+];
+
+// THE WHITELIST. key = the name in the request and in the response; src = which header table the column comes from.
+var PROFILE_FIELDS = [
+  { key: 'name',                src: 'student', col: 'name',              type: 'name' },
+  { key: 'category',            src: 'student', col: 'category',          type: 'category' },
+  { key: 'gender',              src: 'profile', col: 'gender',            type: 'enum', list: PROFILE_GENDERS },
+  { key: 'pwd',                 src: 'profile', col: 'pwd',               type: 'enum', list: PROFILE_YES_NO },
+  { key: 'home_state',          src: 'profile', col: 'homeState',         type: 'enum', list: PROFILE_STATES },
+  { key: 'home_university',     src: 'profile', col: 'homeUniversity',    type: 'text' },
+  { key: 'minority',            src: 'profile', col: 'minority',          type: 'text' },
+  { key: 'jee_main_percentile', src: 'profile', col: 'jeeMainPercentile', type: 'percentile' },
+  { key: 'jee_main_crl_rank',   src: 'profile', col: 'jeeMainCrlRank',    type: 'rank' },
+  { key: 'category_rank',       src: 'profile', col: 'categoryRank',      type: 'rank' },
+  { key: 'jee_adv_rank',        src: 'profile', col: 'jeeAdvRank',        type: 'rank' },
+  { key: 'mhtcet_percentile',   src: 'profile', col: 'mhtcetPercentile',  type: 'percentile' },
+  { key: 'desired_branches',    src: 'profile', col: 'desiredBranches',   type: 'branches' }
+];
+// PROFILE_HEADERS has no 'pwd' key above by accident of ordering: keep it in sync here.
+PROFILE_HEADERS.pwd = 'PwD';
+
+/** Header columns of the profile table. strict=true throws HeaderError (missing/ambiguous); strict=false just leaves them out. */
+function profileColumns_(sheet, strict) {
+  var lastCol = sheet.getLastColumn();
+  var row = lastCol > 0 ? sheet.getRange(HEADER_ROW, 1, 1, lastCol).getValues()[0] : [];
+  var index = {};
+  for (var i = 0; i < row.length; i++) { var n = normHeader_(row[i]); if (n !== '') (index[n] = index[n] || []).push(i + 1); }
+  var cols = {}, missing = [], ambiguous = [];
+  Object.keys(PROFILE_HEADERS).forEach(function (k) {
+    var hits = index[normHeader_(PROFILE_HEADERS[k])] || [];
+    if (hits.length === 1) cols[k] = hits[0];
+    else if (hits.length === 0) missing.push('"' + PROFILE_HEADERS[k] + '"');
+    else ambiguous.push('"' + PROFILE_HEADERS[k] + '" (appears ' + hits.length + ' times)');
+  });
+  if (strict && (missing.length || ambiguous.length)) {
+    var err = new Error('Header problem in Student profile/' + DASHBOARD_TAB + '.' + (missing.length ? ' MISSING: ' + missing.join(', ') + '.' : '') + (ambiguous.length ? ' AMBIGUOUS: ' + ambiguous.join(', ') + '.' : ''));
+    err.name = 'HeaderError';
+    throw err;
+  }
+  return cols;
+}
+
+// ── reading: tolerant. The sheet may hold older spellings; they are mapped to the allowed lists, anything else reads as blank. ──
+
+function matchList_(raw, list) {
+  var k = String(raw === null || raw === undefined ? '' : raw).replace(/\s+/g, ' ').trim().toLowerCase();
+  if (!k) return '';
+  for (var i = 0; i < list.length; i++) if (list[i].toLowerCase() === k) return list[i];
+  return '';
+}
+
+/** Same first-match-wins rules as the dashboard's categoryRules (OBC, SEBC, SC, ST, EWS, VJ/NT/SBC, default General), giving the allowed names. */
+function normCategoryRead_(raw) {
+  var s = String(raw === null || raw === undefined ? '' : raw).trim();
+  if (!s) return '';
+  var u = s.toUpperCase();
+  if (u.indexOf('OBC') !== -1) return 'OBC-NCL';
+  if (u.indexOf('SEBC') !== -1) return 'SEBC';
+  if (u.indexOf('SC') !== -1) return 'SC';
+  if (u.indexOf('ST') !== -1) return 'ST';
+  if (u.indexOf('EWS') !== -1) return 'EWS';
+  if (['VJ', 'NT', 'SBC', 'OTHER'].some(function (x) { return u.indexOf(x) !== -1; })) return 'VJ/NT/SBC';
+  return 'General';
+}
+function normYesNoRead_(raw) {
+  var k = String(raw === null || raw === undefined ? '' : raw).trim().toLowerCase();
+  if (['yes', 'y', 'true', '1'].indexOf(k) !== -1) return 'Yes';
+  if (['no', 'n', 'false', '0'].indexOf(k) !== -1) return 'No';
+  return '';
+}
+function numOrNull_(raw) {
+  if (raw === '' || raw === null || raw === undefined) return null;
+  var n = Number(raw);
+  return isFinite(n) ? n : null;
+}
+function rankOrNull_(raw) { var n = numOrNull_(raw); return (n !== null && n >= 1 && Math.floor(n) === n) ? n : null; }
+function splitBranches_(raw) {
+  return String(raw === null || raw === undefined ? '' : raw).split(',')
+    .map(function (t) { return cleanText_(t, PROFILE_TEXT_MAX); }).filter(function (t) { return t; }).slice(0, PROFILE_MAX_BRANCHES);
+}
+
+/** All 13 profile fields of one row, in the shape the dashboard uses. category here is the normalised (allowed-list) name. */
+function profileView_(vals, cols, pcols) {
+  var p = function (k) { var c = pcols[k]; if (!c) return ''; var x = vals[c - 1]; return (x === null || x === undefined) ? '' : x; };
+  var s = function (k) { var c = cols[k]; if (!c) return ''; var x = vals[c - 1]; return (x === null || x === undefined) ? '' : x; };
+  return {
+    name:                String(s('name')).trim(),
+    category:            normCategoryRead_(s('category')),
+    gender:              matchList_(p('gender'), PROFILE_GENDERS),
+    pwd:                 normYesNoRead_(p('pwd')),
+    home_state:          matchList_(p('homeState'), PROFILE_STATES),
+    home_university:     cleanText_(p('homeUniversity'), PROFILE_TEXT_MAX),
+    minority:            cleanText_(p('minority'), PROFILE_TEXT_MAX),
+    jee_main_percentile: numOrNull_(p('jeeMainPercentile')),
+    jee_main_crl_rank:   rankOrNull_(p('jeeMainCrlRank')),
+    category_rank:       rankOrNull_(p('categoryRank')),
+    jee_adv_rank:        rankOrNull_(p('jeeAdvRank')),
+    mhtcet_percentile:   numOrNull_(p('mhtcetPercentile')),
+    desired_branches:    splitBranches_(p('desiredBranches'))
+  };
+}
+
+// ── validation: strict. Returns { ok, values: { key: value to store }, errors: { key: message } }. ──
+
+function profileFieldByKey_(key) { for (var i = 0; i < PROFILE_FIELDS.length; i++) if (PROFILE_FIELDS[i].key === key) return PROFILE_FIELDS[i]; return null; }
+
+function validateProfileField_(f, raw) {
+  var isStr = typeof raw === 'string', isNum = typeof raw === 'number';
+  if (raw === null || raw === undefined) return { ok: false, message: 'Missing value.' };
+  if (f.type === 'branches') {
+    if (isStr && raw.trim() === '') return { ok: true, value: '' };
+    if (!Array.isArray(raw)) return { ok: false, message: 'Desired branches must be a list.' };
+    var seen = {}, items = [];
+    for (var i = 0; i < raw.length; i++) {
+      if (typeof raw[i] !== 'string') return { ok: false, message: 'Each branch must be text.' };
+      var t = cleanText_(raw[i], 1000);
+      if (!t) continue;
+      if (t.length > PROFILE_TEXT_MAX) return { ok: false, message: 'A branch name can have at most ' + PROFILE_TEXT_MAX + ' characters.' };
+      if (t.indexOf(',') !== -1) return { ok: false, message: 'A branch name cannot contain a comma.' };
+      if (!seen[t.toLowerCase()]) { seen[t.toLowerCase()] = true; items.push(t); }
+    }
+    if (items.length > PROFILE_MAX_BRANCHES) return { ok: false, message: 'Choose at most ' + PROFILE_MAX_BRANCHES + ' branches.' };
+    return { ok: true, value: items.join(', ') };
+  }
+  if (!isStr && !isNum) return { ok: false, message: 'Invalid value.' };
+  var s = String(raw).trim();
+  if (f.type === 'name') {
+    if (cleanText_(s, 1000).length > PROFILE_NAME_MAX) return { ok: false, message: 'Name can have at most ' + PROFILE_NAME_MAX + ' characters.' };
+    var nm = validateName_(s);
+    return nm.ok ? { ok: true, value: nm.value } : { ok: false, message: nm.message };
+  }
+  if (s === '') return { ok: true, value: '' };                                  // an empty string clears the field
+  if (f.type === 'category') {
+    var c = matchList_(s, PROFILE_CATEGORIES);
+    return c ? { ok: true, value: c } : { ok: false, message: 'Choose one of: ' + PROFILE_CATEGORIES.join(', ') + '.' };
+  }
+  if (f.type === 'enum') {
+    var m = matchList_(s, f.list);
+    return m ? { ok: true, value: m } : { ok: false, message: f.list === PROFILE_STATES ? 'Choose a state or union territory from the list.' : 'Choose one of: ' + f.list.join(', ') + '.' };
+  }
+  if (f.type === 'text') {
+    var t2 = cleanText_(s, 1000);
+    return t2.length <= PROFILE_TEXT_MAX ? { ok: true, value: t2 } : { ok: false, message: 'At most ' + PROFILE_TEXT_MAX + ' characters.' };
+  }
+  if (f.type === 'percentile') {
+    if (!/^\d{1,3}(\.\d{1,2})?$/.test(s) || parseFloat(s) > 100) return { ok: false, message: 'Percentile must be between 0 and 100, with at most 2 decimals.' };
+    return { ok: true, value: parseFloat(s) };
+  }
+  if (f.type === 'rank') {
+    if (!/^\d{1,7}$/.test(s) || parseInt(s, 10) < 1 || parseInt(s, 10) > PROFILE_RANK_MAX) return { ok: false, message: 'Rank must be a whole number from 1 to 9,999,999.' };
+    return { ok: true, value: parseInt(s, 10) };
+  }
+  return { ok: false, message: 'Unsupported field.' };
+}
+
+function validateProfile_(profile) {
+  var errors = {}, values = {};
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile)) return { ok: false, values: {}, errors: { profile: 'Send the changed fields as an object.' } };
+  Object.keys(profile).forEach(function (key) {
+    var f = profileFieldByKey_(key);
+    if (!f) { errors[key] = 'Unknown field.'; return; }
+    var r = validateProfileField_(f, profile[key]);
+    if (r.ok) values[key] = r.value; else errors[key] = r.message;
+  });
+  return { ok: Object.keys(errors).length === 0, values: values, errors: errors };
+}
+
+// ── saving ──
+
+/** Light throttle: at most PROFILE_RATE_LIMIT saveProfile calls per token per hour. Never blocks a student if the cache itself fails. */
+function profileRateOk_(tok) {
+  try {
+    var cache = CacheService.getScriptCache();
+    var key = 'prl_' + tok + '_' + Math.floor(now_().getTime() / (PROFILE_RATE_WINDOW_S * 1000));
+    var n = Number(cache.get(key) || 0);
+    if (n >= PROFILE_RATE_LIMIT) return false;
+    cache.put(key, String(n + 1), PROFILE_RATE_WINDOW_S);
+    return true;
+  } catch (e) {
+    log_('Profile rate-limit cache unavailable: ' + describeError_(e));
+    return true;
+  }
+}
+
+function sameProfileCell_(oldRaw, nw) {
+  var o = (oldRaw === null || oldRaw === undefined) ? '' : oldRaw;
+  if (nw === '' || nw === null) return String(o).trim() === '';
+  if (typeof nw === 'number') return String(o).trim() !== '' && Number(o) === nw;
+  return String(o).trim() === String(nw);
+}
+function displayCell_(v) { return (v === null || v === undefined) ? '' : String(v); }
+
+/**
+ * Appends one row per changed field to the "Profile Log" tab (created if missing): timestamp, token, field, old value, new value.
+ * Nothing else is logged.
+ */
+function appendProfileLog_(ss, tok, changes) {
+  var log = ss.getSheetByName(PROFILE_LOG_TAB);
+  if (!log) {
+    log = ss.insertSheet(PROFILE_LOG_TAB);
+    log.getRange(1, 1, 1, 5).setNumberFormats([[TEXT_FORMAT, TEXT_FORMAT, TEXT_FORMAT, TEXT_FORMAT, TEXT_FORMAT]]).setValues([['Timestamp', 'Token', 'Field', 'Old value', 'New value']]);
+  }
+  var start = Math.max(log.getLastRow(), 1) + 1;
+  var at = now_();
+  var rows = changes.map(function (c) { return [at, tok, c.key, c.oldDisplay, c.newDisplay]; });
+  var range = log.getRange(start, 1, rows.length, 5);
+  range.setNumberFormats(rows.map(function () { return [DATE_FORMAT, TEXT_FORMAT, TEXT_FORMAT, TEXT_FORMAT, TEXT_FORMAT]; }));   // text format: a value like =x is never a formula
+  range.setValues(rows);
+}
+
+/** Returns { ok:true, profile } | { ok:false, error: 'rate_limited' | 'validation' | 'busy', fields? }. Throws only for sheet/header problems (caller answers server_error). */
+function saveProfile_(ss, sheet, cols, row, tok, profile) {
+  if (!profileRateOk_(tok)) return { ok: false, error: 'rate_limited' };
+
+  var v = validateProfile_(profile);
+  if (!v.ok) return { ok: false, error: 'validation', fields: v.errors };      // nothing is written if any field fails
+
+  var pcols = profileColumns_(sheet, true);
+
+  var lock = LockService.getScriptLock();
+  var locked = false;
+  try { locked = lock.tryLock(PROFILE_LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+  if (!locked) return { ok: false, error: 'busy' };
+  try {
+    var vals = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var changes = [];
+    Object.keys(v.values).forEach(function (key) {
+      var f = profileFieldByKey_(key);
+      var col = f.src === 'student' ? cols[f.col] : pcols[f.col];
+      var nw = v.values[key];
+      if (sameProfileCell_(vals[col - 1], nw)) return;                         // only changed cells are written
+      changes.push({ key: key, col: col, value: nw, oldDisplay: displayCell_(vals[col - 1]), newDisplay: displayCell_(nw) });
+    });
+
+    changes.forEach(function (c) {                                             // a formula-driven cell is never overwritten
+      if (sheet.getRange(row, c.col).getFormula()) throw new Error('Profile field "' + c.key + '" sits in a formula cell; refusing to overwrite it.');
+    });
+    changes.forEach(function (c) {
+      var cell = sheet.getRange(row, c.col);
+      cell.setNumberFormat((typeof c.value === 'number' || c.value === '') ? GENERAL_FORMAT : TEXT_FORMAT);
+      cell.setValue(c.value);
+    });
+    if (changes.length) {
+      try { appendProfileLog_(ss, tok, changes); }
+      catch (logErr) { log_('Profile Log append failed: ' + describeError_(logErr)); notifyError_('Profile Log could not be written', describeError_(logErr)); }
+    }
+    var after = sheet.getRange(row, 1, 1, sheet.getLastColumn()).getValues()[0];
+    return { ok: true, profile: profileView_(after, cols, pcols) };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 
