@@ -153,6 +153,7 @@ tr.h2 th{top:calc(var(--h1,34px) - 1px)}
 .menu .mtop .tools{margin-bottom:0}
 .menu .nomatch{padding:10px;color:var(--muted);font-size:13px;text-align:center}
 td.fee{text-align:center !important;font-family:var(--mono);font-size:13px;white-space:nowrap}
+.yrs{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}.yrs button{font:inherit;font-weight:700;font-size:14px;padding:9px 16px;border-radius:999px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}.yrs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:#fff}
 </style><style>
 table{min-width:1100px}
 td.n{text-align:right}
@@ -198,6 +199,7 @@ td.tot{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 <header class="brand"><img class="logo" alt="ASMI Youth Career Advisor" src="/asmi-logo.png">
 <div><h1>NEET-PG Seat Matrix 2026</h1><p class="help">ASMI Youth Career Advisor &nbsp;|&nbsp; Helpline: <a href="tel:7410019075">7410019075</a></p>
 <p class="sub">MCC NEET-PG 2026, Round 1. See how many seats each college has, branch by branch and category by category. Pick a seat group first (AIQ, Deemed University, Central University or DNB), then narrow down by state, quota, degree, college, branch and category.</p></div></header>
+<div class="yrs" id="rnds" role="tablist" aria-label="Round"><button type="button" role="tab" data-r="2">Round 2 &middot; clear vacancy</button><button type="button" role="tab" data-r="1">Round 1 &middot; full matrix</button></div>
 <section class="tiles" aria-label="Totals"><div class="tile"><b id="t-seats">0</b><span>Seats</span></div><div class="tile"><b id="t-col">0</b><span>Colleges</span></div><div class="tile"><b id="t-br">0</b><span>Branches</span></div><div class="tile"><b id="t-st">0</b><span>States</span></div></section>
 <section class="panel" aria-label="Filters">
 <label class="wide">Search<input id="q" type="search" placeholder="College, city or branch, e.g. Maulana Azad Radiology" autocomplete="off"></label>
@@ -394,19 +396,32 @@ $('dlp').addEventListener('click',function(){
   if(logo){doc.setFillColor(255,255,255);doc.roundedRect(mx,10,44,44,8,8,'F');try{doc.addImage(logo,'PNG',mx+4,14,36,36)}catch(e){}}
   doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(255,255,255);doc.text('ASMI Youth Career Advisor',mx+58,28);
   doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(230,215,255);doc.text("India's Trusted NEET Admission Counsellors  -  Helpline 7410019075",mx+58,44);
-  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(29,26,59);doc.text('NEET-PG Seat Matrix 2026 (Round 1)',mx,bh+24);
+  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(29,26,59);doc.text('NEET-PG Seat Matrix 2026 (Round '+RND+')',mx,bh+24);
   doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(106,102,137);doc.text('Generated '+new Date().toLocaleString('en-IN')+'  -  '+CUR.length+' rows',W-mx,bh+24,{align:'right'});
   doc.autoTable({head:[headRow()],body:tableRows().map(function(r){return r.map(function(v){return v===0?'-':String(v)})}),startY:bh+36,margin:{left:mx,right:mx,bottom:30},styles:{fontSize:7.5,cellPadding:3},headStyles:{fillColor:[46,16,101],textColor:255},alternateRowStyles:{fillColor:[244,241,255]},columnStyles:{0:{cellWidth:190},2:{cellWidth:150}}});
   doc.save('ASMI_PG_Seat_Matrix_'+stamp()+'.pdf');say('PDF saved.')
  }catch(e){say('PDF could not be created here.')}
 });
-fetch('/data/seatmatrix/pg-2026-round1-seat-matrix.json?v=20261023a').then(function(r){return r.json()}).then(function(data){
- D=data;D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]=/\(Pvt\.\)/.test(i[3])?'DNB (Pvt.)':'DNB (Govt.)'});
- makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
- makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
- groupCards();setGroup('0');
- shown=LIM;render();
-}).catch(function(){$('body').innerHTML='<tr><td colspan="14" class="empty">Could not load the seat matrix.</td></tr>'});
+var RND=2,DC={};
+var RTXT={1:{sub:'MCC NEET-PG 2026, Round 1. See how many seats each college has, branch by branch and category by category. Pick a seat group first (AIQ, Deemed University, Central University or DNB), then narrow down by state, quota, degree, college, branch and category.',src:'MCC final seat matrices for PG Counselling 2026 (MD/MS): All India Quota, Deemed Universities and Central Internal Quota, loaded for Round 1; 31,708 seats in total.'},
+2:{sub:'MCC NEET-PG 2026, Round 2 clear vacancy. These are the seats left to fill in Round 2 (updated clear vacancy matrix for MD, MS and DNB), not the full matrix. Pick a seat group first (AIQ, Deemed University, Central University or DNB), then narrow down by state, quota, degree, college, branch and category.',src:'MCC PG Counselling 2026 Round 2 updated clear vacancy seat matrix (MD/MS/DNB): the seats available for Round 2 after Round 1 results, 15,533 seats in total. Switch to Round 1 for the full matrix.'}};
+function useRound(r,data){
+ D=data;RND=r;
+ D.inst.forEach(function(i){if(/^Diplomate of National Board/.test(i[3]))i[3]=/\(Pvt\.\)/.test(i[3])?'DNB (Pvt.)':'DNB (Govt.)'});
+ Array.prototype.forEach.call($('rnds').querySelectorAll('button'),function(b){b.setAttribute('aria-selected',String(+b.getAttribute('data-r')===r))});
+ var sb=document.querySelector('p.sub');if(sb)sb.textContent=RTXT[r].sub;
+ var nt=document.querySelector('p.note');if(nt){var h=nt.innerHTML;nt.innerHTML=h.replace(/<b>Source\.<\/b>[^<]*?(?=<b>Seat groups)/,'<b>Source.</b> '+RTXT[r].src+' ')}
+ groupCards();setGroup('0');shown=LIM;render();
+}
+function loadRound(r){
+ if(DC[r]){useRound(r,DC[r]);return}
+ $('body').innerHTML='<tr><td colspan="14" class="empty">Loading Round '+r+'...</td></tr>';
+ fetch('/data/seatmatrix/pg-2026-round'+r+'-seat-matrix.json?v=20261120a').then(function(x){return x.json()}).then(function(data){DC[r]=data;useRound(r,data)}).catch(function(){$('body').innerHTML='<tr><td colspan="14" class="empty">Could not load the seat matrix.</td></tr>'});
+}
+makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
+makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
+$('rnds').addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('button[data-r]');if(!b)return;var r=+b.getAttribute('data-r');if(r!==RND)loadRound(r)});
+loadRound(2);
 })();
 </script>
 </body></html>
