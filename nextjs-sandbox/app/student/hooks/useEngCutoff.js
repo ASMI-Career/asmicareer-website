@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS, isReservedJosaa } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -16,6 +16,8 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const [pwd, setPwd] = useState(false);
   const [mainRank, setMainRank] = useState('');     // JEE Main CRL
   const [advRank, setAdvRank] = useState('');       // JEE Advanced CRL
+  const [mainCatRank, setMainCatRank] = useState('');   // JEE Main category rank
+  const [advCatRank, setAdvCatRank] = useState('');     // JEE Advanced category rank
   const [mhMerit, setMhMerit] = useState('');       // MHT-CET state merit number
   const [pMode, setPMode] = useState('percentile');   // Predictor: 'percentile' or 'rank'
   const [mainPct, setMainPct] = useState('');        // Predictor: JEE Main percentile
@@ -97,14 +99,13 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     if (v.mhMerit !== undefined) setMhMerit(v.mhMerit);
     if (v.pwd) setPwd(true);
   };
-  // The rank box means CATEGORY rank for a reserved category on JoSAA, and CRL on every other track (CSAB, which is by JEE Main CRL only).
+  // Profile ranks fill the JEE Main CRL and category rank boxes; which one is compared is decided per college (see pickRank).
   useEffect(() => {
     if (!enabled) return;
     const { mainCrl = '', mainCat = '', advCrl = '', advCat = '' } = profRanks.current;
-    const reserved = isReservedJosaa(counselling, category);
-    if (!rankTouched.current && (mainCrl || mainCat)) setMainRank(reserved ? mainCat : mainCrl);
-    if (!advTouched.current && (advCrl || advCat)) setAdvRank(reserved ? advCat : advCrl);   // the Advanced rank is for IITs on JoSAA
-  }, [enabled, counselling, category, profTick]);
+    if (!rankTouched.current && (mainCrl || mainCat)) { setMainRank(mainCrl); setMainCatRank(mainCat); }
+    if (!advTouched.current && (advCrl || advCat)) { setAdvRank(advCrl); setAdvCatRank(advCat); }
+  }, [enabled, profTick]);
 
   return {
     ecPrefill: prefill, ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
@@ -113,7 +114,8 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     ecGender: gender, setEcGender: setGender, ecItype: itype, setEcItype: (v) => { setItype(v); setVisible(40); },
     ecRound: round, setEcRound: setRound, ecSearch: search, setEcSearch: (v) => { setSearch(v); setVisible(40); },
     ecSort: sort, setEcSort: setSort, ecPwd: pwd, setEcPwd: setPwd,
-    ecMainRank: mainRank, setEcMainRank: (v) => { rankTouched.current = true; setMainRank(v); }, ecAdvRank: advRank, setEcAdvRank: (v) => { advTouched.current = true; setAdvRank(v); }, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
+    ecMainRank: mainRank, setEcMainRank: (v) => { rankTouched.current = true; setMainRank(v); }, ecAdvRank: advRank, setEcAdvRank: (v) => { advTouched.current = true; setAdvRank(v); },
+    ecMainCatRank: mainCatRank, setEcMainCatRank: (v) => { rankTouched.current = true; setMainCatRank(v); }, ecAdvCatRank: advCatRank, setEcAdvCatRank: (v) => { advTouched.current = true; setAdvCatRank(v); }, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
     ecPMode: pMode, setEcPMode: setPMode, ecMainPct: mainPct, setEcMainPct: setMainPct, ecMhPct: mhPct, setEcMhPct: setMhPct, ecMhCurve: mhCurve,
     ecVisible: visible, ecShowMore: () => setVisible(v => v + 40),
     ecManifest: manifest, ecIntake: intake, ecData: data, ecMhCategories: mhCategories, ecMhGenders: mhGenders,

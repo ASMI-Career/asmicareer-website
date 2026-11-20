@@ -1,4 +1,4 @@
-import { JOSAA, MH, CSAB, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, pickRank, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
 
 // Engineering Cutoff Explorer (student view). Same data as the counsellor tool; every filter is a plain dropdown,
 // last year's closing ranks are shown per round, and a student who enters their rank sees Safe / Likely / Borderline / Out of reach.
@@ -7,7 +7,7 @@ export default function EngineeringCutoff(props) {
     config, shortlist, handleToggleShortlist,
     ecCounselling: cs, ecSwitch, ecQuota, setEcQuota, ecCategory, setEcCategory, ecGender, setEcGender, ecItype, setEcItype,
     ecRound, setEcRound, ecSearch, setEcSearch, ecSort, setEcSort, ecPwd, setEcPwd,
-    ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMhMerit, setEcMhMerit,
+    ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMainCatRank, setEcMainCatRank, ecAdvCatRank, setEcAdvCatRank, ecMhMerit, setEcMhMerit,
     ecVisible, ecShowMore, ecManifest, ecIntake, ecData, ecMhCategories, ecMhGenders,
   } = props;
   const ec = config.engineeringCutoff;
@@ -23,8 +23,10 @@ export default function EngineeringCutoff(props) {
   const reserved = isReservedJosaa(cs, ecCategory);
   const catLabel = (categories.find(c => c.key === ecCategory) || {}).label || ecCategory;
 
-  const rankFor = (c) => (isMH ? parseRank(ecMhMerit) : (c.type === 'IIT' ? parseRank(ecAdvRank) : parseRank(ecMainRank)));
-  const haveRank = isMH ? !!parseRank(ecMhMerit) : (!!parseRank(ecAdvRank) || !!parseRank(ecMainRank));
+  // JoSAA: JEE Main CRL / category rank (NITs, IIITs, GFTIs) and JEE Advanced CRL / category rank (IITs). CSAB: JEE Main CRL only.
+  const ranks = { mainCrl: parseRank(ecMainRank), mainCat: parseRank(ecMainCatRank), advCrl: cs === 'CSAB' ? null : parseRank(ecAdvRank), advCat: cs === 'CSAB' ? null : parseRank(ecAdvCatRank) };
+  const rankFor = (c) => (isMH ? parseRank(ecMhMerit) : pickRank(cs, c.type, reserved, ranks));
+  const haveRank = isMH ? !!parseRank(ecMhMerit) : Object.values(ranks).some(v => v != null);
 
   let rows = ecData.colleges
     .filter(c => ecItype === 'ALL' || c.type === ecItype)
@@ -91,10 +93,16 @@ export default function EngineeringCutoff(props) {
             <div className="form-group"><label className="form-label">MHT-CET state merit number (SML)</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4500" value={ecMhMerit} onChange={e => setEcMhMerit(e.target.value)} /></div>
           ) : (<>
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Main category rank (${catLabel}) for NITs, IIITs, GFTIs` : 'JEE Main CRL rank (NITs, IIITs, GFTIs)'}</label>
+            <div className="form-group"><label className="form-label">JEE Main CRL rank{cs === 'CSAB' ? '' : ' (NITs, IIITs, GFTIs)'}</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 12000" value={ecMainRank} onChange={e => setEcMainRank(e.target.value)} /></div>
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Advanced category rank (${catLabel}) for IITs` : 'JEE Advanced CRL rank (IITs)'}</label>
-              <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+            {cs !== 'CSAB' && (<>
+              <div className="form-group"><label className="form-label">JEE Main category rank{reserved ? ` (${catLabel})` : ''}</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4500" value={ecMainCatRank} onChange={e => setEcMainCatRank(e.target.value)} /></div>
+              <div className="form-group"><label className="form-label">JEE Advanced CRL rank (IITs)</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+              <div className="form-group"><label className="form-label">JEE Advanced category rank{reserved ? ` (${catLabel})` : ''}</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 1200" value={ecAdvCatRank} onChange={e => setEcAdvCatRank(e.target.value)} /></div>
+            </>)}
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--text-700)', alignSelf: 'end', paddingBottom: 10 }}>
               <input type="checkbox" checked={ecPwd} onChange={e => setEcPwd(e.target.checked)} style={{ accentColor: 'var(--primary)' }} /> Show PwD ranks
             </label>

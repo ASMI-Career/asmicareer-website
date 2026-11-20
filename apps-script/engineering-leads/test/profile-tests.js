@@ -103,6 +103,20 @@ test('P9 getStudent reads messy profile cells safely; no phone leak', () => {
   assert.ok(!JSON.stringify(d).includes('9876543210'));
   return 'ok';
 });
+test('P10b JEE Advanced category rank: saved as a whole number, validated, header optional', () => {
+  const env = buildEnvironment(); seed(env);
+  const r = save(env, { jee_adv_category_rank: '900' }); assert.strictEqual(r.ok, true); assert.strictEqual(r.profile.jee_adv_category_rank, 900);
+  assert.strictEqual(env.dsheet.cell(2, 'JEE Advanced Category Rank'), 900);
+  for (const bad of ['0', '1.5', 'abc', '10000000', '-3']) { env.state.cache = {}; assert.strictEqual(save(env, { jee_adv_category_rank: bad }).error, 'validation', bad); }
+  assert.strictEqual(save(env, { jee_adv_category_rank: '' }).profile.jee_adv_category_rank, null);
+  const e2 = buildEnvironment({ noProfileCols: false }); seed(e2);
+  const i = e2.dsheet.rows[0].indexOf('JEE Advanced Category Rank'); e2.dsheet.rows[0][i] = '';
+  assert.strictEqual(save(e2, { gender: 'Male' }).ok, true, 'other fields still save');
+  assert.strictEqual(save(e2, { jee_adv_category_rank: '500' }).error, 'server_error');
+  assert.strictEqual(get(e2).jee_adv_category_rank, null);
+  assert.strictEqual(e2.ctx.verifyHeaders().ok, true);
+  return 'ok';
+});
 test('P10 MHT-CET SML rank: saved as a whole number, validated, header optional', () => {
   const env = buildEnvironment(); seed(env);
   const r = save(env, { mhtcet_sml: '12345' }); assert.strictEqual(r.ok, true); assert.strictEqual(r.profile.mhtcet_sml, 12345);

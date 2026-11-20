@@ -109,6 +109,15 @@ export function estimateMhMerit(percentile, pairs) {
 // Open ones, EWS 0.16x, SC 0.22x, ST 0.11x). So a reserved-category student must compare their category rank, not their CRL.
 export const isReservedJosaa = (counselling, categoryKey) => counselling === 'JOSAA' && !!categoryKey && categoryKey !== 'OPEN';
 
+// Which of the student's four JEE ranks to compare with a college. JoSAA: IITs use the JEE Advanced rank, every other institute the
+// JEE Main rank; a reserved category uses the CATEGORY rank, Open uses the CRL. CSAB: JEE Main CRL for everyone.
+// r = { mainCrl, mainCat, advCrl, advCat } (numbers or null). Returns null if the needed rank is missing: never falls back to a wrong one.
+export function pickRank(counselling, type, reserved, r) {
+  if (counselling === 'CSAB') return r.mainCrl ?? null;
+  if (type === 'IIT') return (reserved ? r.advCat : r.advCrl) ?? null;
+  return (reserved ? r.mainCat : r.mainCrl) ?? null;
+}
+
 // Rough category rank from a CRL estimate: CRL x the category's share of candidates. A shortcut for students who only know a percentile;
 // the shares are set in the config and are estimates.
 export function estimateCategoryRank(crl, categoryKey, shares) {

@@ -78,7 +78,7 @@ export function prefillFrom(profile) {
   // Both ranks are handed over; the Predictor picks per track. JoSAA compares reserved categories by CATEGORY rank, CSAB and the rest by CRL.
   if (profile.jee_main_crl_rank) out.mainCrl = String(profile.jee_main_crl_rank);
   if (profile.category_rank) out.mainCat = String(profile.category_rank);
-  if (profile.jee_adv_rank) out.advCrl = String(profile.jee_adv_rank);                       // IITs: reserved categories compare their CATEGORY rank
+  if (profile.jee_adv_rank) out.advCrl = String(profile.jee_adv_rank);
   if (profile.jee_adv_category_rank) out.advCat = String(profile.jee_adv_category_rank);
   if (profile.jee_main_percentile) out.mainPct = String(profile.jee_main_percentile);
   if (profile.mhtcet_percentile) out.mhPct = String(profile.mhtcet_percentile);
