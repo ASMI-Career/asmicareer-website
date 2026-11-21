@@ -51,7 +51,25 @@
     "VITEEE": "viteee",
     "SRMJEEE": "srmjeee", "SRMJEE": "srmjeee",
     "COMEDK": "comedk"
+  },  "instituteExams": [
+    { "id": "jee-main", "label": "JEE Main" },
+    { "id": "jee-advanced", "label": "JEE Advanced" },
+    { "id": "mhtcet", "label": "MHT-CET" },
+    { "id": "comedk", "label": "COMEDK" },
+    { "id": "met", "label": "MET" },
+    { "id": "viteee", "label": "VITEEE" },
+    { "id": "srmjee", "label": "SRMJEE" }
+  ],
+  "instituteExamAliases": {
+    "JEE Main": "jee-main", "JEE Mains": "jee-main", "JEE": "jee-main", "JoSAA": "jee-main", "JOSAA": "jee-main", "CSAB": "jee-main", "JoSAA & CSAB": "jee-main", "DASA": "jee-main",
+    "JEE Advanced": "jee-advanced", "JEE Adv": "jee-advanced",
+    "MHT-CET": "mhtcet", "MHT CET": "mhtcet", "MH": "mhtcet", "CAP": "mhtcet", "Maharashtra CAP": "mhtcet", "MHT-CET NRI": "mhtcet", "MHT CET NRI": "mhtcet",
+    "COMEDK": "comedk",
+    "MET": "met", "Manipal MET": "met",
+    "VITEEE": "viteee",
+    "SRMJEE": "srmjee", "SRMJEEE": "srmjee"
   },
+
   "student": {
     "defaultName": "Student",
     "logRecord": false,

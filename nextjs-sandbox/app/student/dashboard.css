@@ -1710,6 +1710,7 @@ input[type="range"]::-moz-range-thumb {
 :root[data-stream="engineering"] .dg-wrap { margin-bottom: 20px; }
 :root[data-stream="engineering"] .dg-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 :root[data-stream="engineering"] .dg-own { color: var(--primary-accent, #00A896); font-weight: 800; }
+:root[data-stream="engineering"] .dg-hint { margin: 8px 0 0; font-size: 12px; color: var(--text-500); }
 :root[data-stream="engineering"] .dg-count { opacity: 0.65; font-weight: 600; margin-left: 4px; }
 :root[data-stream="engineering"] .dg-note { margin-top: 10px; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: #fff7e6; border: 1px solid #f0d49b; color: #7a5200; }
 @media (max-width: 720px) {

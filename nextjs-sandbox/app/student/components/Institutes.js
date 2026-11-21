@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { formatFees } from '../lib/format';
 import AddChoicePanel from './AddChoicePanel';
-import { resolveExamIds } from '../lib/exams';
+import { studentExamIds } from '../lib/exams';
 
 export default function Institutes(props) {
   const { config, shortlistGroups, studentTracks, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
   const inst = config.institutes;
   // Engineering: a choice needs branch + seat type, so the heart opens a small form instead of toggling straight away.
   const [pendingCollege, setPendingCollege] = useState(null);
-  // Engineering (config.exams): colleges are split by exam / counselling group (college.groups). Component state only, not saved.
+  // Engineering (config.instituteExams): colleges are split by the entrance EXAM you can apply through (college.groups holds exam ids). Component state only, not saved.
   const [exam, setExam] = useState(null);   // null = the default view: "My exams" for a student with tracks, otherwise All
-  const grouped = !!config.exams;
-  const mine = grouped ? resolveExamIds(studentTracks, config) : [];
+  const grouped = !!config.instituteExams;
+  const mine = grouped ? studentExamIds(props.profile, studentTracks, config) : [];   // from the student's tracks and the scores in Settings
   const view = exam === null ? (mine.length ? 'mine' : 'all') : exam;
   const inView = (c) => view === 'all' || (c.groups || []).some(g => (view === 'mine' ? mine.includes(g) : g === view));
-  const viewLabel = view === 'mine' ? mine.map(id => (config.exams.find(e => e.id === id) || {}).label || id).join(', ') : ((config.exams || []).find(e => e.id === view) || {}).label;
+  const viewLabel = view === 'mine' ? mine.map(id => (config.instituteExams.find(e => e.id === id) || {}).label || id).join(', ') : ((config.instituteExams || []).find(e => e.id === view) || {}).label;
   const isShortlistedFor = (college) => config.shortlist.askDetails
     ? Object.values(shortlistGroups).some(arr => Array.isArray(arr) && arr.some(i => i && i.institute === college.name))
     : shortlist.includes(college.name);
@@ -45,14 +45,15 @@ export default function Institutes(props) {
                 {/* Exam / counselling groups (engineering) */}
                 {grouped && (
                   <div className="dg-wrap">
-                    <div className="dg-chips" role="group" aria-label="Exam or counselling">
+                    <div className="dg-chips" role="group" aria-label="Entrance exam">
                       <button type="button" className={`chip ${exam === null ? 'active' : ''}`} aria-pressed={exam === null} onClick={() => setExam(null)}>
                         {mine.length ? 'My exams' : 'All'}<span className="dg-count">{collegesList.filter(c => (mine.length ? (c.groups || []).some(g => mine.includes(g)) : true)).length}</span></button>
                       {mine.length > 0 && <button type="button" className={`chip ${exam === 'all' ? 'active' : ''}`} aria-pressed={exam === 'all'} onClick={() => setExam('all')}>All<span className="dg-count">{collegesList.length}</span></button>}
-                      {config.exams.map(e => (
+                      {config.instituteExams.map(e => (
                         <button key={e.id} type="button" className={`chip ${exam === e.id ? 'active' : ''}`} aria-pressed={exam === e.id} onClick={() => setExam(e.id)}>
                           {e.label}{mine.includes(e.id) && <span className="dg-own" title="One of your exams" aria-label="your exam"> ★</span>}<span className="dg-count">{collegesList.filter(c => (c.groups || []).includes(e.id)).length}</span></button>))}
                     </div>
+                    <p className="dg-hint">You can apply to a college only through an entrance exam you have taken. Pick an exam to see the colleges it opens.</p>
                   </div>
                 )}
 
