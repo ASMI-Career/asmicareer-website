@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import './colleges.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import { AddToCompare, CompareBar } from './CompareControls';
 import engConfig from '../../student/config/engineering.provisional.json';
 
 const engineeringNavLinks = [
@@ -386,6 +387,7 @@ export default function EngineeringCollegesDirectory() {
                       {college.seats && (
                         <div className="col-card-seats">{college.seats} B.Tech seats</div>
                       )}
+                      <AddToCompare slug={college.slug} small />
                     </div>
                   </a>
                 );
@@ -405,6 +407,7 @@ export default function EngineeringCollegesDirectory() {
         </main>
 
       </div>
+      <CompareBar />
       <Footer isEngineering={true} />
     </div>
   );

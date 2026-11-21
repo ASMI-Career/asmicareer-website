@@ -1,0 +1,20 @@
+/* Compare hook (CSS Module): the add button, the floating bar. Used by the directory and by the college page. */
+.addBtn { display: inline-flex; align-items: center; gap: 6px; font: 700 13px 'Open Sans', sans-serif; padding: 8px 14px; border-radius: 10px; cursor: pointer; border: 1px solid #00a896; color: #00a896; background: #fff; }
+.addBtn:hover { background: #eefaf8; }
+.addBtn[aria-pressed='true'] { background: #00a896; color: #fff; }
+.addBtn:disabled { opacity: .5; cursor: not-allowed; }
+.addBtnLight { border-color: rgba(255,255,255,.6); color: #fff; background: transparent; }
+.addBtnLight:hover { background: rgba(255,255,255,.12); }
+.addBtnLight[aria-pressed='true'] { background: #fff; color: #0a1628; }
+.cardBtn { margin-top: 10px; padding: 6px 10px; font-size: 12px; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: center; padding: 12px 16px; background: #0a1628; color: #fff; box-shadow: 0 -4px 18px rgba(0,0,0,.25); font: 600 14px 'Open Sans', sans-serif; }
+.barGo { background: #00a896; color: #fff; text-decoration: none; padding: 9px 18px; border-radius: 10px; font-weight: 700; }
+.barClear { background: transparent; color: #9fe7df; border: 0; cursor: pointer; text-decoration: underline; font: inherit; }
+.page { background: #f2fbfc; color: #0a1628; min-height: 100vh; padding-top: 64px; font-family: 'Open Sans', sans-serif; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px 16px 80px; }
+.list { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 10px; }
+.list li { background: #fff; border: 1px solid #d6e6ea; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; }
+.list a { color: #0a1628; font-weight: 700; text-decoration: none; }
+.list a:hover { color: #00a896; }
+.list span { font-size: 12.5px; color: #55657a; }
+.note { background: #fff8e1; border: 1px solid #ffe08a; border-radius: 10px; padding: 10px 14px; font-size: 14px; }
