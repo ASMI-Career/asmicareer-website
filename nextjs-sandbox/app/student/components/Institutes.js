@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { formatFees } from '../lib/format';
 import AddChoicePanel from './AddChoicePanel';
+import { resolveExamIds } from '../lib/exams';
 
 export default function Institutes(props) {
   const { config, shortlistGroups, studentTracks, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
   const inst = config.institutes;
   // Engineering: a choice needs branch + seat type, so the heart opens a small form instead of toggling straight away.
   const [pendingCollege, setPendingCollege] = useState(null);
+  // Engineering (config.exams): colleges are split by exam / counselling group (college.groups). Component state only, not saved.
+  const [exam, setExam] = useState(null);   // null = the default view: "My exams" for a student with tracks, otherwise All
+  const grouped = !!config.exams;
+  const mine = grouped ? resolveExamIds(studentTracks, config) : [];
+  const view = exam === null ? (mine.length ? 'mine' : 'all') : exam;
+  const inView = (c) => view === 'all' || (c.groups || []).some(g => (view === 'mine' ? mine.includes(g) : g === view));
+  const viewLabel = view === 'mine' ? mine.map(id => (config.exams.find(e => e.id === id) || {}).label || id).join(', ') : ((config.exams || []).find(e => e.id === view) || {}).label;
   const isShortlistedFor = (college) => config.shortlist.askDetails
     ? Object.values(shortlistGroups).some(arr => Array.isArray(arr) && arr.some(i => i && i.institute === college.name))
     : shortlist.includes(college.name);
@@ -16,6 +24,7 @@ export default function Institutes(props) {
 
   const getFilteredCollegesList = () => {
     let r = [...collegesList];
+    if (grouped) r = r.filter(inView);
     if (instTabType !== 'All') r = r.filter(c => c.type?.toLowerCase() === instTabType.toLowerCase());
     if (instType !== 'All')    r = r.filter(c => c.type?.toLowerCase() === instType.toLowerCase());
     if (instCourse !== 'All')  r = r.filter(c => c.course?.toLowerCase() === instCourse.toLowerCase());
@@ -33,12 +42,26 @@ export default function Institutes(props) {
                 <h2 className="section-title">{inst.title}</h2>
                 <p className="section-sub">{inst.subtitle}</p>
 
+                {/* Exam / counselling groups (engineering) */}
+                {grouped && (
+                  <div className="dg-wrap">
+                    <div className="dg-chips" role="group" aria-label="Exam or counselling">
+                      <button type="button" className={`chip ${exam === null ? 'active' : ''}`} aria-pressed={exam === null} onClick={() => setExam(null)}>
+                        {mine.length ? 'My exams' : 'All'}<span className="dg-count">{collegesList.filter(c => (mine.length ? (c.groups || []).some(g => mine.includes(g)) : true)).length}</span></button>
+                      {mine.length > 0 && <button type="button" className={`chip ${exam === 'all' ? 'active' : ''}`} aria-pressed={exam === 'all'} onClick={() => setExam('all')}>All<span className="dg-count">{collegesList.length}</span></button>}
+                      {config.exams.map(e => (
+                        <button key={e.id} type="button" className={`chip ${exam === e.id ? 'active' : ''}`} aria-pressed={exam === e.id} onClick={() => setExam(e.id)}>
+                          {e.label}{mine.includes(e.id) && <span className="dg-own" title="One of your exams" aria-label="your exam"> ★</span>}<span className="dg-count">{collegesList.filter(c => (c.groups || []).includes(e.id)).length}</span></button>))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Tab pills */}
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
                   {inst.tabTypes.map(tab => (
                     <button key={tab} onClick={() => setInstTabType(tab)}
                       className={`chip ${instTabType === tab ? 'active' : ''}`}>
-                      {tab === 'All' ? inst.tabAllLabel : tab}
+                      {tab === 'All' ? inst.tabAllLabel : tab}{grouped && <span className="dg-count">{collegesList.filter(c => inView(c) && (tab === 'All' || c.type?.toLowerCase() === tab.toLowerCase())).length}</span>}
                     </button>
                   ))}
                 </div>
@@ -124,7 +147,7 @@ export default function Institutes(props) {
                         onCancel={() => setPendingCollege(null)} />
                     )}
                     {getFilteredCollegesList().length === 0 ? (
-                      <div className="card-sm empty-state">No colleges found. Try adjusting your filters.</div>
+                      <div className="card-sm empty-state">{grouped && collegesList.length > 0 && collegesList.filter(inView).length === 0 ? `Institutes for ${viewLabel} are being added.` : 'No colleges found. Try adjusting your filters.'}</div>
                     ) : (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
                         {getFilteredCollegesList().slice(0, 48).map(college => {

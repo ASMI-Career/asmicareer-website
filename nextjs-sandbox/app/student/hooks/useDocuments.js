@@ -5,6 +5,7 @@ import engineeringDocs from '../data/docs.engineering.provisional.json';
 // Document lists by stream (the file is named in config.documents.data).
 export const DOC_SETS = { medical: medicalDocs, engineering: engineeringDocs };
 import { writeCache } from '../lib/cache';
+import { buildDocumentSections, docProgress } from '../lib/docGroups';
 
 // currentToken: the student's token (empty until it has been read from the link)
 export default function useDocuments({ config, endpoint, currentToken }) {
@@ -38,6 +39,11 @@ export default function useDocuments({ config, endpoint, currentToken }) {
 // A student with no track recorded is treated as being on every track of the stream.
 export function useDocumentSections({ config, checkedDocs, docCategory, docQuota, studentTracks }) {
   const DOCS = DOC_SETS[config.documents.data] || { sections: [], category: {}, quota: {} };
+  // Engineering (config.exams): the default view of the groups ("My exams", or everything for a student with no tracks).
+  if (config.exams) {
+    const b = buildDocumentSections({ DOCS, config, docCategory, docQuota, studentTracks, view: null });
+    return { sectionsToRender: b.sections, allIds: b.allIds, ...docProgress(b.allIds, checkedDocs) };
+  }
   const tracks = (studentTracks && studentTracks.length) ? studentTracks : (config.tracks || []).map(t => t.id);
   const sectionsToRender = [
     ...DOCS.sections,

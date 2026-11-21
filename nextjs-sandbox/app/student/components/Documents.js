@@ -1,6 +1,19 @@
 
+import { useState } from 'react';
+import { DOC_SETS } from '../hooks/useDocuments';
+import { buildDocumentSections, docProgress } from '../lib/docGroups';
+import { resolveExamIds } from '../lib/exams';
+
 export default function Documents(props) {
-  const { config, allIds, checkedDocs, docCategory, docQuota, doneCount, pct, saveChecklist, sectionsToRender, setCheckedDocs, setDocQuota, toggleDoc } = props;
+  const { config, studentTracks, checkedDocs, docCategory, docQuota, saveChecklist, setCheckedDocs, setDocQuota, toggleDoc } = props;
+  // Engineering (config.exams): the list is split by exam / counselling group. The chosen chip is component state only (not saved).
+  const [view, setView] = useState(null);   // null = the default view: "My exams" for a student with tracks, otherwise All
+  const grouped = !!config.exams;
+  const built = grouped ? buildDocumentSections({ DOCS: DOC_SETS[config.documents.data], config, docCategory, docQuota, studentTracks, view }) : null;
+  const sectionsToRender = grouped ? built.sections : props.sectionsToRender;
+  const allIds = grouped ? built.allIds : props.allIds;
+  const { doneCount, pct } = grouped ? docProgress(built.allIds, checkedDocs) : props;
+  const mine = grouped ? resolveExamIds(studentTracks, config) : [];
 
 
   const docCfg = config.documents;
@@ -23,6 +36,21 @@ export default function Documents(props) {
                     ))}
                   </div>
                 </div>
+                )}
+
+                {/* Exam / counselling groups (engineering) */}
+                {grouped && (
+                  <div className="dg-wrap">
+                    <div className="dg-chips" role="group" aria-label="Exam or counselling">
+                      <button type="button" className={`chip ${view === null ? 'active' : ''}`} aria-pressed={view === null} onClick={() => setView(null)}>{mine.length ? 'My exams' : 'All'}</button>
+                      {mine.length > 0 && <button type="button" className={`chip ${view === 'all' ? 'active' : ''}`} aria-pressed={view === 'all'} onClick={() => setView('all')}>All</button>}
+                      {config.exams.map(e => (
+                        <button key={e.id} type="button" className={`chip ${view === e.id ? 'active' : ''}`} aria-pressed={view === e.id} onClick={() => setView(e.id)}>
+                          {e.label}{mine.includes(e.id) && <span className="dg-own" title="One of your exams" aria-label="your exam"> ★</span>}
+                        </button>))}
+                    </div>
+                    {built.notes.map(n => <div key={n.id} className="dg-note" role="status">{n.text}</div>)}
+                  </div>
                 )}
 
                 {/* Progress */}

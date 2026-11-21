@@ -32,6 +32,26 @@
     { "id": "JoSAA", "label": "JoSAA" },
     { "id": "Maharashtra CAP", "label": "Maharashtra CAP" }
   ],
+  "exams": [
+    { "id": "josaa-csab", "label": "JoSAA & CSAB" },
+    { "id": "dasa", "label": "DASA" },
+    { "id": "mhtcet", "label": "MHT-CET" },
+    { "id": "mhtcet-nri", "label": "MHT-CET NRI" },
+    { "id": "met", "label": "MET" },
+    { "id": "viteee", "label": "VITEEE" },
+    { "id": "srmjeee", "label": "SRMJEEE" },
+    { "id": "comedk", "label": "COMEDK" }
+  ],
+  "examAliases": {
+    "JoSAA": "josaa-csab", "JOSAA": "josaa-csab", "CSAB": "josaa-csab", "JoSAA & CSAB": "josaa-csab",
+    "Maharashtra CAP": "mhtcet", "MH": "mhtcet", "CAP": "mhtcet", "MHT-CET": "mhtcet", "MHT CET": "mhtcet",
+    "MHT-CET NRI": "mhtcet-nri", "MHT CET NRI": "mhtcet-nri",
+    "DASA": "dasa",
+    "MET": "met", "Manipal MET": "met",
+    "VITEEE": "viteee",
+    "SRMJEEE": "srmjeee", "SRMJEE": "srmjeee",
+    "COMEDK": "comedk"
+  },
   "student": {
     "defaultName": "Student",
     "logRecord": false,

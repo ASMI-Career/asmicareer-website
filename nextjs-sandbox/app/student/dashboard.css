@@ -1705,3 +1705,19 @@ input[type="range"]::-moz-range-thumb {
   :root[data-stream="engineering"] .pl-row { grid-template-columns: 30px minmax(0, 1fr) 130px 80px; break-inside: avoid; border-color: #999; border-radius: 0; padding: 4px 6px; }
   :root[data-stream="engineering"] .pl-summary { font-size: 11px; }
 }
+
+/* Documents and Institutes by exam group (engineering) */
+:root[data-stream="engineering"] .dg-wrap { margin-bottom: 20px; }
+:root[data-stream="engineering"] .dg-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+:root[data-stream="engineering"] .dg-own { color: var(--primary-accent, #00A896); font-weight: 800; }
+:root[data-stream="engineering"] .dg-count { opacity: 0.65; font-weight: 600; margin-left: 4px; }
+:root[data-stream="engineering"] .dg-note { margin-top: 10px; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: #fff7e6; border: 1px solid #f0d49b; color: #7a5200; }
+@media (max-width: 720px) {
+  :root[data-stream="engineering"] .dg-wrap { contain: inline-size; min-width: 0; }   /* the chip row scrolls inside the page instead of widening it */
+  :root[data-stream="engineering"] .dg-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  :root[data-stream="engineering"] .dg-chips::-webkit-scrollbar { display: none; }
+  :root[data-stream="engineering"] .dg-chips .chip { flex: 0 0 auto; white-space: nowrap; }
+}
+@media print {
+  :root[data-stream="engineering"] .dg-chips { display: none !important; }
+}
