@@ -67,7 +67,7 @@
             <img src="/asmi-logo.png" alt="ASMI Logo" class="h-9 w-auto">
             <div>
               <h1 class="text-2xl font-bold tracking-tight text-gray-950">Counsellor — Engineering Preference List Builder</h1>
-              <p id="header-sub" class="text-sm text-gray-500 mt-1">JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
+              <p id="header-sub" class="text-sm text-gray-500 mt-1">JoSAA 2026 · round-wise opening/closing rank and chances — build a ranked preference list for the student.</p>
             </div>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center sm:flex-wrap gap-3">
@@ -79,9 +79,10 @@
               <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto" id="counselling-switch">
                 <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="JOSAA">JoSAA</button>
                 <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="MH">Maharashtra CAP</button>
+                <button class="counselling-btn px-3 py-2 rounded-xl text-sm font-bold whitespace-nowrap" data-c="CSAB">CSAB Special</button>
               </div>
               <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl p-1 custom-shadow overflow-x-auto">
-                <button id="year-label" class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2025">2025</button>
+                <button id="year-label" class="year-btn px-3 py-2 rounded-xl bg-[#0a1628] text-[#00C8B4] text-sm font-bold" data-year="2026">2026</button>
                 <button id="year-prev" class="year-btn px-3 py-2 rounded-xl text-gray-400 text-sm font-bold" disabled title="Data coming soon">2024</button>
               </div>
               <button id="togglePrefBtn" class="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-white border border-gray-200 custom-shadow text-sm font-bold text-[#0a1628] whitespace-nowrap hover:border-[#00A896] transition" title="Show or hide the preference list">
@@ -228,7 +229,7 @@
 
 <script>
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
-  const YEAR = 2025;
+  const YEAR = 2026;
 
   const JOSAA_QUOTAS = [
     { key: 'all-india',   label: 'All India' },
@@ -257,18 +258,38 @@
     { key: 'GFTI', label: 'GFTI' },
   ];
 
+  // CSAB Special round (after JoSAA): NITs, IIITs and GFTIs only, adds the two DASA quotas. Every rank is an All India CRL rank.
+  const CSAB_QUOTAS = JOSAA_QUOTAS.concat([
+    { key: 'dasa-ciwg',     label: 'DASA (CIWG)' },
+    { key: 'dasa-non-ciwg', label: 'DASA (Non-CIWG)' },
+  ]);
+  const CSAB_ITYPES = JOSAA_ITYPES.filter(t => t.key !== 'IIT');
+
   const COUNSELLINGS = {
     JOSAA: {
-      year: 2025,
-      base: '/data/cutoffs/JOSAA/2025',
+      year: 2026,
+      base: '/data/cutoffs/JOSAA/2026',
       title: 'JoSAA — Joint Seat Allocation Authority',
       sub: 'IITs · NITs · IIITs · GFTIs · B.Tech / B.Arch programs',
-      header: 'JoSAA 2025 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
+      header: 'JoSAA 2026 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
       rankLabel: 'JEE RANK',
       rankPlaceholder: 'Enter CRL rank manually',
       rankHint: 'Pre-loaded from student token. Per-round chances shown below.',
-      rounds: ['Round 1','Round 2','Round 3','Round 4','Round 5','Round 6'],
-      defaultRound: 'Round 6',
+      rounds: ['Round 1','Round 2','Round 3','Round 4','Round 5'],
+      defaultRound: 'Round 5',
+      defaults: { quota: 'all-india', category: 'OPEN' },
+    },
+    CSAB: {
+      year: 2026,
+      base: '/data/cutoffs/CSAB/2026',
+      title: 'CSAB Special Round — Central Seat Allocation Board',
+      sub: 'NITs · IIITs · GFTIs · seats left after JoSAA · DASA quotas',
+      header: 'CSAB Special 2026 · round-wise opening/closing rank and chances — build a ranked preference list for the student.',
+      rankLabel: 'JEE CRL RANK',
+      rankPlaceholder: 'Enter CRL rank manually',
+      rankHint: 'CSAB ranks are All India CRL ranks for every category (including OBC-NCL, EWS, SC, ST). Per-round chances shown below.',
+      rounds: ['Round 1','Round 2'],
+      defaultRound: 'Round 2',
       defaults: { quota: 'all-india', category: 'OPEN' },
     },
     MH: {
@@ -294,13 +315,13 @@
     gender: 'all',
     itype: 'ALL',
     pwd: false,
-    round: 'Round 6',
+    round: 'Round 5',
     sort: 'rank_asc',
     search: '',
     branches: [],
   };
   let RANK = null;
-  const RANKS = { JOSAA: null, MH: null };
+  const RANKS = { JOSAA: null, CSAB: null, MH: null };
   let TOKEN_RANK_SYNCED = false;
   let MH_MANIFEST = null;
   let MH_INTAKE = {};
@@ -314,7 +335,7 @@
   const cfg = () => COUNSELLINGS[state.counselling];
 
   function quotaList() {
-    return isMH() ? MH_MANIFEST.quotas.map(q => ({ key: q.key, label: q.label })) : JOSAA_QUOTAS;
+    return isMH() ? MH_MANIFEST.quotas.map(q => ({ key: q.key, label: q.label })) : (state.counselling === 'CSAB' ? CSAB_QUOTAS : JOSAA_QUOTAS);
   }
   function categoryList() {
     if (!isMH()) return JOSAA_CATEGORIES;
@@ -328,7 +349,7 @@
     return [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => avail.includes(g.key));
   }
   function itypeList() {
-    if (!isMH()) return JOSAA_ITYPES;
+    if (!isMH()) return state.counselling === 'CSAB' ? CSAB_ITYPES : JOSAA_ITYPES;
     return [{ key: 'ALL', label: 'All' }].concat(MH_MANIFEST.instituteTypes.map(t => ({ key: t, label: t })));
   }
 
@@ -419,7 +440,7 @@
     state.pwd = false;
     state.round = c.defaultRound;
     state.branches = [];
-    RANK = RANKS[key];
+    RANK = RANKS[key] != null ? RANKS[key] : (key !== 'MH' ? RANKS.JOSAA : null);   // JoSAA and CSAB both use the JEE CRL rank
 
     document.getElementById('header-sub').textContent = c.header;
     document.getElementById('counselling-title').textContent = c.title;
@@ -432,7 +453,7 @@
     mr.placeholder = c.rankPlaceholder;
     mr.value = RANK != null ? RANK : '';
     document.getElementById('rank-value').textContent = RANK ? `#${RANK.toLocaleString('en-IN')}` : '—';
-    document.getElementById('rank-sync-badge').classList.toggle('hidden', !(key === 'JOSAA' && RANK != null && TOKEN_RANK_SYNCED));
+    document.getElementById('rank-sync-badge').classList.toggle('hidden', !(key !== 'MH' && RANK != null && TOKEN_RANK_SYNCED));
 
     setCounsellingButtons();
     ensureValidSelection();
@@ -559,7 +580,7 @@
 
     const tbody = document.getElementById('tableBody');
     if (rows.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : '2025 JoSAA'} data.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-10 text-center text-gray-400 text-sm">No programs found for this combination in the ${isMH() ? 'Maharashtra CAP 2026' : state.counselling === 'CSAB' ? '2026 CSAB Special' : '2026 JoSAA'} data.</td></tr>`;
       return;
     }
 
@@ -637,7 +658,7 @@
           program: found.c.program,
           close: found.close,
           chance: found.chance ? found.chance.label : '—',
-          counselling: isMH() ? 'Maharashtra CAP' : 'JoSAA',
+          counselling: isMH() ? 'Maharashtra CAP' : state.counselling === 'CSAB' ? 'CSAB Special' : 'JoSAA',
           year: cfg().year,
           round: state.round,
           quota: quotaLabelNow(),
@@ -692,7 +713,7 @@
     if (preferenceList.length === 0) { alert('Add at least one college to the preference list first.'); return; }
     const rows = preferenceList.map((p, i) => ({
       'Pref No.': i + 1,
-      'Counselling': `${p.counselling || 'JoSAA'} ${p.year || 2025}`,
+      'Counselling': `${p.counselling || 'JoSAA'} ${p.year || 2026}`,
       'Institute': p.name,
       'Type': p.type,
       'Program': p.program,
@@ -769,7 +790,7 @@
     try { if (localStorage.getItem('asmiPrefHidden') === '1') setPrefHidden(true); } catch (e) {}
     initBranchDropdown();
     const wanted = (params.get('c') || params.get('counselling') || '').toUpperCase();
-    await switchCounselling(wanted === 'MH' ? 'MH' : 'JOSAA');
+    await switchCounselling(wanted === 'MH' ? 'MH' : wanted === 'CSAB' ? 'CSAB' : 'JOSAA');
   }
 
   initUI();

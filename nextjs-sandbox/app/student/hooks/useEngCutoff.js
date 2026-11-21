@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { JOSAA, MH, cfgFor, defaultCategory, buildMhCurve, COMBINED_PARTS } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, defaultCategory, buildMhCurve, fetchCutoffRecords, fetchMhManifest } from '../lib/engCutoff';
 
 // State and data for the engineering Cutoff Explorer tab. Lives in the page (like the other hooks), so filters survive tab
 // switches. Files are fetched only after the student opens the tab. A no-op for streams without config.engineeringCutoff.
@@ -16,6 +16,8 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const [pwd, setPwd] = useState(false);
   const [mainRank, setMainRank] = useState('');     // JEE Main CRL
   const [advRank, setAdvRank] = useState('');       // JEE Advanced CRL
+  const [mainCatRank, setMainCatRank] = useState('');   // JEE Main category rank
+  const [advCatRank, setAdvCatRank] = useState('');     // JEE Advanced category rank
   const [mhMerit, setMhMerit] = useState('');       // MHT-CET state merit number
   const [pMode, setPMode] = useState('percentile');   // Predictor: 'percentile' or 'rank'
   const [mainPct, setMainPct] = useState('');        // Predictor: JEE Main percentile
@@ -27,12 +29,16 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   const [data, setData] = useState({ loading: false, error: false, colleges: [] });
   const seq = useRef(0);
   const touched = useRef(false);   // the student changed the category themselves
+  const rankTouched = useRef(false);   // the student typed their own rank: the profile no longer overwrites it
+  const advTouched = useRef(false);
+  const profRanks = useRef({});        // from the profile: { mainCrl, mainCat, advCrl, advCat }
+  const [profTick, setProfTick] = useState(0);
 
   // Maharashtra needs its manifest (quotas, categories, rounds, institute types) before it can show anything.
   useEffect(() => {
     if (!enabled || !active || counselling !== 'MH' || manifest) return;
     let live = true;
-    fetch(MH.manifest).then(r => r.json()).then(m => { if (live) setManifest(m); })
+    fetchMhManifest().then(m => { if (live) setManifest(m); })
       .catch(() => { if (live) setData({ loading: false, error: true, colleges: [] }); });
     fetch(MH.intake).then(r => (r.ok ? r.json() : {})).then(j => { if (live) setIntake(j || {}); }).catch(() => {});
     return () => { live = false; };
@@ -53,7 +59,7 @@ export default function useEngCutoff({ config, studentCategory, active }) {
   // Pick the student's own category the first time, and whenever the options change underneath the current choice.
   useEffect(() => {
     if (!enabled) return;
-    const keys = counselling === 'MH' ? mhCategories.map(c => c.key) : JOSAA.categories.map(c => c.key);
+    const keys = counselling === 'MH' ? mhCategories.map(c => c.key) : cfgFor(counselling).categories.map(c => c.key);
     if (counselling === 'MH' && !manifest) return;
     const want = defaultCategory(counselling, studentCategory, keys);
     if (!touched.current) { if (category !== want) setCategory(want); }
@@ -67,32 +73,46 @@ export default function useEngCutoff({ config, studentCategory, active }) {
     if (counselling === 'MH' && !manifest) return;
     const id = ++seq.current;
     setData(d => ({ ...d, loading: true, error: false }));
-    const parts = (counselling === 'JOSAA' && quota === 'combined') ? COMBINED_PARTS : [quota];
-    Promise.all(parts.map(q => fetch(`${cfgFor(counselling).base}/${q}/${category}/${gender}.json`)
-      .then(r => { if (r.status === 404) return { colleges: [] }; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(j => (j.colleges || []).map(c => ({ ...c, _quota: q })))))
-      .then(lists => { if (id === seq.current) { setData({ loading: false, error: false, colleges: [].concat(...lists) }); setVisible(40); } })
+    fetchCutoffRecords(counselling, quota, category, gender)
+      .then(colleges => { if (id === seq.current) { setData({ loading: false, error: false, colleges }); setVisible(40); } })
       .catch(() => { if (id === seq.current) setData({ loading: false, error: true, colleges: [] }); });
   }, [enabled, active, counselling, quota, category, gender, manifest]);
 
   const switchCounselling = (key) => {
     if (key === counselling) return;
     touched.current = false;
-    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : 'combined'); setCategory(''); setGender('all'); setItype('ALL');
-    setRound(key === 'MH' ? (manifest ? manifest.rounds[manifest.rounds.length - 1] : 'Round 1') : JOSAA.defaultRound);
+    setCounselling(key); setQuota(key === 'MH' ? MH.defaultQuota : key === 'CSAB' ? CSAB.defaultQuota : 'combined'); setCategory(''); setGender('all'); setItype('ALL');
+    setRound(key === 'MH' ? (manifest ? manifest.rounds[manifest.rounds.length - 1] : 'Round 1') : cfgFor(key).defaultRound);
     setPwd(false); setVisible(40);
   };
   // Once the Maharashtra manifest arrives, start on its last round.
   useEffect(() => { if (counselling === 'MH' && manifest && !manifest.rounds.includes(round)) setRound(manifest.rounds[manifest.rounds.length - 1]); }, [counselling, manifest, round]);
 
+  // Profile prefill: only the values the student has filled in are passed; nothing else is touched. The category follows studentCategory.
+  const prefill = (v) => {
+    profRanks.current = { mainCrl: v.mainCrl || '', mainCat: v.mainCat || '', advCrl: v.advCrl || '', advCat: v.advCat || '' }; setProfTick(t => t + 1);
+    if (v.mainPct !== undefined) setMainPct(v.mainPct);
+    if (v.mhPct !== undefined) setMhPct(v.mhPct);
+    if (v.mhMerit !== undefined) setMhMerit(v.mhMerit);
+    if (v.pwd) setPwd(true);
+  };
+  // Profile ranks fill the JEE Main CRL and category rank boxes; which one is compared is decided per college (see pickRank).
+  useEffect(() => {
+    if (!enabled) return;
+    const { mainCrl = '', mainCat = '', advCrl = '', advCat = '' } = profRanks.current;
+    if (!rankTouched.current && (mainCrl || mainCat)) { setMainRank(mainCrl); setMainCatRank(mainCat); }
+    if (!advTouched.current && (advCrl || advCat)) { setAdvRank(advCrl); setAdvCatRank(advCat); }
+  }, [enabled, profTick]);
+
   return {
-    ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
+    ecPrefill: prefill, ecEnabled: enabled, ecCounselling: counselling, ecSwitch: switchCounselling,
     ecQuota: quota, setEcQuota: (v) => { touched.current = false; setQuota(v); setCategory(''); },
     ecCategory: category, setEcCategory: (v) => { touched.current = true; setCategory(v); },
     ecGender: gender, setEcGender: setGender, ecItype: itype, setEcItype: (v) => { setItype(v); setVisible(40); },
     ecRound: round, setEcRound: setRound, ecSearch: search, setEcSearch: (v) => { setSearch(v); setVisible(40); },
     ecSort: sort, setEcSort: setSort, ecPwd: pwd, setEcPwd: setPwd,
-    ecMainRank: mainRank, setEcMainRank: setMainRank, ecAdvRank: advRank, setEcAdvRank: setAdvRank, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
+    ecMainRank: mainRank, setEcMainRank: (v) => { rankTouched.current = true; setMainRank(v); }, ecAdvRank: advRank, setEcAdvRank: (v) => { advTouched.current = true; setAdvRank(v); },
+    ecMainCatRank: mainCatRank, setEcMainCatRank: (v) => { rankTouched.current = true; setMainCatRank(v); }, ecAdvCatRank: advCatRank, setEcAdvCatRank: (v) => { advTouched.current = true; setAdvCatRank(v); }, ecMhMerit: mhMerit, setEcMhMerit: setMhMerit,
     ecPMode: pMode, setEcPMode: setPMode, ecMainPct: mainPct, setEcMainPct: setMainPct, ecMhPct: mhPct, setEcMhPct: setMhPct, ecMhCurve: mhCurve,
     ecVisible: visible, ecShowMore: () => setVisible(v => v + 40),
     ecManifest: manifest, ecIntake: intake, ecData: data, ecMhCategories: mhCategories, ecMhGenders: mhGenders,

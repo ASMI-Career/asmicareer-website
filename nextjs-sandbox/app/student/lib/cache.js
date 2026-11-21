@@ -11,7 +11,7 @@ export const writeCache = (token, field, value) => {
   try { localStorage.setItem(cacheKey(token, field), JSON.stringify(value)); } catch (e) { /* storage blocked: cache is best-effort */ }
 };
 export const clearCache = (token) => {
-  try { ['name', 'rank', 'score', 'shortlist', 'checklist'].forEach(f => localStorage.removeItem(cacheKey(token, f))); } catch (e) { /* ignore */ }
+  try { ['name', 'rank', 'score', 'shortlist', 'checklist', 'preflist'].forEach(f => localStorage.removeItem(cacheKey(token, f))); } catch (e) { /* ignore */ }
 };
 // Removes the old shared (un-keyed) keys written by earlier versions of this page. Nothing else reads them.
 // 'asmi-checklist' is NOT removed: the public documents-checklist tool still uses it.

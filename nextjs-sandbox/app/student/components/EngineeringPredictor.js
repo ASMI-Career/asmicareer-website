@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, pickRank, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, estimateMainRank, estimateMhMerit, isReservedJosaa, estimateCategoryRank } from '../lib/engCutoff';
 
 // Engineering Predictor: the student enters the percentile they expect (or the rank, if they know it), we estimate the rank,
 // and list the colleges and branches that rank could get, using last year's closing ranks (the same data as the Cutoff Explorer).
@@ -7,7 +7,7 @@ export default function EngineeringPredictor(props) {
   const {
     config, shortlist, handleToggleShortlist, setActiveTab,
     ecCounselling: cs, ecSwitch, ecQuota, setEcQuota, ecCategory, setEcCategory, ecGender, setEcGender, ecItype, setEcItype,
-    ecRound, setEcRound, ecSearch, setEcSearch, ecPwd, ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMhMerit, setEcMhMerit,
+    ecRound, setEcRound, ecSearch, setEcSearch, ecPwd, ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMainCatRank, setEcMainCatRank, ecAdvCatRank, setEcAdvCatRank, ecMhMerit, setEcMhMerit,
     ecPMode: mode, setEcPMode, ecMainPct, setEcMainPct, ecMhPct, setEcMhPct, ecMhCurve,
     ecVisible, ecShowMore, ecManifest, ecData, ecMhCategories, ecMhGenders,
   } = props;
@@ -17,33 +17,36 @@ export default function EngineeringPredictor(props) {
   const [show, setShow] = useState('all');          // all | safe | likely | borderline
   const [showOut, setShowOut] = useState(false);
 
-  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : JOSAA.quotas;
-  const categories = isMH ? ecMhCategories : JOSAA.categories;
-  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
-  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
-  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
+  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : base.quotas;
+  const categories = isMH ? ecMhCategories : base.categories;
+  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : base.genders;
+  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : base.itypes;
+  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : base.rounds;
   const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
 
   // ── the student's rank ──
-  const advRank = parseRank(ecAdvRank);
   const aiMerit = isMH && ecQuota === 'all-india';          // All India merit numbers are on a different list: no percentile estimate for them
   const reserved = isReservedJosaa(cs, ecCategory);          // reserved categories are compared by CATEGORY rank in JoSAA
   const catLabel = (categories.find(c => c.key === ecCategory) || {}).label || ecCategory;
-  let crlEst = null, mainRank = null, merit = null, note = '', estimated = false;
+  let crlEst = null, mainCrl = null, mainCat = null, merit = null, note = '', estimated = false;
+  const advCrl = (!isMH && cs !== 'CSAB') ? parseRank(ecAdvRank) : null;      // CSAB is by JEE Main CRL only: no Advanced rank
+  const advCat = (!isMH && cs !== 'CSAB') ? parseRank(ecAdvCatRank) : null;
   if (!isMH) {
     if (mode === 'percentile') {
       crlEst = estimateMainRank(parseFloat(ecMainPct), pc.jeeMainCandidates);
-      mainRank = reserved ? estimateCategoryRank(crlEst, ecCategory, pc.categoryShare) : crlEst;
-      estimated = mainRank != null;
-      if (crlEst != null && reserved && mainRank == null) note = 'Cannot estimate a category rank for this category. Choose "I know my rank" and enter it from your scorecard.';
-    } else mainRank = parseRank(ecMainRank);
+      mainCrl = crlEst;
+      mainCat = reserved && cs !== 'CSAB' ? estimateCategoryRank(crlEst, ecCategory, pc.categoryShare) : null;
+      estimated = crlEst != null;
+      if (crlEst != null && reserved && mainCat == null) note = 'Cannot estimate a category rank for this category. Choose "I know my rank" and enter it from your scorecard.';
+    } else { mainCrl = parseRank(ecMainRank); mainCat = cs === 'CSAB' ? null : parseRank(ecMainCatRank); }
   } else if (mode === 'percentile' && !aiMerit) {
     const est = estimateMhMerit(parseFloat(ecMhPct), ecMhCurve);
     if (est) { merit = est.merit; estimated = true; if (!est.inRange) note = 'This percentile is outside the range of last year\'s admissions, so the estimate is rough.'; }
     else if (ecMhPct && !ecMhCurve) note = 'Loading last year\'s results…';
   } else merit = parseRank(ecMhMerit);
-  const haveRank = isMH ? merit != null : (mainRank != null || advRank != null);
-  const rankFor = (c) => (isMH ? merit : (c.type === 'IIT' ? advRank : mainRank));
+  const ranks = { mainCrl, mainCat, advCrl, advCat };
+  const haveRank = isMH ? merit != null : Object.values(ranks).some(v => v != null);
+  const rankFor = (c) => (isMH ? merit : pickRank(cs, c.type, reserved, ranks));
 
   let all = ecData.colleges
     .filter(c => ecItype === 'ALL' || c.type === ecItype)
@@ -52,14 +55,14 @@ export default function EngineeringPredictor(props) {
     .filter(r => r.close != null && r.chance);
   const counts = { safe: 0, likely: 0, borderline: 0, out: 0 };
   all.forEach(r => { counts[r.chance.key] += 1; });
-  const iitSkipped = !isMH && advRank == null && ecData.colleges.some(c => c.type === 'IIT');
+  const iitSkipped = !isMH && cs !== 'CSAB' && pickRank(cs, 'IIT', reserved, ranks) == null && ecData.colleges.some(c => c.type === 'IIT');
   let rows = all.filter(r => (showOut || r.chance.key !== 'out') && (show === 'all' || r.chance.key === show));
   rows.sort((a, b) => a.close - b.close);
 
   const labelOf = (c) => `${c.name} — ${c.program} (${qLabel(c)})`;
   const isIn = (c) => shortlist.includes(labelOf(c));
   const toggle = (c) => handleToggleShortlist(labelOf(c), { name: c.name, institute: c.name, branch: c.program, seatType: qLabel(c), track: base.track, type: c.type });
-  const openInExplorer = () => { if (!isMH && mainRank != null) setEcMainRank(String(mainRank)); if (isMH && merit != null) setEcMhMerit(String(merit)); setActiveTab('cutoff'); };
+  const openInExplorer = () => { if (!isMH && mainCrl != null) { setEcMainRank(String(mainCrl)); if (mainCat != null) setEcMainCatRank(String(mainCat)); } if (isMH && merit != null) setEcMhMerit(String(merit)); setActiveTab('cutoff'); };
 
   const field = { fontFamily: 'inherit' };
   const fmt = (v) => v.toLocaleString('en-IN');
@@ -74,6 +77,7 @@ export default function EngineeringPredictor(props) {
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
         <button className={`chip ${cs === 'JOSAA' ? 'active' : ''}`} onClick={() => ecSwitch('JOSAA')}>JEE Main / JEE Advanced (JoSAA)</button>
         <button className={`chip ${cs === 'MH' ? 'active' : ''}`} onClick={() => ecSwitch('MH')}>MHT-CET (Maharashtra CAP)</button>
+        <button className={`chip ${cs === 'CSAB' ? 'active' : ''}`} onClick={() => ecSwitch('CSAB')}>JEE Main (CSAB Special)</button>
       </div>
 
       <div style={{ background: 'var(--primary-bg)', border: '1px solid var(--primary-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 18 }}>
@@ -87,13 +91,19 @@ export default function EngineeringPredictor(props) {
               <input className="form-input" style={field} inputMode="decimal" placeholder="e.g. 96.5" value={ecMainPct} onChange={e => setEcMainPct(e.target.value)} /></div>
           )}
           {!isMH && mode === 'rank' && (
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Main category rank (${catLabel}), from your scorecard` : 'JEE Main CRL rank'}</label>
+            <div className="form-group"><label className="form-label">JEE Main CRL rank</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 45000" value={ecMainRank} onChange={e => setEcMainRank(e.target.value)} /></div>
           )}
-          {!isMH && (
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Advanced category rank (${catLabel}), IITs only` : 'JEE Advanced CRL rank (only for IITs)'}</label>
-              <input className="form-input" style={field} inputMode="numeric" placeholder="optional, e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+          {!isMH && mode === 'rank' && cs !== 'CSAB' && (
+            <div className="form-group"><label className="form-label">{reserved ? `JEE Main category rank (${catLabel}), from your scorecard` : 'JEE Main category rank (for reserved categories)'}</label>
+              <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4500" value={ecMainCatRank} onChange={e => setEcMainCatRank(e.target.value)} /></div>
           )}
+          {!isMH && cs !== 'CSAB' && (<>
+            <div className="form-group"><label className="form-label">JEE Advanced CRL rank (only for IITs)</label>
+              <input className="form-input" style={field} inputMode="numeric" placeholder="optional, e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+            <div className="form-group"><label className="form-label">{reserved ? `JEE Advanced category rank (${catLabel}), IITs only` : 'JEE Advanced category rank (reserved categories, IITs only)'}</label>
+              <input className="form-input" style={field} inputMode="numeric" placeholder="optional, e.g. 1200" value={ecAdvCatRank} onChange={e => setEcAdvCatRank(e.target.value)} /></div>
+          </>)}
           {isMH && mode === 'percentile' && !aiMerit && (
             <div className="form-group"><label className="form-label">MHT-CET percentile (0 – 100)</label>
               <input className="form-input" style={field} inputMode="decimal" placeholder="e.g. 95.2" value={ecMhPct} onChange={e => setEcMhPct(e.target.value)} /></div>
@@ -117,14 +127,17 @@ export default function EngineeringPredictor(props) {
             ? 'Home State seats count only for NITs and GFTIs in your own home state. Use the search box to find the one in your state. For every other NIT, use Other State.'
             : ecQuota === 'combined'
               ? 'Shows IITs, IIITs and GFTIs (All India seats) together with NITs outside your home state (Other State seats). Applying to the NIT in your own home state? Choose Home State instead.'
-              : 'JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India; NITs are only under Home State or Other State.'}
+              : cs === 'CSAB'
+                ? 'CSAB Special seats are NITs, IIITs and GFTIs. Ranks are All India CRL ranks for every category. DASA quotas are for foreign nationals, PIO/OCI and Gulf-returned candidates.'
+                : 'JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India; NITs are only under Home State or Other State.'}
         </p>}
         {haveRank && (
           <div style={{ marginTop: 14, fontSize: 14, color: 'var(--text-900)' }}>
             {!isMH && crlEst != null && <div>Estimated <b>JEE Main CRL rank: about {fmt(crlEst)}</b> (from your percentile)</div>}
-            {!isMH && mainRank != null && reserved && <div>{estimated ? 'Estimated ' : ''}<b>{catLabel} category rank: about {fmt(mainRank)}</b>{estimated && ' (rough: your CRL x the category\'s share of candidates)'}</div>}
-            {!isMH && advRank != null && <div>JEE Advanced {reserved ? `${catLabel} category` : 'CRL'} rank: <b>{fmt(advRank)}</b></div>}
-            {!isMH && reserved && <div style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 4 }}>For {catLabel}, JoSAA closing ranks are category ranks, so your category rank is used. It is on your JEE scorecard.</div>}
+            {!isMH && mainCat != null && reserved && <div>{estimated ? 'Estimated ' : ''}<b>{catLabel} category rank: about {fmt(mainCat)}</b>{estimated && ' (rough: your CRL x the category\'s share of candidates)'}</div>}
+            {!isMH && advCrl != null && <div>JEE Advanced CRL rank: <b>{fmt(advCrl)}</b></div>}
+            {!isMH && advCat != null && <div>JEE Advanced {reserved ? `${catLabel} ` : ''}category rank: <b>{fmt(advCat)}</b></div>}
+            {!isMH && reserved && cs !== 'CSAB' && <div style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 4 }}>For {catLabel}, JoSAA closing ranks are category ranks, so your category rank is used. It is on your JEE scorecard.</div>}
             {isMH && <div>{estimated ? 'Estimated ' : ''}<b>state merit number: about {fmt(merit)}</b>{estimated && ' (read from last year\'s CAP results)'}</div>}
             {note && <div style={{ fontSize: 12, color: '#b45309', marginTop: 4 }}>{note}</div>}
             {estimated && <div style={{ fontSize: 11, color: 'var(--text-500)', marginTop: 4 }}>

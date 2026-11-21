@@ -100,5 +100,15 @@
       { "id": "cap-fee-receipt",   "label": "CAP Admission Fee Receipt", "copies": "Original + 1 photocopy" }
     ] }
   },
-  "quota": {}
+  "quota": {},
+  "groups": {
+    "josaa-csab": { "sections": ["jee-main-scorecard", "jee-adv-scorecard", "cls10-mark", "cls10-cert", "cls12-mark", "cls12-cert", "domicile", "aadhaar-self", "aadhaar-parent", "photos", "pwd-cert", "josaa-reg-slip", "josaa-choice-slip", "josaa-allotment", "josaa-reporting"], "includeCategory": true },
+    "mhtcet": { "sections": ["mht-cet-scorecard", "cls10-mark", "cls10-cert", "cls12-mark", "cls12-cert", "domicile", "aadhaar-self", "aadhaar-parent", "photos", "pwd-cert", "cap-application", "cap-verification", "cap-allotment", "cap-fee-receipt"], "includeCategory": true },
+    "dasa": { "note": "The document list for DASA is being prepared by your counsellor." },
+    "mhtcet-nri": { "note": "The document list for MHT-CET NRI is being prepared by your counsellor." },
+    "met": { "note": "The document list for MET is being prepared by your counsellor." },
+    "viteee": { "note": "The document list for VITEEE is being prepared by your counsellor." },
+    "srmjeee": { "note": "The document list for SRMJEEE is being prepared by your counsellor." },
+    "comedk": { "note": "The document list for COMEDK is being prepared by your counsellor." }
+  }
 }

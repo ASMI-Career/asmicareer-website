@@ -1,8 +1,9 @@
 import { isClosed } from '../lib/dates';
 import { getWhatsAppLink } from '../lib/format';
+import { examBadge } from '../lib/profile';
 
 export default function Dashboard(props) {
-  const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink } = props;
+  const { config, allIds, checkedDocs, counsellorBranch, counsellorInitials, counsellorName, counsellorWhatsapp, hasCounsellorWhatsapp, deadlines, doneCount, handleToggleShortlist, progressSteps, sectionsToRender, setActiveTab, shortlist, studentCategory, studentName, studentRank, studentScore, toggleDoc, whatsappGroupLink, profile, profileSupported } = props;
   const dash = config.dashboard;
   const dlRules = config.deadlines;
   // Engineering only (set in its config): "View All" opens the in-app Deadlines tab, rows get an Apply Now button, the advisor gets a WhatsApp button.
@@ -14,6 +15,7 @@ export default function Dashboard(props) {
   const hasEditTab = config.modules.includes(dash.shortlistEditTab);
   const hasChecklist = config.modules.includes('checklist');
   const badgeValue = (field) => {
+    if (field === 'examScore') return examBadge(profile, studentScore, profileSupported).value;
     if (field === 'score') return studentScore || '—';
     if (field === 'rank') return studentRank ? studentRank.toLocaleString('en-IN') : '—';
     return studentCategory ? (dash.categoryLabels[studentCategory] || studentCategory) : '—';
@@ -67,7 +69,7 @@ export default function Dashboard(props) {
                       <div style={{ display: 'flex', gap: 12, marginTop: 20, flexWrap: 'wrap' }}>
                         {dash.badges.map(b => (
                           <div className="rank-badge" key={b.field}>
-                            <span className="rank-badge-label">{b.label}</span>
+                            <span className="rank-badge-label">{b.field === 'examScore' ? examBadge(profile, studentScore, profileSupported).label : b.label}</span>
                             <span className="rank-badge-value">{badgeValue(b.field)}</span>
                           </div>
                         ))}

@@ -1,0 +1,11 @@
+[
+  {"id": "cs", "label": "Computer Science & allied (CSE, IT, AI/ML, Data Science)", "keywords": ["computer", "information technology", "artificial intelligence", "machine learning", "data science", "data engineering", "cyber", "software", "mathematics and computing", "cse", "csbs", "internet of things", "iot", "ai and", "ai &", "ai/", "computational", "intelligent systems", "mathematics & computing", "cloud"]},
+  {"id": "ece", "label": "Electronics & Communication", "keywords": ["electronics", "telecommunication", "communication", "vlsi", "instrumentation", "e&tc", "entc", "electronic", "integrated circuit"]},
+  {"id": "electrical", "label": "Electrical", "keywords": ["electrical", "power", "eee"]},
+  {"id": "mechanical", "label": "Mechanical & allied (Auto, Production, Robotics, Aerospace)", "keywords": ["mechanical", "automobile", "automotive", "production", "industrial", "mechatronics", "robotics", "automation", "aerospace", "aeronautical", "marine", "manufacturing", "aviation", "naval", "ocean", "maritime", "space science"]},
+  {"id": "civil", "label": "Civil & Environmental", "keywords": ["civil", "construction", "structural", "infrastructure", "environmental"]},
+  {"id": "chemical", "label": "Chemical & Petroleum", "keywords": ["chemical", "petroleum", "petrochemical", "polymer", "plastic", "paint", "oil technology", "dyestuff", "pharmaceutical", "oil fats", "surface coating", "printing", "packaging"]},
+  {"id": "bio", "label": "Biotechnology & Biomedical", "keywords": ["bio technology", "biotechnology", "biomedical", "bio medical", "biosciences", "bioengineering", "bio engineering", "biochemical", "biological"]},
+  {"id": "materials", "label": "Materials, Metallurgy, Mining & Textile", "keywords": ["metallurg", "materials", "mining", "ceramic", "mineral", "textile", "food", "paper", "fibre", "leather", "geolog", "geophysic", "nano science", "safety and fire", "fashion", "apparel", "dairy", "agricultural"]},
+  {"id": "others", "label": "Others", "keywords": [], "catchAll": true}
+]

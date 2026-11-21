@@ -1,4 +1,4 @@
-import { JOSAA, MH, cfgFor, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
+import { JOSAA, MH, CSAB, cfgFor, pickRank, quotaLabelOf, chanceFor, roundValues, fmtNum, parseRank, isReservedJosaa } from '../lib/engCutoff';
 
 // Engineering Cutoff Explorer (student view). Same data as the counsellor tool; every filter is a plain dropdown,
 // last year's closing ranks are shown per round, and a student who enters their rank sees Safe / Likely / Borderline / Out of reach.
@@ -7,24 +7,26 @@ export default function EngineeringCutoff(props) {
     config, shortlist, handleToggleShortlist,
     ecCounselling: cs, ecSwitch, ecQuota, setEcQuota, ecCategory, setEcCategory, ecGender, setEcGender, ecItype, setEcItype,
     ecRound, setEcRound, ecSearch, setEcSearch, ecSort, setEcSort, ecPwd, setEcPwd,
-    ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMhMerit, setEcMhMerit,
+    ecMainRank, setEcMainRank, ecAdvRank, setEcAdvRank, ecMainCatRank, setEcMainCatRank, ecAdvCatRank, setEcAdvCatRank, ecMhMerit, setEcMhMerit,
     ecVisible, ecShowMore, ecManifest, ecIntake, ecData, ecMhCategories, ecMhGenders,
   } = props;
   const ec = config.engineeringCutoff;
   const isMH = cs === 'MH';
   const base = cfgFor(cs);
-  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : JOSAA.quotas;
-  const categories = isMH ? ecMhCategories : JOSAA.categories;
-  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : JOSAA.genders;
-  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : JOSAA.itypes;
-  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : JOSAA.rounds;
+  const quotas = isMH ? (ecManifest ? ecManifest.quotas.map(q => ({ key: q.key, label: q.label })) : []) : base.quotas;
+  const categories = isMH ? ecMhCategories : base.categories;
+  const genders = isMH ? [{ key: 'all', label: 'General (G)' }, { key: 'female-only', label: 'Ladies (L)' }].filter(g => ecMhGenders.includes(g.key)) : base.genders;
+  const itypes = isMH ? (ecManifest ? ecManifest.instituteTypes : []) : base.itypes;
+  const rounds = isMH ? (ecManifest ? ecManifest.rounds : []) : base.rounds;
   const qLabel = (c) => quotaLabelOf(cs, c._quota || ecQuota, ecManifest);   // each row knows which quota it came from
   const track = base.track;
   const reserved = isReservedJosaa(cs, ecCategory);
   const catLabel = (categories.find(c => c.key === ecCategory) || {}).label || ecCategory;
 
-  const rankFor = (c) => (isMH ? parseRank(ecMhMerit) : (c.type === 'IIT' ? parseRank(ecAdvRank) : parseRank(ecMainRank)));
-  const haveRank = isMH ? !!parseRank(ecMhMerit) : (!!parseRank(ecAdvRank) || !!parseRank(ecMainRank));
+  // JoSAA: JEE Main CRL / category rank (NITs, IIITs, GFTIs) and JEE Advanced CRL / category rank (IITs). CSAB: JEE Main CRL only.
+  const ranks = { mainCrl: parseRank(ecMainRank), mainCat: parseRank(ecMainCatRank), advCrl: cs === 'CSAB' ? null : parseRank(ecAdvRank), advCat: cs === 'CSAB' ? null : parseRank(ecAdvCatRank) };
+  const rankFor = (c) => (isMH ? parseRank(ecMhMerit) : pickRank(cs, c.type, reserved, ranks));
+  const haveRank = isMH ? !!parseRank(ecMhMerit) : Object.values(ranks).some(v => v != null);
 
   let rows = ecData.colleges
     .filter(c => ecItype === 'ALL' || c.type === ecItype)
@@ -53,10 +55,13 @@ export default function EngineeringCutoff(props) {
       <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
         <button className={`chip ${cs === 'JOSAA' ? 'active' : ''}`} onClick={() => ecSwitch('JOSAA')}>JoSAA {JOSAA.year}</button>
         <button className={`chip ${cs === 'MH' ? 'active' : ''}`} onClick={() => ecSwitch('MH')}>Maharashtra CAP {MH.year}</button>
+        <button className={`chip ${cs === 'CSAB' ? 'active' : ''}`} onClick={() => ecSwitch('CSAB')}>CSAB Special {CSAB.year}</button>
       </div>
       <p style={{ fontSize: 12, color: 'var(--text-500)', marginBottom: 16 }}>
         {isMH
           ? `Maharashtra CAP ${MH.year}: closing merit number and percentile for each round. Merit number = your rank in the Maharashtra state merit list.`
+          : cs === 'CSAB'
+          ? `CSAB Special ${CSAB.year} (the round after JoSAA): opening and closing ranks for NITs, IIITs and GFTIs. Every rank here is an All India CRL rank, including OBC-NCL, EWS, SC and ST, so compare your CRL rank, not your category rank. DASA quotas are for foreign nationals, PIO/OCI and Gulf-returned candidates.`
           : `JoSAA ${JOSAA.year}: opening and closing ranks for each round. IIT ranks are JEE Advanced ranks; NIT, IIIT and GFTI ranks are JEE Main ranks. For every category except Open the ranks are category ranks (shown on your scorecard), not all-India ranks. JoSAA seats are split by quota: IITs, IIITs and most GFTIs are All India, while NITs are under Home State or Other State; the default view shows All India and Other State together.`}
         {' '}Last year&apos;s ranks are a guide, not a promise: cutoffs change every year.
       </p>
@@ -88,10 +93,16 @@ export default function EngineeringCutoff(props) {
             <div className="form-group"><label className="form-label">MHT-CET state merit number (SML)</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4500" value={ecMhMerit} onChange={e => setEcMhMerit(e.target.value)} /></div>
           ) : (<>
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Main category rank (${catLabel}) for NITs, IIITs, GFTIs` : 'JEE Main CRL rank (NITs, IIITs, GFTIs)'}</label>
+            <div className="form-group"><label className="form-label">JEE Main CRL rank{cs === 'CSAB' ? '' : ' (NITs, IIITs, GFTIs)'}</label>
               <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 12000" value={ecMainRank} onChange={e => setEcMainRank(e.target.value)} /></div>
-            <div className="form-group"><label className="form-label">{reserved ? `JEE Advanced category rank (${catLabel}) for IITs` : 'JEE Advanced CRL rank (IITs)'}</label>
-              <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+            {cs !== 'CSAB' && (<>
+              <div className="form-group"><label className="form-label">JEE Main category rank{reserved ? ` (${catLabel})` : ''}</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4500" value={ecMainCatRank} onChange={e => setEcMainCatRank(e.target.value)} /></div>
+              <div className="form-group"><label className="form-label">JEE Advanced CRL rank (IITs)</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 4000" value={ecAdvRank} onChange={e => setEcAdvRank(e.target.value)} /></div>
+              <div className="form-group"><label className="form-label">JEE Advanced category rank{reserved ? ` (${catLabel})` : ''}</label>
+                <input className="form-input" style={field} inputMode="numeric" placeholder="e.g. 1200" value={ecAdvCatRank} onChange={e => setEcAdvCatRank(e.target.value)} /></div>
+            </>)}
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--text-700)', alignSelf: 'end', paddingBottom: 10 }}>
               <input type="checkbox" checked={ecPwd} onChange={e => setEcPwd(e.target.checked)} style={{ accentColor: 'var(--primary)' }} /> Show PwD ranks
             </label>

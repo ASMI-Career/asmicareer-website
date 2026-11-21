@@ -13,13 +13,17 @@
     "[CONFIRM] OBC students are shown as OBC-NCL."
   ],
   "id": "engineering",
-  "modules": ["dashboard", "deadlines", "predictor", "cutoff", "institutes", "checklist", "tutorials"],
+  "profile": { "enabled": true },
+  "preferenceList": true,
+  "modules": ["dashboard", "deadlines", "predictor", "cutoff", "preferenceList", "institutes", "branchGuide", "checklist", "tutorials"],
   "nav": [
     { "id": "dashboard",  "label": "Dashboard",  "icon": "lucide:layout-dashboard" },
     { "id": "deadlines",  "label": "Deadlines",  "icon": "lucide:calendar-days" },
     { "id": "predictor",  "label": "Predictor",  "icon": "lucide:bar-chart-3" },
     { "id": "cutoff",     "label": "Cutoff Explorer", "icon": "lucide:search" },
+    { "id": "preferenceList", "label": "Preference List", "icon": "lucide:list-ordered" },
     { "id": "institutes", "label": "Institutes", "icon": "lucide:building-2" },
+    { "id": "branchGuide", "label": "Branch Guide", "icon": "lucide:compass" },
     { "id": "checklist",  "label": "Documents",  "icon": "lucide:file-text" },
     { "id": "tutorials",  "label": "Tutorials",  "icon": "lucide:play-circle" }
   ],
@@ -28,6 +32,26 @@
     { "id": "JoSAA", "label": "JoSAA" },
     { "id": "Maharashtra CAP", "label": "Maharashtra CAP" }
   ],
+  "exams": [
+    { "id": "josaa-csab", "label": "JoSAA & CSAB" },
+    { "id": "dasa", "label": "DASA" },
+    { "id": "mhtcet", "label": "MHT-CET" },
+    { "id": "mhtcet-nri", "label": "MHT-CET NRI" },
+    { "id": "met", "label": "MET" },
+    { "id": "viteee", "label": "VITEEE" },
+    { "id": "srmjeee", "label": "SRMJEEE" },
+    { "id": "comedk", "label": "COMEDK" }
+  ],
+  "examAliases": {
+    "JoSAA": "josaa-csab", "JOSAA": "josaa-csab", "CSAB": "josaa-csab", "JoSAA & CSAB": "josaa-csab",
+    "Maharashtra CAP": "mhtcet", "MH": "mhtcet", "CAP": "mhtcet", "MHT-CET": "mhtcet", "MHT CET": "mhtcet",
+    "MHT-CET NRI": "mhtcet-nri", "MHT CET NRI": "mhtcet-nri",
+    "DASA": "dasa",
+    "MET": "met", "Manipal MET": "met",
+    "VITEEE": "viteee",
+    "SRMJEEE": "srmjeee", "SRMJEE": "srmjeee",
+    "COMEDK": "comedk"
+  },
   "student": {
     "defaultName": "Student",
     "logRecord": false,
@@ -53,7 +77,7 @@
     "headerRole": "Engineering Aspirant",
     "heroSubtitle": "Your engineering admission journey is in progress. Keep going!",
     "badges": [
-      { "label": "PERCENTILE", "field": "score" },
+      { "label": "PERCENTILE", "field": "examScore" },
       { "label": "CATEGORY",   "field": "category" }
     ],
     "categoryLabels": { "General": "General / UR", "OBC": "OBC-NCL" },

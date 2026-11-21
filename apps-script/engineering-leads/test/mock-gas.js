@@ -35,6 +35,7 @@ class MockRange {
     return this;
   }
   // single-cell forms of the real Range API
+  getFormula() { const v = this.sheet._get(this.r, this.c); return (typeof v === 'string' && v.charAt(0) === '=') ? v : ''; }
   getValue() { return this.getValues()[0][0]; }
   setValue(v) { return this.setValues([[v]]); }
   setNumberFormat(f) { return this.setNumberFormats([[f]]); }
@@ -62,6 +63,7 @@ class MockSheet {
   getLastColumn() { let m = 0; this.rows.forEach(r => r.forEach((v, i) => { if (String(v) !== '') m = Math.max(m, i + 1); })); return m; }
   getMaxRows() { return this.maxRows; }
   getMaxColumns() { return this.maxCols; }
+  deleteRows(start, n) { if (start < 1 || n < 1) throw new Error('Mock: bad deleteRows'); this.rows.splice(start - 1, n); this.deletedRows = (this.deletedRows || 0) + n; }
   insertRowsAfter(after, n) { this.maxRows += n; this.insertedRows += n; }
   insertColumnsAfter(after, n) { this.maxCols += n; }
   getRange(r, c, nr = 1, nc = 1) { return new MockRange(this, r, c, nr, nc); }
@@ -75,13 +77,14 @@ class MockSpreadsheet {
   constructor(id) { this.id = id; this.sheets = {}; }
   add(sheet) { this.sheets[sheet.name] = sheet; return sheet; }
   getSheetByName(n) { return this.sheets[n] || null; }
+  insertSheet(name) { if (this.sheets[name]) throw new Error('Mock: sheet exists'); return this.add(new MockSheet(name, [''], { maxCols: 10 })); }
 }
 
 function buildEnvironment(options = {}) {
   const code = fs.readFileSync(SCRIPT_PATH, 'utf8');
   const state = {
     logs: [], mails: [], props: {}, lockAcquired: 0, lockReleased: 0, lockHeld: false, lockBusy: false,
-    mailThrows: false, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
+    mailThrows: false, cache: {}, cacheThrows: false, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
   };
 
   const ctx = vm.createContext({
@@ -100,6 +103,9 @@ function buildEnvironment(options = {}) {
         tryLock: () => { if (state.lockBusy || state.lockHeld) return false; state.lockHeld = true; state.lockAcquired++; return true; },
         releaseLock: () => { state.lockHeld = false; state.lockReleased++; }
       })
+    },
+    CacheService: {
+      getScriptCache: () => { if (state.cacheThrows) throw new Error('Mock: cache unavailable'); return { get: k => (k in state.cache ? state.cache[k] : null), put: (k, v) => { state.cache[k] = String(v); } }; }
     },
     PropertiesService: {
       getScriptProperties: () => ({
@@ -137,7 +143,8 @@ function buildEnvironment(options = {}) {
   // The dashboard tab: lead-flow columns + the columns the dashboard PAGE reads, plus unrelated columns around them.
   // 'Student Phone' and 'Parent Notes' are DECOYS: the page's data must never include them.
   const STUDENT = get('STUDENT_HEADERS');
-  const dashHeaders = ['Parent Notes', 'Student Phone'].concat(Array.from(new Set(Object.values(DASH).concat(Object.values(STUDENT))))).concat(['Admin Remarks']);
+  const PROFILE = get('PROFILE_HEADERS');
+  const dashHeaders = ['Parent Notes', 'Student Phone'].concat(Array.from(new Set(Object.values(DASH).concat(Object.values(STUDENT)).concat(options.noProfileCols ? [] : Object.values(PROFILE))))).concat(['Admin Remarks']);
   const dash = new MockSpreadsheet(DASH_ID);
   const dsheet = dash.add(new MockSheet('Student Dashboard', dashHeaders, options.sheetOpts));
 
@@ -154,7 +161,7 @@ function buildEnvironment(options = {}) {
 }
 
 /** All data rows (row 2+) of a tab that carry a Token or Full Name, ignoring formula-only rows. */
-function leadRows(sheet, tokenHeader = 'Token', nameHeader = 'Full Name') {
+function leadRows(sheet, tokenHeader = 'Token Number', nameHeader = 'Student Name') {
   const out = [];
   for (let r = 2; r <= sheet.rows.length; r++) {
     if (String(sheet.cell(r, tokenHeader)) !== '' || String(sheet.cell(r, nameHeader)) !== '') out.push(r);

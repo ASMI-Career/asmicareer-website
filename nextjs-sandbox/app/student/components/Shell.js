@@ -1,8 +1,17 @@
+import { useEffect } from 'react';
+
 export default function Shell(props) {
-  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar } = props;
+  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported } = props;
 
   // Only the modules this stream has appear in the menus.
   const navItems = config.nav.filter(item => config.modules.includes(item.id));
+
+  // A bottom bar with more tabs than fit scrolls sideways; keep the open tab in view. A bar that fits is left alone (Medical).
+  useEffect(() => {
+    const nav = document.querySelector('.mobile-bottom-nav');
+    const on = nav && nav.querySelector('.mobile-nav-item.active');
+    if (nav && on && nav.scrollWidth > nav.clientWidth + 1) nav.scrollLeft = on.offsetLeft - (nav.clientWidth - on.offsetWidth) / 2;
+  }, [activeTab]);
 
   return (
     <div className="student-body">
@@ -30,7 +39,7 @@ export default function Shell(props) {
 
             <div className="nav-section-label" style={{marginTop: '24px'}}>Account</div>
 
-            <button className="nav-link">
+            <button className={`nav-link${activeTab === 'settings' ? ' active' : ''}`} onClick={profileSupported ? () => setActiveTab('settings') : undefined}>
               <iconify-icon icon="lucide:settings" className="nav-icon"></iconify-icon>
               <span>Settings</span>
             </button>
@@ -57,7 +66,9 @@ export default function Shell(props) {
               <input type="text" placeholder="Search for colleges, cutoffs or help..." />
             </div>
             <div className="header-right">
-              <div className="header-user">
+              <div className={`header-user${profileSupported ? ' header-user-link' : ''}`} onClick={profileSupported ? () => setActiveTab('settings') : undefined}
+                role={profileSupported ? 'button' : undefined} tabIndex={profileSupported ? 0 : undefined} title={profileSupported ? 'Profile & settings' : undefined}
+                onKeyDown={profileSupported ? (e) => { if (e.key === 'Enter') setActiveTab('settings'); } : undefined}>
                 <div className="header-user-info">
                   <div className="header-user-name">{studentName}</div>
                   <div className="header-user-role">{config.dashboard.headerRole}</div>

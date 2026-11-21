@@ -9,7 +9,10 @@
     "annual_fees": 230000,
     "seats": 1360,
     "asmi_recommended": true,
-    "asmi_pulse_score": 5
+    "asmi_pulse_score": 5,
+    "groups": [
+      "josaa-csab"
+    ]
   },
   {
     "name": "Indian Institute of Technology Delhi",
@@ -21,7 +24,10 @@
     "annual_fees": 235000,
     "seats": 1200,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.9
+    "asmi_pulse_score": 4.9,
+    "groups": [
+      "josaa-csab"
+    ]
   },
   {
     "name": "Indian Institute of Technology Madras",
@@ -33,7 +39,10 @@
     "annual_fees": 214000,
     "seats": 1100,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.9
+    "asmi_pulse_score": 4.9,
+    "groups": [
+      "josaa-csab"
+    ]
   },
   {
     "name": "Indian Institute of Technology Kanpur",
@@ -45,7 +54,10 @@
     "annual_fees": 220000,
     "seats": 1050,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.8
+    "asmi_pulse_score": 4.8,
+    "groups": [
+      "josaa-csab"
+    ]
   },
   {
     "name": "Indian Institute of Technology Kharagpur",
@@ -57,7 +69,10 @@
     "annual_fees": 225000,
     "seats": 1900,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.8
+    "asmi_pulse_score": 4.8,
+    "groups": [
+      "josaa-csab"
+    ]
   },
   {
     "name": "National Institute of Technology Tiruchirappalli",
@@ -69,7 +84,11 @@
     "annual_fees": 180000,
     "seats": 950,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.7
+    "asmi_pulse_score": 4.7,
+    "groups": [
+      "josaa-csab",
+      "dasa"
+    ]
   },
   {
     "name": "National Institute of Technology Karnataka",
@@ -81,7 +100,11 @@
     "annual_fees": 175000,
     "seats": 900,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.6
+    "asmi_pulse_score": 4.6,
+    "groups": [
+      "josaa-csab",
+      "dasa"
+    ]
   },
   {
     "name": "Visvesvaraya National Institute of Technology",
@@ -93,7 +116,11 @@
     "annual_fees": 170000,
     "seats": 850,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.5
+    "asmi_pulse_score": 4.5,
+    "groups": [
+      "josaa-csab",
+      "dasa"
+    ]
   },
   {
     "name": "International Institute of Information Technology Hyderabad",
@@ -105,7 +132,8 @@
     "annual_fees": 350000,
     "seats": 300,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.9
+    "asmi_pulse_score": 4.9,
+    "groups": []
   },
   {
     "name": "Indraprastha Institute of Information Technology Delhi",
@@ -117,7 +145,8 @@
     "annual_fees": 400000,
     "seats": 450,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.5
+    "asmi_pulse_score": 4.5,
+    "groups": []
   },
   {
     "name": "Indian Institute of Information Technology Pune",
@@ -129,7 +158,11 @@
     "annual_fees": 200000,
     "seats": 200,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.2
+    "asmi_pulse_score": 4.2,
+    "groups": [
+      "josaa-csab",
+      "dasa"
+    ]
   },
   {
     "name": "College of Engineering Pune",
@@ -141,7 +174,8 @@
     "annual_fees": 90000,
     "seats": 800,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.8
+    "asmi_pulse_score": 4.8,
+    "groups": []
   },
   {
     "name": "Veermata Jijabai Technological Institute",
@@ -153,7 +187,10 @@
     "annual_fees": 85000,
     "seats": 600,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.7
+    "asmi_pulse_score": 4.7,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Pune Institute of Computer Technology",
@@ -165,7 +202,10 @@
     "annual_fees": 110000,
     "seats": 720,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.6
+    "asmi_pulse_score": 4.6,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Sardar Patel Institute of Technology",
@@ -177,7 +217,10 @@
     "annual_fees": 175000,
     "seats": 420,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.5
+    "asmi_pulse_score": 4.5,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Dwarkadas J. Sanghvi College of Engineering",
@@ -189,7 +232,10 @@
     "annual_fees": 200000,
     "seats": 600,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.4
+    "asmi_pulse_score": 4.4,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "K. J. Somaiya College of Engineering",
@@ -201,7 +247,8 @@
     "annual_fees": 300000,
     "seats": 800,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.3
+    "asmi_pulse_score": 4.3,
+    "groups": []
   },
   {
     "name": "Vishwakarma Institute of Technology",
@@ -213,7 +260,10 @@
     "annual_fees": 185000,
     "seats": 900,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.3
+    "asmi_pulse_score": 4.3,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Walchand College of Engineering",
@@ -225,7 +275,10 @@
     "annual_fees": 85000,
     "seats": 500,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.5
+    "asmi_pulse_score": 4.5,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Shri Ramdeobaba College of Engineering and Management",
@@ -237,7 +290,8 @@
     "annual_fees": 160000,
     "seats": 1000,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.2
+    "asmi_pulse_score": 4.2,
+    "groups": []
   },
   {
     "name": "Government College of Engineering Amravati",
@@ -249,7 +303,10 @@
     "annual_fees": 82000,
     "seats": 400,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4
+    "asmi_pulse_score": 4,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Government College of Engineering Aurangabad",
@@ -261,7 +318,10 @@
     "annual_fees": 82000,
     "seats": 400,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.1
+    "asmi_pulse_score": 4.1,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Thadomal Shahani Engineering College",
@@ -273,7 +333,10 @@
     "annual_fees": 195000,
     "seats": 600,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.2
+    "asmi_pulse_score": 4.2,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Pimpri Chinchwad College of Engineering",
@@ -285,7 +348,10 @@
     "annual_fees": 140000,
     "seats": 840,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.3
+    "asmi_pulse_score": 4.3,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Maharashtra Institute of Technology",
@@ -297,7 +363,8 @@
     "annual_fees": 310000,
     "seats": 1500,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4
+    "asmi_pulse_score": 4,
+    "groups": []
   },
   {
     "name": "Symbiosis Institute of Technology",
@@ -309,7 +376,8 @@
     "annual_fees": 280000,
     "seats": 720,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.1
+    "asmi_pulse_score": 4.1,
+    "groups": []
   },
   {
     "name": "Fr. Conceicao Rodrigues College of Engineering",
@@ -321,7 +389,10 @@
     "annual_fees": 165000,
     "seats": 360,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.1
+    "asmi_pulse_score": 4.1,
+    "groups": [
+      "mhtcet"
+    ]
   },
   {
     "name": "Birla Institute of Technology and Science",
@@ -333,7 +404,8 @@
     "annual_fees": 550000,
     "seats": 1000,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.9
+    "asmi_pulse_score": 4.9,
+    "groups": []
   },
   {
     "name": "Vellore Institute of Technology",
@@ -345,7 +417,10 @@
     "annual_fees": 198000,
     "seats": 4500,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.4
+    "asmi_pulse_score": 4.4,
+    "groups": [
+      "viteee"
+    ]
   },
   {
     "name": "Manipal Institute of Technology",
@@ -357,7 +432,11 @@
     "annual_fees": 400000,
     "seats": 2000,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.3
+    "asmi_pulse_score": 4.3,
+    "groups": [
+      "dasa",
+      "met"
+    ]
   },
   {
     "name": "SRM Institute of Science and Technology",
@@ -369,7 +448,10 @@
     "annual_fees": 250000,
     "seats": 5000,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.1
+    "asmi_pulse_score": 4.1,
+    "groups": [
+      "srmjeee"
+    ]
   },
   {
     "name": "R.V. College of Engineering",
@@ -381,7 +463,8 @@
     "annual_fees": 250000,
     "seats": 1200,
     "asmi_recommended": true,
-    "asmi_pulse_score": 4.6
+    "asmi_pulse_score": 4.6,
+    "groups": []
   },
   {
     "name": "BMS College of Engineering",
@@ -393,7 +476,8 @@
     "annual_fees": 230000,
     "seats": 1100,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.5
+    "asmi_pulse_score": 4.5,
+    "groups": []
   },
   {
     "name": "Ramaiah Institute of Technology",
@@ -405,6 +489,7 @@
     "annual_fees": 220000,
     "seats": 1300,
     "asmi_recommended": false,
-    "asmi_pulse_score": 4.4
+    "asmi_pulse_score": 4.4,
+    "groups": []
   }
 ]

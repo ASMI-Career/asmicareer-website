@@ -1,11 +1,11 @@
-// Engineering Cutoff Explorer: the same JoSAA 2025 and Maharashtra CAP 2026 files the counsellor tool
+// Engineering Cutoff Explorer: the same JoSAA 2026 and Maharashtra CAP 2026 files the counsellor tool
 // (public/engineering-counsellor) reads, shown in a student-friendly way. Nothing here is Medical.
 
 export const JOSAA = {
-  id: 'JOSAA', track: 'JoSAA', label: 'JoSAA', year: 2025,
-  base: '/data/cutoffs/JOSAA/2025',
-  rounds: ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5', 'Round 6'],
-  defaultRound: 'Round 6',
+  id: 'JOSAA', track: 'JoSAA', label: 'JoSAA', year: 2026,
+  base: '/data/cutoffs/JOSAA/2026',
+  rounds: ['Round 1', 'Round 2', 'Round 3', 'Round 4', 'Round 5'],
+  defaultRound: 'Round 5',
   quotas: [
     { key: 'combined', label: 'All India + Other State (recommended)' },
     { key: 'all-india', label: 'All India' }, { key: 'home-state', label: 'Home State' }, { key: 'other-state', label: 'Other State' },
@@ -18,6 +18,23 @@ export const JOSAA = {
   itypes: ['IIT', 'NIT', 'IIIT', 'GFTI'],
 };
 
+// CSAB Special Round (after JoSAA): NITs, IIITs and GFTIs only. Same file layout as JoSAA, but every rank is an All India CRL rank
+// (including reserved categories), and it adds the DASA quotas.
+export const CSAB = {
+  id: 'CSAB', track: 'CSAB', label: 'CSAB Special', year: 2026,
+  base: '/data/cutoffs/CSAB/2026',
+  rounds: ['Round 1', 'Round 2'],
+  defaultRound: 'Round 2',
+  defaultQuota: 'all-india',
+  quotas: [
+    { key: 'all-india', label: 'All India' }, { key: 'home-state', label: 'Home State' }, { key: 'other-state', label: 'Other State' },
+    { key: 'goa', label: 'Goa' }, { key: 'jk', label: 'J&K' }, { key: 'ladakh', label: 'Ladakh' },
+    { key: 'dasa-ciwg', label: 'DASA (CIWG)' }, { key: 'dasa-non-ciwg', label: 'DASA (Non-CIWG)' },
+  ],
+  categories: JOSAA.categories, genders: JOSAA.genders,
+  itypes: ['NIT', 'IIIT', 'GFTI'],
+};
+
 export const MH = {
   id: 'MH', track: 'Maharashtra CAP', label: 'Maharashtra CAP', year: 2026,
   base: '/data/cutoffs/MH_ENGG/2026',
@@ -26,7 +43,18 @@ export const MH = {
   defaultQuota: 'state-level',
 };
 
-export const cfgFor = (counselling) => (counselling === 'MH' ? MH : JOSAA);
+export const cfgFor = (counselling) => (counselling === 'MH' ? MH : counselling === 'CSAB' ? CSAB : JOSAA);
+
+// The files for one selection, fetched and tagged with the quota they came from. Used by the Cutoff Explorer and the Preference List.
+// JoSAA "combined" loads All India + Other State together. A missing file (404) is an empty list.
+export async function fetchCutoffRecords(counselling, quota, category, gender) {
+  const parts = (counselling === 'JOSAA' && quota === 'combined') ? COMBINED_PARTS : [quota];
+  const lists = await Promise.all(parts.map(q => fetch(`${cfgFor(counselling).base}/${q}/${category}/${gender}.json`)
+    .then(r => { if (r.status === 404) return { colleges: [] }; if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(j => (j.colleges || []).map(c => ({ ...c, _quota: q })))));
+  return [].concat(...lists);
+}
+export const fetchMhManifest = () => fetch(MH.manifest).then(r => r.json());
 
 // The student's category (from the sheet, mapped by the config rules) -> the file category for each counselling.
 export function defaultCategory(counselling, studentCategory, availableKeys) {
@@ -90,7 +118,16 @@ export function estimateMhMerit(percentile, pairs) {
 
 // JoSAA closing ranks for every category except Open are CATEGORY ranks (checked against the data: OBC-NCL closings are about 0.39x the
 // Open ones, EWS 0.16x, SC 0.22x, ST 0.11x). So a reserved-category student must compare their category rank, not their CRL.
-export const isReservedJosaa = (counselling, categoryKey) => counselling !== 'MH' && !!categoryKey && categoryKey !== 'OPEN';
+export const isReservedJosaa = (counselling, categoryKey) => counselling === 'JOSAA' && !!categoryKey && categoryKey !== 'OPEN';
+
+// Which of the student's four JEE ranks to compare with a college. JoSAA: IITs use the JEE Advanced rank, every other institute the
+// JEE Main rank; a reserved category uses the CATEGORY rank, Open uses the CRL. CSAB: JEE Main CRL for everyone.
+// r = { mainCrl, mainCat, advCrl, advCat } (numbers or null). Returns null if the needed rank is missing: never falls back to a wrong one.
+export function pickRank(counselling, type, reserved, r) {
+  if (counselling === 'CSAB') return r.mainCrl ?? null;
+  if (type === 'IIT') return (reserved ? r.advCat : r.advCrl) ?? null;
+  return (reserved ? r.mainCat : r.mainCrl) ?? null;
+}
 
 // Rough category rank from a CRL estimate: CRL x the category's share of candidates. A shortcut for students who only know a percentile;
 // the shares are set in the config and are estimates.
@@ -106,6 +143,6 @@ export function estimateCategoryRank(crl, categoryKey, shares) {
 // (checked in the data: all-india = IIT/IIIT/GFTI, other-state = NIT/GFTI, home-state = NIT/GFTI).
 export const COMBINED_PARTS = ['all-india', 'other-state'];
 export const quotaLabelOf = (counselling, key, manifest) => {
-  const list = counselling === 'MH' ? (manifest ? manifest.quotas : []) : JOSAA.quotas;
+  const list = counselling === 'MH' ? (manifest ? manifest.quotas : []) : cfgFor(counselling).quotas;
   const q = list.find(x => x.key === key); return q ? q.label : key;
 };

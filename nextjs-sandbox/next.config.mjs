@@ -3,7 +3,7 @@
 // "Build environment variables: (none found)", i.e. dashboard variables were not reaching the build.
 // A Cloudflare/CLI variable with the same name still wins, so this can be overridden or cleared later.
 const ENGINEERING_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbw1zJfbK7rYbBbAm14fsOV25F7arzJNnrWrJ6cEZ0zKuyPn_xw_MYcR_L-DuI77Avsf/exec';
+  'https://script.google.com/macros/s/AKfycbzv5tXbxUxYLPS5IxX0Bz4wGJTkc3APV0HKpmzut6BHqj5kKXc3B1E4UiFN6tDLry-G9Q/exec';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
