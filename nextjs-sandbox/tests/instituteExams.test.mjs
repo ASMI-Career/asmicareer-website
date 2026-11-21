@@ -37,9 +37,14 @@ t('D2 only `groups` changed: all other fields match origin/main, in the same ord
   assert.equal(COLLEGES.length, old.length); COLLEGES.forEach((c, i) => { const { groups, ...rest } = c; const { groups: og, ...orest } = old[i]; assert.deepEqual(rest, orest); assert.equal(Object.keys(c).pop(), 'groups'); });
   return '34 rows';
 });
-t('D3 evidence rules: IITs only under JEE Advanced; NIT/IIIT only under JEE Main; Maharashtra colleges under MHT-CET; no COMEDK', () => {
+t('D3 evidence rules: IITs only under JEE Advanced; NIT/IIIT under JEE Main; Maharashtra colleges under MHT-CET, and also JEE Main unless Govt / Govt-Aided; no COMEDK', () => {
   COLLEGES.filter(c => c.type === 'IIT').forEach(c => assert.deepEqual(c.groups, ['jee-advanced'], c.name));
-  COLLEGES.filter(c => c.groups.includes('jee-main') && !/Manipal/.test(c.name)).forEach(c => assert.ok(['NIT', 'IIIT'].includes(c.type), c.name));
+  COLLEGES.filter(c => ['NIT', 'IIIT'].includes(c.type) && c.groups.length).forEach(c => assert.deepEqual(c.groups, ['jee-main'], c.name));
+  const mh = COLLEGES.filter(c => c.groups.includes('mhtcet'));
+  const govt = ['Veermata Jijabai Technological Institute', 'Government College of Engineering Amravati', 'Government College of Engineering Aurangabad', 'Walchand College of Engineering'];
+  mh.filter(c => govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['mhtcet'], c.name + ' (Govt / Govt-Aided, or mixed: MHT-CET only)'));
+  mh.filter(c => !govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['jee-main', 'mhtcet'], c.name + ' (private, minority or deemed: JEE Main as well)'));
+  assert.equal(mh.length, 11); assert.equal(mh.filter(c => c.groups.includes('jee-main')).length, 7);
   assert.equal(COLLEGES.filter(c => c.groups.includes('comedk')).length, 0);
   assert.deepEqual(COLLEGES.find(c => /Vellore/.test(c.name)).groups, ['viteee']); assert.deepEqual(COLLEGES.find(c => /SRM/.test(c.name)).groups, ['srmjee']); assert.deepEqual(COLLEGES.find(c => /Manipal/.test(c.name)).groups, ['jee-main', 'met']);
   return 'ok';
