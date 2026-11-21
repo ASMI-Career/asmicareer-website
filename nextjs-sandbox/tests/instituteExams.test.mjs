@@ -32,21 +32,28 @@ t('S1 "my exams" comes from the profile scores and the tracks, in canonical orde
   return 'ok';
 });
 t('D1 every college group id is one of the 7 exams; none repeated', () => { for (const c of COLLEGES) { assert.ok(Array.isArray(c.groups)); c.groups.forEach(g => assert.ok(ids.includes(g), c.name + ': ' + g)); assert.equal(new Set(c.groups).size, c.groups.length); } return COLLEGES.length + ' rows'; });
-t('D2 only `groups` changed: all other fields match origin/main, in the same order', () => {
+t('D2 only `groups` changed, except the Walchand split: every other field matches origin/main; Walchand is listed twice (Govt-Aided and Un-Aided)', () => {
   const old = JSON.parse(execSync('git show origin/main:nextjs-sandbox/public/data/engineering-colleges.json', { cwd: root }).toString());
-  assert.equal(COLLEGES.length, old.length); COLLEGES.forEach((c, i) => { const { groups, ...rest } = c; const { groups: og, ...orest } = old[i]; assert.deepEqual(rest, orest); assert.equal(Object.keys(c).pop(), 'groups'); });
-  return '34 rows';
+  const split = (c) => /^Walchand College of Engineering \((Govt-Aided|Un-Aided)\)$/.test(c.name);
+  const rest = COLLEGES.filter(c => !split(c)); const oldRest = old.filter(c => c.name !== 'Walchand College of Engineering');
+  assert.equal(COLLEGES.length, old.length + 1); assert.equal(rest.length, oldRest.length);
+  rest.forEach((c, i) => { const { groups, ...a } = c; const { groups: og, ...b } = oldRest[i]; assert.deepEqual(a, b); assert.equal(Object.keys(c).pop(), 'groups'); });
+  const ga = COLLEGES.find(c => c.name === 'Walchand College of Engineering (Govt-Aided)'), ua = COLLEGES.find(c => c.name === 'Walchand College of Engineering (Un-Aided)'); const o = old.find(c => c.name === 'Walchand College of Engineering');
+  const { name: n1, groups: g1, ...r1 } = ga; const { name: n2, groups: g2, ...r2 } = o; assert.deepEqual(r1, r2, 'the Govt-Aided row keeps the old fees, seats and slug');
+  assert.equal(ua.type, 'Private'); assert.equal(ua.city, 'Sangli'); assert.equal(ua.annual_fees, null); assert.equal(ua.seats, null); assert.notEqual(ua.slug, ga.slug);
+  assert.equal(new Set(COLLEGES.map(c => c.slug)).size, COLLEGES.length, 'slugs are unique');
+  return '35 rows';
 });
 t('D3 evidence rules: IITs only under JEE Advanced; NIT/IIIT under JEE Main; Maharashtra colleges under MHT-CET, and also JEE Main unless Govt / Govt-Aided; no COMEDK', () => {
   COLLEGES.filter(c => c.type === 'IIT').forEach(c => assert.deepEqual(c.groups, ['jee-advanced'], c.name));
   COLLEGES.filter(c => ['NIT', 'IIIT'].includes(c.type) && c.groups.length).forEach(c => assert.deepEqual(c.groups, ['jee-main'], c.name));
   const mh = COLLEGES.filter(c => c.groups.includes('mhtcet'));
-  const govt = ['Veermata Jijabai Technological Institute', 'Government College of Engineering Amravati', 'Government College of Engineering Aurangabad', 'Walchand College of Engineering'];
+  const govt = ['Veermata Jijabai Technological Institute', 'Government College of Engineering Amravati', 'Government College of Engineering Aurangabad', 'Walchand College of Engineering (Govt-Aided)'];
   mh.filter(c => govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['mhtcet'], c.name + ' (Govt / Govt-Aided, or mixed: MHT-CET only)'));
   mh.filter(c => !govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['jee-main', 'mhtcet'], c.name + ' (private, minority or deemed: JEE Main as well)'));
-  assert.equal(mh.length, 11); assert.equal(mh.filter(c => c.groups.includes('jee-main')).length, 7);
+  assert.equal(mh.length, 12); assert.equal(mh.filter(c => c.groups.includes('jee-main')).length, 8);   // the Un-Aided Walchand row is the 8th
   assert.equal(COLLEGES.filter(c => c.groups.includes('comedk')).length, 0);
-  assert.deepEqual(COLLEGES.find(c => /Vellore/.test(c.name)).groups, ['viteee']); assert.deepEqual(COLLEGES.find(c => /SRM/.test(c.name)).groups, ['srmjee']); assert.deepEqual(COLLEGES.find(c => /Manipal/.test(c.name)).groups, ['jee-main', 'met']);
+  assert.deepEqual(COLLEGES.find(c => /Walchand/.test(c.name) && /Un-Aided/.test(c.name)).groups, ['jee-main', 'mhtcet']); assert.deepEqual(COLLEGES.find(c => /Vellore/.test(c.name)).groups, ['viteee']); assert.deepEqual(COLLEGES.find(c => /SRM/.test(c.name)).groups, ['srmjee']); assert.deepEqual(COLLEGES.find(c => /Manipal/.test(c.name)).groups, ['jee-main', 'met']);
   return 'ok';
 });
 const counts = Object.fromEntries(ids.map(id => [id, COLLEGES.filter(c => c.groups.includes(id)).length]));

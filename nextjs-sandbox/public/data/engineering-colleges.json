@@ -266,7 +266,7 @@
     ]
   },
   {
-    "name": "Walchand College of Engineering",
+    "name": "Walchand College of Engineering (Govt-Aided)",
     "slug": "wce-sangli",
     "type": "Government",
     "course": "BTech",
@@ -277,6 +277,22 @@
     "asmi_recommended": true,
     "asmi_pulse_score": 4.5,
     "groups": [
+      "mhtcet"
+    ]
+  },
+  {
+    "name": "Walchand College of Engineering (Un-Aided)",
+    "slug": "wce-sangli-unaided",
+    "type": "Private",
+    "course": "BTech",
+    "state": "Maharashtra",
+    "city": "Sangli",
+    "annual_fees": null,
+    "seats": null,
+    "asmi_recommended": false,
+    "asmi_pulse_score": null,
+    "groups": [
+      "jee-main",
       "mhtcet"
     ]
   },
