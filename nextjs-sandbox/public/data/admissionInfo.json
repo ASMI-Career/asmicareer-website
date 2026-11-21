@@ -1,5 +1,10 @@
 {
   "_default": "Contact ASMI for the current admission process.",
-  "josaa-csab": "Admission is through JoSAA/CSAB counselling using JEE Main ranks; IITs use JEE Advanced ranks.",
+  "josaa-csab": {
+    "IIT": "Admission to this IIT is through JoSAA counselling, based on your JEE Advanced rank.",
+    "NIT": "Admission is through JoSAA counselling based on your JEE Main rank. CSAB special rounds follow JoSAA for seats that remain vacant.",
+    "IIIT": "Admission is through JoSAA counselling based on your JEE Main rank. CSAB special rounds follow JoSAA for seats that remain vacant.",
+    "GFTI": "Admission is through JoSAA counselling based on your JEE Main rank. CSAB special rounds follow JoSAA for seats that remain vacant."
+  },
   "mhtcet": "Admission is through the Maharashtra CAP counselling run by the State CET Cell, based on MHT-CET merit."
 }

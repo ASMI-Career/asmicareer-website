@@ -82,19 +82,32 @@ function buildIndex() {
   return idx;
 }
 
-const cleanProgram = (p) => String(p || '')
-  .replace(/\s+for DASA[- ]?(Non[- ]?)?CIWG/i, '')
-  .replace(/\s*\(4 Years, Bachelor of Technology\)\s*/i, ' ')
-  .replace(/\s+/g, ' ').trim();
+// `program` is written "Branch name (N Years, Degree)" in the JoSAA/CSAB files; the Maharashtra CAP files carry no degree or
+// duration at all. We only read what the string says: no parse -> degree null (shown under "Other programmes" or, when the
+// whole section has none, as a plain list).
+const tidy = (x) => String(x || '').replace(/\s+for DASA[- ]?(Non[- ]?)?CIWG/i, '').replace(/\s+/g, ' ').trim();
+const PROGRAM_RE = /^(.*?)\s*\((\d+(?:\.\d+)?)\s*Years?,\s*(.+)\)\s*$/i;
+export function parseProgram(raw) {
+  const m = PROGRAM_RE.exec(String(raw || ''));
+  return m ? { n: tidy(m[1]), y: Number(m[2]), d: m[3].trim() } : { n: String(raw || '').replace(/\s+/g, ' ').trim(), y: 0, d: null };   // no parse: keep the raw text
+}
 // Architecture and Planning use a different entrance paper, so they are listed in the table but left out of the headline numbers
-const isTechBranch = (name) => !/architecture|planning/i.test(name);
+export const isTechBranch = (sec, bidx) => { const [n, di] = sec.b[bidx]; return !/architecture|planning/i.test(n + ' ' + (di >= 0 ? sec.dg[di] : '')); };
 const CAT_ORDER = ['OPEN', 'EWS', 'OBC-NCL', 'OBC', 'SEBC', 'SC', 'ST', 'VJ', 'NT1', 'NT2', 'NT3'];
 const catSort = (a, b) => { const ia = CAT_ORDER.indexOf(a), ib = CAT_ORDER.indexOf(b); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.localeCompare(b); };
 
 function makeSection(id, label, year, basis, quotaMap, college, mhType) {
   // quotaMap: Map quota -> Map cat -> Map programKey -> rec
-  const branchIdx = new Map(); const branches = [];
-  const bi = (program) => { const k = cleanProgram(program); if (!branchIdx.has(k)) { branchIdx.set(k, branches.length); branches.push(k); } return branchIdx.get(k); };
+  const branchIdx = new Map(); const branches = []; const degrees = [];
+  const bi = (program) => {
+    const k = String(program);   // distinct programs stay distinct (the same name can exist in more than one degree)
+    if (!branchIdx.has(k)) {
+      const pp = parseProgram(k); let di = -1;
+      if (pp.d) { di = degrees.indexOf(pp.d); if (di < 0) { di = degrees.length; degrees.push(pp.d); } }
+      branchIdx.set(k, branches.length); branches.push([pp.n, di, pp.y]);
+    }
+    return branchIdx.get(k);
+  };
   const pref = QUOTA_PREF[id];
   const quotas = [];
   for (const [quota, cats] of quotaMap) {
@@ -113,16 +126,16 @@ function makeSection(id, label, year, basis, quotaMap, college, mhType) {
   quotas.sort((a, b) => { const ia = pref.indexOf(a.k), ib = pref.indexOf(b.k); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); });
   const catKeys = [...new Set(quotas.flatMap(q => Object.keys(q.c)))].sort(catSort);
   const cl = {}; for (const k of catKeys) cl[k] = id === 'mhcap' ? (MH_LABELS.cats[k] || k) : k;
-  return { id, label, year, basis, b: branches, q: quotas, cl };
+  return { id, label, year, basis, b: branches, dg: degrees, q: quotas, cl };
 }
 
 // the OPEN closing ranks of the section's headline quota, for summary text and the stat strip
 export function sectionSummary(sec) {
   const q = sec.q.find(x => x.c.OPEN); if (!q) return null;
-  const rows = q.c.OPEN.filter(r => isTechBranch(sec.b[r[0]])); if (!rows.length) return null;
+  const rows = q.c.OPEN.filter(r => isTechBranch(sec, r[0])); if (!rows.length) return null;
   const ranks = rows.map(r => r[1]); const rounds = rows.map(r => r[2]);
   const best = rows[0];
-  return { quota: q.l, branches: rows.length, min: Math.min(...ranks), max: Math.max(...ranks), roundMax: Math.max(...rounds), roundMin: Math.min(...rounds), bestBranch: sec.b[best[0]], bestRank: best[1], bestRound: best[2] };
+  return { quota: q.l, branches: rows.length, min: Math.min(...ranks), max: Math.max(...ranks), roundMax: Math.max(...rounds), roundMin: Math.min(...rounds), bestBranch: sec.b[best[0]][0], bestRank: best[1], bestRound: best[2] };
 }
 
 // Returns { matched, sections } for one directory row. `college` is a row of engineering-colleges.json.
@@ -133,15 +146,15 @@ export function getCollegeCutoffs(college) {
   if (!e) return { matched: false, sections: [] };
   const isIIT = college.type === 'IIT';
   const sections = [];
-  const jo = makeSection('josaa', 'JoSAA', YEARS.JOSAA, isIIT ? 'JEE Advanced rank (AIR)' : 'JEE Main rank (AIR)', e.jo, college);
+  const jo = makeSection('josaa', 'JoSAA', YEARS.JOSAA, isIIT ? 'JEE Advanced rank' : 'JEE Main rank', e.jo, college);
   if (jo) sections.push(jo);
   const csabAll = new Map([...e.csab].filter(([k]) => !k.startsWith('dasa-')));
   const dasaAll = new Map([...e.csab].filter(([k]) => k.startsWith('dasa-')));
-  const cs = makeSection('csab', 'CSAB', YEARS.CSAB, isIIT ? 'JEE Advanced rank (AIR)' : 'JEE Main rank (AIR)', csabAll, college);
+  const cs = makeSection('csab', 'CSAB', YEARS.CSAB, isIIT ? 'JEE Advanced rank' : 'JEE Main rank', csabAll, college);
   if (cs) sections.push(cs);
   const da = makeSection('dasa', 'DASA', YEARS.CSAB, 'JEE Main rank (DASA)', dasaAll, college);
   if (da) sections.push(da);
-  const mh = makeSection('mhcap', 'Maharashtra CAP', YEARS.MH_ENGG, 'MHT-CET merit number', e.mh, college, map.mhType || null);
+  const mh = makeSection('mhcap', 'Maharashtra CAP', YEARS.MH_ENGG, 'State merit number', e.mh, college, map.mhType || null);
   if (mh) sections.push(mh);
   return { matched: sections.length > 0, sections };
 }

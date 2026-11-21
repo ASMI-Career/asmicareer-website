@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(root);
-const { getCollegeCutoffs, sectionSummary, matchStats } = await import('../lib/engCollegeData.js');
+const { getCollegeCutoffs, sectionSummary, matchStats, parseProgram } = await import('../lib/engCollegeData.js');
 const COLLEGES = JSON.parse(fs.readFileSync('public/data/engineering-colleges.json', 'utf8'));
 let pass = 0, fail = 0;
 const t = (n, f) => { try { const r = f(); pass++; console.log('PASS ' + n + (r ? '  -> ' + r : '')); } catch (e) { fail++; console.log('FAIL ' + n + '\n   ' + e.message.split('\n')[0]); } };
@@ -39,7 +39,17 @@ t('D2 Walchand rows are split by type: Govt-Aided and Un-Aided get different bra
 t('D3 payload per page stays far below the 60 KB cap', () => {
   let max = 0; for (const c of COLLEGES) max = Math.max(max, JSON.stringify(getCollegeCutoffs(c).sections).length); assert.ok(max < 60000, String(max)); return `max ${max} bytes`;
 });
-t('A1 admissionInfo.json has only the two real texts plus the default line', () => {
-  const a = JSON.parse(fs.readFileSync('public/data/admissionInfo.json', 'utf8')); assert.deepEqual(Object.keys(a).sort(), ['_default', 'josaa-csab', 'mhtcet']); return 'ok';
+t('P1 program strings: degree and duration are read from "(N Years, Degree)" only; no parse keeps the raw text', () => {
+  assert.deepEqual(parseProgram('Mechatronics Engineering (4 Years, Bachelor of Technology)'), { n: 'Mechatronics Engineering', y: 4, d: 'Bachelor of Technology' });
+  assert.deepEqual(parseProgram('Mathematics & Computing (5 Years, Bachelor of Science and Master of Science (Dual Degree))'), { n: 'Mathematics & Computing', y: 5, d: 'Bachelor of Science and Master of Science (Dual Degree)' });
+  assert.deepEqual(parseProgram('Architecture for DASA-CIWG (5 Years, Bachelor of Architecture)'), { n: 'Architecture', y: 5, d: 'Bachelor of Architecture' });
+  assert.deepEqual(parseProgram('Mechanical Engineering [Minority seats]'), { n: 'Mechanical Engineering [Minority seats]', y: 0, d: null }); return 'ok';
+});
+t('P2 IIT Bombay sections carry degrees; Maharashtra CAP rows carry none (the data has none)', () => {
+  const j = getCollegeCutoffs(COLLEGES.find(x => x.slug === 'iit-bombay')).sections[0]; assert.ok(j.dg.length >= 1 && j.b.every(b => b[1] >= 0 && b[2] > 0));
+  const m = getCollegeCutoffs(COLLEGES.find(x => x.slug === 'pict-pune')).sections[0]; assert.equal(m.dg.length, 0); assert.ok(m.b.every(b => b[1] === -1)); assert.equal(m.basis, 'State merit number'); return 'ok';
+});
+t('A1 admissionInfo.json: IIT text never mentions CSAB; NIT/IIIT/GFTI text does', () => {
+  const a = JSON.parse(fs.readFileSync('public/data/admissionInfo.json', 'utf8')); assert.deepEqual(Object.keys(a).sort(), ['_default', 'josaa-csab', 'mhtcet']); assert.deepEqual(Object.keys(a['josaa-csab']).sort(), ['GFTI', 'IIIT', 'IIT', 'NIT']); assert.ok(!/CSAB/.test(a['josaa-csab'].IIT)); return 'ok';
 });
 console.log(`\n${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

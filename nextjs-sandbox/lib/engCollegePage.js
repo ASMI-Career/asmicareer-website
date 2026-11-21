@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import config from '../app/student/config/engineering.provisional.json';
-import { getCollegeCutoffs, sectionSummary } from './engCollegeData';
+import { getCollegeCutoffs, sectionSummary, isTechBranch } from './engCollegeData';
 
 export const SITE_URL = String(config.siteUrl || 'https://asmicareer.in').replace(/\/+$/, '');
 export const PULSE_METHOD_TEXT = String(config.pulseMethodText || '').trim();
@@ -23,8 +23,12 @@ export function isIndexable(college) {
   return cutoffsFor(college).sections.length > 0 || Boolean(college.description && String(college.description).trim());
 }
 
-export const examLabel = (id) => (config.instituteExams.find(e => e.id === id) || {}).label || id;
-export function examLabels(college) { return (college.groups || []).map(examLabel); }
+// "JoSAA & CSAB" is the label of the Documents group; on an IIT page it must read "JoSAA" (IITs are not part of CSAB).
+export const examLabel = (id, type) => {
+  const l = (config.instituteExams.find(e => e.id === id) || (config.exams || []).find(e => e.id === id) || {}).label || id;
+  return type === 'IIT' ? l.replace(/\s*&\s*CSAB/i, '') : l;
+};
+export function examLabels(college) { return (college.groups || []).map(g => examLabel(g, college.type)); }
 const joinList = (a) => (a.length <= 1 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
 const fmt = (n) => Number(n).toLocaleString('en-IN');
 const SHORT_TYPES = ['IIT', 'NIT', 'IIIT', 'GFTI'];
@@ -43,7 +47,7 @@ export function primarySection(cut) {
 
 export function branchCount(cut) {
   const names = new Set();
-  for (const s of cut.sections) for (const q of s.q) for (const r of (q.c.OPEN || [])) { const b = s.b[r[0]]; if (!/architecture|planning/i.test(b)) names.add(b.toLowerCase()); }
+  for (const s of cut.sections) for (const q of s.q) for (const r of (q.c.OPEN || [])) { if (isTechBranch(s, r[0])) { const [n, di, y] = s.b[r[0]]; names.add(`${n.toLowerCase()}|${di >= 0 ? s.dg[di] : ''}|${y}`); } }
   return names.size;
 }
 
@@ -66,7 +70,7 @@ export function metaDescription(college, cut) {
   const base = `${college.name} is ${kindOf(college, 'college')}${where ? ' in ' + where : ''}.`;
   const parts = [];
   const p = primarySection(cut);
-  const nb = branchCount(cut);
+  const nb = p ? p.sum.branches : branchCount(cut);   // same count as the Overview sentence
   if (nb) parts.push(`${nb} branch${nb === 1 ? '' : 'es'}`);
   if (p) parts.push(`OPEN closing ranks ${fmt(p.sum.min)}-${fmt(p.sum.max)} (${p.sec.label} ${p.sec.year})`);
   const ex = examLabels(college); if (ex.length) parts.push(`admission via ${joinList(ex)}`);
@@ -93,7 +97,8 @@ export function admissionBlocks(college, cut) {
   const ids = college.groups || [];
   const hasJosaaCsab = cut.sections.some(s => s.id === 'josaa' || s.id === 'csab') || ['IIT', 'NIT', 'IIIT', 'GFTI'].includes(college.type);
   const blocks = []; let generic = false;
-  if ((ids.includes('jee-main') || ids.includes('jee-advanced')) && hasJosaaCsab && ADMISSION['josaa-csab']) blocks.push({ id: 'josaa-csab', text: ADMISSION['josaa-csab'] });
+  const josaaText = (ADMISSION['josaa-csab'] || {})[college.type];   // text depends on the institute type (IIT: JoSAA only, never CSAB)
+  if ((ids.includes('jee-main') || ids.includes('jee-advanced')) && hasJosaaCsab && josaaText) blocks.push({ id: 'josaa-csab', text: josaaText });
   else if (ids.includes('jee-main') || ids.includes('jee-advanced')) generic = true;
   if (ids.includes('mhtcet') && ADMISSION.mhtcet) blocks.push({ id: 'mhtcet', text: ADMISSION.mhtcet });
   if (ids.some(i => !['jee-main', 'jee-advanced', 'mhtcet'].includes(i))) generic = true;
