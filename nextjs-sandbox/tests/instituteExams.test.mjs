@@ -32,28 +32,49 @@ t('S1 "my exams" comes from the profile scores and the tracks, in canonical orde
   return 'ok';
 });
 t('D1 every college group id is one of the 7 exams; none repeated', () => { for (const c of COLLEGES) { assert.ok(Array.isArray(c.groups)); c.groups.forEach(g => assert.ok(ids.includes(g), c.name + ': ' + g)); assert.equal(new Set(c.groups).size, c.groups.length); } return COLLEGES.length + ' rows'; });
-t('D2 only `groups` changed, except the Walchand split: every other field matches origin/main; Walchand is listed twice (Govt-Aided and Un-Aided)', () => {
+const CUR = COLLEGES.slice(0, 35), NEW = COLLEGES.slice(35);
+const norm = (x) => x.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const cutDir = path.join(root, 'public/data/cutoffs');
+const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith('.json') && e.name !== 'manifest.json' && e.name !== 'intake.json' ? [path.join(d, e.name)] : []);
+const fromCutoffs = (sub) => { const m = new Map(); for (const f of walk(path.join(cutDir, sub))) for (const c of JSON.parse(fs.readFileSync(f, 'utf8')).colleges || []) if (!m.has(norm(c.name))) m.set(norm(c.name), c); return m; };
+const JOSAA = fromCutoffs('JOSAA/2026'), CSAB = fromCutoffs('CSAB/2026'), MH = fromCutoffs('MH_ENGG/2026');
+t('D2 the 35 curated rows are unchanged (only College of Engineering Pune gained groups); Walchand is listed twice; 508 rows added after them; slugs unique', () => {
   const old = JSON.parse(execSync('git show origin/main:nextjs-sandbox/public/data/engineering-colleges.json', { cwd: root }).toString());
-  const split = (c) => /^Walchand College of Engineering \((Govt-Aided|Un-Aided)\)$/.test(c.name);
-  const rest = COLLEGES.filter(c => !split(c)); const oldRest = old.filter(c => c.name !== 'Walchand College of Engineering');
-  assert.equal(COLLEGES.length, old.length + 1); assert.equal(rest.length, oldRest.length);
-  rest.forEach((c, i) => { const { groups, ...a } = c; const { groups: og, ...b } = oldRest[i]; assert.deepEqual(a, b); assert.equal(Object.keys(c).pop(), 'groups'); });
-  const ga = COLLEGES.find(c => c.name === 'Walchand College of Engineering (Govt-Aided)'), ua = COLLEGES.find(c => c.name === 'Walchand College of Engineering (Un-Aided)'); const o = old.find(c => c.name === 'Walchand College of Engineering');
-  const { name: n1, groups: g1, ...r1 } = ga; const { name: n2, groups: g2, ...r2 } = o; assert.deepEqual(r1, r2, 'the Govt-Aided row keeps the old fees, seats and slug');
-  assert.equal(ua.type, 'Private'); assert.equal(ua.city, 'Sangli'); assert.equal(ua.annual_fees, null); assert.equal(ua.seats, null); assert.notEqual(ua.slug, ga.slug);
-  assert.equal(new Set(COLLEGES.map(c => c.slug)).size, COLLEGES.length, 'slugs are unique');
-  return '35 rows';
+  assert.equal(old.length, 35); assert.equal(CUR.length, 35);
+  CUR.forEach((c, i) => { if (c.name === 'College of Engineering Pune') { assert.deepEqual(c.groups, ['mhtcet']); const { groups: _a, ...a } = c; const { groups: _b, ...b } = old[i]; assert.deepEqual(a, b); } else assert.deepEqual(c, old[i], c.name); });
+  assert.equal(NEW.length, 508); assert.equal(new Set(COLLEGES.map(c => c.slug)).size, COLLEGES.length); assert.equal(new Set(COLLEGES.map(c => norm(c.name))).size, COLLEGES.length, 'no repeated name');
+  return COLLEGES.length + ' rows';
 });
-t('D3 evidence rules: IITs only under JEE Advanced; NIT/IIIT under JEE Main; Maharashtra colleges under MHT-CET, and also JEE Main unless Govt / Govt-Aided; no COMEDK', () => {
-  COLLEGES.filter(c => c.type === 'IIT').forEach(c => assert.deepEqual(c.groups, ['jee-advanced'], c.name));
-  COLLEGES.filter(c => ['NIT', 'IIIT'].includes(c.type) && c.groups.length).forEach(c => assert.deepEqual(c.groups, ['jee-main'], c.name));
-  const mh = COLLEGES.filter(c => c.groups.includes('mhtcet'));
-  const govt = ['Veermata Jijabai Technological Institute', 'Government College of Engineering Amravati', 'Government College of Engineering Aurangabad', 'Walchand College of Engineering (Govt-Aided)'];
-  mh.filter(c => govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['mhtcet'], c.name + ' (Govt / Govt-Aided, or mixed: MHT-CET only)'));
-  mh.filter(c => !govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['jee-main', 'mhtcet'], c.name + ' (private, minority or deemed: JEE Main as well)'));
-  assert.equal(mh.length, 12); assert.equal(mh.filter(c => c.groups.includes('jee-main')).length, 8);   // the Un-Aided Walchand row is the 8th
-  assert.equal(COLLEGES.filter(c => c.groups.includes('comedk')).length, 0);
-  assert.deepEqual(COLLEGES.find(c => /Walchand/.test(c.name) && /Un-Aided/.test(c.name)).groups, ['jee-main', 'mhtcet']); assert.deepEqual(COLLEGES.find(c => /Vellore/.test(c.name)).groups, ['viteee']); assert.deepEqual(COLLEGES.find(c => /SRM/.test(c.name)).groups, ['srmjee']); assert.deepEqual(COLLEGES.find(c => /Manipal/.test(c.name)).groups, ['jee-main', 'met']);
+t('D3 curated rows keep the evidence rules (IIT: JEE Advanced; NIT/IIIT: JEE Main; Maharashtra: MHT-CET, plus JEE Main unless Govt / Govt-Aided)', () => {
+  CUR.filter(c => c.type === 'IIT').forEach(c => assert.deepEqual(c.groups, ['jee-advanced'], c.name));
+  CUR.filter(c => ['NIT', 'IIIT'].includes(c.type) && c.groups.length).forEach(c => assert.deepEqual(c.groups, ['jee-main'], c.name));
+  const govt = ['College of Engineering Pune', 'Veermata Jijabai Technological Institute', 'Government College of Engineering Amravati', 'Government College of Engineering Aurangabad', 'Walchand College of Engineering (Govt-Aided)'];
+  const mh = CUR.filter(c => c.groups.includes('mhtcet')); assert.equal(mh.length, 13);
+  mh.filter(c => govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['mhtcet'], c.name)); mh.filter(c => !govt.includes(c.name)).forEach(c => assert.deepEqual(c.groups, ['jee-main', 'mhtcet'], c.name));
+  assert.deepEqual(COLLEGES.find(c => /Vellore/.test(c.name)).groups, ['viteee']); assert.deepEqual(COLLEGES.find(c => /SRM/.test(c.name)).groups, ['srmjee']); assert.deepEqual(COLLEGES.find(c => /Manipal/.test(c.name)).groups, ['jee-main', 'met']);
+  return 'ok';
+});
+t('D4 every institute in the 2026 cutoff data is in the directory, under its exact cutoff name (curated rows cover the 14 renamed or shortened ones)', () => {
+  const have = new Set(COLLEGES.map(c => norm(c.name))); const all = new Map([...JOSAA, ...CSAB, ...MH]);
+  const absent = [...all.values()].filter(c => !have.has(norm(c.name))).map(c => c.name);
+  assert.equal(absent.length, 14, absent.join(" | ")); assert.equal(all.size, 530);
+  return `${all.size} institutes in data, ${absent.length} covered by curated rows (renamed or shortened)`;
+});
+t('D5 new rows: exact cutoff name, type mapping, groups by exam rules, no invented city/fees/seats/scores', () => {
+  const tab = { IIT: 'IIT', NIT: 'NIT', IIIT: 'IIIT', GFTI: 'GFTI', Govt: 'Government', 'Govt-Aided': 'Government', University: 'Government', 'Un-Aided': 'Private', Minority: 'Private', Deemed: 'Deemed' };
+  for (const c of NEW) {
+    const k = norm(c.name); const mh = MH.get(k), jo = JOSAA.get(k) || CSAB.get(k); const src = mh || jo; assert.ok(src, c.name);
+    assert.equal(c.type, tab[src.type], c.name); assert.equal(c.course, 'BTech'); assert.equal(c.city, ''); assert.equal(c.annual_fees, null); assert.equal(c.seats, null); assert.equal(c.asmi_recommended, false); assert.equal(c.asmi_pulse_score, null);
+    if (mh) { assert.equal(c.state, 'Maharashtra'); assert.deepEqual(c.groups, ['Govt', 'Govt-Aided', 'University'].includes(src.type) ? ['mhtcet'] : ['jee-main', 'mhtcet'], c.name); }
+    else { assert.equal(c.state, ''); assert.deepEqual(c.groups, src.type === 'IIT' ? ['jee-advanced'] : ['jee-main'], c.name); }
+  }
+  return `${NEW.length} rows`;
+});
+t('D6 mixed variants are listed separately (Walchand is the only one in the Maharashtra data); no new row for it', () => {
+  const mixed = [...MH.values()]; const by = new Map(); fs.readdirSync(cutDir);
+  const types = new Map(); for (const f of walk(path.join(cutDir, 'MH_ENGG/2026'))) for (const c of JSON.parse(fs.readFileSync(f, 'utf8')).colleges) { const k = norm(c.name); (types.get(k) || types.set(k, new Set()).get(k)).add(c.type); }
+  const multi = [...types].filter(([, v]) => v.size > 1).map(([k]) => k); assert.deepEqual(multi, ['walchand college of engineering sangli']); assert.equal(mixed.length, 387);
+  assert.equal(COLLEGES.filter(c => /^Walchand College of Engineering/.test(c.name)).length, 2);
   return 'ok';
 });
 const counts = Object.fromEntries(ids.map(id => [id, COLLEGES.filter(c => c.groups.includes(id)).length]));

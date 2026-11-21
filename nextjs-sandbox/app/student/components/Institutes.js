@@ -9,6 +9,7 @@ export default function Institutes(props) {
   // Engineering: a choice needs branch + seat type, so the heart opens a small form instead of toggling straight away.
   const [pendingCollege, setPendingCollege] = useState(null);
   // Engineering (config.instituteExams): colleges are split by the entrance EXAM you can apply through (college.groups holds exam ids). Component state only, not saved.
+  const [more, setMore] = useState({ sig: '', n: 48 });   // engineering only: "Show more" count, reset whenever a filter changes
   const [exam, setExam] = useState(null);   // null = the default view: "My exams" for a student with tracks, otherwise All
   const grouped = !!config.instituteExams;
   const mine = grouped ? studentExamIds(props.profile, studentTracks, config) : [];   // from the student's tracks and the scores in Settings
@@ -22,6 +23,8 @@ export default function Institutes(props) {
   const uniqueStates = Array.from(new Set(collegesList.map(c => c.state).filter(Boolean))).sort();
   const filteredStatesList = uniqueStates.filter(s => s.toLowerCase().includes(instStateSearch.toLowerCase()));
 
+  const sig = JSON.stringify([view, instTabType, instType, instCourse, instSearch, instMaxFees, instSortBy, [...(instSelectedStates || [])]]);
+  const limit = grouped && more.sig === sig ? more.n : 48;
   const getFilteredCollegesList = () => {
     let r = [...collegesList];
     if (grouped) r = r.filter(inView);
@@ -151,7 +154,7 @@ export default function Institutes(props) {
                       <div className="card-sm empty-state">{grouped && collegesList.length > 0 && collegesList.filter(inView).length === 0 ? `Institutes for ${viewLabel} are being added.` : 'No colleges found. Try adjusting your filters.'}</div>
                     ) : (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
-                        {getFilteredCollegesList().slice(0, 48).map(college => {
+                        {getFilteredCollegesList().slice(0, limit).map(college => {
                           const isShortlisted = isShortlistedFor(college);
                           return (
                             <Card {...(inst.detailHref ? { href: inst.detailHref.replace('{slug}', college.slug), target: '_blank', rel: 'noreferrer' } : {})}
@@ -197,6 +200,11 @@ export default function Institutes(props) {
                             </Card>
                           );
                         })}
+                      </div>
+                    )}
+                    {grouped && getFilteredCollegesList().length > limit && (
+                      <div style={{ textAlign: 'center', marginTop: 20 }}>
+                        <button className="chip" onClick={() => setMore({ sig, n: limit + 48 })}>Show more ({getFilteredCollegesList().length - limit} left)</button>
                       </div>
                     )}
                   </div>
