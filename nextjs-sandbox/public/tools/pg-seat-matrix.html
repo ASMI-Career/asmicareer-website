@@ -416,7 +416,7 @@ function useRound(r,data){
 function loadRound(r){
  if(DC[r]){useRound(r,DC[r]);return}
  $('body').innerHTML='<tr><td colspan="14" class="empty">Loading Round '+r+'...</td></tr>';
- fetch('/data/seatmatrix/pg-2026-round'+r+'-seat-matrix.json?v=20261121a').then(function(x){return x.json()}).then(function(data){DC[r]=data;useRound(r,data)}).catch(function(){$('body').innerHTML='<tr><td colspan="14" class="empty">Could not load the seat matrix.</td></tr>'});
+ fetch('/data/seatmatrix/pg-2026-round'+r+'-seat-matrix.json?v=20261121b').then(function(x){return x.json()}).then(function(data){DC[r]=data;useRound(r,data)}).catch(function(){$('body').innerHTML='<tr><td colspan="14" class="empty">Could not load the seat matrix.</td></tr>'});
 }
 makeMS('cat',['Open','OBC','EWS','SC','ST'],[],'categories');
 makeMS('pwd',['Seats without PwD','PwD seats only'],[],'seat types');
