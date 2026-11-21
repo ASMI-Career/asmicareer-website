@@ -13,6 +13,8 @@
     "[CONFIRM] OBC students are shown as OBC-NCL."
   ],
   "id": "engineering",
+  "siteUrl": "https://asmicareer.in",
+  "pulseMethodText": "",
   "profile": { "enabled": true },
   "preferenceList": true,
   "modules": ["dashboard", "deadlines", "predictor", "cutoff", "preferenceList", "institutes", "branchGuide", "checklist", "tutorials"],
@@ -152,7 +154,7 @@
     ],
     "courseOptions": [ { "value": "All", "label": "All Courses" }, { "value": "BTech", "label": "BTech" } ],
     "defaultCourse": "BTech",
-    "detailHref": null
+    "detailHref": "/engineering/colleges/{slug}"
   },
   "fees": { "yearsByCourse": {}, "defaultYears": 4 },
   "catalog": {

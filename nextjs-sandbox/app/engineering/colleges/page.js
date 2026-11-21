@@ -316,11 +316,16 @@ export default function EngineeringCollegesDirectory() {
                     <div
                       className="col-card-img"
                       style={
-                        college.photo !== null
-                          ? { backgroundImage: `url(/images/colleges/${college.slug}.jpg)` }
-                          : { background: college.photo_placeholder_color || '#1a0040' }
+                        college.photo
+                          ? { backgroundImage: `url(${college.photo})` }
+                          : { background: college.photo_placeholder_color || 'linear-gradient(135deg, #0a1628, #00A896)', display: 'flex', alignItems: 'center', justifyContent: 'center' }
                       }
                     >
+                      {!college.photo && (
+                        <span style={{ color: 'rgba(255,255,255,0.85)', font: "800 28px 'Montserrat', sans-serif" }} aria-hidden="true">
+                          {String(college.name).split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                        </span>
+                      )}
                       {college.asmi_recommended && (
                         <span className="col-asmi-badge">★ ASMI RECOMMENDS</span>
                       )}
