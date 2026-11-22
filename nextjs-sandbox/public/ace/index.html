@@ -82,6 +82,12 @@
 
 <main>
   <div class="card">
+    <div id="closed" class="hidden" style="text-align:center;padding:24px 8px;">
+      <h2 style="font-family:'Montserrat',sans-serif;margin:0 0 10px;">Registration is closed</h2>
+      <p style="margin:0;">Registration for photo click and document scanning is now closed. For any query, please contact your ACE branch or ASMI Career.</p>
+      <a class="btn alt" href="/">Explore ASMI Career</a>
+    </div>
+
     <div id="formWrap">
       <div class="benefit">ASMI Career will take your photo and scan your documents at your ACE branch. The same photos and scans help with both your NEET and JEE application forms, so you don't repeat the work.</div>
 
@@ -179,6 +185,7 @@
 // ===== Settings to update =====
 var ENDPOINT    = "https://script.google.com/macros/s/AKfycbzdT7p6ysww5wQVp2v3iUPdG3oaOjKSpHIjCemh2HhQfHMD-lK3ArZNbqbyAilciRoO/exec";   // Apps Script Web app (ACE Registrations sheet)
 var PAYMENT_URL = "https://rzp.io/rzp/asmicareer";   // Razorpay link, used for the Rs. 499 package only.
+var REGISTRATION_OPEN = false;  // false = form hidden and submissions blocked. Set true to reopen.
 var JEE_FEE     = 300;  // "ASMI fills JEE form" fee, charged after the form is filled.
 // WhatsApp group link per ACE branch (thank-you screen). A branch missing here hides the group card.
 var BRANCH_GROUPS = {
@@ -225,6 +232,7 @@ document.getElementById('jeeFeeText').textContent = 'Additional charges apply (R
 })();
 
 function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
+if (!REGISTRATION_OPEN) { show('formWrap', false); show('closed', true); document.querySelector('header p').style.display = 'none'; }
 function setErr(id, msg) { document.getElementById('e-' + id).textContent = msg || ''; }
 function val(name) { var r = f.querySelector('input[name=' + name + ']:checked'); return r ? r.value : ''; }
 
@@ -256,6 +264,7 @@ function validate() {
 
 f.addEventListener('submit', function (ev) {
   ev.preventDefault();
+  if (!REGISTRATION_OPEN) return;
   var fe = document.getElementById('formError'); fe.textContent = '';
   if (f.website.value) return; // bot trap
   if (!validate()) return;
