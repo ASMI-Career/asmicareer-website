@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Nav from '../../../components/Nav';
 import Footer from '../../../components/Footer';
 import CutoffTables from './CutoffTables';
-import TabBar from './TabBar';
+import Tabs from './Tabs';
 import { AddToCompare, CompareBar } from '../CompareControls';
 import styles from './college.module.css';
 import {
@@ -217,26 +217,27 @@ export default async function Page({ params }) {
           </div>
         )}
 
-        <TabBar items={tabs} />
-
-        <div className={styles.layout}>
-          <aside className={styles.aside}>
+        <Tabs
+          items={tabs}
+          aside={(
+        <aside className={styles.aside}>
+          <div className={styles.helpCard}>
+            <h2 className={styles.h3}>Need counselling help?</h2>
+            <p className={styles.small}>Talk to an ASMI counsellor about {college.name}: cut-offs, preference list and the admission process.</p>
+            <Link href={inquiryHref} className={styles.ctaPrimary}>Talk to Experts →</Link>
+            <a href={waHref} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>WhatsApp our counsellor</a>
+          </div>
+          {showPulse && (
             <div className={styles.helpCard}>
-              <h2 className={styles.h3}>Need counselling help?</h2>
-              <p className={styles.small}>Talk to an ASMI counsellor about {college.name}: cut-offs, preference list and the admission process.</p>
-              <Link href={inquiryHref} className={styles.ctaPrimary}>Talk to Experts →</Link>
-              <a href={waHref} target="_blank" rel="noopener noreferrer" className={styles.waBtn}>WhatsApp our counsellor</a>
+              <h2 className={styles.h3}>ASMI Pulse Score</h2>
+              <div className={styles.pulseV}>{college.asmi_pulse_score}</div>
+              <p className={styles.small}>{PULSE_METHOD_TEXT}</p>
             </div>
-            {showPulse && (
-              <div className={styles.helpCard}>
-                <h2 className={styles.h3}>ASMI Pulse Score</h2>
-                <div className={styles.pulseV}>{college.asmi_pulse_score}</div>
-                <p className={styles.small}>{PULSE_METHOD_TEXT}</p>
-              </div>
-            )}
-          </aside>
-
-          <div className={styles.main}>
+          )}
+        </aside>
+          )}
+          panels={{
+            overview: (
             <section id="overview" className={styles.section}>
               <h2 className={styles.h2}>Overview</h2>
               <p className={styles.p}>{description || autoSummary(college, cut)}</p>
@@ -256,8 +257,8 @@ export default async function Page({ params }) {
                 </>
               )}
             </section>
-
-            {cut.sections.length > 0 && (
+            ),
+            cutoffs: cut.sections.length > 0 ? (
               <section id="cutoffs" className={styles.section}>
                 <h2 className={styles.h2}>Branches &amp; Cut-offs</h2>
                 <p className={styles.notice}>Last year&apos;s ranks are a guide, not a promise. Ranks are from the {[...new Set(cut.sections.flatMap((s) => s.years.map((y) => y.y)))].sort((a, b) => b - a).join(' and ')} counselling rounds. Use the selectors to change category, gender pool, round and year.</p>
@@ -287,9 +288,8 @@ export default async function Page({ params }) {
                   </div>
                 )}
               </section>
-            )}
-
-            {fees && (
+            ) : null,
+            fees: fees ? (
               <section id="fees" className={styles.section}>
                 <h2 className={styles.h2}>Fees</h2>
                 <p className={styles.p}>{fees.year}</p>
@@ -330,8 +330,8 @@ export default async function Page({ params }) {
                 )}
                 {fees.caveat && <p className={styles.notice}>The institute may revise fees in later semesters. Always check the latest fee circular on the institute&apos;s website.</p>}
               </section>
-            )}
-
+            ) : null,
+            admissions: (
             <section id="admissions" className={styles.section}>
               <h2 className={styles.h2}>Admissions</h2>
               {(routes.length > 0 || labels.length > 0) && <div className={styles.pills}>{(routes.length ? routes : labels).map((l) => <span key={l} className={styles.chip}>{l}</span>)}</div>}
@@ -345,8 +345,8 @@ export default async function Page({ params }) {
               )}
               <p className={styles.p}><Link href="/tools/documents-checklist" className={styles.inlineLink}>Open the document checklist →</Link> <span className={styles.muted}>(also inside your student dashboard)</span></p>
             </section>
-
-            {placements && (
+            ),
+            placements: placements ? (
               <section id="placements" className={styles.section}>
                 <h2 className={styles.h2}>Placements{placements.year ? ` ${placements.year}` : ''}</h2>
                 <Src status={placements.status} year={placements.year} source={placements.source} />
@@ -363,9 +363,8 @@ export default async function Page({ params }) {
                   <ul className={styles.bullets}>{placements.caveats.map((c, i) => <li key={i} className={styles.muted}>{c}</li>)}</ul>
                 )}
               </section>
-            )}
-
-            {hasCampus && (
+            ) : null,
+            campus: hasCampus ? (
               <section id="campus" className={styles.section}>
                 <h2 className={styles.h2}>Campus &amp; Location</h2>
                 {has(id.address) && (
@@ -381,9 +380,8 @@ export default async function Page({ params }) {
                 {facilities && Array.isArray(facilities.value) && <><h3 className={styles.h3}>Facilities</h3><ul className={styles.bullets}>{facilities.value.map((f, i) => <li key={i}>{f}</li>)}</ul><Src status={facilities.status} year={facilities.year} source={facilities.source} /></>}
                 {contact && <p className={styles.p}>{typeof contact.value === 'string' ? contact.value : JSON.stringify(contact.value)}<Src status={contact.status} year={contact.year} source={contact.source} /></p>}
               </section>
-            )}
-
-            {similar.length > 0 && (
+            ) : null,
+            similar: similar.length > 0 ? (
               <section id="similar" className={styles.section}>
                 <h2 className={styles.h2}>Compare similar colleges</h2>
                 <ul className={styles.simList}>
@@ -397,9 +395,9 @@ export default async function Page({ params }) {
                   ))}
                 </ul>
               </section>
-            )}
-          </div>
-        </div>
+            ) : null,
+          }}
+        />
       </div>
       <CompareBar />
       <Footer isEngineering />
