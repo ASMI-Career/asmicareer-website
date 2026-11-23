@@ -122,9 +122,12 @@ def open_bundle(root, name, course_of, private_only=False):
                     rounds = c.get('rounds')
                     if rounds is None and c.get('categories'): rounds = next((v for v in c['categories'].values() if v), None)   # Himachal files keep the rounds under a category; the first category is taken, as the counsellor page does   # Open States = management / NRI quota of private colleges; state government-quota seats are left out
                     key = f"{state}|{quota}|{c.get('code') or c['name']}"
-                    b.add(key, dict(code=c.get('code'), name=c['name'], state=state, type=ctype, course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees')), 'ALL', '', rounds)
+                    base = dict(code=c.get('code'), name=c['name'], state=state, type=ctype, course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees'))
+                    b.add(key, base, 'ALL', '', rounds)
+                    for cname, rr in (c.get('categories') or {}).items():   # Himachal / Tripura keep every category: each becomes a category button
+                        if rr: b.add(key, base, str(cname).strip(), '', rr)
     return b
-open_bundle('OPEN', 'open_med', lambda n: 'BDS' if dental(n) else 'MBBS', private_only=True).write('open_med')
+open_bundle('OPEN', 'open_med', lambda n: 'BDS' if dental(n) else 'MBBS', private_only=True).write('open_med', ['ALL', 'General', 'OBC', 'SC', 'ST', 'EWS', 'PWD', 'Physically Handicapped', 'NRI'])
 if os.path.isdir(f'{SRC}/OPEN_AYUSH/{YEAR}'): open_bundle('OPEN_AYUSH', 'open_ayush', lambda n: 'AYUSH').write('open_ayush')
 open_bundle('OPEN_BVSC', 'open_bvsc', lambda n: 'BVSc').write('open_bvsc')
 
