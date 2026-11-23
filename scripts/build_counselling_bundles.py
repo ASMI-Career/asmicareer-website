@@ -36,7 +36,7 @@ class Bundle:
         self.entries = {}; self.rounds = set()
         self.pwd = False
     def add(self, key, base, cat, sub, rounds):
-        e = self.entries.setdefault(key, dict(base, cats={}))
+        e = self.entries.setdefault(key, dict(base, cats={}, catFees={}))
         if base.get('est') and not e.get('est'): e['est'] = base['est']
         if base.get('fees') and not e.get('fees'): e['fees'] = base['fees']
         ck = f'{cat}|{sub}'
@@ -47,9 +47,17 @@ class Bundle:
             clean[r] = {k: x for k, x in v.items() if x is not None and x != ''}
             if clean[r].get('AIR_PWD') is not None: self.pwd = True
             self.rounds.add(r)
-        if clean: e['cats'][ck] = clean   # a category with no round data in this file is left out
+        if clean:
+            e['cats'][ck] = clean   # a category with no round data in this file is left out
+            if base.get('fees'): e['catFees'][ck] = base['fees']   # the fee of THIS category (open / reserved / IQ / NRI differ)
     def write(self, fname, cat_order=None):
         cols = [c for c in self.entries.values() if c['cats']]    # drop colleges with no data in this file
+        for c in cols:
+            cf = c['catFees']
+            # the college-level fee is only a fallback: prefer the Open category's fee, not whichever file came first (often IQ)
+            pick = next((cf[k] for k in ('OPEN|GENERAL', 'OPEN|FEMALE') if k in cf), None) or next((v for k, v in cf.items() if not k.startswith(('IQ|', 'AIQ|', 'NRI|'))), None)
+            if pick: c['fees'] = pick
+            if len(set(cf.values())) <= 1: del c['catFees']      # one fee for every category: nothing extra to store
         seen = collections.OrderedDict()
         for c in cols:
             for ck in c['cats']:

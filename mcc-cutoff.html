@@ -642,9 +642,17 @@ const rankOf=rd=>rd?(F.pwd==="yes"?rd.AIR_PWD:rd.AIR):null;
 const seatsOf=rd=>rd?(F.pwd==="yes"?rd.Intake_PWD:rd.Intake):null;   // regular seats (NO) or PwD seats (PH) of the seat matrix
 const openOf=rd=>rd?(F.pwd==="yes"?rd.OPEN_AIR_PWD:rd.OPEN_AIR):null;
 const fmt=n=>n==null?null:Number(n).toLocaleString("en-IN");
-const feeNum=c=>{const n=parseInt(String(c.fees==null?"":c.fees).replace(/\D/g,""));return n||0;};
+// Fee of the category being viewed (Maharashtra: Open, reserved, IQ, NRI each have their own fee); falls back to the college fee
+const feeOf=c=>{
+  if(c.catFees&&!isMCC()){
+    const k=ec(); if(c.catFees[k]!=null) return c.catFees[k];
+    const same=Object.keys(c.catFees).find(x=>x.split("|")[0]===F.cat); if(same) return c.catFees[same];
+  }
+  return c.fees;
+};
+const feeNum=c=>{const n=parseInt(String(feeOf(c)==null?"":feeOf(c)).replace(/\D/g,""));return n||0;};
 const feeText=c=>{
-  const f=c.fees; if(f==null||f==="") return '<span class="none">—</span>';
+  const f=feeOf(c); if(f==null||f==="") return '<span class="none">—</span>';
   if(typeof f==="string"&&f.trim().startsWith("$")) return esc(f.trim());
   return feeNum(c)?"₹"+feeNum(c).toLocaleString("en-IN"):'<span class="none">—</span>';
 };
