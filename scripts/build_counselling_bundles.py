@@ -100,7 +100,7 @@ for q in sorted(os.listdir(f'{SRC}/MH/{YEAR}'), key=lambda x: x == 'AYUSH_AIQ'):
 def gov_ok(state, quota):
     q = re.sub(r'[^a-z]', '', str(quota).lower())
     if state in ('Dadra Nagar Haveli', 'Himachal Pradesh'): return True
-    if state == 'Karnataka': return q.startswith('nri')
+    if state == 'Karnataka': return q.startswith(('nri', 'oth'))
     if state == 'Pondicherry': return q.startswith(('nri', 'mq'))
     return False
 
@@ -117,9 +117,8 @@ def open_bundle(root, name, course_of, private_only=False):
                     ctype = fix_type(c.get('type'))
                     if re.search(r'christian medical college', c['name'], re.I): ctype = 'Private'   # a minority private college, tagged Govt in the Tamil Nadu source
                     if re.search(r'\((govt|government)', c['name'], re.I): ctype = 'Government'   # e.g. IGMCRI Puducherry (Government), tagged Private in the source
-                    if state == 'Karnataka' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith('nri') and str(c.get('type')).strip() == 'Private': ctype = 'Government'   # Mysore MMCRI, Mandya, Hassan, Belagavi ... are government colleges, tagged Private in the Karnataka NRI source
+                    if state == 'Karnataka' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith(('nri', 'oth')) and str(c.get('type')).strip() == 'Private': ctype = 'Government'   # Mysore MMCRI, Mandya, Hassan, Belagavi ... are government colleges, tagged Private in the Karnataka NRI source
                     if private_only and ctype == 'Government' and not gov_ok(state, quota): continue
-                    if state == 'Himachal Pradesh' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith('hpquota'): continue   # HP state (category) quota is not MQ / NRI
                     rounds = c.get('rounds')
                     if rounds is None and c.get('categories'): rounds = next((v for v in c['categories'].values() if v), None)   # Himachal files keep the rounds under a category; the first category is taken, as the counsellor page does   # Open States = management / NRI quota of private colleges; state government-quota seats are left out
                     key = f"{state}|{quota}|{c.get('code') or c['name']}"
