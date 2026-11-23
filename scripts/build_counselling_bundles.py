@@ -96,6 +96,14 @@ for q in sorted(os.listdir(f'{SRC}/MH/{YEAR}'), key=lambda x: x == 'AYUSH_AIQ'):
     b.write(f'mh_{q}', CAT_ORDER)
 
 # ---- Open States (MBBS / BDS, the other states' own counselling)
+# Open States lists private colleges only, except these government-college seats the user asked for
+def gov_ok(state, quota):
+    q = re.sub(r'[^a-z]', '', str(quota).lower())
+    if state in ('Dadra Nagar Haveli', 'Himachal Pradesh'): return True
+    if state == 'Karnataka': return q.startswith('nri')
+    if state == 'Pondicherry': return q.startswith(('nri', 'mq'))
+    return False
+
 def open_bundle(root, name, course_of, private_only=False):
     b = Bundle('OPEN', name)
     for sd in sorted(glob.glob(f'{SRC}/{root}/{YEAR}/*/')):
@@ -109,9 +117,13 @@ def open_bundle(root, name, course_of, private_only=False):
                     ctype = fix_type(c.get('type'))
                     if re.search(r'christian medical college', c['name'], re.I): ctype = 'Private'   # a minority private college, tagged Govt in the Tamil Nadu source
                     if re.search(r'\((govt|government)', c['name'], re.I): ctype = 'Government'   # e.g. IGMCRI Puducherry (Government), tagged Private in the source
-                    if private_only and ctype == 'Government': continue   # Open States = management / NRI quota of private colleges; state government-quota seats are left out
+                    if state == 'Karnataka' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith('nri') and str(c.get('type')).strip() == 'Private': ctype = 'Government'   # Mysore MMCRI, Mandya, Hassan, Belagavi ... are government colleges, tagged Private in the Karnataka NRI source
+                    if private_only and ctype == 'Government' and not gov_ok(state, quota): continue
+                    if state == 'Himachal Pradesh' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith('hpquota'): continue   # HP state (category) quota is not MQ / NRI
+                    rounds = c.get('rounds')
+                    if rounds is None and c.get('categories'): rounds = next((v for v in c['categories'].values() if v), None)   # Himachal files keep the rounds under a category; the first category is taken, as the counsellor page does   # Open States = management / NRI quota of private colleges; state government-quota seats are left out
                     key = f"{state}|{quota}|{c.get('code') or c['name']}"
-                    b.add(key, dict(code=c.get('code'), name=c['name'], state=state, type=ctype, course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees')), 'ALL', '', c.get('rounds'))
+                    b.add(key, dict(code=c.get('code'), name=c['name'], state=state, type=ctype, course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees')), 'ALL', '', rounds)
     return b
 open_bundle('OPEN', 'open_med', lambda n: 'BDS' if dental(n) else 'MBBS', private_only=True).write('open_med')
 if os.path.isdir(f'{SRC}/OPEN_AYUSH/{YEAR}'): open_bundle('OPEN_AYUSH', 'open_ayush', lambda n: 'AYUSH').write('open_ayush')
