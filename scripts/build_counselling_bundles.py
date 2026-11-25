@@ -26,7 +26,12 @@ def rkey(r):
 
 def label(s): return re.sub(r'\s+', ' ', str(s).replace('_', ' ')).strip()
 
-def fix_type(t): return re.sub(r'PR\s+IVATE', 'PRIVATE', re.sub(r'^Govt$', 'Government', str(t or '').strip()))
+def fix_type(t):
+    """Only three college types are shown: Government, Private, Private University (deemed / university / affiliated)."""
+    t = re.sub(r'PR\s+IVATE', 'PRIVATE', str(t or '').strip())
+    if re.search(r'^govt|government', t, re.I): return 'Government'
+    if re.search(r'deemed|universit|affiliated', t, re.I): return 'Private University'
+    return 'Private' if t else ''
 
 def dental(name): return bool(re.search(r'dental|dentistry', name, re.I))
 
@@ -36,7 +41,7 @@ class Bundle:
         self.entries = {}; self.rounds = set()
         self.pwd = False
     def add(self, key, base, cat, sub, rounds):
-        e = self.entries.setdefault(key, dict(base, cats={}))
+        e = self.entries.setdefault(key, dict(base, cats={}, catFees={}))
         if base.get('est') and not e.get('est'): e['est'] = base['est']
         if base.get('fees') and not e.get('fees'): e['fees'] = base['fees']
         ck = f'{cat}|{sub}'
@@ -47,9 +52,17 @@ class Bundle:
             clean[r] = {k: x for k, x in v.items() if x is not None and x != ''}
             if clean[r].get('AIR_PWD') is not None: self.pwd = True
             self.rounds.add(r)
-        if clean: e['cats'][ck] = clean   # a category with no round data in this file is left out
+        if clean:
+            e['cats'][ck] = clean   # a category with no round data in this file is left out
+            if base.get('fees'): e['catFees'][ck] = base['fees']   # the fee of THIS category (open / reserved / IQ / NRI differ)
     def write(self, fname, cat_order=None):
         cols = [c for c in self.entries.values() if c['cats']]    # drop colleges with no data in this file
+        for c in cols:
+            cf = c['catFees']
+            # the college-level fee is only a fallback: prefer the Open category's fee, not whichever file came first (often IQ)
+            pick = next((cf[k] for k in ('OPEN|GENERAL', 'OPEN|FEMALE') if k in cf), None) or next((v for k, v in cf.items() if not k.startswith(('IQ|', 'AIQ|', 'NRI|'))), None)
+            if pick: c['fees'] = pick
+            if len(set(cf.values())) <= 1: del c['catFees']      # one fee for every category: nothing extra to store
         seen = collections.OrderedDict()
         for c in cols:
             for ck in c['cats']:
@@ -68,7 +81,8 @@ class Bundle:
 CAT_ORDER = ['OPEN', 'OBC', 'EWS', 'SC', 'ST', 'SEBC']
 
 # ---- Maharashtra State (CAP): one bundle per quota type (course x government / private)
-for q in sorted(os.listdir(f'{SRC}/MH/{YEAR}')):
+TYPE_BY_CODE = {}   # college code -> Government / Private, from the Govt and Private quota folders
+for q in sorted(os.listdir(f'{SRC}/MH/{YEAR}'), key=lambda x: x == 'AYUSH_AIQ'):   # AYUSH_AIQ last: it has no type of its own
     typ, _, course = q.partition('_')
     tname = {'GOVT': 'Government', 'PRIVATE': 'Private', 'AYUSH': 'AIQ'}.get(typ, typ)
     course = course or 'AYUSH'
@@ -77,11 +91,20 @@ for q in sorted(os.listdir(f'{SRC}/MH/{YEAR}')):
         d = json.load(open(f)); cat, sub = d['category'], d['sub_type']
         for c in d['colleges']:
             key = c.get('code') or c['name']
-            b.add(key, dict(code=c.get('code'), name=c['name'], state='Maharashtra', type=tname, course=course, quota=label(q), est=c.get('establishment'), fees=c.get('fees')), cat, sub, c.get('rounds'))
+            if typ in ('GOVT', 'PRIVATE') and c.get('code'): TYPE_BY_CODE[c['code']] = tname
+            b.add(key, dict(code=c.get('code'), name=c['name'], state='Maharashtra', type=TYPE_BY_CODE.get(c.get('code'), 'Government' if re.search(r'govt|government', c['name'], re.I) else 'Private') if typ == 'AYUSH' else tname, course=course, quota=label(q), est=c.get('establishment'), fees=c.get('fees')), cat, sub, c.get('rounds'))
     b.write(f'mh_{q}', CAT_ORDER)
 
 # ---- Open States (MBBS / BDS, the other states' own counselling)
-def open_bundle(root, name, course_of):
+# Open States lists private colleges only, except these government-college seats the user asked for
+def gov_ok(state, quota):
+    q = re.sub(r'[^a-z]', '', str(quota).lower())
+    if state in ('Dadra Nagar Haveli', 'Himachal Pradesh'): return True
+    if state == 'Karnataka': return q.startswith(('nri', 'oth'))
+    if state == 'Pondicherry': return q.startswith(('nri', 'mq'))
+    return False
+
+def open_bundle(root, name, course_of, private_only=False):
     b = Bundle('OPEN', name)
     for sd in sorted(glob.glob(f'{SRC}/{root}/{YEAR}/*/')):
         state = os.path.basename(os.path.dirname(sd)).replace('_', ' ')
@@ -91,10 +114,20 @@ def open_bundle(root, name, course_of):
             for d in docs:
                 quota = d.get('quota') or os.path.basename(f)[:-5]
                 for c in d['colleges']:
+                    ctype = fix_type(c.get('type'))
+                    if re.search(r'christian medical college', c['name'], re.I): ctype = 'Private'   # a minority private college, tagged Govt in the Tamil Nadu source
+                    if re.search(r'\((govt|government)', c['name'], re.I): ctype = 'Government'   # e.g. IGMCRI Puducherry (Government), tagged Private in the source
+                    if state == 'Karnataka' and re.sub(r'[^a-z]', '', str(quota).lower()).startswith(('nri', 'oth')) and str(c.get('type')).strip() == 'Private': ctype = 'Government'   # Mysore MMCRI, Mandya, Hassan, Belagavi ... are government colleges, tagged Private in the Karnataka NRI source
+                    if private_only and ctype == 'Government' and not gov_ok(state, quota): continue
+                    rounds = c.get('rounds')
+                    if rounds is None and c.get('categories'): rounds = next((v for v in c['categories'].values() if v), None)   # Himachal files keep the rounds under a category; the first category is taken, as the counsellor page does   # Open States = management / NRI quota of private colleges; state government-quota seats are left out
                     key = f"{state}|{quota}|{c.get('code') or c['name']}"
-                    b.add(key, dict(code=c.get('code'), name=c['name'], state=state, type=fix_type(c.get('type')), course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees')), 'ALL', '', c.get('rounds'))
+                    base = dict(code=c.get('code'), name=c['name'], state=state, type=ctype, course=course_of(c['name']), quota=label(quota), est=c.get('establishment'), fees=c.get('fees'))
+                    b.add(key, base, 'ALL', '', rounds)
+                    for cname, rr in (c.get('categories') or {}).items():   # Himachal / Tripura keep every category: each becomes a category button
+                        if rr: b.add(key, base, str(cname).strip(), '', rr)
     return b
-open_bundle('OPEN', 'open_med', lambda n: 'BDS' if dental(n) else 'MBBS').write('open_med')
+open_bundle('OPEN', 'open_med', lambda n: 'BDS' if dental(n) else 'MBBS', private_only=True).write('open_med', ['ALL', 'General', 'OBC', 'SC', 'ST', 'EWS', 'PWD', 'Physically Handicapped', 'NRI'])
 if os.path.isdir(f'{SRC}/OPEN_AYUSH/{YEAR}'): open_bundle('OPEN_AYUSH', 'open_ayush', lambda n: 'AYUSH').write('open_ayush')
 open_bundle('OPEN_BVSC', 'open_bvsc', lambda n: 'BVSc').write('open_bvsc')
 
@@ -106,7 +139,7 @@ for f in sorted(glob.glob(f'{SRC}/AACCC/{YEAR}/*/*.json')):
     folder = os.path.basename(os.path.dirname(f)); course, _, q = folder.partition('_')
     d = json.load(open(f)); cat = d['category']
     for c in d['colleges']:
-        b.add(f'{folder}|{c.get("code") or c["name"]}', dict(code=c.get('code'), name=c['name'], state=c.get('state') or '', type=c.get('type') or '', course=course, quota=AACCC_Q.get(q, q), est=c.get('establishment'), fees=c.get('fees')), cat, '', c.get('rounds'))
+        b.add(f'{folder}|{c.get("code") or c["name"]}', dict(code=c.get('code'), name=c['name'], state=c.get('state') or '', type=fix_type(c.get('type')) or '', course=course, quota=AACCC_Q.get(q, q), est=c.get('establishment'), fees=c.get('fees')), cat, '', c.get('rounds'))
 b.write('aaccc', CAT_ORDER)
 
 # ---- VCI (veterinary, 15% All India quota)
@@ -114,7 +147,7 @@ b = Bundle('VCI', 'vci')
 for f in sorted(glob.glob(f'{SRC}/VCI/{YEAR}/*/*.json')):
     folder = os.path.basename(os.path.dirname(f)); d = json.load(open(f)); cat = d['category']
     for c in d['colleges']:
-        b.add(f'{folder}|{c.get("code") or c["name"]}', dict(code=c.get('code'), name=c['name'], state=c.get('state') or '', type=(c.get('type') or label(folder.split('_')[0]).title()), course='BVSc', quota='15% AIQ', est=c.get('establishment'), fees=c.get('fees')), cat, '', c.get('rounds'))
+        b.add(f'{folder}|{c.get("code") or c["name"]}', dict(code=c.get('code'), name=c['name'], state=c.get('state') or '', type=fix_type(c.get('type') or label(folder.split('_')[0]).title()), course='BVSc', quota='15% AIQ', est=c.get('establishment'), fees=c.get('fees')), cat, '', c.get('rounds'))
 b.write('vci', CAT_ORDER)
 
 # ---- MAFSU (Maharashtra Animal & Fishery Sciences University, BVSc): merit numbers and NEET marks, not AIR
@@ -130,5 +163,5 @@ for f in sorted(glob.glob(f'{SRC}/MAFSU/{YEAR}/*/*/*.json')):
             if not v: continue
             m = v.get(field) if v.get(field) is not None else v.get('STATE_MERIT') if v.get('STATE_MERIT') is not None else v.get('REGION_MERIT')
             rounds[r] = dict(Intake=v.get('Intake'), AIR=m, NEET_MARKS=v.get('NEET_MARKS'), REGION_MERIT=v.get('REGION_MERIT'), STATE_MERIT=v.get('STATE_MERIT'))
-        b.add(f'{folder}|{c["name"]}', dict(code=None, name=c['name'], state=c.get('state') or 'Maharashtra', type=c.get('type') or ('Govt' if inst == 'GOVT' else 'Private'), course='BVSc', quota=MAFSU_Q.get(quota, quota), est=c.get('establishment'), fees=c.get('fees')), cat, sub, rounds)
+        b.add(f'{folder}|{c["name"]}', dict(code=None, name=c['name'], state=c.get('state') or 'Maharashtra', type=fix_type(c.get('type') or ('Govt' if inst == 'GOVT' else 'Private')), course='BVSc', quota=MAFSU_Q.get(quota, quota), est=c.get('establishment'), fees=c.get('fees')), cat, sub, rounds)
 b.write('mafsu', CAT_ORDER)
