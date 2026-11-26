@@ -1287,7 +1287,13 @@
       sel.querySelectorAll('option[data-sml]').forEach(o => o.remove());
       const colleges = (data && data.colleges) || [];
       const feesOpt = sel.querySelector('option[value="fees-asc"]');
-      [1, 2, 3].forEach(n => {
+      // Round 4 (Maharashtra AYUSH special CAP round): AIR sort option, only where the data carries a Round 4 AIR.
+      if (colleges.some(c => { const r = c.rounds && c.rounds['Round 4']; return r && r.AIR != null && r.AIR !== ''; })) {
+        const o = document.createElement('option');
+        o.value = 'r4-asc'; o.textContent = 'Round 4: Low to High'; o.dataset.sml = '1';
+        sel.insertBefore(o, feesOpt);
+      }
+      [1, 2, 3, 4].forEach(n => {
         const has = colleges.some(c => { const r = c.rounds && c.rounds['Round ' + n]; return r && r.SML != null && r.SML !== ''; });
         if (!has) return;
         const o = document.createElement('option');
@@ -1391,9 +1397,11 @@
         case 'sml1-asc': roundKey = 'Round 1'; useSml = true; break;
         case 'sml2-asc': roundKey = 'Round 2'; useSml = true; break;
         case 'sml3-asc': roundKey = 'Round 3'; useSml = true; break;
+        case 'sml4-asc': roundKey = 'Round 4'; useSml = true; break;
         case 'r1-desc': roundKey = 'Round 1'; dir = -1; break;
         case 'r2-asc':  roundKey = 'Round 2'; dir = 1;  break;
         case 'r3-asc':  roundKey = 'Round 3'; dir = 1;  break;
+        case 'r4-asc':  roundKey = 'Round 4'; dir = 1;  break;
 
         case 'fees-asc': useFees = true; dir = 1; break;
         case 'r1-asc':

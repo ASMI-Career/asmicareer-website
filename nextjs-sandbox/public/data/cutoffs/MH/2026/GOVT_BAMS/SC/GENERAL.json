@@ -142,8 +142,8 @@
         "Round 4": {
           "Intake": 1,
           "AIR": 199810,
-          "SML": null,
-          "CSML": null
+          "SML": 3879,
+          "CSML": "SC-227"
         }
       }
     },
@@ -234,6 +234,18 @@
           "AIR": 220346,
           "SML": 4545,
           "CSML": "SC-329"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 291406,
+          "SML": 7000,
+          "CSML": "SC-668"
+        },
+        "Stray Round 2": {
+          "Intake": 2,
+          "AIR": 368580,
+          "SML": 9909,
+          "CSML": "SC-1092"
         }
       }
     },
@@ -350,6 +362,12 @@
           "AIR": 262189,
           "SML": 6002,
           "CSML": "SC-526"
+        },
+        "Round 4": {
+          "Intake": null,
+          "AIR": 267343,
+          "SML": 6195,
+          "CSML": "SC-552"
         }
       }
     },
@@ -522,6 +540,18 @@
           "AIR": 217518,
           "SML": 4453,
           "CSML": "SC-306"
+        },
+        "Stray Round 1": {
+          "Intake": 1,
+          "AIR": 284254,
+          "SML": 6747,
+          "CSML": "SC-630"
+        },
+        "Stray Round 2": {
+          "Intake": 2,
+          "AIR": 293696,
+          "SML": 7093,
+          "CSML": "SC-683"
         }
       }
     },
@@ -539,9 +569,9 @@
         },
         "Round 4": {
           "Intake": 1,
-          "AIR": 247059,
-          "SML": 5494,
-          "CSML": "SC-450"
+          "AIR": 256269,
+          "SML": 5805,
+          "CSML": "SC-503"
         }
       }
     },
@@ -590,6 +620,12 @@
           "AIR": 284721,
           "SML": 6765,
           "CSML": "SC-635"
+        },
+        "Stray Round 1": {
+          "Intake": 2,
+          "AIR": 371229,
+          "SML": 10015,
+          "CSML": "SC-1104"
         }
       }
     }

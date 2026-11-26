@@ -13,6 +13,8 @@
     "[CONFIRM] OBC students are shown as OBC-NCL."
   ],
   "id": "engineering",
+  "siteUrl": "https://asmicareer.in",
+  "pulseMethodText": "",
   "profile": { "enabled": true },
   "preferenceList": true,
   "modules": ["dashboard", "deadlines", "predictor", "cutoff", "preferenceList", "institutes", "branchGuide", "checklist", "tutorials"],
@@ -51,7 +53,25 @@
     "VITEEE": "viteee",
     "SRMJEEE": "srmjeee", "SRMJEE": "srmjeee",
     "COMEDK": "comedk"
+  },  "instituteExams": [
+    { "id": "jee-main", "label": "JEE Main" },
+    { "id": "jee-advanced", "label": "JEE Advanced" },
+    { "id": "mhtcet", "label": "MHT-CET" },
+    { "id": "comedk", "label": "COMEDK" },
+    { "id": "met", "label": "MET" },
+    { "id": "viteee", "label": "VITEEE" },
+    { "id": "srmjee", "label": "SRMJEE" }
+  ],
+  "instituteExamAliases": {
+    "JEE Main": "jee-main", "JEE Mains": "jee-main", "JEE": "jee-main", "JoSAA": "jee-main", "JOSAA": "jee-main", "CSAB": "jee-main", "JoSAA & CSAB": "jee-main", "DASA": "jee-main",
+    "JEE Advanced": "jee-advanced", "JEE Adv": "jee-advanced",
+    "MHT-CET": "mhtcet", "MHT CET": "mhtcet", "MH": "mhtcet", "CAP": "mhtcet", "Maharashtra CAP": "mhtcet", "MHT-CET NRI": "mhtcet", "MHT CET NRI": "mhtcet",
+    "COMEDK": "comedk",
+    "MET": "met", "Manipal MET": "met",
+    "VITEEE": "viteee",
+    "SRMJEE": "srmjee", "SRMJEEE": "srmjee"
   },
+
   "student": {
     "defaultName": "Student",
     "logRecord": false,
@@ -125,16 +145,16 @@
   "institutes": {
     "title": "🏫 Institutes Directory",
     "subtitle": "Browse and filter engineering colleges across India.",
-    "tabTypes": ["All", "IIT", "NIT", "IIIT", "Government", "Deemed", "Private"],
+    "tabTypes": ["All", "IIT", "NIT", "IIIT", "GFTI", "Government", "Deemed", "Private"],
     "tabAllLabel": "All Colleges",
     "typeOptions": [
       { "value": "All", "label": "All Colleges" }, { "value": "IIT", "label": "IIT" }, { "value": "NIT", "label": "NIT" },
-      { "value": "IIIT", "label": "IIIT" }, { "value": "Government", "label": "Government" },
+      { "value": "IIIT", "label": "IIIT" }, { "value": "GFTI", "label": "GFTI" }, { "value": "Government", "label": "Government" },
       { "value": "Deemed", "label": "Deemed" }, { "value": "Private", "label": "Private" }
     ],
     "courseOptions": [ { "value": "All", "label": "All Courses" }, { "value": "BTech", "label": "BTech" } ],
     "defaultCourse": "BTech",
-    "detailHref": null
+    "detailHref": "/engineering/colleges/{slug}"
   },
   "fees": { "yearsByCourse": {}, "defaultYears": 4 },
   "catalog": {

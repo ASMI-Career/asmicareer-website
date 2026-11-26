@@ -1,34 +1,51 @@
 import { useState } from 'react';
 import { formatFees } from '../lib/format';
 import AddChoicePanel from './AddChoicePanel';
-import { resolveExamIds } from '../lib/exams';
+import { studentExamIds } from '../lib/exams';
 
 export default function Institutes(props) {
   const { config, shortlistGroups, studentTracks, collegesList, handleToggleShortlist, instCourse, instMaxFees, instSearch, instSelectedStates, instSortBy, instStateSearch, instTabType, instType, setInstCourse, setInstMaxFees, setInstSearch, setInstSelectedStates, setInstSortBy, setInstStateSearch, setInstTabType, setInstType, shortlist } = props;
   const inst = config.institutes;
   // Engineering: a choice needs branch + seat type, so the heart opens a small form instead of toggling straight away.
   const [pendingCollege, setPendingCollege] = useState(null);
-  // Engineering (config.exams): colleges are split by exam / counselling group (college.groups). Component state only, not saved.
+  // Engineering (config.instituteExams): colleges are split by the entrance EXAM you can apply through (college.groups holds exam ids). Component state only, not saved.
+  const [more, setMore] = useState({ sig: '', n: 48 });   // engineering only: "Show more" count, reset whenever a filter changes
   const [exam, setExam] = useState(null);   // null = the default view: "My exams" for a student with tracks, otherwise All
-  const grouped = !!config.exams;
-  const mine = grouped ? resolveExamIds(studentTracks, config) : [];
+  const grouped = !!config.instituteExams;
+  const mine = grouped ? studentExamIds(props.profile, studentTracks, config) : [];   // from the student's tracks and the scores in Settings
   const view = exam === null ? (mine.length ? 'mine' : 'all') : exam;
   const inView = (c) => view === 'all' || (c.groups || []).some(g => (view === 'mine' ? mine.includes(g) : g === view));
-  const viewLabel = view === 'mine' ? mine.map(id => (config.exams.find(e => e.id === id) || {}).label || id).join(', ') : ((config.exams || []).find(e => e.id === view) || {}).label;
+  const viewLabel = view === 'mine' ? mine.map(id => (config.instituteExams.find(e => e.id === id) || {}).label || id).join(', ') : ((config.instituteExams || []).find(e => e.id === view) || {}).label;
   const isShortlistedFor = (college) => config.shortlist.askDetails
     ? Object.values(shortlistGroups).some(arr => Array.isArray(arr) && arr.some(i => i && i.institute === college.name))
     : shortlist.includes(college.name);
   const Card = inst.detailHref ? 'a' : 'div';   // link to a detail page only when the stream has one
-  const uniqueStates = Array.from(new Set(collegesList.map(c => c.state).filter(Boolean))).sort();
+  // Engineering: the filters only offer what exists in the selected exam (e.g. under MHT-CET the only state is Maharashtra). Selections that no longer apply are ignored, not shown.
+  const inViewList = grouped ? collegesList.filter(inView) : collegesList;
+  const lc = (x) => (x || '').toLowerCase();
+  const typesInView = new Set(inViewList.map(c => lc(c.type)));
+  const statesInView = new Set(inViewList.map(c => c.state).filter(Boolean));
+  const tabT = grouped && instTabType !== 'All' && !typesInView.has(lc(instTabType)) ? 'All' : instTabType;
+  const typeT = grouped && instType !== 'All' && !typesInView.has(lc(instType)) ? 'All' : instType;
+  const selStates = grouped ? (instSelectedStates || []).filter(x => statesInView.has(x)) : instSelectedStates;
+  const stateScope = grouped ? inViewList.filter(c => (tabT === 'All' || lc(c.type) === lc(tabT)) && (typeT === 'All' || lc(c.type) === lc(typeT))) : collegesList;
+  const uniqueStates = Array.from(new Set(stateScope.map(c => c.state).filter(Boolean))).sort();
   const filteredStatesList = uniqueStates.filter(s => s.toLowerCase().includes(instStateSearch.toLowerCase()));
+  const typeScope = grouped && selStates.length ? inViewList.filter(c => selStates.includes(c.state)) : inViewList;
+  const typesAvail = new Set(typeScope.map(c => lc(c.type)));
+  const tabList = grouped ? inst.tabTypes.filter(t => t === 'All' || typesInView.has(lc(t))) : inst.tabTypes;
+  const typeOptionList = grouped ? inst.typeOptions.filter(o => o.value === 'All' || typesAvail.has(lc(o.value)) || lc(o.value) === lc(typeT)) : inst.typeOptions;
+  const oneState = grouped && statesInView.size === 1 ? [...statesInView][0] : null;
 
+  const sig = JSON.stringify([view, tabT, typeT, instCourse, instSearch, instMaxFees, instSortBy, selStates]);
+  const limit = grouped && more.sig === sig ? more.n : 48;
   const getFilteredCollegesList = () => {
     let r = [...collegesList];
     if (grouped) r = r.filter(inView);
-    if (instTabType !== 'All') r = r.filter(c => c.type?.toLowerCase() === instTabType.toLowerCase());
-    if (instType !== 'All')    r = r.filter(c => c.type?.toLowerCase() === instType.toLowerCase());
+    if (tabT !== 'All') r = r.filter(c => c.type?.toLowerCase() === tabT.toLowerCase());
+    if (typeT !== 'All')    r = r.filter(c => c.type?.toLowerCase() === typeT.toLowerCase());
     if (instCourse !== 'All')  r = r.filter(c => c.course?.toLowerCase() === instCourse.toLowerCase());
-    if (instSelectedStates.length > 0) r = r.filter(c => instSelectedStates.includes(c.state));
+    if (selStates.length > 0) r = r.filter(c => selStates.includes(c.state));
     if (instSearch) r = r.filter(c => c.name.toLowerCase().includes(instSearch.toLowerCase()));
     r = r.filter(c => c.annual_fees == null || c.annual_fees <= instMaxFees);
     if (instSortBy === 'Recommended') r.sort((a, b) => (b.asmi_recommended ? 1 : 0) - (a.asmi_recommended ? 1 : 0));
@@ -45,23 +62,24 @@ export default function Institutes(props) {
                 {/* Exam / counselling groups (engineering) */}
                 {grouped && (
                   <div className="dg-wrap">
-                    <div className="dg-chips" role="group" aria-label="Exam or counselling">
+                    <div className="dg-chips" role="group" aria-label="Entrance exam">
                       <button type="button" className={`chip ${exam === null ? 'active' : ''}`} aria-pressed={exam === null} onClick={() => setExam(null)}>
                         {mine.length ? 'My exams' : 'All'}<span className="dg-count">{collegesList.filter(c => (mine.length ? (c.groups || []).some(g => mine.includes(g)) : true)).length}</span></button>
                       {mine.length > 0 && <button type="button" className={`chip ${exam === 'all' ? 'active' : ''}`} aria-pressed={exam === 'all'} onClick={() => setExam('all')}>All<span className="dg-count">{collegesList.length}</span></button>}
-                      {config.exams.map(e => (
+                      {config.instituteExams.map(e => (
                         <button key={e.id} type="button" className={`chip ${exam === e.id ? 'active' : ''}`} aria-pressed={exam === e.id} onClick={() => setExam(e.id)}>
                           {e.label}{mine.includes(e.id) && <span className="dg-own" title="One of your exams" aria-label="your exam"> ★</span>}<span className="dg-count">{collegesList.filter(c => (c.groups || []).includes(e.id)).length}</span></button>))}
                     </div>
+                    <p className="dg-hint">You can apply to a college only through an entrance exam you have taken. Pick an exam to see the colleges it opens.</p>
                   </div>
                 )}
 
                 {/* Tab pills */}
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
-                  {inst.tabTypes.map(tab => (
+                  {tabList.map(tab => (
                     <button key={tab} onClick={() => setInstTabType(tab)}
-                      className={`chip ${instTabType === tab ? 'active' : ''}`}>
-                      {tab === 'All' ? inst.tabAllLabel : tab}{grouped && <span className="dg-count">{collegesList.filter(c => inView(c) && (tab === 'All' || c.type?.toLowerCase() === tab.toLowerCase())).length}</span>}
+                      className={`chip ${tabT === tab ? 'active' : ''}`}>
+                      {tab === 'All' ? inst.tabAllLabel : tab}{grouped && <span className="dg-count">{collegesList.filter(c => inView(c) && (tab === 'All' || c.type?.toLowerCase() === tab.toLowerCase()) && (selStates.length === 0 || selStates.includes(c.state))).length}</span>}
                     </button>
                   ))}
                 </div>
@@ -84,6 +102,12 @@ export default function Institutes(props) {
                         value={instSearch} onChange={e => setInstSearch(e.target.value)} style={{ padding: '8px 12px', fontSize: 12 }} />
                     </div>
 
+                    {oneState ? (
+                      <div className="filter-section">
+                        <div className="form-label">State</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-700)' }}>{oneState} only</div>
+                      </div>
+                    ) : (
                     <div className="filter-section">
                       <div className="form-label">State</div>
                       <input type="text" placeholder="Search state..." className="form-input"
@@ -92,22 +116,24 @@ export default function Institutes(props) {
                       <div style={{ maxHeight: 140, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 5 }}>
                         {filteredStatesList.map(state => (
                           <label key={state} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, cursor: 'pointer', color: 'var(--text-700)' }}>
-                            <input type="checkbox" checked={instSelectedStates.includes(state)}
-                              onChange={() => setInstSelectedStates(prev =>
-                                prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state])}
+                            <input type="checkbox" checked={selStates.includes(state)}
+                              onChange={() => setInstSelectedStates(selStates.includes(state) ? selStates.filter(x => x !== state) : [...selStates, state])}
                               style={{ accentColor: 'var(--primary)' }} />
                             {state}
                           </label>
                         ))}
                       </div>
                     </div>
+                    )}
 
+                    {typeOptionList.length > 2 || !grouped ? (
                     <div className="filter-section">
                       <div className="form-label">College Type</div>
-                      <select className="form-select" value={instType} onChange={e => setInstType(e.target.value)} style={{ fontSize: 12 }}>
-                        {inst.typeOptions.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                      <select className="form-select" value={typeT} onChange={e => setInstType(e.target.value)} style={{ fontSize: 12 }}>
+                        {typeOptionList.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
+                    ) : null}
 
                     <div className="filter-section">
                       <div className="form-label">Course</div>
@@ -150,7 +176,7 @@ export default function Institutes(props) {
                       <div className="card-sm empty-state">{grouped && collegesList.length > 0 && collegesList.filter(inView).length === 0 ? `Institutes for ${viewLabel} are being added.` : 'No colleges found. Try adjusting your filters.'}</div>
                     ) : (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
-                        {getFilteredCollegesList().slice(0, 48).map(college => {
+                        {getFilteredCollegesList().slice(0, limit).map(college => {
                           const isShortlisted = isShortlistedFor(college);
                           return (
                             <Card {...(inst.detailHref ? { href: inst.detailHref.replace('{slug}', college.slug), target: '_blank', rel: 'noreferrer' } : {})}
@@ -196,6 +222,11 @@ export default function Institutes(props) {
                             </Card>
                           );
                         })}
+                      </div>
+                    )}
+                    {grouped && getFilteredCollegesList().length > limit && (
+                      <div style={{ textAlign: 'center', marginTop: 20 }}>
+                        <button className="chip" onClick={() => setMore({ sig, n: limit + 48 })}>Show more ({getFilteredCollegesList().length - limit} left)</button>
                       </div>
                     )}
                   </div>

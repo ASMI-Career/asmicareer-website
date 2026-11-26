@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import './colleges.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
+import { AddToCompare, CompareBar } from './CompareControls';
+import engConfig from '../../student/config/engineering.provisional.json';
 
 const engineeringNavLinks = [
   { label: 'Colleges', href: '/engineering/colleges' },
@@ -31,6 +33,8 @@ export default function EngineeringCollegesDirectory() {
   const [maxFees, setMaxFees] = useState(3000000);
   const [sortBy, setSortBy] = useState('Recommended');
   const [savedColleges, setSavedColleges] = useState([]);
+  const [exam, setExam] = useState('all');          // entrance exam the colleges are shown for ('all' = every college)
+  const [limit, setLimit] = useState(48);           // "Show more" count
 
   // Fetch data
   useEffect(() => {
@@ -46,21 +50,38 @@ export default function EngineeringCollegesDirectory() {
       });
   }, []);
 
+  // Filters follow the selected exam: only the states and college types that exist under it are offered, and a selection that
+  // no longer applies is ignored (e.g. under MHT-CET the only state is Maharashtra).
+  const lc = (x) => (x || '').toLowerCase();
+  const inView = (c) => exam === 'all' || (c.groups || []).includes(exam);
+  const viewList = allColleges.filter(inView);
+  const typesInView = new Set(viewList.map((c) => lc(c.type)));
+  const statesInView = new Set(viewList.map((c) => c.state).filter(Boolean));
+  const tabT = selectedTabType !== 'All' && !typesInView.has(lc(selectedTabType)) ? 'All' : selectedTabType;
+  const typeT = selectedType !== 'All' && !typesInView.has(lc(selectedType)) ? 'All' : selectedType;
+  const selStates = selectedStates.filter((st) => statesInView.has(st));
+  const selKey = selStates.join('|');
+  const TYPE_TABS = [
+    { label: 'All Colleges', value: 'All' }, { label: 'IITs', value: 'IIT' }, { label: 'NITs', value: 'NIT' },
+    { label: 'IIITs', value: 'IIIT' }, { label: 'GFTIs', value: 'GFTI' }, { label: 'Private', value: 'Private' },
+    { label: 'Government', value: 'Government' }, { label: 'Deemed', value: 'Deemed' },
+  ];
+
   // Filter and Sort Effect
   useEffect(() => {
-    let result = [...allColleges];
+    let result = allColleges.filter((c) => exam === 'all' || (c.groups || []).includes(exam));
 
     // Filter by Tab Type (Pill tabs)
-    if (selectedTabType !== 'All') {
+    if (tabT !== 'All') {
       result = result.filter(
-        (c) => c.type && c.type.toLowerCase() === selectedTabType.toLowerCase()
+        (c) => c.type && c.type.toLowerCase() === tabT.toLowerCase()
       );
     }
 
     // Filter by Dropdown Type
-    if (selectedType !== 'All') {
+    if (typeT !== 'All') {
       result = result.filter(
-        (c) => c.type && c.type.toLowerCase() === selectedType.toLowerCase()
+        (c) => c.type && c.type.toLowerCase() === typeT.toLowerCase()
       );
     }
 
@@ -72,8 +93,8 @@ export default function EngineeringCollegesDirectory() {
     }
 
     // Filter by States (Multi-select)
-    if (selectedStates.length > 0) {
-      result = result.filter((c) => selectedStates.includes(c.state));
+    if (selStates.length > 0) {
+      result = result.filter((c) => selStates.includes(c.state));
     }
 
     // Filter by Fees (Only filters if annual_fees is populated)
@@ -98,12 +119,19 @@ export default function EngineeringCollegesDirectory() {
     }
 
     setFilteredColleges(result);
-  }, [allColleges, selectedTabType, selectedType, selectedCourse, selectedStates, maxFees, sortBy]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allColleges, exam, tabT, typeT, selectedCourse, selKey, maxFees, sortBy]);
+
+  useEffect(() => { setLimit(48); }, [exam, tabT, typeT, selectedCourse, selKey, maxFees, sortBy]);
 
   // Extract unique states for sidebar list
+  const stateScope = viewList.filter((c) => (tabT === 'All' || lc(c.type) === lc(tabT)) && (typeT === 'All' || lc(c.type) === lc(typeT)));
   const uniqueStates = Array.from(
-    new Set(allColleges.map((c) => c.state).filter(Boolean))
+    new Set(stateScope.map((c) => c.state).filter(Boolean))
   ).sort();
+  const oneState = statesInView.size === 1 ? [...statesInView][0] : null;
+  const typeScope = selStates.length ? viewList.filter((c) => selStates.includes(c.state)) : viewList;
+  const typesAvail = new Set(typeScope.map((c) => lc(c.type)));
 
   // Filter unique states by search text
   const filteredStatesList = uniqueStates.filter((state) =>
@@ -134,13 +162,14 @@ export default function EngineeringCollegesDirectory() {
     setSelectedType('All');
     setSelectedCourse('All');
     setSelectedTabType('All');
+    setExam('all');
     setMaxFees(3000000);
     setSortBy('Recommended');
     setStateSearch('');
   };
 
   return (
-    <div className="colleges-page">
+    <div className="colleges-page" style={{ paddingTop: 64 }}>  {/* clears the fixed 64px site nav (the first 32px of the page were hidden behind it) */}
       <Nav links={engineeringNavLinks} ctaHref="/engineering/inquiry" homeHref="/engineering" />
       <div className="colleges-layout">
         
@@ -168,6 +197,12 @@ export default function EngineeringCollegesDirectory() {
           </div>
 
           {/* State Filter */}
+          {oneState ? (
+            <div className="col-filter-section">
+              <span className="col-filter-label">State</span>
+              <div className="col-checkbox-text">{oneState} only</div>
+            </div>
+          ) : (
           <div className="col-filter-section">
             <span className="col-filter-label">State</span>
             <input
@@ -182,8 +217,8 @@ export default function EngineeringCollegesDirectory() {
                 <label className="col-checkbox-label" key={state}>
                   <input
                     type="checkbox"
-                    checked={selectedStates.includes(state)}
-                    onChange={() => handleStateToggle(state)}
+                    checked={selStates.includes(state)}
+                    onChange={() => setSelectedStates(selStates.includes(state) ? selStates.filter((x) => x !== state) : [...selStates, state])}
                     className="col-checkbox"
                   />
                   <span className="col-checkbox-text">{state}</span>
@@ -194,25 +229,23 @@ export default function EngineeringCollegesDirectory() {
               )}
             </div>
           </div>
+          )}
 
-          {/* University Type Filter */}
+          {/* University Type Filter (only the types that exist for the chosen exam) */}
+          {TYPE_TABS.filter((t) => t.value === 'All' || typesAvail.has(lc(t.value)) || lc(t.value) === lc(typeT)).length > 2 && (
           <div className="col-filter-section">
             <span className="col-filter-label">University Type</span>
             <select
-              value={selectedType}
+              value={typeT}
               onChange={(e) => setSelectedType(e.target.value)}
               className="col-select"
             >
-              <option value="All">All Colleges</option>
-              <option value="IIT">IIT</option>
-              <option value="NIT">NIT</option>
-              <option value="IIIT">IIIT</option>
-              <option value="GFTI">GFTI</option>
-              <option value="Government">State Government</option>
-              <option value="Private">Private</option>
-              <option value="Deemed">Deemed</option>
+              {TYPE_TABS.filter((t) => t.value === 'All' || typesAvail.has(lc(t.value)) || lc(t.value) === lc(typeT)).map((t) => (
+                <option key={t.value} value={t.value}>{t.value === 'All' ? 'All Colleges' : t.value === 'Government' ? 'State Government' : t.label.replace(/s$/, '')}</option>
+              ))}
             </select>
           </div>
+          )}
 
           {/* Course Filter */}
           <div className="col-filter-section">
@@ -264,21 +297,26 @@ export default function EngineeringCollegesDirectory() {
         {/* Right Section */}
         <main className="col-main">
           
-          {/* Pill Tabs */}
+          {/* Entrance exam: which exam you can apply through */}
+          <div className="col-tabs" role="group" aria-label="Entrance exam">
+            {[{ id: 'all', label: 'All exams' }, ...engConfig.instituteExams].map((e) => (
+              <button
+                key={e.id}
+                onClick={() => setExam(e.id)}
+                className={`col-tab${exam === e.id ? ' active' : ''}`}
+              >
+                {e.label} <span style={{ opacity: 0.7, fontWeight: 600 }}>{allColleges.filter((c) => e.id === 'all' || (c.groups || []).includes(e.id)).length}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Pill Tabs (college type; only types that exist for the chosen exam) */}
           <div className="col-tabs">
-            {[
-              { label: 'All Colleges', value: 'All' },
-              { label: 'IITs', value: 'IIT' },
-              { label: 'NITs', value: 'NIT' },
-              { label: 'IIITs', value: 'IIIT' },
-              { label: 'Private', value: 'Private' },
-              { label: 'Government', value: 'Government' },
-              { label: 'Deemed', value: 'Deemed' },
-            ].map((tab) => (
+            {TYPE_TABS.filter((t) => t.value === 'All' || typesInView.has(lc(t.value))).map((tab) => (
               <button
                 key={tab.value}
                 onClick={() => setSelectedTabType(tab.value)}
-                className={`col-tab${selectedTabType === tab.value ? ' active' : ''}`}
+                className={`col-tab${tabT === tab.value ? ' active' : ''}`}
               >
                 {tab.label}
               </button>
@@ -309,18 +347,23 @@ export default function EngineeringCollegesDirectory() {
                 </div>
               ))
             ) : filteredColleges.length > 0 ? (
-              filteredColleges.map((college) => {
+              filteredColleges.slice(0, limit).map((college) => {
                 const isSaved = savedColleges.includes(college.slug);
                 return (
                   <a href={`/engineering/colleges/${college.slug}`} className="col-card" key={college.slug}>
                     <div
                       className="col-card-img"
                       style={
-                        college.photo !== null
-                          ? { backgroundImage: `url(/images/colleges/${college.slug}.jpg)` }
-                          : { background: college.photo_placeholder_color || '#1a0040' }
+                        college.photo
+                          ? { backgroundImage: `url(${college.photo})` }
+                          : { background: college.photo_placeholder_color || 'linear-gradient(135deg, #0a1628, #00A896)', display: 'flex', alignItems: 'center', justifyContent: 'center' }
                       }
                     >
+                      {!college.photo && (
+                        <span style={{ color: 'rgba(255,255,255,0.85)', font: "800 28px 'Montserrat', sans-serif" }} aria-hidden="true">
+                          {String(college.name).split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()}
+                        </span>
+                      )}
                       {college.asmi_recommended && (
                         <span className="col-asmi-badge">★ ASMI RECOMMENDS</span>
                       )}
@@ -344,6 +387,7 @@ export default function EngineeringCollegesDirectory() {
                       {college.seats && (
                         <div className="col-card-seats">{college.seats} B.Tech seats</div>
                       )}
+                      <AddToCompare slug={college.slug} small />
                     </div>
                   </a>
                 );
@@ -355,9 +399,15 @@ export default function EngineeringCollegesDirectory() {
               </div>
             )}
           </div>
+          {filteredColleges.length > limit && (
+            <div style={{ textAlign: 'center', margin: '24px 0' }}>
+              <button className="col-tab" onClick={() => setLimit(limit + 48)}>Show more ({filteredColleges.length - limit} left)</button>
+            </div>
+          )}
         </main>
 
       </div>
+      <CompareBar />
       <Footer isEngineering={true} />
     </div>
   );

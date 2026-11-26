@@ -175,7 +175,7 @@
           "Intake": 1,
           "AIR": 1055296,
           "SML": 32200,
-          "CSML": "PWD"
+          "CSML": null
         }
       }
     },
@@ -204,8 +204,14 @@
         "Round 4": {
           "Intake": 1,
           "AIR": 1019150,
-          "SML": null,
-          "CSML": null
+          "SML": 31603,
+          "CSML": "SEBC-3434"
+        },
+        "Stray Round 1": {
+          "Intake": 1
+        },
+        "Stray Round 2": {
+          "Intake": 1
         }
       }
     },
@@ -493,6 +499,9 @@
       "rounds": {
         "Round 4": {
           "Intake": 2
+        },
+        "Stray Round 1": {
+          "Intake": 1
         }
       }
     }

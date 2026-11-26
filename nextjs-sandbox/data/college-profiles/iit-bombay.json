@@ -1,0 +1,76 @@
+{
+  "_readme": "Pilot college profile. Every figure carries value + year + source + status. status: 'official' = read from the institute's own page/PDF; 'secondary' = from a news/aggregator page, team must verify against official report; 'missing' = not found, leave null and the page hides that block. Never fill a null from memory.",
+  "slug": "iit-bombay",
+  "asmiRecommended": false,
+  "name": "Indian Institute of Technology Bombay",
+  "identity": {
+    "established": { "value": 1958, "year": null, "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" },
+    "campusAcres": { "value": 545, "year": null, "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" },
+    "address": { "value": "Adi Shankaracharya Marg, Powai, Mumbai, Maharashtra", "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" },
+    "website": { "value": "https://www.iitb.ac.in", "source": "https://www.iitb.ac.in", "status": "official" },
+    "status": { "value": "Institution of Eminence (from 11 Oct 2018)", "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" },
+    "students": { "value": { "total": 13282, "ug": 6276, "pg": 3319, "phd": 3687 }, "year": "2023-24", "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" },
+    "faculty": { "value": 732, "year": "Jan 2025", "source": "https://en.wikipedia.org/wiki/IIT_Bombay", "status": "secondary" }
+  },
+  "ranking": {
+    "nirf": {
+      "value": { "overall": 3, "engineering": 3, "management": 14, "research": 4, "innovation": 2 },
+      "year": 2025,
+      "source": "https://www.iitb.ac.in/breaking-news/national-institutional-ranking-framework-nirf-2025",
+      "status": "official"
+    }
+  },
+  "admission": {
+    "route": { "value": "JEE Advanced rank via JoSAA (B.Tech, B.S., B.Tech+M.Tech). B.Des via UCEED (separate route, not JoSAA).", "source": "https://www.collegedekho.com/colleges/iitb-admission ; https://careers360.com/university/indian-institute-of-technology-bombay/admission", "status": "secondary" },
+    "rankType": { "value": "JEE Advanced rank", "status": "official-by-rule" },
+    "feePaymentWindow2026": { "value": "17 Jul 2026 to 28 Jul 2026", "source": "https://acad.iitb.ac.in/sites/default/files/New_Entrants_fee_structure_2026.pdf", "status": "official" }
+  },
+  "programmes": {
+    "value": [
+      { "degree": "B.Tech", "years": 4, "note": "11 specialisations per aggregator; confirm list against acad.iitb.ac.in/admissions/bachelors" },
+      { "degree": "B.S.", "years": 4, "note": "Chemistry, Economics, Mathematics, Applied Geophysics per aggregator" },
+      { "degree": "B.Tech + M.Tech (Dual Degree)", "years": 5 },
+      { "degree": "B.Des", "years": 4, "note": "admitted via UCEED" }
+    ],
+    "source": "https://www.collegedekho.com/colleges/iitb-courses (cites acad.iitb.ac.in/admissions/bachelors)",
+    "status": "secondary"
+  },
+  "seats": {
+    "value": null,
+    "status": "missing",
+    "todo": "Take programme-wise seat matrix (gender-neutral + female-only) from the official JoSAA seat matrix PDF for 2026. Aggregator figures conflict (1,204 / 1,360 / 1,368 total), so none are used."
+  },
+  "fees": {
+    "year": "2026-27 (Autumn, new entrants, Indian nationals)",
+    "source": "https://acad.iitb.ac.in/sites/default/files/New_Entrants_fee_structure_2026.pdf ; https://acad.iitb.ac.in/details-fees-payable",
+    "status": "official",
+    "oneTimeAtAdmission": { "admissionFee": 9650, "alumniLifeMembership": 5000, "studentWelfareFund": 1350, "total": 16000 },
+    "perSemester": { "tuitionStatutory": 100000, "registrationAndExamination": 2400, "gymkhana": 2400, "studentBenevolentFund": 800, "accidentInsurance": 400, "medical": 2150, "total": 108150 },
+    "refundableDeposits": { "instituteSecurity": 5000, "librarySecurity": 5000, "total": 10000 },
+    "firstSemesterAcademicTotal": { "generalEwsObc": 134150, "scStPwd": 34150 },
+    "tuitionExemption": "SC, ST and PwD students are exempt from the Rs 1,00,000 tuition only. Other per-semester items still apply.",
+    "hostelFirstSemester": 19950,
+    "messAdvancePerSemester": 22500,
+    "firstSemesterPayable": { "generalEwsObc": 154100, "scStPwd": 54100, "note": "before adjusting the seat acceptance fee (Rs 25,000 for general/EWS/OBC, Rs 10,000 for SC/ST/PwD) paid at JoSAA; mess advance is paid separately" },
+    "caveat": "IIT Bombay states it may revise fees in later semesters. Do not show a 4-year total as official; if shown, label it an estimate."
+  },
+  "placements": {
+    "year": "2024-25",
+    "status": "secondary",
+    "source": "Times of India report relayed by https://www.freepressjournal.in/education/iit-bombay-average-salary-hits-rs-2645-lakh-1422-students-placed (updated 19 May 2026); counts also on https://collegedunia.com/news/iit-bombay-placements-2025-report-out-alertid-153518",
+    "value": {
+      "registered": 2469, "participated": 2040, "offersAccepted": 1422, "companiesParticipated": 417, "companiesWithOffers": 368,
+      "ppoAccepted": 260, "internationalOffers": 65,
+      "averageCtcLakh": 26.45, "medianCtcLakh": 20
+    },
+    "caveats": [
+      "Scope is all programmes together, not B.Tech only.",
+      "Placement rate is reported as ~70% by aggregators, but not stated in the FPJ article. Do not show a percentage until the official report is read.",
+      "Figures are from a news report, not the official placement report. Team must read the official report on the IIT Bombay placement site before launch.",
+      "Highest-package figures vary by source and year. Not included."
+    ]
+  },
+  "facilities": { "value": null, "status": "missing", "todo": "Hostels, labs, sports, library: collect from iitb.ac.in pages. Photos only from IIT Bombay with permission or own photographs." },
+  "contact": { "value": null, "status": "missing", "todo": "Admissions contact from acad.iitb.ac.in (verify before showing)." },
+  "pulse": { "value": null, "status": "missing", "todo": "Hidden until ASMI supplies the methodology sentence." }
+}
