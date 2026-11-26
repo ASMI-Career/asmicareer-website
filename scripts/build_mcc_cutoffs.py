@@ -13,8 +13,10 @@ Rules (checked against the existing Round 1 files, which this script does not to
     their earlier seat). Only Fresh / Upgraded allotments set a round's cutoff.
   * NRI is one category (no priority split): every fresh / upgraded NRI-quota allotment counts and goes
     into the NRI_P-I / NRI_P1 files; the P-II files are left empty.
-  * Round 3 only: when an NRI seat is still on offer but no NRI candidate was allotted, the NRI seats have
-    been converted to general merit, so the NRI cutoff is the college's last allotted rank.
+  * An NRI cutoff is only ever a rank of a candidate allotted an NRI seat. When no NRI candidate was allotted
+    in a round the NRI cutoff stays empty: it is NOT filled with the college's open (Self-Financed Merit) rank.
+    (Until 2026-11 Round 3 copied the open rank into the NRI cutoff for such colleges; the official Round 3
+    allotment list has no NRI allotment at those ranks, so those values were not real cutoffs.)
   * MBBS and BDS only. B.Sc Nursing is ignored.
 AIR / AIR_PWD (closing = the last rank freshly allotted) and OPEN_AIR / OPEN_AIR_PWD (opening = the first rank freshly allotted) come from the allotment lists. Intake is the number of seats offered in the round (from the seat matrix of that round); Allotted is the number of candidates holding a seat after the round, retained included (from the allotment lists). Intake and every other field stay as they were.
 """
@@ -85,11 +87,6 @@ MINORITY = {'MuslimMinorityQuota', 'JainMinorityQuota'}
 MINORITY_CAT = {'MuslimMinorityQuota': 'MINORITY_MUSLIM', 'JainMinorityQuota': 'MINORITY_JAIN'}
 SFM, NRI = 'Self-FinancedMeritSeat', 'Non-ResidentIndian'
 
-def has_nri_seats(k, code, course):
-    rows = seat_rows[SEATKEY[k]]
-    return any(x['code'] == code and x['branch'].startswith(course) and re.search(r'NRI|Non-Resident', x['quota']) for x in rows)
-
-
 def offered(k, folder, cat, code, pwd=False):
     """Seats offered in that round for the quota / category the cutoff is about, from the seat matrix of the round
     (regular seats, or the PwD seats when pwd=True: the seat matrix marks them 'PH'). None when there are none."""
@@ -136,10 +133,9 @@ def compute(k, rows):
                 bump(d, 'AIR_PWD' if r['acat'].endswith('PwD') else 'AIR', r['rank'])
                 low(d, 'OPEN_AIR_PWD' if r['acat'].endswith('PwD') else 'OPEN_AIR', r['rank'])
             continue
-        sfm_last = {}
         for r in pool:
             if r['quota'] == SFM:
-                bump(res[(folder, 'OPEN')][r['code']], 'AIR', r['rank']); bump(sfm_last, r['code'], r['rank'])
+                bump(res[(folder, 'OPEN')][r['code']], 'AIR', r['rank'])
                 low(res[(folder, 'OPEN')][r['code']], 'OPEN_AIR', r['rank'])
             elif r['quota'] in MINORITY:
                 bump(res[(folder, 'MINORITY')][r['code']], 'AIR', r['rank'])
@@ -149,11 +145,6 @@ def compute(k, rows):
             elif r['quota'] == NRI:   # one NRI category, no priority split (the BDS file is named NRI_P1)
                 bump(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'AIR', r['rank'])
                 low(res[(folder, 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1')][r['code']], 'OPEN_AIR', r['rank'])
-        if k == 3:   # unfilled NRI seats are converted to general merit (decide for the Stray round once its results are in)
-            p1 = 'NRI_P-I' if folder == 'DEEMED_MBBS' else 'NRI_P1'
-            for code, last in sfm_last.items():
-                if code not in res[(folder, p1)] and has_nri_seats(k, code, course):
-                    res[(folder, p1)][code]['AIR'] = last; res[(folder, p1)][code]['OPEN_AIR'] = last
     return res
 
 def dump(path, obj):
