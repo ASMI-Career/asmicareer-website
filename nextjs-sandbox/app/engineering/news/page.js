@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { streamMatches, mergeEvents } from '../../../lib/events';
+import { streamMatches, mergeEvents, nextDay } from '../../../lib/events';
 import './news.css';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
@@ -142,7 +142,9 @@ export default function EngineeringNewsPage() {
     ])
       .then(([tagged, legacy]) => {
         const data = mergeEvents(tagged, legacy);
-        const active = data.filter(e => !isExpired(e));
+        // A multi-day event (JEE Main exam: 20-24 and 28 Jan) stays listed until its last day (`date`, checked by isExpired),
+        // but its date box and countdown show the next exam day.
+        const active = data.filter(e => !isExpired(e)).map(e => (Array.isArray(e.dates) && e.dates.length ? { ...e, date: nextDay(e) } : e));
         active.sort((a, b) => new Date(a.date) - new Date(b.date));
         setEvents(active);
         setLoading(false);
