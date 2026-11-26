@@ -141,6 +141,7 @@ export default function Dashboard(props) {
                               </div>
                               <div style={{ flex: 1 }}>
                                 <div className="deadline-title">{dl.title}</div>
+                                {dl.dates && dl.display_date && <div style={{ fontSize: 11, color: 'var(--text-500)', fontWeight: 600, marginTop: 2 }}>{dl.display_date}</div>}
                                 <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 5 }}>
                                   <span className={`tag ${getDeadlineTag(dl.tag)}`}>{dl.tag}</span>
                                   <span style={{ fontSize: 10, color: 'var(--text-400)', fontWeight: 600 }}>{cd.text}</span>

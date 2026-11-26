@@ -7,7 +7,7 @@ import { MONTHS, WEEKDAYS, parseLocalDate, startOfToday, dayKey, sameDay, format
 const STATE_LABEL = { open: 'Open now', upcoming: 'Upcoming', closed: 'Closed' };
 const STATE_TAG = { open: 'tag-green', upcoming: 'tag-blue', closed: 'dl-tag-closed' };
 const RUN_COLORS = ['#00A896', '#3b82f6', '#f59e0b', '#8b5cf6', '#f43f5e', '#22c55e', '#0ea5e9', '#ec4899'];
-const keyOf = (ev) => `${ev.date}|${ev.title}`;
+const keyOf = (ev) => `${(ev.dates && ev.dates[0]) || ev.date}|${ev.title}`;   // stable even though `date` moves to the next exam day
 const shortDate = (d) => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`;
 
 // Apply (the event's own link, labelled by its cta) and View notice (its PDF). No Apply button once the event is closed, none without
@@ -52,10 +52,10 @@ export default function Deadlines(props) {
     .map((r, i) => ({ ...r, color: RUN_COLORS[i % RUN_COLORS.length] })), [shown, today]);
   const runningOn = (d) => running.filter(r => d >= r.span.start && d <= r.span.end);
 
-  const byDay = useMemo(() => { const m = {}; shown.forEach(e => { (m[e.date] = m[e.date] || []).push(e); }); return m; }, [shown]);
-  const monthEvents = shown.filter(e => { const d = parseLocalDate(e.date); return d.getFullYear() === month.getFullYear() && d.getMonth() === month.getMonth(); });
+  const byDay = useMemo(() => { const m = {}; shown.forEach(e => { (e.dates || [e.date]).forEach(d => { (m[d] = m[d] || []).push(e); }); }); return m; }, [shown]);
+  const monthEvents = shown.filter(e => (e.dates || [e.date]).some(x => { const d = parseLocalDate(x); return d && d.getFullYear() === month.getFullYear() && d.getMonth() === month.getMonth(); }));
   const monthRunning = running.filter(r => r.span.start <= new Date(month.getFullYear(), month.getMonth() + 1, 0) && r.span.end >= new Date(month.getFullYear(), month.getMonth(), 1));
-  const nextAfterMonth = shown.find(e => parseLocalDate(e.date) >= new Date(month.getFullYear(), month.getMonth() + 1, 1));
+  const nextAfterMonth = shown.find(e => (e.dates || [e.date]).some(x => parseLocalDate(x) >= new Date(month.getFullYear(), month.getMonth() + 1, 1)));
 
   const panelEvents = !selected ? [] : (selected.key ? shown.filter(e => e.key === selected.key) : (byDay[selected.day] || []));
   const panelRunning = (!selected || selected.key) ? [] : runningOn(parseLocalDate(selected.day)).filter(r => !panelEvents.some(e => e.key === r.ev.key));
@@ -117,7 +117,7 @@ export default function Deadlines(props) {
         <span className="dl-row-date"><b>{parseLocalDate(ev.date).getDate()}</b><i>{MONTHS[parseLocalDate(ev.date).getMonth()].slice(0, 3)}</i></span>
         <span className="dl-row-body">
           <span className="dl-row-title">{ev.title}</span>
-          <span className="dl-row-meta"><span className="tag tag-gold">{ev.tag}</span>{ev.exam && <span className="dl-row-exam">{ev.exam}</span>}</span>
+          <span className="dl-row-meta"><span className="tag tag-gold">{ev.tag}</span>{ev.exam && <span className="dl-row-exam">{ev.exam}</span>}{ev.dates && ev.display_date && <span className="dl-row-exam">{ev.display_date}</span>}</span>
         </span>
       </button>
       <Actions ev={ev} />
