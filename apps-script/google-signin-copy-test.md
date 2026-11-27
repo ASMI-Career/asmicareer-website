@@ -12,9 +12,9 @@ Mock tests already pass (`node apps-script/engineering-leads/test/run-tests.js`,
 ## B. Engineering script, on a COPY
 1. Drive → make a copy of the **Dashboard workbook** (and of the Enquiry workbook if you will also test the lead flow). Make a **new** Apps Script project (script.google.com) → paste `engineering-leads.js` (the project is standalone, as in the README).
 2. Script properties: `DASHBOARD_SPREADSHEET_ID` = the **copy's** ID; `ENQUIRY_SPREADSHEET_ID` = the **copy's** ID; `ENVIRONMENT` = `copy`; **`GOOGLE_CLIENT_ID`** = the client ID from step A.
-3. In the copy's **Student Dashboard** tab add the header **`Approved Email`** as the **last column**, plus the other page headers listed in the README if the copy lacks them. Add 4 FAKE students with Stream = `Engineering` and Gmail accounts you control: two normal, one with a **blank** email, one that **duplicates** another. Add one row with Stream = `Medical`.
+3. In the copy's **Student Dashboard** tab add the header **`Approved Email`** as the **last column**, plus the other page headers listed in the README if the copy lacks them. Add FAKE students with Stream = `Engineering` and Gmail accounts you control: two normal, one with a **blank** email, and two **twins** whose cells each list their own email **and** the same parent email (see the twins rows in E). Add one row with Stream = `Medical`. **An `Approved Email` cell may list several emails**, separated by commas, semicolons or new lines.
 4. Editor: run `verifyHeaders()` (approve permissions: it now also needs permission to **connect to an external service**, because the script calls Google to verify tokens). Fix anything it lists.
-5. Run `checkApprovedEmails()`. Open the **Email Check** tab: it must list exactly the blank and duplicate rows (names and row numbers only). Fix the duplicate and re-run: "No problems found".
+5. Run `checkApprovedEmails()`. Open the **Email Check** tab: **Blank** and **Not a valid email** rows are problems; twins that share an email are listed under **"Shared emails (allowed; check these are intended)"** (names and row numbers only).
 6. **Staff tab (counsellor tools):** in the copy workbook add a tab named exactly **`Staff`** with one column headed **`Staff Email`**. List 1–2 Google accounts you control (this is the ONLY list that can use the counsellor tools). Use a different account from the student test accounts.
 7. **Deploy → New deployment → Web app**, Execute as **Me**, access **Anyone**. This is a **new** URL. Do not edit the live deployment.
 
@@ -43,7 +43,13 @@ Push the branch, wait for the preview, and open the **branch preview** URL. *(Ea
 | 3 | Sign in as a **medical** test student | Dashboard loads with that student's name only |
 | 4 | Sign in as an **engineering** test student | Engineering theme and data |
 | 5 | Sign in with a Google account **not** on either sheet | "This Google account is not registered"; no data |
-| 6 | Sign in as the **blank** row's student, and as the **duplicate** | "not registered" (blank cannot match; duplicate refused) |
+| 6 | Sign in with an account whose email is on **no** row (the stranger), and check a **blank** row cannot be opened | "not registered" |
+| T1 | Twin A's own email | Opens only Twin A's dashboard |
+| T2 | The **shared parent** email | "Whose dashboard do you want to open?" with both names and **no** dashboard data until you pick |
+| T3 | Pick Twin B, tick a document and shortlist an institute | Only Twin B's row changes in the sheet; Twin A's cells are untouched |
+| T4 | Click **Switch student** in the left menu and pick Twin A | Twin A opens, with none of Twin B's data on screen |
+| T5 | Put the shared parent email on **11** rows (copy only), sign in as the parent | "not registered" (more than 10 rows is treated as a typo). Undo it afterwards |
+| T6 | Type a **second email with a typo** in Twin A's cell (`good@x.com, bad`), run the check | Listed under **Not a valid email**; the valid email in that cell still signs in |
 | 7 | In the browser, call the script URL directly: `<exec>?action=getStudent&token=<a real test token>` | `{"error":"invalid_action"}` |
 | 8 | Tick a document, add and remove a shortlist item | The **right row's** `Document Status` / `Saved Shortlist` cells change as plain text, other rows untouched |
 | 9 | (Engineering) Save the profile, edit the preference list | Saved on the right row; Preference Lists tab updated |

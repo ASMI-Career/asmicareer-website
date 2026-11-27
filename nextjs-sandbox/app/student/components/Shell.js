@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export default function Shell(props) {
-  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported, signOut } = props;
+  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported, signOut, switchStudent } = props;
 
   // Only the modules this stream has appear in the menus.
   const navItems = config.nav.filter(item => config.modules.includes(item.id));
@@ -48,6 +48,13 @@ export default function Shell(props) {
               <iconify-icon icon="lucide:help-circle" className="nav-icon"></iconify-icon>
               <span>Help &amp; Support</span>
             </button>
+
+            {switchStudent && (
+              <button className="nav-link" onClick={switchStudent}>
+                <iconify-icon icon="lucide:users" className="nav-icon"></iconify-icon>
+                <span>Switch student</span>
+              </button>
+            )}
 
             {signOut && (
               <button className="nav-link" onClick={signOut}>

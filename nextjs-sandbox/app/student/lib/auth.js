@@ -60,7 +60,12 @@ export function renderSignInButton(el) {
 export function promptOneTap() { if (initialized) { try { window.google.accounts.id.prompt(); } catch (e) { /* the button still works */ } } }
 export const subscribeAuth = (f) => { listeners.add(f); return () => listeners.delete(f); };
 export const currentSession = () => current;
-export const cacheKeyOf = () => (current && current.sub ? 'g_' + current.sub : '');
+// Which student is open when one Google account is registered for several (twins with a shared parent email). Sent with every call; the script
+// re-checks that the signed-in email is really on that student's row, so this is a choice, not a credential.
+let studentRef = '';
+export const setStudentRef = (r) => { studentRef = r || ''; };
+export const getStudentRef = () => studentRef;
+export const cacheKeyOf = () => (current && current.sub ? 'g_' + current.sub + (studentRef ? '_' + studentRef : '') : '');
 
 const isFresh = () => !!current && current.exp - Date.now() > 60 * 1000;
 
@@ -77,7 +82,7 @@ export async function getIdToken({ force = false } = {}) {
 
 export function signOut() {
   try { if (initialized) window.google.accounts.id.disableAutoSelect(); } catch (e) { /* ignore */ }
-  current = null;
+  current = null; studentRef = '';
   emit({ type: 'out' });
 }
 export function expireNow() { current = null; emit({ type: 'expired' }); }

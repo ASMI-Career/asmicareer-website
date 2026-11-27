@@ -764,14 +764,65 @@ test('38 verifyHeaders also checks the page columns and says which are missing',
 
 
 // ─────────────────────────────────────────────────────────────── 12. Google sign-in details
-test('39 two rows with the same Approved Email: nobody is served and nothing is written', () => {
-  const env = buildEnvironment(); seedStudent(env); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Student Name': 'Sibling' });
-  const before = snapshot(env);
-  assert.deepStrictEqual(getStudent(env, EMAIL), { error: 'not_approved' });
-  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: EMAIL, colleges: { JOSAA: [] } }), { error: 'not_approved' });
-  assert.strictEqual(snapshot(env), before);
-  assert.ok(env.state.logs.some(l => /more than one row/.test(l)));
-  return 'duplicate email => not_approved for reads and writes';
+const PARENT = 'parent.test@example.invalid', TWIN2 = 'twin2.test@example.invalid', TOK2 = 'ENG-JKMNPQRS45';
+function twinsEnv() {
+  const env = buildEnvironment();
+  seedStudent(env, 2, { 'Approved Email': EMAIL + ', ' + PARENT, 'Student Name': 'Aarav Deshmukh' });
+  seedStudent(env, 3, { 'Token': TOK2, 'Approved Email': TWIN2 + ';\n' + PARENT.toUpperCase(), 'Student Name': 'Twin Two', 'Saved Shortlist': '', 'Document Status': '' });
+  return env;
+}
+test('39 twins + shared parent email: a cell may list several emails; a shared email gets a choice, not data', () => {
+  const env = twinsEnv();
+  assert.strictEqual(getStudent(env, EMAIL).data.name, 'Aarav Deshmukh', 'a twin\'s own email opens only that twin');
+  assert.strictEqual(getStudent(env, TWIN2).data.name, 'Twin Two');
+  const ch = getStudent(env, PARENT);
+  assert.strictEqual(ch.success, true); assert.deepStrictEqual(Object.keys(ch), ['success', 'choose'], 'no student data before a choice');
+  assert.deepStrictEqual(ch.choose.map(c => c.name), ['Aarav Deshmukh', 'Twin Two']); assert.deepStrictEqual(ch.choose.map(c => c.ref), [TOK, TOK2]);
+  ['9876543210', 'secret-admin-note', 'Student Phone', 'Counsellor', EMAIL, TWIN2].forEach(x => assert.ok(!JSON.stringify(ch).includes(x), 'must not leak ' + x));
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: PARENT, studentRef: TOK2 }).data.name, 'Twin Two');
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: PARENT, studentRef: '  ' + TOK + ' ' }).data.name, 'Aarav Deshmukh');
+  return 'choose list = names + refs only';
+});
+test('39b the chosen student only: a ref can never reach a row the email is not on', () => {
+  const env = twinsEnv(); const snap = snapshot(env);
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: EMAIL, studentRef: TOK2 }), { error: 'not_approved' }, 'twin A cannot ask for twin B');
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: TWIN2, studentRef: TOK }), { error: 'not_approved' });
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: PARENT, studentRef: 'ENG-ZZZZZZZZZ9' }), { error: 'not_approved' }, 'unknown ref');
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: 'stranger@example.invalid', studentRef: TOK }), { error: 'not_approved' });
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: EMAIL, studentRef: TOK2, colleges: { JOSAA: [] } }), { error: 'not_approved' });
+  assert.strictEqual(snapshot(env), snap, 'nothing written by refused requests');
+  // a single-row student may also send their own ref
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: EMAIL, studentRef: TOK }).success, true);
+});
+test('39c writes by a shared email need a choice and go only to the chosen row (shortlist, documents, profile, preference list)', () => {
+  const env = twinsEnv(); const list = { JOSAA: [{ institute: 'VJTI', branch: 'IT', seatType: 'AI' }] };
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: PARENT, colleges: list }), { error: 'student_required' });
+  assert.deepStrictEqual(postJson(env, { action: 'saveDocStatus', as: PARENT, data: { checked: ['a'] } }), { error: 'student_required' });
+  assert.deepStrictEqual(postJson(env, { action: 'saveProfile', as: PARENT, profile: { gender: 'Male' } }), { ok: false, error: 'student_required' });
+  assert.deepStrictEqual(postJson(env, { action: 'savePreferenceList', as: PARENT, counselling: 'JOSAA', items: [] }), { ok: false, error: 'student_required' });
+  const snap = snapshot(env); assert.strictEqual(env.dash.getSheetByName('Preference Lists'), null);
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: PARENT, studentRef: TOK2, colleges: list }), { success: true, count: 1 });
+  assert.strictEqual(JSON.parse(env.dsheet.cell(3, 'Saved Shortlist')).JOSAA[0].institute, 'VJTI');
+  assert.ok(env.dsheet.cell(2, 'Saved Shortlist').includes('Demo Institute Alpha'), 'the other twin is untouched');
+  assert.strictEqual(postJson(env, { action: 'saveDocStatus', as: PARENT, studentRef: TOK, data: { checked: ['jee-scorecard'], category: 'OBC', quota: '' } }).success, true);
+  assert.ok(env.dsheet.cell(3, 'Document Status') === '', 'twin 2 untouched'); 
+  assert.strictEqual(postJson(env, { action: 'saveProfile', as: PARENT, studentRef: TOK2, profile: { gender: 'Female' } }).ok, true);
+  assert.strictEqual(env.dsheet.cell(3, 'Gender'), 'Female'); assert.notStrictEqual(env.dsheet.cell(2, 'Gender'), 'Female');
+  assert.strictEqual(postJson(env, { action: 'savePreferenceList', as: PARENT, studentRef: TOK2, counselling: 'JOSAA', items: [{ institute: 'IIT Bombay', program: 'CSE', quota: 'AI', gender: 'all', choiceCode: '', tag: 'safe' }] }).ok, true);
+  const pl = env.dash.getSheetByName('Preference Lists'); assert.ok(pl.rows.slice(1).every(r => r.includes(TOK2) && !r.includes(TOK)), 'preference rows belong to the chosen twin');
+  assert.ok(snap !== snapshot(env));
+});
+test('39d limits: more than 10 rows on one email is refused; non-Engineering rows and rows without a Token are never offered', () => {
+  const env = buildEnvironment();
+  for (let r = 2; r <= 12; r++) seedStudent(env, r, { 'Token': 'ENG-ABCDEFGH' + (20 + r), 'Approved Email': PARENT, 'Student Name': 'S' + r });
+  assert.deepStrictEqual(getStudent(env, PARENT), { error: 'not_approved' }, '11 rows');
+  assert.ok(env.state.logs.some(l => /more than 10 rows/.test(l)));
+  const e2 = twinsEnv(); setCell(e2.dsheet, 3, 'Stream', 'Medical');
+  assert.strictEqual(getStudent(e2, PARENT).data.name, 'Aarav Deshmukh', 'only one Engineering row left: opens at once');
+  setCell(e2.dsheet, 3, 'Stream', 'Engineering'); setCell(e2.dsheet, 3, 'Token', '');
+  assert.strictEqual(getStudent(e2, PARENT).data.name, 'Aarav Deshmukh', 'a row with no Token is not offered');
+  const e3 = twinsEnv(); setCell(e3.dsheet, 3, 'Approved Email', TWIN2 + ', not-an-email');
+  assert.strictEqual(getStudent(e3, TWIN2).success, true, 'one bad entry does not block the valid ones');
 });
 
 test('40 writes go to the signed-in student\'s row only, never another row', () => {
@@ -822,25 +873,25 @@ test('43 errors never carry internal text: only short codes reach the browser', 
 });
 
 // ─────────────────────────────────────────────────────────────── 13. staff check inside the sheet
-test('44 checkApprovedEmails: lists only ACTIVE students with blank / invalid / duplicate emails, inside the "Email Check" tab', () => {
+test('44 checkApprovedEmails: blank / invalid are problems; shared emails are listed for information; inside the "Email Check" tab only', () => {
   const env = buildEnvironment();
   seedStudent(env, 2, { 'Student Name': 'Good One' });
   seedStudent(env, 3, { 'Token': 'ENG-BBBBBBBBB2', 'Approved Email': '', 'Student Name': 'Blank One' });
-  seedStudent(env, 4, { 'Token': 'ENG-CCCCCCCCC3', 'Approved Email': 'no-at-sign', 'Student Name': 'Invalid One' });
-  seedStudent(env, 5, { 'Token': 'ENG-DDDDDDDDD4', 'Approved Email': ' ' + EMAIL.toUpperCase(), 'Student Name': 'Dup One' });
-  seedStudent(env, 6, { 'Token': 'ENG-EEEEEEEEE5', 'Approved Email': '', 'Student Name': 'Finished Student', 'Stage': 'Admitted' });
-  seedStudent(env, 7, { 'Token': 'ENG-FFFFFFFFF6', 'Approved Email': '', 'Student Name': 'Medical Row', 'Stream': 'Medical' });
+  seedStudent(env, 4, { 'Token': 'ENG-CCCCCCCCC3', 'Approved Email': 'fine@example.invalid, no-at-sign', 'Student Name': 'Invalid One' });
+  seedStudent(env, 5, { 'Token': 'ENG-DDDDDDDDD4', 'Approved Email': 'a1@example.invalid, ' + PARENT, 'Student Name': 'Twin A' });
+  seedStudent(env, 6, { 'Token': 'ENG-EEEEEEEEE5', 'Approved Email': 'a2@example.invalid; ' + PARENT.toUpperCase(), 'Student Name': 'Twin B' });
+  seedStudent(env, 7, { 'Token': 'ENG-FFFFFFFFF6', 'Approved Email': '', 'Student Name': 'Finished Student', 'Stage': 'Admitted' });
+  seedStudent(env, 8, { 'Token': 'ENG-GGGGGGGGG7', 'Approved Email': '', 'Student Name': 'Medical Row', 'Stream': 'Medical' });
   const res = env.ctx.checkApprovedEmails();
-  assert.strictEqual(res.checked, 4); assert.strictEqual(res.problems, 4, 'blank, invalid, and BOTH rows of the duplicate');
-  const tab = env.dash.getSheetByName('Email Check');
-  const text = JSON.stringify(tab.rows);
-  ['Blank One', 'Invalid One', 'Dup One', 'Good One'].forEach(n => assert.ok(text.includes(n), n));
+  assert.deepStrictEqual({ c: res.checked, p: res.problems, s: res.shared }, { c: 5, p: 2, s: 2 });
+  const text = JSON.stringify(env.dash.getSheetByName('Email Check').rows);
+  ['Blank One', 'Invalid One', 'Twin A', 'Twin B', 'Good One'].forEach(n => assert.ok(text.includes(n) || n === 'Good One', n));
+  assert.ok(/Blank/.test(text) && /Not a valid email/.test(text) && /Shared emails \(allowed/.test(text) && /Shares an email with rows: 6/.test(text) && /Shares an email with rows: 5/.test(text));
   assert.ok(!text.includes('Finished Student') && !text.includes('Medical Row'), 'inactive and other-stream rows are not listed');
-  assert.ok(/Blank/.test(text) && /Not a valid email/.test(text) && /Duplicate/.test(text) && /Also on rows: 5/.test(text));
-  assert.ok(!text.includes(TOK) && !text.includes('9876543210'), 'no token or phone copied into the tab');
-  assert.strictEqual(env.state.mails.length, 0, 'nothing is emailed'); 
+  assert.ok(!text.includes(TOK) && !text.includes('9876543210') && !text.includes('@') , 'no token, phone or email copied into the tab');
+  assert.strictEqual(env.state.mails.length, 0, 'nothing is emailed');
   assert.strictEqual(env.enq.getSheetByName('Online').writeLog.length, 0);
-  return '4 problems found; inactive/other-stream skipped; result stays in the workbook';
+  return 'blank + invalid flagged; twins listed as shared (information)';
 });
 
 test('45 checkApprovedEmails: a clean sheet says so; running twice replaces the old list', () => {

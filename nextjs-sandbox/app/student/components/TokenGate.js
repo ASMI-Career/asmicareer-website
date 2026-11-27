@@ -1,5 +1,5 @@
 // ── Shown instead of the dashboard when there is no valid student link ───────
-export default function TokenGate({ state, helpline, buttonRef, onSwitch, expired }) {
+export default function TokenGate({ state, helpline, buttonRef, onSwitch, expired, choices, onChoose }) {
   const number = helpline || '7410019074';   // engineering sets its own helpline in its config; Medical keeps this one
   const wrap = { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: 16 };
   const card = { maxWidth: 460, width: '100%', textAlign: 'center', marginBottom: 0 };
@@ -16,6 +16,16 @@ export default function TokenGate({ state, helpline, buttonRef, onSwitch, expire
               <h2 className="section-title">{expired ? 'Please sign in again' : 'Sign in to your dashboard'}</h2>
               <p className="section-sub">{expired ? 'Your sign-in has expired. Sign in with the same Google account to carry on.' : 'Use the Google account your ASMI counsellor registered for you.'}</p>
               <div ref={buttonRef} style={{ display: 'flex', justifyContent: 'center', minHeight: 44, marginTop: 20 }} />
+            </>
+          )}
+          {state === 'choose' && (
+            <>
+              <h2 className="section-title">Whose dashboard do you want to open?</h2>
+              <p className="section-sub">Your Google account is registered for more than one student. You can switch any time from the menu.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                {(choices || []).map((c, i) => <button key={i} style={primaryBtn} onClick={() => onChoose(c)}>{c.name}</button>)}
+                {onSwitch && <button className="btn-outline-navy" onClick={onSwitch}>Use a different Google account</button>}
+              </div>
             </>
           )}
           {state === 'not_approved' && (

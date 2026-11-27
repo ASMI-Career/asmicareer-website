@@ -91,7 +91,7 @@ Shipping a later change (same URL, nothing to update on the website):
 
 The engineering `/student` page talks to **this same web app** (`NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL`). **A link or token alone no longer works.**
 The student signs in with Google; the page sends the Google ID token in the **body of a POST** (never in a URL). The script asks Google to verify it,
-then serves **only the one "Student Dashboard" row whose `Approved Email` equals the verified email**.
+then serves **only the "Student Dashboard" row(s) whose `Approved Email` cell lists the verified email**. A cell may list **several emails** (separated by commas, semicolons or new lines), and one email may be on **several rows** (twins with a shared parent email): the page then asks which student (`getStudent` returns `{ success: true, choose: [{ ref, name }] }`, names only) and sends the chosen student's Token as `studentRef` with every later call. The script re-checks that the signed-in email is on that row every time, so `studentRef` can only pick among the email's own rows. A write without a choice answers `student_required`. More than 10 rows on one email is refused as a typo.
 
 | Action (POST, text/plain JSON, always with `idToken`) | Body fields | Returns |
 |---|---|---|
@@ -103,9 +103,9 @@ then serves **only the one "Student Dashboard" row whose `Approved Email` equals
 
 GET never returns student data: any `?action=` answers `{ "error": "invalid_action" }`; no action is the health check.
 
-**Checks on every call:** a Google token of the right shape → Google's `tokeninfo` says it is genuine → `aud` equals `GOOGLE_CLIENT_ID` → issuer is Google → not expired → `email_verified` → the email matches **exactly one** `Approved Email` cell (case and spaces ignored) → that row's Stream is `Engineering`. The sheet is read on every call, so removing an email locks that student out at once (a verified token is cached for at most 5 minutes, only to save Google calls).
+**Checks on every call:** a Google token of the right shape → Google's `tokeninfo` says it is genuine → `aud` equals `GOOGLE_CLIENT_ID` → issuer is Google → not expired → `email_verified` → the email is listed in at least one `Approved Email` cell (case and spaces ignored) of an `Engineering` row that has a Token. The sheet is read on every call, so removing an email locks that student out at once (a verified token is cached for at most 5 minutes, only to save Google calls).
 
-**Answers are short codes only:** `auth_required` (no token), `auth_invalid` (bad/expired/foreign token), `not_approved` (email not on the sheet, on two rows, wrong stream, or the row has no Token), `invalid_input`, `busy`, `server_error`, plus the existing `locked`, `rate_limited`, `validation`. Nothing internal (no stack, no header names, no email, no token) is returned or logged.
+**Answers are short codes only:** `auth_required` (no token), `auth_invalid` (bad/expired/foreign token), `not_approved` (email not on the sheet, on more than 10 rows, wrong stream, a ref that is not one of the email's rows, or the row has no Token), `student_required` (a shared email must pick a student first), `invalid_input`, `busy`, `server_error`, plus the existing `locked`, `rate_limited`, `validation`. Nothing internal (no stack, no header names, no email, no token) is returned or logged.
 
 **Writes** keep their checks: shortlist ≤ 300 items / 10 groups / 40,000 chars; document ids letters, digits and `_ . -`, ≤ 500; every value is saved as plain text; one script lock; profile and preference-list rate limits are per student (by the row's Token, which is now only an internal row id).
 

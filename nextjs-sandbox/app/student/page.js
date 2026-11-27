@@ -37,10 +37,10 @@ import PreferenceList from './components/PreferenceList';
 // behaves exactly as before (token in the link).
 export default function StudentPage() {
   if (!googleMode()) return <StudentDashboard />;
-  return <GoogleGate>{(session, signOut) => <StudentDashboard key={session.streamId} session={session} signOut={signOut} />}</GoogleGate>;
+  return <GoogleGate>{(session, signOut, switchStudent) => <StudentDashboard key={session.cacheKey} session={session} signOut={signOut} switchStudent={switchStudent} />}</GoogleGate>;
 }
 
-function StudentDashboard({ session = null, signOut = null }) {
+function StudentDashboard({ session = null, signOut = null, switchStudent = null }) {
   const [currentToken, setCurrentToken] = useState('');   // the link token (legacy) or the signed-in account's cache key; set by useStudent
   // The stream (medical / engineering) comes from the sign-in check, or (legacy) from the token prefix in the link. It does not change while the page is open.
   const [streamId] = useState(() => (session ? session.streamId : streamFromLocation()));
@@ -85,7 +85,7 @@ function StudentDashboard({ session = null, signOut = null }) {
   const settingsOpen = shell.activeTab === 'settings' && profileApi.profileSupported;
   const activeTab = settingsOpen ? 'settings' : (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? (shell.activeTab === 'settings' ? (config.unknownTabFallback || 'dashboard') : shell.activeTab) : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, signOut, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...prefList, ...profileApi };
+  const ctx = { config, streamId, currentToken, signOut, switchStudent, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...prefList, ...profileApi };
 
   return (
     <Shell {...ctx}>

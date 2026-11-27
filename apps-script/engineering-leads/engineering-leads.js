@@ -484,14 +484,15 @@ function dashboardAction_(action, idToken, payload) {
     if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
     var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB);
 
-    var found = findRowByEmail_(sheet, cols.approvedEmail, who.email);
-    if (!found.row) { if (found.duplicate) log_('Approved Email appears on more than one row (' + found.duplicate + '); nobody is served until staff fix it.'); return { error: 'not_approved' }; }
-    var row = found.row;
-    // This script only serves engineering students: a Medical (or blank) Stream is "not approved" here.
-    if (String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_approved' };
-    // The Token column is now only the student's internal row id (used for the shortlist-profile log and Preference Lists), never a key to log in.
-    var tok = String(sheet.getRange(row, cols.token).getValue()).trim();
-    if (!tok) return { error: 'not_approved' };
+    // Which row? Only rows whose Approved Email cell lists the verified email (a cell may list several emails, and one email may be on several rows,
+    // e.g. twins with a shared parent email). One match opens at once; several need the page to say which student (studentRef = that row's Token),
+    // and the script re-checks that the email is really on that row every time. Only Engineering rows with a Token can be served.
+    var pick = resolveStudentRow_(sheet, cols, who.email, payload && payload.studentRef);
+    if (pick.error) return { error: pick.error };
+    if (pick.choose) return action === 'getStudent' ? { success: true, choose: pick.choose } : { error: 'student_required' };   // names only, no data
+    var row = pick.row;
+    // The Token column is only the student's internal row id (used for Preference Lists and the Profile Log), never a key to log in.
+    var tok = pick.token;
 
     if (action === 'getStudent') return { success: true, data: readStudent_(sheet, row, cols) };
     if (action === 'saveProfile') return saveProfile_(dashSS, sheet, cols, row, tok, payload && payload.profile);   // has its own rate limit and lock
@@ -576,34 +577,63 @@ function verifyGoogleIdToken_(idToken) {
   }
 }
 
-/** { row } when exactly one row holds this email; { row: 0 } when none; { row: 0, duplicate: 'rows 4, 9' } when several do (nobody is served). */
-function findRowByEmail_(sheet, emailCol, email) {
+/** Every valid email in an Approved Email cell. A cell may hold several, separated by commas, semicolons, spaces or new lines. */
+function emailParts_(cell) {
+  var parts = String(cell === null || cell === undefined ? '' : cell).split(/[\s,;]+/).filter(function (x) { return x !== ''; }), valid = [], invalid = 0;
+  parts.forEach(function (x) { var e = normEmail_(x); if (validEmail_(e)) { if (valid.indexOf(e) === -1) valid.push(e); } else invalid++; });
+  return { valid: valid, invalid: invalid, blank: parts.length === 0 };
+}
+var MAX_ROWS_PER_EMAIL = 10;      // one email on more rows than this is treated as a typo and refused
+
+/** Engineering rows with a Token whose Approved Email cell lists `email`: [{ row, token, name }]. */
+function candidateRows_(sheet, cols, email) {
   var last = sheet.getLastRow();
-  if (last <= HEADER_ROW || !validEmail_(email)) return { row: 0 };
-  var vals = sheet.getRange(HEADER_ROW + 1, emailCol, last - HEADER_ROW, 1).getValues();
-  var hits = [];
-  for (var i = 0; i < vals.length; i++) if (normEmail_(vals[i][0]) === email) hits.push(HEADER_ROW + 1 + i);
-  if (hits.length === 1) return { row: hits[0] };
-  return hits.length ? { row: 0, duplicate: 'rows ' + hits.join(', ') } : { row: 0 };
+  if (last <= HEADER_ROW || !validEmail_(email)) return [];
+  var n = last - HEADER_ROW, col = function (c) { return sheet.getRange(HEADER_ROW + 1, c, n, 1).getValues(); };
+  var emails = col(cols.approvedEmail), tokens = col(cols.token), streams = col(cols.stream), names = col(cols.name), out = [];
+  for (var i = 0; i < n; i++) {
+    if (emailParts_(emails[i][0]).valid.indexOf(email) === -1) continue;
+    if (String(streams[i][0]).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) continue;
+    var token = String(tokens[i][0]).trim();
+    if (!token) continue;
+    out.push({ row: HEADER_ROW + 1 + i, token: token, name: String(names[i][0]).trim() });
+  }
+  return out;
+}
+
+/** { row, token } | { choose: [{ ref, name }] } | { error: 'not_approved' }. studentRef (a Token) only ever picks AMONG the rows this email is on. */
+function resolveStudentRow_(sheet, cols, email, studentRef) {
+  var c = candidateRows_(sheet, cols, email);
+  if (!c.length) return { error: 'not_approved' };
+  if (c.length > MAX_ROWS_PER_EMAIL) { log_('One Approved Email is on more than ' + MAX_ROWS_PER_EMAIL + ' rows; nobody is served until staff fix it.'); return { error: 'not_approved' }; }
+  var ref = (typeof studentRef === 'string') ? studentRef.trim() : '';
+  if (ref) {
+    for (var i = 0; i < c.length; i++) if (c[i].token === ref) return { row: c[i].row, token: c[i].token };
+    return { error: 'not_approved' };
+  }
+  if (c.length === 1) return { row: c[0].row, token: c[0].token };
+  return { choose: c.map(function (x) { return { ref: x.token, name: x.name || 'Student' }; }) };
 }
 
 // ── Sheet check: which ACTIVE students cannot sign in? Writes only to the "Email Check" tab, inside the workbook. Nothing is emailed or returned by the web app. ──
 var EMAIL_CHECK_TAB = 'Email Check';
 var INACTIVE_STAGES = ['Admitted'];                // students at these stages are not checked (assumed: the last stage in the dashboard config; change if you use another)
 
-/** Run from the editor (or a time trigger). Lists active students whose Approved Email is blank, not a valid email, or used by more than one row. */
+/** Run from the editor (or a time trigger). Lists active students whose Approved Email is blank, not a valid email, or on too many rows, in the "Email Check" tab.
+ *  Shared emails (twins with a parent email) are listed under "Shared emails" for information: they are allowed, but check they are intended. */
 function checkApprovedEmails() {
   var cfg = getConfig_();
   var ss = SpreadsheetApp.openById(cfg.dashboardId);
   var sheet = ss.getSheetByName(DASHBOARD_TAB);
   if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
   var cols = resolveHeaders_(sheet, { token: STUDENT_HEADERS.token, name: STUDENT_HEADERS.name, stream: STUDENT_HEADERS.stream, stage: STUDENT_HEADERS.stage, approvedEmail: STUDENT_HEADERS.approvedEmail }, 'Email check/' + DASHBOARD_TAB);
-  var last = sheet.getLastRow(), problems = [], checked = 0;
+  var last = sheet.getLastRow(), problems = [], shared = [], checked = 0;
   if (last > HEADER_ROW) {
     var vals = sheet.getRange(HEADER_ROW + 1, 1, last - HEADER_ROW, sheet.getLastColumn()).getValues();
     var cell = function (row, key) { var x = row[cols[key] - 1]; return (x === null || x === undefined) ? '' : String(x).trim(); };
-    var byEmail = {};
-    vals.forEach(function (row, i) { var e = normEmail_(row[cols.approvedEmail - 1]); if (e) (byEmail[e] = byEmail[e] || []).push(HEADER_ROW + 1 + i); });
+    var isEng = function (row) { return cell(row, 'stream').toLowerCase() === STREAM_VALUE.toLowerCase() && !!cell(row, 'token'); };
+    var byEmail = {};                                    // every Engineering row with a Token can sign in, whatever its stage
+    vals.forEach(function (row, i) { if (!isEng(row)) return; emailParts_(row[cols.approvedEmail - 1]).valid.forEach(function (e) { (byEmail[e] = byEmail[e] || []).push(HEADER_ROW + 1 + i); }); });
     var inactive = INACTIVE_STAGES.map(function (x) { return x.toLowerCase(); });
     vals.forEach(function (row, i) {
       var rowNo = HEADER_ROW + 1 + i;
@@ -611,21 +641,23 @@ function checkApprovedEmails() {
       if (!cell(row, 'token') && !cell(row, 'name')) return;
       if (inactive.indexOf(cell(row, 'stage').toLowerCase()) !== -1) return;
       checked++;
-      var e = normEmail_(row[cols.approvedEmail - 1]), name = cell(row, 'name') || '(no name)';
-      if (!e) problems.push([rowNo, name, 'Blank', '']);
-      else if (!validEmail_(e)) problems.push([rowNo, name, 'Not a valid email', '']);
-      else if (byEmail[e].length > 1) problems.push([rowNo, name, 'Duplicate', 'Also on rows: ' + byEmail[e].filter(function (r) { return r !== rowNo; }).join(', ')]);
+      var name = cell(row, 'name') || '(no name)', p = emailParts_(row[cols.approvedEmail - 1]);
+      if (p.blank || (!p.valid.length && !p.invalid)) { problems.push([rowNo, name, 'Blank', '']); return; }
+      if (p.invalid) { problems.push([rowNo, name, 'Not a valid email', 'One or more entries in the cell are not valid emails.']); return; }
+      var others = {}, many = false;
+      p.valid.forEach(function (e) { byEmail[e].forEach(function (r) { if (r !== rowNo) others[r] = true; }); if (byEmail[e].length > MAX_ROWS_PER_EMAIL) many = true; });
+      if (many) problems.push([rowNo, name, 'Email on too many rows', 'More than ' + MAX_ROWS_PER_EMAIL + ' rows share one email.']);
+      else if (Object.keys(others).length) shared.push([rowNo, name, 'Shared', 'Shares an email with rows: ' + Object.keys(others).join(', ')]);
     });
   }
   var out = ss.getSheetByName(EMAIL_CHECK_TAB) || ss.insertSheet(EMAIL_CHECK_TAB);
   out.clearContents();
-  var header = [['Sheet row', 'Student Name', 'Problem', 'Detail']];
-  var lines = problems.length ? problems : [['', 'No problems found among ' + checked + ' active students.', '', '']];
-  var all = header.concat(lines);
+  var all = [['Sheet row', 'Student Name', 'Problem', 'Detail']].concat(problems.length ? problems : [['', 'No problems found among ' + checked + ' active students.', '', '']]);
+  if (shared.length) all = all.concat([['', 'Shared emails (allowed; check these are intended):', '', '']]).concat(shared);
   out.getRange(1, 1, all.length, 4).setNumberFormat('@').setValues(all.map(function (r) { return r.map(String); }));
   out.getRange(all.length + 2, 1, 1, 2).setValues([['Last run', now_().toString()]]);
-  log_('Email check: ' + checked + ' active students, ' + problems.length + ' problem(s).');
-  return { checked: checked, problems: problems.length };
+  log_('Email check: ' + checked + ' active students, ' + problems.length + ' problem(s), ' + shared.length + ' sharing an email.');
+  return { checked: checked, problems: problems.length, shared: shared.length };
 }
 
 

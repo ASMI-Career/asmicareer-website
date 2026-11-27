@@ -2,7 +2,7 @@
 //  - Google mode (NEXT_PUBLIC_GOOGLE_CLIENT_ID set): every call is a POST whose BODY carries { action, idToken, ...payload }. No token is ever put in a URL.
 //  - Legacy mode (no client id): the old link-token calls, exactly as they were.
 // Returns the parsed JSON answer; throws only when the network fails (callers already handle that).
-import { googleMode, getIdToken, expireNow } from './auth';
+import { googleMode, getIdToken, expireNow, getStudentRef } from './auth';
 
 const AUTH_ERRORS = { auth_required: true, auth_invalid: true };
 const post = async (endpoint, body) => {
@@ -13,10 +13,11 @@ const post = async (endpoint, body) => {
 async function googleCall(endpoint, action, payload) {
   const token = await getIdToken();
   if (!token) { expireNow(); return { error: 'auth_required' }; }
-  let res = await post(endpoint, { ...payload, action, idToken: token });
+  const ref = getStudentRef(); const base = ref ? { ...payload, studentRef: ref } : payload;
+  let res = await post(endpoint, { ...base, action, idToken: token });
   if (res && AUTH_ERRORS[res.error]) {                      // the script refused it (expired, clock): ask Google for a new one and try once more
     const again = await getIdToken({ force: true });
-    if (again) res = await post(endpoint, { ...payload, action, idToken: again });
+    if (again) res = await post(endpoint, { ...base, action, idToken: again });
     if (!again || (res && AUTH_ERRORS[res.error])) expireNow();
   }
   return res;

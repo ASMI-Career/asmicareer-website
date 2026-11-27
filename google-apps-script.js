@@ -74,8 +74,9 @@ function dashboardAction_(action, idToken, payload) {
     if (!emailCol) throw new Error('Header not found: ' + APPROVED_EMAIL_HEADER);
 
     if (action === 'getStudent') {
-      var f = findRowByEmail_(sheet, emailCol, who.email);
-      if (!f.row) { if (f.duplicate) log_('Approved Email appears on more than one row (' + f.duplicate + '); nobody is served until staff fix it.'); return { error: 'not_approved' }; }
+      var f = resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
+      if (f.error) return { error: f.error };
+      if (f.choose) return { success: true, choose: f.choose };          // names only, no data: the page asks "whose dashboard?"
       return { success: true, data: readStudent_(sheet, f.row) };
     }
 
@@ -85,8 +86,9 @@ function dashboardAction_(action, idToken, payload) {
     if (!locked) return { error: 'busy' };
     try {
       // The row is looked up INSIDE the lock, from the verified email only.
-      var found = findRowByEmail_(sheet, emailCol, who.email);
-      if (!found.row) { if (found.duplicate) log_('Approved Email appears on more than one row (' + found.duplicate + ').'); return { error: 'not_approved' }; }
+      var found = resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
+      if (found.error) return { error: found.error };
+      if (found.choose) return { error: 'student_required' };            // a shared email must say which student first
       if (action === 'saveShortlist') {
         var v = validateShortlist_(payload && payload.colleges);
         if (!v) return { error: 'invalid_input' };
@@ -244,14 +246,41 @@ function findHeaderCol_(sheet, header) {
 }
 function normHeader_(s) { return String(s === null || s === undefined ? '' : s).replace(/\s+/g, ' ').trim().toLowerCase(); }
 
-/** { row } for exactly one match; { row: 0 } for none; { row: 0, duplicate: 'rows 4, 9' } when several rows hold the email. */
-function findRowByEmail_(sheet, emailCol, email) {
+/** Every valid email in an Approved Email cell. A cell may hold several, separated by commas, semicolons, spaces or new lines. */
+function emailParts_(cell) {
+  var parts = String(cell === null || cell === undefined ? '' : cell).split(/[\s,;]+/).filter(function (x) { return x !== ''; }), valid = [], invalid = 0;
+  parts.forEach(function (x) { var e = normEmail_(x); if (validEmail_(e)) { if (valid.indexOf(e) === -1) valid.push(e); } else invalid++; });
+  return { valid: valid, invalid: invalid, blank: parts.length === 0 };
+}
+var MAX_ROWS_PER_EMAIL = 10;      // one email on more rows than this is treated as a typo and refused
+
+/** Rows with a Token whose Approved Email cell lists `email`: [{ row, token, name }]. */
+function candidateRows_(sheet, emailCol, email) {
   var last = sheet.getLastRow();
-  if (last <= HEADER_ROW || !validEmail_(email)) return { row: 0 };
-  var vals = sheet.getRange(HEADER_ROW + 1, emailCol, last - HEADER_ROW, 1).getValues(), hits = [];
-  for (var i = 0; i < vals.length; i++) if (normEmail_(vals[i][0]) === email) hits.push(HEADER_ROW + 1 + i);
-  if (hits.length === 1) return { row: hits[0] };
-  return hits.length ? { row: 0, duplicate: 'rows ' + hits.join(', ') } : { row: 0 };
+  if (last <= HEADER_ROW || !validEmail_(email)) return [];
+  var n = last - HEADER_ROW, col = function (c) { return sheet.getRange(HEADER_ROW + 1, c, n, 1).getValues(); };
+  var emails = col(emailCol), tokens = col(COL.TOKEN), names = col(COL.NAME), out = [];
+  for (var i = 0; i < n; i++) {
+    if (emailParts_(emails[i][0]).valid.indexOf(email) === -1) continue;
+    var token = String(tokens[i][0]).trim();
+    if (!token) continue;
+    out.push({ row: HEADER_ROW + 1 + i, token: token, name: String(names[i][0]).trim() });
+  }
+  return out;
+}
+
+/** { row } | { choose: [{ ref, name }] } | { error: 'not_approved' }. studentRef (a Token) only ever picks AMONG the rows this email is on. */
+function resolveStudentRow_(sheet, emailCol, email, studentRef) {
+  var c = candidateRows_(sheet, emailCol, email);
+  if (!c.length) return { error: 'not_approved' };
+  if (c.length > MAX_ROWS_PER_EMAIL) { log_('One Approved Email is on more than ' + MAX_ROWS_PER_EMAIL + ' rows; nobody is served until staff fix it.'); return { error: 'not_approved' }; }
+  var ref = (typeof studentRef === 'string') ? studentRef.trim() : '';
+  if (ref) {
+    for (var i = 0; i < c.length; i++) if (c[i].token === ref) return { row: c[i].row };
+    return { error: 'not_approved' };
+  }
+  if (c.length === 1) return { row: c[0].row };
+  return { choose: c.map(function (x) { return { ref: x.token, name: x.name || 'Student' }; }) };
 }
 
 // ── input checks (same rules as the engineering script) ──────────
@@ -308,36 +337,42 @@ function onOpen() {
   try { SpreadsheetApp.getUi().createMenu('ASMI').addItem('Check approved emails', 'checkApprovedEmails').addToUi(); } catch (e) { /* no UI (trigger/test) */ }
 }
 
-/** Lists active students whose Approved Email is blank, not a valid email, or used by more than one row, in the "Email Check" tab. Nothing leaves the workbook. */
+/** Lists students whose Approved Email is blank, not a valid email, or on too many rows, in the "Email Check" tab. Shared emails (twins with a parent email) are allowed
+ *  and listed under "Shared emails" for information. Nothing leaves the workbook. */
 function checkApprovedEmails() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) throw new Error('Tab not found: ' + SHEET_NAME);
   var emailCol = findHeaderCol_(sheet, APPROVED_EMAIL_HEADER);
   if (!emailCol) throw new Error('Header "' + APPROVED_EMAIL_HEADER + '" is missing or appears twice.');
-  var last = sheet.getLastRow(), problems = [], checked = 0;
+  var last = sheet.getLastRow(), problems = [], shared = [], checked = 0;
   if (last > HEADER_ROW) {
     var vals = sheet.getRange(HEADER_ROW + 1, 1, last - HEADER_ROW, Math.max(sheet.getLastColumn(), COL.STAGE)).getValues();
     var byEmail = {};
-    vals.forEach(function (row, i) { var e = normEmail_(row[emailCol - 1]); if (e) (byEmail[e] = byEmail[e] || []).push(HEADER_ROW + 1 + i); });
+    vals.forEach(function (row, i) { if (!String(row[COL.TOKEN - 1] || '').trim()) return; emailParts_(row[emailCol - 1]).valid.forEach(function (e) { (byEmail[e] = byEmail[e] || []).push(HEADER_ROW + 1 + i); }); });
     var inactive = INACTIVE_STAGES.map(function (x) { return x.toLowerCase(); });
     vals.forEach(function (row, i) {
       var rowNo = HEADER_ROW + 1 + i, token = String(row[COL.TOKEN - 1] || '').trim(), name = String(row[COL.NAME - 1] || '').trim();
       if (!token && !name) return;
       if (inactive.indexOf(String(row[COL.STAGE - 1] || '').trim().toLowerCase()) !== -1) return;
       checked++;
-      var e = normEmail_(row[emailCol - 1]), label = name || '(no name)';
-      if (!e) problems.push([rowNo, label, 'Blank', '']);
-      else if (!validEmail_(e)) problems.push([rowNo, label, 'Not a valid email', '']);
-      else if (byEmail[e].length > 1) problems.push([rowNo, label, 'Duplicate', 'Also on rows: ' + byEmail[e].filter(function (r) { return r !== rowNo; }).join(', ')]);
+      var label = name || '(no name)', p = emailParts_(row[emailCol - 1]);
+      if (p.blank || (!p.valid.length && !p.invalid)) { problems.push([rowNo, label, 'Blank', '']); return; }
+      if (p.invalid) { problems.push([rowNo, label, 'Not a valid email', 'One or more entries in the cell are not valid emails.']); return; }
+      if (!token) { problems.push([rowNo, label, 'No Token', 'A row without a Token cannot be opened.']); return; }
+      var others = {}, many = false;
+      p.valid.forEach(function (e) { byEmail[e].forEach(function (r) { if (r !== rowNo) others[r] = true; }); if (byEmail[e].length > MAX_ROWS_PER_EMAIL) many = true; });
+      if (many) problems.push([rowNo, label, 'Email on too many rows', 'More than ' + MAX_ROWS_PER_EMAIL + ' rows share one email.']);
+      else if (Object.keys(others).length) shared.push([rowNo, label, 'Shared', 'Shares an email with rows: ' + Object.keys(others).join(', ')]);
     });
   }
   var out = ss.getSheetByName(EMAIL_CHECK_TAB) || ss.insertSheet(EMAIL_CHECK_TAB);
   out.clearContents();
   var all = [['Sheet row', 'Student Name', 'Problem', 'Detail']].concat(problems.length ? problems : [['', 'No problems found among ' + checked + ' students.', '', '']]);
+  if (shared.length) all = all.concat([['', 'Shared emails (allowed; check these are intended):', '', '']]).concat(shared);
   out.getRange(1, 1, all.length, 4).setNumberFormat('@').setValues(all.map(function (r) { return r.map(String); }));
   out.getRange(all.length + 2, 1, 1, 2).setValues([['Last run', now_().toString()]]);
-  return { checked: checked, problems: problems.length };
+  return { checked: checked, problems: problems.length, shared: shared.length };
 }
 
 // ── helpers ──────────────────────────────────────────────────────

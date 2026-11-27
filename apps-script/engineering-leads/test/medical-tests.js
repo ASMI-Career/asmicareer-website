@@ -77,11 +77,7 @@ test('M3 bad Google tokens: other app, wrong issuer, expired, unverified, bad em
   assert.strictEqual(p(e.mint(' ' + EMAIL.toUpperCase())).success, true, 'case/space-insensitive');
   assert.ok(!e.state.logs.some(l => l.includes(EMAIL) || l.includes('mk1.')), 'no email or token in logs');
 });
-test('M4 duplicate Approved Email: nobody served, nothing written; Google down or no client id => server_error', () => {
-  const e = build(); e.seed(2); e.seed(3, { Name: 'Sibling' }); const before = e.snap();
-  assert.deepStrictEqual(e.post({ action: 'getStudent', as: EMAIL }), { error: 'not_approved' });
-  assert.deepStrictEqual(e.post({ action: 'saveDocStatus', as: EMAIL, data: { checked: [] } }), { error: 'not_approved' });
-  assert.strictEqual(e.snap(), before);
+test('M4 Google unreachable or no client id => server_error (fail closed)', () => {
   const f = build(); f.seed(2); f.state.g.down = true;
   assert.deepStrictEqual(f.post({ action: 'getStudent', as: EMAIL }), { error: 'server_error' });
   f.state.g.down = false; delete f.state.props.GOOGLE_CLIENT_ID;
@@ -132,15 +128,46 @@ test('M9 only short codes ever reach the browser', () => {
   e.sheet.getRange = () => { throw new Error('Mock: internal boom'); };
   const r = e.post({ action: 'getStudent', as: EMAIL }); assert.deepStrictEqual(r, { error: 'server_error' });
 });
-test('M10 checkApprovedEmails: blank / invalid / duplicate listed in the Email Check tab only; nothing else written', () => {
+test('M10 checkApprovedEmails: blank / invalid are problems; shared emails are listed for information; the Email Check tab only', () => {
   const e = build();
-  e.seed(2, { Name: 'Good One' }); e.seed(3, { Name: 'Blank One', 'Approved Email': '' }); e.seed(4, { Name: 'Invalid One', 'Approved Email': 'oops' });
-  e.seed(5, { Name: 'Dup One', 'Approved Email': EMAIL.toUpperCase() }); e.seed(6, { Name: '', Token: '', 'Approved Email': '' });
-  const res = e.ctx.checkApprovedEmails(); assert.deepStrictEqual({ c: res.checked, p: res.problems }, { c: 4, p: 4 });
+  e.seed(2, { Name: 'Good One' }); e.seed(3, { Name: 'Blank One', 'Approved Email': '' }); e.seed(4, { Name: 'Invalid One', 'Approved Email': 'fine@example.invalid, oops' });
+  e.seed(5, { Name: 'Twin A', 'Approved Email': 'a1@example.invalid, ' + PARENT }); e.seed(6, { Name: 'Twin B', 'Approved Email': 'a2@example.invalid;' + PARENT.toUpperCase() });
+  e.seed(7, { Name: '', Token: '', 'Approved Email': '' });
+  const res = e.ctx.checkApprovedEmails(); assert.deepStrictEqual({ c: res.checked, p: res.problems, s: res.shared }, { c: 5, p: 2, s: 2 });
   const text = JSON.stringify(e.ss.getSheetByName('Email Check').rows);
-  ['Blank One', 'Invalid One', 'Dup One', 'Good One', 'Also on rows: 5'].forEach(x => assert.ok(text.includes(x), x));
-  assert.ok(!text.includes('26-AND') && !text.includes('9876543210') && !text.includes('secret'));
-  assert.strictEqual(e.sheet.writeLog.length, 0, 'the dashboard tab itself is never written by the check (only its own Email Check tab)');
+  ['Blank One', 'Invalid One', 'Twin A', 'Twin B', 'Shared emails (allowed', 'Shares an email with rows: 6', 'Shares an email with rows: 5'].forEach(x => assert.ok(text.includes(x), x));
+  assert.ok(!text.includes('26-AND') && !text.includes('9876543210') && !text.includes('secret') && !text.includes('@'), 'no token, phone, link or email in the tab');
+  assert.strictEqual(e.sheet.writeLog.length, 0, 'the dashboard tab itself is never written by the check');
+});
+const PARENT = 'parent.test@example.invalid', TWIN2 = 'twin2.test@example.invalid';
+function twins() { const e = build(); e.seed(2, { Name: 'Riya Patil', 'Approved Email': EMAIL + ', ' + PARENT }); e.seed(3, { Name: 'Twin Two', Token: '26-AND-003', 'Approved Email': TWIN2 + ';\n' + PARENT.toUpperCase(), 'Saved Shortlist': '' }); return e; }
+test('M14 twins + shared parent email: own email opens one child; shared email gets a choice list, no data', () => {
+  const e = twins();
+  assert.strictEqual(e.post({ action: 'getStudent', as: EMAIL }).data.name, 'Riya Patil'); assert.strictEqual(e.post({ action: 'getStudent', as: TWIN2 }).data.name, 'Twin Two');
+  const ch = e.post({ action: 'getStudent', as: PARENT }); assert.deepStrictEqual(Object.keys(ch), ['success', 'choose']);
+  assert.deepStrictEqual(ch.choose, [{ ref: '26-AND-002', name: 'Riya Patil' }, { ref: '26-AND-003', name: 'Twin Two' }]);
+  ['9876543210', 'INQ-SECRET', 'secret', EMAIL, TWIN2].forEach(x => assert.ok(!JSON.stringify(ch).includes(x), 'must not leak ' + x));
+  assert.strictEqual(e.post({ action: 'getStudent', as: PARENT, studentRef: '26-AND-003' }).data.name, 'Twin Two');
+});
+test('M15 a ref only picks among the rows the email is on; writes need a choice and touch only the chosen row', () => {
+  const e = twins(); const snap = e.snap();
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: EMAIL, studentRef: '26-AND-003' }), { error: 'not_approved' });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: PARENT, studentRef: '26-AND-999' }), { error: 'not_approved' });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: 'x@example.invalid', studentRef: '26-AND-002' }), { error: 'not_approved' });
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: PARENT, colleges: { MCC: [] } }), { error: 'student_required' });
+  assert.deepStrictEqual(e.post({ action: 'saveDocStatus', as: PARENT, data: { checked: [] } }), { error: 'student_required' });
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: EMAIL, studentRef: '26-AND-003', colleges: { MCC: [] } }), { error: 'not_approved' });
+  assert.strictEqual(e.snap(), snap, 'nothing written');
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: PARENT, studentRef: '26-AND-003', colleges: { MCC: [{ name: 'Demo' }] } }), { success: true, count: 1 });
+  assert.ok(e.sheet.cell(3, 'Saved Shortlist').includes('Demo')); assert.ok(e.sheet.cell(2, 'Saved Shortlist').includes('Demo Medical College'), 'the other twin untouched');
+  assert.strictEqual(e.post({ action: 'saveDocStatus', as: PARENT, studentRef: '26-AND-002', data: { checked: ['x'] } }).success, true);
+  assert.strictEqual(e.sheet.cell(3, 'Document Status'), '');
+});
+test('M16 limits: more than 10 rows on one email refused; rows without a Token not offered; one bad entry does not block the valid ones', () => {
+  const e = build(); for (let r = 2; r <= 12; r++) e.seed(r, { Token: '26-AND-1' + r, 'Approved Email': PARENT, Name: 'S' + r });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: PARENT }), { error: 'not_approved' });
+  const t = twins(); t.set(3, 'Token', ''); assert.strictEqual(t.post({ action: 'getStudent', as: PARENT }).data.name, 'Riya Patil');
+  const u = twins(); u.set(3, 'Approved Email', TWIN2 + ', not-an-email'); assert.strictEqual(u.post({ action: 'getStudent', as: TWIN2 }).success, true);
 });
 
 const STAFF = 'counsellor.test@example.invalid';
