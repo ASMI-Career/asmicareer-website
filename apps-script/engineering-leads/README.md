@@ -111,6 +111,8 @@ GET never returns student data: any `?action=` answers `{ "error": "invalid_acti
 
 **New Script property:** `GOOGLE_CLIENT_ID` = the OAuth Web client ID (public value). **New sheet column:** `Approved Email` on the Student Dashboard tab, far right; found by header name. `verifyHeaders()` reports it if missing and the page fails closed.
 
+**Counsellor tools (staff):** the same Google check, but the verified email must be on the **`Staff`** tab of the Dashboard workbook (column `Staff Email`; no tab, header or match = `not_staff`, fail closed). `staffCheck` (is this a staff email?), `staffGetStudent { token }` and `staffSaveShortlist { token, colleges }` take the student's internal **Token** in the POST body. Only the same safe fields as the student view are returned. A save replaces only the groups it sends; the student's other groups are kept. Only `Engineering` rows are served. Students can never use these actions and staff emails never open a student row.
+
 **Sheet check (staff):** run `checkApprovedEmails()` from the editor. It writes the **"Email Check"** tab inside the Dashboard workbook: active students (Stream = Engineering, not at a stage in `INACTIVE_STAGES`, default `Admitted`) with a **blank**, **invalid** or **duplicate** Approved Email. Nothing is emailed or returned by the web app; the tab shows row numbers and names only.
 
 **Not changed:** the lead form, lead routing, tokens on enquiry rows, and everything under "What it does".

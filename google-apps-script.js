@@ -9,7 +9,8 @@
 // SETUP (Project Settings -> Script properties):  GOOGLE_CLIENT_ID = the OAuth "Web application" client ID (a public value, not a secret).
 // Add a column headed exactly "Approved Email" at the far right of the Student Dashboard tab (found by header name, so its position does not matter).
 //
-// Actions (POST, text/plain JSON):  { action: 'getStudent' | 'saveShortlist' | 'saveDocStatus', idToken, ... }
+// Actions (POST, text/plain JSON):  { action: 'getStudent' | 'saveShortlist' | 'saveDocStatus', idToken, ... }  (students)
+//                                   { action: 'staffCheck' | 'staffGetStudent' | 'staffSaveShortlist', idToken, token?, colleges? }  (counsellors; email must be on the "Staff" tab)
 // GET never serves student data.
 
 var SHEET_NAME = 'Student Dashboard';
@@ -27,7 +28,12 @@ var EMAIL_MAX = 254;
 var LOCK_WAIT_MS = 20000;
 var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
 var EMAIL_CHECK_TAB = 'Email Check';
-var INACTIVE_STAGES = [];     // stages that are NOT checked by checkApprovedEmails(). Empty = every student row is checked.
+var STAFF_TAB = 'Staff';
+var STAFF_EMAIL_HEADER = 'Staff Email';
+// Stages that are NOT checked by checkApprovedEmails(). EMPTY on purpose: the dashboard's stage list is Enrolled, Documents Verified, Counselled,
+// Preferences Filed, Round 1, Allotted (config/medical.json). None of them means "admission complete" ('Allotted' = a seat was allotted, not that the student has joined),
+// so every student row is checked. Add a stage here only if staff start using a value that means admission is complete.
+var INACTIVE_STAGES = [];
 
 // ── entry points ─────────────────────────────────────────────────
 
@@ -39,6 +45,7 @@ function doPost(e) {
   try {
     var body = parseBody_(e);
     if (!body || typeof body.action !== 'string') return jsonOut_({ error: 'invalid_action' });
+    if (body.action === 'staffCheck' || body.action === 'staffGetStudent' || body.action === 'staffSaveShortlist') return jsonOut_(staffAction_(body.action, body.idToken, body));
     if (body.action !== 'getStudent' && body.action !== 'saveShortlist' && body.action !== 'saveDocStatus') return jsonOut_({ error: 'invalid_action' });
     return jsonOut_(dashboardAction_(body.action, body.idToken, body));
   } catch (err) {
@@ -98,6 +105,73 @@ function dashboardAction_(action, idToken, payload) {
     return { error: 'invalid_action' };
   } catch (err) {
     log_('Dashboard action ' + action + ' failed: ' + describeError_(err));
+    return { error: 'server_error' };
+  }
+}
+
+// ── staff sign-in (counsellor tools: /counsellor) ────────────────
+// Same Google check; the verified email must be listed on the "Staff" tab (a column headed "Staff Email"). Staff then name a student by that
+// student's Token (an internal id shown in the sheet). There is no token-only path.
+
+function isStaffEmail_(ss, email) {
+  var sh = ss.getSheetByName(STAFF_TAB);
+  if (!sh) { log_('Staff tab not found; no staff can sign in.'); return false; }
+  var col = findHeaderCol_(sh, STAFF_EMAIL_HEADER), last = sh.getLastRow();
+  if (!col || last <= HEADER_ROW) return false;
+  var vals = sh.getRange(HEADER_ROW + 1, col, last - HEADER_ROW, 1).getValues();
+  for (var r = 0; r < vals.length; r++) if (normEmail_(vals[r][0]) === email) return true;
+  return false;
+}
+
+function findRowByToken_(sheet, token) {
+  var last = sheet.getLastRow();
+  if (last <= HEADER_ROW) return 0;
+  var vals = sheet.getRange(HEADER_ROW + 1, COL.TOKEN, last - HEADER_ROW, 1).getValues();
+  for (var i = 0; i < vals.length; i++) if (String(vals[i][0]).trim() === token) return HEADER_ROW + 1 + i;
+  return 0;
+}
+
+/** Codes: auth_required, auth_invalid, not_staff, not_found, invalid_input, busy, server_error. */
+function staffAction_(action, idToken, payload) {
+  try {
+    var who = verifyGoogleIdToken_(idToken);
+    if (who.error) return { error: who.error };
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    if (!isStaffEmail_(ss, who.email)) return { error: 'not_staff' };
+    if (action === 'staffCheck') return { success: true };
+
+    var tok = (payload && typeof payload.token === 'string') ? payload.token.trim() : '';
+    if (!/^[A-Za-z0-9_-]{3,64}$/.test(tok)) return { error: 'not_found' };
+    var sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) throw new Error('Tab not found: ' + SHEET_NAME);
+
+    if (action === 'staffGetStudent') {
+      var row = findRowByToken_(sheet, tok);
+      return row ? { success: true, data: readStudent_(sheet, row) } : { error: 'not_found' };
+    }
+    if (action === 'staffSaveShortlist') {
+      var incoming = validateShortlist_(payload && payload.colleges);
+      if (!incoming) return { error: 'invalid_input' };
+      var lock = LockService.getScriptLock(), locked = false;
+      try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+      if (!locked) return { error: 'busy' };
+      try {
+        var r2 = findRowByToken_(sheet, tok);
+        if (!r2) return { error: 'not_found' };
+        // Only the groups the tool sent are replaced; any other group on the row is kept.
+        var merged = parseJsonObject_(sheet.getRange(r2, COL.SHORTLIST).getValue()), sent = JSON.parse(incoming.json);
+        Object.keys(sent).forEach(function (k) { merged[k] = sent[k]; });
+        var v = validateShortlist_(merged);
+        if (!v) return { error: 'invalid_input' };
+        sheet.getRange(r2, COL.SHORTLIST).setNumberFormat('@').setValue(v.json);
+        return { success: true, count: v.count };
+      } finally {
+        lock.releaseLock();
+      }
+    }
+    return { error: 'invalid_action' };
+  } catch (err) {
+    log_('Staff action ' + action + ' failed: ' + describeError_(err));
     return { error: 'server_error' };
   }
 }

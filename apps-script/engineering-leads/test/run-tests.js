@@ -9,7 +9,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const { buildEnvironment, leadRows } = require('./mock-gas');
+const { buildEnvironment, leadRows, MockSheet } = require('./mock-gas');
 
 const tests = [];
 const test = (name, fn) => tests.push({ name, fn });
@@ -851,6 +851,88 @@ test('45 checkApprovedEmails: a clean sheet says so; running twice replaces the 
   setCell(env.dsheet, 2, 'Approved Email', EMAIL); env.ctx.checkApprovedEmails();
   assert.ok(!JSON.stringify(env.dash.getSheetByName('Email Check').rows).includes('Blank'));
   return 'idempotent';
+});
+
+
+// ─────────────────────────────────────────────────────────────── 14. staff sign-in (counsellor tools)
+const STAFF = 'counsellor.test@example.invalid';
+function staffEnv(emails = [STAFF]) {
+  const env = buildEnvironment(); seedStudent(env);
+  const st = env.dash.add(new MockSheet('Staff', ['Notes', 'Staff Email'], { maxRows: 50 }));
+  emails.forEach((e, i) => { st._set(i + 2, 2, e); });
+  return env;
+}
+const staffPost = (env, as, body) => postJson(env, Object.assign({ as }, body));
+
+test('46 staff actions need a signed-in email on the Staff tab; a student (or stranger) is not_staff', () => {
+  const env = staffEnv(['  ' + STAFF.toUpperCase()]);
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffCheck' }), { success: true });
+  assert.deepStrictEqual(staffPost(env, EMAIL, { action: 'staffCheck' }), { error: 'not_staff' }, 'a student is not staff');
+  assert.deepStrictEqual(staffPost(env, 'stranger@example.invalid', { action: 'staffGetStudent', token: TOK }), { error: 'not_staff' });
+  assert.deepStrictEqual(postJson(env, { action: 'staffGetStudent', token: TOK }), { error: 'auth_required' }, 'a token alone is nothing');
+  assert.deepStrictEqual(postJson(env, { action: 'staffGetStudent', token: TOK, idToken: 'a.b.c' }), { error: 'auth_invalid' });
+  assert.deepStrictEqual(JSON.parse(env.ctx.doGet({ parameter: { action: 'staffGetStudent', token: TOK } }).getContent()), { error: 'invalid_action' });
+  return 'only listed staff emails pass';
+});
+
+test('47 staff fail closed: no Staff tab, no header, repeated header, blank list', () => {
+  const none = buildEnvironment(); seedStudent(none);
+  assert.deepStrictEqual(staffPost(none, STAFF, { action: 'staffCheck' }), { error: 'not_staff' }, 'no Staff tab');
+  const e1 = staffEnv(); e1.dash.getSheetByName('Staff').rows[0][1] = 'Email';
+  assert.deepStrictEqual(staffPost(e1, STAFF, { action: 'staffCheck' }), { error: 'not_staff' }, 'wrong header');
+  const e2 = staffEnv(); e2.dash.getSheetByName('Staff').rows[0][0] = 'Staff Email';
+  assert.deepStrictEqual(staffPost(e2, STAFF, { action: 'staffCheck' }), { error: 'not_staff' }, 'header twice => ambiguous');
+  const e3 = staffEnv([]);
+  assert.deepStrictEqual(staffPost(e3, STAFF, { action: 'staffCheck' }), { error: 'not_staff' }, 'empty list');
+  const e4 = staffEnv(); e4.dash.getSheetByName('Staff').rows[1][1] = '';
+  assert.deepStrictEqual(staffPost(e4, STAFF, { action: 'staffCheck' }), { error: 'not_staff' }, 'removing the email takes effect at once');
+});
+
+test('48 staffGetStudent: by internal Token, same safe fields as the student view; unknown / bad / Medical => not_found', () => {
+  const env = staffEnv();
+  const r = staffPost(env, STAFF, { action: 'staffGetStudent', token: TOK });
+  assert.strictEqual(r.success, true); assert.deepStrictEqual(Object.keys(r.data).sort(), ALLOWED_KEYS);
+  ['9876543210', '9123456780', 'secret-admin-note', EMAIL, 'Student Phone'].forEach(x => assert.ok(!JSON.stringify(r).includes(x), 'must not leak ' + x));
+  for (const bad of ['', undefined, null, 'x', 'ENG-SHORT', 'ENG-JKMNPQRS45', "ENG-ABCDEFGH23'", 123]) assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffGetStudent', token: bad }), { error: 'not_found' }, 'token ' + String(bad));
+  setCell(env.dsheet, 2, 'Stream', 'Medical');
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffGetStudent', token: TOK }), { error: 'not_found' }, 'a Medical row is not served by this script');
+});
+
+test('49 staffSaveShortlist: validated, merged by group (student\'s other groups kept), text cell, only that row; bad input writes nothing', () => {
+  const env = staffEnv(); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Approved Email': EMAIL2, 'Student Name': 'Other' });
+  const before3 = JSON.stringify(env.dsheet.rows[2]);
+  const mine = { COUNSELLOR: [{ id: 'a', institute: 'IIT Bombay', branch: 'CSE', name: '=HYPERLINK("http://x.invalid","y")' }] };
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: TOK, colleges: mine }), { success: true, count: 2 });
+  const saved = JSON.parse(env.dsheet.cell(2, 'Saved Shortlist'));
+  assert.deepStrictEqual(saved.COUNSELLOR, mine.COUNSELLOR); assert.strictEqual(saved.JOSAA[0].institute, 'Demo Institute Alpha', 'the student\'s own group is kept');
+  assert.strictEqual(env.dsheet.formats['2,' + (env.dashHeaders.indexOf('Saved Shortlist') + 1)], '@');
+  assert.strictEqual(JSON.stringify(env.dsheet.rows[2]), before3, 'no other row touched');
+  assert.strictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: TOK, colleges: { JOSAA: [] } }).success, true, 'a sent group replaces that group');
+  assert.deepStrictEqual(JSON.parse(env.dsheet.cell(2, 'Saved Shortlist')).JOSAA, []);
+  const snap = snapshot(env);
+  const bad = [[], 'x', null, { A: 'x' }, { A: [1] }, { 'bad key!': [] }, { A: new Array(301).fill({ a: 1 }) }, { A: [{ a: 'x'.repeat(2100) }] }, Object.fromEntries(Array.from({ length: 11 }, (_, i) => ['G' + i, []]))];
+  bad.forEach((b, i) => assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: TOK, colleges: b }), { error: 'invalid_input' }, 'bad #' + i));
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: 'ENG-JKMNPQRS99', colleges: mine }), { error: 'not_found' });
+  assert.strictEqual(snapshot(env), snap, 'rejected requests changed nothing');
+  env.state.lockBusy = true;
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: TOK, colleges: mine }), { error: 'busy' });
+  env.state.lockBusy = false;
+  // a merge that would exceed the limits is refused rather than truncated
+  setCell(env.dsheet, 2, 'Saved Shortlist', JSON.stringify({ JOSAA: new Array(250).fill({ a: 1 }) }));
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSaveShortlist', token: TOK, colleges: { CAP: new Array(100).fill({ a: 1 }) } }), { error: 'invalid_input' });
+});
+
+test('50 staff and students stay separate: a staff email is not a student; a student cannot read others; errors are short codes', () => {
+  const env = staffEnv();
+  assert.deepStrictEqual(getStudent(env, STAFF), { error: 'not_approved' }, 'staff email on the Staff tab does not open a student row');
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: EMAIL, token: 'ENG-JKMNPQRS45' }).data.name, 'Aarav Deshmukh', 'a student always gets their OWN row');
+  const ok = new Set(['auth_required', 'auth_invalid', 'not_staff', 'not_found', 'invalid_input', 'busy', 'server_error', 'invalid_action']);
+  [{ action: 'staffGetStudent' }, { action: 'staffGetStudent', idToken: 'a.b.c' }, { action: 'staffSaveShortlist', as: STAFF, token: TOK, colleges: 1 }, { action: 'staffGetStudent', as: STAFF, token: { a: 1 } }].forEach(b => {
+    const r = postJson(env, b); assert.ok(!r.error || ok.has(r.error), 'code ' + r.error); assert.ok(!/at |Error|\.gs|Exception/.test(JSON.stringify(r)));
+  });
+  env.dsheet.rows[0][env.dashHeaders.indexOf('Saved Shortlist')] = 'x';
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffGetStudent', token: TOK }), { error: 'server_error' }, 'missing header: closed, no details');
+  assert.ok(!env.state.logs.some(l => l.includes(STAFF) || l.includes(EMAIL)), 'no emails in logs');
 });
 
 // ─────────────────────────────────────────────────────────────── runner

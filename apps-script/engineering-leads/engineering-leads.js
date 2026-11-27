@@ -159,6 +159,7 @@ var STUDENT_HEADERS = {
   documentStatus:     'Document Status',
   approvedEmail:      'Approved Email'      // staff type the student's Google email here; it is the ONLY way into a dashboard row
 };
+var STAFF_ACTIONS = { staffCheck: true, staffGetStudent: true, staffSaveShortlist: true };
 var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true, saveProfile: true, savePreferenceList: true, getPreferenceList: true };
 var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
 
@@ -186,6 +187,7 @@ function doPost(e) {
     // The student dashboard saves with a JSON body ({ action: 'saveShortlist', token, colleges }); the lead form posts form fields.
     var body = parseJsonBody_(e);
     if (body && body.action) {
+      if (STAFF_ACTIONS[body.action]) return json_(staffAction_(body.action, body.idToken, body));   // counsellor tools: a signed-in STAFF email, not a student
       if (!DASH_ACTIONS[body.action]) return json_({ error: 'invalid_action' });
       var out = dashboardAction_(body.action, body.idToken, body);   // the Google ID token travels in the POST body, never in a URL
       // saveProfile / the preference-list actions answer { ok: true, ... } or { ok: false, error }; the early exits (not_approved ...) are put into that shape too.
@@ -624,6 +626,88 @@ function checkApprovedEmails() {
   out.getRange(all.length + 2, 1, 1, 2).setValues([['Last run', now_().toString()]]);
   log_('Email check: ' + checked + ' active students, ' + problems.length + ' problem(s).');
   return { checked: checked, problems: problems.length };
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  STAFF SIGN-IN  (counsellor tools: /counsellor, /engineering-counsellor)
+//  Same Google check as students, but the verified email must be listed on the "Staff" tab of the Dashboard workbook
+//  (a column headed "Staff Email"). Staff then name a student by that student's Token (an internal id shown in the sheet).
+//  No staff email, no data: there is no token-only path any more.
+// ════════════════════════════════════════════════════════════════
+
+var STAFF_TAB = 'Staff';
+var STAFF_EMAIL_HEADER = 'Staff Email';
+
+function isStaffEmail_(ss, email) {
+  var sh = ss.getSheetByName(STAFF_TAB);
+  if (!sh) { log_('Staff tab not found; no staff can sign in.'); return false; }
+  var lastCol = sh.getLastColumn(), last = sh.getLastRow();
+  if (lastCol < 1 || last <= HEADER_ROW) return false;
+  var head = sh.getRange(HEADER_ROW, 1, 1, lastCol).getValues()[0], col = 0, want = normHeader_(STAFF_EMAIL_HEADER);
+  for (var i = 0; i < head.length; i++) if (normHeader_(head[i]) === want) { if (col) { log_('Staff tab has the "' + STAFF_EMAIL_HEADER + '" header twice; closed.'); return false; } col = i + 1; }
+  if (!col) { log_('Staff tab has no "' + STAFF_EMAIL_HEADER + '" header.'); return false; }
+  var vals = sh.getRange(HEADER_ROW + 1, col, last - HEADER_ROW, 1).getValues();
+  for (var r = 0; r < vals.length; r++) if (normEmail_(vals[r][0]) === email) return true;
+  return false;
+}
+
+/** Row of this exact Token, or 0. */
+function findRowByToken_(sheet, tokenCol, token) {
+  var last = sheet.getLastRow();
+  if (last <= HEADER_ROW) return 0;
+  var vals = sheet.getRange(HEADER_ROW + 1, tokenCol, last - HEADER_ROW, 1).getValues();
+  for (var i = 0; i < vals.length; i++) if (String(vals[i][0]).trim() === token) return HEADER_ROW + 1 + i;
+  return 0;
+}
+
+/** staffCheck {} | staffGetStudent { token } | staffSaveShortlist { token, colleges }. Codes: auth_required, auth_invalid, not_staff, not_found, invalid_input, busy, server_error. */
+function staffAction_(action, idToken, payload) {
+  try {
+    var who = verifyGoogleIdToken_(idToken);
+    if (who.error) return { error: who.error };
+    var cfg = getConfig_();
+    var dashSS = SpreadsheetApp.openById(cfg.dashboardId);
+    if (!isStaffEmail_(dashSS, who.email)) return { error: 'not_staff' };
+    if (action === 'staffCheck') return { success: true };
+
+    var tok = String(payload && payload.token !== undefined && payload.token !== null ? payload.token : '').trim();
+    if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };
+    var sheet = dashSS.getSheetByName(DASHBOARD_TAB);
+    if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
+    var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Staff tools/' + DASHBOARD_TAB);
+
+    if (action === 'staffGetStudent') {
+      var row = findRowByToken_(sheet, cols.token, tok);
+      if (!row || String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+      return { success: true, data: readStudent_(sheet, row, cols) };
+    }
+    if (action === 'staffSaveShortlist') {
+      var incoming = validateShortlist_(payload && payload.colleges);
+      if (!incoming) return { error: 'invalid_input' };
+      var lock = LockService.getScriptLock(), locked = false;
+      try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+      if (!locked) return { error: 'busy' };
+      try {
+        var r2 = findRowByToken_(sheet, cols.token, tok);
+        if (!r2 || String(sheet.getRange(r2, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+        // Only the groups the tool sent are replaced; the student's other groups (JOSAA / CAP ...) are kept.
+        var merged = parseJsonObject_(sheet.getRange(r2, cols.savedShortlist).getValue()), sent = JSON.parse(incoming.json);
+        Object.keys(sent).forEach(function (k) { merged[k] = sent[k]; });
+        var v = validateShortlist_(merged);
+        if (!v) return { error: 'invalid_input' };
+        sheet.getRange(r2, cols.savedShortlist).setNumberFormat(TEXT_FORMAT).setValue(v.json);
+        return { success: true, count: v.count };
+      } finally {
+        lock.releaseLock();
+      }
+    }
+    return { error: 'invalid_action' };
+  } catch (err) {
+    log_('Staff action ' + action + ' failed: ' + describeError_(err));
+    notifyError_(err && err.name === 'HeaderError' ? 'Staff tools: missing/ambiguous sheet header' : 'Staff action failed', describeError_(err));
+    return { error: 'server_error' };
+  }
 }
 
 

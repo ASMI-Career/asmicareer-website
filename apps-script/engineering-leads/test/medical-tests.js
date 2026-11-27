@@ -143,6 +143,41 @@ test('M10 checkApprovedEmails: blank / invalid / duplicate listed in the Email C
   assert.strictEqual(e.sheet.writeLog.length, 0, 'the dashboard tab itself is never written by the check (only its own Email Check tab)');
 });
 
+const STAFF = 'counsellor.test@example.invalid';
+function withStaff(emails = [STAFF]) { const e = build(); e.seed(2); const st = e.ss.add(new MockSheet('Staff', ['Notes', 'Staff Email'], { maxRows: 50 })); emails.forEach((x, i) => st._set(i + 2, 2, x)); return e; }
+test('M11 staff actions need a signed-in email on the Staff tab; students and strangers are not_staff; fails closed', () => {
+  const e = withStaff(['  ' + STAFF.toUpperCase()]);
+  assert.deepStrictEqual(e.post({ action: 'staffCheck', as: STAFF }), { success: true });
+  assert.deepStrictEqual(e.post({ action: 'staffCheck', as: EMAIL }), { error: 'not_staff' }, 'a student is not staff');
+  assert.deepStrictEqual(e.post({ action: 'staffGetStudent', as: 'x@example.invalid', token: '26-AND-002' }), { error: 'not_staff' });
+  assert.deepStrictEqual(e.post({ action: 'staffGetStudent', token: '26-AND-002' }), { error: 'auth_required' });
+  assert.deepStrictEqual(JSON.parse(e.ctx.doGet({ parameter: { action: 'staffGetStudent', token: '26-AND-002' } }).getContent()), { error: 'invalid_action' });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF }), { error: 'not_approved' }, 'a staff email is not a student');
+  const none = build(); none.seed(2); assert.deepStrictEqual(none.post({ action: 'staffCheck', as: STAFF }), { error: 'not_staff' }, 'no Staff tab');
+  const h = withStaff(); h.ss.getSheetByName('Staff').rows[0][1] = 'Email'; assert.deepStrictEqual(h.post({ action: 'staffCheck', as: STAFF }), { error: 'not_staff' });
+  const r = withStaff(); r.ss.getSheetByName('Staff').rows[1][1] = ''; assert.deepStrictEqual(r.post({ action: 'staffCheck', as: STAFF }), { error: 'not_staff' }, 'removed = locked out at once');
+});
+test('M12 staffGetStudent by internal Token: only the safe fields; unknown/bad token not_found', () => {
+  const e = withStaff();
+  const r = e.post({ action: 'staffGetStudent', as: STAFF, token: '26-AND-002' });
+  assert.strictEqual(r.success, true); assert.strictEqual(r.data.name, 'Riya Patil');
+  ['9876543210', 'INQ-SECRET', 'secret', EMAIL].forEach(x => assert.ok(!JSON.stringify(r).includes(x), 'must not leak ' + x));
+  for (const bad of ['', undefined, null, 'x', "26-AND-002'", '26-AND-999', 5, { a: 1 }]) assert.deepStrictEqual(e.post({ action: 'staffGetStudent', as: STAFF, token: bad }), { error: 'not_found' }, String(bad));
+});
+test('M13 staffSaveShortlist: validated, merged by group, text cell, only that row; bad input writes nothing', () => {
+  const e = withStaff(); e.seed(3, { Name: 'Kabir', 'Approved Email': EMAIL2, Token: '26-AND-003', 'Saved Shortlist': '' }); const row3 = JSON.stringify(e.sheet.rows[2]);
+  const list = { MCC: [{ name: '=HYPERLINK("http://x.invalid","y")' }], MH: [], OPEN: [{ name: 'Demo OPEN' }] };
+  assert.deepStrictEqual(e.post({ action: 'staffSaveShortlist', as: STAFF, token: '26-AND-002', colleges: list }), { success: true, count: 2 });
+  assert.deepStrictEqual(JSON.parse(e.sheet.cell(2, 'Saved Shortlist')), list); assert.strictEqual(e.sheet.formats['2,14'], '@'); assert.strictEqual(JSON.stringify(e.sheet.rows[2]), row3);
+  assert.strictEqual(e.post({ action: 'staffSaveShortlist', as: STAFF, token: '26-AND-002', colleges: { EXTRA: [{ name: 'x' }] } }).success, true);
+  const kept = JSON.parse(e.sheet.cell(2, 'Saved Shortlist')); assert.strictEqual(kept.OPEN[0].name, 'Demo OPEN', 'groups not sent are kept'); assert.strictEqual(kept.EXTRA[0].name, 'x');
+  const snap = e.snap();
+  [[], 'x', null, { A: 'x' }, { A: [1] }, { 'bad key!': [] }, { A: new Array(301).fill({ a: 1 }) }].forEach((b, i) => assert.deepStrictEqual(e.post({ action: 'staffSaveShortlist', as: STAFF, token: '26-AND-002', colleges: b }), { error: 'invalid_input' }, 'bad #' + i));
+  assert.deepStrictEqual(e.post({ action: 'staffSaveShortlist', as: STAFF, token: '26-AND-777', colleges: list }), { error: 'not_found' });
+  e.state.lockBusy = true; assert.deepStrictEqual(e.post({ action: 'staffSaveShortlist', as: STAFF, token: '26-AND-002', colleges: list }), { error: 'busy' });
+  e.state.lockBusy = false; assert.strictEqual(e.snap(), snap);
+});
+
 let p = 0, f = 0;
 for (const t of tests) { try { t.f(); p++; console.log('PASS ' + t.n); } catch (er) { f++; console.log('FAIL ' + t.n + '\n      -> ' + er.message.split('\n')[0]); if (process.env.VERBOSE) console.log(er.stack); } }
 console.log(`\n${p} passed, ${f} failed, ${tests.length} total`); process.exit(f ? 1 : 0);
