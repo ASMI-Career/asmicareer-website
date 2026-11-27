@@ -65,7 +65,11 @@ export const currentSession = () => current;
 let studentRef = '';
 export const setStudentRef = (r) => { studentRef = r || ''; };
 export const getStudentRef = () => studentRef;
-export const cacheKeyOf = () => (current && current.sub ? 'g_' + current.sub + (studentRef ? '_' + studentRef : '') : '');
+// Staff view: a staff Google account opening any student. Sent as asStaff:true with every call; the script checks the Staff tab and logs each action.
+let asStaff = false;
+export const setAsStaff = (v) => { asStaff = !!v; };
+export const getAsStaff = () => asStaff;
+export const cacheKeyOf = () => (current && current.sub ? 'g_' + current.sub + (asStaff ? '_staff' : '') + (studentRef ? '_' + studentRef : '') : '');
 
 const isFresh = () => !!current && current.exp - Date.now() > 60 * 1000;
 
@@ -82,7 +86,7 @@ export async function getIdToken({ force = false } = {}) {
 
 export function signOut() {
   try { if (initialized) window.google.accounts.id.disableAutoSelect(); } catch (e) { /* ignore */ }
-  current = null; studentRef = '';
+  current = null; studentRef = ''; asStaff = false;
   emit({ type: 'out' });
 }
 export function expireNow() { current = null; emit({ type: 'expired' }); }

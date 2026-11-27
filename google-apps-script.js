@@ -45,7 +45,7 @@ function doPost(e) {
   try {
     var body = parseBody_(e);
     if (!body || typeof body.action !== 'string') return jsonOut_({ error: 'invalid_action' });
-    if (body.action === 'staffCheck' || body.action === 'staffGetStudent' || body.action === 'staffSaveShortlist') return jsonOut_(staffAction_(body.action, body.idToken, body));
+    if (body.action === 'staffCheck' || body.action === 'staffSearch' || body.action === 'staffGetStudent' || body.action === 'staffSaveShortlist') return jsonOut_(staffAction_(body.action, body.idToken, body));
     if (body.action !== 'getStudent' && body.action !== 'saveShortlist' && body.action !== 'saveDocStatus') return jsonOut_({ error: 'invalid_action' });
     return jsonOut_(dashboardAction_(body.action, body.idToken, body));
   } catch (err) {
@@ -73,8 +73,19 @@ function dashboardAction_(action, idToken, payload) {
     var emailCol = findHeaderCol_(sheet, APPROVED_EMAIL_HEADER);
     if (!emailCol) throw new Error('Header not found: ' + APPROVED_EMAIL_HEADER);
 
+    // STAFF VIEW: a staff email (Staff tab) may open ANY student by Token when the page says asStaff. Each such call is written to the "Staff Log" tab first;
+    // if the log cannot be written the call is refused. A non-staff email that sends asStaff gets not_staff.
+    var staffPick = null;
+    if (payload && payload.asStaff === true) {
+      if (!isStaffEmail_(SpreadsheetApp.getActiveSpreadsheet(), who.email)) return { error: 'not_staff' };
+      var sref = (typeof payload.studentRef === 'string') ? payload.studentRef.trim() : '';
+      var srow = /^[A-Za-z0-9_-]{3,64}$/.test(sref) ? findRowByToken_(sheet, sref) : 0;
+      if (!srow) return { error: 'not_found' };
+      if (!logStaffAccess_(SpreadsheetApp.getActiveSpreadsheet(), who.email, sref, action)) return { error: 'server_error' };
+      staffPick = { row: srow };
+    }
     if (action === 'getStudent') {
-      var f = resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
+      var f = staffPick || resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
       if (f.error) return { error: f.error };
       if (f.choose) return { success: true, choose: f.choose };          // names only, no data: the page asks "whose dashboard?"
       return { success: true, data: readStudent_(sheet, f.row) };
@@ -86,7 +97,7 @@ function dashboardAction_(action, idToken, payload) {
     if (!locked) return { error: 'busy' };
     try {
       // The row is looked up INSIDE the lock, from the verified email only.
-      var found = resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
+      var found = staffPick || resolveStudentRow_(sheet, emailCol, who.email, payload && payload.studentRef);
       if (found.error) return { error: found.error };
       if (found.choose) return { error: 'student_required' };            // a shared email must say which student first
       if (action === 'saveShortlist') {
@@ -133,6 +144,49 @@ function findRowByToken_(sheet, token) {
   return 0;
 }
 
+var STAFF_LOG_TAB = 'Staff Log';
+var STAFF_SEARCH_MAX = 20;
+
+/** One line per staff action on a student: time, staff email, student Token, action. Never the content. Returns false if it could not be written (the action is then refused). */
+function logStaffAccess_(ss, staffEmail, token, action) {
+  var lock = LockService.getScriptLock(), locked = false;
+  try {
+    try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (e) { locked = false; }
+    if (!locked) { log_('Staff Log: could not get the lock.'); return false; }
+    var sh = ss.getSheetByName(STAFF_LOG_TAB);
+    if (!sh) { sh = ss.insertSheet(STAFF_LOG_TAB); sh.getRange(1, 1, 1, 4).setNumberFormat('@').setValues([['Time', 'Staff Email', 'Student Token', 'Action']]); }
+    var r = Math.max(sh.getLastRow(), HEADER_ROW) + 1;
+    sh.getRange(r, 1, 1, 4).setNumberFormats([['yyyy-mm-dd hh:mm:ss', '@', '@', '@']]);   // text: nothing is read as a formula
+    sh.getRange(r, 1, 1, 4).setValues([[now_(), staffEmail, token, action]]);
+    return true;
+  } catch (err) {
+    log_('Staff Log write failed: ' + describeError_(err));
+    return false;
+  } finally {
+    if (locked) { try { lock.releaseLock(); } catch (e2) { /* ignore */ } }
+  }
+}
+
+/** staffSearch { query }: up to 20 students whose name or Token contains the query. Returns { ref, name, stage } only. */
+function staffSearch_(ss, payload) {
+  var q = (payload && typeof payload.query === 'string') ? payload.query.trim() : '';
+  if (q.length < 2 || q.length > 60) return { error: 'invalid_input' };
+  var sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('Tab not found: ' + SHEET_NAME);
+  var last = sheet.getLastRow(), out = [];
+  if (last > HEADER_ROW) {
+    var n = last - HEADER_ROW, col = function (c) { return sheet.getRange(HEADER_ROW + 1, c, n, 1).getValues(); };
+    var tokens = col(COL.TOKEN), names = col(COL.NAME), stages = col(COL.STAGE), lq = q.toLowerCase(), uq = q.toUpperCase();
+    for (var i = 0; i < n && out.length < STAFF_SEARCH_MAX; i++) {
+      var tok = String(tokens[i][0]).trim(), name = String(names[i][0]).trim();
+      if (!tok) continue;
+      if (name.toLowerCase().indexOf(lq) === -1 && tok.toUpperCase().indexOf(uq) === -1) continue;
+      out.push({ ref: tok, name: name || 'Student', stage: String(stages[i][0]).trim() });
+    }
+  }
+  return { success: true, results: out };
+}
+
 /** Codes: auth_required, auth_invalid, not_staff, not_found, invalid_input, busy, server_error. */
 function staffAction_(action, idToken, payload) {
   try {
@@ -141,6 +195,7 @@ function staffAction_(action, idToken, payload) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     if (!isStaffEmail_(ss, who.email)) return { error: 'not_staff' };
     if (action === 'staffCheck') return { success: true };
+    if (action === 'staffSearch') return staffSearch_(ss, payload);
 
     var tok = (payload && typeof payload.token === 'string') ? payload.token.trim() : '';
     if (!/^[A-Za-z0-9_-]{3,64}$/.test(tok)) return { error: 'not_found' };

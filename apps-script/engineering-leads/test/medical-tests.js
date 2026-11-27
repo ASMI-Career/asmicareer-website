@@ -205,6 +205,47 @@ test('M13 staffSaveShortlist: validated, merged by group, text cell, only that r
   e.state.lockBusy = false; assert.strictEqual(e.snap(), snap);
 });
 
+const logRowsM = e => { const t = e.ss.getSheetByName('Staff Log'); return t ? t.rows.slice(1).filter(r => r.some(v => String(v) !== '')) : []; };
+function staffView() { const e = withStaff(); e.seed(3, { Name: 'Kabir Shah', Token: '26-AND-003', 'Approved Email': EMAIL2, 'Saved Shortlist': '', 'Document Status': '' }); return e; }
+test('M17 staffSearch: staff only; name or Token; 2+ characters; max 20; only ref, name, stage', () => {
+  const e = staffView();
+  assert.deepStrictEqual(e.post({ action: 'staffSearch', as: STAFF, query: 'kabir' }), { success: true, results: [{ ref: '26-AND-003', name: 'Kabir Shah', stage: 'Counselled' }] });
+  assert.deepStrictEqual(e.post({ action: 'staffSearch', as: STAFF, query: '26-and-002' }).results.map(x => x.name), ['Riya Patil'], 'by Token, any case');
+  for (const q of ['', 'a', undefined, 5, 'x'.repeat(61)]) assert.deepStrictEqual(e.post({ action: 'staffSearch', as: STAFF, query: q }), { error: 'invalid_input' });
+  assert.deepStrictEqual(e.post({ action: 'staffSearch', as: EMAIL, query: 'kabir' }), { error: 'not_staff' });
+  assert.deepStrictEqual(e.post({ action: 'staffSearch', query: 'kabir' }), { error: 'auth_required' });
+  ['9876543210', 'INQ-SECRET', EMAIL, EMAIL2].forEach(x => assert.ok(!JSON.stringify(e.post({ action: 'staffSearch', as: STAFF, query: 'a' + 'r' })).includes(x)));
+  const m = withStaff(); for (let r = 3; r <= 40; r++) m.seed(r, { Name: 'Many ' + r, Token: '26-AND-1' + r, 'Approved Email': '' });
+  assert.strictEqual(m.post({ action: 'staffSearch', as: STAFF, query: 'many' }).results.length, 20);
+});
+test('M18 staff view and edit of any student; students/strangers cannot; only the boolean true counts', () => {
+  const e = staffView(); const row2 = JSON.stringify(e.sheet.rows[1]);
+  assert.strictEqual(e.post({ action: 'getStudent', as: STAFF, asStaff: true, studentRef: '26-AND-003' }).data.name, 'Kabir Shah');
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: EMAIL, asStaff: true, studentRef: '26-AND-003' }), { error: 'not_staff' });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF }), { error: 'not_approved' });
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF, asStaff: 'true', studentRef: '26-AND-003' }), { error: 'not_approved' });
+  for (const bad of ['', undefined, '26-AND-999', "26-AND-003'", 5]) assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF, asStaff: true, studentRef: bad }), { error: 'not_found' });
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: '26-AND-003', colleges: { MCC: [{ name: 'Demo' }] } }), { success: true, count: 1 });
+  assert.strictEqual(e.post({ action: 'saveDocStatus', as: STAFF, asStaff: true, studentRef: '26-AND-003', data: { checked: ['x'] } }).success, true);
+  assert.ok(e.sheet.cell(3, 'Saved Shortlist').includes('Demo') && e.sheet.cell(3, 'Document Status').includes('"x"'));
+  assert.strictEqual(JSON.stringify(e.sheet.rows[1]), row2, 'the other student is untouched');
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: '26-AND-003', colleges: { A: 'x' } }), { error: 'invalid_input' });
+});
+test('M19 every staff action is logged first (never content); a log failure refuses the action; student actions are not logged; access ends with the Staff tab entry', () => {
+  const e = staffView();
+  e.post({ action: 'getStudent', as: STAFF, asStaff: true, studentRef: '26-AND-003' });
+  e.post({ action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: '26-AND-003', colleges: { MCC: [{ name: 'SECRET-COLLEGE' }] } });
+  let rows = logRowsM(e); assert.deepStrictEqual(rows.map(r => [r[1], r[2], r[3]]), [[STAFF, '26-AND-003', 'getStudent'], [STAFF, '26-AND-003', 'saveShortlist']]);
+  assert.ok(!JSON.stringify(e.ss.getSheetByName('Staff Log').rows).includes('SECRET-COLLEGE')); assert.strictEqual(e.ss.getSheetByName('Staff Log').formats['2,2'], '@');
+  e.post({ action: 'getStudent', as: EMAIL }); e.post({ action: 'saveDocStatus', as: EMAIL, data: { checked: ['a'] } }); assert.strictEqual(logRowsM(e).length, 2);
+  const log = e.ss.getSheetByName('Staff Log'), real = log.getRange; log.getRange = () => { throw new Error('Mock: log broken'); }; const snap = e.snap();
+  assert.deepStrictEqual(e.post({ action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: '26-AND-003', colleges: { MCC: [] } }), { error: 'server_error' }); assert.strictEqual(e.snap(), snap); log.getRange = real;
+  e.state.lockBusy = true; assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF, asStaff: true, studentRef: '26-AND-003' }), { error: 'server_error' }); e.state.lockBusy = false;
+  e.ss.getSheetByName('Staff').rows[1][1] = '';
+  assert.deepStrictEqual(e.post({ action: 'getStudent', as: STAFF, asStaff: true, studentRef: '26-AND-003' }), { error: 'not_staff' });
+  assert.ok(!e.state.logs.some(l => l.includes(STAFF)), 'no emails in the script log');
+});
+
 let p = 0, f = 0;
 for (const t of tests) { try { t.f(); p++; console.log('PASS ' + t.n); } catch (er) { f++; console.log('FAIL ' + t.n + '\n      -> ' + er.message.split('\n')[0]); if (process.env.VERBOSE) console.log(er.stack); } }
 console.log(`\n${p} passed, ${f} failed, ${tests.length} total`); process.exit(f ? 1 : 0);

@@ -986,6 +986,94 @@ test('50 staff and students stay separate: a staff email is not a student; a stu
   assert.ok(!env.state.logs.some(l => l.includes(STAFF) || l.includes(EMAIL)), 'no emails in logs');
 });
 
+
+// ─────────────────────────────────────────────────────────────── 15. staff view of any student (edit allowed, every action logged)
+const logRows = env => { const t = env.dash.getSheetByName('Staff Log'); return t ? t.rows.slice(1).filter(r => r.some(v => String(v) !== '')) : []; };
+function staffViewEnv() { const env = staffEnv(); seedStudent(env, 3, { 'Token': 'ENG-JKMNPQRS45', 'Approved Email': EMAIL2, 'Student Name': 'Other Student', 'Saved Shortlist': '', 'Document Status': '' }); return env; }
+
+test('51 staffSearch: staff only; name or Token; at least 2 characters; at most 20; Engineering rows only; returns only ref, name, stage', () => {
+  const env = staffViewEnv();
+  const r = staffPost(env, STAFF, { action: 'staffSearch', query: 'deshm' });
+  assert.deepStrictEqual(r, { success: true, results: [{ ref: TOK, name: 'Aarav Deshmukh', stage: 'Counselling Started' }] });
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSearch', query: 'jkmnp' }).results.map(x => x.name), ['Other Student'], 'by Token, any case');
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSearch', query: 'zzzzzz' }), { success: true, results: [] });
+  for (const q of ['', 'a', ' a ', undefined, null, 5, 'x'.repeat(61)]) assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSearch', query: q }), { error: 'invalid_input' }, 'query ' + String(q).slice(0, 5));
+  assert.deepStrictEqual(staffPost(env, EMAIL, { action: 'staffSearch', query: 'aarav' }), { error: 'not_staff' }, 'a student cannot search');
+  assert.deepStrictEqual(postJson(env, { action: 'staffSearch', query: 'aarav' }), { error: 'auth_required' });
+  const blob = JSON.stringify(staffPost(env, STAFF, { action: 'staffSearch', query: 'st' }));
+  ['9876543210', EMAIL, EMAIL2, 'secret-admin-note'].forEach(x => assert.ok(!blob.includes(x), 'must not leak ' + x));
+  setCell(env.dsheet, 3, 'Stream', 'Medical'); assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSearch', query: 'other' }).results, [], 'other-stream rows are not listed');
+  const many = buildEnvironment(); const st = many.dash.add(new MockSheet('Staff', ['Staff Email'])); st._set(2, 1, STAFF);
+  for (let r = 2; r <= 40; r++) seedStudent(many, r, { 'Token': 'ENG-ABCDEFGH' + (10 + r), 'Approved Email': '', 'Student Name': 'Many ' + r });
+  assert.strictEqual(staffPost(many, STAFF, { action: 'staffSearch', query: 'many' }).results.length, 20, 'capped at 20');
+});
+
+test('52 staff view: any Engineering student by Token (read), without the student\'s email; students and strangers cannot; a bad Token is not_found', () => {
+  const env = staffViewEnv();
+  const r = postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 });
+  assert.strictEqual(r.success, true); assert.strictEqual(r.data.name, 'Other Student');
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK }).data.name, 'Aarav Deshmukh', 'any student, not just one');
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: EMAIL, asStaff: true, studentRef: TOK2 }), { error: 'not_staff' }, 'a student cannot use asStaff on another student');
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: 'stranger@example.invalid', asStaff: true, studentRef: TOK }), { error: 'not_staff' });
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF }), { error: 'not_approved' }, 'staff WITHOUT asStaff are treated as any other (non-registered) account');
+  for (const bad of ['', undefined, 'ENG-SHORT', 'ENG-ZZZZZZZZZ9', "ENG-ABCDEFGH23'", 5]) assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: bad }), { error: 'not_found' }, 'ref ' + String(bad));
+  setCell(env.dsheet, 3, 'Stream', 'Medical'); assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 }), { error: 'not_found' });
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: 'true', studentRef: TOK }), { error: 'not_approved' }, 'only the boolean true counts');
+  const ok = r2 => assert.ok(!JSON.stringify(r2).includes('9876543210') && !JSON.stringify(r2).includes('secret-admin-note'));
+  ok(r);
+});
+
+test('53 staff may EDIT any student: shortlist, documents, profile, preference list; each write lands only on that student\'s row', () => {
+  const env = staffViewEnv(); const row2 = JSON.stringify(env.dsheet.rows[1]);
+  const list = { JOSAA: [{ institute: 'VJTI', branch: 'IT', seatType: 'AI' }] };
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: TOK2, colleges: list }), { success: true, count: 1 });
+  assert.strictEqual(JSON.parse(env.dsheet.cell(3, 'Saved Shortlist')).JOSAA[0].institute, 'VJTI');
+  assert.strictEqual(postJson(env, { action: 'saveDocStatus', as: STAFF, asStaff: true, studentRef: TOK2, data: { checked: ['jee-scorecard'], category: 'OBC', quota: '' } }).success, true);
+  assert.ok(env.dsheet.cell(3, 'Document Status').includes('jee-scorecard'));
+  assert.strictEqual(postJson(env, { action: 'saveProfile', as: STAFF, asStaff: true, studentRef: TOK2, profile: { gender: 'Female' } }).ok, true);
+  assert.strictEqual(env.dsheet.cell(3, 'Gender'), 'Female');
+  assert.strictEqual(postJson(env, { action: 'savePreferenceList', as: STAFF, asStaff: true, studentRef: TOK2, counselling: 'JOSAA', items: [{ institute: 'IIT Bombay', program: 'CSE', quota: 'AI', gender: 'all', choiceCode: '', tag: 'safe' }] }).ok, true);
+  assert.strictEqual(postJson(env, { action: 'getPreferenceList', as: STAFF, asStaff: true, studentRef: TOK2, counselling: 'JOSAA' }).items.length, 1);
+  assert.strictEqual(JSON.stringify(env.dsheet.rows[1]), row2, 'the other student\'s row is untouched');
+  const before = snapshot(env);
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: TOK2, colleges: { A: 'x' } }), { error: 'invalid_input' }, 'the same input checks apply to staff');
+  assert.strictEqual(snapshot(env), before);
+});
+
+test('54 every staff action is logged first (time, staff email, Token, action; never content); a log failure refuses the action; student actions are not logged', () => {
+  const env = staffViewEnv();
+  postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 });
+  postJson(env, { action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: TOK2, colleges: { JOSAA: [{ institute: 'SECRET-COLLEGE-NAME' }] } });
+  postJson(env, { action: 'saveDocStatus', as: STAFF, asStaff: true, studentRef: TOK, data: { checked: ['jee-scorecard'] } });
+  let rows = logRows(env); assert.strictEqual(rows.length, 3);
+  assert.deepStrictEqual(rows.map(r => [r[1], r[2], r[3]]), [[STAFF, TOK2, 'getStudent'], [STAFF, TOK2, 'saveShortlist'], [STAFF, TOK, 'saveDocStatus']]);
+  assert.ok(Object.prototype.toString.call(rows[0][0]) === '[object Date]');
+  assert.ok(!JSON.stringify(env.dash.getSheetByName('Staff Log').rows).includes('SECRET-COLLEGE-NAME') && !JSON.stringify(env.dash.getSheetByName('Staff Log').rows).includes('jee-scorecard'), 'no content in the log');
+  assert.strictEqual(env.dash.getSheetByName('Staff Log').formats['2,2'], '@', 'plain-text cells');
+  getStudent(env, EMAIL); postJson(env, { action: 'saveDocStatus', as: EMAIL, data: { checked: ['a'] } });
+  assert.strictEqual(logRows(env).length, 3, 'a student\'s own actions are not staff actions');
+  // refusals are not logged as access, and a log failure blocks the action
+  postJson(env, { action: 'getStudent', as: EMAIL, asStaff: true, studentRef: TOK2 }); assert.strictEqual(logRows(env).length, 3);
+  const log = env.dash.getSheetByName('Staff Log'); const real = log.getRange; log.getRange = function () { throw new Error('Mock: log tab broken'); };
+  const snap = snapshot(env);
+  assert.deepStrictEqual(postJson(env, { action: 'saveShortlist', as: STAFF, asStaff: true, studentRef: TOK2, colleges: { JOSAA: [] } }), { error: 'server_error' }, 'no log, no action');
+  assert.strictEqual(snapshot(env), snap); log.getRange = real;
+  env.state.lockBusy = true; assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 }), { error: 'server_error' }, 'lock busy while logging => refused');
+  assert.strictEqual(env.state.lockHeld, false);
+  env.state.lockBusy = false; env.dash.sheets['Staff Log'] = undefined; delete env.dash.sheets['Staff Log'];
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 }).success, true, 'the tab is created on demand');
+  assert.deepStrictEqual(env.dash.getSheetByName('Staff Log').rows[0].slice(0, 4), ['Time', 'Staff Email', 'Student Token', 'Action']);
+  assert.ok(!env.state.logs.some(l => l.includes(STAFF)), 'no emails in the script log');
+});
+
+test('55 staff access ends the moment the email leaves the Staff tab', () => {
+  const env = staffViewEnv();
+  assert.strictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 }).success, true);
+  env.dash.getSheetByName('Staff').rows[1][1] = '';
+  assert.deepStrictEqual(postJson(env, { action: 'getStudent', as: STAFF, asStaff: true, studentRef: TOK2 }), { error: 'not_staff' });
+  assert.deepStrictEqual(staffPost(env, STAFF, { action: 'staffSearch', query: 'aarav' }), { error: 'not_staff' });
+});
+
 // ─────────────────────────────────────────────────────────────── runner
 let pass = 0, fail = 0;
 const lines = [];

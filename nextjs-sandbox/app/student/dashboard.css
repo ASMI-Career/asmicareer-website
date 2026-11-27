@@ -1722,3 +1722,7 @@ input[type="range"]::-moz-range-thumb {
 @media print {
   :root[data-stream="engineering"] .dg-chips { display: none !important; }
 }
+
+
+/* Staff viewing a student: a fixed 40px bar sits on top, so the fixed sidebar starts below it. */
+.student-body.staff-view .sidebar { top: 40px; }

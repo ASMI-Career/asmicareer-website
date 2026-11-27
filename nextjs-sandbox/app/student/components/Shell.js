@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export default function Shell(props) {
-  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported, signOut, switchStudent } = props;
+  const { config, children, activeTab, initials, setActiveTab, sidebarCollapsed, studentName, toggleSidebar, profileSupported, signOut, switchStudent, staffExit } = props;
 
   // Only the modules this stream has appear in the menus.
   const navItems = config.nav.filter(item => config.modules.includes(item.id));
@@ -14,7 +14,13 @@ export default function Shell(props) {
   }, [activeTab]);
 
   return (
-    <div className="student-body">
+    <div className={`student-body${staffExit ? ' staff-view' : ''}`} style={staffExit ? { paddingTop: 40 } : undefined}>
+      {staffExit && (
+        <div role="status" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9998, background: '#b45309', color: '#fff', padding: '8px 14px', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+          <span>Viewing as staff: {studentName}. What you change is saved to this student and recorded in the Staff Log.</span>
+          <button onClick={staffExit} style={{ background: '#fff', color: '#b45309', border: 0, borderRadius: 8, padding: '4px 12px', fontWeight: 800, cursor: 'pointer' }}>Exit</button>
+        </div>
+      )}
       <div className="dashboard-shell">
 
         {/* ── SIDEBAR ── */}

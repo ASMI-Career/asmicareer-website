@@ -59,6 +59,17 @@ Push the branch, wait for the preview, and open the **branch preview** URL. *(Ea
 | 13 | Click **Sign out** | Back to sign-in; cached data for that student gone from `localStorage` (keys `asmi_student:g_…`) |
 | 14 | Try an **iPhone Safari**, an **Android Chrome**, and the **WhatsApp / Instagram in-app browser** | Note which work. In-app browsers may block Google sign-in. *Not verified.* |
 | 15 | Executions log (Apps Script) | No stack traces visible to the browser; logs contain no emails or tokens |
+| **Staff view of any student** (a staff Google account opens `/student`) | | |
+| V1 | Sign in at `<preview>/student` with a **staff** Gmail that is **not** on any student row | The page shows **Staff: find a student** (no student data) |
+| V2 | Type 2+ letters of a test student's name | A short list appears with each student's name, stage and **Medical** or **Engineering** |
+| V3 | Click a student | Their normal dashboard opens with an orange bar: **Viewing as staff: <name> … Exit** |
+| V4 | Tick a document and shortlist an institute as staff | Saved on **that student's** row only; other rows unchanged |
+| V5 | Open the sheet's **Staff Log** tab | One line per action: time, **your staff email**, the student's **Token**, the action (`getStudent`, `saveDocStatus` …). **No** document or college names |
+| V6 | Click **Exit**, then open a different student | The first student's data is gone from the screen; the second opens |
+| V7 | Sign in with a **student** Gmail and add `?staff=1` to the address | Still only their own dashboard or "not registered": a student never gets the staff screen |
+| V8 | Remove the staff email from the **Staff** tab, reload and sign in | No staff screen ("not registered"), and no access |
+| V9 | (Copy only) Rename the **Staff Log** tab to something else and open a student as staff | The tab is created again; if it **cannot** be written, the student does not open ("could not open that student") |
+| V10 | Staff Gmail that is **also** a student row: open `<preview>/student?staff=1` | The staff screen; without `?staff=1` it opens the student dashboard |
 | **Counsellor tools (staff)** | | |
 | S1 | Open `<preview>/counsellor/?token=<a medical test student's Token from the copy sheet>` | A "Staff sign-in" box covers the page. In the Network tab there is **no** call to the script yet |
 | S2 | Sign in with a **student** test Gmail (not on the Staff tab) | "Not on the staff list". Only one call was made (`staffCheck`); no student data was requested |
@@ -70,6 +81,13 @@ Push the branch, wait for the preview, and open the **branch preview** URL. *(Ea
 | S8 | Delete the **Staff** tab (copy only), reload, sign in as that staff Gmail | "Not on the staff list" (fails closed). Put the tab back afterwards |
 | S9 | Call a script URL directly in the browser: `<exec>?action=staffGetStudent&token=<Token>` | `{"error":"invalid_action"}` |
 | S10 | As a signed-in **student**, try the counsellor page | Refused (the student's email is not on the Staff tab), even if you know a Token |
+
+## Staff view: what it is and the rules
+- A Google account on the **Staff** tab can open **any** student by name or Token, and **edit** them (shortlist, documents, profile, preference list). Staff do not become the student's Google account.
+- **Every** staff read or save is written to the **Staff Log** tab **before** it happens: time, staff email, student Token, action. Never content. If the line cannot be written, the action is refused.
+- Staff are asked for the search screen when their account is **not** a student, or when the link has `?staff=1`.
+- The log is plain data in the sheet: protect the workbook, and review the Staff Log from time to time. Anyone who can edit the sheet can also edit the log.
+- A compromised staff Google account exposes every student. Keep the Staff list short, ask staff to use 2-step verification, and remove leavers the same day.
 
 ## F. Going live (only after you approve; each step separate)
 1. Merge the website PR **with `NEXT_PUBLIC_GOOGLE_CLIENT_ID` still EMPTY in Production**. The page still uses the old link flow, so nothing changes for students.
