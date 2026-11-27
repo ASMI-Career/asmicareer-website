@@ -39,7 +39,8 @@ export default function GoogleGate({ children }) {
     const found = []; let sawError = false;
     for (const id of STREAMS) {
       const endpoint = endpointFor(id); if (!endpoint) continue;
-      try { const r = await callDash(endpoint, 'staffCheck'); if (r && r.success) found.push({ streamId: id, endpoint }); else if (r && r.error !== 'not_staff' && r.error !== 'auth_invalid' && r.error !== 'auth_required') sawError = true; } catch (e) { sawError = true; }
+      // invalid_action = that stream's script is the old one / not set up: not an error for this account
+      try { const r = await callDash(endpoint, 'staffCheck'); if (r && r.success) found.push({ streamId: id, endpoint }); else if (r && r.error !== 'not_staff' && r.error !== 'invalid_action' && r.error !== 'auth_invalid' && r.error !== 'auth_required') sawError = true; } catch (e) { sawError = true; }
     }
     return { found, sawError };
   }
@@ -68,7 +69,7 @@ export default function GoogleGate({ children }) {
       if (res && res.success && res.data) options.push({ streamId: id, endpoint, ref: '', name: res.data.name || 'Student', prefetched: res });
       else if (res && res.success && Array.isArray(res.choose)) res.choose.forEach(c => options.push({ streamId: id, endpoint, ref: c.ref, name: c.name || 'Student', prefetched: null }));
       else if (res && (res.error === 'auth_invalid' || res.error === 'auth_required')) { setPhase('signin'); return; }
-      else if (!res || res.error !== 'not_approved') sawError = true;
+      else if (!res || (res.error !== 'not_approved' && res.error !== 'invalid_action')) sawError = true;   // invalid_action = that stream's script is the old one / not set up yet
     }
     if (options.length === 1) { await open(options[0], options); return; }
     if (options.length > 1) { setChoices(options); setPhase('choose'); return; }
