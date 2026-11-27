@@ -156,8 +156,10 @@ var STUDENT_HEADERS = {
   counsellorWhatsapp: 'Counsellor WhatsApp',
   whatsappGroupLink:  'WhatsApp Group Link',
   savedShortlist:     'Saved Shortlist',
-  documentStatus:     'Document Status'
+  documentStatus:     'Document Status',
+  approvedEmail:      'Approved Email'      // staff type the student's Google email here; it is the ONLY way into a dashboard row
 };
+var STAFF_ACTIONS = { staffCheck: true, staffSearch: true, staffGetStudent: true, staffSaveShortlist: true };
 var DASH_ACTIONS = { getStudent: true, saveShortlist: true, saveDocStatus: true, saveProfile: true, savePreferenceList: true, getPreferenceList: true };
 var SHORTLIST_MAX_CHARS = 40000, SHORTLIST_MAX_ITEMS = 300, SHORTLIST_MAX_GROUPS = 10, SHORTLIST_ITEM_MAX_CHARS = 2000, DOC_MAX_IDS = 500;
 
@@ -185,10 +187,11 @@ function doPost(e) {
     // The student dashboard saves with a JSON body ({ action: 'saveShortlist', token, colleges }); the lead form posts form fields.
     var body = parseJsonBody_(e);
     if (body && body.action) {
+      if (STAFF_ACTIONS[body.action]) return json_(staffAction_(body.action, body.idToken, body));   // counsellor tools: a signed-in STAFF email, not a student
       if (!DASH_ACTIONS[body.action]) return json_({ error: 'invalid_action' });
-      var out = dashboardAction_(body.action, body.token, body);
-      // saveProfile answers { ok: true, profile } or { ok: false, error }; the early exits (not_found ...) are put into that shape too.
-      if ((body.action === 'saveProfile' || body.action === 'savePreferenceList') && out && out.ok === undefined) out = { ok: false, error: out.error || 'server_error' };
+      var out = dashboardAction_(body.action, body.idToken, body);   // the Google ID token travels in the POST body, never in a URL
+      // saveProfile / the preference-list actions answer { ok: true, ... } or { ok: false, error }; the early exits (not_approved ...) are put into that shape too.
+      if ((body.action === 'saveProfile' || body.action === 'savePreferenceList' || body.action === 'getPreferenceList') && out && out.ok === undefined) out = { ok: false, error: out.error || 'server_error' };
       return json_(out);
     }
     return json_(handleSubmission_((e && e.parameter) || {}));
@@ -200,21 +203,12 @@ function doPost(e) {
 }
 
 /**
- * GET ?action=getStudent&token=...            -> the student's dashboard data
- * GET ?action=saveDocStatus&token=...&data=.. -> saves the document checklist (same call the Medical dashboard makes)
- * GET with no action                          -> health check only. Exposes nothing about sheets or configuration.
- * (saveShortlist is POST only.)
+ * GET with no action -> health check only. Exposes nothing about sheets or configuration.
+ * GET with any action -> { error: 'invalid_action' }. Dashboard actions are POST only and need a Google ID token (see dashboardAction_).
  */
 function doGet(e) {
   var p = (e && e.parameter) || {};
-  if (p.action) {
-    if (p.action === 'getStudent' || p.action === 'saveDocStatus') return json_(dashboardAction_(p.action, p.token, { data: p.data }));
-    if (p.action === 'getPreferenceList') {                       // GET: token, counselling (JOSAA or CAP)
-      var got = dashboardAction_('getPreferenceList', p.token, { counselling: p.counselling });
-      return json_(got && got.ok === undefined ? { ok: false, error: got.error || 'server_error' } : got);
-    }
-    return json_({ error: 'invalid_action' });
-  }
+  if (p.action) return json_({ error: 'invalid_action' });   // every dashboard action is a POST with a Google sign-in; a link alone does nothing
   return json_({ ok: true, service: 'asmi-engineering-leads', version: SCRIPT_VERSION });
 }
 
@@ -476,10 +470,10 @@ function parseJsonBody_(e) {
 }
 
 /** Always returns a plain object, never throws. Error codes: not_found, invalid_input, busy, locked, rate_limited, validation, server_error. */
-function dashboardAction_(action, token, payload) {
+function dashboardAction_(action, idToken, payload) {
   try {
-    var tok = String(token === undefined || token === null ? '' : token).trim();
-    if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };            // wrong shape: never even looks at the sheet
+    var who = verifyGoogleIdToken_(idToken);                              // not signed in / bad sign-in: never even looks at the sheet
+    if (who.error) return { error: who.error };
 
     if (action === 'saveProfile' && !PROFILE_EDIT_ENABLED) return { error: 'locked' };   // the switch at the top of the file
     if (action === 'savePreferenceList' && !PREF_LIST_EDIT_ENABLED) return { error: 'locked' };
@@ -490,10 +484,25 @@ function dashboardAction_(action, token, payload) {
     if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
     var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Student dashboard page/' + DASHBOARD_TAB);
 
-    var row = findTokenRow_(sheet, cols.token, tok);
-    if (!row) return { error: 'not_found' };
-    // This script only serves engineering students: a Medical (or blank) Stream behind an ENG- token is "not found".
-    if (String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+    // Which row? Only rows whose Approved Email cell lists the verified email (a cell may list several emails, and one email may be on several rows,
+    // e.g. twins with a shared parent email). One match opens at once; several need the page to say which student (studentRef = that row's Token),
+    // and the script re-checks that the email is really on that row every time. Only Engineering rows with a Token can be served.
+    // STAFF VIEW: a staff email (Staff tab) may open ANY Engineering student by Token when the page says asStaff. Every such call is written to the
+    // "Staff Log" tab first; if the log cannot be written the call is refused. A non-staff email that sends asStaff gets not_staff.
+    var pick;
+    if (payload && payload.asStaff === true) {
+      if (!isStaffEmail_(dashSS, who.email)) return { error: 'not_staff' };
+      pick = resolveStaffRow_(sheet, cols, payload.studentRef);
+      if (pick.error) return { error: pick.error };
+      if (!logStaffAccess_(dashSS, who.email, pick.token, action)) return { error: 'server_error' };
+    } else {
+      pick = resolveStudentRow_(sheet, cols, who.email, payload && payload.studentRef);
+      if (pick.error) return { error: pick.error };
+      if (pick.choose) return action === 'getStudent' ? { success: true, choose: pick.choose } : { error: 'student_required' };   // names only, no data
+    }
+    var row = pick.row;
+    // The Token column is only the student's internal row id (used for Preference Lists and the Profile Log), never a key to log in.
+    var tok = pick.token;
 
     if (action === 'getStudent') return { success: true, data: readStudent_(sheet, row, cols) };
     if (action === 'saveProfile') return saveProfile_(dashSS, sheet, cols, row, tok, payload && payload.profile);   // has its own rate limit and lock
@@ -528,14 +537,274 @@ function dashboardAction_(action, token, payload) {
   }
 }
 
-/** Row number of the exact token (trimmed), or 0. Reads only the Token column. */
-function findTokenRow_(sheet, tokenCol, token) {
+// ════════════════════════════════════════════════════════════════
+//  GOOGLE SIGN-IN  (replaces "the token in the link is the key")
+//  The page sends a Google ID token in the POST body. We ask Google whether it is genuine, then require its verified email to equal exactly
+//  one "Approved Email" cell. Script Property GOOGLE_CLIENT_ID = the OAuth Web client ID (a public value, not a secret).
+// ════════════════════════════════════════════════════════════════
+
+var GOOGLE_TOKENINFO_URL = 'https://oauth2.googleapis.com/tokeninfo?id_token=';
+var GOOGLE_ISSUERS = ['accounts.google.com', 'https://accounts.google.com'];
+var AUTH_CACHE_MAX_S = 300;                        // a verified token is remembered this long at most (the email is still looked up in the sheet every time)
+var EMAIL_RE = /^[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+var EMAIL_MAX = 254;
+
+function sha256Hex_(text) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, text).map(function (b) { var x = (b < 0 ? b + 256 : b).toString(16); return x.length === 1 ? '0' + x : x; }).join('');
+}
+function normEmail_(raw) { return String(raw === null || raw === undefined ? '' : raw).trim().toLowerCase(); }
+function validEmail_(e) { return e.length > 0 && e.length <= EMAIL_MAX && EMAIL_RE.test(e); }
+
+/** Returns { email } for a genuine token, else { error: 'auth_required' | 'auth_invalid' | 'server_error' }. Never throws, never returns details. */
+function verifyGoogleIdToken_(idToken) {
+  try {
+    var t = (typeof idToken === 'string') ? idToken.trim() : '';
+    if (!t) return { error: 'auth_required' };
+    if (t.length > 4096 || !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(t)) return { error: 'auth_invalid' };
+    var clientId = prop_('GOOGLE_CLIENT_ID');
+    if (!clientId) { log_('GOOGLE_CLIENT_ID is not set.'); return { error: 'server_error' }; }
+
+    var cacheKey = 'gid_' + sha256Hex_(t), cache = null;
+    try { cache = CacheService.getScriptCache(); var hit = cache.get(cacheKey); if (hit) return { email: hit }; } catch (ce) { cache = null; }
+
+    var res = UrlFetchApp.fetch(GOOGLE_TOKENINFO_URL + encodeURIComponent(t), { muteHttpExceptions: true });
+    var code = res.getResponseCode();
+    if (code >= 500) { log_('Google token check unavailable (HTTP ' + code + ').'); return { error: 'server_error' }; }
+    if (code !== 200) return { error: 'auth_invalid' };
+    var info = JSON.parse(res.getContentText());
+    var expMs = Number(info.exp) * 1000;
+    var email = normEmail_(info.email);
+    if (info.aud !== clientId) return { error: 'auth_invalid' };                           // a token made for some other app
+    if (GOOGLE_ISSUERS.indexOf(info.iss) === -1) return { error: 'auth_invalid' };
+    if (!isFinite(expMs) || expMs <= now_().getTime()) return { error: 'auth_invalid' };
+    if (String(info.email_verified) !== 'true') return { error: 'auth_invalid' };
+    if (!validEmail_(email)) return { error: 'auth_invalid' };
+    if (cache) { try { cache.put(cacheKey, email, Math.max(1, Math.min(AUTH_CACHE_MAX_S, Math.floor((expMs - now_().getTime()) / 1000)))); } catch (pe) { /* caching is optional */ } }
+    return { email: email };
+  } catch (err) {
+    log_('Google token check failed: ' + describeError_(err));
+    return { error: 'server_error' };
+  }
+}
+
+/** Every valid email in an Approved Email cell. A cell may hold several, separated by commas, semicolons, spaces or new lines. */
+function emailParts_(cell) {
+  var parts = String(cell === null || cell === undefined ? '' : cell).split(/[\s,;]+/).filter(function (x) { return x !== ''; }), valid = [], invalid = 0;
+  parts.forEach(function (x) { var e = normEmail_(x); if (validEmail_(e)) { if (valid.indexOf(e) === -1) valid.push(e); } else invalid++; });
+  return { valid: valid, invalid: invalid, blank: parts.length === 0 };
+}
+var MAX_ROWS_PER_EMAIL = 10;      // one email on more rows than this is treated as a typo and refused
+
+/** Engineering rows with a Token whose Approved Email cell lists `email`: [{ row, token, name }]. */
+function candidateRows_(sheet, cols, email) {
+  var last = sheet.getLastRow();
+  if (last <= HEADER_ROW || !validEmail_(email)) return [];
+  var n = last - HEADER_ROW, col = function (c) { return sheet.getRange(HEADER_ROW + 1, c, n, 1).getValues(); };
+  var emails = col(cols.approvedEmail), tokens = col(cols.token), streams = col(cols.stream), names = col(cols.name), out = [];
+  for (var i = 0; i < n; i++) {
+    if (emailParts_(emails[i][0]).valid.indexOf(email) === -1) continue;
+    if (String(streams[i][0]).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) continue;
+    var token = String(tokens[i][0]).trim();
+    if (!token) continue;
+    out.push({ row: HEADER_ROW + 1 + i, token: token, name: String(names[i][0]).trim() });
+  }
+  return out;
+}
+
+/** { row, token } | { choose: [{ ref, name }] } | { error: 'not_approved' }. studentRef (a Token) only ever picks AMONG the rows this email is on. */
+function resolveStudentRow_(sheet, cols, email, studentRef) {
+  var c = candidateRows_(sheet, cols, email);
+  if (!c.length) return { error: 'not_approved' };
+  if (c.length > MAX_ROWS_PER_EMAIL) { log_('One Approved Email is on more than ' + MAX_ROWS_PER_EMAIL + ' rows; nobody is served until staff fix it.'); return { error: 'not_approved' }; }
+  var ref = (typeof studentRef === 'string') ? studentRef.trim() : '';
+  if (ref) {
+    for (var i = 0; i < c.length; i++) if (c[i].token === ref) return { row: c[i].row, token: c[i].token };
+    return { error: 'not_approved' };
+  }
+  if (c.length === 1) return { row: c[0].row, token: c[0].token };
+  return { choose: c.map(function (x) { return { ref: x.token, name: x.name || 'Student' }; }) };
+}
+
+// ── Sheet check: which ACTIVE students cannot sign in? Writes only to the "Email Check" tab, inside the workbook. Nothing is emailed or returned by the web app. ──
+var EMAIL_CHECK_TAB = 'Email Check';
+var INACTIVE_STAGES = ['Admitted'];                // students at these stages are not checked (assumed: the last stage in the dashboard config; change if you use another)
+
+/** Run from the editor (or a time trigger). Lists active students whose Approved Email is blank, not a valid email, or on too many rows, in the "Email Check" tab.
+ *  Shared emails (twins with a parent email) are listed under "Shared emails" for information: they are allowed, but check they are intended. */
+function checkApprovedEmails() {
+  var cfg = getConfig_();
+  var ss = SpreadsheetApp.openById(cfg.dashboardId);
+  var sheet = ss.getSheetByName(DASHBOARD_TAB);
+  if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
+  var cols = resolveHeaders_(sheet, { token: STUDENT_HEADERS.token, name: STUDENT_HEADERS.name, stream: STUDENT_HEADERS.stream, stage: STUDENT_HEADERS.stage, approvedEmail: STUDENT_HEADERS.approvedEmail }, 'Email check/' + DASHBOARD_TAB);
+  var last = sheet.getLastRow(), problems = [], shared = [], checked = 0;
+  if (last > HEADER_ROW) {
+    var vals = sheet.getRange(HEADER_ROW + 1, 1, last - HEADER_ROW, sheet.getLastColumn()).getValues();
+    var cell = function (row, key) { var x = row[cols[key] - 1]; return (x === null || x === undefined) ? '' : String(x).trim(); };
+    var isEng = function (row) { return cell(row, 'stream').toLowerCase() === STREAM_VALUE.toLowerCase() && !!cell(row, 'token'); };
+    var byEmail = {};                                    // every Engineering row with a Token can sign in, whatever its stage
+    vals.forEach(function (row, i) { if (!isEng(row)) return; emailParts_(row[cols.approvedEmail - 1]).valid.forEach(function (e) { (byEmail[e] = byEmail[e] || []).push(HEADER_ROW + 1 + i); }); });
+    var inactive = INACTIVE_STAGES.map(function (x) { return x.toLowerCase(); });
+    vals.forEach(function (row, i) {
+      var rowNo = HEADER_ROW + 1 + i;
+      if (cell(row, 'stream').toLowerCase() !== STREAM_VALUE.toLowerCase()) return;
+      if (!cell(row, 'token') && !cell(row, 'name')) return;
+      if (inactive.indexOf(cell(row, 'stage').toLowerCase()) !== -1) return;
+      checked++;
+      var name = cell(row, 'name') || '(no name)', p = emailParts_(row[cols.approvedEmail - 1]);
+      if (p.blank || (!p.valid.length && !p.invalid)) { problems.push([rowNo, name, 'Blank', '']); return; }
+      if (p.invalid) { problems.push([rowNo, name, 'Not a valid email', 'One or more entries in the cell are not valid emails.']); return; }
+      var others = {}, many = false;
+      p.valid.forEach(function (e) { byEmail[e].forEach(function (r) { if (r !== rowNo) others[r] = true; }); if (byEmail[e].length > MAX_ROWS_PER_EMAIL) many = true; });
+      if (many) problems.push([rowNo, name, 'Email on too many rows', 'More than ' + MAX_ROWS_PER_EMAIL + ' rows share one email.']);
+      else if (Object.keys(others).length) shared.push([rowNo, name, 'Shared', 'Shares an email with rows: ' + Object.keys(others).join(', ')]);
+    });
+  }
+  var out = ss.getSheetByName(EMAIL_CHECK_TAB) || ss.insertSheet(EMAIL_CHECK_TAB);
+  out.clearContents();
+  var all = [['Sheet row', 'Student Name', 'Problem', 'Detail']].concat(problems.length ? problems : [['', 'No problems found among ' + checked + ' active students.', '', '']]);
+  if (shared.length) all = all.concat([['', 'Shared emails (allowed; check these are intended):', '', '']]).concat(shared);
+  out.getRange(1, 1, all.length, 4).setNumberFormat('@').setValues(all.map(function (r) { return r.map(String); }));
+  out.getRange(all.length + 2, 1, 1, 2).setValues([['Last run', now_().toString()]]);
+  log_('Email check: ' + checked + ' active students, ' + problems.length + ' problem(s), ' + shared.length + ' sharing an email.');
+  return { checked: checked, problems: problems.length, shared: shared.length };
+}
+
+
+// ════════════════════════════════════════════════════════════════
+//  STAFF SIGN-IN  (counsellor tools: /counsellor, /engineering-counsellor)
+//  Same Google check as students, but the verified email must be listed on the "Staff" tab of the Dashboard workbook
+//  (a column headed "Staff Email"). Staff then name a student by that student's Token (an internal id shown in the sheet).
+//  No staff email, no data: there is no token-only path any more.
+// ════════════════════════════════════════════════════════════════
+
+var STAFF_TAB = 'Staff';
+var STAFF_EMAIL_HEADER = 'Staff Email';
+
+function isStaffEmail_(ss, email) {
+  var sh = ss.getSheetByName(STAFF_TAB);
+  if (!sh) { log_('Staff tab not found; no staff can sign in.'); return false; }
+  var lastCol = sh.getLastColumn(), last = sh.getLastRow();
+  if (lastCol < 1 || last <= HEADER_ROW) return false;
+  var head = sh.getRange(HEADER_ROW, 1, 1, lastCol).getValues()[0], col = 0, want = normHeader_(STAFF_EMAIL_HEADER);
+  for (var i = 0; i < head.length; i++) if (normHeader_(head[i]) === want) { if (col) { log_('Staff tab has the "' + STAFF_EMAIL_HEADER + '" header twice; closed.'); return false; } col = i + 1; }
+  if (!col) { log_('Staff tab has no "' + STAFF_EMAIL_HEADER + '" header.'); return false; }
+  var vals = sh.getRange(HEADER_ROW + 1, col, last - HEADER_ROW, 1).getValues();
+  for (var r = 0; r < vals.length; r++) if (normEmail_(vals[r][0]) === email) return true;
+  return false;
+}
+
+/** Row of this exact Token, or 0. */
+function findRowByToken_(sheet, tokenCol, token) {
   var last = sheet.getLastRow();
   if (last <= HEADER_ROW) return 0;
   var vals = sheet.getRange(HEADER_ROW + 1, tokenCol, last - HEADER_ROW, 1).getValues();
   for (var i = 0; i < vals.length; i++) if (String(vals[i][0]).trim() === token) return HEADER_ROW + 1 + i;
   return 0;
 }
+
+var STAFF_LOG_TAB = 'Staff Log';
+var STAFF_SEARCH_MAX = 20;
+
+/** Engineering row of this exact Token: { row, token } | { error: 'not_found' }. Used only after the Staff tab said the caller is staff. */
+function resolveStaffRow_(sheet, cols, ref) {
+  var tok = (typeof ref === 'string') ? ref.trim() : '';
+  if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };
+  var row = findRowByToken_(sheet, cols.token, tok);
+  if (!row || String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+  return { row: row, token: tok };
+}
+
+/** One line per staff action on a student: time, staff email, student Token, action. Never the content. Returns false if it could not be written (the action is then refused). */
+function logStaffAccess_(ss, staffEmail, token, action) {
+  var lock = LockService.getScriptLock(), locked = false;
+  try {
+    try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (e) { locked = false; }
+    if (!locked) { log_('Staff Log: could not get the lock.'); return false; }
+    var sh = ss.getSheetByName(STAFF_LOG_TAB);
+    if (!sh) { sh = ss.insertSheet(STAFF_LOG_TAB); sh.getRange(1, 1, 1, 4).setNumberFormat('@').setValues([['Time', 'Staff Email', 'Student Token', 'Action']]); }
+    var r = Math.max(sh.getLastRow(), HEADER_ROW) + 1;
+    sh.getRange(r, 1, 1, 4).setNumberFormats([['yyyy-mm-dd hh:mm:ss', '@', '@', '@']]);   // text: nothing is read as a formula
+    sh.getRange(r, 1, 1, 4).setValues([[now_(), staffEmail, token, action]]);
+    return true;
+  } catch (err) {
+    log_('Staff Log write failed: ' + describeError_(err));
+    return false;
+  } finally {
+    if (locked) { try { lock.releaseLock(); } catch (e2) { /* ignore */ } }
+  }
+}
+
+/** staffSearch { query }: up to 20 Engineering students whose name or Token contains the query. Returns { ref, name, stage } only. */
+function staffSearch_(ss, payload) {
+  var q = (payload && typeof payload.query === 'string') ? payload.query.trim() : '';
+  if (q.length < 2 || q.length > 60) return { error: 'invalid_input' };
+  var sheet = ss.getSheetByName(DASHBOARD_TAB);
+  if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
+  var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Staff search/' + DASHBOARD_TAB), last = sheet.getLastRow(), out = [];
+  if (last > HEADER_ROW) {
+    var n = last - HEADER_ROW, col = function (c) { return sheet.getRange(HEADER_ROW + 1, c, n, 1).getValues(); };
+    var tokens = col(cols.token), names = col(cols.name), streams = col(cols.stream), stages = col(cols.stage), lq = q.toLowerCase(), uq = q.toUpperCase();
+    for (var i = 0; i < n && out.length < STAFF_SEARCH_MAX; i++) {
+      var tok = String(tokens[i][0]).trim(), name = String(names[i][0]).trim();
+      if (!tok || String(streams[i][0]).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) continue;
+      if (name.toLowerCase().indexOf(lq) === -1 && tok.toUpperCase().indexOf(uq) === -1) continue;
+      out.push({ ref: tok, name: name || 'Student', stage: String(stages[i][0]).trim() });
+    }
+  }
+  return { success: true, results: out };
+}
+
+/** staffCheck {} | staffGetStudent { token } | staffSaveShortlist { token, colleges }. Codes: auth_required, auth_invalid, not_staff, not_found, invalid_input, busy, server_error. */
+function staffAction_(action, idToken, payload) {
+  try {
+    var who = verifyGoogleIdToken_(idToken);
+    if (who.error) return { error: who.error };
+    var cfg = getConfig_();
+    var dashSS = SpreadsheetApp.openById(cfg.dashboardId);
+    if (!isStaffEmail_(dashSS, who.email)) return { error: 'not_staff' };
+    if (action === 'staffCheck') return { success: true };
+    if (action === 'staffSearch') return staffSearch_(dashSS, payload);
+
+    var tok = String(payload && payload.token !== undefined && payload.token !== null ? payload.token : '').trim();
+    if (!TOKEN_REGEX.test(tok)) return { error: 'not_found' };
+    var sheet = dashSS.getSheetByName(DASHBOARD_TAB);
+    if (!sheet) throw new Error('Dashboard tab not found: ' + DASHBOARD_TAB);
+    var cols = resolveHeaders_(sheet, STUDENT_HEADERS, 'Staff tools/' + DASHBOARD_TAB);
+
+    if (action === 'staffGetStudent') {
+      var row = findRowByToken_(sheet, cols.token, tok);
+      if (!row || String(sheet.getRange(row, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+      return { success: true, data: readStudent_(sheet, row, cols) };
+    }
+    if (action === 'staffSaveShortlist') {
+      var incoming = validateShortlist_(payload && payload.colleges);
+      if (!incoming) return { error: 'invalid_input' };
+      var lock = LockService.getScriptLock(), locked = false;
+      try { locked = lock.tryLock(LOCK_WAIT_MS); } catch (lockErr) { log_('Lock error: ' + describeError_(lockErr)); }
+      if (!locked) return { error: 'busy' };
+      try {
+        var r2 = findRowByToken_(sheet, cols.token, tok);
+        if (!r2 || String(sheet.getRange(r2, cols.stream).getValue()).trim().toLowerCase() !== STREAM_VALUE.toLowerCase()) return { error: 'not_found' };
+        // Only the groups the tool sent are replaced; the student's other groups (JOSAA / CAP ...) are kept.
+        var merged = parseJsonObject_(sheet.getRange(r2, cols.savedShortlist).getValue()), sent = JSON.parse(incoming.json);
+        Object.keys(sent).forEach(function (k) { merged[k] = sent[k]; });
+        var v = validateShortlist_(merged);
+        if (!v) return { error: 'invalid_input' };
+        sheet.getRange(r2, cols.savedShortlist).setNumberFormat(TEXT_FORMAT).setValue(v.json);
+        return { success: true, count: v.count };
+      } finally {
+        lock.releaseLock();
+      }
+    }
+    return { error: 'invalid_action' };
+  } catch (err) {
+    log_('Staff action ' + action + ' failed: ' + describeError_(err));
+    notifyError_(err && err.name === 'HeaderError' ? 'Staff tools: missing/ambiguous sheet header' : 'Staff action failed', describeError_(err));
+    return { error: 'server_error' };
+  }
+}
+
 
 /** The ONLY fields the page uses. Add a field here only when the page needs it. Never a student or parent phone number. */
 function readStudent_(sheet, row, cols) {

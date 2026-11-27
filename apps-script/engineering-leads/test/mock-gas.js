@@ -38,7 +38,7 @@ class MockRange {
   getFormula() { const v = this.sheet._get(this.r, this.c); return (typeof v === 'string' && v.charAt(0) === '=') ? v : ''; }
   getValue() { return this.getValues()[0][0]; }
   setValue(v) { return this.setValues([[v]]); }
-  setNumberFormat(f) { return this.setNumberFormats([[f]]); }
+  setNumberFormat(f) { return this.setNumberFormats(Array.from({ length: this.nr }, () => Array(this.nc).fill(f))); }
   setNumberFormats(f) {
     this._check();
     for (let i = 0; i < this.nr; i++) for (let j = 0; j < this.nc; j++) this.sheet.formats[(this.r + i) + ',' + (this.c + j)] = f[i][j];
@@ -66,6 +66,7 @@ class MockSheet {
   deleteRows(start, n) { if (start < 1 || n < 1) throw new Error('Mock: bad deleteRows'); this.rows.splice(start - 1, n); this.deletedRows = (this.deletedRows || 0) + n; }
   insertRowsAfter(after, n) { this.maxRows += n; this.insertedRows += n; }
   insertColumnsAfter(after, n) { this.maxCols += n; }
+  clearContents() { this.rows = [[]]; return this; }
   getRange(r, c, nr = 1, nc = 1) { return new MockRange(this, r, c, nr, nc); }
   /** helper for tests: row as {header: value} */
   obj(r) { const h = this.rows[0]; const o = {}; h.forEach((name, i) => { o[name] = this._get(r, i + 1); }); return o; }
@@ -84,12 +85,28 @@ function buildEnvironment(options = {}) {
   const code = fs.readFileSync(SCRIPT_PATH, 'utf8');
   const state = {
     logs: [], mails: [], props: {}, lockAcquired: 0, lockReleased: 0, lockHeld: false, lockBusy: false,
-    mailThrows: false, cache: {}, cacheThrows: false, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
+    mailThrows: false, cache: {}, cacheThrows: false, google: { tokens: {}, down: false, fetches: 0, n: 0 }, mailQuota: 100, spreadsheets: {}, clock: options.now ? new Date(options.now) : new Date('2026-11-01T10:00:00Z')
   };
 
   const ctx = vm.createContext({
     Logger: { log: m => state.logs.push(String(m)) },
-    Utilities: { getUuid: () => crypto.randomUUID() },
+    Utilities: {
+      getUuid: () => crypto.randomUUID(),
+      DigestAlgorithm: { SHA_256: 'SHA_256' },
+      computeDigest: (alg, text) => Array.from(crypto.createHash('sha256').update(String(text)).digest()).map(b => (b > 127 ? b - 256 : b))   // Apps Script returns signed bytes
+    },
+    // Stand-in for Google's tokeninfo endpoint: answers only for tokens a test minted with mintToken().
+    UrlFetchApp: {
+      fetch: url => {
+        state.google.fetches++;
+        const m = /[?&]id_token=([^&]+)/.exec(String(url));
+        if (!/^https:\/\/oauth2\.googleapis\.com\/tokeninfo\?/.test(String(url)) || !m) throw new Error('Mock: unexpected URL');
+        if (state.google.down) return { getResponseCode: () => 503, getContentText: () => '' };
+        const info = state.google.tokens[decodeURIComponent(m[1])];
+        if (!info) return { getResponseCode: () => 400, getContentText: () => '{"error":"invalid_token"}' };
+        return { getResponseCode: () => 200, getContentText: () => JSON.stringify(info) };
+      }
+    },
     ContentService: {
       MimeType: { JSON: 'JSON', TEXT: 'TEXT' },
       createTextOutput: s => ({ _s: s, setMimeType() { return this; }, getContent() { return this._s; } })
@@ -154,10 +171,18 @@ function buildEnvironment(options = {}) {
     state.props.ENQUIRY_SPREADSHEET_ID = ENQ_ID;
     state.props.DASHBOARD_SPREADSHEET_ID = DASH_ID;
     state.props.LEAD_ALERT_EMAIL = 'alerts@example.invalid';
+    state.props.GOOGLE_CLIENT_ID = 'MOCK-CLIENT-ID.apps.googleusercontent.com';
   }
 
+  // A fake Google ID token for `email`. `over` can change any claim (aud, iss, exp, email_verified) to test rejection.
+  const mintToken = (email, over = {}) => {
+    const tok = 'mk' + (++state.google.n) + '.payload' + state.google.n + '.sig' + state.google.n;
+    state.google.tokens[tok] = Object.assign({ aud: 'MOCK-CLIENT-ID.apps.googleusercontent.com', iss: 'https://accounts.google.com',
+      exp: String(Math.floor(state.clock.getTime() / 1000) + 3600), email, email_verified: 'true' }, over);
+    return tok;
+  };
   const submit = params => JSON.parse(ctx.doPost({ parameter: params }).getContent());
-  return { ctx, state, enq, dash, dsheet, ENQ, DASH, get, submit, ENQ_ID, DASH_ID, enqHeaders, dashHeaders };
+  return { ctx, state, enq, dash, dsheet, ENQ, DASH, get, submit, mintToken, ENQ_ID, DASH_ID, enqHeaders, dashHeaders };
 }
 
 /** All data rows (row 2+) of a tab that carry a Token or Full Name, ignoring formula-only rows. */

@@ -3,13 +3,28 @@
 const assert = require('assert');
 const { buildEnvironment } = require('./mock-gas');
 const TOK = 'ENG-ABCDEFGH23', TOK2 = 'ENG-JKMNPQRS45';
+
+// Sign-in stand-ins: the old tests named a student by token; now a student is a Google account. EMAIL/EMAIL2/MEDMAIL are the Approved Email of TOK/TOK2/the Medical row.
+const EMAIL = 'aarav.test@example.invalid', EMAIL2 = 'other.test@example.invalid', MEDMAIL = 'med.test@example.invalid';
+function idFor(env, who) {
+  if (who === TOK) return env.mintToken(EMAIL);
+  if (typeof TOK2 !== 'undefined' && who === TOK2) return env.mintToken(EMAIL2);
+  if (who === 'ENG-ZZZZZZZZ22') return env.mintToken(MEDMAIL);
+  if (who === '' || who === undefined) return '';
+  if (/^ENG-[A-Z0-9]{10}$/.test(who)) return env.mintToken('unknown@example.invalid');   // a well-formed but unknown student
+  return 'bad';                                                                           // not a Google token at all
+}
 const setCell = (sh, row, h, v) => sh._set(row, sh.rows[0].indexOf(h) + 1, v);
 function seed(env) {
-  [[2, TOK, 'Engineering'], [3, TOK2, 'Engineering'], [4, 'ENG-ZZZZZZZZ22', 'Medical']].forEach(([r, t, st]) => { setCell(env.dsheet, r, 'Token', t); setCell(env.dsheet, r, 'Stream', st); setCell(env.dsheet, r, 'Student Name', 'Test Student'); });
+  [[2, TOK, 'Engineering'], [3, TOK2, 'Engineering'], [4, 'ENG-ZZZZZZZZ22', 'Medical']].forEach(([r, t, st]) => { setCell(env.dsheet, r, 'Token', t); setCell(env.dsheet, r, 'Approved Email', r === 2 ? EMAIL : r === 3 ? EMAIL2 : MEDMAIL); setCell(env.dsheet, r, 'Stream', st); setCell(env.dsheet, r, 'Student Name', 'Test Student'); });
 }
-const post = (env, body) => JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify(body) } }).getContent());
+const post = (env, body) => {
+  const b = Object.assign({}, body);
+  if ('token' in b) { b.idToken = idFor(env, b.token); delete b.token; }
+  return JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify(b) } }).getContent());
+};
 const save = (env, counselling, items, token = TOK) => post(env, { action: 'savePreferenceList', token, counselling, items });
-const get = (env, counselling, token = TOK) => JSON.parse(env.ctx.doGet({ parameter: { action: 'getPreferenceList', token, counselling } }).getContent());
+const get = (env, counselling, token = TOK) => post(env, { action: 'getPreferenceList', token, counselling });
 const item = (i, over = {}) => Object.assign({ institute: 'Institute ' + i, program: 'Computer Engineering', quota: 'All India', gender: 'all', choiceCode: '', tag: 'safe' }, over);
 const items = (n, over) => Array.from({ length: n }, (_, i) => item(i + 1, over));
 const tab = (env) => env.dash.getSheetByName('Preference Lists');
@@ -71,10 +86,13 @@ test('C5 a valid save followed by an invalid one keeps the first list', () => {
   assert.strictEqual(get(env, 'JOSAA').items.length, 3);
   return 'ok';
 });
-test('C6 token checks: bad shape, unknown token and a Medical row are not_found; nothing written', () => {
+test('C6 sign-in checks: no/bad Google token, unknown email and a Medical row are refused; nothing written', () => {
   const env = buildEnvironment(); seed(env);
-  ['', 'bad', 'ENG-SHORT', 'ENG-JKMNPQRS99'].forEach(t => { env.state.cache = {}; const r = save(env, 'JOSAA', items(1), t); assert.deepStrictEqual(r, { ok: false, error: 'not_found' }); assert.strictEqual(get(env, 'JOSAA', t).ok, false); });
-  const med = save(env, 'JOSAA', items(1), 'ENG-ZZZZZZZZ22'); assert.deepStrictEqual(med, { ok: false, error: 'not_found' });
+  [['', 'auth_required'], ['bad', 'auth_invalid'], ['ENG-SHORT', 'auth_invalid'], ['ENG-JKMNPQRS99', 'not_approved'], ['ENG-ZZZZZZZZ22', 'not_approved']].forEach(([t, code]) => {
+    env.state.cache = {};
+    assert.deepStrictEqual(save(env, 'JOSAA', items(1), t), { ok: false, error: code }, 'save as ' + t);
+    assert.deepStrictEqual(get(env, 'JOSAA', t), { ok: false, error: code }, 'get as ' + t);
+  });
   assert.strictEqual(tab(env), null);
   return 'ok';
 });
@@ -112,10 +130,10 @@ test('C10 empty list clears; text starting with = stays text; get on a missing t
 });
 test('C11 existing endpoints still work (getStudent has pref_list_enabled:true; shortlist unchanged)', () => {
   const env = buildEnvironment(); seed(env);
-  const gs = JSON.parse(env.ctx.doGet({ parameter: { action: 'getStudent', token: TOK } }).getContent());
+  const gs = post(env, { action: 'getStudent', token: TOK });
   assert.strictEqual(gs.data.pref_list_enabled, true);
   const sl = post(env, { action: 'saveShortlist', token: TOK, colleges: { JOSAA: [{ name: 'x' }], CAP: [] } }); assert.strictEqual(sl.success, true);
-  assert.deepStrictEqual(JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify({ action: 'nope', token: TOK }) } }).getContent()), { error: 'invalid_action' });
+  assert.deepStrictEqual(post(env, { action: 'nope', token: TOK }), { error: 'invalid_action' });
   assert.strictEqual(env.ctx.verifyHeaders().ok, true);
   return 'ok';
 });

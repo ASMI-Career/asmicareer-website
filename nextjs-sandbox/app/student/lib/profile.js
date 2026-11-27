@@ -1,3 +1,4 @@
+import { callDash } from './api';
 // Engineering student profile (Settings). The allowed lists mirror the Apps Script (PROFILE_* in engineering-leads.js): the script
 // re-checks everything, this only gives the student quick feedback before saving.
 export const GENDERS = ['Male', 'Female', 'Other', 'Prefer not to say'];
@@ -91,8 +92,7 @@ export function prefillFrom(profile) {
 export async function postProfile(endpoint, token, changes) {
   let res;
   try {
-    const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'saveProfile', token, profile: changes }) });
-    res = await r.json();
+    res = await callDash(endpoint, 'saveProfile', { profile: changes }, token);
   } catch (e) { return { ok: false, error: 'network' }; }
   return res && typeof res === 'object' ? res : { ok: false, error: 'server_error' };
 }
@@ -103,6 +103,9 @@ export const ERROR_TEXT = {
   rate_limited: 'Too many changes in the last hour. Please try again later.',
   busy: 'The server is busy. Please try again in a few seconds.',
   not_found: 'This link is not valid any more. Ask your counsellor for a fresh link.',
+  not_approved: 'This Google account is not registered for this dashboard. Ask your counsellor.',
+  auth_required: 'Please sign in again.',
+  auth_invalid: 'Please sign in again.',
   server_error: 'Something went wrong on our side. Please try again.',
   validation: 'Some values need fixing (shown below).',
 };

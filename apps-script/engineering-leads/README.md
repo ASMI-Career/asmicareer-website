@@ -87,36 +87,39 @@ Shipping a later change (same URL, nothing to update on the website):
 * **Stop the new flow on the website:** remove `NEXT_PUBLIC_ENGINEERING_LEAD_URL` and rebuild. The form goes back to the old payload and old script. Note the old script puts engineering leads in the Medical *Online* tab, as it does today.
 * Rows already written stay in the sheets; parked leads stay in Script Properties until `replayPendingLeads()` runs. Rolling back code does not delete either.
 
-## Student dashboard actions (`getStudent`, `saveShortlist`, `saveDocStatus`)
+## Student dashboard actions (Google sign-in)
 
-The engineering `/student` page talks to **this same web app** (set its URL as `NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL` when building the site).
-They read and write the **"Student Dashboard"** tab of the Dashboard workbook, columns by header name.
+The engineering `/student` page talks to **this same web app** (`NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL`). **A link or token alone no longer works.**
+The student signs in with Google; the page sends the Google ID token in the **body of a POST** (never in a URL). The script asks Google to verify it,
+then serves **only the "Student Dashboard" row(s) whose `Approved Email` cell lists the verified email**. A cell may list **several emails** (separated by commas, semicolons or new lines), and one email may be on **several rows** (twins with a shared parent email): the page then asks which student (`getStudent` returns `{ success: true, choose: [{ ref, name }] }`, names only) and sends the chosen student's Token as `studentRef` with every later call. The script re-checks that the signed-in email is on that row every time, so `studentRef` can only pick among the email's own rows. A write without a choice answers `student_required`. More than 10 rows on one email is refused as a typo.
 
-| Call | How | Returns |
+| Action (POST, text/plain JSON, always with `idToken`) | Body fields | Returns |
 |---|---|---|
-| `getStudent` | `GET <exec>?action=getStudent&token=ENG-…` | `{ success: true, data: { name, score, category, stage, tracks[], counsellor_name, counsellor_whatsapp, whatsapp_group_link, saved_colleges, document_status } }` |
-| `saveShortlist` | `POST <exec>` body `{"action":"saveShortlist","token":"ENG-…","colleges":{"JOSAA":[…],"CAP":[…]}}` (text/plain JSON) | `{ success: true, count }` |
-| `saveDocStatus` | `GET <exec>?action=saveDocStatus&token=ENG-…&data={"checked":[…],"category":"…","quota":"…"}` | `{ success: true }` |
+| `getStudent` | none | `{ success: true, data: { name, score, category, stage, tracks[], counsellor_*, saved_colleges, document_status, profile fields … } }` |
+| `saveShortlist` | `colleges` | `{ success: true, count }` |
+| `saveDocStatus` | `data` (object or JSON text) | `{ success: true }` |
+| `saveProfile` | `profile` | `{ ok: true, profile }` or `{ ok: false, error }` |
+| `getPreferenceList` / `savePreferenceList` | `counselling` (+ `items`) | `{ ok: true, … }` or `{ ok: false, error }` |
 
-* **Token is checked on the server.** It must be exactly `ENG-` + 10 characters from the token alphabet, must exist in the Token column, and its **Stream** cell must be `Engineering`. Anything else returns `{ "error": "not_found" }` (a Medical row behind an `ENG-` token is also `not_found`).
-* **Only the fields above are returned.** No student or parent phone numbers, no other columns. `counsellor_whatsapp` is the **counsellor's** number (digits only), because the page's "Call the Advisor" button needs it. If you want no numbers at all in this response, say so and it can come from the website instead.
-* `score` is a number with its decimals (98.37). `saved_colleges` is the grouped JSON saved by the shortlist; a damaged cell reads as `{}`. `whatsapp_group_link` is returned only if it starts with `http(s)://`.
-* **Writes** take the script lock (`{ "error": "busy" }` if it cannot be had), validate their input (`{ "error": "invalid_input" }`), and write one cell as plain text. A shortlist is at most 300 items in 10 groups; a document list at most 500 ids of letters/digits/`_ . -`.
-* Errors the browser sees: `not_found`, `invalid_input`, `busy`, `server_error` (never details). A missing or duplicated header returns `server_error`, writes nothing, and emails the admin (throttled).
-* The page keeps `saveShortlist` last-write-wins, so it re-reads the student just before saving; the script itself does not merge.
+GET never returns student data: any `?action=` answers `{ "error": "invalid_action" }`; no action is the health check.
 
-**Headers the page columns need (assumed names, in `STUDENT_HEADERS`; add any that are missing to the "Student Dashboard" tab):**
-`Token` · `Stream` · `Name` · `Score` · `Category` · `Stage` · `Tracks` (comma-separated, e.g. `JoSAA, Maharashtra CAP`) · `Counsellor Name` · `Counsellor WhatsApp` · `WhatsApp Group Link` · `Saved Shortlist` · `Document Status`.
-Staff fill `Category`, `Stage`, `Tracks` and the counsellor columns; the page writes only `Saved Shortlist` and `Document Status`. `verifyHeaders()` reports missing ones. The lead flow does **not** need these columns, so it keeps working if they are not there yet.
+**Checks on every call:** a Google token of the right shape → Google's `tokeninfo` says it is genuine → `aud` equals `GOOGLE_CLIENT_ID` → issuer is Google → not expired → `email_verified` → the email is listed in at least one `Approved Email` cell (case and spaces ignored) of an `Engineering` row that has a Token. The sheet is read on every call, so removing an email locks that student out at once (a verified token is cached for at most 5 minutes, only to save Google calls).
 
-### Copy test for the dashboard actions (no deployment of live data)
-1. On the **copy** of the Dashboard workbook, add the headers above, then add one test student row: a real-format token (e.g. generated by `runSmokeTest()`), `Stream` = `Engineering`, a name, a score like `98.37`, `Category`, `Stage` = `Counselling Started`, `Tracks` = `JoSAA, Maharashtra CAP`, your own number as counsellor.
-2. Run `verifyHeaders()`; fix anything it lists.
-3. Deploy the copy-attached project as a **new** web app version (see Deploy below), then in a browser open
-   `<exec>?action=getStudent&token=<your test token>`. Expect `success: true` and only the fields in the table. Try a wrong token, a Medical token and a lowercase token: all `not_found`.
-4. Build a **preview** of the website with `NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL=<that exec URL>` and open `/student?token=<your test token>`. Tick a document and remove a shortlist item; check `Document Status` and `Saved Shortlist` in the copy sheet.
-5. Rename one page header in the copy (e.g. `Tracks`), reload the page: it must show the "could not load" page, and you must get an email. Rename it back.
-6. Only after the engineering lead has signed off: point the Script Properties at the live Dashboard workbook (and the live site build at the live URL).
+**Answers are short codes only:** `auth_required` (no token), `auth_invalid` (bad/expired/foreign token), `not_approved` (email not on the sheet, on more than 10 rows, wrong stream, a ref that is not one of the email's rows, or the row has no Token), `student_required` (a shared email must pick a student first), `invalid_input`, `busy`, `server_error`, plus the existing `locked`, `rate_limited`, `validation`. Nothing internal (no stack, no header names, no email, no token) is returned or logged.
+
+**Writes** keep their checks: shortlist ≤ 300 items / 10 groups / 40,000 chars; document ids letters, digits and `_ . -`, ≤ 500; every value is saved as plain text; one script lock; profile and preference-list rate limits are per student (by the row's Token, which is now only an internal row id).
+
+**New Script property:** `GOOGLE_CLIENT_ID` = the OAuth Web client ID (public value). **New sheet column:** `Approved Email` on the Student Dashboard tab, far right; found by header name. `verifyHeaders()` reports it if missing and the page fails closed.
+
+**Counsellor tools (staff):** the same Google check, but the verified email must be on the **`Staff`** tab of the Dashboard workbook (column `Staff Email`; no tab, header or match = `not_staff`, fail closed). `staffCheck` (is this a staff email?), `staffGetStudent { token }` and `staffSaveShortlist { token, colleges }` take the student's internal **Token** in the POST body. Only the same safe fields as the student view are returned. A save replaces only the groups it sends; the student's other groups are kept. Only `Engineering` rows are served. Students can never use these actions and staff emails never open a student row.
+
+**Staff view of any student:** a Google account on the `Staff` tab may open and edit **any** Engineering student. `staffSearch { query }` (2–60 characters, max 20 results, `{ ref, name, stage }` only), then the normal student actions with `asStaff: true` and `studentRef` = that student's Token. A non-staff email sending `asStaff` gets `not_staff`; only the boolean `true` counts. **Every** such call is first written to the **`Staff Log`** tab (time, staff email, student Token, action; never content; created on demand; plain text); if it cannot be written the call is refused. Removing the email from the Staff tab ends access at once.
+
+**Sheet check (staff):** run `checkApprovedEmails()` from the editor. It writes the **"Email Check"** tab inside the Dashboard workbook: active students (Stream = Engineering, not at a stage in `INACTIVE_STAGES`, default `Admitted`) with a **blank**, **invalid** or **duplicate** Approved Email. Nothing is emailed or returned by the web app; the tab shows row numbers and names only.
+
+**Not changed:** the lead form, lead routing, tokens on enquiry rows, and everything under "What it does".
+
+Test it on COPIES first: see `../google-signin-copy-test.md` (covers this script, the Medical script and the website preview).
 
 ## Operating it
 
@@ -143,8 +146,7 @@ They run the real script against an in-memory fake. They do **not** show how rea
 
 ## Known limits
 
-* The `/student` dashboard does not read `Stream` or `Plan` yet and will show its Medical layout for an `ENG-` token. See the dashboard audit.
-* The web app URL is public and the token is the only key to a dashboard row. Tokens are random (about 8×10¹⁴ possibilities) so they cannot be guessed in order, but anyone holding a token can open that student's dashboard.
+* The web app URL is public, but a dashboard row can only be read or written with a Google sign-in whose verified email is on that row's `Approved Email`. The counsellor tools (`/counsellor`, `/engineering-counsellor`) still send a token to `getStudent`/`saveShortlist`; those token-only calls are gone, so those pages stop working until the staff sign-in is built.
 * Parked leads contain phone numbers inside Script Properties (private to project editors).
 * The static `inquiry-engineering.html` pages still use the old payload and old script. Only the Next.js form (`/engineering/inquiry`) was updated.
 * The form keeps the rules merged in PR #196: **Indian mobile numbers only** and **percentile required**. The script is more permissive (accepts `+country code` and an empty percentile); loosen the form later if you want those.

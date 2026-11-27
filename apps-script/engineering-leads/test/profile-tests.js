@@ -3,16 +3,31 @@
 const assert = require('assert');
 const { buildEnvironment } = require('./mock-gas');
 const TOK = 'ENG-ABCDEFGH23';
+
+// Sign-in stand-ins: the old tests named a student by token; now a student is a Google account. EMAIL/EMAIL2/MEDMAIL are the Approved Email of TOK/TOK2/the Medical row.
+const EMAIL = 'aarav.test@example.invalid', EMAIL2 = 'other.test@example.invalid', MEDMAIL = 'med.test@example.invalid';
+function idFor(env, who) {
+  if (who === TOK) return env.mintToken(EMAIL);
+  if (typeof TOK2 !== 'undefined' && who === TOK2) return env.mintToken(EMAIL2);
+  if (who === 'ENG-ZZZZZZZZ22') return env.mintToken(MEDMAIL);
+  if (who === '' || who === undefined) return '';
+  if (/^ENG-[A-Z0-9]{10}$/.test(who)) return env.mintToken('unknown@example.invalid');   // a well-formed but unknown student
+  return 'bad';                                                                           // not a Google token at all
+}
 const setCell = (sh, row, h, v) => sh._set(row, sh.rows[0].indexOf(h) + 1, v);
 function seed(env, over = {}) {
-  const v = Object.assign({ 'Token': TOK, 'Stream': 'Engineering', 'Student Name': 'Aarav Deshmukh', 'Score': 98.37, 'Category': 'OPEN',
+  const v = Object.assign({ 'Token': TOK, 'Approved Email': EMAIL, 'Stream': 'Engineering', 'Student Name': 'Aarav Deshmukh', 'Score': 98.37, 'Category': 'OPEN',
     'Student Phone': '9876543210', 'Admin Remarks': 'keep' }, over);
   Object.keys(v).forEach(h => setCell(env.dsheet, 2, h, v[h]));
   env.dsheet.writeLog.length = 0;
 }
-const post = (env, body) => JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify(body) } }).getContent());
+const post = (env, body) => {
+  const b = Object.assign({}, body);
+  if ('token' in b) { b.idToken = idFor(env, b.token); delete b.token; }
+  return JSON.parse(env.ctx.doPost({ parameter: {}, postData: { type: 'text/plain', contents: JSON.stringify(b) } }).getContent());
+};
 const save = (env, profile, token = TOK) => post(env, { action: 'saveProfile', token, profile });
-const get = (env) => JSON.parse(env.ctx.doGet({ parameter: { action: 'getStudent', token: TOK } }).getContent()).data;
+const get = (env) => post(env, { action: 'getStudent', token: TOK }).data;
 const tests = []; const test = (n, f) => tests.push({ n, f });
 
 test('P1 save changes only the changed cells, returns the profile, logs one row per change', () => {
@@ -84,10 +99,11 @@ test('P7 lock: busy => busy and nothing written; lock released after success and
   assert.strictEqual(env.state.lockHeld, false);
   return 'ok';
 });
-test('P8 unknown / malformed token => not_found, nothing written; formula cell never overwritten; missing column => server_error', () => {
+test('P8 unknown email / bad sign-in => not_approved / auth_invalid, nothing written; formula cell never overwritten; missing column => server_error', () => {
   const env = buildEnvironment(); seed(env);
-  assert.strictEqual(save(env, { gender: 'Male' }, 'ENG-JKMNPQRS45').error, 'not_found');
-  assert.strictEqual(save(env, { gender: 'Male' }, 'bad').error, 'not_found');
+  assert.strictEqual(save(env, { gender: 'Male' }, 'ENG-JKMNPQRS45').error, 'not_approved');
+  assert.strictEqual(save(env, { gender: 'Male' }, 'bad').error, 'auth_invalid');
+  assert.strictEqual(save(env, { gender: 'Male' }, '').error, 'auth_required');
   setCell(env.dsheet, 2, 'Gender', '=IF(1,"Male")'); assert.strictEqual(save(env, { gender: 'Female' }).ok, false);
   assert.strictEqual(env.dsheet.cell(2, 'Gender'), '=IF(1,"Male")');
   const e2 = buildEnvironment({ noProfileCols: true }); seed(e2);

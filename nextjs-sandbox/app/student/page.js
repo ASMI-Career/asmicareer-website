@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import './dashboard.css';
 import { streamFromLocation, getStreamConfig, endpointFor } from './config';
+import { googleMode } from './lib/auth';
+import GoogleGate from './components/GoogleGate';
 import useShell from './hooks/useShell';
 import useDocuments, { useDocumentSections } from './hooks/useDocuments';
 import useShortlist from './hooks/useShortlist';
@@ -31,12 +33,19 @@ import PreferenceList from './components/PreferenceList';
 
 // The student dashboard page. All state lives in the hooks below, which are always called, so what a student typed in one
 // tab (filters, inputs) is still there after switching tabs. Each tab is a component that receives everything as props.
-export default function StudentDashboard() {
-  const [currentToken, setCurrentToken] = useState('');   // read from the link by useStudent; also needed by the documents and shortlist hooks
-  // The stream (medical / engineering) comes from the token prefix in the link and does not change while the page is open.
-  const [streamId] = useState(streamFromLocation);
+// With Google sign-in switched on (NEXT_PUBLIC_GOOGLE_CLIENT_ID), the student signs in first and the gate works out the stream; without it the page
+// behaves exactly as before (token in the link).
+export default function StudentPage() {
+  if (!googleMode()) return <StudentDashboard />;
+  return <GoogleGate>{(session, signOut, switchStudent, staffExit) => <StudentDashboard key={session.cacheKey} session={session} signOut={signOut} switchStudent={switchStudent} staffExit={staffExit} />}</GoogleGate>;
+}
+
+function StudentDashboard({ session = null, signOut = null, switchStudent = null, staffExit = null }) {
+  const [currentToken, setCurrentToken] = useState('');   // the link token (legacy) or the signed-in account's cache key; set by useStudent
+  // The stream (medical / engineering) comes from the sign-in check, or (legacy) from the token prefix in the link. It does not change while the page is open.
+  const [streamId] = useState(() => (session ? session.streamId : streamFromLocation()));
   const config = getStreamConfig(streamId);
-  const endpoint = endpointFor(streamId);
+  const endpoint = session ? session.endpoint : endpointFor(streamId);
 
   // Engineering gets its own colours (see the [data-stream="engineering"] block at the end of dashboard.css).
   // Medical sets nothing, so its page is exactly as before.
@@ -54,7 +63,7 @@ export default function StudentDashboard() {
   const institutes = useInstitutes();
   const profileApi = useProfile({ config, endpoint, currentToken });
   const student = useStudent({
-    config, endpoint,
+    config, endpoint, session,
     setCurrentToken,
     setCheckedDocs: docs.setCheckedDocs, setDocCategory: docs.setDocCategory, setDocQuota: docs.setDocQuota,
     docCategory: docs.docCategory, docQuota: docs.docQuota,
@@ -76,7 +85,7 @@ export default function StudentDashboard() {
   const settingsOpen = shell.activeTab === 'settings' && profileApi.profileSupported;
   const activeTab = settingsOpen ? 'settings' : (config.modules.includes(shell.activeTab) || !config.unknownTabFallback) ? (shell.activeTab === 'settings' ? (config.unknownTabFallback || 'dashboard') : shell.activeTab) : config.unknownTabFallback;
 
-  const ctx = { config, streamId, currentToken, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...prefList, ...profileApi };
+  const ctx = { config, streamId, currentToken, signOut, switchStudent, staffExit, ...shell, activeTab, ...docs, ...docSections, ...shortlistApi, ...predictor, ...cutoff, ...institutes, ...student, ...catalog, ...engCutoff, ...prefList, ...profileApi };
 
   return (
     <Shell {...ctx}>

@@ -13,6 +13,10 @@ export const writeCache = (token, field, value) => {
 export const clearCache = (token) => {
   try { ['name', 'rank', 'score', 'shortlist', 'checklist', 'preflist'].forEach(f => localStorage.removeItem(cacheKey(token, f))); } catch (e) { /* ignore */ }
 };
+// Signed-in (Google) caches are keyed 'g_<account>[_<student>]'. Sign-out clears every one of them, so a shared phone keeps nothing of any child.
+export const clearGoogleCaches = () => {
+  try { Object.keys(localStorage).filter(k => k.startsWith('asmi_student:g_')).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ignore */ }
+};
 // Removes the old shared (un-keyed) keys written by earlier versions of this page. Nothing else reads them.
 // 'asmi-checklist' is NOT removed: the public documents-checklist tool still uses it.
 export const purgeLegacyCache = () => {

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { writeCache } from '../lib/cache';
 import { makeShortlist } from '../lib/shortlist';
+import { callDash } from '../lib/api';
 
 export default function useShortlist({ config, endpoint, currentToken }) {
   const { normalizeGroups, groupNames, addToGroups, removeFromGroups } = makeShortlist(config.shortlist);
@@ -18,15 +19,10 @@ export default function useShortlist({ config, endpoint, currentToken }) {
       try {
         let merged = localNext;
         try {
-          const latest = await (await fetch(`${endpoint}?action=getStudent&token=${encodeURIComponent(token)}`)).json();
+          const latest = await callDash(endpoint, 'getStudent', {}, token);
           if (latest && latest.success && latest.data) merged = op(normalizeGroups(latest.data.saved_colleges));
         } catch (e) { /* offline or unreadable: save our own copy */ }
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'saveShortlist', token, colleges: merged }),
-        });
-        const json = await res.json();
+        const json = await callDash(endpoint, 'saveShortlist', { colleges: merged }, token);
         if (!(json && json.success)) throw new Error('save rejected: ' + JSON.stringify(json));
         if (q.pending === 1) { setShortlistGroups(merged); writeCache(token, 'shortlist', merged); } // last queued save: show what the sheet now holds
       } catch (e) {

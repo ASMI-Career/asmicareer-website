@@ -227,8 +227,8 @@
     </div>
   </div>
 
+<script src="/staff-auth.js"></script>
 <script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
   const YEAR = 2026;
 
   const JOSAA_QUOTAS = [
@@ -735,12 +735,8 @@
     if (!PAGE_TOKEN) { statusEl.textContent = 'Save failed — no student token in URL'; return; }
     statusEl.textContent = 'Saving...';
     try {
-      const res = await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges: preferenceList, track: 'engineering' }),
-      });
-      const json = await res.json();
+      // Staff sign-in on: the list is stored under its own group (COUNSELLOR) so the student's own JOSAA / CAP lists are not overwritten.
+      const json = await StaffAuth.call('staffSaveShortlist', { token: PAGE_TOKEN, colleges: { COUNSELLOR: preferenceList }, legacyColleges: preferenceList, track: 'engineering' });
       statusEl.textContent = json.success ? 'Saved to student record.' : 'Save failed — please retry.';
     } catch (e) {
       statusEl.textContent = 'Save failed — network error.';
@@ -748,15 +744,15 @@
   }
 
   async function initUI() {
+    await StaffAuth.start({ kind: 'engineering' });   // staff Google sign-in; nothing below runs until a listed staff email has signed in
     const params = new URLSearchParams(window.location.search);
     PAGE_TOKEN = params.get('token');
 
     if (PAGE_TOKEN) {
       try {
-        const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(PAGE_TOKEN)}`);
-        const json = await res.json();
+        const json = await StaffAuth.call('staffGetStudent', { token: PAGE_TOKEN });
         if (json.success && json.data) {
-          const rawRank = json.data.rank || json.data.jee_rank || json.data.crl_rank;
+          const rawRank = json.data.rank || json.data.jee_rank || json.data.crl_rank || json.data.jee_main_crl_rank;
           if (rawRank && rawRank !== 0) {
             RANK = parseInt(rawRank, 10);
             TOKEN_RANK_SYNCED = true;

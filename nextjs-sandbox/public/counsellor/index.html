@@ -561,11 +561,11 @@
     </div>
   </div>
 
+  <script src="/staff-auth.js"></script>
   <script>
     let RANK = null;
     let STUDENT = {};
     let PAGE_TOKEN = null;
-    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyL1UC5_EGNPKZcitbkQ38HOnKzgj5ObTZGroPcH0kpyHtjY-SpYYtyl3_jH0-rUR-x/exec';
     let strayVisible = false;
     let currentData = null;
     let currentYear = '2026';
@@ -740,6 +740,7 @@
     }
 
     async function initUI() {
+      await StaffAuth.start({ kind: 'medical' });   // staff Google sign-in; nothing below runs until a listed staff email has signed in
       applyPrefPanelState();
 
       const params = new URLSearchParams(window.location.search);
@@ -750,8 +751,7 @@
       let fetchedScore = null;
       if (token && token.trim() !== '') {
         try {
-          const res = await fetch(`${APPS_SCRIPT_URL}?action=getStudent&token=${encodeURIComponent(token)}`);
-          const json = await res.json();
+          const json = await StaffAuth.call('staffGetStudent', { token });
           if (json.success && json.data) {
             STUDENT = json.data;
             STUDENT.token = token;
@@ -2052,12 +2052,7 @@
       statusEl.className = 'pref-save-status';
 
       try {
-        const res = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'saveShortlist', token: PAGE_TOKEN, colleges: collegesGrouped }),
-        });
-        const json = await res.json();
+        const json = await StaffAuth.call('staffSaveShortlist', { token: PAGE_TOKEN, colleges: collegesGrouped });
         if (json && json.success) {
           const time = new Date().toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
           statusEl.textContent = `Saved ✓ ${time}`;
