@@ -5,6 +5,7 @@ import engineeringDocs from '../data/docs.engineering.provisional.json';
 // Document lists by stream (the file is named in config.documents.data).
 export const DOC_SETS = { medical: medicalDocs, engineering: engineeringDocs };
 import { writeCache } from '../lib/cache';
+import { callDash } from '../lib/api';
 import { buildDocumentSections, docProgress } from '../lib/docGroups';
 
 // currentToken: the student's token (empty until it has been read from the link)
@@ -20,7 +21,7 @@ export default function useDocuments({ config, endpoint, currentToken }) {
     if (currentToken) writeCache(currentToken, 'checklist', payload);
     // Write to sheet for cross-device persistence (requires Apps Script action=saveDocStatus)
     if (currentToken) {
-      fetch(`${endpoint}?action=saveDocStatus&token=${encodeURIComponent(currentToken)}&data=${encodeURIComponent(JSON.stringify(payload))}`)
+      callDash(endpoint, 'saveDocStatus', { data: payload }, currentToken)
         .catch(() => {}); // silent fail — localStorage remains fallback
     }
   };

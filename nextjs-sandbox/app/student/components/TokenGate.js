@@ -1,5 +1,5 @@
 // ── Shown instead of the dashboard when there is no valid student link ───────
-export default function TokenGate({ state, helpline }) {
+export default function TokenGate({ state, helpline, buttonRef, onSwitch, expired }) {
   const number = helpline || '7410019074';   // engineering sets its own helpline in its config; Medical keeps this one
   const wrap = { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: 16 };
   const card = { maxWidth: 460, width: '100%', textAlign: 'center', marginBottom: 0 };
@@ -11,6 +11,23 @@ export default function TokenGate({ state, helpline }) {
         <div className="tool-card" style={card} role={state === 'checking' ? 'status' : 'alert'}>
           <img src="/asmi-logo.png" alt="ASMI Logo" style={{ height: 44, marginBottom: 20 }} />
           {state === 'checking' && <h2 className="section-title">Loading your dashboard…</h2>}
+          {state === 'signin' && (
+            <>
+              <h2 className="section-title">{expired ? 'Please sign in again' : 'Sign in to your dashboard'}</h2>
+              <p className="section-sub">{expired ? 'Your sign-in has expired. Sign in with the same Google account to carry on.' : 'Use the Google account your ASMI counsellor registered for you.'}</p>
+              <div ref={buttonRef} style={{ display: 'flex', justifyContent: 'center', minHeight: 44, marginTop: 20 }} />
+            </>
+          )}
+          {state === 'not_approved' && (
+            <>
+              <h2 className="section-title">This Google account is not registered</h2>
+              <p className="section-sub">We could not find a student dashboard for the account you signed in with. Try the Google account you gave your ASMI counsellor, or ask them to add this one.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+                {onSwitch && <button style={primaryBtn} onClick={onSwitch}>Use a different Google account</button>}
+                <a href={`tel:${number}`} className="btn-outline-navy">{`Call ASMI Helpline: ${number}`}</a>
+              </div>
+            </>
+          )}
           {state === 'invalid' && (
             <>
               <h2 className="section-title">This link is not valid</h2>

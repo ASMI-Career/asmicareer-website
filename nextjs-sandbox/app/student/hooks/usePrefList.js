@@ -4,6 +4,7 @@ import {
   buildList, rowFromRecord, indexRecords, mergePinned, familyForDesired, recordKey, TAG_LABELS, DREAM_OPTIONS, DEFAULT_DREAM, MAX_ROWS_DEFAULT, MAX_ROWS_LIMIT,
 } from '../lib/prefList';
 import { readCache, writeCache } from '../lib/cache';
+import { callDash } from '../lib/api';
 
 // State for the engineering "Preference List" tab. Lives in the page (like the other hooks), so the list survives tab switches.
 // It loads its own cutoff files with the shared loaders in lib/engCutoff.js and never touches the Explorer's state.
@@ -14,13 +15,12 @@ const SCRIPT_COUNSELLING = { JOSAA: 'JOSAA', MH: 'CAP' };
 const ITEM_LIMIT = MAX_ROWS_LIMIT;
 
 async function loadSaved(endpoint, token, c) {
-  const res = await (await fetch(`${endpoint}?action=getPreferenceList&token=${encodeURIComponent(token)}&counselling=${SCRIPT_COUNSELLING[c]}`)).json();
+  const res = await callDash(endpoint, 'getPreferenceList', { counselling: SCRIPT_COUNSELLING[c] }, token);
   if (!(res && res.ok && Array.isArray(res.items))) throw new Error('not available');
   return { items: res.items, locked: !!res.locked };
 }
 async function postSave(endpoint, token, c, items) {
-  const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'savePreferenceList', token, counselling: SCRIPT_COUNSELLING[c], items }) });
-  return r.json();
+  return callDash(endpoint, 'savePreferenceList', { counselling: SCRIPT_COUNSELLING[c], items }, token);
 }
 const toItem = (r) => ({ institute: r.institute, program: r.program, quota: r.quota, gender: r.gender || 'all', choiceCode: r.choiceCode || '', tag: (r.pinned ? 'PICK:' : '') + (r.tag || 'none') });
 // A saved item -> a stored row. Its numbers come back when the row is matched against the loaded data.

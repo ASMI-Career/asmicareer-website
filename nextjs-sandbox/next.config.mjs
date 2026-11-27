@@ -14,6 +14,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_ENGINEERING_LEAD_URL: process.env.NEXT_PUBLIC_ENGINEERING_LEAD_URL || ENGINEERING_SCRIPT_URL,
     NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL: process.env.NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL || ENGINEERING_SCRIPT_URL,
+    // Google sign-in for /student. Empty = the old link-token behaviour. The client ID is a public value (not a secret), so it can live here like the script URLs.
+    NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
+    // Preview builds only: point /student at a COPY of the Medical sheet's script. Empty in production.
+    NEXT_PUBLIC_DASHBOARD_URL: process.env.NEXT_PUBLIC_DASHBOARD_URL || '',
   },
 };
 

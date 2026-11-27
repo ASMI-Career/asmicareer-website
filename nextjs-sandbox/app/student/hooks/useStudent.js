@@ -3,10 +3,11 @@ import { TOKEN_RE, readCache, writeCache, clearCache, purgeLegacyCache } from '.
 import { makeShortlist } from '../lib/shortlist';
 import { applyRules } from '../config';
 import { getBranchFromToken } from '../lib/format';
+import { callDash } from '../lib/api';
 
 // Resolves the token in the link, loads the student (cache first, then the sheet) and hands the pieces the other hooks own to their setters.
 // The effect runs once, so it uses the values of the first render, exactly like before the split.
-export default function useStudent({ config, endpoint, setCurrentToken, setCheckedDocs, setDocCategory, setDocQuota, docCategory, docQuota, setShortlistGroups, setCpScoreInput, onProfile }) {
+export default function useStudent({ config, endpoint, session, setCurrentToken, setCheckedDocs, setDocCategory, setDocQuota, docCategory, docQuota, setShortlistGroups, setCpScoreInput, onProfile }) {
   const sc = config.student;
   const { normalizeGroups } = makeShortlist(config.shortlist);
   // Medical keeps whole numbers (NEET score); engineering keeps decimals (percentile 98.37).
@@ -32,8 +33,9 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
       purgeLegacyCache();
 
       // A student record is only shown for a valid token, and cached data is read per token only.
-      const token = (params.get('token') || '').trim();
-      if (!TOKEN_RE.test(token)) {
+      // Google sign-in: the page was already let in by the gate; the key for the browser cache is the signed-in account. Legacy: the token in the link.
+      const token = session ? session.cacheKey : (params.get('token') || '').trim();
+      if (!session && !TOKEN_RE.test(token)) {
         setAuthState('invalid');
       } else {
         setCurrentToken(token);
@@ -54,8 +56,9 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
           setDocQuota(cDocs.quota || config.documents.defaults.quota);
         }
         setAuthState(hasCache ? 'ok' : 'checking');
-        fetch(`${endpoint}?action=getStudent&token=${encodeURIComponent(token)}`)
-          .then(res => res.json())
+        // With Google sign-in the gate has already fetched the record (and so decided the stream); use that answer instead of asking again.
+        const load = session ? () => Promise.resolve(session.prefetched) : () => callDash(endpoint, 'getStudent', {}, token);
+        load()
           .then(res => {
             if (res.success && res.data) {
               setAuthState('ok');
@@ -135,7 +138,7 @@ export default function useStudent({ config, endpoint, setCurrentToken, setCheck
 
   // After a profile save: bring name, category and the checklist category in line with what the sheet now holds.
   const applyProfileToStudent = (p) => {
-    const token = new URLSearchParams(window.location.search).get('token') || '';
+    const token = session ? session.cacheKey : (new URLSearchParams(window.location.search).get('token') || '');
     if (p.name) { setStudentName(p.name); writeCache(token, 'name', p.name); }
     if (p.category) {
       const cat = applyRules(p.category, sc.categoryRules);
