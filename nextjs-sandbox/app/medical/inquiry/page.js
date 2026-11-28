@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Nav from '../../components/Nav';
 import Footer from '../../components/Footer';
-import { getLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR, looksLikeToken } from '../../../lib/leadForm';
+import { getMedicalLeadTarget, TEST_TOKEN, EMPTY_ATTR, readAttribution, sanitizePhoneInput, normalizePhone, PHONE_ERROR, looksLikeToken } from '../../../lib/leadForm';
 import TestModeBanner from '../../components/TestModeBanner';
 
 export default function InquiryPage() {
@@ -26,6 +26,7 @@ export default function InquiryPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [token, setToken] = useState('---');
+  const [isDuplicate, setIsDuplicate] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
   const [errors, setErrors] = useState({});
   const [attribution, setAttribution] = useState(EMPTY_ATTR); // utm_source/medium/campaign + gclid
@@ -52,7 +53,7 @@ export default function InquiryPage() {
       const details = branchDetails[currentSource.toLowerCase()] || branchDetails['online'];
       setBranchInfo(details);
       setAttribution(readAttribution());
-      setLeadTarget(getLeadTarget());
+      setLeadTarget(getMedicalLeadTarget());
     }
   }, []);
 
@@ -103,7 +104,7 @@ export default function InquiryPage() {
     setErrorMsg(null);
 
     // Preview / local builds must never post to the live lead sheet (see lib/leadForm.js).
-    const target = getLeadTarget();
+    const target = getMedicalLeadTarget();
     setLeadTarget(target);
     if (!target.endpoint) {
       setToken(TEST_TOKEN);
@@ -128,6 +129,42 @@ export default function InquiryPage() {
     data.append('courses', selectedCourses.join(', '));
     data.append('budget', selectedBudgets.join(', '));
     Object.keys(attribution).forEach(k => data.append(k, attribution[k]));
+
+    const resetForm = () => {
+      setFormData({ fullName: '', neetRank: '', studentContact: '', fatherContact: '', motherContact: '', coachingClass: '', city: '', category: 'General' });
+      setSelectedCourses([]);
+      setSelectedBudgets([]);
+      setIsLoading(false);
+    };
+
+    // New medical script (apps-script/medical-leads): it answers with JSON.
+    if (target.newScript) {
+      fetch(target.endpoint, { method: 'POST', body: data })
+        .then(response => response.text())
+        .then(text => {
+          let res = null;
+          try { res = JSON.parse(text); } catch (parseErr) { /* handled below */ }
+          if (!res) throw new Error('Unexpected response from lead script');
+          if (res.ok === false) {
+            const first = res.errors && res.errors[0];
+            setIsLoading(false);
+            setErrorMsg(first ? first.message : (res.message || 'Submission failed. Please try again.'));
+            setTimeout(() => setErrorMsg(null), 8000);
+            return; // keep what the student typed so they can fix it
+          }
+          setToken(res.token || '');
+          setIsDuplicate(!!res.duplicate);
+          setShowModal(true);
+          resetForm();
+        })
+        .catch(error => {
+          console.error('Network Error!', error);
+          setIsLoading(false);
+          setErrorMsg('Submission Failed. Try Again.');
+          setTimeout(() => setErrorMsg(null), 4000);
+        });
+      return;
+    }
 
     fetch(target.endpoint, { method: 'POST', body: data })
       .then(response => response.text())
@@ -355,13 +392,15 @@ export default function InquiryPage() {
             <div className="modal-card">
                 <span className="material-symbols-outlined modal-icon">check_circle</span>
                 <h2 className="modal-heading">Thank You!</h2>
-                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : 'Welcome to ASMI. Your details are registered.'}</p>
-                <div className="modal-token-box">
-                    <span className="modal-token-lbl">Your Token Number</span>
-                    <span id="tokenDisplay">{token}</span>
-                </div>
+                <p className="modal-sub">{token === TEST_TOKEN ? 'TEST MODE: nothing was sent to the lead sheet.' : isDuplicate ? 'We already have your details from today.' : 'Welcome to ASMI. Your details are registered.'}</p>
+                {token && (
+                  <div className="modal-token-box">
+                      <span className="modal-token-lbl">Your Token Number</span>
+                      <span id="tokenDisplay">{token}</span>
+                  </div>
+                )}
                 <p className="modal-msg">{['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) ? 'Please take a seat. A counsellor will call your token shortly.' : 'Your Personalized Medical Admission Health Report will be shared within 24 hours.'}</p>
-                {token !== TEST_TOKEN && !['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (
+                {token !== TEST_TOKEN && !(leadTarget && leadTarget.newScript) && !['andheri','thane','pune','kolhapur','sangli','sambhajinagar'].includes(source.toLowerCase()) && (   /* the old report download belongs to the old script */
                   <a
                     href={`/slide4_recommended.html?token=${encodeURIComponent(token)}&download=1`}
                     target="_blank"

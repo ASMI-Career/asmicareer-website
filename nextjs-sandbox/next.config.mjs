@@ -21,6 +21,8 @@ const nextConfig = {
     NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL: process.env.NEXT_PUBLIC_ENGINEERING_DASHBOARD_URL || (IS_PREVIEW_BUILD ? '' : ENGINEERING_SCRIPT_URL),
     NEXT_PUBLIC_PREVIEW_BUILD: IS_PREVIEW_BUILD ? '1' : '',
     // Google sign-in for /student. Empty = the old link-token behaviour. The client ID is a public value (not a secret), so it can live here like the script URLs.
+    // Medical enquiry form -> the new medical script (apps-script/medical-leads). Empty = the old behaviour. On a preview build point it at a script attached to COPIES.
+    NEXT_PUBLIC_MEDICAL_LEAD_URL: process.env.NEXT_PUBLIC_MEDICAL_LEAD_URL || '',
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
     // Preview builds only: point /student at a COPY of the Medical sheet's script. Empty in production.
     NEXT_PUBLIC_DASHBOARD_URL: process.env.NEXT_PUBLIC_DASHBOARD_URL || '',
