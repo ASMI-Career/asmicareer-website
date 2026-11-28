@@ -56,6 +56,25 @@ export function getEngineeringLeadTarget() {
   };
 }
 
+// ── Medical lead script (apps-script/medical-leads) ─────────────────────
+// Same idea as the engineering script above. When NEXT_PUBLIC_MEDICAL_LEAD_URL is set at build time the medical form posts there and reads a JSON reply
+// ({ ok, token, duplicate } or { ok:false, errors }). When it is empty nothing changes: the form uses getLeadTarget() and the old plain-token reply.
+// A preview or local build on a non-live host shows the TEST MODE banner; give Preview builds the URL of a script attached to COPIES of the sheets.
+export const MEDICAL_LEAD_URL = process.env.NEXT_PUBLIC_MEDICAL_LEAD_URL || '';
+export const MEDICAL_NEW_SCRIPT = !!MEDICAL_LEAD_URL;
+
+export function getMedicalLeadTarget() {
+  if (!MEDICAL_NEW_SCRIPT) return { ...getLeadTarget(), newScript: false };
+  const host = typeof window !== 'undefined' ? window.location.hostname : '';
+  const isProd = PRODUCTION_HOSTS.includes(host);
+  return {
+    endpoint: MEDICAL_LEAD_URL,
+    newScript: true,
+    testMode: !isProd,
+    label: isProd ? '' : 'TEST MODE: submissions go to the TEST endpoint, not the live lead sheet.',
+  };
+}
+
 export const TEST_TOKEN = 'TEST-NOT-SENT';
 
 // ── Marketing attribution (utm_* + gclid) ───────────────────────────────
